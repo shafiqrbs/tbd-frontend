@@ -187,7 +187,7 @@ export default function AppShellDemo() {
                 </Footer>
             }
             header={
-                <Header height={{ base: 50, md: 60 }} p="md">
+                <Header height={{ base: 50, md: 56 }} p="md">
                     <div style={{ display: 'flex', alignItems: 'center', height: '100%' }}>
                         <HeaderMegaMenu>
                         </HeaderMegaMenu>

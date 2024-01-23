@@ -165,9 +165,9 @@ export function HeaderMegaMenu() {
 
     return (
         <Box pb={120}>
-            <Header height={60} px="md">
+            <Header height={56} px="md">
                 <div className="flex py-3">
-                    <div className="flex-none w-72 ... " >
+                    <div className="flex-none w-60 ... " >
                         <Group position="apart" sx={{ height: '100%' }}>
                             <MediaQuery largerThan="sm" styles={{ display: 'none' }}>
                                 <Burger
@@ -186,6 +186,7 @@ export function HeaderMegaMenu() {
 
                         </Group>
                     </div>
+
                     <div className="flex-none w-40 ... " >
                         <Group position="apart" sx={{ height: '100%' }}>
                             <MediaQuery largerThan="sm">
@@ -236,6 +237,24 @@ export function HeaderMegaMenu() {
                                         </HoverCard.Dropdown>
                                     </HoverCard>
                                 </Group>
+                            </MediaQuery>
+                        </Group>
+                    </div>
+                    <div className="flex-none w-40 ... " >
+                        <Group position="apart" sx={{ height: '100%' }}>
+                            <MediaQuery largerThan="sm">
+                                <Tooltip label="All Navigation here"
+                                         color="red"
+                                         position="top"
+                                         withArrow>
+                                    <a href="#" className={classes.link}>
+                                        <Center inline>
+                                            <Box component="span" mr={5}>
+                                                Menu
+                                            </Box>
+                                        </Center>
+                                    </a>
+                                </Tooltip>
                             </MediaQuery>
                         </Group>
                     </div>

@@ -66,4 +66,8 @@ th:not(:last-child) {
   border-bottom: 2px solid rgba(0, 0, 0, .1);
 }
 
+.mantine-Header-root{
+  background: #f6f8fa;
+}
+
 
