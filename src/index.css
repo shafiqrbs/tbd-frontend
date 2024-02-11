@@ -1,0 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.form-box {
+    background-color: #f8f9fafa;
+}
+
+.mantine-Tabs-list{
+    height: 40px !important;
+}

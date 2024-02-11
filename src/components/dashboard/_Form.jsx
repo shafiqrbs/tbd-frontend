@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import React, {useCallback, useEffect, useState} from "react";
+import ReactShortcut from 'react-shortcut';
+
 import {
   useForm,
   isNotEmpty,
@@ -40,8 +42,12 @@ import {
 } from "@mantine/dates";
 import "@mantine/dropzone/styles.css";
 import "@mantine/dates/styles.css";
+import { notifications } from '@mantine/notifications';
+import { getHotkeyHandler } from '@mantine/hooks';
 
 function _Form() {
+
+
   const [saveFormData, setSaveFormData] = useState(null);
   const form = useForm({
     initialValues: {},
@@ -66,6 +72,10 @@ function _Form() {
       file: isNotEmpty(),
     },
   });
+
+  const [value, setValue] = useState("I've just used a hotkey to send a message");
+
+  // const handleSubmit = () => notifications.show({ title: 'Your message', message: value });
   return (
     <Box
       component="form"
@@ -86,12 +96,21 @@ function _Form() {
             zIndex={0}
             transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
           >
+
             <TextInput
               size="xs"
               label="Name"
-              placeholder="Name"
+              placeholder="Name y"
               withAsterisk
               {...form.getInputProps("name")}
+              // value={value}
+              // onChange={(event) => setValue(event.target.value)}
+              onKeyDown={getHotkeyHandler([
+                ['Enter', (e)=>{
+                  document.getElementById('email').focus();
+               }],
+                // ['mod+S', handleSave],
+              ])}
             />
           </Tooltip>
           <Tooltip
@@ -108,10 +127,17 @@ function _Form() {
           >
             <TextInput
               size="xs"
+              id="email"
               label="Your email"
               placeholder="Your email"
               withAsterisk
               {...form.getInputProps("email")}
+              onKeyDown={getHotkeyHandler([
+                ['Enter', (e)=>{
+                  document.getElementById('favoriteColor').focus();
+                }],
+                // ['mod+S', handleSave],
+              ])}
             />
           </Tooltip>
 
@@ -130,6 +156,7 @@ function _Form() {
             <ColorInput
               size="xs"
               label="Your favorite color"
+              id="favoriteColor"
               // placeholder="Your favorite color"
               withAsterisk
               {...form.getInputProps("favoriteColor")}

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { ActionIcon, Box, Button, Grid, Group, TextInput } from "@mantine/core";
+import {ActionIcon, Box, Button, Grid, Group, Text, TextInput, Title} from "@mantine/core";
 import { DataTable } from "mantine-datatable";
 import axios from "axios";
 import {
@@ -30,6 +30,12 @@ function _Datatable() {
 
   // console.log(records)
   return (
+      <>
+          <Box p={`xs`}>
+              <Title order={4}>Notifications</Title>
+              <Text fz={`sm`}>We'll always let you know about important changes</Text>
+          </Box>
+          <Box h={1} bg={`gray.1`}></Box>
     <DataTable
       withTableBorder
       withColumnBorders
@@ -145,6 +151,7 @@ function _Datatable() {
         ),
       }}
     />
+    </>
   );
 }
 

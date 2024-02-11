@@ -4,12 +4,12 @@ import { IconChevronRight, IconChevronRightPipe } from '@tabler/icons-react';
 import NavbarStyle from '../../assets/css/Navbar.module.css';
 
 
-function _NavbarList({ icon, label, initiallyOpened, links }) {
+function _NavbarList({ icon, label, initiallyOpened, links,component }) {
     const hasLinks = Array.isArray(links);
     const [opened, setOpened] = useState(initiallyOpened || false);
     const items = (hasLinks ? links : []).map((link) => (
         <Text
-            component="a"
+            component={component}
             className={NavbarStyle.link}
             href={link.link}
             key={link.label}
