@@ -9,17 +9,11 @@ import Footer from "./Footer";
 function Layout() {
   const [mobileOpened, { toggle: toggleMobile }] = useDisclosure(false);
   const [navbarOpened, { toggle: toggleNavbar }] = useDisclosure(true);
-  const [rightSidebarOpened, { toggle: toggleRightSideBar }] =
-    useDisclosure(false);
+  const [rightSidebarOpened, { toggle: toggleRightSideBar }] = useDisclosure(false);
   const { height, width } = useViewportSize();
-
-  //   const [isOnline, { toggle: networkStatus }] = useDisclosure(navigator.onLine);
   const [isOnline, setNetworkStatus] = useState(navigator.onLine);
 
   useEffect(() => {
-    // window.addEventListener("online", networkStatus);
-    // window.addEventListener("offline", networkStatus);
-
     return () => {
       window.addEventListener("online", () => setNetworkStatus(true));
       window.addEventListener("offline", () => setNetworkStatus(false));

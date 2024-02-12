@@ -35,6 +35,8 @@ import ThreeGrid from "./ThreeGrid";
 import {hasLength, isEmail, useForm} from "@mantine/form";
 import { modals } from '@mantine/modals';
 import { notifications } from '@mantine/notifications';
+import TwoGrid from "./TwoGrid";
+import FullGrid from "./FullGrid";
 function Dashboard() {
   const { t, i18n } = useTranslation();
   const iconStyle = { width: rem(12), height: rem(12) };
@@ -44,7 +46,7 @@ function Dashboard() {
   const [formSubmitData, setFormSubmitData] = useState([]);
   const { isOnline, mainAreaHeight } = useOutletContext();
 
-  const height = mainAreaHeight - 36; //TabList height 36
+  // const height = mainAreaHeight - 48; //TabList height 36
 
 
   const form = useForm({
@@ -240,9 +242,15 @@ function Dashboard() {
 
 
       <Tabs.Panel value="ThreeGrid">
-        <ScrollArea h={height} scrollbarSize={4}>
-          <ThreeGrid isFormSubmit={isFormSubmit} setFormSubmitData={setFormSubmitData} setFormSubmit={setFormSubmit} form={form} />
-        </ScrollArea>
+        <ThreeGrid isFormSubmit={isFormSubmit} setFormSubmitData={setFormSubmitData} setFormSubmit={setFormSubmit} form={form} />
+      </Tabs.Panel>
+
+      <Tabs.Panel value="TwoGrid">
+        <TwoGrid isFormSubmit={isFormSubmit} setFormSubmitData={setFormSubmitData} setFormSubmit={setFormSubmit} form={form} />
+      </Tabs.Panel>
+
+      <Tabs.Panel value="FullForm">
+        <FullGrid  isFormSubmit={isFormSubmit} setFormSubmitData={setFormSubmitData} setFormSubmit={setFormSubmit} form={form}  />
       </Tabs.Panel>
 
       {/*<Tabs.Panel value="data_list">

@@ -49,7 +49,7 @@ import {
 
 
 
-function ThreeGrid(props) {
+function TwoGrid(props) {
     const {t, i18n} = useTranslation();
 
     const { isOnline, mainAreaHeight } = useOutletContext();
@@ -128,8 +128,8 @@ function ThreeGrid(props) {
       <Box>
 
 
-        <SimpleGrid cols={3}>
-          <div>
+        <Grid cols={2}>
+          <Grid.Col span={8}>
             <Box p={`md`}>
                   <Group right={0} gap={0}>
                       <TextInput
@@ -260,69 +260,8 @@ function ThreeGrid(props) {
             />*/}
               {/*</Box>*/}
               </ScrollArea>
-          </div>
-          <div>
-            <Box p={`xs`}>
-              <Title order={4}>Details Data</Title>
-              <Text fz={`sm`}>We'll always let you know about important changes</Text>
-            </Box>
-            <Box h={1} bg={`gray.1`}></Box>
-
-              <ScrollArea h={height} scrollbarSize={2}>
-                  <List
-                      px={4}
-                      pt={10}
-                      spacing="xs"
-                      size="sm"
-                      center
-                      icon={
-                          <ThemeIcon color="teal" size={24} radius="xl">
-                              <IconCircleCheck style={{ width: rem(16), height: rem(16) }} />
-                          </ThemeIcon>
-                      }
-                  >
-                      <List.Item>Clone or download repository from GitHub </List.Item>
-                      <List.Item>Install dependencies with yarn</List.Item>
-                      <List.Item>To start development server run npm start command</List.Item>
-                      <List.Item>Run tests to make sure your changes do not break the build</List.Item>
-                      <List.Item>Clone or download repository from GitHub</List.Item>
-                      <List.Item>Install dependencies with yarn</List.Item>
-                      <List.Item>To start development server run npm start command</List.Item>
-                      <List.Item>Run tests to make sure your changes do not break the build</List.Item>
-                      <List.Item>Clone or download repository from GitHub</List.Item>
-                      <List.Item>Install dependencies with yarn</List.Item>
-                      <List.Item>To start development server run npm start command</List.Item>
-                      <List.Item>Run tests to make sure your changes do not break the build</List.Item>
-                      <List.Item>Clone or download repository from GitHub</List.Item>
-                      <List.Item>Install dependencies with yarn</List.Item>
-                      <List.Item>To start development server run npm start command</List.Item>
-                      <List.Item>Run tests to make sure your changes do not break the build</List.Item>
-                      <List.Item>Clone or download repository from GitHub</List.Item>
-                      <List.Item>Install dependencies with yarn</List.Item>
-                      <List.Item>To start development server run npm start command</List.Item>
-                      <List.Item>Run tests to make sure your changes do not break the build</List.Item>
-                      <List.Item>Clone or download repository from GitHub</List.Item>
-                      <List.Item>Install dependencies with yarn</List.Item>
-                      <List.Item>To start development server run npm start command</List.Item>
-                      <List.Item>Run tests to make sure your changes do not break the build</List.Item>
-                      <List.Item>Clone or download repository from GitHub</List.Item>
-                      <List.Item>Install dependencies with yarn</List.Item>
-                      <List.Item>To start development server run npm start command</List.Item>
-                      <List.Item>Run tests to make sure your changes do not break the build</List.Item>
-                  </List>
-                  {/*{
-                      showItemDetails &&
-                      <List>
-                          <List.Item>{showItemData.name}</List.Item>
-                          <List.Item>{showItemData.username}</List.Item>
-                          <List.Item>{showItemData.email}</List.Item>
-                          <List.Item>{showItemData.phone}</List.Item>
-                          <List.Item>{showItemData.website}</List.Item>
-                      </List>
-                  }*/}
-              </ScrollArea>
-          </div>
-          <div className={"form-box"}>
+          </Grid.Col>
+          <Grid.Col className={"form-box"} span={4}>
 
 
 
@@ -670,8 +609,8 @@ function ThreeGrid(props) {
               </Tooltip>
               </Box>
               </ScrollArea>
-          </div>
-        </SimpleGrid>
+          </Grid.Col>
+        </Grid>
 
 
 
@@ -680,4 +619,4 @@ function ThreeGrid(props) {
   );
 }
 
-export default ThreeGrid;
+export default TwoGrid;
