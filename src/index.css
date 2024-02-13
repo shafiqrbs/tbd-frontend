@@ -3,10 +3,10 @@
 @tailwind utilities;
 
 .form-grid {
-    background-color: rgba(16, 39, 62, 0.98);
+    background-color:#f8f9fa;
 }
 .view-gird {
-    background-color: rgba(62, 70, 78, 0.98);
+    background-color: rgba(248, 249, 250, 0.26);
 }
 
 .mantine-Tabs-list{
@@ -14,5 +14,6 @@
 }
 
 .mantine-AppShell-main{
+    padding-top: 60px !important;
     padding-bottom: 0 !important;
 }

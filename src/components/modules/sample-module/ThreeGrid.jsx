@@ -36,7 +36,7 @@ function ThreeGrid(props) {
 
     const {t, i18n} = useTranslation();
     const {isOnline, mainAreaHeight} = useOutletContext();
-    const height = mainAreaHeight - 110; //TabList height 36
+    const height = mainAreaHeight - 90; //TabList height 36
     const [fetching, setFetching] = useState(true)
     const [data, setRecords] = useState([]);
 
@@ -199,14 +199,14 @@ function ThreeGrid(props) {
                         </ScrollArea>
                     </div>
                     <div className={"form-grid"}>
-                        <Box p={`xs`}>
+                        <Box p={`xs`} pl={`md`}>
                             <Title order={4}>Form</Title>
                             <Text fz={`sm`}>We'll always let you know about important changes</Text>
                         </Box>
                         <Box h={1} bg={`gray.1`}></Box>
 
                         <ScrollArea h={height} scrollbarSize={2}>
-                            <Box p={`sm`}>
+                            <Box p={`md`}>
 
                                 <Tooltip
                                     label={"Name must be 2-10 characters long"}
