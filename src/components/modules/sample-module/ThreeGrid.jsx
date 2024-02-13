@@ -9,14 +9,14 @@ import {
     Box,
     ScrollArea,
     Title,
-    TextInput, SimpleGrid, List, ColorInput, Select, ThemeIcon,
+    TextInput, SimpleGrid, List, ColorInput, Select, ThemeIcon, Switch,
 } from "@mantine/core";
 import {useTranslation} from "react-i18next";
 
 import {
     IconCircleCheck,
     IconFilter, IconEyeSearch,
-    IconUserCircle, IconInfoCircle,
+    IconUserCircle, IconInfoCircle, IconList, IconPlus,
 } from "@tabler/icons-react";
 import {getHotkeyHandler, useViewportSize} from "@mantine/hooks";
 
@@ -33,6 +33,8 @@ import {
 
 function ThreeGrid(props) {
     const {isFormSubmit, setFormSubmit, setFormSubmitData, form} = props
+    const iconStyle = {width: rem(12), height: rem(12)};
+
 
     const {t, i18n} = useTranslation();
     const {isOnline, mainAreaHeight} = useOutletContext();
@@ -172,10 +174,6 @@ function ThreeGrid(props) {
                                 <List.Item>To start development server run npm start command</List.Item>
                                 <List.Item>Run tests to make sure your changes do not break the build</List.Item>
                                 <List.Item>Clone or download repository from GitHub</List.Item>
-                                {/*<List.Item>Install dependencies with yarn</List.Item>
-                                <List.Item>To start development server run npm start command</List.Item>
-                                <List.Item>Run tests to make sure your changes do not break the build</List.Item>
-                                <List.Item>Clone or download repository from GitHub</List.Item>
                                 <List.Item>Install dependencies with yarn</List.Item>
                                 <List.Item>To start development server run npm start command</List.Item>
                                 <List.Item>Run tests to make sure your changes do not break the build</List.Item>
@@ -194,7 +192,11 @@ function ThreeGrid(props) {
                                 <List.Item>Clone or download repository from GitHub</List.Item>
                                 <List.Item>Install dependencies with yarn</List.Item>
                                 <List.Item>To start development server run npm start command</List.Item>
-                                <List.Item>Run tests to make sure your changes do not break the build</List.Item>*/}
+                                <List.Item>Run tests to make sure your changes do not break the build</List.Item>
+                                <List.Item>Clone or download repository from GitHub</List.Item>
+                                <List.Item>Install dependencies with yarn</List.Item>
+                                <List.Item>To start development server run npm start command</List.Item>
+                                <List.Item>Run tests to make sure your changes do not break the build</List.Item>
                             </List>
                         </ScrollArea>
                     </div>
@@ -307,10 +309,31 @@ function ThreeGrid(props) {
                                         size="sm"
                                         mt={8}
                                         data={["React", "Angular", "Vue", "Svelte"]}
-
+                                        placeholder={t('ChooseData')}
                                         clearable
                                         withAsterisk
                                         {...form.getInputProps("select")}
+                                    />
+                                </Tooltip>
+
+                                <Tooltip
+                                    label={"Require"}
+                                    opened={!!form.errors.select}
+                                    px={20}
+                                    py={3}
+                                    position="top-end"
+                                    color="red"
+                                    withArrow
+                                    offset={2}
+                                    zIndex={0}
+                                    transitionProps={{transition: "pop-bottom-left", duration: 500}}
+                                >
+                                    <Switch
+                                        defaultChecked
+                                        mt={12}
+                                        label="I agree to sell my privacy"
+                                        size="md"
+                                        radius="sm"
                                     />
                                 </Tooltip>
                             </Box>

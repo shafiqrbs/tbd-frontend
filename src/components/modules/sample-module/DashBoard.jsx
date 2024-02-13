@@ -26,7 +26,7 @@ import FullForm from "./FullForm";
 import FullTable from "./FullTable";
 import FormAndFile from "./FormAndFile";
 
-function Dashboard() {
+function DashBoard() {
     const {t, i18n} = useTranslation();
     const iconStyle = {width: rem(12), height: rem(12)};
     const [activeTab, setActiveTab] = useState("ThreeGrid");
@@ -148,9 +148,7 @@ function Dashboard() {
     );
     return (
         <form
-            component="form"
             onSubmit={form.onSubmit((values) => {
-
                 modals.openConfirmModal({
                     title: 'Please confirm your action',
                     children: (
@@ -264,4 +262,4 @@ function Dashboard() {
     );
 }
 
-export default Dashboard;
+export default DashBoard;

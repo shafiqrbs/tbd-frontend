@@ -1,8 +1,8 @@
-import Dashboard from "../components/modules/sample-module/Dashboard";
+import DashBoard from "../components/modules/sample-module/DashBoard";
 import FullForm from "../components/modules/sample-module/FullForm";
 
 const routes = [
-    {path: '/', name: 'Dashboard', component: Dashboard},
+    {path: '/', name: 'DashBoard', component: DashBoard},
     {path: '/stock', name: 'Stock', component: FullForm}
 ]
 

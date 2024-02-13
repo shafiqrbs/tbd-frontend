@@ -5,7 +5,7 @@ import Login from './components/Login'
 import Layout from './components/layout/Layout'
 import {MantineProvider} from "@mantine/core";
 import {ModalsProvider} from "@mantine/modals";
-import SampleDashboard from "./components/modules/sample-module/Dashboard";
+import SampleDashboard from "./components/modules/sample-module/DashBoard";
 import './lang/i18next';
 
 function App() {
