@@ -6,17 +6,18 @@ import Layout from './components/layout/Layout'
 import {MantineProvider} from "@mantine/core";
 import {ModalsProvider} from "@mantine/modals";
 import SampleDashboard from "./components/modules/sample-module/DashBoard";
+import CustomerDashboard from "./components/modules/master-data/customer/DashBoard";
 import './lang/i18next';
 
 function App() {
     const token = localStorage.getItem('token')
     const navigate = useNavigate()
 
-    useEffect(() => {
+    /*useEffect(() => {
         {
             token ? navigate('/') : navigate('/login')
         }
-    }, [])
+    }, [])*/
     return (
 
         <MantineProvider withNormalizeCSS withGlobalStyles>
@@ -27,6 +28,9 @@ function App() {
                     <Route path="/" element={<Layout/>}>
                         <Route path="/sample/">
                             <Route path="" element={<SampleDashboard/>}/>
+                        </Route>
+                        <Route path="/master-data/">
+                            <Route path="customer" element={<CustomerDashboard/>}/>
                         </Route>
 
                     </Route>

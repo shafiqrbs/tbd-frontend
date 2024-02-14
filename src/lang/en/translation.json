@@ -3,6 +3,29 @@
   "CreateAndSave": "Create & Save",
   "EnterSearchAnyKeyword": "Enter search any keyword",
 
+
+  "MasterData": "Master Data",
+  "Customer": "Customer",
+  "CustomerInformation": "Customer Information",
+  "CustomerInformationFormDetails": "We'll always let you know about customer information",
+  "Name": "Name",
+  "CustomerName": "Customer Name",
+  "NameValidateMessage": "Name must be 2-20 characters long",
+  "CustomerGroup": "Customer Group",
+  "CreditLimit": "Credit Limit",
+  "OLDReferenceNo": "OLD Reference No",
+  "Mobile": "Mobile",
+  "MobileValidateMessage": "Mobile must be 11 digit long",
+  "AlternativeMobile": "Alternative Mobile",
+  "Email": "Email",
+  "Location": "Location",
+  "ChooseLocation": "Choose Location",
+  "MarketingExecutive": "Marketing Executive",
+  "ChooseMarketingExecutive": "Choose Marketing Executive",
+  "Address": "Address",
+  "Status": "Status",
+
+
   "" : ""
 
 
