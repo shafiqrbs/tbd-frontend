@@ -9,17 +9,17 @@ import SampleDashboard from "./components/modules/sample-module/DashBoard";
 import CustomerDashboard from "./components/modules/master-data/customer/DashBoard";
 import './lang/i18next';
 
+import Provider from "react-redux/es/components/Provider";
+import store, {persistor} from "./store";
+import { PersistGate } from 'redux-persist/integration/react'
+
 function App() {
     const token = localStorage.getItem('token')
     const navigate = useNavigate()
 
-    /*useEffect(() => {
-        {
-            token ? navigate('/') : navigate('/login')
-        }
-    }, [])*/
     return (
-
+        <Provider store={store}>
+            <PersistGate loading={null} persistor={persistor}>
         <MantineProvider withNormalizeCSS withGlobalStyles>
             <ModalsProvider>
                 <Routes>
@@ -37,6 +37,8 @@ function App() {
                 </Routes>
             </ModalsProvider>
         </MantineProvider>
+            </PersistGate>
+        </Provider>
 
     )
 }

@@ -12,6 +12,7 @@
   "CustomerName": "Customer Name",
   "NameValidateMessage": "Name must be 2-20 characters long",
   "CustomerGroup": "Customer Group",
+  "ChooseCustomerGroup": "Choose Customer Group",
   "CreditLimit": "Credit Limit",
   "OLDReferenceNo": "OLD Reference No",
   "Mobile": "Mobile",
@@ -24,6 +25,8 @@
   "ChooseMarketingExecutive": "Choose Marketing Executive",
   "Address": "Address",
   "Status": "Status",
+  "Close": "Close",
+  "CustomerGroupModel": "Customer Group Model",
 
 
   "" : ""

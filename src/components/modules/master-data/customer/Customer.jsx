@@ -9,16 +9,16 @@ import {
     Box,
     ScrollArea,
     Title,
-    TextInput, SimpleGrid, List, ColorInput, Select, ThemeIcon, Switch, Textarea,
+    TextInput, SimpleGrid, List, ColorInput, Select, ThemeIcon, Switch, Textarea, Modal, Grid,
 } from "@mantine/core";
 import {useTranslation} from "react-i18next";
 
 import {
     IconCircleCheck,
     IconFilter, IconEyeSearch,
-    IconUserCircle, IconInfoCircle, IconList, IconPlus,
+    IconUserCircle, IconInfoCircle, IconList, IconPlus, IconEyeClosed, IconX, IconXboxX
 } from "@tabler/icons-react";
-import {getHotkeyHandler, useViewportSize} from "@mantine/hooks";
+import {getHotkeyHandler, useDisclosure, useViewportSize} from "@mantine/hooks";
 
 import axios from "axios";
 
@@ -30,6 +30,10 @@ import {
     MantineReactTable,
     useMantineReactTable,
 } from 'mantine-react-table';
+import {modals} from "@mantine/modals";
+import {notifications} from "@mantine/notifications";
+import {hasLength, useForm} from "@mantine/form";
+import CustomerGroupModel from "./CustomerGroupModal";
 
 function Customer(props) {
     const {isFormSubmit, setFormSubmit, setFormSubmitData, form} = props
@@ -41,6 +45,33 @@ function Customer(props) {
     const height = mainAreaHeight - 90; //TabList height 36
     const [fetching, setFetching] = useState(true)
     const [data, setRecords] = useState([]);
+
+    const [searchValue, setSearchValue] = useState('');
+    const [dropdownValue, setDropdownValue] = useState([]);
+    const [opened, { open, close }] = useDisclosure(false);
+
+    // let testDropdown = []
+    // console.log(dropdownValue)
+
+    useEffect(() => {
+        if (searchValue.length>1) {
+            axios({
+                method: "get",
+                url: "http://www.npms.local/api/users/keyword/search",
+                params: {
+                    "value": searchValue
+                }
+            })
+                .then(function (res) {
+                    setDropdownValue(res.data.data)
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        }
+    }, [searchValue]);
+
+    let testDropdown = dropdownValue && dropdownValue.length > 0 ?dropdownValue.map((type, index) => {return ({'label': type.full_name, 'value': type.id})}):[]
 
     useEffect(() => {
         axios({
@@ -85,6 +116,22 @@ function Customer(props) {
     const table = useMantineReactTable({
         columns,
         data,
+    });
+
+    const searchForDropdownValue = ()=>{
+        console.log(searchValue)
+    }
+
+
+    const formModal = useForm({
+        initialValues: {
+             customer_group_name:'', customer_group_status:''
+        },
+        validate: {
+            customer_group_name: hasLength({min: 2, max: 20}),
+            customer_group_status: hasLength({min: 11, max: 11}),
+
+        },
     });
 
     return (
@@ -234,17 +281,56 @@ function Customer(props) {
                                             }],
                                         ])}
                                         rightSection={
+                                            props.form.values.name ?
                                             <Tooltip
-                                                label={t("NameValidateMessage")}
+                                                label={t("Close")}
                                                 withArrow
-                                                bg={`blue.5`}
+                                                bg={`red.5`}
                                             >
-                                                <IconInfoCircle size={16} opacity={0.5}/>
+                                                <IconX color={`red`} size={16} opacity={0.5} onClick={()=>{
+                                                    form.setFieldValue('name', '');
+                                                }}/>
                                             </Tooltip>
+                                                :
+                                                <Tooltip
+                                                    label={t("NameValidateMessage")}
+                                                    withArrow
+                                                    bg={`blue.5`}
+                                                >
+                                                    <IconInfoCircle size={16} opacity={0.5}/>
+                                                </Tooltip>
+
                                         }
                                     />
                                 </Tooltip>
-                                <Tooltip
+                                <Grid gutter={{ base:6}}>
+                                    <Grid.Col span={10}>
+                                        <Select
+                                            searchable
+                                            searchValue={searchValue}
+                                            onSearchChange={(e)=>{
+                                                setSearchValue(e)
+                                            }}
+                                            id="CustomerGroup"
+                                            label={t('CustomerGroup')}
+                                            size="sm"
+                                            mt={8}
+                                            mr={0}
+                                            data={testDropdown}
+                                            placeholder={t('ChooseCustomerGroup')}
+                                            clearable
+                                            {...form.getInputProps("customer_group")}
+                                            onKeyDown={getHotkeyHandler([
+                                                ['Enter', (e) => {
+                                                    document.getElementById('CreditLimit').focus();
+                                                }],
+                                            ])}
+                                        />
+                                    </Grid.Col>
+                                    <Grid.Col span={2}><Button mt={32} color={'gray'} variant={'outline'} onClick={open}><IconPlus size={16} opacity={0.5}/></Button></Grid.Col>
+                                </Grid>
+
+                                {/*<Tooltip
                                     label={t('CustomerGroup')}
                                     opened={!!form.errors.customer_group}
                                     px={20}
@@ -255,30 +341,34 @@ function Customer(props) {
                                     offset={2}
                                     zIndex={0}
                                     transitionProps={{transition: "pop-bottom-left", duration: 500}}
-                                >
-                                    <TextInput
-                                        size="sm"
+                                >*/}
+                                    <Select
+                                        searchable
+                                        searchValue={searchValue}
+                                        onSearchChange={(e)=>{
+                                            setSearchValue(e)
+                                        }}
                                         id="CustomerGroup"
-                                        mt={8}
                                         label={t('CustomerGroup')}
-                                        placeholder={t('CustomerGroup')}
+                                        size="sm"
+                                        mt={8}
+                                        data={testDropdown}
+                                        placeholder={t('ChooseCustomerGroup')}
+                                        clearable
                                         {...form.getInputProps("customer_group")}
                                         onKeyDown={getHotkeyHandler([
                                             ['Enter', (e) => {
                                                 document.getElementById('CreditLimit').focus();
                                             }],
                                         ])}
-                                        rightSection={
-                                            <Tooltip
-                                                label={t("CustomerGroup")}
-                                                withArrow
-                                                bg={`blue.5`}
-                                            >
-                                                <IconInfoCircle size={16} opacity={0.5}/>
-                                            </Tooltip>
-                                        }
                                     />
-                                </Tooltip>
+
+                                {opened &&
+                                    <CustomerGroupModel openedModel={opened} open={open} close={close}  />
+                                }
+
+
+                                {/*</Tooltip>*/}
 
                                 <Tooltip
                                     label={t('CreditLimit')}
@@ -305,13 +395,25 @@ function Customer(props) {
                                             }],
                                         ])}
                                         rightSection={
-                                            <Tooltip
-                                                label={t("CreditLimit")}
-                                                withArrow
-                                                bg={`blue.5`}
-                                            >
-                                                <IconInfoCircle size={16} opacity={0.5}/>
-                                            </Tooltip>
+                                            props.form.values.credit_limit ?
+                                                <Tooltip
+                                                    label={t("Close")}
+                                                    withArrow
+                                                    bg={`red.5`}
+                                                >
+                                                    <IconX color={`red`} size={16} opacity={0.5} onClick={()=>{
+                                                        form.setFieldValue('credit_limit', '');
+                                                    }}/>
+                                                </Tooltip>
+                                                :
+                                                <Tooltip
+                                                    label={t("CreditLimit")}
+                                                    withArrow
+                                                    bg={`blue.5`}
+                                                >
+                                                    <IconInfoCircle size={16} opacity={0.5}/>
+                                                </Tooltip>
+
                                         }
                                     />
                                 </Tooltip>
@@ -341,13 +443,25 @@ function Customer(props) {
                                             }],
                                         ])}
                                         rightSection={
-                                            <Tooltip
-                                                label={t("OLDReferenceNo")}
-                                                withArrow
-                                                bg={`blue.5`}
-                                            >
-                                                <IconInfoCircle size={16} opacity={0.5}/>
-                                            </Tooltip>
+                                            props.form.values.old_reference_no ?
+                                                <Tooltip
+                                                    label={t("Close")}
+                                                    withArrow
+                                                    bg={`red.5`}
+                                                >
+                                                    <IconX color={`red`} size={16} opacity={0.5} onClick={()=>{
+                                                        form.setFieldValue('old_reference_no', '');
+                                                    }}/>
+                                                </Tooltip>
+                                                :
+                                                <Tooltip
+                                                    label={t("OLDReferenceNo")}
+                                                    withArrow
+                                                    bg={`blue.5`}
+                                                >
+                                                    <IconInfoCircle size={16} opacity={0.5}/>
+                                                </Tooltip>
+
                                         }
                                     />
                                 </Tooltip>
@@ -378,13 +492,25 @@ function Customer(props) {
                                             }],
                                         ])}
                                         rightSection={
-                                            <Tooltip
-                                                label={t("MobileValidateMessage")}
-                                                withArrow
-                                                bg={`blue.5`}
-                                            >
-                                                <IconInfoCircle size={16} opacity={0.5}/>
-                                            </Tooltip>
+                                            props.form.values.mobile ?
+                                                <Tooltip
+                                                    label={t("Close")}
+                                                    withArrow
+                                                    bg={`red.5`}
+                                                >
+                                                    <IconX color={`red`} size={16} opacity={0.5} onClick={()=>{
+                                                        form.setFieldValue('mobile', '');
+                                                    }}/>
+                                                </Tooltip>
+                                                :
+                                                <Tooltip
+                                                    label={t("MobileValidateMessage")}
+                                                    withArrow
+                                                    bg={`blue.5`}
+                                                >
+                                                    <IconInfoCircle size={16} opacity={0.5}/>
+                                                </Tooltip>
+
                                         }
                                     />
                                 </Tooltip>
@@ -414,13 +540,25 @@ function Customer(props) {
                                             }],
                                         ])}
                                         rightSection={
-                                            <Tooltip
-                                                label={t("AlternativeMobile")}
-                                                withArrow
-                                                bg={`blue.5`}
-                                            >
-                                                <IconInfoCircle size={16} opacity={0.5}/>
-                                            </Tooltip>
+                                            props.form.values.alternative_mobile ?
+                                                <Tooltip
+                                                    label={t("Close")}
+                                                    withArrow
+                                                    bg={`red.5`}
+                                                >
+                                                    <IconX color={`red`} size={16} opacity={0.5} onClick={()=>{
+                                                        form.setFieldValue('alternative_mobile', '');
+                                                    }}/>
+                                                </Tooltip>
+                                                :
+                                                <Tooltip
+                                                    label={t("AlternativeMobile")}
+                                                    withArrow
+                                                    bg={`blue.5`}
+                                                >
+                                                    <IconInfoCircle size={16} opacity={0.5}/>
+                                                </Tooltip>
+
                                         }
                                     />
                                 </Tooltip>
@@ -450,13 +588,25 @@ function Customer(props) {
                                             }],
                                         ])}
                                         rightSection={
-                                            <Tooltip
-                                                label={t("Email")}
-                                                withArrow
-                                                bg={`blue.5`}
-                                            >
-                                                <IconInfoCircle size={16} opacity={0.5}/>
-                                            </Tooltip>
+                                            props.form.values.email ?
+                                                <Tooltip
+                                                    label={t("Close")}
+                                                    withArrow
+                                                    bg={`red.5`}
+                                                >
+                                                    <IconX color={`red`} size={16} opacity={0.5} onClick={()=>{
+                                                        form.setFieldValue('email', '');
+                                                    }}/>
+                                                </Tooltip>
+                                                :
+                                                <Tooltip
+                                                    label={t("Email")}
+                                                    withArrow
+                                                    bg={`blue.5`}
+                                                >
+                                                    <IconInfoCircle size={16} opacity={0.5}/>
+                                                </Tooltip>
+
                                         }
                                     />
                                 </Tooltip>
@@ -553,13 +703,25 @@ function Customer(props) {
                                             }],
                                         ])}
                                         rightSection={
-                                            <Tooltip
-                                                label={t("Address")}
-                                                withArrow
-                                                bg={`blue.5`}
-                                            >
-                                                <IconInfoCircle size={16} opacity={0.5}/>
-                                            </Tooltip>
+                                            props.form.values.address ?
+                                                <Tooltip
+                                                    label={t("Close")}
+                                                    withArrow
+                                                    bg={`red.5`}
+                                                >
+                                                    <IconX color={`red`} size={16} opacity={0.5} onClick={()=>{
+                                                        form.setFieldValue('address', '');
+                                                    }}/>
+                                                </Tooltip>
+                                                :
+                                                <Tooltip
+                                                    label={t("Address")}
+                                                    withArrow
+                                                    bg={`blue.5`}
+                                                >
+                                                    <IconInfoCircle size={16} opacity={0.5}/>
+                                                </Tooltip>
+
                                         }
                                     />
                                 </Tooltip>
