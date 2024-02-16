@@ -36,14 +36,13 @@ function CustomerIndex() {
     const [isFormSubmit, setFormSubmit] = useState(false);
     const [formSubmitData, setFormSubmitData] = useState([]);
     const {isOnline, mainAreaHeight} = useOutletContext();
-
     const form = useForm({
         initialValues: {
             location:'', marketing_executive:'', name:'', mobile:'', customer_group:'', credit_limit:'', old_reference_no:'', alternative_mobile:'', address:'', email:'', status:''
         },
         validate: {
             name: hasLength({min: 2, max: 20}),
-            mobile: hasLength({min: 11, max: 11}),
+            // mobile: hasLength({min: 11, max: 11}),
 
         },
     });
@@ -70,6 +69,40 @@ function CustomerIndex() {
                     color={`blue.7`}
                     type="submit"
                     leftSection={<IconDeviceFloppy size={24} />}
+                    onClick={()=>{
+                        if (activeTab === 'CustomerView') {
+                            let validation = true
+                            if (!form.values.name) {
+                                form.setFieldError('name', true);
+                                validation = false
+                            }
+                            if (!form.values.mobile) {
+                                form.setFieldError('mobile', true);
+                                validation = false
+                            }
+
+                            validation &&
+                            modals.openConfirmModal({
+                                title: 'Please confirm your action',
+                                children: (
+                                    <Text size="sm">
+                                        This action is so important that you are required to confirm it with a
+                                        modal. Please click
+                                        one of these buttons to proceed.
+                                    </Text>
+                                ),
+                                labels: {confirm: 'Confirm', cancel: 'Cancel'},
+                                onCancel: () => console.log('Cancel'),
+                                onConfirm: () => {
+                                    setSaveCreateLoading(true)
+                                    setTimeout((e)=>{
+                                        console.log(form.values)
+                                        setSaveCreateLoading(false)
+                                    },2000)
+                                },
+                            });
+                        }
+                    }}
                 >
                     <LoadingOverlay
                         visible={saveCreateLoading}
@@ -129,7 +162,7 @@ function CustomerIndex() {
         </Group>
     );
     return (
-        <form
+        /*<form
             onSubmit={form.onSubmit((values) => {
                 modals.openConfirmModal({
                     title: 'Please confirm your action',
@@ -147,7 +180,7 @@ function CustomerIndex() {
                         setTimeout((e) => {
                             console.log(values)
 
-                            /*const getData = (url, params = null) => {
+                            const getData = (url, params = null) => {
                                 const response = axios.get(url, {
                                     params: params,
                                     headers: {
@@ -158,7 +191,7 @@ function CustomerIndex() {
                                 });
 
                                 return response;
-                            };*/
+                            };
 
                             notifications.show({
                                 title: 'Default notification',
@@ -172,7 +205,7 @@ function CustomerIndex() {
 
 
             })}
-        >
+        >*/
             <Tabs
                 defaultValue="CustomerView"
                 onChange={(value) => setActiveTab(value)}
@@ -183,7 +216,7 @@ function CustomerIndex() {
                               leftSection={<IconList style={iconStyle}/>}>
                         {t("ManageCustomer")}
                     </Tabs.Tab>
-                    <Tabs.Tab h={'52'} fz={14} fw={700}
+                    {/*<Tabs.Tab h={'52'} fz={14} fw={700}
                         value="CustomerTable"
                         leftSection={<IconList style={iconStyle}/>}>
                         {t("ManageCustomerTable")}
@@ -197,8 +230,8 @@ function CustomerIndex() {
                               value="CustomerInvoice"
                               leftSection={<IconList style={iconStyle}/>}>
                         {t("CustomerInvoice")}
-                    </Tabs.Tab>
-                    {activeTab === "CustomerTable" && isOnline && tabCreateNewRightButtons}
+                    </Tabs.Tab>*/}
+                    {(activeTab === "CustomerTable" || activeTab==='CustomerView') && isOnline && tabCreateNewRightButtons}
                     {activeTab === "CustomerLedger" && isOnline && tabCustomerLedgerButtons}
                 </Tabs.List>
                 <Tabs.Panel value="CustomerView" h={'52'}>
@@ -209,7 +242,7 @@ function CustomerIndex() {
                         form={form}
                     />
                 </Tabs.Panel>
-                <Tabs.Panel value="CustomerTable" h={'52'}>
+                {/*<Tabs.Panel value="CustomerTable" h={'52'}>
                     <CustomerTable
                         isFormSubmit={isFormSubmit}
                         setFormSubmitData={setFormSubmitData}
@@ -232,10 +265,10 @@ function CustomerIndex() {
                         setFormSubmit={setFormSubmit}
                         form={form}
                     />
-                </Tabs.Panel>
+                </Tabs.Panel>*/}
             </Tabs>
 
-        </form>
+        // </form>
     );
 }
 

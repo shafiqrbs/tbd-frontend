@@ -33,6 +33,7 @@ import {
 } from 'mantine-datatable';
 import CustomerGroupModel from "./CustomerGroupModal";
 import {hasLength, useForm} from "@mantine/form";
+import CustomerForm from "./CustomerForm";
 
 function CustomerView(props) {
 
@@ -208,7 +209,8 @@ function CustomerView(props) {
                         </Box>
                         <Box h={1} bg={`gray.1`}></Box>
                         <ScrollArea h={height} scrollbarSize={2}>
-                            <Box p={`md`}>
+                            <CustomerForm isFormSubmit={isFormSubmit} setFormSubmit={setFormSubmit} setFormSubmitData={setFormSubmitData} form={form}/>
+                            {/*<Box p={`md`}>
 
                                 <Tooltip
                                     label={t('NameValidateMessage')}
@@ -283,7 +285,7 @@ function CustomerView(props) {
                                     <Grid.Col span={2}><Button mt={32} color={'gray'} variant={'outline'} onClick={open}><IconPlus size={16} opacity={0.5}/></Button></Grid.Col>
                                 </Grid>
 
-                                {/*<Tooltip
+                                <Tooltip
                                     label={t('CustomerGroup')}
                                     opened={!!form.errors.customer_group}
                                     px={20}
@@ -294,7 +296,7 @@ function CustomerView(props) {
                                     offset={2}
                                     zIndex={0}
                                     transitionProps={{transition: "pop-bottom-left", duration: 500}}
-                                >*/}
+                                >
                                 <Select
                                     searchable
                                     searchValue={searchValue}
@@ -321,7 +323,7 @@ function CustomerView(props) {
                                 }
 
 
-                                {/*</Tooltip>*/}
+                                </Tooltip>
 
                                 <Tooltip
                                     label={t('CreditLimit')}
@@ -590,15 +592,6 @@ function CustomerView(props) {
                                                 document.getElementById('MarketingExecutive').focus();
                                             }],
                                         ])}
-                                        /*leftSection={
-                                            <Tooltip
-                                                label={t("Location")}
-                                                withArrow
-                                                bg={`blue.5`}
-                                            >
-                                                <IconInfoCircle size={16} opacity={0.5}/>
-                                            </Tooltip>
-                                        }*/
                                     />
                                 </Tooltip>
 
@@ -701,7 +694,7 @@ function CustomerView(props) {
                                         {...form.getInputProps("status")}
                                     />
                                 </Tooltip>
-                            </Box>
+                            </Box>*/}
                         </ScrollArea>
 
                     </div>

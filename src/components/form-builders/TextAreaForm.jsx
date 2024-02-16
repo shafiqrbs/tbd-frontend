@@ -2,13 +2,13 @@ import React from "react";
 import {
     rem,
     Tooltip,
-    TextInput
+    Textarea
 } from "@mantine/core";
 import {useTranslation} from "react-i18next";
 import {IconInfoCircle, IconX} from "@tabler/icons-react";
 import {getHotkeyHandler} from "@mantine/hooks";
 
-function InputForm(props) {
+function TextAreaForm(props) {
     const {label,placeholder,required,nextField,name,form,tooltip,mt,id,value} = props
     const {t, i18n} = useTranslation();
     return (
@@ -27,7 +27,7 @@ function InputForm(props) {
                     zIndex={0}
                     transitionProps={{transition: "pop-bottom-left", duration: 500}}
                 >
-                <TextInput
+                <Textarea
                     id={id}
                     size="sm"
                     label={label}
@@ -69,4 +69,4 @@ function InputForm(props) {
     );
 }
 
-export default InputForm;
+export default TextAreaForm;
