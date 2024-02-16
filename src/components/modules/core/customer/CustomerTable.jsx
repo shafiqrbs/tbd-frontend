@@ -100,7 +100,7 @@ function CustomerTable(props) {
             <Box>
                 <SimpleGrid cols={3}>
                     <div>
-                    <Box pr={`md`} pb={`md`} pt={`xs`} >
+                    <Box pb={`md`} pt={`xs`} >
                         <Grid>
                             <Grid.Col span={8}>
                                 <TextInput

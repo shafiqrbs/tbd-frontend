@@ -99,7 +99,7 @@ function CustomerView(props) {
             <Box>
                 <Grid cols={2}>
                     <Grid.Col span={8}>
-                        <Box  pr={`md`} pb={`md`} pt={`xs`} >
+                        <Box  pb={`md`} pt={`xs`} >
                             <Grid>
                                 <Grid.Col span={8}>
                                     <TextInput

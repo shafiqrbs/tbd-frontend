@@ -101,9 +101,6 @@ function CustomerInvoice(props) {
         },
     });
 
-
-
-
     return (
         <>
             <Box>
@@ -463,23 +460,15 @@ function CustomerInvoice(props) {
 
                     </div>
                     <div className={"form-grid"}>
-                        <Box pl={`xs`} pr={`xs`} pb={`md`} pt={`xs`} >
+                        <Box pl={`xs`} pr={`xs`} pb={`xs`} pt={`xs`} >
                             <Grid>
-                                <Grid.Col span={12}>
-                                    <TextInput
-                                        leftSection={<IconSearch size={16} opacity={0.5}/>}
-                                        rightSection={
-                                            <Tooltip
-                                                label={t("this_filed_is_required")}
-                                                withArrow
-                                                bg={`blue.5`}
-                                            >
-                                                <IconInfoCircle size={16} opacity={0.5}/>
-                                            </Tooltip>
-                                        }
-                                        size="sm"
-                                        placeholder={t('EnterCustomer&Invoice')}
-                                    />
+                                <Grid.Col span={6}>
+                                    <Title order={6}>Md Shafiqul Islam</Title>
+                                    <Text fz={`xs`}>01828148148</Text>
+                                </Grid.Col>
+                                <Grid.Col span={6}>
+                                    <Title order={6}>Md Shafiqul Islam</Title>
+                                    <Text fz={`xs`}>01828148148</Text>
                                 </Grid.Col>
 
                             </Grid>
