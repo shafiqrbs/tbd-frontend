@@ -10,7 +10,12 @@
 }
 
 .mantine-Tabs-list{
-    height: 40px !important;
+    height: 52px !important;
+  /*  border-bottom: 1px solid red!important;*/
+}
+
+.table-fixed{
+    overflow: hidden!important;
 }
 
 .mantine-AppShell-main{

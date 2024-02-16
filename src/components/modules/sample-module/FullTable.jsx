@@ -19,7 +19,8 @@ function FullTable() {
     useEffect(() => {
         axios({
             method: "get",
-            url: "https://jsonplaceholder.typicode.com/users",
+            url: "https://jsonplaceholder.typicode.com/posts",
+            //url: "https://jsonplaceholder.typicode.com/users",
         })
             .then(function (res) {
                 setRecords(res.data);

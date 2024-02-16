@@ -14,30 +14,31 @@ function Navbar() {
 
     return (
 <>
-      <NavLink
-          href="#required-for-focus"
-          label="Sample"
-          leftSection={<IconGauge size="1rem" stroke={1.5} />}
-          childrenOffset={28}
-      >
-          <NavLink href="sample" label="sample" component={"DashBoard"} onClick={(e)=>{navigate('sample')}}  />
-      </NavLink>
 
+    <NavLink
+        href="#required-for-focus"
+        label={t('Core')}
+        leftSection={<IconGauge size="1rem" stroke={1.5} />}
+        childrenOffset={28}
+    >
         <NavLink
-            href="#required-for-focus"
-            label={t('MasterData')}
-            leftSection={<IconGauge size="1rem" stroke={1.5} />}
-            childrenOffset={28}
-        >
-            <NavLink
-                href="sample"
-                label={t('Customer')}
-                component={"DashBoard"}
-                onClick={(e)=>{navigate('master-data/customer')}}
-            />
-        </NavLink>
+            href="customer"
+            label={t('Customer')}
+            component={"CustomerIndex"}
+            onClick={(e)=>{navigate('core/customer')}}
+        />
+    </NavLink>
+    <NavLink
+        href="#required-for-focus"
+        label="Sample"
+        leftSection={<IconGauge size="1rem" stroke={1.5} />}
+        childrenOffset={28}
+    >
+        <NavLink href="sample" label="sample" component={"DashBoard"} onClick={(e)=>{navigate('sample')}}  />
+    </NavLink>
 
-    </>
+
+</>
   )
 }
 
