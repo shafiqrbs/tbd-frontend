@@ -1,6 +1,5 @@
 import React from "react";
 import {
-    rem,
     Tooltip,
     Textarea
 } from "@mantine/core";
@@ -9,7 +8,7 @@ import {IconInfoCircle, IconX} from "@tabler/icons-react";
 import {getHotkeyHandler} from "@mantine/hooks";
 
 function TextAreaForm(props) {
-    const {label,placeholder,required,nextField,name,form,tooltip,mt,id,value} = props
+    const {label,placeholder,required,nextField,name,form,tooltip,mt,id} = props
     const {t, i18n} = useTranslation();
     return (
         <>
@@ -34,7 +33,6 @@ function TextAreaForm(props) {
                     placeholder={placeholder}
                     withAsterisk={required}
                     mt={mt}
-                    // value={'ok'}
                     {...form.getInputProps(name && name)}
                     onKeyDown={getHotkeyHandler([
                         ['Enter', (e) => {

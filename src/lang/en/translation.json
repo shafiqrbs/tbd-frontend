@@ -16,7 +16,7 @@
   "CreditLimit": "Credit Limit",
   "OLDReferenceNo": "OLD Reference No",
   "Mobile": "Mobile",
-  "MobileValidateMessage": "Mobile must be 11 digit long",
+  "MobileValidateMessage": "Mobile must be digit",
   "AlternativeMobile": "Alternative Mobile",
   "Email": "Email",
   "Location": "Location",
@@ -27,6 +27,7 @@
   "Status": "Status",
   "Close": "Close",
   "CustomerGroupModel": "Customer Group Model",
+  "InvalidEmail": "If exists , must be valid Email",
 
 
   "" : ""

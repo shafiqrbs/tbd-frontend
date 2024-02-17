@@ -39,12 +39,7 @@ function CustomerIndex() {
     const form = useForm({
         initialValues: {
             location:'', marketing_executive:'', name:'', mobile:'', customer_group:'', credit_limit:'', old_reference_no:'', alternative_mobile:'', address:'', email:'', status:''
-        },
-        validate: {
-            name: hasLength({min: 2, max: 20}),
-            // mobile: hasLength({min: 11, max: 11}),
-
-        },
+        }
     });
 
     const tabCreateNewRightButtons = (
@@ -65,6 +60,7 @@ function CustomerIndex() {
 
             <>
                 <Button
+                    disabled={saveCreateLoading}
                     size="md"
                     color={`blue.7`}
                     type="submit"
@@ -76,8 +72,12 @@ function CustomerIndex() {
                                 form.setFieldError('name', true);
                                 validation = false
                             }
-                            if (!form.values.mobile) {
+                            if (!form.values.mobile || isNaN(form.values.mobile)) {
                                 form.setFieldError('mobile', true);
+                                validation = false
+                            }
+                            if (form.values.email && !/^\S+@\S+$/.test(form.values.email)) {
+                                form.setFieldError('email', true);
                                 validation = false
                             }
 
@@ -162,50 +162,7 @@ function CustomerIndex() {
         </Group>
     );
     return (
-        /*<form
-            onSubmit={form.onSubmit((values) => {
-                modals.openConfirmModal({
-                    title: 'Please confirm your action',
-                    children: (
-                        <Text size="sm">
-                            This action is so important that you are required to confirm it with a modal. Please click
-                            one of these buttons to proceed.
-                        </Text>
-                    ),
-                    labels: {confirm: 'Confirm', cancel: 'Cancel'},
-                    onCancel: () => console.log('Cancel'),
-                    onConfirm: () => {
-                        setSaveCreateLoading(true)
 
-                        setTimeout((e) => {
-                            console.log(values)
-
-                            const getData = (url, params = null) => {
-                                const response = axios.get(url, {
-                                    params: params,
-                                    headers: {
-                                        "X-API-KEY": appConfig.API_KEY,
-                                        "X-API-VALUE": appConfig.API_VALUE,
-                                        "X-API-SECRET": appConfig.API_SECRET,
-                                    },
-                                });
-
-                                return response;
-                            };
-
-                            notifications.show({
-                                title: 'Default notification',
-                                message: 'Hey there, your code is awesome! 🤥',
-                            })
-
-                            setSaveCreateLoading(false)
-                        }, 3000)
-                    },
-                });
-
-
-            })}
-        >*/
             <Tabs
                 defaultValue="CustomerView"
                 onChange={(value) => setActiveTab(value)}
@@ -236,9 +193,6 @@ function CustomerIndex() {
                 </Tabs.List>
                 <Tabs.Panel value="CustomerView" h={'52'}>
                     <CustomerView
-                        isFormSubmit={isFormSubmit}
-                        setFormSubmitData={setFormSubmitData}
-                        setFormSubmit={setFormSubmit}
                         form={form}
                     />
                 </Tabs.Panel>
@@ -267,8 +221,6 @@ function CustomerIndex() {
                     />
                 </Tabs.Panel>
             </Tabs>
-
-        // </form>
     );
 }
 
