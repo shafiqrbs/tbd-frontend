@@ -173,7 +173,7 @@ function CustomerIndex() {
                               leftSection={<IconList style={iconStyle}/>}>
                         {t("ManageCustomer")}
                     </Tabs.Tab>
-                    <Tabs.Tab h={'52'} fz={14} fw={700}
+                    {/*<Tabs.Tab h={'52'} fz={14} fw={700}
                         value="CustomerTable"
                         leftSection={<IconList style={iconStyle}/>}>
                         {t("ManageCustomerTable")}
@@ -187,7 +187,7 @@ function CustomerIndex() {
                               value="CustomerInvoice"
                               leftSection={<IconList style={iconStyle}/>}>
                         {t("CustomerInvoice")}
-                    </Tabs.Tab>
+                    </Tabs.Tab>*/}
                     {(activeTab === "CustomerTable" || activeTab==='CustomerView') && isOnline && tabCreateNewRightButtons}
                     {activeTab === "CustomerLedger" && isOnline && tabCustomerLedgerButtons}
                 </Tabs.List>
@@ -196,7 +196,7 @@ function CustomerIndex() {
                         form={form}
                     />
                 </Tabs.Panel>
-                <Tabs.Panel value="CustomerTable" h={'52'}>
+                {/*<Tabs.Panel value="CustomerTable" h={'52'}>
                     <CustomerTable
                         isFormSubmit={isFormSubmit}
                         setFormSubmitData={setFormSubmitData}
@@ -219,7 +219,7 @@ function CustomerIndex() {
                         setFormSubmit={setFormSubmit}
                         form={form}
                     />
-                </Tabs.Panel>
+                </Tabs.Panel>*/}
             </Tabs>
     );
 }

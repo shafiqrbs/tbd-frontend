@@ -1,10 +1,10 @@
 import { combineReducers } from 'redux'
 
-import userReducer from './user/userSlice'
+import customerSlice from './core/customerSlice'
 
 const rootReducer = (asyncReducers) => (state, action) => {
     const combinedReducer = combineReducers({
-        userReducer,
+        customerSlice,
         ...asyncReducers,
     })
     return combinedReducer(state, action)

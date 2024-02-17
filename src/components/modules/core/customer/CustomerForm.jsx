@@ -16,32 +16,35 @@ import SelectForm from "../../../form-builders/SelectForm";
 import TextAreaForm from "../../../form-builders/TextAreaForm";
 import SelectServerSideForm from "../../../form-builders/SelectServerSideForm";
 import SwitchForm from "../../../form-builders/SwitchForm";
+import {useDispatch, useSelector} from "react-redux";
+import {userDropdown} from "../../../../store/core/customerSlice";
+// import.meta.env as ImportMetaEnv
+
 
 function CustomerForm(props) {
     const {form} = props
     const {t, i18n} = useTranslation();
+    const dispatch = useDispatch();
     const [searchValue, setSearchValue] = useState('');
     const [dropdownValue, setDropdownValue] = useState([]);
     const [opened, { open, close }] = useDisclosure(false);
 
+    const userDropdownData = useSelector((state) => state.customerSlice.userDropdownData)
+
     useEffect(() => {
         if (searchValue.length>1) {
-            axios({
-                method: "get",
-                url: "http://www.npms.local/api/users/keyword/search",
-                params: {
-                    "value": searchValue
-                }
-            })
-            .then(function (res) {
-                setDropdownValue(res.data.data)
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
+            const param = {
+                "value": searchValue
+            }
+            const apiData = {
+                'url' : 'users/keyword/search',
+                'param' : param
+            }
+            dispatch(userDropdown(apiData))
+
         }
     }, [searchValue]);
-    let testDropdown = dropdownValue && dropdownValue.length > 0 ?dropdownValue.map((type, index) => {return ({'label': type.full_name, 'value': String(type.id)})}):[]
+    let testDropdown = userDropdownData && userDropdownData.length > 0 ?userDropdownData.map((type, index) => {return ({'label': type.full_name, 'value': String(type.id)})}):[]
 
 
     return (
