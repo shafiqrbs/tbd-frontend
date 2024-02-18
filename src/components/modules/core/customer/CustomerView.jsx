@@ -23,19 +23,32 @@ function CustomerView(props) {
     const {isOnline, mainAreaHeight} = useOutletContext();
     const height = mainAreaHeight - 104; //TabList height 36
     const [data, setRecords] = useState([]);
+    const [fetching, setFetching] = useState(false);
+
+   // console.log(data)
 
     useEffect(() => {
         axios({
-            method: "get",
-            url: "https://jsonplaceholder.typicode.com/posts",
-        })
-            .then(function (res) {
-                setRecords(res.data);
+                method: "get",
+               // url: "https://jsonplaceholder.typicode.com/posts",
+                url: "https://backend.poskeeper.com/api/customer",
+                headers: {
+                    "Accept": `application/json`,
+                    "Content-Type": `application/json`,
+                    "Access-Control-Allow-Origin": '*',
+                    "X-Api-Key": 'poskeeper'
+                }
             })
-            .catch(function (error) {
+            .then(function (res) {
+             //   console.log(res.data)
+                // setRecords(res.data);
+                 setRecords(res.data.data.data);
+            })
+            /*.catch(function (error) {
                 console.log(error);
-            });
+            });*/
     }, []);
+
 
     return (
         <>
@@ -100,7 +113,7 @@ function CustomerView(props) {
                                 columns={
                                     [
                                         { accessor: 'id' , title: "S/N", },
-                                        { accessor: 'title',  title: "Post Title" },
+                                        { accessor: 'name',  title: "Post Title" },
                                         {
                                             accessor: "action",
                                             title: "",
@@ -135,8 +148,15 @@ function CustomerView(props) {
                                     ]
                                 }
                                 records={data}
+                                fetching={fetching}
+                                customLoader={
+                                    <svg width={80} height={80} viewBox="0 0 40 40">
+                                        <IconFilter size={18}/>
+                                    </svg>
+                                }
                                 height={height}
-                                scrollAreaProps={{ type: 'never' }}
+                                scrollAreaProps={{ type: 'hover' }}
+                                scrollbarSize={10}
                             />
                         }
 
