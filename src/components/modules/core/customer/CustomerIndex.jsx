@@ -17,8 +17,10 @@ import {
     IconReload,
     IconDashboard,
     IconDeviceFloppy,
+    IconRestore,
     IconX,
 } from "@tabler/icons-react";
+
 import CustomerView from "./CustomerView";
 import {hasLength, isEmail, useForm} from "@mantine/form";
 import {modals} from '@mantine/modals';
@@ -53,7 +55,7 @@ function CustomerIndex() {
                 transitionProps={{transition: "pop-bottom-left", duration: 500}}
             >
                 <Button bg={`red.3`} size="md" ml={1} mr={1} variant="light" color={`white`}>
-                    <IconReload size={18} />
+                    <IconRestore size={18} />
                 </Button>
             </Tooltip>
 
@@ -131,8 +133,8 @@ function CustomerIndex() {
                 position={"bottom"}
                 transitionProps={{transition: "pop-bottom-left", duration: 500}}
             >
-                <Button bg={`red.3`} size="md" ml={1} mr={1} variant="light" color={`white`}>
-                    <IconReload size={18} />
+                <Button bg={`white`} size="md" ml={1} mr={1} variant="light" color={`black`}>
+                    <IconRestore size={24} />
                 </Button>
             </Tooltip>
 
