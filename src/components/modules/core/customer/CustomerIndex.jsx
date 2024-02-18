@@ -29,18 +29,26 @@ import CustomerTable from "./CustomerTable";
 import CustomerSales from "./CustomerView";
 import CustomerLedger from "./CustomerLedger";
 import CustomerInvoice from "./CustomerInvoice";
+import axios from "axios";
+import {createCustomerData, getUserDropdown, setFetching} from "../../../../store/core/customerSlice";
+import {useDispatch, useSelector} from "react-redux";
 
 function CustomerIndex() {
     const {t, i18n} = useTranslation();
+    const dispatch = useDispatch();
     const iconStyle = {width: rem(12), height: rem(12)};
     const [activeTab, setActiveTab] = useState("CustomerView");
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
     const [isFormSubmit, setFormSubmit] = useState(false);
     const [formSubmitData, setFormSubmitData] = useState([]);
     const {isOnline, mainAreaHeight} = useOutletContext();
+
+    const newCustomerData = useSelector((state) => state.customerSlice.newCustomerData)
+    console.log(newCustomerData)
+
     const form = useForm({
         initialValues: {
-            location:'', marketing_executive:'', name:'', mobile:'', customer_group:'', credit_limit:'', old_reference_no:'', alternative_mobile:'', address:'', email:'', status:''
+            location_id:'', marketing_id:'', name:'', mobile:'', customer_group:'', credit_limit:'', reference_id:'', alternative_mobile:'', address:'', email:'', status:''
         }
     });
 
@@ -97,10 +105,22 @@ function CustomerIndex() {
                                 onCancel: () => console.log('Cancel'),
                                 onConfirm: () => {
                                     setSaveCreateLoading(true)
-                                    setTimeout((e)=>{
-                                        console.log(form.values)
+                                    const value = {
+                                        url : 'customer',
+                                        data : form.values
+                                    }
+                                    dispatch(createCustomerData(value))
+                                    setTimeout(()=>{
+                                        form.setFieldValue('location_id', '')
+                                        form.setFieldValue('marketing_id', '')
+                                        form.setFieldValue('customer_group', '')
+                                        form.reset()
                                         setSaveCreateLoading(false)
-                                    },2000)
+                                        dispatch(setFetching(true))
+                                    },500)
+
+                                    console.log(form.values)
+
                                 },
                             });
                         }

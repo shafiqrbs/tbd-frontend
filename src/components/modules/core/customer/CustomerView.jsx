@@ -15,39 +15,24 @@ import {IconFilter, IconSearch, IconInfoCircle, IconEye, IconEdit, IconTrash} fr
 import axios from "axios";
 import {DataTable} from 'mantine-datatable';
 import CustomerForm from "./CustomerForm";
+import {useDispatch, useSelector} from "react-redux";
+import {getCustomerIndexData, setFetching} from "../../../../store/core/customerSlice";
 
 function CustomerView(props) {
 
     const {form} = props
+    const dispatch = useDispatch();
     const {t, i18n} = useTranslation();
     const {isOnline, mainAreaHeight} = useOutletContext();
     const height = mainAreaHeight - 104; //TabList height 36
-    const [data, setRecords] = useState([]);
-    const [fetching, setFetching] = useState(false);
 
-   // console.log(data)
+
+    const fetching = useSelector((state) => state.customerSlice.fetching)
+    const customerIndexData = useSelector((state) => state.customerSlice.customerIndexData)
 
     useEffect(() => {
-        axios({
-                method: "get",
-               // url: "https://jsonplaceholder.typicode.com/posts",
-                url: "https://backend.poskeeper.com/api/customer",
-                headers: {
-                    "Accept": `application/json`,
-                    "Content-Type": `application/json`,
-                    "Access-Control-Allow-Origin": '*',
-                    "X-Api-Key": 'poskeeper'
-                }
-            })
-            .then(function (res) {
-             //   console.log(res.data)
-                // setRecords(res.data);
-                 setRecords(res.data.data.data);
-            })
-            /*.catch(function (error) {
-                console.log(error);
-            });*/
-    }, []);
+        dispatch(getCustomerIndexData('customer'))
+    }, [fetching]);
 
 
     return (
@@ -107,16 +92,25 @@ function CustomerView(props) {
                         </Box>
 
                         {
-                            (data && data.length > 0) &&
+                            // (customerIndexData && customerIndexData.length > 0) &&
                             <DataTable
                                 withTableBorder
-                                columns={
-                                    [
-                                        { accessor: 'id' , title: "S/N", },
-                                        { accessor: 'name',  title: "Post Title" },
+                                withBorder
+                                records={customerIndexData}
+                                withColumnBorders={1}
+                                columns={[
+                                        {
+                                            accessor: 'index',
+                                            title: 'S/N',
+                                            textAlignment: 'right',
+                                            render: (item) => (customerIndexData.indexOf(item) + 1)
+                                        },
+                                        { accessor: 'id' , title: "ID", },
+                                        { accessor: 'name',  title: "Name" },
+                                        { accessor: 'mobile',  title: "Mobile" },
                                         {
                                             accessor: "action",
-                                            title: "",
+                                            title: "Action",
                                             textAlign: "right",
                                             render: (data) => (
                                                 <Group gap={4} justify="right" wrap="nowrap">
@@ -147,13 +141,14 @@ function CustomerView(props) {
 
                                     ]
                                 }
-                                records={data}
                                 fetching={fetching}
-                                customLoader={
+                                loaderSize="xs"
+                                loaderColor="grape"
+                                /*customLoader={
                                     <svg width={80} height={80} viewBox="0 0 40 40">
                                         <IconFilter size={18}/>
                                     </svg>
-                                }
+                                }*/
                                 height={height}
                                 scrollAreaProps={{ type: 'hover' }}
                                 scrollbarSize={10}

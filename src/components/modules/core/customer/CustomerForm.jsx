@@ -17,8 +17,11 @@ import TextAreaForm from "../../../form-builders/TextAreaForm";
 import SelectServerSideForm from "../../../form-builders/SelectServerSideForm";
 import SwitchForm from "../../../form-builders/SwitchForm";
 import {useDispatch, useSelector} from "react-redux";
-import {userDropdown} from "../../../../store/core/customerSlice";
-// import.meta.env as ImportMetaEnv
+import {
+    getLocationDropdown,
+    getMarketingExecutiveDropdown,
+    getUserDropdown
+} from "../../../../store/core/customerSlice";
 
 
 function CustomerForm(props) {
@@ -30,6 +33,15 @@ function CustomerForm(props) {
     const [opened, { open, close }] = useDisclosure(false);
 
     const userDropdownData = useSelector((state) => state.customerSlice.userDropdownData)
+    const locationDropdownData = useSelector((state) => state.customerSlice.locationDropdownData)
+    const marketingExecutiveDropdownData = useSelector((state) => state.customerSlice.marketingExecutiveDropdownData)
+    let locationDropdown = locationDropdownData && locationDropdownData.length > 0 ?locationDropdownData.map((type, index) => {return ({'label': type.name, 'value': String(type.id)})}):[]
+    let marketingExecutiveDropdown = marketingExecutiveDropdownData && marketingExecutiveDropdownData.length > 0 ?marketingExecutiveDropdownData.map((type, index) => {return ({'label': type.name, 'value': String(type.id)})}):[]
+
+    useEffect(() => {
+        dispatch(getLocationDropdown('location'))
+        dispatch(getMarketingExecutiveDropdown('user'))
+    }, []);
 
     useEffect(() => {
         if (searchValue.length>1) {
@@ -40,7 +52,7 @@ function CustomerForm(props) {
                 'url' : 'users/keyword/search',
                 'param' : param
             }
-            dispatch(userDropdown(apiData))
+            dispatch(getUserDropdown(apiData))
 
         }
     }, [searchValue]);
@@ -64,7 +76,20 @@ function CustomerForm(props) {
 
             <Grid gutter={{ base:6}}>
                 <Grid.Col span={10}>
-                    <SelectServerSideForm
+                    <SelectForm
+                        tooltip={t('CustomerGroup')}
+                        label={t('CustomerGroup')}
+                        placeholder={t('ChooseCustomerGroup')}
+                        required = {false}
+                        nextField = {'CreditLimit'}
+                        name = {'customer_group'}
+                        form = {form}
+                        dropdownValue={["Family", "Local"]}
+                        mt={8}
+                        id = {'CustomerGroup'}
+                        searchable={false}
+                    />
+                    {/*<SelectServerSideForm
                         tooltip={t('CustomerGroup')}
                         label={t('CustomerGroup')}
                         placeholder={t('ChooseCustomerGroup')}
@@ -78,7 +103,7 @@ function CustomerForm(props) {
                         searchValue={searchValue}
                         setSearchValue={setSearchValue}
                         dropdownValue={testDropdown}
-                    />
+                    />*/}
                 </Grid.Col>
                 <Grid.Col span={2}><Button mt={32} color={'gray'} variant={'outline'} onClick={open}><IconPlus size={16} opacity={0.5}/></Button></Grid.Col>
                 {opened &&
@@ -104,7 +129,7 @@ function CustomerForm(props) {
                 placeholder={t('OLDReferenceNo')}
                 required = {false}
                 nextField = {'Mobile'}
-                name = {'old_reference_no'}
+                name = {'reference_id'}
                 form = {form}
                 mt={8}
                 id = {'OLDReferenceNo'}
@@ -152,9 +177,9 @@ function CustomerForm(props) {
                 placeholder={t('ChooseLocation')}
                 required = {false}
                 nextField = {'MarketingExecutive'}
-                name = {'location'}
+                name = {'location_id'}
                 form = {form}
-                dropdownValue={["React", "Angular", "Vue", "Svelte"]}
+                dropdownValue={locationDropdown}
                 mt={8}
                 id = {'Location'}
                 searchable={false}
@@ -167,9 +192,9 @@ function CustomerForm(props) {
                 placeholder={t('ChooseMarketingExecutive')}
                 required = {false}
                 nextField = {'Address'}
-                name = {'marketing_executive'}
+                name = {'marketing_id'}
                 form = {form}
-                dropdownValue={["React", "Angular", "Vue", "Svelte"]}
+                dropdownValue={marketingExecutiveDropdown}
                 mt={8}
                 id = {'MarketingExecutive'}
                 searchable={true}
