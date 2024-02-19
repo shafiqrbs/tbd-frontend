@@ -3,12 +3,12 @@ import {useOutletContext} from "react-router-dom";
 import {
     Button,
     rem,
-    Grid, Box,
+    Grid, Box, ScrollArea, Tooltip, TextInput, Switch, Group, Text, LoadingOverlay, Modal,
 } from "@mantine/core";
 import {useTranslation} from 'react-i18next';
-import { IconPlus} from "@tabler/icons-react";
+import {IconInfoCircle, IconPlus, IconX, IconXboxX} from "@tabler/icons-react";
 import CustomerView from "./CustomerView";
-import { useDisclosure} from "@mantine/hooks";
+import {getHotkeyHandler, useDisclosure} from "@mantine/hooks";
 import CustomerGroupModel from "./CustomerGroupModal";
 import axios from "axios";
 import InputForm from "../../../form-builders/InputForm";
@@ -22,6 +22,7 @@ import {
     getMarketingExecutiveDropdown,
     getUserDropdown
 } from "../../../../store/core/customerSlice";
+import {modals} from "@mantine/modals";
 
 
 function CustomerForm(props) {
@@ -31,6 +32,9 @@ function CustomerForm(props) {
     const [searchValue, setSearchValue] = useState('');
     const [dropdownValue, setDropdownValue] = useState([]);
     const [opened, { open, close }] = useDisclosure(false);
+    const [testModelOpend, setTestModelOpend] = useState(false);
+
+    // console.log(opened,open,close)
 
     const userDropdownData = useSelector((state) => state.customerSlice.userDropdownData)
     const locationDropdownData = useSelector((state) => state.customerSlice.locationDropdownData)
@@ -61,6 +65,28 @@ function CustomerForm(props) {
 
     return (
         <Box p={`md`}>
+            <Button onClick={()=>{setTestModelOpend(true)}}>Test Model</Button>
+
+            <Modal
+                opened={testModelOpend}
+                onClose={(e)=>{
+                    console.log(e)
+                    setTestModelOpend(false)
+                }}
+                title={t('CustomerGroupModel')}
+                centered
+                overlayProps={{
+                    backgroundOpacity: 0.55,
+                    blur: 3,
+                }}
+                scrollAreaComponent={ScrollArea.Autosize}
+                closeButtonProps={{
+                    icon: <IconXboxX size={20} stroke={1.5} />,
+                }}
+            >
+                test
+            </Modal>
+
 
             <InputForm
                 tooltip={t('NameValidateMessage')}
