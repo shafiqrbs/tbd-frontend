@@ -99,47 +99,47 @@ function CustomerView(props) {
                                 records={customerIndexData}
                                 withColumnBorders={1}
                                 columns={[
-                                        {
-                                            accessor: 'index',
-                                            title: 'S/N',
-                                            textAlignment: 'right',
-                                            render: (item) => (customerIndexData.indexOf(item) + 1)
-                                        },
-                                        { accessor: 'id' , title: "ID", },
-                                        { accessor: 'name',  title: "Name" },
-                                        { accessor: 'mobile',  title: "Mobile" },
-                                        {
-                                            accessor: "action",
-                                            title: "Action",
-                                            textAlign: "right",
-                                            render: (data) => (
-                                                <Group gap={4} justify="right" wrap="nowrap">
-                                                    <ActionIcon
-                                                        size="sm"
-                                                        variant="subtle"
-                                                        color="green"
-                                                    >
-                                                        <IconEye size={16}/>
-                                                    </ActionIcon>
-                                                    <ActionIcon
-                                                        size="sm"
-                                                        variant="subtle"
-                                                        color="blue"
-                                                    >
-                                                        <IconEdit size={16}/>
-                                                    </ActionIcon>
-                                                    <ActionIcon
-                                                        size="sm"
-                                                        variant="subtle"
-                                                        color="red"
-                                                    >
-                                                        <IconTrash size={16}/>
-                                                    </ActionIcon>
-                                                </Group>
-                                            ),
-                                        },
+                                    {
+                                        accessor: 'index',
+                                        title: 'S/N',
+                                        textAlignment: 'right',
+                                        render: (item) => (customerIndexData.indexOf(item) + 1)
+                                    },
+                                    { accessor: 'id' , title: "ID", },
+                                    { accessor: 'name',  title: "Name" },
+                                    { accessor: 'mobile',  title: "Mobile" },
+                                    {
+                                        accessor: "action",
+                                        title: "Action",
+                                        textAlign: "right",
+                                        render: (data) => (
+                                            <Group gap={4} justify="right" wrap="nowrap">
+                                                <ActionIcon
+                                                    size="sm"
+                                                    variant="subtle"
+                                                    color="green"
+                                                >
+                                                    <IconEye size={16}/>
+                                                </ActionIcon>
+                                                <ActionIcon
+                                                    size="sm"
+                                                    variant="subtle"
+                                                    color="blue"
+                                                >
+                                                    <IconEdit size={16}/>
+                                                </ActionIcon>
+                                                <ActionIcon
+                                                    size="sm"
+                                                    variant="subtle"
+                                                    color="red"
+                                                >
+                                                    <IconTrash size={16}/>
+                                                </ActionIcon>
+                                            </Group>
+                                        ),
+                                    },
 
-                                    ]
+                                ]
                                 }
                                 fetching={fetching}
                                 loaderSize="xs"
@@ -157,18 +157,18 @@ function CustomerView(props) {
 
                     </Grid.Col>
                     <Grid.Col span={4}>
-                    <div className={"form-grid"}>
-                        <Box pl={`xs`}  pb={`xs`} pt={`xs`}>
-                            <Title order={6}>{t('CustomerInformation')}</Title>
-                            <Text fz={`xs`}>{t('CustomerInformationFormDetails')}</Text>
-                        </Box>
-                        <Box h={1} bg={`gray.1`}></Box>
-                        <ScrollArea h={height} scrollbarSize={2}>
-                            <CustomerForm form={form}/>
-                        </ScrollArea>
+                        <div className={"form-grid"}>
+                            <Box pl={`xs`}  pb={`xs`} pt={`xs`}>
+                                <Title order={6}>{t('CustomerInformation')}</Title>
+                                <Text fz={`xs`}>{t('CustomerInformationFormDetails')}</Text>
+                            </Box>
+                            <Box h={1} bg={`gray.1`}></Box>
+                            <ScrollArea h={height} scrollbarSize={2}>
+                                <CustomerForm form={form}/>
+                            </ScrollArea>
 
-                    </div>
-                   </Grid.Col>
+                        </div>
+                    </Grid.Col>
                 </Grid>
             </Box>
         </>
