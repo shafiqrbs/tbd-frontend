@@ -5,6 +5,7 @@ import {AppShell} from "@mantine/core";
 import {useDisclosure, useViewportSize} from "@mantine/hooks";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
+import Aside from "./Aside";
 
 function Layout() {
     const [mobileOpened, {toggle: toggleMobile}] = useDisclosure(false);
@@ -35,11 +36,11 @@ function Layout() {
                     collapsed: {mobile: !mobileOpened, desktop: !navbarOpened},
                 }}
                 aside={{
-                    width: 50,
-                    breakpoint: "md",
-                    collapsed: {mobile: !mobileOpened, desktop: !rightSidebarOpened},
+                    width: 88,
+                    breakpoint: "sm",
+                    collapsed: {mobile: !mobileOpened, desktop: rightSidebarOpened},
                 }}
-                padding="xs"
+                padding="0"
             >
                 <AppShell.Header bg={`gray.0`}>
                     <Header
@@ -59,7 +60,9 @@ function Layout() {
                     <Outlet context={{isOnline, mainAreaHeight}}/>
                 </AppShell.Main>
 
-                <AppShell.Aside p="xs">Aside</AppShell.Aside>
+                <AppShell.Aside p="xs">
+                    <Aside/>
+                </AppShell.Aside>
 
                 <AppShell.Footer p="5">
                     <Footer/>

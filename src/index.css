@@ -2,8 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
-.form-grid {
-    background-color:#f8f9fa;
+.form-grid{
+    background-color:white;
+    border-radius: 8px;
 }
 .view-gird {
     background-color: rgba(248, 249, 250, 0.26);
@@ -26,4 +27,13 @@
 .mantine-AppShell-main{
     padding-top: 60px !important;
     padding-bottom: 0 !important;
+    background: #f0f1f9;
+
+
+}
+.mantine-Tabs-list{
+    background: #ffffff;
+}
+.grid-radius{
+    border-radius: 8px;
 }

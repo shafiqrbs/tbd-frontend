@@ -21,35 +21,23 @@ import {
     IconX,
 } from "@tabler/icons-react";
 
-import CustomerView from "./CustomerView";
+import UserView from "./UserView";
 import {hasLength, isEmail, useForm} from "@mantine/form";
 import {modals} from '@mantine/modals';
-import {notifications} from '@mantine/notifications';
-import CustomerTable from "./CustomerTable";
-import CustomerSales from "./CustomerView";
-import CustomerLedger from "../../master-data/customer/CustomerLedger";
-import CustomerInvoice from "../../master-data/customer/CustomerInvoice";
-import axios from "axios";
-import {createCustomerData, getUserDropdown, setFetching} from "../../../../store/core/customerSlice";
-import {useDispatch, useSelector} from "react-redux";
-import {storeEntityData} from "../../../../store/core/crudSlice";
 
-function CustomerIndex() {
+import axios from "axios";
+import {storeEntityData, setFetching} from "../../../../store/core/crudSlice.js";
+import {useDispatch, useSelector} from "react-redux";
+
+function UserIndex() {
     const {t, i18n} = useTranslation();
     const dispatch = useDispatch();
     const iconStyle = {width: rem(12), height: rem(12)};
-    const [activeTab, setActiveTab] = useState("CustomerView");
+    const [activeTab, setActiveTab] = useState("UserView");
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
-    const [isFormSubmit, setFormSubmit] = useState(false);
-    const [formSubmitData, setFormSubmitData] = useState([]);
-    const {isOnline, mainAreaHeight} = useOutletContext();
-
-    const newCustomerData = useSelector((state) => state.customerSlice.newCustomerData)
-    console.log(newCustomerData)
-
     const form = useForm({
         initialValues: {
-            location_id:'', marketing_id:'', name:'', mobile:'', customer_group:'', credit_limit:'', reference_id:'', alternative_mobile:'', address:'', email:'', status:''
+            location_id:'', username:'', name:'', mobile:'', email:'', password:'', address:'', status:''
         }
     });
     const tabCreateNewRightButtons = (
@@ -73,30 +61,33 @@ function CustomerIndex() {
                     type="submit"
                     leftSection={<IconDeviceFloppy size={24} />}
                     onClick={()=>{
-                        if (activeTab === 'CustomerView') {
+                        if (activeTab === 'UserView') {
                             let validation = true
                             if (!form.values.name) {
                                 form.setFieldError('name', true);
+                                validation = false
+                            }
+                            if (!form.values.username) {
+                                form.setFieldError('username', true);
                                 validation = false
                             }
                             if (!form.values.mobile || isNaN(form.values.mobile)) {
                                 form.setFieldError('mobile', true);
                                 validation = false
                             }
+                            if (!form.values.email || isNaN(form.values.mobile)) {
+                                form.setFieldError('email', true);
+                                validation = falses
+                            }
                             if (form.values.email && !/^\S+@\S+$/.test(form.values.email)) {
                                 form.setFieldError('email', true);
                                 validation = false
                             }
-
                             validation &&
                             modals.openConfirmModal({
-                                title: 'Please confirm your action',
+                                title: '{t("FormConfirmationTitle")}',
                                 children: (
-                                    <Text size="sm">
-                                        This action is so important that you are required to confirm it with a
-                                        modal. Please click
-                                        one of these buttons to proceed.
-                                    </Text>
+                                    <Text size="sm"> {t("FormConfirmationMessage")}</Text>
                                 ),
                                 labels: {confirm: 'Confirm', cancel: 'Cancel'},
                                 onCancel: () => console.log('Cancel'),
@@ -109,13 +100,10 @@ function CustomerIndex() {
                                     dispatch(storeEntityData(value))
                                     setTimeout(()=>{
                                         form.setFieldValue('location_id', '')
-                                        form.setFieldValue('marketing_id', '')
-                                        form.setFieldValue('customer_group', '')
                                         form.reset()
                                         setSaveCreateLoading(false)
                                         dispatch(setFetching(true))
                                     },500)
-
                                     console.log(form.values)
 
                                 },
@@ -140,69 +128,27 @@ function CustomerIndex() {
             </>
         </Group>
     );
-    const tabCustomerLedgerButtons = (
-        <Group mt={4} pos={`absolute`} right={0} gap={0}>
-            <Tooltip
-                label={t("Refresh")}
-                color={`red.6`}
-                withArrow
-                offset={2}
-                position={"bottom"}
-                transitionProps={{transition: "pop-bottom-left", duration: 500}}
-            >
-                <Button bg={`white`} size="md" ml={1} mr={1} variant="light" color={`black`}>
-                    <IconRestore size={24} />
-                </Button>
-            </Tooltip>
-
-
-            <>
-                <Button
-                    size="md"
-                    color={`blue.7`}
-                    type="submit"
-                    leftSection={<IconDeviceFloppy size={24} />}
-                >
-                    <LoadingOverlay
-                        visible={saveCreateLoading}
-                        zIndex={1000}
-                        overlayProps={{radius: "xs", blur: 2}}
-                        size={'xs'}
-                        position="center"
-                    />
-
-                    <Flex direction={`column`} gap={0}>
-                        <Text fz={14} fw={400}>
-                            {t("NewReceive")}
-                        </Text>
-                    </Flex>
-                </Button>
-            </>
-        </Group>
-    );
     return (
 
             <Tabs
-                defaultValue="CustomerView"
+                defaultValue="UserView"
                 onChange={(value) => setActiveTab(value)}
             >
                 <Tabs.List pos={`relative`} h={'52'}>
                     <Tabs.Tab h={'52'} fz={14} fw={700}
-                              value="CustomerView"
+                              value="UserView"
                               leftSection={<IconList style={iconStyle}/>}>
-                        {t("ManageCustomer")}
+                        {t("ManageUsers")}
                     </Tabs.Tab>
-                    {(activeTab === "CustomerTable" || activeTab==='CustomerView') && isOnline && tabCreateNewRightButtons}
-                    {activeTab === "CustomerLedger" && isOnline && tabCustomerLedgerButtons}
+                    {tabCreateNewRightButtons}
                 </Tabs.List>
-                <Tabs.Panel value="CustomerView" h={'52'}>
-                    <CustomerView
+                <Tabs.Panel value="UserView" h={'52'}>
+                    <UserView
                         form={form}
                     />
                 </Tabs.Panel>
-
             </Tabs>
     );
 }
 
-export default CustomerIndex;
+export default UserIndex;

@@ -16,8 +16,8 @@ function SelectForm(props) {
                 <Tooltip
                     label={tooltip}
                     opened={ (name in form.errors) && !!form.errors[name]}
-                    px={20}
-                    py={3}
+                    px={16}
+                    py={2}
                     position="top-end"
                     color="red"
                     withArrow

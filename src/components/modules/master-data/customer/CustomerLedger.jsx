@@ -36,11 +36,11 @@ import {
 import {
     DataTable
 } from 'mantine-datatable';
-import CustomerGroupModel from "./CustomerGroupModal";
+import CustomerGroupModel from "../../core/customer/CustomerGroupModal";
 import {hasLength, useForm} from "@mantine/form";
 import InputForm from "../../../form-builders/InputForm";
 
-function CustomerInvoice(props) {
+function CustomerLedger(props) {
 
     const {isFormSubmit, setFormSubmit, setFormSubmitData, form} = props
     const iconStyle = {width: rem(12), height: rem(12)};
@@ -100,7 +100,6 @@ function CustomerInvoice(props) {
 
         },
     });
-
     return (
         <>
             <Box>
@@ -217,6 +216,88 @@ function CustomerInvoice(props) {
                             />
 
                         }
+
+                    </div>
+
+                    <div className={"form-grid"}>
+                        <Box pl={`xs`} pr={`xs`} pb={`md`} pt={`xs`} >
+                            <Grid>
+                                <Grid.Col span={12}>
+                                    <TextInput
+                                        leftSection={<IconSearch size={16} opacity={0.5}/>}
+                                        rightSection={
+                                            <Tooltip
+                                                label={t("this_filed_is_required")}
+                                                withArrow
+                                                bg={`blue.5`}
+                                            >
+                                                <IconInfoCircle size={16} opacity={0.5}/>
+                                            </Tooltip>
+                                        }
+                                        size="sm"
+                                        placeholder={t('EnterCustomer&Invoice')}
+                                    />
+                                </Grid.Col>
+
+                            </Grid>
+                        </Box>
+                        <Box pl={`xs`} pr={`xs`}>
+                            {
+                                (data && data.length > 0) &&
+                                <DataTable
+                                    withTableBorder
+                                    withRowBorders={false}
+                                    striped
+                                    highlightOnHover
+                                    columns={
+                                        [
+                                            {
+                                                accessor: 'index',
+                                                title: 'S/N',
+                                                textAlign: 'center',
+                                                render: (record) => data.indexOf(record) + 1,
+                                            },
+                                            {
+                                                accessor: 'title',  title: "Date"
+                                            },
+                                            {
+                                                accessor: 'title',  title: "Invoice"
+                                            },
+                                            {
+                                                accessor: 'title',  title: "Sales"
+                                            },
+                                            {
+                                                accessor: 'title',  title: "Receive"
+                                            },
+                                            {
+                                                accessor: "action",
+                                                title: "",
+                                                textAlign: "right",
+                                                render: (data) => (
+                                                    <Group gap={4} jus
+                                                           tify="right" wrap="nowrap">
+                                                        <ActionIcon
+                                                            size="sm"
+                                                            variant="subtle"
+                                                            color="green"
+                                                        >
+                                                            <IconEye size={16}/>
+                                                        </ActionIcon>
+
+                                                    </Group>
+                                                ),
+                                            },
+
+                                        ]
+                                    }
+                                    records={data}
+                                    height={height}
+                                    scrollAreaProps={{ type: 'never' }}
+
+                                />
+
+                            }
+                        </Box>
 
                     </div>
                     <div className="view-gird">
@@ -459,84 +540,10 @@ function CustomerInvoice(props) {
                         </Box>
 
                     </div>
-                    <div className={"form-grid"}>
-                        <Box pl={`xs`} pr={`xs`} pb={`xs`} pt={`xs`} >
-                            <Grid>
-                                <Grid.Col span={6}>
-                                    <Title order={6}>Md Shafiqul Islam</Title>
-                                    <Text fz={`xs`}>01828148148</Text>
-                                </Grid.Col>
-                                <Grid.Col span={6}>
-                                    <Title order={6}>Md Shafiqul Islam</Title>
-                                    <Text fz={`xs`}>01828148148</Text>
-                                </Grid.Col>
-
-                            </Grid>
-                        </Box>
-                        <Box pl={`xs`} pr={`xs`}>
-                            {
-                                (data && data.length > 0) &&
-                                <DataTable
-                                    withTableBorder
-                                    withRowBorders={false}
-                                    striped
-                                    highlightOnHover
-                                    columns={
-                                        [
-                                            {
-                                                accessor: 'index',
-                                                title: 'S/N',
-                                                textAlign: 'center',
-                                                render: (record) => data.indexOf(record) + 1,
-                                            },
-                                            {
-                                                accessor: 'title',  title: "Date"
-                                            },
-                                            {
-                                                accessor: 'title',  title: "Invoice"
-                                            },
-                                            {
-                                                accessor: 'title',  title: "Sales"
-                                            },
-                                            {
-                                                accessor: 'title',  title: "Receive"
-                                            },
-                                            {
-                                                accessor: "action",
-                                                title: "",
-                                                textAlign: "right",
-                                                render: (data) => (
-                                                    <Group gap={4} jus
-                                                           tify="right" wrap="nowrap">
-                                                        <ActionIcon
-                                                            size="sm"
-                                                            variant="subtle"
-                                                            color="green"
-                                                        >
-                                                            <IconEye size={16}/>
-                                                        </ActionIcon>
-
-                                                    </Group>
-                                                ),
-                                            },
-
-                                        ]
-                                    }
-                                    records={data}
-                                    height={height}
-                                    scrollAreaProps={{ type: 'never' }}
-
-                                />
-
-                            }
-                        </Box>
-
-                    </div>
-
                 </SimpleGrid>
             </Box>
         </>
     );
 }
 
-export default CustomerInvoice;
+export default CustomerLedger;

@@ -5,6 +5,8 @@ import Layout from './components/layout/Layout'
 import SampleDashboard from "./components/modules/sample-module/DashBoard";
 import './lang/i18next';
 import CustomerIndex from "./components/modules/core/customer/CustomerIndex";
+import UserIndex from "./components/modules/core/user/UserIndex";
+import VendorIndex from "./components/modules/core/vendor/VendorIndex";
 function AppRoute() {
     const token = localStorage.getItem('token')
     const navigate = useNavigate()
@@ -17,6 +19,8 @@ function AppRoute() {
                 </Route>
                 <Route path="/core/">
                     <Route path="customer" element={<CustomerIndex/>}/>
+                    <Route path="user" element={<UserIndex/>}/>
+                    <Route path="vendor" element={<VendorIndex/>}/>
                 </Route>
             </Route>
         </Routes>

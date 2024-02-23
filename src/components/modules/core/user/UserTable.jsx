@@ -14,7 +14,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {getIndexEntityData, setFetching} from "../../../../store/core/crudSlice.js";
 
 
-function CustomerTable(props) {
+function UserTable(props) {
 
     const {form} = props
     const dispatch = useDispatch();
@@ -24,7 +24,7 @@ function CustomerTable(props) {
     const fetching = useSelector((state) => state.crudSlice.fetching)
     const indexData = useSelector((state) => state.crudSlice.indexEntityData)
     useEffect(() => {
-        dispatch(getIndexEntityData('customer'))
+        dispatch(getIndexEntityData('user'))
     }, [fetching]);
 
     return (
@@ -165,4 +165,4 @@ function CustomerTable(props) {
     );
 }
 
-export default CustomerTable;
+export default UserTable;

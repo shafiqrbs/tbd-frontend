@@ -32,7 +32,6 @@ import CustomerInvoice from "../../master-data/customer/CustomerInvoice";
 import axios from "axios";
 import {createCustomerData, getUserDropdown, setFetching} from "../../../../store/core/customerSlice";
 import {useDispatch, useSelector} from "react-redux";
-import {storeEntityData} from "../../../../store/core/crudSlice";
 
 function CustomerIndex() {
     const {t, i18n} = useTranslation();
@@ -106,7 +105,7 @@ function CustomerIndex() {
                                         url : 'customer',
                                         data : form.values
                                     }
-                                    dispatch(storeEntityData(value))
+                                    dispatch(createCustomerData(value))
                                     setTimeout(()=>{
                                         form.setFieldValue('location_id', '')
                                         form.setFieldValue('marketing_id', '')
@@ -192,6 +191,21 @@ function CustomerIndex() {
                               leftSection={<IconList style={iconStyle}/>}>
                         {t("ManageCustomer")}
                     </Tabs.Tab>
+                    {/*<Tabs.Tab h={'52'} fz={14} fw={700}
+                        value="CustomerTable"
+                        leftSection={<IconList style={iconStyle}/>}>
+                        {t("ManageCustomerTable")}
+                    </Tabs.Tab>
+                    <Tabs.Tab h={'52'} fz={14} fw={700}
+                              value="CustomerLedger"
+                              leftSection={<IconList style={iconStyle}/>}>
+                        {t("ManageCustomerLedger")}
+                    </Tabs.Tab>
+                    <Tabs.Tab h={'52'} fz={14} fw={700}
+                              value="CustomerInvoice"
+                              leftSection={<IconList style={iconStyle}/>}>
+                        {t("CustomerInvoice")}
+                    </Tabs.Tab>*/}
                     {(activeTab === "CustomerTable" || activeTab==='CustomerView') && isOnline && tabCreateNewRightButtons}
                     {activeTab === "CustomerLedger" && isOnline && tabCustomerLedgerButtons}
                 </Tabs.List>
@@ -200,7 +214,30 @@ function CustomerIndex() {
                         form={form}
                     />
                 </Tabs.Panel>
-
+                {/*<Tabs.Panel value="CustomerTable" h={'52'}>
+                    <CustomerTable
+                        isFormSubmit={isFormSubmit}
+                        setFormSubmitData={setFormSubmitData}
+                        setFormSubmit={setFormSubmit}
+                        form={form}
+                    />
+                </Tabs.Panel>
+                <Tabs.Panel value="CustomerLedger" h={'52'}>
+                    <CustomerLedger
+                        isFormSubmit={isFormSubmit}
+                        setFormSubmitData={setFormSubmitData}
+                        setFormSubmit={setFormSubmit}
+                        form={form}
+                    />
+                </Tabs.Panel>
+                <Tabs.Panel value="CustomerInvoice" h={'52'}>
+                    <CustomerInvoice
+                        isFormSubmit={isFormSubmit}
+                        setFormSubmitData={setFormSubmitData}
+                        setFormSubmit={setFormSubmit}
+                        form={form}
+                    />
+                </Tabs.Panel>*/}
             </Tabs>
     );
 }

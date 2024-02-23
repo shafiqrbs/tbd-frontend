@@ -38,12 +38,13 @@ import {
     IconChevronLeft,
     IconChevronRight,
     IconWifiOff,
+    IconTableShortcut
 } from "@tabler/icons-react";
 import HeaderStyle from "./../../assets/css/Header.module.css";
 import LanguagePickerStyle from "./../../assets/css/LanguagePicker.module.css";
 import {Spotlight, spotlight} from "@mantine/spotlight";
 import "@mantine/spotlight/styles.css";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import flagBD from "../../assets/images/flags/bd.svg";
 import flagGB from "../../assets/images/flags/gb.svg";
 import {useTranslation} from "react-i18next";
@@ -152,8 +153,8 @@ export default function Header({
 
     return (
         <>
-            <Box h={`100%`} pos={`relative`}>
-                <Group justify="space-between" h="100%" px={`xs`}>
+            <Box bg={'white'} h={`100%`} pos={`relative`}>
+                <Group justify="space-between" h="100%" px={`xs`} mr={'4'}>
                     <Group>
                         <Tooltip
                             label={navbarOpened ? t("collapse_navbar") : t("expand_navbar")}
@@ -177,7 +178,7 @@ export default function Header({
                                     style={{cursor: "default"}}
                                 >
                                     <Box component="span" mr={5}>
-                                        {t("shortcuts")}
+                                        {t("QuickMenu")}
                                     </Box>
                                     <IconChevronDown
                                         style={{width: rem(16), height: rem(16)}}
@@ -214,20 +215,17 @@ export default function Header({
                             </HoverCard.Dropdown>
                         </HoverCard>
                     </Group>
-
                     <Button
                         leftSection={
                             <>
                                 <IconSearch size={16} color="rgba(158, 158, 158, 0.3)"/>
-                                <Text fz={`xs`} c={`gray.3`}>
-                                    {t("search")}
-                                </Text>
+                                <Text fz={`xs`} c={`gray.3`}>{t("search")}</Text>
                             </>
                         }
                         variant="transparent"
                         rightSection={
                             <>
-                                <Kbd>Ctrl</Kbd> + <Kbd>K</Kbd>
+                                <Kbd>Ctrl </Kbd> + <Kbd> K</Kbd>
                             </>
                         }
                         w={`50%`}
@@ -236,7 +234,6 @@ export default function Header({
                         color={`gray`}
                         onClick={spotlight.open}
                     ></Button>
-
                     <Group>
                         <Menu
                             onOpen={() => setLanguageOpened(true)}
@@ -268,12 +265,12 @@ export default function Header({
                                     />
                                 </UnstyledButton>
                             </Menu.Target>
-                            <Menu.Dropdown className={LanguagePickerStyle.dropdown}>
+                            <Menu.Dropdown  p={4} className={LanguagePickerStyle.dropdown}>
                                 {languages.map((item) => (
                                     <Menu.Item
-                                        p={2}
+                                        p={4}
                                         leftSection={
-                                            <Image src={item.flag} width={18} height={18}/>
+                                            <Image src={item.flag} width={16} height={16}/>
                                         }
                                         onClick={() => {
                                             setLanguageSelected(item);
@@ -287,69 +284,67 @@ export default function Header({
                             </Menu.Dropdown>
                         </Menu>
                         <Tooltip
-                            label={fullscreen ? t("normal_screen") : t("fullscreen")}
-                            bg={`green`}
+                            label={fullscreen ? t("NormalScreen") : t("Fullscreen")}
+                            bg={`indigo.6`} withArrow
+                            position={"left"}
                         >
-                            <ActionIcon onClick={toggle} variant="subtle" color={`green.3`}>
+                            <ActionIcon onClick={toggle} variant="subtle" color={`indigo.4`}>
                                 {fullscreen ? (
-                                    <IconWindowMinimize size={20}/>
+                                    <IconWindowMinimize size={28}/>
                                 ) : (
-                                    <IconWindowMaximize size={20}/>
+                                    <IconWindowMaximize size={28}/>
                                 )}
                             </ActionIcon>
                         </Tooltip>
-                        <Tooltip label={t("log_out")} bg={`red`}>
-                            <ActionIcon onClick={() => logout()} variant="subtle" color="red">
-                                <IconLogout size={20}/>
+                        <Tooltip label={t("Logout")} bg={`indigo.6`}  withArrow position={"left"}>
+                            <ActionIcon onClick={() => logout()} variant="subtle" color={`gray.8`}>
+                                <IconLogout size={28}/>
                             </ActionIcon>
                         </Tooltip>
                         <Tooltip
                             label={
                                 rightSidebarOpened
-                                    ? t("collapse_right_sidebar")
-                                    : t("expand_right_sidebar")
+                                    ? t("CollapseRightSidebar")
+                                    : t("ExpandRightSidebar")
                             }
-                            bg={`indigo`}
+                            bg={`indigo.6`}
+                            withArrow
+                            position={"left"}
                         >
                             <ActionIcon
                                 onClick={toggleRightSideBar}
-                                variant="light"
-                                color="indigo"
-                                size={20}
+                                variant="transparent"
+                                color={'indigo'}
                                 radius={`xs`}
                             >
                                 {rightSidebarOpened ? (
-                                    <IconChevronRight/>
+                                    <IconTableShortcut size={28} />
                                 ) : (
-                                    <IconChevronLeft/>
+                                    <IconTableShortcut size={28} />
                                 )}
                             </ActionIcon>
                         </Tooltip>
                     </Group>
                 </Group>
-
-
                 <Spotlight
                     actions={actions}
-                    nothingFound="Nothing found..."
+                    nothingFound={t("NothingFound")}
                     highlightQuery
                     searchProps={{
                         leftSection: <IconSearch style={{width: rem(20), height: rem(20)}} stroke={1.5}/>,
-                        placeholder: 'Search...',
+                        placeholder: "Search...",
                     }}
                 />
-
                 <Notification
                     pos={`absolute`}
                     display={isOnline ? "none" : ""}
                     right={0}
                     top={5}
-                    // loading
                     withCloseButton={false}
                     icon={<IconWifiOff/>}
                     color={`yellow`}
                     radius="xs"
-                    title={t("you_are_offline_now")}
+                    title={t("Offline")}
                 ></Notification>
             </Box>
         </>

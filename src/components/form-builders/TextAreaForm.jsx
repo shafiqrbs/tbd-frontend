@@ -17,8 +17,8 @@ function TextAreaForm(props) {
                 <Tooltip
                     label={tooltip}
                     opened={ (name in form.errors) && !!form.errors[name]}
-                    px={20}
-                    py={3}
+                    px={16}
+                    py={2}
                     position="top-end"
                     color="red"
                     withArrow
@@ -53,8 +53,13 @@ function TextAreaForm(props) {
                             :
                             <Tooltip
                                 label={tooltip}
+                                px={16}
+                                py={2}
                                 withArrow
-                                bg={`blue.5`}
+                                position={"left"}
+                                c={'indigo'}
+                                bg={`gray.1`}
+                                transitionProps={{transition: "pop-bottom-left", duration: 500}}
                             >
                                 <IconInfoCircle size={16} opacity={0.5}/>
                             </Tooltip>

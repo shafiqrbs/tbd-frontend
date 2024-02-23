@@ -38,16 +38,23 @@ function CustomerForm(props) {
     const [opened, { open, close }] = useDisclosure(false);
     const [testModelOpend, setTestModelOpend] = useState(false);
 
+    // console.log(opened,open,close)
+
+    const userDropdownData = useSelector((state) => state.customerSlice.userDropdownData)
     const locationDropdownData = useSelector((state) => state.utilitySlice.locationDropdownData)
     const executiveDropdownData = useSelector((state) => state.utilitySlice.executiveDropdownData)
+    const marketingExecutiveDropdownData = useSelector((state) => state.customerSlice.marketingExecutiveDropdownData)
     let locationDropdown = locationDropdownData && locationDropdownData.length > 0 ? locationDropdownData.map((type, index) => {return ({'label': type.name, 'value': String(type.id)})}):[]
     let executiveDropdown = executiveDropdownData && executiveDropdownData.length > 0 ? executiveDropdownData.map((type, index) => {return ({'label': type.name, 'value': String(type.id)})}):[]
+    let marketingExecutiveDropdown = marketingExecutiveDropdownData && marketingExecutiveDropdownData.length > 0 ?marketingExecutiveDropdownData.map((type, index) => {return ({'label': type.name, 'value': String(type.id)})}):[]
+
+    console.log(locationDropdown);
     useEffect(() => {
         dispatch(getLocationDropdown('location'))
         dispatch(getExecutiveDropdown('executive'))
+        dispatch(getMarketingExecutiveDropdown('user'))
     }, []);
 
-    const userDropdownData = useSelector((state) => state.customerSlice.userDropdownData)
     useEffect(() => {
         if (searchValue.length>1) {
             const param = {
@@ -66,7 +73,7 @@ function CustomerForm(props) {
 
     return (
         <Box p={`md`}>
-            {/*<Button onClick={()=>{setTestModelOpend(true)}}>Test Model</Button>
+            <Button onClick={()=>{setTestModelOpend(true)}}>Test Model</Button>
 
             <Modal
                 opened={testModelOpend}
@@ -88,7 +95,7 @@ function CustomerForm(props) {
                 test
             </Modal>
 
-*/}
+
             <InputForm
                 tooltip={t('NameValidateMessage')}
                 label={t('Name')}

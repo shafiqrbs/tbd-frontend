@@ -1,11 +1,30 @@
 {
   "Home": "Home",
+  "QuickMenu": "Quick",
+  "Logout": "Logout",
+  "Offline": "Offline",
+  "Online": "Online",
+  "CollapseRightSidebar": "Collapse right sidebar",
+  "ExpandRightSidebar": "Expand right sidebar",
+  "Fullscreen": "Full Screen",
+  "NormalScreen": "Normal Screen",
+  "NothingFound": "Nothing found ...",
+
   "CreateAndSave": "Create & Save",
+
+  "SearchButton" : "Search your desire particular",
+  "FilterButton": "Press the filter button for more advance search",
+  "ResetButton": "Press the reset button for clean data",
+
   "EnterSearchAnyKeyword": "Enter search any keyword",
+  "FiledIsRequired": "This field is required value",
+  "FormConfirmationTitle": "Please confirm your action",
+  "FormConfirmationMessage": " This action is so important that you are required to confirm it with a\nmodal. Please click\none of these buttons to proceed.",
 
 
   "MasterData": "Master Data",
   "Customer": "Customer",
+  "ManageCustomer": "Manage Customers",
   "CustomerInformation": "Customer Information",
   "CustomerInformationFormDetails": "We'll always let you know about customer information",
   "Name": "Name",
@@ -29,6 +48,22 @@
   "CustomerGroupModel": "Customer Group Model",
   "InvalidEmail": "If exists , must be valid Email",
 
+
+  "ManageUsers": "Manage Users",
+  "UserInformation": "Manage Users Information",
+  "UserFormDetails": "Manage Users Information Details",
+
+
+
+  "ShortCut": "SHORTCUT",
+  "Crtl+f": "Crtl + F",
+  "CrtlfText": "Find the table value",
+  "Crtl+s": "Crtl + S",
+  "CrtlsText": "Save the form value",
+  "Crtl+n": "Crtl + N",
+  "CrtlnText": "Enter the new form first field",
+  "Crtl+r": "Crtl + R",
+  "CrtlrText": "Reset the form",
 
   "" : ""
 

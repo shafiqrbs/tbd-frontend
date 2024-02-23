@@ -1,12 +1,13 @@
 import React  from 'react'
-import {NavLink} from '@mantine/core'
+import { UnstyledButton, NavLink,Group, Avatar, Text, rem,Stack } from '@mantine/core';
 import {
     IconGauge,
+    IconChevronRight,
+    IconSwitchHorizontal,
+    IconLogout
 } from '@tabler/icons-react';
 import {useNavigate} from "react-router-dom";
-import DashBoard from "../modules/sample-module/DashBoard";
 import {useTranslation} from "react-i18next";
-
 function Navbar() {
     const navigate = useNavigate()
     const {t, i18n} = useTranslation();
@@ -14,7 +15,6 @@ function Navbar() {
 
     return (
 <>
-
     <NavLink
         href="#required-for-focus"
         label={t('Core')}
@@ -27,6 +27,18 @@ function Navbar() {
             component={"CustomerIndex"}
             onClick={(e)=>{navigate('core/customer')}}
         />
+        <NavLink
+            href="user"
+            label={t('Users')}
+            component={"UserIndex"}
+            onClick={(e)=>{navigate('core/user')}}
+        />
+        <NavLink
+            href="user"
+            label={t('Vendors')}
+            component={"VendorIndex"}
+            onClick={(e)=>{navigate('core/vendor')}}
+        />
     </NavLink>
     <NavLink
         href="#required-for-focus"
@@ -36,8 +48,6 @@ function Navbar() {
     >
         <NavLink href="sample" label="sample" component={"DashBoard"} onClick={(e)=>{navigate('sample')}}  />
     </NavLink>
-
-
 </>
   )
 }
