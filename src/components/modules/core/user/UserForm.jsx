@@ -18,6 +18,8 @@ import {useDispatch, useSelector} from "react-redux";
 import {
     getLocationDropdown,
 } from "../../../../store/core/utilitySlice";
+import PasswordInput from "../../../form-builders/PasswordInputForm";
+import PasswordInputForm from "../../../form-builders/PasswordInputForm";
 function UserForm(props) {
     const {form} = props
     const {t, i18n} = useTranslation();
@@ -39,97 +41,72 @@ function UserForm(props) {
                 placeholder={t('Name')}
                 required = {true}
                 name = {'name'}
-                id = {'name'}
-                nextField = {'username'}
+                id = {'Name'}
+                nextField = {'UserName'}
                 mt={0}
             />
 
             <InputForm
                 form = {form}
-                tooltip={t('UserName')}
+                tooltip={t('UserNameValidateMessage')}
                 label={t('UserName')}
                 placeholder={t('UserName')}
-                required = {false}
+                required = {true}
                 name = {'username'}
-                id = {'username'}
-                nextField = {'email'}
+                id = {'UserName'}
+                nextField = {'Email'}
                 mt={8}
             />
 
             <InputForm
                 form = {form}
-                tooltip={t('InvalidEmail')}
+                tooltip={t('RequiredAndInvalidEmail')}
                 label={t('Email')}
                 placeholder={t('Email')}
-                required = {false}
+                required = {true}
                 name = {'email'}
-                id = {'email'}
-                nextField = {'mobile'}
+                id = {'Email'}
+                nextField = {'Password'}
                 mt={8}
             />
 
-            <InputForm
+            {/*<InputForm
                 form = {form}
                 tooltip={t('Mobile')}
                 label={t('Mobile')}
                 placeholder={t('Mobile')}
-                required = {false}
+                required = {true}
                 name = {'mobile'}
-                id = {'mobile'}
-                nextField = {'mobile'}
+                id = {'Mobile'}
+                nextField = {'Mobile'}
+                mt={8}
+            />*/}
+
+            <PasswordInputForm
+                form = {form}
+                tooltip={t('RequiredPassword')}
+                label={t('Password')}
+                placeholder={t('Password')}
+                required = {true}
+                name = {'password'}
+                id = {'Password'}
+                nextField = {'ConfirmPassword'}
                 mt={8}
             />
 
-            <InputForm
+
+            <PasswordInputForm
                 form = {form}
-                tooltip={t('Designation')}
-                label={t('Designation')}
-                placeholder={t('Designation')}
-                required = {false}
-                name = {'designation'}
-                id = {'designation'}
-                nextField = {'designation'}
+                tooltip={t('ConfirmPassword')}
+                label={t('ConfirmPassword')}
+                placeholder={t('ConfirmPassword')}
+                required = {true}
+                name = {'confirm_password'}
+                id = {'ConfirmPassword'}
+                nextField = {'ConfirmPassword'}
                 mt={8}
             />
 
-            <SelectForm
-                tooltip={t('Location')}
-                label={t('Location')}
-                placeholder={t('ChooseLocation')}
-                required = {false}
-                nextField = {'MarketingExecutive'}
-                name = {'location_id'}
-                form = {form}
-                dropdownValue={locationDropdown}
-                mt={8}
-                id = {'Location'}
-                searchable={false}
-            />
-
-            <TextAreaForm
-                tooltip={t('Address')}
-                label={t('Address')}
-                placeholder={t('Address')}
-                required = {false}
-                nextField = {'Status'}
-                name = {'address'}
-                form = {form}
-                mt={8}
-                id = {'Address'}
-            />
-
-            <SwitchForm
-                tooltip={t('Status')}
-                label={t('Status')}
-                required = {false}
-                nextField = {'Address'}
-                name = {'status'}
-                form = {form}
-                mt={12}
-                id = {'Status'}
-                position={'left'}
-                defaultChecked={false}
-            />
         </Box>
         </ScrollArea>
     );

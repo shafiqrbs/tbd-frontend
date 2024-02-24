@@ -37,7 +37,7 @@ function UserIndex() {
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
     const form = useForm({
         initialValues: {
-            location_id:'', username:'', name:'', mobile:'', email:'', password:'', address:'', status:''
+            name:'', username:'', email:'', password:'',confirm_password:''
         }
     });
     const tabCreateNewRightButtons = (
@@ -71,28 +71,40 @@ function UserIndex() {
                                 form.setFieldError('username', true);
                                 validation = false
                             }
-                            if (!form.values.mobile || isNaN(form.values.mobile)) {
-                                form.setFieldError('mobile', true);
-                                validation = false
-                            }
-                            if (!form.values.email || isNaN(form.values.mobile)) {
-                                form.setFieldError('email', true);
-                                validation = falses
-                            }
-                            if (form.values.email && !/^\S+@\S+$/.test(form.values.email)) {
+
+                            if ( !/^\S+@\S+$/.test(form.values.email)) {
                                 form.setFieldError('email', true);
                                 validation = false
                             }
+
+                            if (!form.values.password){
+                                form.setFieldError('password', true);
+                                validation = false
+                            }
+
+                            if (!form.values.confirm_password){
+                                form.setFieldError('confirm_password', true);
+                                validation = false
+                            }
+
+                            if (form.values.password !== form.values.confirm_password){
+                                form.setFieldError('confirm_password', true);
+                                validation = false
+                            }
+
+
                             validation &&
                             modals.openConfirmModal({
-                                title: '{t("FormConfirmationTitle")}',
+                                title: (
+                                    <Text size="sm"> {t("FormConfirmationTitle")}</Text>
+                                ),
                                 children: (
                                     <Text size="sm"> {t("FormConfirmationMessage")}</Text>
                                 ),
                                 labels: {confirm: 'Confirm', cancel: 'Cancel'},
                                 onCancel: () => console.log('Cancel'),
                                 onConfirm: () => {
-                                    setSaveCreateLoading(true)
+                                    /*setSaveCreateLoading(true)
                                     const value = {
                                         url : 'customer',
                                         data : form.values
@@ -103,7 +115,7 @@ function UserIndex() {
                                         form.reset()
                                         setSaveCreateLoading(false)
                                         dispatch(setFetching(true))
-                                    },500)
+                                    },500)*/
                                     console.log(form.values)
 
                                 },

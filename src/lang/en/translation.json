@@ -75,6 +75,14 @@
   "ChooseCustomer": "Choose Customer",
   "ManageVendors": "Manage Vendors",
 
+  "UserName": "User Name",
+  "UserNameValidateMessage": "User Name must be 2-20 characters long",
+  "RequiredAndInvalidEmail": "Email must be valid",
+  "Password": "Password",
+  "RequiredPassword": "Password field required",
+  "ConfirmPassword": "Confirm Password",
+
+
   "" : ""
 
 
