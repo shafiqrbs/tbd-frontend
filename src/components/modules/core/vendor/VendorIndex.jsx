@@ -33,11 +33,11 @@ function VendorIndex() {
     const {t, i18n} = useTranslation();
     const dispatch = useDispatch();
     const iconStyle = {width: rem(12), height: rem(12)};
-    const [activeTab, setActiveTab] = useState("UserView");
+    const [activeTab, setActiveTab] = useState("VendorView");
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
     const form = useForm({
         initialValues: {
-            location_id:'', username:'', name:'', mobile:'', email:'', password:'', address:'', status:''
+            company_name:'',vendor_name:'',tp_percent:'',email:'',customer_id:''
         }
     });
     const tabCreateNewRightButtons = (
@@ -61,23 +61,11 @@ function VendorIndex() {
                     type="submit"
                     leftSection={<IconDeviceFloppy size={24} />}
                     onClick={()=>{
-                        if (activeTab === 'UserView') {
+                        if (activeTab === 'VendorView') {
                             let validation = true
-                            if (!form.values.name) {
-                                form.setFieldError('name', true);
+                            if (!form.values.company_name) {
+                                form.setFieldError('company_name', true);
                                 validation = false
-                            }
-                            if (!form.values.username) {
-                                form.setFieldError('username', true);
-                                validation = false
-                            }
-                            if (!form.values.mobile || isNaN(form.values.mobile)) {
-                                form.setFieldError('mobile', true);
-                                validation = false
-                            }
-                            if (!form.values.email || isNaN(form.values.mobile)) {
-                                form.setFieldError('email', true);
-                                validation = falses
                             }
                             if (form.values.email && !/^\S+@\S+$/.test(form.values.email)) {
                                 form.setFieldError('email', true);
@@ -85,14 +73,16 @@ function VendorIndex() {
                             }
                             validation &&
                             modals.openConfirmModal({
-                                title: '{t("FormConfirmationTitle")}',
+                                title: (
+                                    <Text size="md"> {t("FormConfirmationTitle")}</Text>
+                                ),
                                 children: (
                                     <Text size="sm"> {t("FormConfirmationMessage")}</Text>
                                 ),
                                 labels: {confirm: 'Confirm', cancel: 'Cancel'},
                                 onCancel: () => console.log('Cancel'),
                                 onConfirm: () => {
-                                    setSaveCreateLoading(true)
+                                    /*setSaveCreateLoading(true)
                                     const value = {
                                         url : 'vendor',
                                         data : form.values
@@ -103,7 +93,7 @@ function VendorIndex() {
                                         form.reset()
                                         setSaveCreateLoading(false)
                                         dispatch(setFetching(true))
-                                    },500)
+                                    },500)*/
                                     console.log(form.values)
 
                                 },
@@ -131,18 +121,18 @@ function VendorIndex() {
     return (
 
             <Tabs
-                defaultValue="UserView"
+                defaultValue="VendorView"
                 onChange={(value) => setActiveTab(value)}
             >
                 <Tabs.List pos={`relative`} h={'52'}>
                     <Tabs.Tab h={'52'} fz={14} fw={700}
-                              value="UserView"
+                              value="VendorView"
                               leftSection={<IconList style={iconStyle}/>}>
-                        {t("ManageUsers")}
+                        {t("ManageVendors")}
                     </Tabs.Tab>
                     {tabCreateNewRightButtons}
                 </Tabs.List>
-                <Tabs.Panel value="UserView" h={'52'}>
+                <Tabs.Panel value="VendorView" h={'52'}>
                     <VendorView
                         form={form}
                     />

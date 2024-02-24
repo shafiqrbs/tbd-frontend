@@ -15,7 +15,7 @@ export const getUserDropdown = createAsyncThunk("user/select", async (value) => 
 
 export const getCustomerDropdown = createAsyncThunk("customer/select", async (value) => {
     try {
-        const response = getDataWithParam(value);
+        const response = getDataWithoutParam(value);
         return response;
     } catch (error) {
         console.log('error', error.message);

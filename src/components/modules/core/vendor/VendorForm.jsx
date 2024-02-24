@@ -15,7 +15,7 @@ import TextAreaForm from "../../../form-builders/TextAreaForm";
 import SelectServerSideForm from "../../../form-builders/SelectServerSideForm";
 import SwitchForm from "../../../form-builders/SwitchForm";
 import {useDispatch, useSelector} from "react-redux";
-import { getLocationDropdown } from "../../../../store/core/utilitySlice.js";
+import {getCustomerDropdown} from "../../../../store/core/utilitySlice";
 function VendorForm(props) {
     const {form} = props
     const {t, i18n} = useTranslation();
@@ -23,10 +23,11 @@ function VendorForm(props) {
     const {isOnline, mainAreaHeight} = useOutletContext();
     const height = mainAreaHeight - 104; //TabList height 104
 
-    const locationDropdownData = useSelector((state) => state.utilitySlice.locationDropdownData)
-    let locationDropdown = locationDropdownData && locationDropdownData.length > 0 ? locationDropdownData.map((type, index) => {return ({'label': type.name, 'value': String(type.id)})}):[]
+    const customerDropdownData = useSelector((state) => state.utilitySlice.customerDropdownData)
+    // console.log(customerDropdownData)
+    let customerDropdown = customerDropdownData && customerDropdownData.length > 0 ? customerDropdownData.map((type, index) => {return ({'label': type.name, 'value': String(type.id)})}):[]
     useEffect(() => {
-        dispatch(getLocationDropdown('location'))
+        dispatch(getCustomerDropdown('core/select/customer'))
     }, []);
 
 
@@ -35,37 +36,25 @@ function VendorForm(props) {
         <Box p={`md`}>
             <InputForm
                 form = {form}
-                tooltip={t('NameValidateMessage')}
-                label={t('Name')}
-                placeholder={t('Name')}
+                tooltip={t('CompanyNameValidateMessage')}
+                label={t('CompanyName')}
+                placeholder={t('CompanyName')}
                 required = {true}
-                name = {'name'}
-                id = {'name'}
-                nextField = {'username'}
+                name = {'company_name'}
+                id = {'VendorName'}
+                nextField = {'VendorName'}
                 mt={0}
             />
 
             <InputForm
                 form = {form}
-                tooltip={t('UserName')}
-                label={t('UserName')}
-                placeholder={t('UserName')}
+                tooltip={t('VendorName')}
+                label={t('VendorName')}
+                placeholder={t('VendorName')}
                 required = {false}
-                name = {'username'}
-                id = {'username'}
-                nextField = {'email'}
-                mt={8}
-            />
-
-            <InputForm
-                form = {form}
-                tooltip={t('InvalidEmail')}
-                label={t('Email')}
-                placeholder={t('Email')}
-                required = {false}
-                name = {'email'}
-                id = {'email'}
-                nextField = {'mobile'}
+                name = {'vendor_name'}
+                id = {'VendorName'}
+                nextField = {'Mobile'}
                 mt={8}
             />
 
@@ -76,34 +65,47 @@ function VendorForm(props) {
                 placeholder={t('Mobile')}
                 required = {false}
                 name = {'mobile'}
-                id = {'mobile'}
-                nextField = {'mobile'}
+                id = {'Mobile'}
+                nextField = {'TPPercent'}
                 mt={8}
             />
 
             <InputForm
                 form = {form}
-                tooltip={t('Designation')}
-                label={t('Designation')}
-                placeholder={t('Designation')}
+                tooltip={t('TPPercent')}
+                label={t('TPPercent')}
+                placeholder={t('TPPercent')}
                 required = {false}
-                name = {'designation'}
-                id = {'designation'}
-                nextField = {'designation'}
+                name = {'tp_percent'}
+                id = {'TPPercent'}
+                nextField = {'Email'}
                 mt={8}
             />
 
-            <SelectForm
-                tooltip={t('Location')}
-                label={t('Location')}
-                placeholder={t('ChooseLocation')}
+            <InputForm
+                tooltip={t('InvalidEmail')}
+                label={t('Email')}
+                placeholder={t('Email')}
                 required = {false}
-                nextField = {'MarketingExecutive'}
-                name = {'location_id'}
+                nextField = {'Customer'}
+                name = {'email'}
                 form = {form}
-                dropdownValue={locationDropdown}
                 mt={8}
-                id = {'Location'}
+                id = {'Email'}
+            />
+
+            <SelectForm
+                tooltip={t('Customer')}
+                label={t('Customer')}
+                placeholder={t('ChooseCustomer')}
+                required = {false}
+                nextField = {'Address'}
+                name = {'customer_id'}
+                form = {form}
+                // dropdownValue={customerDropdown}
+                dropdownValue={['Customer1','Customer2']}
+                mt={8}
+                id = {'Customer'}
                 searchable={false}
             />
 
@@ -117,19 +119,6 @@ function VendorForm(props) {
                 form = {form}
                 mt={8}
                 id = {'Address'}
-            />
-
-            <SwitchForm
-                tooltip={t('Status')}
-                label={t('Status')}
-                required = {false}
-                nextField = {'Address'}
-                name = {'status'}
-                form = {form}
-                mt={12}
-                id = {'Status'}
-                position={'left'}
-                defaultChecked={false}
             />
         </Box>
         </ScrollArea>

@@ -65,6 +65,16 @@
   "Crtl+r": "Crtl + R",
   "CrtlrText": "Reset the form",
 
+
+  "VendorInformation": "Manage Vendors Information",
+  "VendorFormDetails": "Manage Vendors Information Details",
+  "CompanyName": "Company Name",
+  "CompanyNameValidateMessage": "Company Name must be 2-20 characters long",
+  "VendorName": "Vendor Name",
+  "TPPercent": "TP Percent",
+  "ChooseCustomer": "Choose Customer",
+  "ManageVendors": "Manage Vendors",
+
   "" : ""
 
 

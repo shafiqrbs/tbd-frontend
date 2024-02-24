@@ -37,8 +37,8 @@ function VendorView(props) {
                             <Box pb={`xs`} pl={'md'} >
                                 <Grid>
                                     <Grid.Col span={12} h={52}>
-                                        <Title order={6}>{t('UserInformation')}</Title>
-                                        <Text fz={`xs`}>{t('UserFormDetails')}</Text>
+                                        <Title order={6}>{t('VendorInformation')}</Title>
+                                        <Text fz={`xs`}>{t('VendorFormDetails')}</Text>
                                     </Grid.Col>
                                 </Grid>
                             </Box>
