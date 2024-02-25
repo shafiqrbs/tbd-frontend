@@ -4,12 +4,12 @@ export const getSelectDataWithParam = async (value) => {
     let data = []
     await axios({
         method: 'get',
-        url: import.meta.env.VITE_API_SELECT_GATEWAY_URL+value,
+        url: import.meta.env.VITE_API_GATEWAY_URL+value.url,
         headers: {
             "Accept": `application/json`,
             "Content-Type": `application/json`,
             "Access-Control-Allow-Origin": '*',
-            "X-Api-Key": 'poskeeper'
+            "X-Api-Key": import.meta.env.VITE_API_KEY
         },
         params : value.param
     })
@@ -31,7 +31,7 @@ export const getDataWithParam = async (value) => {
             "Accept": `application/json`,
             "Content-Type": `application/json`,
             "Access-Control-Allow-Origin": '*',
-            "X-Api-Key": 'poskeeper'
+            "X-Api-Key": import.meta.env.VITE_API_KEY
         },
         params : value.param
     })
@@ -53,7 +53,7 @@ export const getDataWithoutParam = async (value) => {
             "Accept": `application/json`,
             "Content-Type": `application/json`,
             "Access-Control-Allow-Origin": '*',
-            "X-Api-Key": 'poskeeper'
+            "X-Api-Key": import.meta.env.VITE_API_KEY
         }
     })
         .then(res => {
@@ -74,7 +74,7 @@ export const createData = async (value) => {
             "Accept": `application/json`,
             "Content-Type": `application/json`,
             "Access-Control-Allow-Origin": '*',
-            "X-Api-Key": 'poskeeper'
+            "X-Api-Key": import.meta.env.VITE_API_KEY
         },
         data : value.data
     })
@@ -90,15 +90,14 @@ export const createData = async (value) => {
 export const editData = async (value) => {
     let data = []
     await axios({
-        method: 'POST',
-        url: `${import.meta.env.VITE_API_GATEWAY_URL+value.url}`,
+        method: 'get',
+        url: `${import.meta.env.VITE_API_GATEWAY_URL+value}`,
         headers: {
             "Accept": `application/json`,
             "Content-Type": `application/json`,
             "Access-Control-Allow-Origin": '*',
-            "X-Api-Key": 'poskeeper'
+            "X-Api-Key": import.meta.env.VITE_API_KEY
         },
-        data : value.data
     })
         .then(res => {
             data = res
@@ -118,7 +117,7 @@ export const updateData = async (value) => {
             "Accept": `application/json`,
             "Content-Type": `application/json`,
             "Access-Control-Allow-Origin": '*',
-            "X-Api-Key": 'poskeeper'
+            "X-Api-Key": import.meta.env.VITE_API_KEY
         },
         data : value.data
     })
@@ -140,7 +139,7 @@ export const showData = async (value) => {
             "Accept": `application/json`,
             "Content-Type": `application/json`,
             "Access-Control-Allow-Origin": '*',
-            "X-Api-Key": 'poskeeper'
+            "X-Api-Key": import.meta.env.VITE_API_KEY
         },
         data : value.data
     })
@@ -156,15 +155,14 @@ export const showData = async (value) => {
 export const deleteData = async (value) => {
     let data = []
     await axios({
-        method: 'POST',
-        url: `${import.meta.env.VITE_API_GATEWAY_URL+value.url}`,
+        method: 'delete',
+        url: `${import.meta.env.VITE_API_GATEWAY_URL+value}`,
         headers: {
             "Accept": `application/json`,
             "Content-Type": `application/json`,
             "Access-Control-Allow-Origin": '*',
-            "X-Api-Key": 'poskeeper'
+            "X-Api-Key": import.meta.env.VITE_API_KEY
         },
-        data : value.data
     })
         .then(res => {
             data = res

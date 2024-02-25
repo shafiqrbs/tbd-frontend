@@ -4,28 +4,52 @@ import {
     Group,
     Tooltip,
     Box,
-    TextInput, Grid, ActionIcon,rem
+    TextInput, Grid, ActionIcon, rem, Text
 } from "@mantine/core";
 import {useTranslation} from "react-i18next";
 import {IconFilter, IconSearch, IconInfoCircle, IconEye, IconEdit, IconTrash, IconRestore} from "@tabler/icons-react";
 import axios from "axios";
 import {DataTable} from 'mantine-datatable';
 import {useDispatch, useSelector} from "react-redux";
-import {getIndexEntityData, setFetching} from "../../../../store/core/crudSlice.js";
+import {
+    deleteEntityData,
+    editEntityData,
+    getIndexEntityData,
+    setFetching,
+    storeEntityData
+} from "../../../../store/core/crudSlice.js";
+import {modals} from "@mantine/modals";
+import {useHotkeys} from "@mantine/hooks";
 
 
-function CustomerTable(props) {
-
-    const {form} = props
+function CustomerTable() {
     const dispatch = useDispatch();
     const {t, i18n} = useTranslation();
     const {isOnline, mainAreaHeight} = useOutletContext();
     const height = mainAreaHeight - 104; //TabList height 104
+
+    const [searchKeyword,setSearchKeyword] = useState('')
+
     const fetching = useSelector((state) => state.crudSlice.fetching)
     const indexData = useSelector((state) => state.crudSlice.indexEntityData)
+
     useEffect(() => {
-        dispatch(getIndexEntityData('customer'))
+        const value = {
+            url : 'customer',
+            param : {
+                term : searchKeyword
+            }
+        }
+        dispatch(getIndexEntityData(value))
+        dispatch(setFetching(false))
     }, [fetching]);
+
+    useHotkeys(
+        [['shift+F', () => {
+            document.getElementById('searchKeyword').focus();
+        }]
+    ],[]
+    );
 
     return (
         <>
@@ -49,12 +73,25 @@ function CustomerTable(props) {
                                     }
                                     size="sm"
                                     placeholder={t('EnterSearchAnyKeyword')}
+                                    onChange={(e)=>{
+                                        setSearchKeyword(e.target.value)
+                                    }}
+                                    value={searchKeyword}
+                                    id={'searchKeyword'}
                                 />
                             </Grid.Col>
                             <Grid.Col span={2}>
 
                                 <ActionIcon.Group mt={'1'}>
-                                    <ActionIcon variant="transparent" size="lg" mr={16} aria-label="Gallery">
+                                    <ActionIcon
+                                        variant="transparent"
+                                        size="lg" mr={16}
+                                        aria-label="Gallery"
+                                        onClick={()=>{
+                                            searchKeyword.length>0 &&
+                                                dispatch(setFetching(true))
+                                        }}
+                                    >
                                         <Tooltip
                                             label={t('SearchButton')}
                                             px={16}
@@ -83,7 +120,15 @@ function CustomerTable(props) {
                                             <IconFilter style={{ width: rem(20) }} stroke={2.0} />
                                         </Tooltip>
                                     </ActionIcon>
-                                    <ActionIcon variant="transparent" size="lg" aria-label="Settings">
+                                    <ActionIcon
+                                        variant="transparent"
+                                        size="lg"
+                                        aria-label="Settings"
+                                        onClick={(e)=>{
+                                            dispatch(setFetching(true))
+                                            setSearchKeyword('')
+                                        }}
+                                    >
                                         <Tooltip
                                             label={t("ResetButton")}
                                             px={16}
@@ -105,7 +150,6 @@ function CustomerTable(props) {
                 </Box>
                 <Box>
                     {
-                        // (customerIndexData && customerIndexData.length > 0) &&
                         <DataTable
                             withBorder
                             records={indexData}
@@ -124,17 +168,20 @@ function CustomerTable(props) {
                                     textAlign: "right",
                                     render: (data) => (
                                         <Group gap={4} justify="right" wrap="nowrap">
-                                            <ActionIcon
+                                            {/*<ActionIcon
                                                 size="sm"
                                                 variant="subtle"
                                                 color="green"
                                             >
                                                 <IconEye size={16}/>
-                                            </ActionIcon>
+                                            </ActionIcon>*/}
                                             <ActionIcon
                                                 size="sm"
                                                 variant="subtle"
                                                 color="blue"
+                                                onClick={()=>{
+                                                    dispatch(editEntityData('customer/'+data.id))
+                                                }}
                                             >
                                                 <IconEdit size={16}/>
                                             </ActionIcon>
@@ -142,6 +189,22 @@ function CustomerTable(props) {
                                                 size="sm"
                                                 variant="subtle"
                                                 color="red"
+                                                onClick={()=>{
+                                                    modals.openConfirmModal({
+                                                        title: (
+                                                            <Text size="md"> {t("FormConfirmationTitle")}</Text>
+                                                        ),
+                                                        children: (
+                                                            <Text size="sm"> {t("FormConfirmationMessage")}</Text>
+                                                        ),
+                                                        labels: {confirm: 'Confirm', cancel: 'Cancel'},
+                                                        onCancel: () => console.log('Cancel'),
+                                                        onConfirm: () => {
+                                                            dispatch(deleteEntityData('customer/'+data.id))
+                                                            dispatch(setFetching(true))
+                                                        },
+                                                    });
+                                                }}
                                             >
                                                 <IconTrash size={16}/>
                                             </ActionIcon>

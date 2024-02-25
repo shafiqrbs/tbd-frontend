@@ -30,9 +30,10 @@ import CustomerSales from "./CustomerView";
 import CustomerLedger from "../../master-data/customer/CustomerLedger";
 import CustomerInvoice from "../../master-data/customer/CustomerInvoice";
 import axios from "axios";
-import {createCustomerData, getUserDropdown, setFetching} from "../../../../store/core/customerSlice";
+import {createCustomerData, getUserDropdown} from "../../../../store/core/customerSlice";
 import {useDispatch, useSelector} from "react-redux";
-import {storeEntityData} from "../../../../store/core/crudSlice";
+import {storeEntityData,setFetching} from "../../../../store/core/crudSlice";
+import {useHotkeys} from "@mantine/hooks";
 
 function CustomerIndex() {
     const {t, i18n} = useTranslation();
@@ -45,13 +46,15 @@ function CustomerIndex() {
     const {isOnline, mainAreaHeight} = useOutletContext();
 
     const newCustomerData = useSelector((state) => state.customerSlice.newCustomerData)
-    console.log(newCustomerData)
 
     const form = useForm({
         initialValues: {
             location_id:'', marketing_id:'', name:'', mobile:'', customer_group:'', credit_limit:'', reference_id:'', alternative_mobile:'', address:'', email:'', status:''
         }
     });
+    useHotkeys([['shift+r', () => {form.reset()}]],[]);
+    useHotkeys([['shift+s', () => {document.getElementById('customerSave').click()}]],[]);
+
     const tabCreateNewRightButtons = (
         <Group mt={4} pos={`absolute`} right={12} gap={0}>
             <Tooltip
@@ -67,6 +70,7 @@ function CustomerIndex() {
             </Tooltip>
             <>
                 <Button
+                    id={'customerSave'}
                     disabled={saveCreateLoading}
                     size="md"
                     color={`indigo.7`}
@@ -115,9 +119,6 @@ function CustomerIndex() {
                                         setSaveCreateLoading(false)
                                         dispatch(setFetching(true))
                                     },500)
-
-                                    console.log(form.values)
-
                                 },
                             });
                         }

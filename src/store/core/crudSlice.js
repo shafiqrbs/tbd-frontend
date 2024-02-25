@@ -1,9 +1,9 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
-import {createData, getDataWithoutParam, getDataWithParam} from "../../services/apiService";
+import {createData, deleteData, editData, getDataWithoutParam, getDataWithParam} from "../../services/apiService";
 
 export const getIndexEntityData = createAsyncThunk("index", async (value) => {
     try {
-        const response = getDataWithoutParam(value);
+        const response = getDataWithParam(value);
         return response;
     } catch (error) {
         console.log('error', error.message);
@@ -79,11 +79,11 @@ const crudSlice = createSlice({
         fetching : true,
         indexEntityData : [],
         storeEntityData : [],
-        editEntityData : [],
+        entityEditData : [],
         updateEntityData : [],
         showEntityData : [],
         customerIndexData : [],
-        deleteEntityData : []
+        entityDataDelete : []
     },
     reducers : {
         setFetching : (state,action) => {
@@ -108,7 +108,7 @@ const crudSlice = createSlice({
         })
 
         builder.addCase(editEntityData.fulfilled, (state, action) => {
-            state.editEntityData = action.payload.data.data
+            state.entityEditData = action.payload.data.data
         })
 
         builder.addCase(updateEntityData.fulfilled, (state, action) => {
@@ -120,7 +120,7 @@ const crudSlice = createSlice({
         })
 
         builder.addCase(deleteEntityData.fulfilled, (state, action) => {
-            state.deleteEntityData = action.payload.data.data
+            state.entityDataDelete = action.payload.data.data
         })
 
 

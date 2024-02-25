@@ -8,7 +8,7 @@ import {
 import {useTranslation} from 'react-i18next';
 import {IconInfoCircle, IconPlus, IconX, IconXboxX} from "@tabler/icons-react";
 import CustomerView from "./CustomerView";
-import {getHotkeyHandler, useDisclosure} from "@mantine/hooks";
+import {getHotkeyHandler, useDisclosure, useHotkeys} from "@mantine/hooks";
 import CustomerGroupModel from "./CustomerGroupModal";
 import axios from "axios";
 import InputForm from "../../../form-builders/InputForm";
@@ -40,11 +40,40 @@ function CustomerForm(props) {
 
     const locationDropdownData = useSelector((state) => state.utilitySlice.locationDropdownData)
     const executiveDropdownData = useSelector((state) => state.utilitySlice.executiveDropdownData)
+    const entityEditData = useSelector((state) => state.crudSlice.entityEditData)
+
+    console.log(entityEditData)
+
+    // form.setFieldValue(name, 'raju');
+
+    /*if (entityEditData.name && entityEditData.name.length > 0){
+        console.log(entityEditData.name)
+        form.setFieldValue('name',entityEditData.name)
+    }*/
+
+
     let locationDropdown = locationDropdownData && locationDropdownData.length > 0 ? locationDropdownData.map((type, index) => {return ({'label': type.name, 'value': String(type.id)})}):[]
     let executiveDropdown = executiveDropdownData && executiveDropdownData.length > 0 ? executiveDropdownData.map((type, index) => {return ({'label': type.name, 'value': String(type.id)})}):[]
     useEffect(() => {
-        dispatch(getLocationDropdown('location'))
-        dispatch(getExecutiveDropdown('executive'))
+        /*if (entityEditData.name){
+            console.log(entityEditData.name)
+            form.setFieldValue('name',entityEditData.name)
+        }*/
+
+        const valueForLocation = {
+            url : 'core/select/location',
+            param : {
+                term : ''
+            }
+        }
+        const valueForExecutive = {
+            url : 'core/select/executive',
+            param : {
+                term : ''
+            }
+        }
+        dispatch(getLocationDropdown(valueForLocation))
+        dispatch(getExecutiveDropdown(valueForExecutive))
     }, []);
 
     const userDropdownData = useSelector((state) => state.customerSlice.userDropdownData)
@@ -63,6 +92,8 @@ function CustomerForm(props) {
     }, [searchValue]);
     let testDropdown = userDropdownData && userDropdownData.length > 0 ?userDropdownData.map((type, index) => {return ({'label': type.full_name, 'value': String(type.id)})}):[]
 
+
+    useHotkeys([['shift+n', () => {document.getElementById('CustomerName').focus()}]],[]);
 
     return (
         <Box p={`md`}>
@@ -98,7 +129,7 @@ function CustomerForm(props) {
                 name = {'name'}
                 form = {form}
                 mt={0}
-                id = {'Name'}
+                id = {'CustomerName'}
             />
 
             <Grid gutter={{ base:6}}>
@@ -209,7 +240,7 @@ function CustomerForm(props) {
                 dropdownValue={locationDropdown}
                 mt={8}
                 id = {'Location'}
-                searchable={false}
+                searchable={true}
             />
 
 

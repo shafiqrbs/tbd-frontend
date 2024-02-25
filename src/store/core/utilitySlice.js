@@ -73,7 +73,7 @@ const utilitySlice = createSlice({
         vendorDropdownData : [],
         userDropdownData : [],
         locationDropdownData : [],
-        getExecutiveDropdown : [],
+        executiveDropdownData : [],
     },
     reducers : {
         setFetching : (state,action) => {

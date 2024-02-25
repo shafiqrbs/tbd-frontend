@@ -27,20 +27,13 @@ function CustomerView(props) {
     const {t, i18n} = useTranslation();
     const {isOnline, mainAreaHeight} = useOutletContext();
     const height = mainAreaHeight - 104; //TabList height 104
-    const fetching = useSelector((state) => state.customerSlice.fetching)
-    const customerIndexData = useSelector((state) => state.customerSlice.customerIndexData)
-
-    useEffect(() => {
-        dispatch(getCustomerIndexData('customer'))
-    }, [fetching]);
-
 
     return (
         <>
             <Box pr={12} pl={'12'} mt={16}>
                 <Grid gutter="xs">
                     <Grid.Col span={8}  className={"grid-radius"} >
-                        <CustomerTable form={form} />
+                        <CustomerTable />
                     </Grid.Col>
                     <Grid.Col span="auto" className={"grid-radius"} >
                         <Box bg={"white"} pd={`md`}>
