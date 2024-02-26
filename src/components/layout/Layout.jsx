@@ -35,11 +35,11 @@ function Layout() {
                     breakpoint: "sm",
                     collapsed: {mobile: !mobileOpened, desktop: !navbarOpened},
                 }}
-                aside={{
+                /*aside={{
                     width: 88,
                     breakpoint: "sm",
                     collapsed: {mobile: !mobileOpened, desktop: rightSidebarOpened},
-                }}
+                }}*/
                 padding="0"
             >
                 <AppShell.Header bg={`gray.0`}>
@@ -60,9 +60,9 @@ function Layout() {
                     <Outlet context={{isOnline, mainAreaHeight}}/>
                 </AppShell.Main>
 
-                <AppShell.Aside p="xs">
-                    <Aside/>
-                </AppShell.Aside>
+                {/*<AppShell.Shortcut p="xs">
+                    <Shortcut/>
+                </AppShell.Shortcut>*/}
 
                 <AppShell.Footer p="5">
                     <Footer/>

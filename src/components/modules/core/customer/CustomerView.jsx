@@ -19,6 +19,8 @@ import {useDispatch, useSelector} from "react-redux";
 import {getCustomerIndexData, setFetching} from "../../../../store/core/customerSlice";
 import VendorTable from "../vendor/VendorTable";
 import CustomerTable from "./CustomerTable";
+import Aside from "../../../layout/Aside.jsx";
+import Shortcut from "../../shortcut/Shortcut.jsx";
 
 function CustomerView(props) {
 
@@ -32,10 +34,10 @@ function CustomerView(props) {
         <>
             <Box pr={12} pl={'12'} mt={16}>
                 <Grid gutter="xs">
-                    <Grid.Col span={8}  className={"grid-radius"} >
+                    <Grid.Col span={7}  className={"grid-radius"} >
                         <CustomerTable />
                     </Grid.Col>
-                    <Grid.Col span="auto" className={"grid-radius"} >
+                    <Grid.Col span={4} className={"grid-radius"} >
                         <Box bg={"white"} pd={`md`}>
                             <Box pb={`xs`} pl={'md'} >
                                 <Grid>
@@ -51,6 +53,11 @@ function CustomerView(props) {
                             </ScrollArea>
                         </Box>
                     </Grid.Col>
+
+                    <Grid.Col span={"auto"}  className={"grid-radius"} >
+                        <Shortcut />
+                    </Grid.Col>
+
                 </Grid>
             </Box>
         </>
