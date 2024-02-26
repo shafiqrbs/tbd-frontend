@@ -56,14 +56,14 @@
 
 
   "ShortCut": "SHORTCUT",
-  "Crtl+f": "Crtl + F",
-  "CrtlfText": "Find the table value",
-  "Crtl+s": "Crtl + S",
-  "CrtlsText": "Save the form value",
-  "Crtl+n": "Crtl + N",
-  "CrtlnText": "Enter the new form first field",
-  "Crtl+r": "Crtl + R",
-  "CrtlrText": "Reset the form",
+  "Shift+f": "Shift + F",
+  "ShiftText": "Find the table value",
+  "Shift+s": "Shift + S",
+  "ShiftsText": "Save the form value",
+  "Shift+n": "Shift + N",
+  "ShiftnText": "Enter the new form first field",
+  "Shift+r": "Shift + R",
+  "ShiftrText": "Reset the form",
 
 
   "VendorInformation": "Manage Vendors Information",

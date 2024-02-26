@@ -7,7 +7,7 @@ import {useTranslation} from "react-i18next";
 import {getHotkeyHandler} from "@mantine/hooks";
 
 function SelectForm(props) {
-    const {label,placeholder,required,nextField,name,form,tooltip,mt,id,dropdownValue,searchable,value} = props
+    const {label,placeholder,required,nextField,name,form,tooltip,mt,id,dropdownValue,searchable,value,changeValue} = props
     const {t, i18n} = useTranslation();
     return (
         <>
@@ -42,6 +42,9 @@ function SelectForm(props) {
                             }],
                         ])}
                         value={value}
+                        onChange={(e)=>{
+                            changeValue(e)
+                        }}
                     />
                 </Tooltip>
 

@@ -111,7 +111,7 @@ export const editData = async (value) => {
 export const updateData = async (value) => {
     let data = []
     await axios({
-        method: 'POST',
+        method: 'PATCH',
         url: `${import.meta.env.VITE_API_GATEWAY_URL+value.url}`,
         headers: {
             "Accept": `application/json`,

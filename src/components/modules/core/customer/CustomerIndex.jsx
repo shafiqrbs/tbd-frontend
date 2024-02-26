@@ -32,7 +32,7 @@ import CustomerInvoice from "../../master-data/customer/CustomerInvoice";
 import axios from "axios";
 import {createCustomerData, getUserDropdown} from "../../../../store/core/customerSlice";
 import {useDispatch, useSelector} from "react-redux";
-import {storeEntityData,setFetching} from "../../../../store/core/crudSlice";
+import {storeEntityData, setFetching, updateEntityData, editEntityData} from "../../../../store/core/crudSlice";
 import {useHotkeys} from "@mantine/hooks";
 
 function CustomerIndex() {
@@ -45,7 +45,14 @@ function CustomerIndex() {
     const [formSubmitData, setFormSubmitData] = useState([]);
     const {isOnline, mainAreaHeight} = useOutletContext();
 
-    const newCustomerData = useSelector((state) => state.customerSlice.newCustomerData)
+    const [customerGroup, setCustomerGroup] = useState('');
+    const [location, setLocation] = useState('');
+    const [marketing, setMarketing] = useState('');
+
+    const formLoading = useSelector((state) => state.crudSlice.formLoading)
+    const insertType = useSelector((state) => state.crudSlice.insertType)
+    const entityEditData = useSelector((state) => state.crudSlice.editEntityData)
+
 
     const form = useForm({
         initialValues: {
@@ -106,11 +113,21 @@ function CustomerIndex() {
                                 onCancel: () => console.log('Cancel'),
                                 onConfirm: () => {
                                     setSaveCreateLoading(true)
+
+                                    const formData = form.values
+                                    formData['marketing_id'] = Number(marketing)
+                                    formData['location_id'] = Number(location)
+                                    formData['customer_group'] = customerGroup
+
                                     const value = {
-                                        url : 'customer',
-                                        data : form.values
+                                        url : insertType === 'update'?'customer/'+entityEditData.id:'customer',
+                                        data : formData
                                     }
-                                    dispatch(storeEntityData(value))
+
+                                    insertType === 'create' && dispatch(storeEntityData(value))
+                                    insertType === 'update' && dispatch(updateEntityData(value))
+
+
                                     setTimeout(()=>{
                                         form.setFieldValue('location_id', '')
                                         form.setFieldValue('marketing_id', '')
@@ -199,6 +216,12 @@ function CustomerIndex() {
                 <Tabs.Panel value="CustomerView" h={'52'}>
                     <CustomerView
                         form={form}
+                        customerGroup={customerGroup}
+                        setCustomerGroup={setCustomerGroup}
+                        location={location}
+                        setLocation={setLocation}
+                        marketing={marketing}
+                        setMarketing={setMarketing}
                     />
                 </Tabs.Panel>
 

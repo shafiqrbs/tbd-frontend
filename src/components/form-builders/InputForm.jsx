@@ -10,7 +10,7 @@ import {getHotkeyHandler} from "@mantine/hooks";
 
 function InputForm(props) {
     const {label,placeholder,required,nextField,name,form,tooltip,mt,id} = props
-    console.log(form.values)
+    // console.log(form.values)
     const {t, i18n} = useTranslation();
     return (
         <>
@@ -32,7 +32,6 @@ function InputForm(props) {
                     id={id}
                     size="sm"
                     label={label}
-                    value={form.values[name]}
                     placeholder={placeholder}
                     withAsterisk={required}
                     mt={mt}

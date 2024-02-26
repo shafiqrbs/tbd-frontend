@@ -2,8 +2,8 @@ import React from 'react'
 import {IconFilter, IconSearch, IconDeviceFloppy, IconRestore,IconArrowUp, IconPlus, IconTableShortcut} from "@tabler/icons-react";
 import {Button, Flex, Group, LoadingOverlay, Text, Tooltip, Grid, Title, Box,Affix,Transition} from "@mantine/core";
 import {useTranslation} from "react-i18next";
-import { useWindowScroll } from '@mantine/hooks';
-function Shortcut() {
+import {useHotkeys, useWindowScroll} from '@mantine/hooks';
+function Shortcut(props) {
   const {t, i18n} = useTranslation();
   const [scroll, scrollTo] = useWindowScroll();
   return (
@@ -14,7 +14,7 @@ function Shortcut() {
       </Box>
       <Box h={1} bg={`gray.1`} mb={'md'}></Box>
       <Tooltip
-          label={t('CrtlfText')}
+          label={t('ShiftText')}
           px={16}
           py={2}
           withArrow
@@ -30,18 +30,21 @@ function Shortcut() {
             pr={'16'}
             variant={'light'}
             color={`indigo`}
+            onClick={()=>{
+              document.getElementById(props.shiftF).focus();
+            }}
         >
           <Flex direction={`column`} align={'center'}>
             <IconSearch size={16}/>
             <Text fz={10}>
-              {t('Crtl+f')}
+              {t('Shift+f')}
             </Text>
           </Flex>
         </Button>
       </Tooltip>
 
       <Tooltip
-          label={t('CrtlnText')}
+          label={t('ShiftnText')}
           px={16}
           py={2}
           withArrow
@@ -57,17 +60,20 @@ function Shortcut() {
             pr={'16'}
             variant={'light'}
             color={`indigo`}
+            onClick={()=>{
+              document.getElementById(props.shiftN).focus();
+            }}
         >
           <Flex direction={`column`} align={'center'}>
             <IconPlus size={16}/>
             <Text fz={10}>
-              {t('Crtl+n')}
+              {t('Shift+n')}
             </Text>
           </Flex>
         </Button>
       </Tooltip>
       <Tooltip
-          label={t('CrtlrText')}
+          label={t('ShiftrText')}
           px={16}
           py={2}
           withArrow
@@ -83,18 +89,21 @@ function Shortcut() {
             pr={'16'}
             variant={'light'}
             color={`indigo`}
+            onClick={(e)=>{
+              props.shiftR.reset()
+            }}
         >
           <Flex direction={`column`} align={'center'}>
 
             <IconRestore size={16}/>
             <Text fz={10}>
-              {t('Crtl+r')}
+              {t('Shift+r')}
             </Text>
           </Flex>
         </Button>
       </Tooltip>
       <Tooltip
-          label={t('CrtlsText')}
+          label={t('ShiftsText')}
           px={16}
           py={2}
           withArrow
@@ -110,12 +119,15 @@ function Shortcut() {
             pr={'16'}
             variant={'light'}
             color={`indigo`}
+            onClick={()=>{
+              document.getElementById(props.shiftS).click()
+            }}
         >
           <Flex direction={`column`} align={'center'}>
 
             <IconDeviceFloppy size={16}/>
             <Text fz={10}>
-              {t('Crtl+s')}
+              {t('Shift+s')}
             </Text>
           </Flex>
         </Button>

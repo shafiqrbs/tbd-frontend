@@ -3,7 +3,7 @@ import {useOutletContext} from "react-router-dom";
 import {
     Button,
     rem,
-    Grid, Box, ScrollArea, Tooltip, TextInput, Switch, Group, Text, LoadingOverlay, Modal,
+    Grid, Box, ScrollArea, Tooltip, TextInput, Switch, Group, Text, LoadingOverlay, Modal, Select,
 } from "@mantine/core";
 import {useTranslation} from 'react-i18next';
 import {IconInfoCircle, IconPlus, IconX, IconXboxX} from "@tabler/icons-react";
@@ -38,11 +38,19 @@ function CustomerForm(props) {
     const [opened, { open, close }] = useDisclosure(false);
     const [testModelOpend, setTestModelOpend] = useState(false);
 
+    /*const [customerGroup, setCustomerGroup] = useState('');
+    const [location, setLocation] = useState('');
+    const [marketing, setMarketing] = useState('');*/
+
     const locationDropdownData = useSelector((state) => state.utilitySlice.locationDropdownData)
     const executiveDropdownData = useSelector((state) => state.utilitySlice.executiveDropdownData)
-    const entityEditData = useSelector((state) => state.crudSlice.entityEditData)
+    const entityEditData = useSelector((state) => state.crudSlice.editEntityData)
+    const formLoading = useSelector((state) => state.crudSlice.formLoading)
 
-    console.log(entityEditData)
+
+    // console.log(entityEditData)
+    // form.setValues({ name: 'John' });
+
 
     // form.setFieldValue(name, 'raju');
 
@@ -120,6 +128,7 @@ function CustomerForm(props) {
             </Modal>
 
 */}
+
             <InputForm
                 tooltip={t('NameValidateMessage')}
                 label={t('Name')}
@@ -130,6 +139,7 @@ function CustomerForm(props) {
                 form = {form}
                 mt={0}
                 id = {'CustomerName'}
+                value={"test"}
             />
 
             <Grid gutter={{ base:6}}>
@@ -146,6 +156,8 @@ function CustomerForm(props) {
                         mt={8}
                         id = {'CustomerGroup'}
                         searchable={false}
+                        value={ props.customerGroup && !formLoading ? props.customerGroup: String(entityEditData.customer_group)}
+                        changeValue={props.setCustomerGroup}
                     />
                     {/*<SelectServerSideForm
                         tooltip={t('CustomerGroup')}
@@ -241,6 +253,8 @@ function CustomerForm(props) {
                 mt={8}
                 id = {'Location'}
                 searchable={true}
+                value={ props.location && !formLoading ? props.location: String(entityEditData.location_id)}
+                changeValue={props.setLocation}
             />
 
 
@@ -256,6 +270,8 @@ function CustomerForm(props) {
                 mt={8}
                 id = {'MarketingExecutive'}
                 searchable={true}
+                value={ props.marketing && !formLoading ? props.marketing: String(entityEditData.marketing_id)}
+                changeValue={props.setMarketing}
             />
 
 
@@ -281,7 +297,8 @@ function CustomerForm(props) {
                 mt={12}
                 id = {'Status'}
                 position={'left'}
-                defaultChecked={false}
+                // defaultChecked={!!(formLoading && entityEditData.status === 1)}
+                defaultChecked={1}
             />
         </Box>
     );

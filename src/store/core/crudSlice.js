@@ -1,5 +1,12 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
-import {createData, deleteData, editData, getDataWithoutParam, getDataWithParam} from "../../services/apiService";
+import {
+    createData,
+    deleteData,
+    editData,
+    getDataWithoutParam,
+    getDataWithParam,
+    updateData
+} from "../../services/apiService";
 
 export const getIndexEntityData = createAsyncThunk("index", async (value) => {
     try {
@@ -79,16 +86,24 @@ const crudSlice = createSlice({
         fetching : true,
         indexEntityData : [],
         storeEntityData : [],
-        entityEditData : [],
+        editEntityData : [],
         updateEntityData : [],
         showEntityData : [],
         customerIndexData : [],
-        entityDataDelete : []
+        entityDataDelete : [],
+        formLoading : false,
+        insertType : 'create',
     },
     reducers : {
         setFetching : (state,action) => {
             state.fetching = action.payload
         },
+        setFormLoading : (state,action) => {
+            state.formLoading = action.payload
+        },
+        setInsertType : (state,action)=>{
+            state.insertType = action.payload
+        }
     },
 
     extraReducers : (builder) => {
@@ -108,7 +123,7 @@ const crudSlice = createSlice({
         })
 
         builder.addCase(editEntityData.fulfilled, (state, action) => {
-            state.entityEditData = action.payload.data.data
+            state.editEntityData = action.payload.data.data
         })
 
         builder.addCase(updateEntityData.fulfilled, (state, action) => {
@@ -127,6 +142,6 @@ const crudSlice = createSlice({
     }
 })
 
-export const { setFetching } = crudSlice.actions
+export const { setFetching,setFormLoading ,setInsertType} = crudSlice.actions
 
 export default crudSlice.reducer;

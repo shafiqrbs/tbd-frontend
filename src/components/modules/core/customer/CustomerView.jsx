@@ -8,7 +8,7 @@ import {
     Box,
     ScrollArea,
     Title,
-    TextInput, Grid, ActionIcon,rem
+    TextInput, Grid, ActionIcon, rem, LoadingOverlay
 } from "@mantine/core";
 import {useTranslation} from "react-i18next";
 import {IconFilter, IconSearch, IconInfoCircle, IconEye, IconEdit, IconTrash, IconRestore} from "@tabler/icons-react";
@@ -30,12 +30,14 @@ function CustomerView(props) {
     const {isOnline, mainAreaHeight} = useOutletContext();
     const height = mainAreaHeight - 104; //TabList height 104
 
+    const formLoading = useSelector((state) => state.crudSlice.formLoading)
+
     return (
         <>
             <Box pr={12} pl={'12'} mt={16}>
                 <Grid gutter="xs">
                     <Grid.Col span={7}  className={"grid-radius"} >
-                        <CustomerTable />
+                        <CustomerTable form={form} />
                     </Grid.Col>
                     <Grid.Col span={4} className={"grid-radius"} >
                         <Box bg={"white"} pd={`md`}>
@@ -49,13 +51,27 @@ function CustomerView(props) {
                             </Box>
                             <Box h={1} bg={`gray.1`}></Box>
                             <ScrollArea h={height}  scrollbarSize={2}>
-                                <CustomerForm form={form}/>
+                                <LoadingOverlay visible={formLoading} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />
+                                <CustomerForm
+                                    form={form}
+                                    customerGroup={props.customerGroup}
+                                    setCustomerGroup={props.setCustomerGroup}
+                                    location={props.location}
+                                    setLocation={props.setLocation}
+                                    marketing={props.marketing}
+                                    setMarketing={props.setMarketing}
+                                />
                             </ScrollArea>
                         </Box>
                     </Grid.Col>
 
                     <Grid.Col span={"auto"}  className={"grid-radius"} >
-                        <Shortcut />
+                        <Shortcut
+                            shiftF={"customerSearchKeyword"}
+                            shiftN={"CustomerName"}
+                            shiftR={form}
+                            shiftS={"customerSave"}
+                        />
                     </Grid.Col>
 
                 </Grid>

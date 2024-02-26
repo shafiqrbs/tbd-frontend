@@ -15,23 +15,49 @@ import {
     deleteEntityData,
     editEntityData,
     getIndexEntityData,
-    setFetching,
+    setFetching, setFormLoading, setInsertType,
     storeEntityData
 } from "../../../../store/core/crudSlice.js";
 import {modals} from "@mantine/modals";
 import {useHotkeys} from "@mantine/hooks";
 
 
-function CustomerTable() {
+function CustomerTable(props) {
     const dispatch = useDispatch();
     const {t, i18n} = useTranslation();
     const {isOnline, mainAreaHeight} = useOutletContext();
     const height = mainAreaHeight - 104; //TabList height 104
 
     const [searchKeyword,setSearchKeyword] = useState('')
+    const [isSetFormData,setFormData] = useState(false)
 
     const fetching = useSelector((state) => state.crudSlice.fetching)
     const indexData = useSelector((state) => state.crudSlice.indexEntityData)
+    const entityEditData = useSelector((state) => state.crudSlice.editEntityData)
+
+    useEffect(() => {
+
+        if (entityEditData.name && entityEditData.name.length>0){
+            props.form.setValues({
+                name: entityEditData.name,
+                customer_group: entityEditData.customer_group,
+                credit_limit : entityEditData.credit_Limit,
+                mobile : entityEditData.mobile,
+                marketing_id : entityEditData.marketing_id,
+                location_id : entityEditData.location_id,
+                reference_id : entityEditData.reference_id,
+                alternative_mobile : entityEditData.alternative_mobile,
+                address : entityEditData.address,
+                email : entityEditData.email,
+                status : entityEditData.status,
+            });
+        }
+
+        setFormData(false)
+        setTimeout(()=>{
+            dispatch(setFormLoading(false))
+        },1000)
+    }, [isSetFormData]);
 
     useEffect(() => {
         const value = {
@@ -46,7 +72,7 @@ function CustomerTable() {
 
     useHotkeys(
         [['shift+F', () => {
-            document.getElementById('searchKeyword').focus();
+            document.getElementById('customerSearchKeyword').focus();
         }]
     ],[]
     );
@@ -77,7 +103,7 @@ function CustomerTable() {
                                         setSearchKeyword(e.target.value)
                                     }}
                                     value={searchKeyword}
-                                    id={'searchKeyword'}
+                                    id={'customerSearchKeyword'}
                                 />
                             </Grid.Col>
                             <Grid.Col span={2}>
@@ -180,7 +206,10 @@ function CustomerTable() {
                                                 variant="subtle"
                                                 color="blue"
                                                 onClick={()=>{
+                                                    dispatch(setInsertType('update'))
+                                                    dispatch(setFormLoading(true))
                                                     dispatch(editEntityData('customer/'+data.id))
+                                                    setFormData(true)
                                                 }}
                                             >
                                                 <IconEdit size={16}/>
