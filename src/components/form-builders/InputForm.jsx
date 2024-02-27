@@ -1,6 +1,5 @@
 import React from "react";
 import {
-    rem,
     Tooltip,
     TextInput
 } from "@mantine/core";
@@ -9,16 +8,18 @@ import {IconInfoCircle, IconX} from "@tabler/icons-react";
 import {getHotkeyHandler} from "@mantine/hooks";
 
 function InputForm(props) {
-    const {label,placeholder,required,nextField,name,form,tooltip,mt,id} = props
-    // console.log(form.values)
+
+    const {label, placeholder, required, nextField, name, form, tooltip, mt, id} = props
+
     const {t, i18n} = useTranslation();
+
     return (
         <>
             {
                 form &&
                 <Tooltip
                     label={tooltip}
-                    opened={ (name in form.errors) && !!form.errors[name]}
+                    opened={(name in form.errors) && !!form.errors[name]}
                     px={16}
                     py={2}
                     position="top-end"
@@ -28,49 +29,48 @@ function InputForm(props) {
                     zIndex={0}
                     transitionProps={{transition: "pop-bottom-left", duration: 500}}
                 >
-                <TextInput
-                    id={id}
-                    size="sm"
-                    label={label}
-                    placeholder={placeholder}
-                    withAsterisk={required}
-                    mt={mt}
-                    {...form.getInputProps(name && name)}
-                    onKeyDown={getHotkeyHandler([
-                        ['Enter', (e) => {
-                            document.getElementById(nextField).focus();
-                        }],
-                    ])}
-                    rightSection={
-                         form.values[name] ?
-                            <Tooltip
-                                label={t("Close")}
-                                withArrow
-                                bg={`red.5`}
-                            >
-                                <IconX color={`red`} size={16} opacity={0.5} onClick={()=>{
-                                    form.setFieldValue(name, '');
-                                }}/>
-                            </Tooltip>
-                            :
-                            <Tooltip
-                                label={tooltip}
-                                px={16}
-                                py={2}
-                                withArrow
-                                position={"left"}
-                                c={'indigo'}
-                                bg={`gray.1`}
-                                transitionProps={{transition: "pop-bottom-left", duration: 500}}
-                            >
-                                <IconInfoCircle size={16} opacity={0.5}/>
-                            </Tooltip>
-                    }
-                />
+                    <TextInput
+                        id={id}
+                        size="sm"
+                        label={label}
+                        placeholder={placeholder}
+                        withAsterisk={required}
+                        mt={mt}
+                        {...form.getInputProps(name && name)}
+                        onKeyDown={getHotkeyHandler([
+                            ['Enter', (e) => {
+                                document.getElementById(nextField).focus();
+                            }],
+                        ])}
+                        rightSection={
+                            form.values[name] ?
+                                <Tooltip
+                                    label={t("Close")}
+                                    withArrow
+                                    bg={`red.5`}
+                                >
+                                    <IconX color={`red`} size={16} opacity={0.5} onClick={() => {
+                                        form.setFieldValue(name, '');
+                                    }}/>
+                                </Tooltip>
+                                :
+                                <Tooltip
+                                    label={tooltip}
+                                    px={16}
+                                    py={2}
+                                    withArrow
+                                    position={"left"}
+                                    c={'indigo'}
+                                    bg={`gray.1`}
+                                    transitionProps={{transition: "pop-bottom-left", duration: 500}}
+                                >
+                                    <IconInfoCircle size={16} opacity={0.5}/>
+                                </Tooltip>
+                        }
+                    />
                 </Tooltip>
-
-                }
-            </>
+            }
+        </>
     );
 }
 

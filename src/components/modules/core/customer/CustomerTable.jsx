@@ -6,21 +6,26 @@ import {
     Box,
     TextInput, Grid, ActionIcon, rem, Text
 } from "@mantine/core";
-import {useTranslation} from "react-i18next";
-import {IconFilter, IconSearch, IconInfoCircle, IconEye, IconEdit, IconTrash, IconRestore} from "@tabler/icons-react";
-import axios from "axios";
+import {
+    IconFilter,
+    IconSearch,
+    IconInfoCircle,
+    IconEdit,
+    IconTrash,
+    IconRestore,
+    IconX
+} from "@tabler/icons-react";
 import {DataTable} from 'mantine-datatable';
 import {useDispatch, useSelector} from "react-redux";
+import {modals} from "@mantine/modals";
+import {useHotkeys} from "@mantine/hooks";
+import {useTranslation} from "react-i18next";
 import {
     deleteEntityData,
     editEntityData,
     getIndexEntityData,
     setFetching, setFormLoading, setInsertType,
-    storeEntityData
 } from "../../../../store/core/crudSlice.js";
-import {modals} from "@mantine/modals";
-import {useHotkeys} from "@mantine/hooks";
-
 
 function CustomerTable(props) {
     const dispatch = useDispatch();
@@ -28,8 +33,9 @@ function CustomerTable(props) {
     const {isOnline, mainAreaHeight} = useOutletContext();
     const height = mainAreaHeight - 104; //TabList height 104
 
-    const [searchKeyword,setSearchKeyword] = useState('')
-    const [isSetFormData,setFormData] = useState(false)
+    const [searchKeyword, setSearchKeyword] = useState('')
+    const [isSetFormData, setFormData] = useState(false)
+    const [searchKeywordTooltip, setSearchKeywordTooltip] = useState(false)
 
     const fetching = useSelector((state) => state.crudSlice.fetching)
     const indexData = useSelector((state) => state.crudSlice.indexEntityData)
@@ -37,74 +43,106 @@ function CustomerTable(props) {
 
     useEffect(() => {
 
-        if (entityEditData.name && entityEditData.name.length>0){
+        if (entityEditData.name && entityEditData.name.length > 0) {
             props.form.setValues({
                 name: entityEditData.name,
                 customer_group: entityEditData.customer_group,
-                credit_limit : entityEditData.credit_Limit,
-                mobile : entityEditData.mobile,
-                marketing_id : entityEditData.marketing_id,
-                location_id : entityEditData.location_id,
-                reference_id : entityEditData.reference_id,
-                alternative_mobile : entityEditData.alternative_mobile,
-                address : entityEditData.address,
-                email : entityEditData.email,
-                status : entityEditData.status,
+                credit_limit: entityEditData.credit_Limit,
+                mobile: entityEditData.mobile,
+                marketing_id: entityEditData.marketing_id,
+                location_id: entityEditData.location_id,
+                reference_id: entityEditData.reference_id,
+                alternative_mobile: entityEditData.alternative_mobile,
+                address: entityEditData.address,
+                email: entityEditData.email,
+                status: entityEditData.status,
             });
         }
 
         setFormData(false)
-        setTimeout(()=>{
+        setTimeout(() => {
             dispatch(setFormLoading(false))
-        },1000)
+        }, 1000)
     }, [isSetFormData]);
 
     useEffect(() => {
         const value = {
-            url : 'customer',
-            param : {
-                term : searchKeyword
+            url: 'customer',
+            param: {
+                term: searchKeyword
             }
         }
         dispatch(getIndexEntityData(value))
-        dispatch(setFetching(false))
+        setTimeout(() => {
+            dispatch(setFetching(false))
+        }, 1000)
     }, [fetching]);
 
     useHotkeys(
         [['shift+F', () => {
             document.getElementById('customerSearchKeyword').focus();
         }]
-    ],[]
+        ], []
     );
 
     return (
         <>
             <Box>
                 <Box bg={`white`}>
-                    <Box pb={`xs`} pl={`xs`} pr={8} >
+                    <Box pb={`xs`} pl={`xs`} pr={8}>
                         <Grid justify="flex-end" align="flex-end">
                             <Grid.Col span={10}>
-                                <TextInput
-                                    leftSection={<IconSearch size={16} opacity={0.5}/>}
-                                    rightSection={
-                                        <Tooltip
-                                            label={t("FiledIsRequired")}
-                                            withArrow
-                                            position={"bottom"}
-                                            c={'indigo'}
-                                            bg={`indigo.1`}
-                                        >
-                                            <IconInfoCircle size={16} opacity={0.5}/>
-                                        </Tooltip>
-                                    }
-                                    size="sm"
-                                    placeholder={t('EnterSearchAnyKeyword')}
-                                    onChange={(e)=>{
-                                        setSearchKeyword(e.target.value)
-                                    }}
-                                    value={searchKeyword}
-                                    id={'customerSearchKeyword'}
-                                />
+                                <Tooltip
+                                    label={t('EnterSearchAnyKeyword')}
+                                    opened={searchKeywordTooltip}
+                                    px={16}
+                                    py={2}
+                                    position="top-end"
+                                    color="red"
+                                    withArrow
+                                    offset={2}
+                                    zIndex={0}
+                                    transitionProps={{transition: "pop-bottom-left", duration: 500}}
+                                >
+                                    <TextInput
+                                        leftSection={<IconSearch size={16} opacity={0.5}/>}
+                                        rightSection={
+                                            searchKeyword ?
+                                                <Tooltip
+                                                    label={t("Close")}
+                                                    withArrow
+                                                    bg={`red.5`}
+                                                >
+                                                    <IconX color={`red`} size={16} opacity={0.5} onClick={() => {
+                                                        setSearchKeyword('')
+                                                    }}/>
+                                                </Tooltip>
+                                                :
+                                                <Tooltip
+                                                    label={t("FiledIsRequired")}
+                                                    withArrow
+                                                    position={"bottom"}
+                                                    c={'indigo'}
+                                                    bg={`indigo.1`}
+                                                >
+                                                    <IconInfoCircle size={16} opacity={0.5}/>
+                                                </Tooltip>
+                                        }
+                                        size="sm"
+                                        placeholder={t('EnterSearchAnyKeyword')}
+                                        onChange={(e) => {
+                                            setSearchKeyword(e.target.value)
+                                            e.target.value !== '' ?
+                                                setSearchKeywordTooltip(false) :
+                                                (setSearchKeywordTooltip(true),
+                                                    setTimeout(() => {
+                                                        setSearchKeywordTooltip(false)
+                                                    }, 1500))
+                                        }}
+                                        value={searchKeyword}
+                                        id={'customerSearchKeyword'}
+                                    />
+                                </Tooltip>
                             </Grid.Col>
                             <Grid.Col span={2}>
 
@@ -113,9 +151,15 @@ function CustomerTable(props) {
                                         variant="transparent"
                                         size="lg" mr={16}
                                         aria-label="Gallery"
-                                        onClick={()=>{
-                                            searchKeyword.length>0 &&
-                                                dispatch(setFetching(true))
+                                        onClick={() => {
+                                            searchKeyword.length > 0 ?
+                                                (dispatch(setFetching(true)),
+                                                    setSearchKeywordTooltip(false))
+                                                :
+                                                (setSearchKeywordTooltip(true),
+                                                    setTimeout(() => {
+                                                        setSearchKeywordTooltip(false)
+                                                    }, 1500))
                                         }}
                                     >
                                         <Tooltip
@@ -128,11 +172,11 @@ function CustomerTable(props) {
                                             bg={`gray.1`}
                                             transitionProps={{transition: "pop-bottom-left", duration: 500}}
                                         >
-                                            <IconSearch  style={{ width: rem(20) }} stroke={2.0} />
+                                            <IconSearch style={{width: rem(20)}} stroke={2.0}/>
                                         </Tooltip>
                                     </ActionIcon>
 
-                                    <ActionIcon variant="transparent" size="lg"  mr={16} aria-label="Settings">
+                                    <ActionIcon variant="transparent" size="lg" mr={16} aria-label="Settings">
                                         <Tooltip
                                             label={t("FilterButton")}
                                             px={16}
@@ -143,14 +187,14 @@ function CustomerTable(props) {
                                             bg={`gray.1`}
                                             transitionProps={{transition: "pop-bottom-left", duration: 500}}
                                         >
-                                            <IconFilter style={{ width: rem(20) }} stroke={2.0} />
+                                            <IconFilter style={{width: rem(20)}} stroke={2.0}/>
                                         </Tooltip>
                                     </ActionIcon>
                                     <ActionIcon
                                         variant="transparent"
                                         size="lg"
                                         aria-label="Settings"
-                                        onClick={(e)=>{
+                                        onClick={(e) => {
                                             dispatch(setFetching(true))
                                             setSearchKeyword('')
                                         }}
@@ -165,7 +209,7 @@ function CustomerTable(props) {
                                             bg={`gray.1`}
                                             transitionProps={{transition: "pop-bottom-left", duration: 500}}
                                         >
-                                            <IconRestore style={{ width: rem(20) }} stroke={2.0} />
+                                            <IconRestore style={{width: rem(20)}} stroke={2.0}/>
                                         </Tooltip>
                                     </ActionIcon>
                                 </ActionIcon.Group>
@@ -186,8 +230,8 @@ function CustomerTable(props) {
                                     textAlignment: 'right',
                                     render: (item) => (indexData.indexOf(item) + 1)
                                 },
-                                { accessor: 'id' , title: "ID", },
-                                { accessor: 'name',  title: "Name" },
+                                {accessor: 'id', title: "ID",},
+                                {accessor: 'name', title: "Name"},
                                 {
                                     accessor: "action",
                                     title: "Action",
@@ -205,10 +249,10 @@ function CustomerTable(props) {
                                                 size="sm"
                                                 variant="subtle"
                                                 color="blue"
-                                                onClick={()=>{
+                                                onClick={() => {
                                                     dispatch(setInsertType('update'))
                                                     dispatch(setFormLoading(true))
-                                                    dispatch(editEntityData('customer/'+data.id))
+                                                    dispatch(editEntityData('customer/' + data.id))
                                                     setFormData(true)
                                                 }}
                                             >
@@ -218,7 +262,7 @@ function CustomerTable(props) {
                                                 size="sm"
                                                 variant="subtle"
                                                 color="red"
-                                                onClick={()=>{
+                                                onClick={() => {
                                                     modals.openConfirmModal({
                                                         title: (
                                                             <Text size="md"> {t("FormConfirmationTitle")}</Text>
@@ -229,7 +273,7 @@ function CustomerTable(props) {
                                                         labels: {confirm: 'Confirm', cancel: 'Cancel'},
                                                         onCancel: () => console.log('Cancel'),
                                                         onConfirm: () => {
-                                                            dispatch(deleteEntityData('customer/'+data.id))
+                                                            dispatch(deleteEntityData('customer/' + data.id))
                                                             dispatch(setFetching(true))
                                                         },
                                                     });
@@ -240,17 +284,15 @@ function CustomerTable(props) {
                                         </Group>
                                     ),
                                 },
-
                             ]
                             }
                             fetching={fetching}
                             loaderSize="xs"
                             loaderColor="grape"
                             height={height}
-                            scrollAreaProps={{ type: 'never' }}
+                            scrollAreaProps={{type: 'never'}}
                         />
                     }
-
                 </Box>
             </Box>
         </>

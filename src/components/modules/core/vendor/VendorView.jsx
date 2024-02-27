@@ -15,7 +15,6 @@ import {IconFilter, IconSearch, IconInfoCircle, IconEye, IconEdit, IconTrash, Ic
 import axios from "axios";
 import {DataTable} from 'mantine-datatable';
 import {useDispatch, useSelector} from "react-redux";
-import {getCustomerIndexData, setFetching} from "../../../../store/core/customerSlice";
 import VendorTable from "./VendorTable";
 import VendorForm from "./VendorForm";
 

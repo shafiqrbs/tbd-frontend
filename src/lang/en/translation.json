@@ -81,6 +81,8 @@
   "Password": "Password",
   "RequiredPassword": "Password field required",
   "ConfirmPassword": "Confirm Password",
+  "UpdateSuccessfully": "Updated Successfully",
+  "CreateSuccessfully": "Created Successfully",
 
 
   "" : ""

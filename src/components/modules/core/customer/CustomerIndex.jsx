@@ -12,55 +12,62 @@ import {
 } from "@mantine/core";
 import {useTranslation} from 'react-i18next';
 import {
-    IconCircleCheck,
     IconList,
-    IconReload,
-    IconDashboard,
     IconDeviceFloppy,
     IconRestore,
-    IconX,
+    IconCheck,
 } from "@tabler/icons-react";
 
-import CustomerView from "./CustomerView";
-import {hasLength, isEmail, useForm} from "@mantine/form";
+import {useForm} from "@mantine/form";
 import {modals} from '@mantine/modals';
 import {notifications} from '@mantine/notifications';
-import CustomerTable from "./CustomerTable";
-import CustomerSales from "./CustomerView";
-import CustomerLedger from "../../master-data/customer/CustomerLedger";
-import CustomerInvoice from "../../master-data/customer/CustomerInvoice";
-import axios from "axios";
-import {createCustomerData, getUserDropdown} from "../../../../store/core/customerSlice";
-import {useDispatch, useSelector} from "react-redux";
-import {storeEntityData, setFetching, updateEntityData, editEntityData} from "../../../../store/core/crudSlice";
 import {useHotkeys} from "@mantine/hooks";
+import {useNavigate} from 'react-router-dom'
+
+import {useDispatch, useSelector} from "react-redux";
+import {storeEntityData, updateEntityData} from "../../../../store/core/crudSlice";
+
+import CustomerView from "./CustomerView";
 
 function CustomerIndex() {
+    const navigate = useNavigate();
     const {t, i18n} = useTranslation();
     const dispatch = useDispatch();
+    const {isOnline, mainAreaHeight} = useOutletContext();
     const iconStyle = {width: rem(12), height: rem(12)};
+
     const [activeTab, setActiveTab] = useState("CustomerView");
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
-    const [isFormSubmit, setFormSubmit] = useState(false);
-    const [formSubmitData, setFormSubmitData] = useState([]);
-    const {isOnline, mainAreaHeight} = useOutletContext();
-
     const [customerGroup, setCustomerGroup] = useState('');
     const [location, setLocation] = useState('');
     const [marketing, setMarketing] = useState('');
 
-    const formLoading = useSelector((state) => state.crudSlice.formLoading)
     const insertType = useSelector((state) => state.crudSlice.insertType)
     const entityEditData = useSelector((state) => state.crudSlice.editEntityData)
 
-
     const form = useForm({
         initialValues: {
-            location_id:'', marketing_id:'', name:'', mobile:'', customer_group:'', credit_limit:'', reference_id:'', alternative_mobile:'', address:'', email:'', status:''
+            location_id: '',
+            marketing_id: '',
+            name: '',
+            mobile: '',
+            customer_group: '',
+            credit_limit: '',
+            reference_id: '',
+            alternative_mobile: '',
+            address: '',
+            email: '',
+            status: ''
         }
     });
-    useHotkeys([['shift+r', () => {form.reset()}]],[]);
-    useHotkeys([['shift+s', () => {document.getElementById('customerSave').click()}]],[]);
+
+    useHotkeys([['shift+r', () => {
+        navigate(0);
+    }]], []);
+
+    useHotkeys([['shift+s', () => {
+        document.getElementById('customerSave').click()
+    }]], []);
 
     const tabCreateNewRightButtons = (
         <Group mt={4} pos={`absolute`} right={12} gap={0}>
@@ -72,7 +79,7 @@ function CustomerIndex() {
                 position={"bottom"}
                 transitionProps={{transition: "pop-bottom-left", duration: 500}}>
                 <Button variant="transparent" size="md" ml={1} mr={1} color={`gray`}>
-                    <IconRestore style={{ width: rem(24) }}  />
+                    <IconRestore style={{width: rem(24)}}/>
                 </Button>
             </Tooltip>
             <>
@@ -82,8 +89,8 @@ function CustomerIndex() {
                     size="md"
                     color={`indigo.7`}
                     type="submit"
-                    leftSection={<IconDeviceFloppy size={24} />}
-                    onClick={()=>{
+                    leftSection={<IconDeviceFloppy size={24}/>}
+                    onClick={() => {
                         if (activeTab === 'CustomerView') {
                             let validation = true
                             if (!form.values.name) {
@@ -113,29 +120,43 @@ function CustomerIndex() {
                                 onCancel: () => console.log('Cancel'),
                                 onConfirm: () => {
                                     setSaveCreateLoading(true)
-
                                     const formData = form.values
-                                    formData['marketing_id'] = Number(marketing)
-                                    formData['location_id'] = Number(location)
-                                    formData['customer_group'] = customerGroup
+
+                                    marketing && (formData['marketing_id'] = Number(marketing))
+                                    location && (formData['location_id'] = Number(location))
+                                    customerGroup && (formData['customer_group'] = customerGroup)
 
                                     const value = {
-                                        url : insertType === 'update'?'customer/'+entityEditData.id:'customer',
-                                        data : formData
+                                        url: insertType === 'update' ? 'customer/' + entityEditData.id : 'customer',
+                                        data: formData
                                     }
 
                                     insertType === 'create' && dispatch(storeEntityData(value))
                                     insertType === 'update' && dispatch(updateEntityData(value))
 
+                                    notifications.show({
+                                        color: 'teal',
+                                        title: insertType === 'update' ?
+                                            t('UpdateSuccessfully') :
+                                            t('CreateSuccessfully'),
+                                        icon: <IconCheck style={{width: rem(18), height: rem(18)}}/>,
+                                        loading: false,
+                                        autoClose: 700,
+                                        style: {backgroundColor: 'lightgray'},
+                                    });
 
-                                    setTimeout(()=>{
-                                        form.setFieldValue('location_id', '')
+                                    setTimeout(() => {
+                                        /*form.setFieldValue('location_id', '')
+                                        setLocation('')
                                         form.setFieldValue('marketing_id', '')
+                                        setMarketing('')
                                         form.setFieldValue('customer_group', '')
+                                        setCustomerGroup('')
                                         form.reset()
                                         setSaveCreateLoading(false)
-                                        dispatch(setFetching(true))
-                                    },500)
+                                        dispatch(setFetching(true))*/
+                                        navigate(0);
+                                    }, 700)
                                 },
                             });
                         }
@@ -149,9 +170,9 @@ function CustomerIndex() {
                         position="center"
                     />
 
-                    <Flex direction={`column`}  gap={0}>
+                    <Flex direction={`column`} gap={0}>
                         <Text fz={14} fw={400}>
-                          {t("CreateAndSave")}
+                            {t("CreateAndSave")}
                         </Text>
                     </Flex>
                 </Button>
@@ -169,7 +190,7 @@ function CustomerIndex() {
                 transitionProps={{transition: "pop-bottom-left", duration: 500}}
             >
                 <Button bg={`white`} size="md" ml={1} mr={1} variant="light" color={`black`}>
-                    <IconRestore size={24} />
+                    <IconRestore size={24}/>
                 </Button>
             </Tooltip>
 
@@ -179,7 +200,7 @@ function CustomerIndex() {
                     size="md"
                     color={`blue.7`}
                     type="submit"
-                    leftSection={<IconDeviceFloppy size={24} />}
+                    leftSection={<IconDeviceFloppy size={24}/>}
                 >
                     <LoadingOverlay
                         visible={saveCreateLoading}
@@ -200,32 +221,33 @@ function CustomerIndex() {
     );
     return (
 
-            <Tabs
-                defaultValue="CustomerView"
-                onChange={(value) => setActiveTab(value)}
-            >
-                <Tabs.List pos={`relative`} h={'52'}>
-                    <Tabs.Tab h={'52'} fz={14} fw={700}
-                              value="CustomerView"
-                              leftSection={<IconList style={iconStyle}/>}>
-                        {t("ManageCustomer")}
-                    </Tabs.Tab>
-                    {(activeTab === "CustomerTable" || activeTab==='CustomerView') && isOnline && tabCreateNewRightButtons}
-                    {activeTab === "CustomerLedger" && isOnline && tabCustomerLedgerButtons}
-                </Tabs.List>
-                <Tabs.Panel value="CustomerView" h={'52'}>
-                    <CustomerView
-                        form={form}
-                        customerGroup={customerGroup}
-                        setCustomerGroup={setCustomerGroup}
-                        location={location}
-                        setLocation={setLocation}
-                        marketing={marketing}
-                        setMarketing={setMarketing}
-                    />
-                </Tabs.Panel>
+        <Tabs
+            defaultValue="CustomerView"
+            onChange={(value) => setActiveTab(value)}
+        >
+            <Tabs.List pos={`relative`} h={'52'}>
+                <Tabs.Tab h={'52'} fz={14} fw={700}
+                          value="CustomerView"
+                          leftSection={<IconList style={iconStyle}/>}>
+                    {t("ManageCustomer")}
+                </Tabs.Tab>
+                {(activeTab === "CustomerTable" || activeTab === 'CustomerView') && isOnline && tabCreateNewRightButtons}
+                {activeTab === "CustomerLedger" && isOnline && tabCustomerLedgerButtons}
+            </Tabs.List>
+            <Tabs.Panel value="CustomerView" h={'52'}>
+                <CustomerView
+                    form={form}
+                    customerGroup={customerGroup}
+                    setCustomerGroup={setCustomerGroup}
+                    location={location}
+                    setLocation={setLocation}
+                    marketing={marketing}
+                    setMarketing={setMarketing}
+                />
+            </Tabs.Panel>
 
-            </Tabs>
+        </Tabs>
+
     );
 }
 

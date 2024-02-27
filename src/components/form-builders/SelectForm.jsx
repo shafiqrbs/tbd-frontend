@@ -3,19 +3,32 @@ import {
     Tooltip,
     Select
 } from "@mantine/core";
-import {useTranslation} from "react-i18next";
 import {getHotkeyHandler} from "@mantine/hooks";
 
 function SelectForm(props) {
-    const {label,placeholder,required,nextField,name,form,tooltip,mt,id,dropdownValue,searchable,value,changeValue} = props
-    const {t, i18n} = useTranslation();
+    const {
+        label,
+        placeholder,
+        required,
+        nextField,
+        name,
+        form,
+        tooltip,
+        mt,
+        id,
+        dropdownValue,
+        searchable,
+        value,
+        changeValue
+    } = props
+
     return (
         <>
             {
                 form &&
                 <Tooltip
                     label={tooltip}
-                    opened={ (name in form.errors) && !!form.errors[name]}
+                    opened={(name in form.errors) && !!form.errors[name]}
                     px={16}
                     py={2}
                     position="top-end"
@@ -42,14 +55,13 @@ function SelectForm(props) {
                             }],
                         ])}
                         value={value}
-                        onChange={(e)=>{
+                        onChange={(e) => {
                             changeValue(e)
                         }}
                     />
                 </Tooltip>
-
-                }
-            </>
+            }
+        </>
     );
 }
 
