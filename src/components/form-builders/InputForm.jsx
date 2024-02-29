@@ -34,9 +34,9 @@ function InputForm(props) {
                         size="sm"
                         label={label}
                         placeholder={placeholder}
-                        withAsterisk={required}
                         mt={mt}
-                        {...form.getInputProps(name && name)}
+                        autoComplete="off"
+                        {...form.getInputProps(name)}
                         onKeyDown={getHotkeyHandler([
                             ['Enter', (e) => {
                                 document.getElementById(nextField).focus();
@@ -67,6 +67,7 @@ function InputForm(props) {
                                     <IconInfoCircle size={16} opacity={0.5}/>
                                 </Tooltip>
                         }
+                        withAsterisk={required}
                     />
                 </Tooltip>
             }

@@ -1,5 +1,4 @@
-import {useEffect, useState} from 'react'
-import {Routes, Route, useNavigate} from 'react-router-dom'
+import {Routes, Route} from 'react-router-dom'
 import Login from './components/Login'
 import Layout from './components/layout/Layout'
 import SampleDashboard from "./components/modules/sample-module/DashBoard";
@@ -8,8 +7,7 @@ import CustomerIndex from "./components/modules/core/customer/CustomerIndex";
 import UserIndex from "./components/modules/core/user/UserIndex";
 import VendorIndex from "./components/modules/core/vendor/VendorIndex";
 function AppRoute() {
-    const token = localStorage.getItem('token')
-    const navigate = useNavigate()
+
     return (
         <Routes>
             <Route path='/login' element={<Login/>}/>

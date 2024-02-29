@@ -31,9 +31,9 @@ function TextAreaForm(props) {
                         size="sm"
                         label={label}
                         placeholder={placeholder}
-                        withAsterisk={required}
                         mt={mt}
                         {...form.getInputProps(name && name)}
+                        autoComplete="off"
                         onKeyDown={getHotkeyHandler([
                             ['Enter', (e) => {
                                 document.getElementById(nextField).focus();
@@ -64,6 +64,7 @@ function TextAreaForm(props) {
                                     <IconInfoCircle size={16} opacity={0.5}/>
                                 </Tooltip>
                         }
+                        withAsterisk={required}
                     />
                 </Tooltip>
 

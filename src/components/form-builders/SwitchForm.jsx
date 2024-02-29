@@ -3,7 +3,7 @@ import {Tooltip, Switch} from "@mantine/core";
 import {getHotkeyHandler} from "@mantine/hooks";
 
 function SwitchForm(props) {
-    const {label, required, nextField, name, form, tooltip, mt, id, position, defaultChecked} = props
+    const {label, nextField, name, form, tooltip, mt, id, position, defaultChecked} = props
     return (
         <>
             {
@@ -23,7 +23,6 @@ function SwitchForm(props) {
                     <Switch
                         defaultChecked={defaultChecked}
                         labelPosition={position}
-                        withAsterisk={required}
                         mt={mt}
                         label={label}
                         size="md"

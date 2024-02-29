@@ -89,7 +89,6 @@ function CustomerGroupModel(props) {
                             size="sm"
                             label={t('Name')}
                             placeholder={t('CustomerName')}
-                            withAsterisk
                             {...formModal.getInputProps("customer_group_name")}
                             onKeyDown={getHotkeyHandler([
                                 ['Enter', (e) => {

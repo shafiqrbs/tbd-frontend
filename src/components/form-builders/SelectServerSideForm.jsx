@@ -29,7 +29,6 @@ function SelectServerSideForm(props) {
                         id={id}
                         label={label}
                         placeholder={placeholder}
-                        withAsterisk={required}
                         mt={mt}
                         size="sm"
                         searchValue={searchValue}
@@ -46,6 +45,7 @@ function SelectServerSideForm(props) {
                             }],
                         ])}
                         value={value}
+                        withAsterisk={required}
                     />
                 </Tooltip>
 

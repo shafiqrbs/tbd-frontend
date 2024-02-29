@@ -5,7 +5,7 @@ import {
     Box,
     ScrollArea,
     Title,
-    Grid, LoadingOverlay
+    Grid, LoadingOverlay, TextInput
 } from "@mantine/core";
 import {useTranslation} from "react-i18next";
 import {useSelector} from "react-redux";
@@ -42,8 +42,9 @@ function CustomerView(props) {
                             </Box>
                             <Box h={1} bg={`gray.1`}></Box>
                             <ScrollArea h={height} scrollbarSize={2}>
-                                <LoadingOverlay visible={formLoading} zIndex={1000}
-                                                overlayProps={{radius: "sm", blur: 2}}/>
+
+                                <LoadingOverlay visible={formLoading} zIndex={1000} overlayProps={{radius: "sm", blur: 2}}/>
+
                                 <CustomerForm
                                     form={form}
                                     customerGroup={props.customerGroup}

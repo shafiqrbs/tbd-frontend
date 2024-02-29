@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {useOutletContext} from "react-router-dom";
 import {
     Group,
@@ -13,7 +13,7 @@ import {
     IconEdit,
     IconTrash,
     IconRestore,
-    IconX
+    IconX, IconEye
 } from "@tabler/icons-react";
 import {DataTable} from 'mantine-datatable';
 import {useDispatch, useSelector} from "react-redux";
@@ -41,6 +41,11 @@ function CustomerTable(props) {
     const indexData = useSelector((state) => state.crudSlice.indexEntityData)
     const entityEditData = useSelector((state) => state.crudSlice.editEntityData)
 
+    /*const batchSize = 10;
+    const [loading, setLoading] = useState(false);
+    const [records, setRecords] = useState(indexData && indexData.slice(0, 15));
+    const scrollViewportRef = useRef(null);*/
+
     useEffect(() => {
 
         if (entityEditData.name && entityEditData.name.length > 0) {
@@ -64,6 +69,25 @@ function CustomerTable(props) {
             dispatch(setFormLoading(false))
         }, 1000)
     }, [isSetFormData]);
+
+    /*let timeout;
+
+    const loadMoreRecords = () => {
+        if (records.length < indexData.length) {
+            setLoading(true);
+            timeout = setTimeout(() => {
+                setRecords(indexData.slice(0, records.length + batchSize));
+                setLoading(false);
+            }, 1000);
+        }
+    };*/
+
+    // Clear timeout on unmount
+    /*useEffect(() => {
+        return () => {
+            if (timeout) clearTimeout(timeout);
+        };
+    }, [timeout]);*/
 
     useEffect(() => {
         const value = {
@@ -219,80 +243,80 @@ function CustomerTable(props) {
                     <Box h={1} bg={`gray.1`}></Box>
                 </Box>
                 <Box>
-                    {
-                        <DataTable
-                            withBorder
-                            records={indexData}
-                            columns={[
-                                {
-                                    accessor: 'index',
-                                    title: 'S/N',
-                                    textAlignment: 'right',
-                                    render: (item) => (indexData.indexOf(item) + 1)
-                                },
-                                {accessor: 'id', title: "ID",},
-                                {accessor: 'name', title: "Name"},
-                                {
-                                    accessor: "action",
-                                    title: "Action",
-                                    textAlign: "right",
-                                    render: (data) => (
-                                        <Group gap={4} justify="right" wrap="nowrap">
-                                            {/*<ActionIcon
+                    <DataTable
+                        withTableBorder={true}
+                        records={indexData}
+                        columns={[
+                            {
+                                accessor: 'index',
+                                title: 'S/N',
+                                textAlignment: 'right',
+                                render: (item) => (indexData.indexOf(item) + 1)
+                            },
+                            {accessor: 'id', title: "ID",},
+                            {accessor: 'name', title: "Name"},
+                            {
+                                accessor: "action",
+                                title: "Action",
+                                textAlign: "right",
+                                render: (data) => (
+                                    <Group gap={4} justify="right" wrap="nowrap">
+                                        {/*<ActionIcon
                                                 size="sm"
                                                 variant="subtle"
                                                 color="green"
                                             >
                                                 <IconEye size={16}/>
                                             </ActionIcon>*/}
-                                            <ActionIcon
-                                                size="sm"
-                                                variant="subtle"
-                                                color="blue"
-                                                onClick={() => {
-                                                    dispatch(setInsertType('update'))
-                                                    dispatch(setFormLoading(true))
-                                                    dispatch(editEntityData('customer/' + data.id))
-                                                    setFormData(true)
-                                                }}
-                                            >
-                                                <IconEdit size={16}/>
-                                            </ActionIcon>
-                                            <ActionIcon
-                                                size="sm"
-                                                variant="subtle"
-                                                color="red"
-                                                onClick={() => {
-                                                    modals.openConfirmModal({
-                                                        title: (
-                                                            <Text size="md"> {t("FormConfirmationTitle")}</Text>
-                                                        ),
-                                                        children: (
-                                                            <Text size="sm"> {t("FormConfirmationMessage")}</Text>
-                                                        ),
-                                                        labels: {confirm: 'Confirm', cancel: 'Cancel'},
-                                                        onCancel: () => console.log('Cancel'),
-                                                        onConfirm: () => {
-                                                            dispatch(deleteEntityData('customer/' + data.id))
-                                                            dispatch(setFetching(true))
-                                                        },
-                                                    });
-                                                }}
-                                            >
-                                                <IconTrash size={16}/>
-                                            </ActionIcon>
-                                        </Group>
-                                    ),
-                                },
-                            ]
-                            }
-                            fetching={fetching}
-                            loaderSize="xs"
-                            loaderColor="grape"
-                            height={height}
-                            scrollAreaProps={{type: 'never'}}
-                        />
-                    }
+                                        <ActionIcon
+                                            size="sm"
+                                            variant="subtle"
+                                            color="blue"
+                                            onClick={() => {
+                                                dispatch(setInsertType('update'))
+                                                dispatch(setFormLoading(true))
+                                                dispatch(editEntityData('customer/' + data.id))
+                                                setFormData(true)
+                                            }}
+                                        >
+                                            <IconEdit size={16}/>
+                                        </ActionIcon>
+                                        <ActionIcon
+                                            size="sm"
+                                            variant="subtle"
+                                            color="red"
+                                            onClick={() => {
+                                                modals.openConfirmModal({
+                                                    title: (
+                                                        <Text size="md"> {t("FormConfirmationTitle")}</Text>
+                                                    ),
+                                                    children: (
+                                                        <Text size="sm"> {t("FormConfirmationMessage")}</Text>
+                                                    ),
+                                                    labels: {confirm: 'Confirm', cancel: 'Cancel'},
+                                                    onCancel: () => console.log('Cancel'),
+                                                    onConfirm: () => {
+                                                        dispatch(deleteEntityData('customer/' + data.id))
+                                                        dispatch(setFetching(true))
+                                                    },
+                                                });
+                                            }}
+                                        >
+                                            <IconTrash size={16}/>
+                                        </ActionIcon>
+                                    </Group>
+                                ),
+                            },
+                        ]
+                        }
+                        fetching={fetching}
+                        loaderSize="xs"
+                        loaderColor="grape"
+                        height={height}
+                        scrollAreaProps={{type: 'never'}}
+                        // onScrollToBottom={loadMoreRecords}
+                        // scrollViewportRef={scrollViewportRef}
+                    />
                 </Box>
             </Box>
         </>

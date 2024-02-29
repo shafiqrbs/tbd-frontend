@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import {
     Button,
     Grid,
-    Box
+    Box, TextInput
 } from "@mantine/core";
 import {useTranslation} from 'react-i18next';
 import {IconPlus} from "@tabler/icons-react";
@@ -244,7 +244,6 @@ function CustomerForm(props) {
             <SwitchForm
                 tooltip={t('Status')}
                 label={t('Status')}
-                required={false}
                 nextField={'Address'}
                 name={'status'}
                 form={form}

@@ -42,10 +42,10 @@ function SelectForm(props) {
                         id={id}
                         label={label}
                         placeholder={placeholder}
-                        withAsterisk={required}
                         mt={mt}
                         size="sm"
                         data={dropdownValue}
+                        autoComplete="off"
                         clearable
                         searchable={searchable}
                         {...form.getInputProps(name)}
@@ -58,6 +58,7 @@ function SelectForm(props) {
                         onChange={(e) => {
                             changeValue(e)
                         }}
+                        withAsterisk={required}
                     />
                 </Tooltip>
             }

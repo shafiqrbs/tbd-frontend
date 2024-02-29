@@ -30,7 +30,6 @@ function PasswordInputForm(props) {
                     size="sm"
                     label={label}
                     placeholder={placeholder}
-                    withAsterisk={required}
                     mt={mt}
                     {...form.getInputProps(name && name)}
                     onKeyDown={getHotkeyHandler([
@@ -38,6 +37,7 @@ function PasswordInputForm(props) {
                             document.getElementById(nextField).focus();
                         }],
                     ])}
+                    autoComplete="off"
                     /*rightSection={
                          form.values[name] ?
                             <Tooltip
@@ -63,6 +63,7 @@ function PasswordInputForm(props) {
                                 <IconInfoCircle size={16} opacity={0.5}/>
                             </Tooltip>
                     }*/
+                    withAsterisk={required}
                 />
                 </Tooltip>
 
