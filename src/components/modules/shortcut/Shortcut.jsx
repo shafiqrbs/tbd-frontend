@@ -14,7 +14,7 @@ function Shortcut(props) {
       </Box>
       <Box h={1} bg={`gray.1`} mb={'md'}></Box>
       <Tooltip
-          label={t('ShiftText')}
+          label={t('AltText')}
           px={16}
           py={2}
           withArrow
@@ -37,14 +37,14 @@ function Shortcut(props) {
           <Flex direction={`column`} align={'center'}>
             <IconSearch size={16}/>
             <Text fz={10}>
-              {t('Shift+f')}
+              {t('Alt+f')}
             </Text>
           </Flex>
         </Button>
       </Tooltip>
 
       <Tooltip
-          label={t('ShiftnText')}
+          label={t('AltnText')}
           px={16}
           py={2}
           withArrow
@@ -67,13 +67,13 @@ function Shortcut(props) {
           <Flex direction={`column`} align={'center'}>
             <IconPlus size={16}/>
             <Text fz={10}>
-              {t('Shift+n')}
+              {t('Alt+n')}
             </Text>
           </Flex>
         </Button>
       </Tooltip>
       <Tooltip
-          label={t('ShiftrText')}
+          label={t('AltrText')}
           px={16}
           py={2}
           withArrow
@@ -97,13 +97,13 @@ function Shortcut(props) {
 
             <IconRestore size={16}/>
             <Text fz={10}>
-              {t('Shift+r')}
+              {t('Alt+r')}
             </Text>
           </Flex>
         </Button>
       </Tooltip>
       <Tooltip
-          label={t('ShiftsText')}
+          label={t('AltsText')}
           px={16}
           py={2}
           withArrow
@@ -127,7 +127,7 @@ function Shortcut(props) {
 
             <IconDeviceFloppy size={16}/>
             <Text fz={10}>
-              {t('Shift+s')}
+              {t('Alt+s')}
             </Text>
           </Flex>
         </Button>

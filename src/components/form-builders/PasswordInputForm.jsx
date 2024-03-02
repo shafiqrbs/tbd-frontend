@@ -34,7 +34,7 @@ function PasswordInputForm(props) {
                     {...form.getInputProps(name && name)}
                     onKeyDown={getHotkeyHandler([
                         ['Enter', (e) => {
-                            document.getElementById(nextField).focus();
+                            document.getElementById(nextField).focus()
                         }],
                     ])}
                     autoComplete="off"

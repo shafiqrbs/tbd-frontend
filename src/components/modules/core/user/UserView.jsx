@@ -17,6 +17,7 @@ import {DataTable} from 'mantine-datatable';
 import {useDispatch, useSelector} from "react-redux";
 import UserTable from "./UserTable";
 import UserForm from "./UserForm";
+import Shortcut from "../../shortcut/Shortcut.jsx";
 
 function UserView(props) {
     const {form} = props
@@ -28,10 +29,10 @@ function UserView(props) {
         <>
             <Box pr={12} pl={'12'} mt={16}>
                 <Grid gutter="xs">
-                    <Grid.Col span={8}  className={"grid-radius"} >
-                        <UserTable form={form} />
+                    <Grid.Col span={7}  className={"grid-radius"} >
+                        <UserTable  />
                     </Grid.Col>
-                    <Grid.Col span="auto" className={"grid-radius"} >
+                    <Grid.Col span={4} className={"grid-radius"} >
                         <Box bg={"white"} pd={`md`}>
                             <Box pb={`xs`} pl={'md'} >
                                 <Grid>
@@ -43,9 +44,19 @@ function UserView(props) {
                             </Box>
                             <Box h={1} bg={`gray.1`}></Box>
                             <Box>
-                                <UserForm form={form}/>
+                                {/*<UserForm form={form}/>*/}
+                                <UserForm />
                             </Box>
                         </Box>
+                    </Grid.Col>
+
+                    <Grid.Col span={"auto"} className={"grid-radius"}>
+                        <Shortcut
+                            shiftF={"UserSearchKeyword"}
+                            shiftN={"UserName"}
+                            shiftR={form}
+                            shiftS={"customerSave"}
+                        />
                     </Grid.Col>
                 </Grid>
             </Box>

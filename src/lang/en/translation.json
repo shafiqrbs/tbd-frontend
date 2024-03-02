@@ -56,14 +56,14 @@
 
 
   "ShortCut": "SHORTCUT",
-  "Shift+f": "Shift + F",
-  "ShiftText": "Find the table value",
-  "Shift+s": "Shift + S",
-  "ShiftsText": "Save the form value",
-  "Shift+n": "Shift + N",
-  "ShiftnText": "Enter the new form first field",
-  "Shift+r": "Shift + R",
-  "ShiftrText": "Reset the form",
+  "Alt+f": "Alt + F",
+  "AltText": "Find the table value",
+  "Alt+s": "Alt + S",
+  "AltsText": "Save the form value",
+  "Alt+n": "Alt + N",
+  "AltnText": "Enter the new form first field",
+  "Alt+r": "Alt + R",
+  "AltrText": "Reset the form",
 
 
   "VendorInformation": "Manage Vendors Information",

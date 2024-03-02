@@ -235,36 +235,7 @@ function CustomerIndex() {
                 {activeTab === "CustomerLedger" && isOnline && tabCustomerLedgerButtons}
             </Tabs.List>
             <Tabs.Panel value="CustomerView" h={'52'}>
-                {/*<TextInput
-                    label="name"
-                    description="Input description"
-                    placeholder="Input placeholder"
-                    {...form.getInputProps('name')}
-                />
-                <TextInput
-                    label="mobile"
-                    description="Input description"
-                    placeholder="Input placeholder"
-                    {...form.getInputProps('mobile')}
-                />
-                <TextInput
-                    label="email"
-                    description="Input description"
-                    placeholder="Input placeholder"
-                    {...form.getInputProps('email')}
-                />
-                <TextInput
-                    label="phone"
-                    description="Input description"
-                    placeholder="Input placeholder"
-                    {...form.getInputProps('phone')}
-                />
-                <TextInput
-                    label="address"
-                    description="Input description"
-                    placeholder="Input placeholder"
-                    {...form.getInputProps('address')}
-                />*/}
+
                 <CustomerView
                     form={form}
                     customerGroup={customerGroup}

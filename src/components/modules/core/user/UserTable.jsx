@@ -4,57 +4,125 @@ import {
     Group,
     Tooltip,
     Box,
-    TextInput, Grid, ActionIcon,rem
+    TextInput, Grid, ActionIcon, rem, Text
 } from "@mantine/core";
 import {useTranslation} from "react-i18next";
-import {IconFilter, IconSearch, IconInfoCircle, IconEye, IconEdit, IconTrash, IconRestore} from "@tabler/icons-react";
+import {
+    IconFilter,
+    IconSearch,
+    IconInfoCircle,
+    IconEye,
+    IconEdit,
+    IconTrash,
+    IconRestore,
+    IconX
+} from "@tabler/icons-react";
 import axios from "axios";
 import {DataTable} from 'mantine-datatable';
 import {useDispatch, useSelector} from "react-redux";
-import {getIndexEntityData, setFetching} from "../../../../store/core/crudSlice.js";
+import {deleteEntityData, getIndexEntityData, setFetching} from "../../../../store/core/crudSlice.js";
+import {modals} from "@mantine/modals";
+import UserSearch from "./UserSearch.jsx";
 
 
-function UserTable(props) {
-
-    const {form} = props
+function UserTable() {
     const dispatch = useDispatch();
     const {t, i18n} = useTranslation();
     const {isOnline, mainAreaHeight} = useOutletContext();
     const height = mainAreaHeight - 104; //TabList height 104
+    const [searchKeyword, setSearchKeyword] = useState(null)
+    const [searchKeywordTooltip, setSearchKeywordTooltip] = useState(false)
+
+
     const fetching = useSelector((state) => state.crudSlice.fetching)
     const indexData = useSelector((state) => state.crudSlice.indexEntityData)
+    // console.log(indexData)
     useEffect(() => {
-        dispatch(getIndexEntityData('user'))
+        const value = {
+            url: 'user',
+            param: {
+                term: searchKeyword
+            }
+        }
+        dispatch(getIndexEntityData(value))
     }, [fetching]);
 
     return (
         <>
             <Box>
                 <Box bg={`white`}>
-                    <Box pb={`xs`} pl={`xs`} pr={8} >
+                    <UserSearch />
+                    {/*<Box pb={`xs`} pl={`xs`} pr={8} >
                         <Grid justify="flex-end" align="flex-end">
                             <Grid.Col span={10}>
-                                <TextInput
-                                    leftSection={<IconSearch size={16} opacity={0.5}/>}
-                                    rightSection={
-                                        <Tooltip
-                                            label={t("FiledIsRequired")}
-                                            withArrow
-                                            position={"bottom"}
-                                            c={'indigo'}
-                                            bg={`indigo.1`}
-                                        >
-                                            <IconInfoCircle size={16} opacity={0.5}/>
-                                        </Tooltip>
-                                    }
-                                    size="sm"
-                                    placeholder={t('EnterSearchAnyKeyword')}
-                                />
+
+                                <Tooltip
+                                    label={t('EnterSearchAnyKeyword')}
+                                    opened={searchKeywordTooltip}
+                                    px={16}
+                                    py={2}
+                                    position="top-end"
+                                    color="red"
+                                    withArrow
+                                    offset={2}
+                                    zIndex={0}
+                                    transitionProps={{transition: "pop-bottom-left", duration: 500}}
+                                >
+                                    <TextInput
+                                        leftSection={<IconSearch size={16} opacity={0.5}/>}
+                                        size="sm"
+                                        placeholder={t('EnterSearchAnyKeyword')}
+                                        onChange={(e) => {
+                                            setSearchKeyword(e.currentTarget.value)
+                                            e.target.value !== '' ?
+                                                setSearchKeywordTooltip(false) :
+                                                (setSearchKeywordTooltip(true),
+                                                    setTimeout(() => {
+                                                        setSearchKeywordTooltip(false)
+                                                    }, 1000))
+                                        }}
+                                        value={searchKeyword}
+                                        id={'customerSearchKeyword'}
+                                        rightSection={
+                                            searchKeyword ?
+                                                <Tooltip
+                                                    label={t("Close")}
+                                                    withArrow
+                                                    bg={`red.5`}
+                                                >
+                                                    <IconX color={`red`} size={16} opacity={0.5} onClick={() => {
+                                                        setSearchKeyword('')
+                                                    }}/>
+                                                </Tooltip>
+                                                :
+                                                <Tooltip
+                                                    label={t("FiledIsRequired")}
+                                                    withArrow
+                                                    position={"bottom"}
+                                                    c={'indigo'}
+                                                    bg={`indigo.1`}
+                                                >
+                                                    <IconInfoCircle size={16} opacity={0.5}/>
+                                                </Tooltip>
+                                        }
+                                    />
+                                </Tooltip>
                             </Grid.Col>
                             <Grid.Col span={2}>
 
                                 <ActionIcon.Group mt={'1'}>
-                                    <ActionIcon variant="transparent" size="lg" mr={16} aria-label="Gallery">
+                                    <ActionIcon variant="transparent" size="lg" mr={16} aria-label="Gallery"
+                                                onClick={() => {
+                                                    searchKeyword.length > 0 ?
+                                                        (dispatch(setFetching(true)),
+                                                            setSearchKeywordTooltip(false))
+                                                        :
+                                                        (setSearchKeywordTooltip(true),
+                                                            setTimeout(() => {
+                                                                setSearchKeywordTooltip(false)
+                                                            }, 1500))
+                                                }}
+                                    >
                                         <Tooltip
                                             label={t('SearchButton')}
                                             px={16}
@@ -101,13 +169,11 @@ function UserTable(props) {
                             </Grid.Col>
                         </Grid>
                     </Box>
-                    <Box h={1} bg={`gray.1`}></Box>
+                    <Box h={1} bg={`gray.1`}></Box>*/}
                 </Box>
                 <Box>
-                    {
-                        // (customerIndexData && customerIndexData.length > 0) &&
                         <DataTable
-                            withBorder
+                            withTableBorder
                             records={indexData}
                             columns={[
                                 {
@@ -116,8 +182,9 @@ function UserTable(props) {
                                     textAlignment: 'right',
                                     render: (item) => (indexData.indexOf(item) + 1)
                                 },
-                                { accessor: 'id' , title: "ID", },
                                 { accessor: 'name',  title: "Name" },
+                                { accessor: 'email',  title: "Email" },
+                                { accessor: 'created_at',  title: "Created At" },
                                 {
                                     accessor: "action",
                                     title: "Action",
@@ -142,6 +209,22 @@ function UserTable(props) {
                                                 size="sm"
                                                 variant="subtle"
                                                 color="red"
+                                                onClick={() => {
+                                                    modals.openConfirmModal({
+                                                        title: (
+                                                            <Text size="md"> {t("FormConfirmationTitle")}</Text>
+                                                        ),
+                                                        children: (
+                                                            <Text size="sm"> {t("FormConfirmationMessage")}</Text>
+                                                        ),
+                                                        labels: {confirm: 'Confirm', cancel: 'Cancel'},
+                                                        onCancel: () => console.log('Cancel'),
+                                                        onConfirm: () => {
+                                                            dispatch(deleteEntityData('user/' + data.id))
+                                                            dispatch(setFetching(true))
+                                                        },
+                                                    });
+                                                }}
                                             >
                                                 <IconTrash size={16}/>
                                             </ActionIcon>
@@ -157,7 +240,6 @@ function UserTable(props) {
                             height={height}
                             scrollAreaProps={{ type: 'never' }}
                         />
-                    }
 
                 </Box>
             </Box>
