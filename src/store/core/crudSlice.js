@@ -93,6 +93,7 @@ const crudSlice = createSlice({
         entityDataDelete : [],
         formLoading : false,
         insertType : 'create',
+        searchKeyword : '',
     },
     reducers : {
         setFetching : (state,action) => {
@@ -103,13 +104,16 @@ const crudSlice = createSlice({
         },
         setInsertType : (state,action)=>{
             state.insertType = action.payload
+        },
+        setSearchKeyword : (state,action)=>{
+            state.searchKeyword = action.payload
         }
     },
 
     extraReducers : (builder) => {
 
         builder.addCase(getIndexEntityData.fulfilled, (state, action) => {
-            state.indexEntityData = action.payload.data
+            state.indexEntityData = action.payload
             state.fetching = false
         })
         
@@ -137,6 +141,6 @@ const crudSlice = createSlice({
     }
 })
 
-export const { setFetching,setFormLoading ,setInsertType} = crudSlice.actions
+export const { setFetching,setFormLoading ,setInsertType,setSearchKeyword} = crudSlice.actions
 
 export default crudSlice.reducer;

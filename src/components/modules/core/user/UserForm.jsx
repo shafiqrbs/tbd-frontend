@@ -46,7 +46,7 @@ function UserForm() {
     });
 
     useHotkeys([['alt+n', () => {
-        document.getElementById('UserName').focus()
+        document.getElementById('Name').focus()
     }]], []);
 
 
@@ -72,7 +72,7 @@ function UserForm() {
                                 data: values
                             }
 
-                            // dispatch(storeEntityData(value))
+                            dispatch(storeEntityData(value))
 
                             notifications.show({
                                 color: 'teal',
@@ -100,7 +100,7 @@ function UserForm() {
                         form={form}
                         name={'name'}
                         mt={0}
-                        id={'UserName'}
+                        id={'Name'}
                     />
 
                     <InputForm

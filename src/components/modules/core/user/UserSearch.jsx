@@ -31,7 +31,7 @@ import PasswordInput from "../../../form-builders/PasswordInputForm";
 import PasswordInputForm from "../../../form-builders/PasswordInputForm";
 import {hasLength, isEmail, isInRange, isNotEmpty, matches, useForm} from "@mantine/form";
 import {modals} from "@mantine/modals";
-import {setFetching, storeEntityData, updateEntityData} from "../../../../store/core/crudSlice.js";
+import {setFetching, setSearchKeyword, storeEntityData, updateEntityData} from "../../../../store/core/crudSlice.js";
 import {notifications} from "@mantine/notifications";
 function UserSearch() {
     const {t, i18n} = useTranslation();
@@ -39,7 +39,9 @@ function UserSearch() {
     const {isOnline, mainAreaHeight} = useOutletContext();
     const height = mainAreaHeight - 104; //TabList height 104
 
-    const [searchKeyword, setSearchKeyword] = useState(null)
+    // const [searchKeyword, setSearchKeyword] = useState(null)
+    const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword)
+
     const [searchKeywordTooltip, setSearchKeywordTooltip] = useState(false)
 
     useHotkeys(
@@ -71,7 +73,7 @@ function UserSearch() {
                             size="sm"
                             placeholder={t('EnterSearchAnyKeyword')}
                             onChange={(e) => {
-                                setSearchKeyword(e.currentTarget.value)
+                                dispatch(setSearchKeyword(e.currentTarget.value))
                                 e.target.value !== '' ?
                                     setSearchKeywordTooltip(false) :
                                     (setSearchKeywordTooltip(true),
@@ -89,7 +91,7 @@ function UserSearch() {
                                         bg={`red.5`}
                                     >
                                         <IconX color={`red`} size={16} opacity={0.5} onClick={() => {
-                                            setSearchKeyword('')
+                                            dispatch(setSearchKeyword(''))
                                         }}/>
                                     </Tooltip>
                                     :
@@ -160,7 +162,10 @@ function UserSearch() {
                                 bg={`gray.1`}
                                 transitionProps={{transition: "pop-bottom-left", duration: 500}}
                             >
-                                <IconRestore style={{ width: rem(20) }} stroke={2.0} onClick={()=> setSearchKeyword('')} />
+                                <IconRestore style={{ width: rem(20) }} stroke={2.0} onClick={()=> {
+                                    dispatch(setSearchKeyword(''))
+                                    dispatch(setFetching(true))
+                                }} />
                             </Tooltip>
                         </ActionIcon>
                     </ActionIcon.Group>

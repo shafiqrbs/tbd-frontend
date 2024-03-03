@@ -30,18 +30,23 @@ function UserTable() {
     const {t, i18n} = useTranslation();
     const {isOnline, mainAreaHeight} = useOutletContext();
     const height = mainAreaHeight - 104; //TabList height 104
-    const [searchKeyword, setSearchKeyword] = useState(null)
+    // const [searchKeyword, setSearchKeyword] = useState(null)
     const [searchKeywordTooltip, setSearchKeywordTooltip] = useState(false)
 
 
     const fetching = useSelector((state) => state.crudSlice.fetching)
+    const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword)
     const indexData = useSelector((state) => state.crudSlice.indexEntityData)
-    // console.log(indexData)
+    const perPage = 20;
+    const [page,setPage] = useState(1);
+    console.log(indexData)
     useEffect(() => {
         const value = {
             url: 'user',
             param: {
-                term: searchKeyword
+                term: searchKeyword,
+                page: page,
+                offset : perPage
             }
         }
         dispatch(getIndexEntityData(value))
@@ -52,139 +57,22 @@ function UserTable() {
             <Box>
                 <Box bg={`white`}>
                     <UserSearch />
-                    {/*<Box pb={`xs`} pl={`xs`} pr={8} >
-                        <Grid justify="flex-end" align="flex-end">
-                            <Grid.Col span={10}>
-
-                                <Tooltip
-                                    label={t('EnterSearchAnyKeyword')}
-                                    opened={searchKeywordTooltip}
-                                    px={16}
-                                    py={2}
-                                    position="top-end"
-                                    color="red"
-                                    withArrow
-                                    offset={2}
-                                    zIndex={0}
-                                    transitionProps={{transition: "pop-bottom-left", duration: 500}}
-                                >
-                                    <TextInput
-                                        leftSection={<IconSearch size={16} opacity={0.5}/>}
-                                        size="sm"
-                                        placeholder={t('EnterSearchAnyKeyword')}
-                                        onChange={(e) => {
-                                            setSearchKeyword(e.currentTarget.value)
-                                            e.target.value !== '' ?
-                                                setSearchKeywordTooltip(false) :
-                                                (setSearchKeywordTooltip(true),
-                                                    setTimeout(() => {
-                                                        setSearchKeywordTooltip(false)
-                                                    }, 1000))
-                                        }}
-                                        value={searchKeyword}
-                                        id={'customerSearchKeyword'}
-                                        rightSection={
-                                            searchKeyword ?
-                                                <Tooltip
-                                                    label={t("Close")}
-                                                    withArrow
-                                                    bg={`red.5`}
-                                                >
-                                                    <IconX color={`red`} size={16} opacity={0.5} onClick={() => {
-                                                        setSearchKeyword('')
-                                                    }}/>
-                                                </Tooltip>
-                                                :
-                                                <Tooltip
-                                                    label={t("FiledIsRequired")}
-                                                    withArrow
-                                                    position={"bottom"}
-                                                    c={'indigo'}
-                                                    bg={`indigo.1`}
-                                                >
-                                                    <IconInfoCircle size={16} opacity={0.5}/>
-                                                </Tooltip>
-                                        }
-                                    />
-                                </Tooltip>
-                            </Grid.Col>
-                            <Grid.Col span={2}>
-
-                                <ActionIcon.Group mt={'1'}>
-                                    <ActionIcon variant="transparent" size="lg" mr={16} aria-label="Gallery"
-                                                onClick={() => {
-                                                    searchKeyword.length > 0 ?
-                                                        (dispatch(setFetching(true)),
-                                                            setSearchKeywordTooltip(false))
-                                                        :
-                                                        (setSearchKeywordTooltip(true),
-                                                            setTimeout(() => {
-                                                                setSearchKeywordTooltip(false)
-                                                            }, 1500))
-                                                }}
-                                    >
-                                        <Tooltip
-                                            label={t('SearchButton')}
-                                            px={16}
-                                            py={2}
-                                            withArrow
-                                            position={"bottom"}
-                                            c={'indigo'}
-                                            bg={`gray.1`}
-                                            transitionProps={{transition: "pop-bottom-left", duration: 500}}
-                                        >
-                                            <IconSearch  style={{ width: rem(20) }} stroke={2.0} />
-                                        </Tooltip>
-                                    </ActionIcon>
-
-                                    <ActionIcon variant="transparent" size="lg"  mr={16} aria-label="Settings">
-                                        <Tooltip
-                                            label={t("FilterButton")}
-                                            px={16}
-                                            py={2}
-                                            withArrow
-                                            position={"bottom"}
-                                            c={'indigo'}
-                                            bg={`gray.1`}
-                                            transitionProps={{transition: "pop-bottom-left", duration: 500}}
-                                        >
-                                            <IconFilter style={{ width: rem(20) }} stroke={2.0} />
-                                        </Tooltip>
-                                    </ActionIcon>
-                                    <ActionIcon variant="transparent" size="lg" aria-label="Settings">
-                                        <Tooltip
-                                            label={t("ResetButton")}
-                                            px={16}
-                                            py={2}
-                                            withArrow
-                                            position={"bottom"}
-                                            c={'indigo'}
-                                            bg={`gray.1`}
-                                            transitionProps={{transition: "pop-bottom-left", duration: 500}}
-                                        >
-                                            <IconRestore style={{ width: rem(20) }} stroke={2.0} />
-                                        </Tooltip>
-                                    </ActionIcon>
-                                </ActionIcon.Group>
-                            </Grid.Col>
-                        </Grid>
-                    </Box>
-                    <Box h={1} bg={`gray.1`}></Box>*/}
                 </Box>
                 <Box>
                         <DataTable
                             withTableBorder
-                            records={indexData}
+                            records={indexData.data}
                             columns={[
                                 {
                                     accessor: 'index',
                                     title: 'S/N',
                                     textAlignment: 'right',
-                                    render: (item) => (indexData.indexOf(item) + 1)
+                                    render: (item) => (indexData.data.indexOf(item) + 1)
                                 },
                                 { accessor: 'name',  title: "Name" },
+                                { accessor: 'username',  title: "User Name" },
                                 { accessor: 'email',  title: "Email" },
-                                { accessor: 'created_at',  title: "Created At" },
+                                { accessor: 'mobile',  title: "Mobile" },
                                 {
                                     accessor: "action",
                                     title: "Action",
@@ -235,6 +123,13 @@ function UserTable() {
                             ]
                             }
                             fetching={fetching}
+                            totalRecords={indexData.total}
+                            recordsPerPage={perPage}
+                            page={page}
+                            onPageChange={(p) => {
+                                setPage(p)
+                                dispatch(setFetching(true))
+                            }}
                             loaderSize="xs"
                             loaderColor="grape"
                             height={height}
