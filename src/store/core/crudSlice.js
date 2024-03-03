@@ -112,12 +112,7 @@ const crudSlice = createSlice({
             state.indexEntityData = action.payload.data
             state.fetching = false
         })
-
-        builder.addCase(getCustomerIndexData.fulfilled, (state, action) => {
-            state.customerIndexData = action.payload.data
-            state.fetching = false
-        })
-
+        
         builder.addCase(storeEntityData.fulfilled, (state, action) => {
             state.storeEntityData = action.payload.data.data
         })

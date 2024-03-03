@@ -99,7 +99,6 @@ const utilitySlice = createSlice({
             state.locationDropdownData = action.payload
         })
 
-
         builder.addCase(getLocationProDropdown.fulfilled, (state, action) => {
             state.locationProDropdownData = action.payload
         })

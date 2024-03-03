@@ -85,6 +85,21 @@
   "CreateSuccessfully": "Created Successfully",
 
 
+  "ConfigurationInformation": "Configuration Information",
+  "ConfigurationInformationFormDetails": "Configuration Information Details",
+
+  "BasicInformation": "Basic Information",
+  "BasicInformationDetails": "Basic Information Details",
+  "PrintInformation": "Print Information",
+  "PrintInformationDetails": "Print Information Details",
+  "ProductSetup": "Product Setup",
+  "ProductSetupDetails": "Product Setup Details",
+  "PriceInformation": "Price Information",
+  "PriceInformationDetails": "Price Information Details",
+
+
+
+
   "" : ""
 
 

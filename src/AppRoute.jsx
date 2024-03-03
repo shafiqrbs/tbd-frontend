@@ -6,6 +6,7 @@ import './lang/i18next';
 import CustomerIndex from "./components/modules/core/customer/CustomerIndex";
 import UserIndex from "./components/modules/core/user/UserIndex";
 import VendorIndex from "./components/modules/core/vendor/VendorIndex";
+import ConfigurationIndex from "./components/modules/inventory/configuraton/ConfigurationIndex";
 function AppRoute() {
 
     return (
@@ -19,6 +20,9 @@ function AppRoute() {
                     <Route path="customer" element={<CustomerIndex/>}/>
                     <Route path="user" element={<UserIndex/>}/>
                     <Route path="vendor" element={<VendorIndex/>}/>
+                </Route>
+                <Route path="/inventory/">
+                    <Route path="config" element={<ConfigurationIndex/>}/>
                 </Route>
             </Route>
         </Routes>
