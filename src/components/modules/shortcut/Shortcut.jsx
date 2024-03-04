@@ -28,6 +28,9 @@ function Shortcut(props) {
                 variant={'light'}
                 color={`indigo`}
                 radius="xl"
+                /*onClick={()=>{
+                  document.getElementById('UserSearchKeyword').focus();
+                }}*/
             >
               <Flex direction={`column`} align={'center'}>
                 <IconSearch size={16}/>
@@ -56,6 +59,9 @@ function Shortcut(props) {
                 variant={'light'}
                 color={`indigo`}
                 radius="xl"
+                onClick={(e)=>{
+                  document.getElementById(props.Name).focus()
+                }}
             >
               <Flex direction={`column`} align={'center'}>
                 <IconPlus size={16}/>
@@ -83,6 +89,9 @@ function Shortcut(props) {
                 variant={'light'}
                 color={`indigo`}
                 radius="xl"
+                onClick={(e)=>{
+                  props.form.reset()
+                }}
             >
               <Flex direction={`column`} align={'center'}>
 
@@ -111,6 +120,9 @@ function Shortcut(props) {
                 variant={'filled'}
                 color={`indigo`}
                 radius="xl"
+                onClick={(e)=>{
+                  document.getElementById(props.UserFormSubmit).click()
+                }}
             >
               <Flex direction={`column`} align={'center'}>
 

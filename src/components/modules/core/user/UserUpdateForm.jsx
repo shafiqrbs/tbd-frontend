@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {useOutletContext} from "react-router-dom";
 import {
     Button,
@@ -11,41 +11,66 @@ import {
     IconDeviceFloppy,
     IconRestore,
 } from "@tabler/icons-react";
-import {useHotkeys} from "@mantine/hooks";
+import { useHotkeys} from "@mantine/hooks";
 import InputForm from "../../../form-builders/InputForm";
 import {useDispatch, useSelector} from "react-redux";
-import PasswordInputForm from "../../../form-builders/PasswordInputForm";
 import {hasLength, isEmail, isNotEmpty, useForm} from "@mantine/form";
 import {modals} from "@mantine/modals";
 import {
-    setFetching,
-    storeEntityData,
+    setEditEntityData,
+    setFetching, setFormLoading, setInsertType,
+    updateEntityData
 } from "../../../../store/core/crudSlice.js";
 import {notifications} from "@mantine/notifications";
 import Shortcut from "../../shortcut/Shortcut.jsx";
-
-function UserForm() {
+function UserUpdateForm() {
     const {t, i18n} = useTranslation();
     const dispatch = useDispatch();
     const {isOnline, mainAreaHeight} = useOutletContext();
     const height = mainAreaHeight - 104; //TabList height 104
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
+    const [setFormData, setFormDataForUpdate] = useState(false);
+    const [formLoad, setFormLoad] = useState(true);
+    const entityEditData = useSelector((state) => state.crudSlice.entityEditData)
     const formLoading = useSelector((state) => state.crudSlice.formLoading)
 
     const form = useForm({
         initialValues: {
-            name:'', username:'', email:'', password:'',confirm_password:'',mobile:''
+            name:'',
+            username:'',
+            email:'',
+            mobile:''
         },
         validate: {
             name: hasLength({min: 2, max: 20}),
             username: hasLength({min: 2, max: 20}),
             email: isEmail(),
-            mobile: isNotEmpty(),
-            password: isNotEmpty(),
-            confirm_password: (value, values) =>
-                value !== values.password
+            mobile: isNotEmpty()
         }
     });
+
+    useEffect(() => {
+        setFormLoad(true)
+        setFormDataForUpdate(true)
+    }, [dispatch,formLoading])
+
+    useEffect(() => {
+
+        form.setValues({
+            name:entityEditData.name,
+            username:entityEditData.username,
+            email:entityEditData.email,
+            mobile:entityEditData.mobile
+        })
+
+        dispatch(setFormLoading(false))
+        setTimeout(()=>{
+            setFormLoad(false)
+            setFormDataForUpdate(false)
+        },500)
+
+    }, [dispatch,setFormData])
+
 
     useHotkeys([['alt+n', () => {
         document.getElementById('Name').focus()
@@ -76,13 +101,13 @@ function UserForm() {
                     labels: {confirm: 'Confirm', cancel: 'Cancel'},
                     onCancel: () => console.log('Cancel'),
                     onConfirm: () => {
-
+                        setSaveCreateLoading(true)
                         const value = {
-                            url: 'user',
+                            url: 'user/'+entityEditData.id,
                             data: values
                         }
 
-                        dispatch(storeEntityData(value))
+                        dispatch(updateEntityData(value))
 
                         notifications.show({
                             color: 'teal',
@@ -95,7 +120,10 @@ function UserForm() {
 
                         setTimeout(() => {
                             form.reset()
+                            dispatch(setInsertType('create'))
+                            dispatch(setEditEntityData([]))
                             dispatch(setFetching(true))
+                            setSaveCreateLoading(false)
                         }, 700)
                     },
                 });
@@ -116,9 +144,9 @@ function UserForm() {
                                     transitionProps={{transition: "pop-bottom-left", duration: 500}}
                                 >
                                     <Button bg={`white`} size="md" ml={1} mr={1} variant="light" color={`gray.7`}
-                                            onClick={(e)=>{
-                                                form.reset()
-                                            }}
+                                        onClick={(e)=>{
+                                            form.reset()
+                                        }}
                                     >
                                         <IconRestore size={24}/>
                                     </Button>
@@ -156,8 +184,7 @@ function UserForm() {
                         <ScrollArea h={height} scrollbarSize={2}>
                             <Box p={`md`} pb={'md'} >
 
-                                <LoadingOverlay visible={formLoading} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />
-
+                                <LoadingOverlay visible={formLoad} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />
 
                     <InputForm
                         tooltip={t('NameValidateMessage')}
@@ -207,29 +234,7 @@ function UserForm() {
                         id={'Mobile'}
                     />
 
-                                    <PasswordInputForm
-                                        form={form}
-                                        tooltip={t('RequiredPassword')}
-                                        label={t('Password')}
-                                        placeholder={t('Password')}
-                                        required={true}
-                                        name={'password'}
-                                        id={'Password'}
-                                        nextField={'ConfirmPassword'}
-                                        mt={8}
-                                    />
 
-                                    <PasswordInputForm
-                                    form={form}
-                                tooltip={t('ConfirmPassword')}
-                                label={t('ConfirmPassword')}
-                                placeholder={t('ConfirmPassword')}
-                                required={true}
-                                name={'confirm_password'}
-                                id={'ConfirmPassword'}
-                                nextField={'UserFormSubmit'}
-                                mt={8}
-                            />
 
                             </Box>
                         </ScrollArea>
@@ -246,4 +251,4 @@ function UserForm() {
         </Box>
     )
 }
-export default UserForm;
+export default UserUpdateForm;

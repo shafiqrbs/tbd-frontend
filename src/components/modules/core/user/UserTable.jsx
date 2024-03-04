@@ -2,44 +2,43 @@ import React, {useEffect, useState} from "react";
 import {useOutletContext} from "react-router-dom";
 import {
     Group,
-    Tooltip,
     Box,
-    TextInput, Grid, ActionIcon, rem, Text
+     ActionIcon, Text
 } from "@mantine/core";
 import {useTranslation} from "react-i18next";
 import {
-    IconFilter,
-    IconSearch,
-    IconInfoCircle,
     IconEye,
     IconEdit,
     IconTrash,
-    IconRestore,
-    IconX
 } from "@tabler/icons-react";
-import axios from "axios";
 import {DataTable} from 'mantine-datatable';
 import {useDispatch, useSelector} from "react-redux";
-import {deleteEntityData, getIndexEntityData, setFetching} from "../../../../store/core/crudSlice.js";
+import {
+    deleteEntityData, editEntityData,
+    getIndexEntityData,
+    setFetching,
+    setFormLoading,
+    setInsertType
+} from "../../../../store/core/crudSlice.js";
 import {modals} from "@mantine/modals";
-import UserSearch from "./UserSearch.jsx";
-
+import KeywordSearch from "../../filter/KeywordSearch.jsx";
+import {useDisclosure} from "@mantine/hooks";
+import UserViewModel from "./UserViewModel.jsx";
 
 function UserTable() {
     const dispatch = useDispatch();
     const {t, i18n} = useTranslation();
     const {isOnline, mainAreaHeight} = useOutletContext();
-    const height = mainAreaHeight - 104; //TabList height 104
-    // const [searchKeyword, setSearchKeyword] = useState(null)
-    const [searchKeywordTooltip, setSearchKeywordTooltip] = useState(false)
-
+    const height = mainAreaHeight - 65; //TabList height 104
+    const [userViewModel, setUserViewModel] = useState(false)
 
     const fetching = useSelector((state) => state.crudSlice.fetching)
     const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword)
     const indexData = useSelector((state) => state.crudSlice.indexEntityData)
+
     const perPage = 50;
     const [page,setPage] = useState(1);
-    console.log(indexData)
+
     useEffect(() => {
         const value = {
             url: 'user',
@@ -54,11 +53,16 @@ function UserTable() {
 
     return (
         <>
-            <Box>
-                <Box bg={`white`}>
-                    <UserSearch />
-                </Box>
-                <Box>
+            <Box p={8}>
+                <div radius="xl">
+                    <Box bg={`white`}  >
+                        <Box pt={'xs'} pb={`xs`} pl={`md`} pr={8} >
+                            <KeywordSearch />
+                        </Box>
+                    </Box>
+                    <Box bg={`white`}>
+                            <Box pb={`xs`} pl={`md`} pr={'md'} >
+
                         <DataTable
                             withTableBorder
                             records={indexData.data}
@@ -83,6 +87,10 @@ function UserTable() {
                                                 size="sm"
                                                 variant="subtle"
                                                 color="green"
+                                                onClick={()=>{
+                                                    setUserViewModel(true)
+                                                    dispatch(editEntityData('user/' + data.id))
+                                                }}
                                             >
                                                 <IconEye size={16}/>
                                             </ActionIcon>
@@ -90,6 +98,11 @@ function UserTable() {
                                                 size="sm"
                                                 variant="subtle"
                                                 color="blue"
+                                                onClick={() => {
+                                                    dispatch(setInsertType('update'))
+                                                    dispatch(editEntityData('user/' + data.id))
+                                                    dispatch(setFormLoading(true))
+                                                }}
                                             >
                                                 <IconEdit size={16}/>
                                             </ActionIcon>
@@ -136,8 +149,15 @@ function UserTable() {
                             scrollAreaProps={{ type: 'never' }}
                         />
 
-                </Box>
+                            </Box>
+
+                    </Box>
+                </div>
             </Box>
+            {
+                userViewModel && <UserViewModel  userViewModel={userViewModel} setUserViewModel={setUserViewModel}/>
+            }
+
         </>
     );
 }

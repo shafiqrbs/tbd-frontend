@@ -86,7 +86,7 @@ const crudSlice = createSlice({
         fetching : true,
         indexEntityData : [],
         storeEntityData : [],
-        editEntityData : [],
+        entityEditData : [],
         updateEntityData : [],
         showEntityData : [],
         customerIndexData : [],
@@ -94,6 +94,8 @@ const crudSlice = createSlice({
         formLoading : false,
         insertType : 'create',
         searchKeyword : '',
+        entityUpdateId : null,
+        entityIsUpdate : false,
     },
     reducers : {
         setFetching : (state,action) => {
@@ -107,6 +109,15 @@ const crudSlice = createSlice({
         },
         setSearchKeyword : (state,action)=>{
             state.searchKeyword = action.payload
+        },
+        setEntityUpdateId : (state,action)=>{
+            state.entityUpdateId = action.payload
+        },
+        setEntityIsUpdate : (state,action)=>{
+            state.entityIsUpdate = action.payload
+        },
+        setEditEntityData : (state,action)=>{
+            state.entityEditData = action.payload
         }
     },
 
@@ -122,7 +133,7 @@ const crudSlice = createSlice({
         })
 
         builder.addCase(editEntityData.fulfilled, (state, action) => {
-            state.editEntityData = action.payload.data.data
+            state.entityEditData = action.payload.data.data
         })
 
         builder.addCase(updateEntityData.fulfilled, (state, action) => {
@@ -141,6 +152,6 @@ const crudSlice = createSlice({
     }
 })
 
-export const { setFetching,setFormLoading ,setInsertType,setSearchKeyword} = crudSlice.actions
+export const { setFetching,setFormLoading ,setInsertType,setSearchKeyword,setEntityUpdateId,setEntityIsUpdate,setEditEntityData} = crudSlice.actions
 
 export default crudSlice.reducer;
