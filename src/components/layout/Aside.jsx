@@ -10,7 +10,7 @@ function Aside() {
       <>
     <Box mr={8}>
       <Box mx="auto" ta="center" h={40}>
-        <Text order={6} c={'indigo'} fz={10} fw={900} pt={'8'} ></Text>
+        <Text order={6} c={'indigo'} fz={10} fw={900} pt={'0'} ></Text>
       </Box>
       <Tooltip
           label={t('CrtlfText')}
@@ -125,7 +125,6 @@ function Aside() {
       </Tooltip>
 
     </Box>
-
       </>
   )
 }

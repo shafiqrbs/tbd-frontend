@@ -60,6 +60,43 @@ function VendorForm() {
     }]], []);
     return (
         <Box bg={"white"} mt={`md`} mr={'xs'}>
+            <form onSubmit={form.onSubmit((values) => {
+                modals.openConfirmModal({
+                    title: 'Please confirm your action',
+                    children: (
+                        <Text size="sm">
+                            This action is so important that you are required to confirm it with a
+                            modal. Please click
+                            one of these buttons to proceed.
+                        </Text>
+                    ),
+                    labels: {confirm: 'Confirm', cancel: 'Cancel'},
+                    onCancel: () => console.log('Cancel'),
+                    onConfirm: () => {
+
+                        const value = {
+                            url: 'user',
+                            data: values
+                        }
+
+                        // dispatch(storeEntityData(value))
+
+                        notifications.show({
+                            color: 'teal',
+                            title: t('CreateSuccessfully'),
+                            icon: <IconCheck style={{width: rem(18), height: rem(18)}}/>,
+                            loading: false,
+                            autoClose: 700,
+                            style: {backgroundColor: 'lightgray'},
+                        });
+
+                        setTimeout(() => {
+                            form.reset()
+                            dispatch(setFetching(true))
+                        }, 700)
+                    },
+                });
+            })}>
             <Box  pb={`xs`} pl={`xs`} pr={8} >
                 <Grid>
                     <Grid.Col span={6} h={54}>
@@ -75,7 +112,7 @@ function VendorForm() {
                                 position={"bottom"}
                                 transitionProps={{transition: "pop-bottom-left", duration: 500}}
                             >
-                                <Button bg={`white`} size="md" ml={1} mr={1} variant="light" color={`black`}>
+                                <Button bg={`white`} size="md" ml={1} mr={1} variant="light" color={`gray.7`}>
                                     <IconRestore size={24}/>
                                 </Button>
                             </Tooltip>
@@ -84,8 +121,9 @@ function VendorForm() {
                             <>
                                 <Button
                                     size="md"
-                                    color={`blue.7`}
+                                    color={`indigo.7`}
                                     type="submit"
+                                    id="UserFormSubmit"
                                     leftSection={<IconDeviceFloppy size={24}/>}
                                 >
                                     <LoadingOverlay
@@ -97,7 +135,7 @@ function VendorForm() {
                                     />
 
                                     <Flex direction={`column`} gap={0}>
-                                        <Text fz={14} fw={400}>
+                                        <Text   fz={14} fw={400}>
                                             {t("NewReceive")}
                                         </Text>
                                     </Flex>
@@ -112,43 +150,7 @@ function VendorForm() {
                 <Grid.Col span={10} >
                     <ScrollArea h={height} scrollbarSize={2}>
 <Box p={`md`} pb={'md'} >
-                        <form onSubmit={form.onSubmit((values) => {
-                            modals.openConfirmModal({
-                                title: 'Please confirm your action',
-                                children: (
-                                    <Text size="sm">
-                                        This action is so important that you are required to confirm it with a
-                                        modal. Please click
-                                        one of these buttons to proceed.
-                                    </Text>
-                                ),
-                                labels: {confirm: 'Confirm', cancel: 'Cancel'},
-                                onCancel: () => console.log('Cancel'),
-                                onConfirm: () => {
 
-                                    const value = {
-                                        url: 'user',
-                                        data: values
-                                    }
-
-                                    // dispatch(storeEntityData(value))
-
-                                    notifications.show({
-                                        color: 'teal',
-                                        title: t('CreateSuccessfully'),
-                                        icon: <IconCheck style={{width: rem(18), height: rem(18)}}/>,
-                                        loading: false,
-                                        autoClose: 700,
-                                        style: {backgroundColor: 'lightgray'},
-                                    });
-
-                                    setTimeout(() => {
-                                        form.reset()
-                                        dispatch(setFetching(true))
-                                    }, 700)
-                                },
-                            });
-                        })}>
 
                             <InputForm
                                 tooltip={t('NameValidateMessage')}
@@ -222,18 +224,128 @@ function VendorForm() {
                                 mt={8}
                             />
 
-                            <Group justify="flex-end" mt="md">
-                                <Button type="submit" id="UserFormSubmit">Submit</Button>
-                            </Group>
-                        </form>
-
                     </Box>
                     </ScrollArea>
                 </Grid.Col>
                 <Grid.Col span={2}>
-                    <Aside/>
+                    <Box mr={8}>
+                        <Tooltip
+                            label={t('CrtlfText')}
+                            px={16}
+                            py={2}
+                            withArrow
+                            position={"left"}
+                            c={'indigo'}
+                            bg={`gray.1`}
+                            transitionProps={{transition: "pop-bottom-left", duration: 500}}
+                        >
+                            <Button
+                                size="lg"
+                                mt={16}
+                                mb={16}
+                                pl={'16'}
+                                pr={'16'}
+                                variant={'light'}
+                                color={`indigo`}
+                                radius="xl"
+                            >
+                                <Flex direction={`column`} align={'center'}>
+                                    <IconSearch size={16}/>
+                                    <Text fz={8}>
+                                        {t('alt+f')}
+                                    </Text>
+                                </Flex>
+                            </Button>
+                        </Tooltip>
+
+                        <Tooltip
+                            label={t('CrtlnText')}
+                            px={16}
+                            py={2}
+                            withArrow
+                            position={"left"}
+                            c={'indigo'}
+                            bg={`gray.1`}
+                            transitionProps={{transition: "pop-bottom-left", duration: 500}}
+                        >
+                            <Button
+                                size="lg"
+                                mb={16}
+                                pl={'16'}
+                                pr={'16'}
+                                variant={'light'}
+                                color={`indigo`}
+                                radius="xl"
+                            >
+                                <Flex direction={`column`} align={'center'}>
+                                    <IconPlus size={16}/>
+                                    <Text fz={8}>
+                                        {t('alt+n')}
+                                    </Text>
+                                </Flex>
+                            </Button>
+                        </Tooltip>
+                        <Tooltip
+                            label={t('CrtlrText')}
+                            px={16}
+                            py={2}
+                            withArrow
+                            position={"left"}
+                            c={'indigo'}
+                            bg={`gray.1`}
+                            transitionProps={{transition: "pop-bottom-left", duration: 500}}
+                        >
+                            <Button
+                                size="lg"
+                                mb={16}
+                                pl={'16'}
+                                pr={'16'}
+                                variant={'light'}
+                                color={`indigo`}
+                                radius="xl"
+                            >
+                                <Flex direction={`column`} align={'center'}>
+
+                                    <IconRestore size={16}/>
+                                    <Text fz={8}>
+                                        {t('alt+r')}
+                                    </Text>
+                                </Flex>
+                            </Button>
+                        </Tooltip>
+                        <Tooltip
+                            label={t('CrtlsText')}
+                            px={16}
+                            py={2}
+                            withArrow
+                            position={"left"}
+                            c={'indigo'}
+                            bg={`gray.1`}
+                            transitionProps={{transition: "pop-bottom-left", duration: 500}}
+                        >
+                            <Button
+                                size="lg"
+                                mb={16}
+                                pl={'16'}
+                                pr={'16'}
+                                variant={'filled'}
+                                color={`indigo`}
+                                radius="xl"
+                            >
+                                <Flex direction={`column`} align={'center'}>
+
+                                    <IconDeviceFloppy size={16}/>
+                                    <Text fz={8}>
+                                        {t('alt+s')}
+                                    </Text>
+                                </Flex>
+                            </Button>
+                        </Tooltip>
+
+                    </Box>
                 </Grid.Col>
             </Grid>
+            </form>
         </Box>
 
     );
