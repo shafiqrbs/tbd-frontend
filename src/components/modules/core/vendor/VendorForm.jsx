@@ -35,6 +35,7 @@ import {setFetching, storeEntityData, updateEntityData} from "../../../../store/
 import {notifications} from "@mantine/notifications";
 import CustomerForm from "../customer/CustomerForm";
 import Aside from "../../../layout/Aside";
+import Shortcut from "../../shortcut/Shortcut";
 function VendorForm() {
     const {t, i18n} = useTranslation();
     const dispatch = useDispatch();
@@ -100,7 +101,7 @@ function VendorForm() {
             <Box  pb={`xs`} pl={`xs`} pr={8} >
                 <Grid>
                     <Grid.Col span={6} h={54}>
-                        <Title order={6} mt={'xs'}>{t('CustomerInformation')}</Title>
+                        <Title order={6} mt={'xs'} pl={'6'}>{t('CustomerInformation')}</Title>
                     </Grid.Col>
                     <Grid.Col span={6}>
                         <Group mr={'md'} pos={`absolute`} right={0} gap={0}>
@@ -116,8 +117,6 @@ function VendorForm() {
                                     <IconRestore size={24}/>
                                 </Button>
                             </Tooltip>
-
-
                             <>
                                 <Button
                                     size="md"
@@ -136,7 +135,7 @@ function VendorForm() {
 
                                     <Flex direction={`column`} gap={0}>
                                         <Text   fz={14} fw={400}>
-                                            {t("NewReceive")}
+                                            {t("CreateAndSave")}
                                         </Text>
                                     </Flex>
                                 </Button>
@@ -228,121 +227,7 @@ function VendorForm() {
                     </ScrollArea>
                 </Grid.Col>
                 <Grid.Col span={2}>
-                    <Box mr={8}>
-                        <Tooltip
-                            label={t('CrtlfText')}
-                            px={16}
-                            py={2}
-                            withArrow
-                            position={"left"}
-                            c={'indigo'}
-                            bg={`gray.1`}
-                            transitionProps={{transition: "pop-bottom-left", duration: 500}}
-                        >
-                            <Button
-                                size="lg"
-                                mt={16}
-                                mb={16}
-                                pl={'16'}
-                                pr={'16'}
-                                variant={'light'}
-                                color={`indigo`}
-                                radius="xl"
-                            >
-                                <Flex direction={`column`} align={'center'}>
-                                    <IconSearch size={16}/>
-                                    <Text fz={8}>
-                                        {t('alt+f')}
-                                    </Text>
-                                </Flex>
-                            </Button>
-                        </Tooltip>
-
-                        <Tooltip
-                            label={t('CrtlnText')}
-                            px={16}
-                            py={2}
-                            withArrow
-                            position={"left"}
-                            c={'indigo'}
-                            bg={`gray.1`}
-                            transitionProps={{transition: "pop-bottom-left", duration: 500}}
-                        >
-                            <Button
-                                size="lg"
-                                mb={16}
-                                pl={'16'}
-                                pr={'16'}
-                                variant={'light'}
-                                color={`indigo`}
-                                radius="xl"
-                            >
-                                <Flex direction={`column`} align={'center'}>
-                                    <IconPlus size={16}/>
-                                    <Text fz={8}>
-                                        {t('alt+n')}
-                                    </Text>
-                                </Flex>
-                            </Button>
-                        </Tooltip>
-                        <Tooltip
-                            label={t('CrtlrText')}
-                            px={16}
-                            py={2}
-                            withArrow
-                            position={"left"}
-                            c={'indigo'}
-                            bg={`gray.1`}
-                            transitionProps={{transition: "pop-bottom-left", duration: 500}}
-                        >
-                            <Button
-                                size="lg"
-                                mb={16}
-                                pl={'16'}
-                                pr={'16'}
-                                variant={'light'}
-                                color={`indigo`}
-                                radius="xl"
-                            >
-                                <Flex direction={`column`} align={'center'}>
-
-                                    <IconRestore size={16}/>
-                                    <Text fz={8}>
-                                        {t('alt+r')}
-                                    </Text>
-                                </Flex>
-                            </Button>
-                        </Tooltip>
-                        <Tooltip
-                            label={t('CrtlsText')}
-                            px={16}
-                            py={2}
-                            withArrow
-                            position={"left"}
-                            c={'indigo'}
-                            bg={`gray.1`}
-                            transitionProps={{transition: "pop-bottom-left", duration: 500}}
-                        >
-                            <Button
-                                size="lg"
-                                mb={16}
-                                pl={'16'}
-                                pr={'16'}
-                                variant={'filled'}
-                                color={`indigo`}
-                                radius="xl"
-                            >
-                                <Flex direction={`column`} align={'center'}>
-
-                                    <IconDeviceFloppy size={16}/>
-                                    <Text fz={8}>
-                                        {t('alt+s')}
-                                    </Text>
-                                </Flex>
-                            </Button>
-                        </Tooltip>
-
-                    </Box>
+                    <Shortcut/>
                 </Grid.Col>
             </Grid>
             </form>

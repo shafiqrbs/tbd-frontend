@@ -37,7 +37,7 @@ function UserTable() {
     const fetching = useSelector((state) => state.crudSlice.fetching)
     const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword)
     const indexData = useSelector((state) => state.crudSlice.indexEntityData)
-    const perPage = 20;
+    const perPage = 50;
     const [page,setPage] = useState(1);
     console.log(indexData)
     useEffect(() => {

@@ -123,15 +123,17 @@ function VendorIndex() {
     );
     return (
 
+        <div>
+            <Grid>
+                <Grid.Col span={8}>
+                    <VendorTable/>
+                </Grid.Col>
+                <Grid.Col span={4}>
+                    <VendorForm/>
+                </Grid.Col>
+            </Grid>
+        </div>
 
-        <Grid>
-            <Grid.Col span={8}>
-                <VendorTable/>
-            </Grid.Col>
-            <Grid.Col span={4}>
-                <VendorForm/>
-            </Grid.Col>
-        </Grid>
     );
 }
 

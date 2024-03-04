@@ -21,7 +21,6 @@ ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <MantineProvider theme={theme}>
       <Notifications />
-
       <BrowserRouter>
         <App />
       </BrowserRouter>

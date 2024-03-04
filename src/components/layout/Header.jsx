@@ -301,7 +301,7 @@ export default function Header({
                                 <IconLogout size={28}/>
                             </ActionIcon>
                         </Tooltip>
-                        <Tooltip
+                        {/*<Tooltip
                             label={
                                 rightSidebarOpened
                                     ? t("CollapseRightSidebar")
@@ -323,7 +323,7 @@ export default function Header({
                                     <IconTableShortcut size={28} />
                                 )}
                             </ActionIcon>
-                        </Tooltip>
+                        </Tooltip>*/}
                     </Group>
                 </Group>
                 <Spotlight
