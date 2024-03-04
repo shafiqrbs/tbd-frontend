@@ -29,7 +29,6 @@ function UserForm() {
     const dispatch = useDispatch();
     const {isOnline, mainAreaHeight} = useOutletContext();
     const height = mainAreaHeight - 104; //TabList height 104
-
     const form = useForm({
         initialValues: {
             name:'', username:'', email:'', password:'',confirm_password:'',mobile:''
@@ -44,12 +43,9 @@ function UserForm() {
                 value !== values.password
         }
     });
-
     useHotkeys([['alt+n', () => {
         document.getElementById('Name').focus()
     }]], []);
-
-
     return (
         <ScrollArea h={height}  scrollbarSize={2}>
             <Box p={`md`}>
@@ -172,5 +168,4 @@ function UserForm() {
         </ScrollArea>
 );
 }
-
 export default UserForm;

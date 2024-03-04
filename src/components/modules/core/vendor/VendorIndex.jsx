@@ -3,6 +3,7 @@ import {useOutletContext} from "react-router-dom";
 import {
     Button,
     Group,
+    Grid,
     Tabs,
     rem,
     Text,
@@ -28,6 +29,8 @@ import {modals} from '@mantine/modals';
 import axios from "axios";
 import {storeEntityData, setFetching} from "../../../../store/core/crudSlice.js";
 import {useDispatch, useSelector} from "react-redux";
+import VendorTable from "./VendorTable";
+import VendorForm from "./VendorForm";
 
 function VendorIndex() {
     const {t, i18n} = useTranslation();
@@ -120,24 +123,15 @@ function VendorIndex() {
     );
     return (
 
-            <Tabs
-                defaultValue="VendorView"
-                onChange={(value) => setActiveTab(value)}
-            >
-                <Tabs.List pos={`relative`} h={'52'}>
-                    <Tabs.Tab h={'52'} fz={14} fw={700}
-                              value="VendorView"
-                              leftSection={<IconList style={iconStyle}/>}>
-                        {t("ManageVendors")}
-                    </Tabs.Tab>
-                    {tabCreateNewRightButtons}
-                </Tabs.List>
-                <Tabs.Panel value="VendorView" h={'52'}>
-                    <VendorView
-                        form={form}
-                    />
-                </Tabs.Panel>
-            </Tabs>
+
+        <Grid>
+            <Grid.Col span={8}>
+                <VendorTable/>
+            </Grid.Col>
+            <Grid.Col span={4}>
+                <VendorForm/>
+            </Grid.Col>
+        </Grid>
     );
 }
 

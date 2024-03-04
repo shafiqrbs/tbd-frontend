@@ -9,10 +9,9 @@ function Aside() {
   return (
       <>
     <Box mr={8}>
-      <Box mx="auto" ta="center" h={42}>
-        <Text order={6} c={'indigo'} fz={10} fw={900} pt={'8'} >{t('ShortCut')}</Text>
+      <Box mx="auto" ta="center" h={40}>
+        <Text order={6} c={'indigo'} fz={10} fw={900} pt={'8'} ></Text>
       </Box>
-      <Box h={1} bg={`gray.1`} mb={'md'}></Box>
       <Tooltip
           label={t('CrtlfText')}
           px={16}
@@ -30,11 +29,12 @@ function Aside() {
             pr={'16'}
             variant={'light'}
             color={`indigo`}
+            radius="xl"
         >
           <Flex direction={`column`} align={'center'}>
             <IconSearch size={16}/>
-            <Text fz={10}>
-              {t('Crtl+f')}
+            <Text fz={8}>
+              {t('alt+f')}
             </Text>
           </Flex>
         </Button>
@@ -57,11 +57,12 @@ function Aside() {
             pr={'16'}
             variant={'light'}
             color={`indigo`}
+            radius="xl"
         >
           <Flex direction={`column`} align={'center'}>
             <IconPlus size={16}/>
-            <Text fz={10}>
-              {t('Crtl+n')}
+            <Text fz={8}>
+              {t('alt+n')}
             </Text>
           </Flex>
         </Button>
@@ -83,12 +84,13 @@ function Aside() {
             pr={'16'}
             variant={'light'}
             color={`indigo`}
+            radius="xl"
         >
           <Flex direction={`column`} align={'center'}>
 
             <IconRestore size={16}/>
-            <Text fz={10}>
-              {t('Crtl+r')}
+            <Text fz={8}>
+              {t('alt+r')}
             </Text>
           </Flex>
         </Button>
@@ -108,14 +110,15 @@ function Aside() {
             mb={16}
             pl={'16'}
             pr={'16'}
-            variant={'light'}
+            variant={'filled'}
             color={`indigo`}
+            radius="xl"
         >
           <Flex direction={`column`} align={'center'}>
 
             <IconDeviceFloppy size={16}/>
-            <Text fz={10}>
-              {t('Crtl+s')}
+            <Text fz={8}>
+              {t('alt+s')}
             </Text>
           </Flex>
         </Button>

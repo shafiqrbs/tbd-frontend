@@ -3,8 +3,9 @@ import {useOutletContext} from "react-router-dom";
 import {
     Group,
     Tooltip,
+    Tabs,
     Box,
-    TextInput, Grid, ActionIcon,rem
+    TextInput, Grid, ActionIcon, rem, Title, Text
 } from "@mantine/core";
 import {useTranslation} from "react-i18next";
 import {IconFilter, IconSearch, IconInfoCircle, IconEye, IconEdit, IconTrash, IconRestore} from "@tabler/icons-react";
@@ -14,13 +15,12 @@ import {useDispatch, useSelector} from "react-redux";
 import {getIndexEntityData, setFetching} from "../../../../store/core/crudSlice.js";
 
 
-function VendorTable(props) {
+function VendorTable() {
 
-    const {form} = props
     const dispatch = useDispatch();
     const {t, i18n} = useTranslation();
     const {isOnline, mainAreaHeight} = useOutletContext();
-    const height = mainAreaHeight - 104; //TabList height 104
+    const height = mainAreaHeight - 65; //TabList height 104
     const fetching = useSelector((state) => state.crudSlice.fetching)
     const indexData = useSelector((state) => state.crudSlice.indexEntityData)
     useEffect(() => {
@@ -29,9 +29,10 @@ function VendorTable(props) {
 
     return (
         <>
-            <Box>
-                <Box bg={`white`}>
-                    <Box pb={`xs`} pl={`xs`} pr={8} >
+            <Box p={8}>
+                <div radius="xl">
+                <Box bg={`white`}  >
+                    <Box pt={'xs'} pb={`xs`} pl={`xs`} pr={8} >
                         <Grid justify="flex-end" align="flex-end">
                             <Grid.Col span={10}>
                                 <TextInput
@@ -101,11 +102,12 @@ function VendorTable(props) {
                             </Grid.Col>
                         </Grid>
                     </Box>
-                    <Box h={1} bg={`gray.1`}></Box>
                 </Box>
-                <Box>
+                <Box h={1} bg={`gray.3`}></Box>
+                <Box bg={`white`}>
                     {
                         // (customerIndexData && customerIndexData.length > 0) &&
+                        <Box pb={`xs`} pl={`xs`} pr={8} >
                         <DataTable
                             withBorder
                             records={indexData}
@@ -157,9 +159,10 @@ function VendorTable(props) {
                             height={height}
                             scrollAreaProps={{ type: 'never' }}
                         />
+                        </Box>
                     }
-
                 </Box>
+                </div>
             </Box>
         </>
     );
