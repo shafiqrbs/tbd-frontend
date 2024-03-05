@@ -57,6 +57,7 @@ function SelectForm(props) {
                         value={value}
                         onChange={(e) => {
                             changeValue(e)
+                            form.setFieldValue(name, e)
                         }}
                         withAsterisk={required}
                     />

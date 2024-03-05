@@ -2,33 +2,40 @@ import React, {useEffect, useState} from "react";
 import {useOutletContext} from "react-router-dom";
 import {
     Group,
-    Tooltip,
-    Tabs,
     Box,
-    TextInput, Grid, ActionIcon, rem, Title, Text
+    ActionIcon, Text
 } from "@mantine/core";
 import {useTranslation} from "react-i18next";
-import {IconFilter, IconSearch, IconInfoCircle, IconEye, IconEdit, IconTrash, IconRestore} from "@tabler/icons-react";
-import axios from "axios";
+import { IconEye, IconEdit, IconTrash} from "@tabler/icons-react";
 import {DataTable} from 'mantine-datatable';
 import {useDispatch, useSelector} from "react-redux";
-import {getIndexEntityData, setFetching} from "../../../../store/core/crudSlice.js";
-import UserSearch from "../user/UserSearch";
+import {
+    editEntityData,
+    getIndexEntityData,
+    setFetching, setFormLoading,
+    setInsertType,
+    showEntityData
+} from "../../../../store/core/crudSlice.js";
 import KeywordSearch from "../../filter/KeywordSearch";
 import {modals} from "@mantine/modals";
 import {deleteEntityData} from "../../../../store/core/crudSlice";
+import VendorViewModel from "./VendorViewModel.jsx";
 function VendorTable() {
 
     const dispatch = useDispatch();
     const {t, i18n} = useTranslation();
     const {isOnline, mainAreaHeight} = useOutletContext();
     const height = mainAreaHeight - 65; //TabList height 104
+
+    const perPage = 50;
+    const [page,setPage] = useState(1);
+    const [vendorViewModel,setVendorViewModel] = useState(false)
+
     const fetching = useSelector((state) => state.crudSlice.fetching)
     const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword)
     const indexData = useSelector((state) => state.crudSlice.indexEntityData)
-    const perPage = 50;
-    const [page,setPage] = useState(1);
-    console.log(indexData)
+
+
     useEffect(() => {
         const value = {
             url: 'vendor',
@@ -51,8 +58,7 @@ function VendorTable() {
                     </Box>
                 </Box>
                 <Box bg={`white`}>
-                    {
-                         /*(indexData && indexData.total > 0) &&*/
+
                         <Box pb={`xs`} pl={`md`} pr={'md'} >
                             <DataTable
                                 withTableBorder
@@ -77,6 +83,10 @@ function VendorTable() {
                                                     size="sm"
                                                     variant="subtle"
                                                     color="green"
+                                                    onClick={()=>{
+                                                        setVendorViewModel(true)
+                                                        dispatch(showEntityData('vendor/' + data.id))
+                                                    }}
                                                 >
                                                     <IconEye size={16}/>
                                                 </ActionIcon>
@@ -84,6 +94,11 @@ function VendorTable() {
                                                     size="sm"
                                                     variant="subtle"
                                                     color="blue"
+                                                    onClick={() => {
+                                                        dispatch(setInsertType('update'))
+                                                        dispatch(editEntityData('vendor/' + data.id))
+                                                        dispatch(setFormLoading(true))
+                                                    }}
                                                 >
                                                     <IconEdit size={16}/>
                                                 </ActionIcon>
@@ -102,7 +117,7 @@ function VendorTable() {
                                                             labels: {confirm: 'Confirm', cancel: 'Cancel'},
                                                             onCancel: () => console.log('Cancel'),
                                                             onConfirm: () => {
-                                                                dispatch(deleteEntityData('user/' + data.id))
+                                                                dispatch(deleteEntityData('vendor/' + data.id))
                                                                 dispatch(setFetching(true))
                                                             },
                                                         });
@@ -113,7 +128,6 @@ function VendorTable() {
                                             </Group>
                                         ),
                                     },
-
                                 ]
                                 }
                                 fetching={fetching}
@@ -130,10 +144,12 @@ function VendorTable() {
                                 scrollAreaProps={{ type: 'never' }}
                             />
                         </Box>
-                    }
-                </Box>
+                    </Box>
                 </div>
             </Box>
+            {
+                vendorViewModel && <VendorViewModel  vendorViewModel={vendorViewModel} setVendorViewModel={setVendorViewModel}/>
+            }
         </>
     );
 }

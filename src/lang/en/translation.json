@@ -70,8 +70,11 @@
   "VendorFormDetails": "Manage Vendors Information Details",
   "CompanyName": "Company Name",
   "CompanyNameValidateMessage": "Company Name must be 2-20 characters long",
+  "VendorNameValidateMessage": "Vendor Name must be 2-20 characters long",
   "VendorName": "Vendor Name",
+  "VendorMobile": "Vendor Mobile",
   "TPPercent": "TP Percent",
+  "TPPercentValidateMessage": "TP Percent must be digit or fraction",
   "ChooseCustomer": "Choose Customer",
   "ManageVendors": "Manage Vendors",
 
@@ -96,6 +99,8 @@
   "ProductSetupDetails": "Product Setup Details",
   "PriceInformation": "Price Information",
   "PriceInformationDetails": "Price Information Details",
+
+  "VendorInformation": "Vendor Information",
 
 
 

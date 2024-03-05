@@ -133,15 +133,14 @@ export const updateData = async (value) => {
 export const showData = async (value) => {
     let data = []
     await axios({
-        method: 'POST',
-        url: `${import.meta.env.VITE_API_GATEWAY_URL+value.url}`,
+        method: 'get',
+        url: `${import.meta.env.VITE_API_GATEWAY_URL+value}`,
         headers: {
             "Accept": `application/json`,
             "Content-Type": `application/json`,
             "Access-Control-Allow-Origin": '*',
             "X-Api-Key": import.meta.env.VITE_API_KEY
         },
-        data : value.data
     })
         .then(res => {
             data = res

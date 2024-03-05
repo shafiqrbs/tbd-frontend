@@ -4,7 +4,7 @@ import {
     deleteData,
     editData,
     getDataWithoutParam,
-    getDataWithParam,
+    getDataWithParam, showData,
     updateData
 } from "../../services/apiService";
 

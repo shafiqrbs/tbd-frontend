@@ -237,7 +237,7 @@ function UserForm() {
                     <Grid.Col span={2}>
                         <Shortcut
                             form={form}
-                            UserFormSubmit={'UserFormSubmit'}
+                            FormSubmit={'UserFormSubmit'}
                             Name={'Name'}
                         />
                     </Grid.Col>

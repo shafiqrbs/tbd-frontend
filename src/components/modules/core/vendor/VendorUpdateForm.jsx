@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from "react";
-import {useNavigate, useOutletContext} from "react-router-dom";
+import {useOutletContext} from "react-router-dom";
 import {
     Button,
-    rem, Flex,
-    Grid, Box, ScrollArea, Tooltip, Group, Text, LoadingOverlay, Title,
+    rem,
+    Grid, Box, ScrollArea, Tooltip, Group, Text, LoadingOverlay, Title, Flex,
 } from "@mantine/core";
 import {useTranslation} from 'react-i18next';
 import {
@@ -12,33 +12,38 @@ import {
     IconRestore,
 } from "@tabler/icons-react";
 import {useHotkeys} from "@mantine/hooks";
+import InputForm from "../../../form-builders/InputForm";
 import {useDispatch, useSelector} from "react-redux";
 import {hasLength, useForm} from "@mantine/form";
-import {modals} from "@mantine/modals";
 import {notifications} from "@mantine/notifications";
+import {modals} from "@mantine/modals";
 
 import {
-    getCustomerDropdown,
-} from "../../../../store/core/utilitySlice";
-import {setFetching, storeEntityData} from "../../../../store/core/crudSlice.js";
+    setEditEntityData,
+    setFetching, setFormLoading, setInsertType,
+    updateEntityData
+} from "../../../../store/core/crudSlice.js";
+import {getCustomerDropdown} from "../../../../store/core/utilitySlice.js";
 
-import Shortcut from "../../shortcut/Shortcut";
-import InputForm from "../../../form-builders/InputForm";
-import SelectForm from "../../../form-builders/SelectForm";
-import TextAreaForm from "../../../form-builders/TextAreaForm";
+import Shortcut from "../../shortcut/Shortcut.jsx";
+import SelectForm from "../../../form-builders/SelectForm.jsx";
+import TextAreaForm from "../../../form-builders/TextAreaForm.jsx";
 
-function VendorForm() {
+function VendorUpdateForm() {
     const {t, i18n} = useTranslation();
     const dispatch = useDispatch();
     const {isOnline, mainAreaHeight} = useOutletContext();
-    const height = mainAreaHeight - 65; //TabList height 104
-    const navigate = useNavigate();
+    const height = mainAreaHeight - 104; //TabList height 104
 
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
+    const [setFormData, setFormDataForUpdate] = useState(false);
+    const [formLoad, setFormLoad] = useState(true);
     const [customerData, setCustomerData] = useState(null);
 
     const customerDropdownData = useSelector((state) => state.utilitySlice.customerDropdownData)
+    const entityEditData = useSelector((state) => state.crudSlice.entityEditData)
     const formLoading = useSelector((state) => state.crudSlice.formLoading)
+
 
     let customerDropdown = customerDropdownData && customerDropdownData.length > 0 ?
         customerDropdownData.map((type, index) => {
@@ -48,6 +53,7 @@ function VendorForm() {
     useEffect(() => {
         dispatch(getCustomerDropdown('core/select/customer'))
     }, []);
+
 
     const form = useForm({
         initialValues: {
@@ -62,8 +68,34 @@ function VendorForm() {
         }
     });
 
+    useEffect(() => {
+        setFormLoad(true)
+        setFormDataForUpdate(true)
+    }, [dispatch, formLoading])
+
+    useEffect(() => {
+
+        form.setValues({
+            company_name: entityEditData.company_name,
+            name: entityEditData.name,
+            mobile: entityEditData.mobile,
+            // tp_percent:entityEditData.tp_percent,
+            customer_id: entityEditData.customer_id,
+            address: entityEditData.address,
+            email: entityEditData.email
+        })
+
+        dispatch(setFormLoading(false))
+        setTimeout(() => {
+            setFormLoad(false)
+            setFormDataForUpdate(false)
+        }, 500)
+
+    }, [dispatch, setFormData])
+
+
     useHotkeys([['alt+n', () => {
-        document.getElementById('CompanyName').focus()
+        document.getElementById('Name').focus()
     }]], []);
 
     useHotkeys([['alt+r', () => {
@@ -71,11 +103,12 @@ function VendorForm() {
     }]], []);
 
     useHotkeys([['alt+s', () => {
-        document.getElementById('VendorFormSubmit').click()
+        document.getElementById('UserFormSubmit').click()
     }]], []);
 
 
     return (
+
         <Box bg={"white"} mt={`md`} mr={'xs'}>
             <form onSubmit={form.onSubmit((values) => {
                 modals.openConfirmModal({
@@ -90,13 +123,13 @@ function VendorForm() {
                     labels: {confirm: 'Confirm', cancel: 'Cancel'},
                     onCancel: () => console.log('Cancel'),
                     onConfirm: () => {
-
+                        setSaveCreateLoading(true)
                         const value = {
-                            url: 'vendor',
+                            url: 'vendor/' + entityEditData.id,
                             data: values
                         }
 
-                        dispatch(storeEntityData(value))
+                        dispatch(updateEntityData(value))
 
                         notifications.show({
                             color: 'teal',
@@ -109,8 +142,10 @@ function VendorForm() {
 
                         setTimeout(() => {
                             form.reset()
-                            setCustomerData(null)
+                            dispatch(setInsertType('create'))
+                            dispatch(setEditEntityData([]))
                             dispatch(setFetching(true))
+                            setSaveCreateLoading(false)
                         }, 700)
                     },
                 });
@@ -118,7 +153,7 @@ function VendorForm() {
                 <Box pb={`xs`} pl={`xs`} pr={8}>
                     <Grid>
                         <Grid.Col span={6} h={54}>
-                            <Title order={6} mt={'xs'} pl={'6'}>{t('VendorInformation')}</Title>
+                            <Title order={6} mt={'xs'} pl={'6'}>{t('CustomerInformation')}</Title>
                         </Grid.Col>
                         <Grid.Col span={6}>
                             <Group mr={'md'} pos={`absolute`} right={0} gap={0}>
@@ -130,7 +165,11 @@ function VendorForm() {
                                     position={"bottom"}
                                     transitionProps={{transition: "pop-bottom-left", duration: 500}}
                                 >
-                                    <Button bg={`white`} size="md" ml={1} mr={1} variant="light" color={`gray.7`}>
+                                    <Button bg={`white`} size="md" ml={1} mr={1} variant="light" color={`gray.7`}
+                                            onClick={(e) => {
+                                                form.reset()
+                                            }}
+                                    >
                                         <IconRestore size={24}/>
                                     </Button>
                                 </Tooltip>
@@ -139,7 +178,7 @@ function VendorForm() {
                                         size="md"
                                         color={`indigo.7`}
                                         type="submit"
-                                        id="VendorFormSubmit"
+                                        id="UserFormSubmit"
                                         leftSection={<IconDeviceFloppy size={24}/>}
                                     >
                                         <LoadingOverlay
@@ -167,6 +206,8 @@ function VendorForm() {
                         <ScrollArea h={height} scrollbarSize={2}>
                             <Box p={`md`} pb={'md'}>
 
+                                <LoadingOverlay visible={formLoad} zIndex={1000}
+                                                overlayProps={{radius: "sm", blur: 2}}/>
 
                                 <InputForm
                                     tooltip={t('CompanyNameValidateMessage')}
@@ -240,7 +281,7 @@ function VendorForm() {
                                     mt={8}
                                     id={'ChooseCustomer'}
                                     searchable={true}
-                                    value={customerData}
+                                    value={customerData ? String(customerData) : (entityEditData.customer_id ? String(entityEditData.customer_id) : null)}
                                     changeValue={setCustomerData}
                                 />
 
@@ -256,22 +297,20 @@ function VendorForm() {
                                     mt={8}
                                     id={'Address'}
                                 />
-
                             </Box>
                         </ScrollArea>
                     </Grid.Col>
                     <Grid.Col span={2}>
                         <Shortcut
                             form={form}
-                            FormSubmit={'VendorFormSubmit'}
-                            Name={'CompanyName'}
+                            UserFormSubmit={'UserFormSubmit'}
+                            Name={'Name'}
                         />
                     </Grid.Col>
                 </Grid>
             </form>
         </Box>
-
-    );
+    )
 }
 
-export default VendorForm;
+export default VendorUpdateForm;
