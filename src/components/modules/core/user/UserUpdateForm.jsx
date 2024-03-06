@@ -8,7 +8,7 @@ import {
 import {useTranslation} from 'react-i18next';
 import {
     IconCheck,
-    IconDeviceFloppy,
+    IconDeviceFloppy,IconPencilBolt,
     IconRestore,
 } from "@tabler/icons-react";
 import { useHotkeys} from "@mantine/hooks";
@@ -27,7 +27,7 @@ function UserUpdateForm() {
     const {t, i18n} = useTranslation();
     const dispatch = useDispatch();
     const {isOnline, mainAreaHeight} = useOutletContext();
-    const height = mainAreaHeight - 104; //TabList height 104
+    const height = mainAreaHeight - 116; //TabList height 104
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
     const [setFormData, setFormDataForUpdate] = useState(false);
     const [formLoad, setFormLoad] = useState(true);
@@ -87,7 +87,7 @@ function UserUpdateForm() {
 
     return (
 
-        <Box bg={"white"} mt={`md`} mr={'xs'}>
+        <Box bg={"white"} mt={`xs`}>
             <form onSubmit={form.onSubmit((values) => {
                 modals.openConfirmModal({
                     title: 'Please confirm your action',
@@ -128,36 +128,22 @@ function UserUpdateForm() {
                     },
                 });
             })}>
-                <Box  pb={`xs`} pl={`xs`} pr={8} >
+                <Box pb={`xs`} pl={`xs`} pr={8}>
                     <Grid>
                         <Grid.Col span={6} h={54}>
-                            <Title order={6} mt={'xs'} pl={'6'}>{t('CustomerInformation')}</Title>
+                            <Title order={6} mt={'xs'} pl={'6'}>{t('UserInformation')}</Title>
                         </Grid.Col>
                         <Grid.Col span={6}>
-                            <Group mr={'md'} pos={`absolute`} right={0} gap={0}>
-                                <Tooltip
-                                    label={t("Refresh")}
-                                    color={`red.6`}
-                                    withArrow
-                                    offset={2}
-                                    position={"bottom"}
-                                    transitionProps={{transition: "pop-bottom-left", duration: 500}}
-                                >
-                                    <Button bg={`white`} size="md" ml={1} mr={1} variant="light" color={`gray.7`}
-                                        onClick={(e)=>{
-                                            form.reset()
-                                        }}
-                                    >
-                                        <IconRestore size={24}/>
-                                    </Button>
-                                </Tooltip>
+                            <Group mr={'md'} pos={`absolute`} right={0}  gap={0}>
                                 <>
                                     <Button
-                                        size="md"
-                                        color={`indigo.7`}
+                                        size="xs"
+                                        color={`indigo.6`}
                                         type="submit"
-                                        id="UserFormSubmit"
-                                        leftSection={<IconDeviceFloppy size={24}/>}
+                                        mt={4}
+                                        mr={'xs'}
+                                        id="VendorFormSubmit"
+                                        leftSection={<IconPencilBolt size={16}/>}
                                     >
                                         <LoadingOverlay
                                             visible={saveCreateLoading}
@@ -168,7 +154,7 @@ function UserUpdateForm() {
                                         />
 
                                         <Flex direction={`column`} gap={0}>
-                                            <Text   fz={14} fw={400}>
+                                            <Text fz={12} fw={400}>
                                                 {t("CreateAndSave")}
                                             </Text>
                                         </Flex>
@@ -179,10 +165,11 @@ function UserUpdateForm() {
                     </Grid>
                 </Box>
                 <Box h={1} bg={`gray.3`}></Box>
-                <Grid>
-                    <Grid.Col span={10} >
+                <Box m={'md'}>
+                    <Grid columns={24}>
+                        <Grid.Col span={'auto'}>
                         <ScrollArea h={height} scrollbarSize={2}>
-                            <Box p={`md`} pb={'md'} >
+                            <Box pb={'md'} >
 
                                 <LoadingOverlay visible={formLoad} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />
 
@@ -239,7 +226,7 @@ function UserUpdateForm() {
                             </Box>
                         </ScrollArea>
                     </Grid.Col>
-                    <Grid.Col span={2}>
+                    <Grid.Col span={3}>
                         <Shortcut
                             form={form}
                             UserFormSubmit={'UserFormSubmit'}
@@ -247,6 +234,7 @@ function UserUpdateForm() {
                         />
                     </Grid.Col>
                 </Grid>
+                </Box>
             </form>
         </Box>
     )

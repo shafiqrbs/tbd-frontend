@@ -29,7 +29,7 @@ function UserTable() {
     const dispatch = useDispatch();
     const {t, i18n} = useTranslation();
     const {isOnline, mainAreaHeight} = useOutletContext();
-    const height = mainAreaHeight - 65; //TabList height 104
+    const height = mainAreaHeight - 100; //TabList height 104
     const [userViewModel, setUserViewModel] = useState(false)
 
     const fetching = useSelector((state) => state.crudSlice.fetching)
@@ -53,10 +53,10 @@ function UserTable() {
 
     return (
         <>
-            <Box p={8}>
+            <Box>
                 <div radius="xl">
                     <Box bg={`white`}  >
-                        <Box pt={'xs'} pb={`xs`} pl={`md`} pr={8} >
+                        <Box pt={'xs'} pb={`xs`} pl={`md`} pr={'xl'} >
                             <KeywordSearch />
                         </Box>
                     </Box>

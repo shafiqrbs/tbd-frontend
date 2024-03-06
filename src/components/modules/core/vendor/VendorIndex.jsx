@@ -22,7 +22,7 @@ function VendorIndex() {
                     </Grid.Col>
                 </Grid>
             </Box>
-            <Box pr={12} pl={'12'}>
+            <Box pr={'12'} pl={'12'}>
                 <Grid>
                     <Grid.Col span={8}>
                         <VendorTable/>

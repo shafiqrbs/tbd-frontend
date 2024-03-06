@@ -31,7 +31,7 @@ function VendorForm() {
     const {t, i18n} = useTranslation();
     const dispatch = useDispatch();
     const {isOnline, mainAreaHeight} = useOutletContext();
-    const height = mainAreaHeight - 110; //TabList height 104
+    const height = mainAreaHeight - 116; //TabList height 104
     const navigate = useNavigate();
 
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
@@ -152,11 +152,11 @@ function VendorForm() {
                     </Grid>
                 </Box>
                 <Box  h={1} bg={`gray.3`}></Box>
-                <Box m={'xs'}>
+                <Box m={'md'}>
                  <Grid columns={24}>
                     <Grid.Col span={'auto'}>
                         <ScrollArea h={height} scrollbarSize={2}>
-                            <Box pl={'xs'} pb={'md'}>
+                            <Box pb={'md'}>
                                 <InputForm
                                     tooltip={t('CompanyNameValidateMessage')}
                                     label={t('CompanyName')}

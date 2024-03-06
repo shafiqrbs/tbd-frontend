@@ -9,7 +9,7 @@ import {useTranslation} from 'react-i18next';
 import {
     IconCheck,
     IconDeviceFloppy,
-    IconRestore,
+    IconRestore,IconPencilBolt
 } from "@tabler/icons-react";
 import {useHotkeys} from "@mantine/hooks";
 import InputForm from "../../../form-builders/InputForm";
@@ -33,7 +33,7 @@ function VendorUpdateForm() {
     const {t, i18n} = useTranslation();
     const dispatch = useDispatch();
     const {isOnline, mainAreaHeight} = useOutletContext();
-    const height = mainAreaHeight - 110; //TabList height 104
+    const height = mainAreaHeight - 116; //TabList height 104
 
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
     const [setFormData, setFormDataForUpdate] = useState(false);
@@ -164,7 +164,7 @@ function VendorUpdateForm() {
                                         mt={4}
                                         mr={'xs'}
                                         id="VendorFormSubmit"
-                                        leftSection={<IconDeviceFloppy size={16}/>}
+                                        leftSection={<IconPencilBolt size={16}/>}
                                     >
                                         <LoadingOverlay
                                             visible={saveCreateLoading}
@@ -176,7 +176,7 @@ function VendorUpdateForm() {
 
                                         <Flex direction={`column`} gap={0}>
                                             <Text fz={12} fw={400}>
-                                                {t("CreateAndSave")}
+                                                {t("EditAndSave")}
                                             </Text>
                                         </Flex>
                                     </Button>
@@ -186,11 +186,11 @@ function VendorUpdateForm() {
                     </Grid>
                 </Box>
                 <Box h={1} bg={`gray.3`}></Box>
-                <Box  m={'xs'}>
+                <Box m={'md'}>
                     <Grid columns={24}>
                         <Grid.Col span={'auto'}>
                             <ScrollArea h={height} scrollbarSize={2}>
-                                <Box pl={'xs'} pb={'md'}>
+                                <Box pb={'md'}>
                                     <InputForm
                                         tooltip={t('CompanyNameValidateMessage')}
                                         label={t('CompanyName')}

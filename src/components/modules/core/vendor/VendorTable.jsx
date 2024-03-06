@@ -51,7 +51,6 @@ function VendorTable() {
     return (
         <>
             <Box>
-                <div radius="xl">
                 <Box bg={`white`}  >
                     <Box pt={'xs'} pb={`xs`} pl={`md`} pr={'xl'} >
                         <KeywordSearch />
@@ -59,93 +58,92 @@ function VendorTable() {
                 </Box>
                 <Box bg={`white`}>
 
-                        <Box pb={`xs`} pl={`md`} pr={'md'} >
-                            <DataTable
-                                withTableBorder
-                                records={indexData.data}
-                                columns={[
-                                    {
-                                        accessor: 'index',
-                                        title: 'S/N',
-                                        textAlignment: 'right',
-                                        render: (item) => (indexData.data.indexOf(item) + 1)
-                                    },
-                                    { accessor: 'name',  title: "Name" },
-                                    { accessor: 'company_name',  title: "Company Name" },
-                                    { accessor: 'mobile',  title: "Mobile" },
-                                    {
-                                        accessor: "action",
-                                        title: "Action",
-                                        textAlign: "right",
-                                        render: (data) => (
-                                            <Group gap={4} justify="right" wrap="nowrap">
-                                                <ActionIcon
-                                                    size="sm"
-                                                    variant="subtle"
-                                                    color="green"
-                                                    onClick={()=>{
-                                                        setVendorViewModel(true)
-                                                        dispatch(showEntityData('vendor/' + data.id))
-                                                    }}
-                                                >
-                                                    <IconEye size={16}/>
-                                                </ActionIcon>
-                                                <ActionIcon
-                                                    size="sm"
-                                                    variant="subtle"
-                                                    color="blue"
-                                                    onClick={() => {
-                                                        dispatch(setInsertType('update'))
-                                                        dispatch(editEntityData('vendor/' + data.id))
-                                                        dispatch(setFormLoading(true))
-                                                    }}
-                                                >
-                                                    <IconEdit size={16}/>
-                                                </ActionIcon>
-                                                <ActionIcon
-                                                    size="sm"
-                                                    variant="subtle"
-                                                    color="red"
-                                                    onClick={() => {
-                                                        modals.openConfirmModal({
-                                                            title: (
-                                                                <Text size="md"> {t("FormConfirmationTitle")}</Text>
-                                                            ),
-                                                            children: (
-                                                                <Text size="sm"> {t("FormConfirmationMessage")}</Text>
-                                                            ),
-                                                            labels: {confirm: 'Confirm', cancel: 'Cancel'},
-                                                            onCancel: () => console.log('Cancel'),
-                                                            onConfirm: () => {
-                                                                dispatch(deleteEntityData('vendor/' + data.id))
-                                                                dispatch(setFetching(true))
-                                                            },
-                                                        });
-                                                    }}
-                                                >
-                                                    <IconTrash size={16}/>
-                                                </ActionIcon>
-                                            </Group>
-                                        ),
-                                    },
-                                ]
-                                }
-                                fetching={fetching}
-                                totalRecords={indexData.total}
-                                recordsPerPage={perPage}
-                                page={page}
-                                onPageChange={(p) => {
-                                    setPage(p)
-                                    dispatch(setFetching(true))
-                                }}
-                                loaderSize="xs"
-                                loaderColor="grape"
-                                height={height}
-                                scrollAreaProps={{ type: 'never' }}
-                            />
-                        </Box>
+                    <Box pb={`xs`} pl={`md`} pr={'md'} >
+                        <DataTable
+                            withTableBorder
+                            records={indexData.data}
+                            columns={[
+                                {
+                                    accessor: 'index',
+                                    title: 'S/N',
+                                    textAlignment: 'right',
+                                    render: (item) => (indexData.data.indexOf(item) + 1)
+                                },
+                                { accessor: 'name',  title: "Name" },
+                                { accessor: 'company_name',  title: "Company Name" },
+                                { accessor: 'mobile',  title: "Mobile" },
+                                {
+                                    accessor: "action",
+                                    title: "Action",
+                                    textAlign: "right",
+                                    render: (data) => (
+                                        <Group gap={4} justify="right" wrap="nowrap">
+                                            <ActionIcon
+                                                size="sm"
+                                                variant="subtle"
+                                                color="green"
+                                                onClick={()=>{
+                                                    setVendorViewModel(true)
+                                                    dispatch(showEntityData('vendor/' + data.id))
+                                                }}
+                                            >
+                                                <IconEye size={16}/>
+                                            </ActionIcon>
+                                            <ActionIcon
+                                                size="sm"
+                                                variant="subtle"
+                                                color="blue"
+                                                onClick={() => {
+                                                    dispatch(setInsertType('update'))
+                                                    dispatch(editEntityData('vendor/' + data.id))
+                                                    dispatch(setFormLoading(true))
+                                                }}
+                                            >
+                                                <IconEdit size={16}/>
+                                            </ActionIcon>
+                                            <ActionIcon
+                                                size="sm"
+                                                variant="subtle"
+                                                color="red"
+                                                onClick={() => {
+                                                    modals.openConfirmModal({
+                                                        title: (
+                                                            <Text size="md"> {t("FormConfirmationTitle")}</Text>
+                                                        ),
+                                                        children: (
+                                                            <Text size="sm"> {t("FormConfirmationMessage")}</Text>
+                                                        ),
+                                                        labels: {confirm: 'Confirm', cancel: 'Cancel'},
+                                                        onCancel: () => console.log('Cancel'),
+                                                        onConfirm: () => {
+                                                            dispatch(deleteEntityData('vendor/' + data.id))
+                                                            dispatch(setFetching(true))
+                                                        },
+                                                    });
+                                                }}
+                                            >
+                                                <IconTrash size={16}/>
+                                            </ActionIcon>
+                                        </Group>
+                                    ),
+                                },
+                            ]
+                            }
+                            fetching={fetching}
+                            totalRecords={indexData.total}
+                            recordsPerPage={perPage}
+                            page={page}
+                            onPageChange={(p) => {
+                                setPage(p)
+                                dispatch(setFetching(true))
+                            }}
+                            loaderSize="xs"
+                            loaderColor="grape"
+                            height={height}
+                            scrollAreaProps={{ type: 'never' }}
+                        />
                     </Box>
-                </div>
+                </Box>
             </Box>
             {
                 vendorViewModel && <VendorViewModel  vendorViewModel={vendorViewModel} setVendorViewModel={setVendorViewModel}/>
