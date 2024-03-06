@@ -9,9 +9,9 @@ function Shortcut(props) {
 
     return (
         <>
-            <Box mr={8}>
+            <Box mr={8} mt={'20'}>
                 <Tooltip
-                    label={t('CrtlfText')}
+                    label={t('AltTextNew')}
                     px={16}
                     py={2}
                     withArrow
@@ -21,42 +21,10 @@ function Shortcut(props) {
                     transitionProps={{transition: "pop-bottom-left", duration: 500}}
                 >
                     <Button
-                        size="lg"
-                        mt={16}
-                        mb={16}
-                        pl={'16'}
-                        pr={'16'}
-                        variant={'light'}
-                        color={`indigo`}
-                        radius="xl"
-                        /*onClick={()=>{
-                          document.getElementById('UserSearchKeyword').focus();
-                        }}*/
-                    >
-                        <Flex direction={`column`} align={'center'}>
-                            <IconSearch size={16}/>
-                            <Text fz={8}>
-                                {t('alt+f')}
-                            </Text>
-                        </Flex>
-                    </Button>
-                </Tooltip>
-
-                <Tooltip
-                    label={t('CrtlnText')}
-                    px={16}
-                    py={2}
-                    withArrow
-                    position={"left"}
-                    c={'indigo'}
-                    bg={`gray.1`}
-                    transitionProps={{transition: "pop-bottom-left", duration: 500}}
-                >
-                    <Button
-                        size="lg"
-                        mb={16}
-                        pl={'16'}
-                        pr={'16'}
+                        size="md"
+                        mb={28}
+                        pl={'12'}
+                        pr={'12'}
                         variant={'light'}
                         color={`indigo`}
                         radius="xl"
@@ -66,14 +34,11 @@ function Shortcut(props) {
                     >
                         <Flex direction={`column`} align={'center'}>
                             <IconPlus size={16}/>
-                            <Text fz={8}>
-                                {t('alt+n')}
-                            </Text>
                         </Flex>
                     </Button>
                 </Tooltip>
                 <Tooltip
-                    label={t('CrtlrText')}
+                    label={t('AltTextReset')}
                     px={16}
                     py={2}
                     withArrow
@@ -83,10 +48,10 @@ function Shortcut(props) {
                     transitionProps={{transition: "pop-bottom-left", duration: 500}}
                 >
                     <Button
-                        size="lg"
-                        mb={16}
-                        pl={'16'}
-                        pr={'16'}
+                        size="md"
+                        mb={28}
+                        pl={'12'}
+                        pr={'12'}
                         variant={'light'}
                         color={`indigo`}
                         radius="xl"
@@ -95,16 +60,12 @@ function Shortcut(props) {
                         }}
                     >
                         <Flex direction={`column`} align={'center'}>
-
                             <IconRestore size={16}/>
-                            <Text fz={8}>
-                                {t('alt+r')}
-                            </Text>
                         </Flex>
                     </Button>
                 </Tooltip>
                 <Tooltip
-                    label={t('CrtlsText')}
+                    label={t('AltTextSave')}
                     px={16}
                     py={2}
                     withArrow
@@ -114,10 +75,10 @@ function Shortcut(props) {
                     transitionProps={{transition: "pop-bottom-left", duration: 500}}
                 >
                     <Button
-                        size="lg"
+                        size="md"
                         mb={16}
-                        pl={'16'}
-                        pr={'16'}
+                        pl={'12'}
+                        pr={'12'}
                         variant={'filled'}
                         color={`indigo`}
                         radius="xl"
@@ -126,11 +87,7 @@ function Shortcut(props) {
                         }}
                     >
                         <Flex direction={`column`} align={'center'}>
-
                             <IconDeviceFloppy size={16}/>
-                            <Text fz={8}>
-                                {t('alt+s')}
-                            </Text>
                         </Flex>
                     </Button>
                 </Tooltip>

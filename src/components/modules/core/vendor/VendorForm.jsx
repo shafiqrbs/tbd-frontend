@@ -31,7 +31,7 @@ function VendorForm() {
     const {t, i18n} = useTranslation();
     const dispatch = useDispatch();
     const {isOnline, mainAreaHeight} = useOutletContext();
-    const height = mainAreaHeight - 80; //TabList height 104
+    const height = mainAreaHeight - 110; //TabList height 104
     const navigate = useNavigate();
 
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
@@ -121,14 +121,14 @@ function VendorForm() {
                             <Title order={6} mt={'xs'} pl={'6'}>{t('VendorInformation')}</Title>
                         </Grid.Col>
                         <Grid.Col span={6}>
-                            <Group mr={'md'} pos={`absolute`} right={0} gap={0}>
-
+                            <Group mr={'md'} pos={`absolute`} right={0}  gap={0}>
                                 <>
                                     <Button
                                         size="xs"
                                         color={`indigo.6`}
                                         type="submit"
                                         mt={4}
+                                        mr={'xs'}
                                         id="VendorFormSubmit"
                                         leftSection={<IconDeviceFloppy size={16}/>}
                                     >
@@ -152,7 +152,7 @@ function VendorForm() {
                     </Grid>
                 </Box>
                 <Box  h={1} bg={`gray.3`}></Box>
-                <Box  pl={`xs`} pr={'xs'} mt={'xs'}>
+                <Box m={'xs'}>
                  <Grid columns={24}>
                     <Grid.Col span={'auto'}>
                         <ScrollArea h={height} scrollbarSize={2}>
@@ -263,5 +263,4 @@ function VendorForm() {
 
     );
 }
-
 export default VendorForm;

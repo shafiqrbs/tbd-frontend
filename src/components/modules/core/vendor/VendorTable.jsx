@@ -25,7 +25,7 @@ function VendorTable() {
     const dispatch = useDispatch();
     const {t, i18n} = useTranslation();
     const {isOnline, mainAreaHeight} = useOutletContext();
-    const height = mainAreaHeight - 80; //TabList height 104
+    const height = mainAreaHeight - 100; //TabList height 104
 
     const perPage = 50;
     const [page,setPage] = useState(1);

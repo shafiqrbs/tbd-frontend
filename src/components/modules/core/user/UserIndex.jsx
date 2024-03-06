@@ -6,11 +6,8 @@ import UserForm from "./UserForm.jsx";
 import UserUpdateForm from "./UserUpdateForm.jsx";
 
 function UserIndex() {
-
     const insertType = useSelector((state) => state.crudSlice.insertType)
-
     return (
-
         <div>
             <Grid>
                 <Grid.Col span={8}>

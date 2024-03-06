@@ -33,7 +33,7 @@ function VendorUpdateForm() {
     const {t, i18n} = useTranslation();
     const dispatch = useDispatch();
     const {isOnline, mainAreaHeight} = useOutletContext();
-    const height = mainAreaHeight - 104; //TabList height 104
+    const height = mainAreaHeight - 110; //TabList height 104
 
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
     const [setFormData, setFormDataForUpdate] = useState(false);
@@ -108,8 +108,7 @@ function VendorUpdateForm() {
 
 
     return (
-
-        <Box bg={"white"} mt={`md`} mr={'xs'}>
+        <Box bg={"white"} mt={`xs`}>
             <form onSubmit={form.onSubmit((values) => {
                 modals.openConfirmModal({
                     title: 'Please confirm your action',
@@ -153,33 +152,19 @@ function VendorUpdateForm() {
                 <Box pb={`xs`} pl={`xs`} pr={8}>
                     <Grid>
                         <Grid.Col span={6} h={54}>
-                            <Title order={6} mt={'xs'} pl={'6'}>{t('CustomerInformation')}</Title>
+                            <Title order={6} mt={'xs'} pl={'6'}>{t('VendorInformation')}</Title>
                         </Grid.Col>
                         <Grid.Col span={6}>
                             <Group mr={'md'} pos={`absolute`} right={0} gap={0}>
-                                <Tooltip
-                                    label={t("Refresh")}
-                                    color={`red.6`}
-                                    withArrow
-                                    offset={2}
-                                    position={"bottom"}
-                                    transitionProps={{transition: "pop-bottom-left", duration: 500}}
-                                >
-                                    <Button bg={`white`} size="md" ml={1} mr={1} variant="light" color={`gray.7`}
-                                            onClick={(e) => {
-                                                form.reset()
-                                            }}
-                                    >
-                                        <IconRestore size={24}/>
-                                    </Button>
-                                </Tooltip>
                                 <>
                                     <Button
-                                        size="md"
-                                        color={`indigo.7`}
+                                        size="xs"
+                                        color={`indigo.6`}
                                         type="submit"
-                                        id="UserFormSubmit"
-                                        leftSection={<IconDeviceFloppy size={24}/>}
+                                        mt={4}
+                                        mr={'xs'}
+                                        id="VendorFormSubmit"
+                                        leftSection={<IconDeviceFloppy size={16}/>}
                                     >
                                         <LoadingOverlay
                                             visible={saveCreateLoading}
@@ -190,7 +175,7 @@ function VendorUpdateForm() {
                                         />
 
                                         <Flex direction={`column`} gap={0}>
-                                            <Text fz={14} fw={400}>
+                                            <Text fz={12} fw={400}>
                                                 {t("CreateAndSave")}
                                             </Text>
                                         </Flex>
@@ -201,113 +186,112 @@ function VendorUpdateForm() {
                     </Grid>
                 </Box>
                 <Box h={1} bg={`gray.3`}></Box>
-                <Grid>
-                    <Grid.Col span={10}>
-                        <ScrollArea h={height} scrollbarSize={2}>
-                            <Box p={`md`} pb={'md'}>
+                <Box  m={'xs'}>
+                    <Grid columns={24}>
+                        <Grid.Col span={'auto'}>
+                            <ScrollArea h={height} scrollbarSize={2}>
+                                <Box pl={'xs'} pb={'md'}>
+                                    <InputForm
+                                        tooltip={t('CompanyNameValidateMessage')}
+                                        label={t('CompanyName')}
+                                        placeholder={t('CompanyName')}
+                                        required={true}
+                                        nextField={'VendorName'}
+                                        form={form}
+                                        name={'company_name'}
+                                        mt={0}
+                                        id={'CompanyName'}
+                                    />
 
-                                <LoadingOverlay visible={formLoad} zIndex={1000}
-                                                overlayProps={{radius: "sm", blur: 2}}/>
+                                    <InputForm
+                                        form={form}
+                                        tooltip={t('VendorNameValidateMessage')}
+                                        label={t('VendorName')}
+                                        placeholder={t('VendorName')}
+                                        required={true}
+                                        name={'name'}
+                                        id={'VendorName'}
+                                        nextField={'VendorMobile'}
+                                        mt={8}
+                                    />
 
-                                <InputForm
-                                    tooltip={t('CompanyNameValidateMessage')}
-                                    label={t('CompanyName')}
-                                    placeholder={t('CompanyName')}
-                                    required={true}
-                                    nextField={'VendorName'}
-                                    form={form}
-                                    name={'company_name'}
-                                    mt={0}
-                                    id={'CompanyName'}
-                                />
+                                    <InputForm
+                                        form={form}
+                                        tooltip={t('MobileValidateMessage')}
+                                        label={t('VendorMobile')}
+                                        placeholder={t('VendorMobile')}
+                                        required={true}
+                                        name={'mobile'}
+                                        id={'VendorMobile'}
+                                        nextField={'TPPercent'}
+                                        mt={8}
+                                    />
 
-                                <InputForm
-                                    form={form}
-                                    tooltip={t('VendorNameValidateMessage')}
-                                    label={t('VendorName')}
-                                    placeholder={t('VendorName')}
-                                    required={true}
-                                    name={'name'}
-                                    id={'VendorName'}
-                                    nextField={'VendorMobile'}
-                                    mt={8}
-                                />
+                                    <InputForm
+                                        tooltip={t('TPPercentValidateMessage')}
+                                        label={t('TPPercent')}
+                                        placeholder={t('TPPercent')}
+                                        required={false}
+                                        nextField={'Email'}
+                                        name={'tp_percent'}
+                                        form={form}
+                                        mt={8}
+                                        id={'TPPercent'}
+                                    />
 
-                                <InputForm
-                                    form={form}
-                                    tooltip={t('MobileValidateMessage')}
-                                    label={t('VendorMobile')}
-                                    placeholder={t('VendorMobile')}
-                                    required={true}
-                                    name={'mobile'}
-                                    id={'VendorMobile'}
-                                    nextField={'TPPercent'}
-                                    mt={8}
-                                />
+                                    <InputForm
+                                        form={form}
+                                        tooltip={t('RequiredAndInvalidEmail')}
+                                        label={t('Email')}
+                                        placeholder={t('Email')}
+                                        required={false}
+                                        name={'email'}
+                                        id={'Email'}
+                                        nextField={'ChooseCustomer'}
+                                        mt={8}
+                                    />
 
-                                <InputForm
-                                    tooltip={t('TPPercentValidateMessage')}
-                                    label={t('TPPercent')}
-                                    placeholder={t('TPPercent')}
-                                    required={false}
-                                    nextField={'Email'}
-                                    name={'tp_percent'}
-                                    form={form}
-                                    mt={8}
-                                    id={'TPPercent'}
-                                />
-
-                                <InputForm
-                                    form={form}
-                                    tooltip={t('RequiredAndInvalidEmail')}
-                                    label={t('Email')}
-                                    placeholder={t('Email')}
-                                    required={false}
-                                    name={'email'}
-                                    id={'Email'}
-                                    nextField={'ChooseCustomer'}
-                                    mt={8}
-                                />
-
-                                <SelectForm
-                                    tooltip={t('ChooseCustomer')}
-                                    label={t('ChooseCustomer')}
-                                    placeholder={t('ChooseCustomer')}
-                                    required={false}
-                                    nextField={'Address'}
-                                    name={'customer_id'}
-                                    form={form}
-                                    dropdownValue={customerDropdown}
-                                    mt={8}
-                                    id={'ChooseCustomer'}
-                                    searchable={true}
-                                    value={customerData ? String(customerData) : (entityEditData.customer_id ? String(entityEditData.customer_id) : null)}
-                                    changeValue={setCustomerData}
-                                />
+                                    <SelectForm
+                                        tooltip={t('ChooseCustomer')}
+                                        label={t('ChooseCustomer')}
+                                        placeholder={t('ChooseCustomer')}
+                                        required={false}
+                                        nextField={'Address'}
+                                        name={'customer_id'}
+                                        form={form}
+                                        dropdownValue={customerDropdown}
+                                        mt={8}
+                                        id={'ChooseCustomer'}
+                                        searchable={true}
+                                        value={customerData}
+                                        changeValue={setCustomerData}
+                                    />
 
 
-                                <TextAreaForm
-                                    tooltip={t('Address')}
-                                    label={t('Address')}
-                                    placeholder={t('Address')}
-                                    required={false}
-                                    nextField={'Status'}
-                                    name={'address'}
-                                    form={form}
-                                    mt={8}
-                                    id={'Address'}
-                                />
-                            </Box>
-                        </ScrollArea>
-                    </Grid.Col>
-                    <Grid.Col span={2}>
-                        <Shortcut
-                            form={form}
-                            UserFormSubmit={'UserFormSubmit'}
-                            Name={'Name'}
-                        />
-                    </Grid.Col>
-                </Grid>
+                                    <TextAreaForm
+                                        tooltip={t('Address')}
+                                        label={t('Address')}
+                                        placeholder={t('Address')}
+                                        required={false}
+                                        nextField={'Status'}
+                                        name={'address'}
+                                        form={form}
+                                        mt={8}
+                                        id={'Address'}
+                                    />
+
+                                </Box>
+                            </ScrollArea>
+                        </Grid.Col>
+                        <Grid.Col span={3}>
+                            <Shortcut
+                                form={form}
+                                FormSubmit={'VendorFormSubmit'}
+                                Name={'CompanyName'}
+                            />
+                        </Grid.Col>
+                    </Grid>
+                </Box>
             </form>
         </Box>
     )
