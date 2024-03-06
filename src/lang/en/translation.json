@@ -47,6 +47,12 @@
   "Close": "Close",
   "CustomerGroupModel": "Customer Group Model",
   "InvalidEmail": "If exists , must be valid Email",
+  "CreateNewCustomer": "Create New Customer",
+  "UpdateCustomer": "Update Customer",
+  "CustomerDetailsData": "Customer Details Information",
+  "CustomerId": "Customer ID",
+  "Created": "Created",
+  "ReferenceId": "Reference ID",
 
 
   "ManageUsers": "Manage Users",
