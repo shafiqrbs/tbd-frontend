@@ -31,7 +31,7 @@ function VendorForm() {
     const {t, i18n} = useTranslation();
     const dispatch = useDispatch();
     const {isOnline, mainAreaHeight} = useOutletContext();
-    const height = mainAreaHeight - 65; //TabList height 104
+    const height = mainAreaHeight - 80; //TabList height 104
     const navigate = useNavigate();
 
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
@@ -76,7 +76,7 @@ function VendorForm() {
 
 
     return (
-        <Box bg={"white"} mt={`md`} mr={'xs'}>
+        <Box bg={"white"} mt={`xs`}>
             <form onSubmit={form.onSubmit((values) => {
                 modals.openConfirmModal({
                     title: 'Please confirm your action',
@@ -122,25 +122,15 @@ function VendorForm() {
                         </Grid.Col>
                         <Grid.Col span={6}>
                             <Group mr={'md'} pos={`absolute`} right={0} gap={0}>
-                                <Tooltip
-                                    label={t("Refresh")}
-                                    color={`red.6`}
-                                    withArrow
-                                    offset={2}
-                                    position={"bottom"}
-                                    transitionProps={{transition: "pop-bottom-left", duration: 500}}
-                                >
-                                    <Button bg={`white`} size="md" ml={1} mr={1} variant="light" color={`gray.7`}>
-                                        <IconRestore size={24}/>
-                                    </Button>
-                                </Tooltip>
+
                                 <>
                                     <Button
-                                        size="md"
-                                        color={`indigo.7`}
+                                        size="xs"
+                                        color={`indigo.6`}
                                         type="submit"
+                                        mt={4}
                                         id="VendorFormSubmit"
-                                        leftSection={<IconDeviceFloppy size={24}/>}
+                                        leftSection={<IconDeviceFloppy size={16}/>}
                                     >
                                         <LoadingOverlay
                                             visible={saveCreateLoading}
@@ -151,7 +141,7 @@ function VendorForm() {
                                         />
 
                                         <Flex direction={`column`} gap={0}>
-                                            <Text fz={14} fw={400}>
+                                            <Text fz={12} fw={400}>
                                                 {t("CreateAndSave")}
                                             </Text>
                                         </Flex>
@@ -161,13 +151,12 @@ function VendorForm() {
                         </Grid.Col>
                     </Grid>
                 </Box>
-                <Box h={1} bg={`gray.3`}></Box>
-                <Grid>
-                    <Grid.Col span={10}>
+                <Box  h={1} bg={`gray.3`}></Box>
+                <Box  pl={`xs`} pr={'xs'} mt={'xs'}>
+                 <Grid columns={24}>
+                    <Grid.Col span={'auto'}>
                         <ScrollArea h={height} scrollbarSize={2}>
-                            <Box p={`md`} pb={'md'}>
-
-
+                            <Box pl={'xs'} pb={'md'}>
                                 <InputForm
                                     tooltip={t('CompanyNameValidateMessage')}
                                     label={t('CompanyName')}
@@ -260,7 +249,7 @@ function VendorForm() {
                             </Box>
                         </ScrollArea>
                     </Grid.Col>
-                    <Grid.Col span={2}>
+                    <Grid.Col span={3}>
                         <Shortcut
                             form={form}
                             FormSubmit={'VendorFormSubmit'}
@@ -268,6 +257,7 @@ function VendorForm() {
                         />
                     </Grid.Col>
                 </Grid>
+                </Box>
             </form>
         </Box>
 

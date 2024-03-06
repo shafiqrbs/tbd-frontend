@@ -25,7 +25,7 @@ function VendorTable() {
     const dispatch = useDispatch();
     const {t, i18n} = useTranslation();
     const {isOnline, mainAreaHeight} = useOutletContext();
-    const height = mainAreaHeight - 65; //TabList height 104
+    const height = mainAreaHeight - 80; //TabList height 104
 
     const perPage = 50;
     const [page,setPage] = useState(1);
@@ -50,10 +50,10 @@ function VendorTable() {
 
     return (
         <>
-            <Box p={8}>
+            <Box>
                 <div radius="xl">
                 <Box bg={`white`}  >
-                    <Box pt={'xs'} pb={`xs`} pl={`md`} pr={8} >
+                    <Box pt={'xs'} pb={`xs`} pl={`md`} pr={'xl'} >
                         <KeywordSearch />
                     </Box>
                 </Box>
