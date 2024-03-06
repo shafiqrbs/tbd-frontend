@@ -1,7 +1,7 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {
-    Box,
-    Grid, Title
+    Box, Button,
+    Grid, Progress, Title
 } from "@mantine/core";
 import {useTranslation} from 'react-i18next';
 import {useSelector} from "react-redux";
@@ -13,8 +13,29 @@ import CustomerUpdateForm from "./CustomerUpdateForm.jsx";
 function CustomerIndex() {
     const {t, i18n} = useTranslation();
     const insertType = useSelector((state) => state.crudSlice.insertType)
+
+    const [value, setValue] = useState(1);
+    // const [load, setLOad] = useState(false);
+
+    const [progress, setProgress] = useState(0);
+
+    useEffect(() => {
+        const updateProgress = () => setProgress((oldProgress) => {
+            if (oldProgress === 100) return 100;
+            const diff = Math.random() * 20;
+            return Math.min(oldProgress + diff, 100);
+        });
+
+        const timer = setInterval(updateProgress, 100);
+        return () => clearInterval(timer);
+    }, []);
+
     return (
-        <Box>
+        <>
+            {progress !==100 && <Progress color="red" size={"xs"}  striped animated value={progress} transitionDuration={200} />}
+
+            {progress === 100 &&
+            <Box transitionDuration={200}>
             <Box pl={`md`} pr={8} pb={'8'} pt={'6'} bg={'gray.1'}>
                 <Grid>
                     <Grid.Col span={12}>
@@ -35,6 +56,8 @@ function CustomerIndex() {
                 </Grid>
             </Box>
         </Box>
+            }
+        </>
 
     );
 }

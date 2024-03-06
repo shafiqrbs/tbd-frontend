@@ -15,7 +15,7 @@ function FilterModel(props) {
     }
 
     return (
-        <Modal opened={props.filterModel} onClose={closeModel} title="User View Model" size="55%" top>
+        <Modal opened={props.filterModel} onClose={closeModel} title={t('FilterData')} size="55%" top>
             <List
                 spacing="xs"
                 size="sm"
