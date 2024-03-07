@@ -110,7 +110,8 @@ function UserForm() {
                         <Grid.Col span={6}>
                             <Group mr={'md'} pos={`absolute`} right={0}  gap={0}>
                                 <>
-                                    <Button
+                                    {!saveCreateLoading &&
+                                        <Button
                                         size="xs"
                                         color={`indigo.6`}
                                         type="submit"
@@ -119,13 +120,13 @@ function UserForm() {
                                         id="VendorFormSubmit"
                                         leftSection={<IconDeviceFloppy size={16}/>}
                                     >
-                                        <LoadingOverlay
+                                        {/*<LoadingOverlay
                                             visible={saveCreateLoading}
                                             zIndex={1000}
                                             overlayProps={{radius: "xs", blur: 2}}
                                             size={'xs'}
                                             position="center"
-                                        />
+                                        />*/}
 
                                         <Flex direction={`column`} gap={0}>
                                             <Text fz={12} fw={400}>
@@ -133,6 +134,7 @@ function UserForm() {
                                             </Text>
                                         </Flex>
                                     </Button>
+                                    }
                                 </>
                             </Group>
                         </Grid.Col>

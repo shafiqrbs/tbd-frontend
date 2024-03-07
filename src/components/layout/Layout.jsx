@@ -1,11 +1,10 @@
 import React, {useEffect, useState} from "react";
-import {Outlet} from "react-router-dom";
+import {Navigate, Outlet, useLocation} from "react-router-dom";
 import Header from "./Header";
 import {AppShell} from "@mantine/core";
 import {useDisclosure, useViewportSize} from "@mantine/hooks";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
-import Aside from "./Aside";
 
 function Layout() {
     const [mobileOpened, {toggle: toggleMobile}] = useDisclosure(false);
@@ -13,6 +12,17 @@ function Layout() {
     const [rightSidebarOpened, {toggle: toggleRightSideBar}] = useDisclosure(false);
     const {height, width} = useViewportSize();
     const [isOnline, setNetworkStatus] = useState(navigator.onLine);
+
+    const user = localStorage.getItem("user");
+    const location = useLocation();
+
+    if(!user){
+        return <Navigate replace to="/login"/>;
+    }else{
+        /*if(location.pathname === '/'){
+            return <Navigate replace to="/dashboard"/>;
+        }*/
+    }
 
     useEffect(() => {
         return () => {

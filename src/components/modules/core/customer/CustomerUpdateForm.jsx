@@ -185,7 +185,7 @@ function VendorUpdateForm() {
 
                                         <Flex direction={`column`} gap={0}>
                                             <Text fz={12} fw={400}>
-                                                {t("CreateAndSave")}
+                                                {t("EditAndSave")}
                                             </Text>
                                         </Flex>
                                     </Button>

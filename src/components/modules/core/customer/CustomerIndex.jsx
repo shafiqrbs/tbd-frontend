@@ -1,21 +1,21 @@
 import React, {useEffect, useState} from "react";
 import {
-    Box, Button,
+    Box,
     Grid, Progress, Title
 } from "@mantine/core";
 import {useTranslation} from 'react-i18next';
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 
 import CustomerForm from "./CustomerForm.jsx";
 import CustomerTable from "./CustomerTable.jsx";
 import CustomerUpdateForm from "./CustomerUpdateForm.jsx";
+import {setInsertType} from "../../../../store/core/crudSlice.js";
 
 function CustomerIndex() {
     const {t, i18n} = useTranslation();
-    const insertType = useSelector((state) => state.crudSlice.insertType)
+    const dispatch = useDispatch();
 
-    const [value, setValue] = useState(1);
-    // const [load, setLOad] = useState(false);
+    const insertType = useSelector((state) => state.crudSlice.insertType)
 
     const [progress, setProgress] = useState(0);
 
@@ -29,6 +29,13 @@ function CustomerIndex() {
         const timer = setInterval(updateProgress, 100);
         return () => clearInterval(timer);
     }, []);
+
+    useEffect(() => {
+        dispatch(setInsertType('create'))
+    },[])
+
+    const user = localStorage.getItem("user");
+    console.log(user.name)
 
     return (
         <>
