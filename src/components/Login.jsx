@@ -2,17 +2,18 @@ import {
     Paper,
     TextInput,
     PasswordInput,
-    Button,
-    Box, Tooltip,
-    Center,
-    Image, Alert, Loader
+    Button,Group,Container,
+    Box, Tooltip,Text,
+    Center,Flex,Card,Avatar,
+    Image, Alert, Loader,Anchor,rem
 } from '@mantine/core';
 import LoginPage from './../assets/css/LoginPage.module.css';
 import {useViewportSize, getHotkeyHandler, useHotkeys} from '@mantine/hooks'
-import {IconInfoCircle, IconLogin} from '@tabler/icons-react';
+import {IconInfoCircle, IconLogin,IconArrowLeft} from '@tabler/icons-react';
 import {isNotEmpty, useForm} from '@mantine/form';
 import {Navigate, useNavigate} from 'react-router-dom'
-import Logo from '../assets/images/tbd-logo.png'
+import Logo from '../assets/images/logo.png'
+import TerminalbdBg from '../assets/images/terminalbd-bg.png'
 import React, {useState} from "react";
 import {useTranslation} from "react-i18next";
 import axios from "axios";
@@ -78,19 +79,34 @@ export default function Login() {
     useHotkeys([['alt+n', () => {
         document.getElementById('Username').focus()
     }]], []);
+    console.log(height)
 
     return (
-        <Box
-            component='form'
-            className={LoginPage.wrapper}
-            h={height}
-            onSubmit={form.onSubmit((values) => login(values))}
-        >
-            <Paper className={LoginPage.form} radius={0} p={10} h={height} ml={`auto`} maw={350}>
-                <Center>
-                    <Image src={Logo}/>
-                </Center>
-
+        <Container size={420}>
+        <Card withBorder padding="xl" mt={'160'} radius="md" className={LoginPage.card}>
+            <Card.Section
+                h={140}
+                className={LoginPage.wrapper}
+            />
+            <Avatar
+                src={Logo}
+                size={90}
+                radius={90}
+                mx="auto"
+                mt={-30}
+                className={LoginPage.avatar}
+            />
+            <Text ta="center" fz="lg" fw={500} mt="sm">
+                Login Information
+            </Text>
+            <Text ta="center" fz="sm" c="dimmed" mb={'xl'}>
+                Lets go the credential information.
+            </Text>
+            <Box
+                component='form'
+                onSubmit={form.onSubmit((values) => login(values))}
+            >
+            <Paper>
                 {
                     errorMessage &&
                     <Alert variant="light" color="red" radius="md" title={errorMessage} icon={icon}></Alert>
@@ -101,7 +117,7 @@ export default function Login() {
                     px={20}
                     py={3}
                     opened={!!form.errors.username}
-                    position="top-end"
+                        position="top-end"
                     color='red'
                     withArrow
                     offset={2}
@@ -150,13 +166,24 @@ export default function Login() {
 
                 </Tooltip>
 
+                <Group justify="space-between" mt="lg" className={LoginPage.controls}>
+                    <Anchor c="dimmed" size="sm" className={LoginPage.control}>
+                        <Center inline>
+                            <IconArrowLeft style={{ width: rem(12), height: rem(12) }} stroke={1.5} />
+                            <Box ml={5}>Back to the signup page</Box>
+                        </Center>
+                    </Anchor>
+                    <Button type='submit' id={"LoginSubmit"} className={LoginPage.control} rightSection={<IconLogin/>}>
+                        {
+                            spinner ? <Loader color="red" type="dots" size={30} /> : 'Login'
+                        }
+                    </Button>
+                </Group>
 
-                <Button type='submit' id={"LoginSubmit"} fullWidth mt="xl" size="xs" leftSection={<IconLogin/>}>
-                    {
-                        spinner ? <Loader color="red" type="dots" size={30} /> : 'Login'
-                    }
-                </Button>
             </Paper>
-        </Box>
+            </Box>
+        </Card>
+        </Container>
+
     );
 }
