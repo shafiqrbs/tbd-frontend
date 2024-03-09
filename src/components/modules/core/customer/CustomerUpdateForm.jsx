@@ -80,16 +80,16 @@ function VendorUpdateForm() {
     useEffect(() => {
 
         form.setValues({
-            location_id: entityEditData.location_id,
-            marketing_id: entityEditData.marketing_id,
-            name: entityEditData.name,
-            mobile: entityEditData.mobile,
-            customer_group:entityEditData.customer_group,
-            credit_limit: entityEditData.credit_limit,
-            reference_id: entityEditData.reference_id,
-            alternative_mobile: entityEditData.alternative_mobile,
-            address: entityEditData.address,
-            email: entityEditData.email
+            location_id: entityEditData.location_id?entityEditData.location_id:'',
+            marketing_id: entityEditData.marketing_id?entityEditData.marketing_id:'',
+            name: entityEditData.name?entityEditData.name:'',
+            mobile: entityEditData.mobile?entityEditData.mobile:'',
+            customer_group:entityEditData.customer_group?entityEditData.customer_group:'',
+            credit_limit: entityEditData.credit_limit?entityEditData.credit_limit:'',
+            reference_id: entityEditData.reference_id?entityEditData.reference_id:'',
+            alternative_mobile: entityEditData.alternative_mobile?entityEditData.alternative_mobile:'',
+            address: entityEditData.address?entityEditData.address:'',
+            email: entityEditData.email?entityEditData.email:''
         })
 
         dispatch(setFormLoading(false))

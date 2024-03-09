@@ -35,6 +35,7 @@ function UserTable() {
     const fetching = useSelector((state) => state.crudSlice.fetching)
     const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword)
     const indexData = useSelector((state) => state.crudSlice.indexEntityData)
+    const userFilterData = useSelector((state) => state.crudSlice.userFilterData)
 
     const perPage = 50;
     const [page,setPage] = useState(1);
@@ -44,6 +45,9 @@ function UserTable() {
             url: 'user',
             param: {
                 term: searchKeyword,
+                name: userFilterData.name,
+                mobile: userFilterData.mobile,
+                email: userFilterData.email,
                 page: page,
                 offset : perPage
             }
@@ -57,7 +61,7 @@ function UserTable() {
                 <div radius="xl">
                     <Box bg={`white`}  >
                         <Box pt={'xs'} pb={`xs`} pl={`md`} pr={'xl'} >
-                            <KeywordSearch />
+                            <KeywordSearch module={'user'}/>
                         </Box>
                     </Box>
                     <Box bg={`white`}>

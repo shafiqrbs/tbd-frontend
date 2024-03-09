@@ -35,12 +35,15 @@ function CustomerTable() {
     const fetching = useSelector((state) => state.crudSlice.fetching)
     const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword)
     const indexData = useSelector((state) => state.crudSlice.indexEntityData)
+    const customerFilterData = useSelector((state) => state.crudSlice.customerFilterData)
 
     useEffect(() => {
         const value = {
             url: 'customer',
             param: {
                 term: searchKeyword,
+                name: customerFilterData.name,
+                mobile: customerFilterData.mobile,
                 page: page,
                 offset: perPage
             }
@@ -54,7 +57,7 @@ function CustomerTable() {
                 <div radius="xl">
                     <Box bg={`white`}>
                         <Box pt={'xs'} pb={`xs`} pl={`md`} pr={'xl'}>
-                            <KeywordSearch/>
+                            <KeywordSearch module={'customer'}/>
                         </Box>
                     </Box>
                     <Box bg={`white`}>

@@ -9,13 +9,19 @@ import {useDispatch, useSelector} from "react-redux";
 import VendorTable from "./VendorTable";
 import VendorForm from "./VendorForm";
 import VendorUpdateForm from "./VendorUpdateForm.jsx";
-import {setInsertType, setSearchKeyword} from "../../../../store/core/crudSlice.js";
+import {
+    setCustomerFilterData,
+    setInsertType,
+    setSearchKeyword,
+    setVendorFilterData
+} from "../../../../store/core/crudSlice.js";
 
 function VendorIndex() {
     const {t, i18n} = useTranslation();
     const dispatch = useDispatch();
 
     const insertType = useSelector((state) => state.crudSlice.insertType)
+    const vendorFilterData = useSelector((state) => state.crudSlice.vendorFilterData)
 
     const [progress, setProgress] = useState(0);
 
@@ -33,6 +39,12 @@ function VendorIndex() {
     useEffect(() => {
         dispatch(setInsertType('create'))
         dispatch(setSearchKeyword(''))
+        dispatch(setVendorFilterData({
+            ...vendorFilterData,
+            ['name']: '',
+            ['mobile']:'',
+            ['company_name']:''
+        }))
     }, [])
 
     return (

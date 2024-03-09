@@ -11,7 +11,7 @@ import {DataTable} from 'mantine-datatable';
 import {useDispatch, useSelector} from "react-redux";
 import {
     editEntityData,
-    getIndexEntityData,
+    getIndexEntityData, setEditEntityData,
     setFetching, setFormLoading,
     setInsertType,
     showEntityData
@@ -34,6 +34,8 @@ function VendorTable() {
     const fetching = useSelector((state) => state.crudSlice.fetching)
     const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword)
     const indexData = useSelector((state) => state.crudSlice.indexEntityData)
+    const vendorFilterData = useSelector((state) => state.crudSlice.vendorFilterData)
+
 
 
     useEffect(() => {
@@ -41,6 +43,9 @@ function VendorTable() {
             url: 'vendor',
             param: {
                 term: searchKeyword,
+                name: vendorFilterData.name,
+                mobile: vendorFilterData.mobile,
+                company_name: vendorFilterData.company_name,
                 page: page,
                 offset : perPage
             }
@@ -53,7 +58,7 @@ function VendorTable() {
             <Box>
                 <Box bg={`white`}  >
                     <Box pt={'xs'} pb={`xs`} pl={`md`} pr={'xl'} >
-                        <KeywordSearch />
+                        <KeywordSearch module={'vendor'}/>
                     </Box>
                 </Box>
                 <Box bg={`white`}>

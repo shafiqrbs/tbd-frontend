@@ -57,10 +57,10 @@ function UserUpdateForm() {
     useEffect(() => {
 
         form.setValues({
-            name:entityEditData.name,
-            username:entityEditData.username,
-            email:entityEditData.email,
-            mobile:entityEditData.mobile
+            name:entityEditData.name?entityEditData.name:'',
+            username:entityEditData.username?entityEditData.username:'',
+            email:entityEditData.email?entityEditData.email:'',
+            mobile:entityEditData.mobile?entityEditData.mobile:''
         })
 
         dispatch(setFormLoading(false))

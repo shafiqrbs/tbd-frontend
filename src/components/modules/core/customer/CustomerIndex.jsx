@@ -9,13 +9,14 @@ import {useDispatch, useSelector} from "react-redux";
 import CustomerForm from "./CustomerForm.jsx";
 import CustomerTable from "./CustomerTable.jsx";
 import CustomerUpdateForm from "./CustomerUpdateForm.jsx";
-import {setInsertType, setSearchKeyword} from "../../../../store/core/crudSlice.js";
+import {setCustomerFilterData, setInsertType, setSearchKeyword} from "../../../../store/core/crudSlice.js";
 
 function CustomerIndex() {
     const {t, i18n} = useTranslation();
     const dispatch = useDispatch();
 
     const insertType = useSelector((state) => state.crudSlice.insertType)
+    const customerFilterData = useSelector((state) => state.crudSlice.customerFilterData)
 
     const [progress, setProgress] = useState(0);
 
@@ -33,17 +34,21 @@ function CustomerIndex() {
     useEffect(() => {
         dispatch(setInsertType('create'))
         dispatch(setSearchKeyword(''))
+        dispatch(setCustomerFilterData({
+            ...customerFilterData,
+            ['name']: '',
+            ['mobile']:''
+        }))
     },[])
 
     const user = localStorage.getItem("user");
-    console.log(user.name)
 
     return (
         <>
-            {progress !==100 && <Progress color="red" size={"xs"}  striped animated value={progress} transitionDuration={200} />}
+            {progress !==100 && <Progress color="red" size={"xs"}  striped animated value={progress} />}
 
             {progress === 100 &&
-            <Box transitionDuration={200}>
+            <Box>
             <Box pl={`md`} pr={8} pb={'8'} pt={'6'} bg={'gray.1'}>
                 <Grid>
                     <Grid.Col span={12}>

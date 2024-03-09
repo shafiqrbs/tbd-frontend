@@ -76,13 +76,12 @@ function VendorUpdateForm() {
     useEffect(() => {
 
         form.setValues({
-            company_name: entityEditData.company_name,
-            name: entityEditData.name,
-            mobile: entityEditData.mobile,
-            // tp_percent:entityEditData.tp_percent,
-            customer_id: entityEditData.customer_id,
-            address: entityEditData.address,
-            email: entityEditData.email
+            company_name: entityEditData.company_name?entityEditData.company_name:'',
+            name: entityEditData.name?entityEditData.name:'',
+            mobile: entityEditData.mobile?entityEditData.mobile:'',
+            customer_id: entityEditData.customer_id?entityEditData.customer_id:'',
+            address: entityEditData.address?entityEditData.address:'',
+            email: entityEditData.email?entityEditData.email:''
         })
 
         dispatch(setFormLoading(false))

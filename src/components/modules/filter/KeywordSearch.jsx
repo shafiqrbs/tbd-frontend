@@ -14,10 +14,15 @@ import {
 } from "@tabler/icons-react";
 import {useHotkeys} from "@mantine/hooks";
 import {useDispatch, useSelector} from "react-redux";
-import {setFetching, setSearchKeyword} from "../../../store/core/crudSlice.js";
+import {
+    setCustomerFilterData,
+    setFetching,
+    setSearchKeyword, setUserFilterData,
+    setVendorFilterData
+} from "../../../store/core/crudSlice.js";
 import FilterModel from "./FilterModel.jsx";
 
-function KeywordSearch() {
+function KeywordSearch(props) {
     const {t, i18n} = useTranslation();
     const dispatch = useDispatch();
     const {isOnline} = useOutletContext();
@@ -26,6 +31,9 @@ function KeywordSearch() {
     const [filterModel, setFilterModel] = useState(false)
 
     const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword)
+    const customerFilterData = useSelector((state) => state.crudSlice.customerFilterData)
+    const vendorFilterData = useSelector((state) => state.crudSlice.vendorFilterData)
+    const userFilterData = useSelector((state) => state.crudSlice.userFilterData)
 
     useHotkeys(
         [['alt+F', () => {
@@ -119,10 +127,15 @@ function KeywordSearch() {
                             </Tooltip>
                         </ActionIcon>
 
-                        <ActionIcon variant="transparent" size="lg" mr={16} aria-label="Settings"
-                                    onClick={(e) => {
-                                        setFilterModel(true)
-                                    }}
+
+                        <ActionIcon
+                            variant="transparent"
+                            size="lg"
+                            mr={16}
+                            aria-label="Settings"
+                            onClick={(e) => {
+                                setFilterModel(true)
+                            }}
                         >
                             <Tooltip
                                 label={t("FilterButton")}
@@ -137,6 +150,9 @@ function KeywordSearch() {
                                 <IconFilter style={{width: rem(20)}} stroke={2.0}/>
                             </Tooltip>
                         </ActionIcon>
+
+
+
                         <ActionIcon variant="transparent" size="lg" aria-label="Settings">
                             <Tooltip
                                 label={t("ResetButton")}
@@ -151,6 +167,28 @@ function KeywordSearch() {
                                 <IconRestore style={{width: rem(20)}} stroke={2.0} onClick={() => {
                                     dispatch(setSearchKeyword(''))
                                     dispatch(setFetching(true))
+
+                                    if (props.module === 'customer') {
+                                        dispatch(setCustomerFilterData({
+                                            ...customerFilterData,
+                                            name: '',
+                                            mobile: ''
+                                        }));
+                                    } else if (props.module === 'vendor') {
+                                        dispatch(setVendorFilterData({
+                                            ...vendorFilterData,
+                                            name: '',
+                                            mobile: '',
+                                            company_name: ''
+                                        }));
+                                    }else if (props.module === 'user') {
+                                        dispatch(setUserFilterData({
+                                            ...userFilterData,
+                                            name: '',
+                                            mobile: '',
+                                            email: ''
+                                        }));
+                                    }
                                 }}/>
                             </Tooltip>
                         </ActionIcon>
@@ -159,7 +197,7 @@ function KeywordSearch() {
             </Grid>
 
             {
-                filterModel && <FilterModel filterModel={filterModel} setFilterModel={setFilterModel}/>
+                filterModel && <FilterModel filterModel={filterModel} setFilterModel={setFilterModel} module={props.module}/>
             }
         </>
     );

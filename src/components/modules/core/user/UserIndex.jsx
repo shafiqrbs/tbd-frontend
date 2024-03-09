@@ -5,13 +5,19 @@ import UserTable from "./UserTable.jsx";
 import UserForm from "./UserForm.jsx";
 import UserUpdateForm from "./UserUpdateForm.jsx";
 import {useTranslation} from 'react-i18next';
-import {setInsertType, setSearchKeyword} from "../../../../store/core/crudSlice.js";
+import {
+    setInsertType,
+    setSearchKeyword,
+    setUserFilterData,
+    setVendorFilterData
+} from "../../../../store/core/crudSlice.js";
 
 function UserIndex() {
     const {t, i18n} = useTranslation();
     const dispatch = useDispatch();
 
     const insertType = useSelector((state) => state.crudSlice.insertType)
+    const userFilterData = useSelector((state) => state.crudSlice.userFilterData)
 
     const [progress, setProgress] = useState(0);
 
@@ -29,6 +35,12 @@ function UserIndex() {
     useEffect(() => {
         dispatch(setInsertType('create'))
         dispatch(setSearchKeyword(''))
+        dispatch(setUserFilterData({
+            ...userFilterData,
+            ['name']: '',
+            ['mobile']:'',
+            ['email']:''
+        }))
     }, [])
 
     return (
