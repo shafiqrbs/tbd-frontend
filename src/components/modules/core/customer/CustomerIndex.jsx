@@ -9,7 +9,7 @@ import {useDispatch, useSelector} from "react-redux";
 import CustomerForm from "./CustomerForm.jsx";
 import CustomerTable from "./CustomerTable.jsx";
 import CustomerUpdateForm from "./CustomerUpdateForm.jsx";
-import {setInsertType} from "../../../../store/core/crudSlice.js";
+import {setInsertType, setSearchKeyword} from "../../../../store/core/crudSlice.js";
 
 function CustomerIndex() {
     const {t, i18n} = useTranslation();
@@ -32,6 +32,7 @@ function CustomerIndex() {
 
     useEffect(() => {
         dispatch(setInsertType('create'))
+        dispatch(setSearchKeyword(''))
     },[])
 
     const user = localStorage.getItem("user");

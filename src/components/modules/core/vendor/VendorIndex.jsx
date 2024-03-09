@@ -9,7 +9,7 @@ import {useDispatch, useSelector} from "react-redux";
 import VendorTable from "./VendorTable";
 import VendorForm from "./VendorForm";
 import VendorUpdateForm from "./VendorUpdateForm.jsx";
-import {setInsertType} from "../../../../store/core/crudSlice.js";
+import {setInsertType, setSearchKeyword} from "../../../../store/core/crudSlice.js";
 
 function VendorIndex() {
     const {t, i18n} = useTranslation();
@@ -32,6 +32,7 @@ function VendorIndex() {
 
     useEffect(() => {
         dispatch(setInsertType('create'))
+        dispatch(setSearchKeyword(''))
     }, [])
 
     return (

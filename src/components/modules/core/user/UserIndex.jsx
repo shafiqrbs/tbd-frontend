@@ -5,7 +5,7 @@ import UserTable from "./UserTable.jsx";
 import UserForm from "./UserForm.jsx";
 import UserUpdateForm from "./UserUpdateForm.jsx";
 import {useTranslation} from 'react-i18next';
-import {setInsertType} from "../../../../store/core/crudSlice.js";
+import {setInsertType, setSearchKeyword} from "../../../../store/core/crudSlice.js";
 
 function UserIndex() {
     const {t, i18n} = useTranslation();
@@ -28,6 +28,7 @@ function UserIndex() {
 
     useEffect(() => {
         dispatch(setInsertType('create'))
+        dispatch(setSearchKeyword(''))
     }, [])
 
     return (
