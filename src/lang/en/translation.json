@@ -34,6 +34,7 @@
   "CustomerGroup": "Customer Group",
   "ChooseCustomerGroup": "Choose Customer Group",
   "CreditLimit": "Credit Limit",
+  "CreditLimitValidateMessage": "Credit limit must be a number or fractional value",
   "OLDReferenceNo": "OLD Reference No",
   "Mobile": "Mobile",
   "MobileValidateMessage": "Mobile must be digit",

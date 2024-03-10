@@ -85,7 +85,9 @@ const crudSlice = createSlice({
         isLoading : true,
         fetching : true,
         indexEntityData : [],
-        storeEntityData : [],
+        entityNewData : [],
+        validation : false,
+        validationMessage : [],
         entityEditData : [],
         updateEntityData : [],
         showEntityData : [],
@@ -135,6 +137,12 @@ const crudSlice = createSlice({
             state.userFilterData.name = action.payload.name
             state.userFilterData.mobile = action.payload.mobile
             state.userFilterData.email = action.payload.email
+        },
+        setValidationData : (state,action) => {
+            state.validation = action.payload
+        },
+        setEntityNewData : (state,action) => {
+            state.entityNewData = action.payload
         }
     },
 
@@ -146,7 +154,12 @@ const crudSlice = createSlice({
         })
         
         builder.addCase(storeEntityData.fulfilled, (state, action) => {
-            state.storeEntityData = action.payload.data.data
+            if ('success' === action.payload.data.message){
+                state.entityNewData = action.payload.data
+            }else{
+                state.validationMessage = action.payload.data.data
+                state.validation = true
+            }
         })
 
         builder.addCase(editEntityData.fulfilled, (state, action) => {
@@ -169,6 +182,6 @@ const crudSlice = createSlice({
     }
 })
 
-export const { setFetching,setFormLoading ,setInsertType,setSearchKeyword,setEntityUpdateId,setEntityIsUpdate,setEditEntityData,setCustomerFilterData,setVendorFilterData,setUserFilterData} = crudSlice.actions
+export const { setFetching,setFormLoading ,setInsertType,setSearchKeyword,setEntityUpdateId,setEntityIsUpdate,setEditEntityData,setCustomerFilterData,setVendorFilterData,setUserFilterData,setValidationData,setEntityNewData} = crudSlice.actions
 
 export default crudSlice.reducer;

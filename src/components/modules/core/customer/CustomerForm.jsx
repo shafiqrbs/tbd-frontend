@@ -3,12 +3,12 @@ import {useOutletContext} from "react-router-dom";
 import {
     Button,
     rem, Flex,
-    Grid, Box, ScrollArea, Group, Text, Title,
+    Grid, Box, ScrollArea, Group, Text, Title, Alert, List,
 } from "@mantine/core";
 import {useTranslation} from 'react-i18next';
 import {
     IconCheck,
-    IconDeviceFloppy, IconPlus,
+    IconDeviceFloppy, IconInfoCircle, IconPlus,
 } from "@tabler/icons-react";
 import {useDisclosure, useHotkeys} from "@mantine/hooks";
 import {useDispatch, useSelector} from "react-redux";
@@ -19,7 +19,7 @@ import {notifications} from "@mantine/notifications";
 import {
     getExecutiveDropdown, getLocationDropdown,
 } from "../../../../store/core/utilitySlice";
-import {setFetching, storeEntityData} from "../../../../store/core/crudSlice.js";
+import {setEntityNewData, setFetching, setValidationData, storeEntityData} from "../../../../store/core/crudSlice.js";
 
 import Shortcut from "../../shortcut/Shortcut";
 import InputForm from "../../../form-builders/InputForm";
@@ -32,6 +32,8 @@ function CustomerForm() {
     const {isOnline, mainAreaHeight} = useOutletContext();
     const height = mainAreaHeight - 80; //TabList height 104
     const [opened, {open, close}] = useDisclosure(false);
+    const icon = <IconInfoCircle />;
+
 
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
     const [customerGroupData, setCustomerGroupData] = useState(null);
@@ -41,6 +43,11 @@ function CustomerForm() {
 
     const locationDropdownData = useSelector((state) => state.utilitySlice.locationDropdownData)
     const executiveDropdownData = useSelector((state) => state.utilitySlice.executiveDropdownData)
+    const validationMessage = useSelector((state) => state.crudSlice.validationMessage)
+    const validation = useSelector((state) => state.crudSlice.validation)
+    const entityNewData = useSelector((state) => state.crudSlice.entityNewData)
+    // console.log(validationMessage)
+
 
     let locationDropdown = locationDropdownData && locationDropdownData.length > 0 ? locationDropdownData.map((type, index) => {
         return ({'label': type.name, 'value': String(type.id)})
@@ -83,8 +90,64 @@ function CustomerForm() {
         validate: {
             name: hasLength({min: 2, max: 20}),
             mobile: (value) => (!/^\d+$/.test(value)),
+            email: (value) => {
+                if (value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+                    return true;
+                }
+                return null;
+            },
+            credit_limit: (value) => {
+                if (value) {
+                    const isNumberOrFractional = /^-?\d+(\.\d+)?$/.test(value);
+                    if (!isNumberOrFractional) {
+                        return true;
+                    }
+                }
+                return null;
+            },
+            alternative_mobile: (value) => {
+                if (value && value.trim()) {
+                    const isDigitsOnly = /^\d+$/.test(value);
+                    if (!isDigitsOnly) {
+                        return true;
+                    }
+                }
+                return null;
+            },
         }
     });
+
+
+    useEffect(() => {
+        if (validation) {
+            validationMessage.name && (form.setFieldError('name', true));
+            validationMessage.mobile && (form.setFieldError('mobile', true));
+            validationMessage.email && (form.setFieldError('email', true));
+            validationMessage.credit_limit && (form.setFieldError('credit_limit', true));
+            validationMessage.alternative_mobile && (form.setFieldError('alternative_mobile', true));
+            dispatch(setValidationData(false))
+        }
+
+        if (entityNewData.message ==='success'){
+            notifications.show({
+                color: 'teal',
+                title: t('CreateSuccessfully'),
+                icon: <IconCheck style={{width: rem(18), height: rem(18)}}/>,
+                loading: false,
+                autoClose: 700,
+                style: {backgroundColor: 'lightgray'},
+            });
+
+            setTimeout(() => {
+                form.reset()
+                setMarketingExeData(null)
+                setCustomerGroupData(null)
+                setLocationData(null)
+                dispatch(setEntityNewData([]))
+                dispatch(setFetching(true))
+            }, 700)
+        }
+        }, [validation,validationMessage,form]);
 
     useHotkeys([['alt+n', () => {
         document.getElementById('CustomerName').focus()
@@ -102,6 +165,7 @@ function CustomerForm() {
     return (
         <Box bg={"white"} mt={`xs`}>
             <form onSubmit={form.onSubmit((values) => {
+                dispatch(setValidationData(false))
                 modals.openConfirmModal({
                     title: 'Please confirm your action',
                     children: (
@@ -114,15 +178,13 @@ function CustomerForm() {
                     labels: {confirm: 'Confirm', cancel: 'Cancel'},
                     onCancel: () => console.log('Cancel'),
                     onConfirm: () => {
-
                         const value = {
                             url: 'customer',
                             data: values
                         }
-
                         dispatch(storeEntityData(value))
 
-                        notifications.show({
+                        /*notifications.show({
                             color: 'teal',
                             title: t('CreateSuccessfully'),
                             icon: <IconCheck style={{width: rem(18), height: rem(18)}}/>,
@@ -137,7 +199,7 @@ function CustomerForm() {
                             setCustomerGroupData(null)
                             setLocationData(null)
                             dispatch(setFetching(true))
-                        }, 700)
+                        }, 700)*/
                     },
                 });
             })}>
@@ -160,13 +222,6 @@ function CustomerForm() {
                                             id="CustomerFormSubmit"
                                             leftSection={<IconDeviceFloppy size={16}/>}
                                         >
-                                            {/*<LoadingOverlay
-                                            visible={saveCreateLoading}
-                                            zIndex={1000}
-                                            overlayProps={{radius: "xs", blur: 2}}
-                                            size={'xs'}
-                                            position="center"
-                                        />*/}
 
                                             <Flex direction={`column`} gap={0}>
                                                 <Text fz={12} fw={400}>
@@ -186,6 +241,17 @@ function CustomerForm() {
                         <Grid.Col span={'auto'}>
                             <ScrollArea h={height} scrollbarSize={2} type="never">
                                 <Box pl={'xs'} pb={'md'}>
+                                    {
+                                        Object.keys(form.errors).length > 0 && validationMessage !=0 &&
+                                        <Alert variant="light" color="red" radius="md" title={
+                                            <List withPadding size="sm">
+                                                {validationMessage.name && <List.Item>{t('NameValidateMessage')}</List.Item>}
+                                                {validationMessage.mobile && <List.Item>{t('MobileValidateMessage')}</List.Item>}
+                                                {validationMessage.alternative_mobile && <List.Item>{t('AlternativeMobile')}</List.Item>}
+                                            </List>
+                                        }></Alert>
+                                    }
+
                                     <InputForm
                                         tooltip={t('NameValidateMessage')}
                                         label={t('Name')}
@@ -227,7 +293,7 @@ function CustomerForm() {
                                     </Grid>
 
                                     <InputForm
-                                        tooltip={t('CreditLimit')}
+                                        tooltip={t('CreditLimitValidateMessage')}
                                         label={t('CreditLimit')}
                                         placeholder={t('CreditLimit')}
                                         required={false}
@@ -263,7 +329,7 @@ function CustomerForm() {
                                     />
 
                                     <InputForm
-                                        tooltip={t('AlternativeMobile')}
+                                        tooltip={t('MobileValidateMessage')}
                                         label={t('AlternativeMobile')}
                                         placeholder={t('AlternativeMobile')}
                                         required={false}
