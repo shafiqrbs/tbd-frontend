@@ -170,7 +170,7 @@ function UserUpdateForm() {
                 <Box m={'md'}>
                     <Grid columns={24}>
                         <Grid.Col span={'auto'}>
-                        <ScrollArea h={height} scrollbarSize={2}>
+                        <ScrollArea h={height} scrollbarSize={2} type="never">
                             <Box pb={'md'} >
 
                                 <LoadingOverlay visible={formLoad} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />

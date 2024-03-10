@@ -195,11 +195,11 @@ function VendorUpdateForm() {
                         </Grid.Col>
                     </Grid>
                 </Box>
-                <Box  h={1} bg={`gray.3`}></Box>
-                <Box  pl={`xs`} pr={'xs'} mt={'xs'}>
+                <Box h={1} bg={`gray.3`}></Box>
+                <Box pl={`xs`} pr={'xs'} mt={'xs'}>
                     <Grid columns={24}>
                         <Grid.Col span={'auto'}>
-                            <ScrollArea h={height} scrollbarSize={2}>
+                            <ScrollArea h={height} scrollbarSize={2} type="never">
                                 <Box pl={'xs'} pb={'md'}>
 
                                 <LoadingOverlay visible={formLoad} zIndex={1000} overlayProps={{radius: "sm", blur: 2}}/>

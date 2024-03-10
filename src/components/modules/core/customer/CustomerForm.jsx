@@ -184,7 +184,7 @@ function CustomerForm() {
                 <Box pl={`xs`} pr={'xs'} mt={'xs'}>
                     <Grid columns={24}>
                         <Grid.Col span={'auto'}>
-                            <ScrollArea h={height} scrollbarSize={2}>
+                            <ScrollArea h={height} scrollbarSize={2} type="never">
                                 <Box pl={'xs'} pb={'md'}>
                                     <InputForm
                                         tooltip={t('NameValidateMessage')}
@@ -197,6 +197,7 @@ function CustomerForm() {
                                         mt={0}
                                         id={'CustomerName'}
                                     />
+
 
                                     <Grid gutter={{base: 6}}>
                                         <Grid.Col span={10}>
