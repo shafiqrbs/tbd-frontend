@@ -61,7 +61,6 @@ function CustomerTable() {
                         </Box>
                     </Box>
                     <Box bg={`white`}>
-
                         <Box pb={`xs`} pl={`md`} pr={'md'}>
                             <DataTable
                                 withTableBorder

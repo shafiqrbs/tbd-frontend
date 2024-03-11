@@ -20,14 +20,15 @@ function FilterModel(props) {
 
     return (
 
-        <Drawer opened={props.filterModel} onClose={closeModel} title={t('FilterData')}>
+        <Drawer opened={props.filterModel} position="right" onClose={closeModel} title={t('FilterData')}>
             {props.module === 'customer' && <CustomerFilterForm module={props.module}/> }
             {props.module === 'vendor' && <VendorFilterForm module={props.module}/> }
             {props.module === 'user' && <UserFilterForm module={props.module}/> }
-
             <Button
                 id={'submit'}
                 mt={8}
+                p={'absolute'}
+                right
                 variant="filled"
                 onClick={() => {
                     dispatch(setFetching(true))

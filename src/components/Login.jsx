@@ -79,11 +79,12 @@ export default function Login() {
     useHotkeys([['alt+n', () => {
         document.getElementById('Username').focus()
     }]], []);
-    console.log(height)
+  //  console.log(height)
 
     return (
-        <Container size={420}>
-        <Card withBorder padding="xl" mt={'160'} radius="md" className={LoginPage.card}>
+        <Container >
+        <Center>
+            <Card withBorder padding="xl" w={'420'} mt={'120'} radius="md" className={LoginPage.card}>
             <Card.Section
                 h={140}
                 className={LoginPage.wrapper}
@@ -183,6 +184,7 @@ export default function Login() {
             </Paper>
             </Box>
         </Card>
+        </Center>
         </Container>
 
     );
