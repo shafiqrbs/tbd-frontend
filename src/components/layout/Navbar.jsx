@@ -38,6 +38,14 @@ function Navbar() {
             </NavLink>
             <NavLink
                 href="#required-for-focus"
+                label="Inventory"
+                leftSection={<IconGauge size="1rem" stroke={1.5} />}
+                childrenOffset={28}
+            >
+                <NavLink href="config" label="Configuration" component="button" onClick={(e)=>{navigate('inventory/config')}}  />
+            </NavLink>
+            <NavLink
+                href="#required-for-focus"
                 label="Sample"
                 leftSection={<IconGauge size="1rem" stroke={1.5} />}
                 childrenOffset={28}

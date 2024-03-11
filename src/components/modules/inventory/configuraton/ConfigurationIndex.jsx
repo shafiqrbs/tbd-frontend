@@ -1,202 +1,74 @@
-import React, {useState} from "react";
-import {useOutletContext} from "react-router-dom";
+import React, {useEffect, useState} from "react";
 import {
-    Button,
-    Group,
-    Tabs,
-    rem,
-    Text,
-    Tooltip,
-    Flex,
-    LoadingOverlay,
+    Box, Button,
+    Grid, Progress, Title
 } from "@mantine/core";
 import {useTranslation} from 'react-i18next';
-import {
-    IconCircleCheck,
-    IconList,
-    IconReload,
-    IconDashboard,
-    IconDeviceFloppy,
-    IconRestore,
-    IconX,
-} from "@tabler/icons-react";
-
-import ConfigurationView from "./ConfigurationView";
-import {hasLength, isEmail, useForm} from "@mantine/form";
-import {modals} from '@mantine/modals';
-import axios from "axios";
 import {useDispatch, useSelector} from "react-redux";
-import {storeEntityData,setFetching} from "../../../../store/core/crudSlice";
-import {useHotkeys} from "@mantine/hooks";
+
+
+import {
+    setCustomerFilterData,
+    setInsertType,
+    setSearchKeyword,
+    setVendorFilterData
+} from "../../../../store/core/crudSlice.js";
+import VendorForm from "../../core/vendor/VendorForm";
+import VendorTable from "../../core/vendor/VendorTable";
+import ProductSetupForm from "./ProductSetupForm";
+import ConfigurationForm from "./ConfigurationForm";
+import PrintSetupForm from "./PrintSetupForm";
 
 function ConfigurationIndex() {
     const {t, i18n} = useTranslation();
     const dispatch = useDispatch();
-    const iconStyle = {width: rem(12), height: rem(12)};
-    const [activeTab, setActiveTab] = useState("CustomerView");
-    const [saveCreateLoading, setSaveCreateLoading] = useState(false);
-    const [isFormSubmit, setFormSubmit] = useState(false);
-    const [formSubmitData, setFormSubmitData] = useState([]);
-    const {isOnline, mainAreaHeight} = useOutletContext();
 
-    const newCustomerData = useSelector((state) => state.customerSlice.newCustomerData)
+    const insertType = useSelector((state) => state.crudSlice.insertType)
+    const vendorFilterData = useSelector((state) => state.crudSlice.vendorFilterData)
 
-    const form = useForm({
-        initialValues: {
-            location_id:'', marketing_id:'', name:'', mobile:'', customer_group:'', credit_limit:'', reference_id:'', alternative_mobile:'', address:'', email:'', status:''
-        }
-    });
-    useHotkeys([['shift+r', () => {form.reset()}]],[]);
-    useHotkeys([['shift+s', () => {document.getElementById('customerSave').click()}]],[]);
+    const [progress, setProgress] = useState(0);
 
-    const tabCreateNewRightButtons = (
-        <Group mt={4} pos={`absolute`} right={12} gap={0}>
-            <Tooltip
-                label={t("Refresh")}
-                color={`indigo.6`}
-                withArrow
-                offset={2}
-                position={"bottom"}
-                transitionProps={{transition: "pop-bottom-left", duration: 500}}>
-                <Button variant="transparent" size="md" ml={1} mr={1} color={`gray`}>
-                    <IconRestore style={{ width: rem(24) }}  />
-                </Button>
-            </Tooltip>
-            <>
-                <Button
-                    id={'customerSave'}
-                    disabled={saveCreateLoading}
-                    size="md"
-                    color={`indigo.7`}
-                    type="submit"
-                    leftSection={<IconDeviceFloppy size={24} />}
-                    onClick={()=>{
-                        if (activeTab === 'CustomerView') {
-                            let validation = true
-                            if (!form.values.name) {
-                                form.setFieldError('name', true);
-                                validation = false
-                            }
-                            if (!form.values.mobile || isNaN(form.values.mobile)) {
-                                form.setFieldError('mobile', true);
-                                validation = false
-                            }
-                            if (form.values.email && !/^\S+@\S+$/.test(form.values.email)) {
-                                form.setFieldError('email', true);
-                                validation = false
-                            }
+    useEffect(() => {
+        const updateProgress = () => setProgress((oldProgress) => {
+            if (oldProgress === 100) return 100;
+            const diff = Math.random() * 20;
+            return Math.min(oldProgress + diff, 100);
+        });
 
-                            validation &&
-                            modals.openConfirmModal({
-                                title: 'Please confirm your action',
-                                children: (
-                                    <Text size="sm">
-                                        This action is so important that you are required to confirm it with a
-                                        modal. Please click
-                                        one of these buttons to proceed.
-                                    </Text>
-                                ),
-                                labels: {confirm: 'Confirm', cancel: 'Cancel'},
-                                onCancel: () => console.log('Cancel'),
-                                onConfirm: () => {
-                                    setSaveCreateLoading(true)
-                                    const value = {
-                                        url : 'customer',
-                                        data : form.values
-                                    }
-                                    dispatch(storeEntityData(value))
-                                    setTimeout(()=>{
-                                        form.setFieldValue('location_id', '')
-                                        form.setFieldValue('marketing_id', '')
-                                        form.setFieldValue('customer_group', '')
-                                        form.reset()
-                                        setSaveCreateLoading(false)
-                                        dispatch(setFetching(true))
-                                    },500)
-                                },
-                            });
-                        }
-                    }}
-                >
-                    <LoadingOverlay
-                        visible={saveCreateLoading}
-                        zIndex={1000}
-                        overlayProps={{radius: "xs", blur: 2}}
-                        size={'xs'}
-                        position="center"
-                    />
+        const timer = setInterval(updateProgress, 100);
+        return () => clearInterval(timer);
+    }, []);
 
-                    <Flex direction={`column`}  gap={0}>
-                        <Text fz={14} fw={400}>
-                          {t("CreateAndSave")}
-                        </Text>
-                    </Flex>
-                </Button>
-            </>
-        </Group>
-    );
-    const tabCustomerLedgerButtons = (
-        <Group mt={4} pos={`absolute`} right={0} gap={0}>
-            <Tooltip
-                label={t("Refresh")}
-                color={`red.6`}
-                withArrow
-                offset={2}
-                position={"bottom"}
-                transitionProps={{transition: "pop-bottom-left", duration: 500}}
-            >
-                <Button bg={`white`} size="md" ml={1} mr={1} variant="light" color={`black`}>
-                    <IconRestore size={24} />
-                </Button>
-            </Tooltip>
+    useEffect(() => {
+        dispatch(setInsertType('create'))
+        dispatch(setSearchKeyword(''))
+        dispatch(setVendorFilterData({
+            ...vendorFilterData,
+            ['name']: '',
+            ['mobile']:'',
+            ['company_name']:''
+        }))
+    }, [])
 
-
-            <>
-                <Button
-                    size="md"
-                    color={`blue.7`}
-                    type="submit"
-                    leftSection={<IconDeviceFloppy size={24} />}
-                >
-                    <LoadingOverlay
-                        visible={saveCreateLoading}
-                        zIndex={1000}
-                        overlayProps={{radius: "xs", blur: 2}}
-                        size={'xs'}
-                        position="center"
-                    />
-
-                    <Flex direction={`column`} gap={0}>
-                        <Text fz={14} fw={400}>
-                            {t("NewReceive")}
-                        </Text>
-                    </Flex>
-                </Button>
-            </>
-        </Group>
-    );
     return (
-
-            <Tabs
-                defaultValue="CustomerView"
-                onChange={(value) => setActiveTab(value)}
-            >
-                <Tabs.List pos={`relative`} h={'52'}>
-                    <Tabs.Tab h={'52'} fz={14} fw={700}
-                              value="CustomerView"
-                              leftSection={<IconList style={iconStyle}/>}>
-                        {t("ManageCustomer")}
-                    </Tabs.Tab>
-                    {(activeTab === "CustomerTable" || activeTab==='CustomerView') && isOnline && tabCreateNewRightButtons}
-                    {activeTab === "CustomerLedger" && isOnline && tabCustomerLedgerButtons}
-                </Tabs.List>
-                <Tabs.Panel value="CustomerView" h={'52'}>
-                    <ConfigurationView
-                        form={form}
-                    />
-                </Tabs.Panel>
-
-            </Tabs>
+        <>
+            {progress !== 100 &&
+            <Progress color="red" size={"xs"} striped animated value={progress} transitionDuration={200}/>}
+            {progress === 100 &&
+            <Box>
+                <Box pl={`xs`} pr={8} pb={'8'} pt={'6'} bg={'gray.1'}>
+                    <Grid>
+                        <Grid.Col span={12}>
+                            <Title order={6} pl={'md'} fz={'18'} c={'indigo.4'}>{t('VendorInformation')}</Title>
+                        </Grid.Col>
+                    </Grid>
+                </Box>
+                <Box pr={'12'} pl={'12'}>
+                   <ConfigurationForm />
+                </Box>
+            </Box>
+            }
+        </>
     );
 }
 
