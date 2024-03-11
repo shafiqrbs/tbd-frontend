@@ -238,6 +238,7 @@ function ConfigurationForm() {
                             </Grid>
                         </Box>
                     </Grid.Col>
+
                     <Grid.Col span={4}>
                         <Box pb={`xs`} pl={`xs`} pr={8}>
                             <Grid>
