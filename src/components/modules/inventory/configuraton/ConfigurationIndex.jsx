@@ -8,16 +8,12 @@ import {useDispatch, useSelector} from "react-redux";
 
 
 import {
-    setCustomerFilterData,
     setInsertType,
     setSearchKeyword,
     setVendorFilterData
 } from "../../../../store/core/crudSlice.js";
-import VendorForm from "../../core/vendor/VendorForm";
-import VendorTable from "../../core/vendor/VendorTable";
-import ProductSetupForm from "./ProductSetupForm";
+
 import ConfigurationForm from "./ConfigurationForm";
-import PrintSetupForm from "./PrintSetupForm";
 
 function ConfigurationIndex() {
     const {t, i18n} = useTranslation();
@@ -59,7 +55,7 @@ function ConfigurationIndex() {
                 <Box pl={`xs`} pr={8} pb={'8'} pt={'6'} bg={'gray.1'}>
                     <Grid>
                         <Grid.Col span={12}>
-                            <Title order={6} pl={'md'} fz={'18'} c={'indigo.4'}>{t('VendorInformation')}</Title>
+                            <Title order={6} pl={'md'} fz={'18'} c={'indigo.4'}>{t('ConfigurationInformationFormDetails')}</Title>
                         </Grid.Col>
                     </Grid>
                 </Box>

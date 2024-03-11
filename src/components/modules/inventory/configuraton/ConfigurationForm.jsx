@@ -26,6 +26,8 @@ import Shortcut from "../../shortcut/Shortcut";
 import InputForm from "../../../form-builders/InputForm";
 import SelectForm from "../../../form-builders/SelectForm";
 import TextAreaForm from "../../../form-builders/TextAreaForm";
+import SwitchForm from "../../../form-builders/SwitchForm.jsx";
+import ImageUploadDropzone from "../../../form-builders/ImageUploadDropzone.jsx";
 
 function ConfigurationForm() {
     const {t, i18n} = useTranslation();
@@ -36,6 +38,12 @@ function ConfigurationForm() {
 
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
     const [customerData, setCustomerData] = useState(null);
+
+    const [businessModelData, setBusinessModelData] = useState(null);
+    const BusinessModelDropdown = ['Model 1','Model 2']
+
+    const [stockFormatData, setStockFormatData] = useState(null);
+    const StockFormatDropdown = ['Stock Fotmat 1','Stock Fotmat 2']
 
     const customerDropdownData = useSelector((state) => state.utilitySlice.customerDropdownData)
     const formLoading = useSelector((state) => state.crudSlice.formLoading)
@@ -120,7 +128,7 @@ function ConfigurationForm() {
                         <Box pb={`xs`} pl={`xs`} pr={8}>
                             <Grid>
                                 <Grid.Col span={12} h={54}>
-                                    <Title order={6} mt={'xs'} pl={'6'}>{t('VendorInformation')}</Title>
+                                    <Title order={6} mt={'xs'} pl={'6'}>{t('ConfigurationInformation')}</Title>
                                 </Grid.Col>
                             </Grid>
                         </Box>
@@ -131,39 +139,32 @@ function ConfigurationForm() {
                                     <ScrollArea h={height} scrollbarSize={2} type="never">
                                         <Box pb={'md'}>
 
-                                            <InputForm
-                                                tooltip={t('CompanyNameValidateMessage')}
+                                            <SelectForm
+                                                tooltip={t('ChooseBusinessModel')}
                                                 label={t('BusinessModel')}
-                                                placeholder={t('BusinessModel')}
+                                                placeholder={t('ChooseBusinessModel')}
                                                 required={true}
-                                                nextField={'stock_format'}
-                                                form={form}
+                                                nextField={'VatPercent'}
                                                 name={'business_model'}
+                                                form={form}
+                                                dropdownValue={BusinessModelDropdown}
                                                 mt={0}
-                                                id={'business_model'}
+                                                id={'BusinessModel'}
+                                                searchable={true}
+                                                value={businessModelData}
+                                                changeValue={setBusinessModelData}
                                             />
 
-                                            <InputForm
-                                                form={form}
-                                                tooltip={t('StockFormatValidateMessage')}
-                                                label={t('StockFormat')}
-                                                placeholder={t('StockFormat')}
-                                                required={true}
-                                                name={'stock_format'}
-                                                id={'stock_format'}
-                                                nextField={'vat_percent'}
-                                                mt={8}
-                                            />
 
                                             <InputForm
-                                                form={form}
-                                                tooltip={t('VatPercentMessage')}
+                                                tooltip={t('VatPercentValidateMessage')}
                                                 label={t('VatPercent')}
                                                 placeholder={t('VatPercent')}
-                                                required={true}
+                                                form={form}
+                                                required={false}
                                                 name={'vat_percent'}
-                                                id={'vat_percent'}
-                                                nextField={'ait_percent'}
+                                                id={'VatPercent'}
+                                                nextField={'AITPercent'}
                                                 mt={8}
                                             />
 
@@ -175,23 +176,24 @@ function ConfigurationForm() {
                                                 name={'ait_percent'}
                                                 form={form}
                                                 mt={8}
-                                                id={'ait_percent'}
-                                                nextField={'address'}
+                                                id={'AITPercent'}
+                                                nextField={'Address'}
                                             />
 
                                             <TextAreaForm
                                                 form={form}
-                                                tooltip={t('RequiredAndInvalidEmail')}
+                                                tooltip={t('AddressValidateMessage')}
                                                 label={t('Address')}
                                                 placeholder={t('Address')}
                                                 required={false}
                                                 name={'address'}
-                                                id={'address'}
-                                                nextField={'invoice_comment'}
+                                                id={'Address'}
+                                                nextField={'InvoiceComment'}
                                                 mt={8}
                                             />
+
                                             <TextAreaForm
-                                                tooltip={t('ChooseCustomer')}
+                                                tooltip={t('InvoiceCommentValidateMessage')}
                                                 label={t('InvoiceComment')}
                                                 placeholder={t('InvoiceComment')}
                                                 required={false}
@@ -199,8 +201,9 @@ function ConfigurationForm() {
                                                 name={'invoice_comment'}
                                                 form={form}
                                                 mt={8}
-                                                id={'invoice_comment'}
+                                                id={'InvoiceComment'}
                                             />
+                                            <ImageUploadDropzone />
                                         </Box>
                                     </ScrollArea>
                                 </Grid.Col>
@@ -211,7 +214,7 @@ function ConfigurationForm() {
                         <Box pb={`xs`} pl={`xs`} pr={8}>
                             <Grid>
                                 <Grid.Col span={12} h={54}>
-                                    <Title order={6} mt={'xs'} pl={'6'}>{t('VendorInformation')}</Title>
+                                    <Title order={6} mt={'xs'} pl={'6'}>{t('SetupInformation')}</Title>
                                 </Grid.Col>
                             </Grid>
                         </Box>
@@ -221,16 +224,187 @@ function ConfigurationForm() {
                                 <Grid.Col span={'auto'}>
                                     <ScrollArea h={height} scrollbarSize={2} type="never">
                                         <Box pb={'md'}>
-                                            <Switch
-                                                defaultChecked={'false'}
-                                                labelPosition={'right'}
-                                                mt={'8'}
-                                                label={'PrintSetup'}
-                                                size="md"
-                                                radius="sm"
+
+                                            <SwitchForm
+                                                tooltip={t('PrintSetup')}
+                                                label={t('PrintSetup')}
+                                                nextField={'CustomInvoice'}
+                                                name={'print_setup'}
+                                                form={form}
+                                                mt={12}
                                                 id={'PrintSetup'}
+                                                position={'right'}
+                                                // defaultChecked={!!(formLoading && entityEditData.status === 1)}
+                                                defaultChecked={1}
                                             />
 
+                                            <SwitchForm
+                                                tooltip={t('CustomInvoice')}
+                                                label={t('CustomInvoice')}
+                                                nextField={'BonusFromStock'}
+                                                name={'custom_invoice'}
+                                                form={form}
+                                                mt={12}
+                                                id={'CustomInvoice'}
+                                                position={'right'}
+                                                defaultChecked={1}
+                                            />
+
+                                            <SwitchForm
+                                                tooltip={t('BonusFromStock')}
+                                                label={t('BonusFromStock')}
+                                                nextField={'IsDescription'}
+                                                name={'bonus_from_stock'}
+                                                form={form}
+                                                mt={12}
+                                                id={'BonusFromStock'}
+                                                position={'right'}
+                                                defaultChecked={1}
+                                            />
+
+                                            <SwitchForm
+                                                tooltip={t('IsDescription')}
+                                                label={t('IsDescription')}
+                                                nextField={'ZeroStockAllowed'}
+                                                name={'is_description'}
+                                                form={form}
+                                                mt={12}
+                                                id={'IsDescription'}
+                                                position={'right'}
+                                                defaultChecked={1}
+                                            />
+
+                                            <SwitchForm
+                                                tooltip={t('ZeroStockAllowed')}
+                                                label={t('ZeroStockAllowed')}
+                                                nextField={'StockItem'}
+                                                name={'zero_stock_allowed'}
+                                                form={form}
+                                                mt={12}
+                                                id={'ZeroStockAllowed'}
+                                                position={'right'}
+                                                defaultChecked={1}
+                                            />
+
+                                            <SwitchForm
+                                                tooltip={t('StockItem')}
+                                                label={t('StockItem')}
+                                                nextField={'CustomInvoicePrint'}
+                                                name={'stock_item'}
+                                                form={form}
+                                                mt={12}
+                                                id={'StockItem'}
+                                                position={'right'}
+                                                defaultChecked={1}
+                                            />
+
+                                            <SwitchForm
+                                                tooltip={t('CustomInvoicePrint')}
+                                                label={t('CustomInvoicePrint')}
+                                                nextField={'StockHistory'}
+                                                name={'custom_invoice_print'}
+                                                form={form}
+                                                mt={12}
+                                                id={'CustomInvoicePrint'}
+                                                position={'right'}
+                                                defaultChecked={1}
+                                            />
+
+                                            <SwitchForm
+                                                tooltip={t('StockHistory')}
+                                                label={t('StockHistory')}
+                                                nextField={'ConditionSales'}
+                                                name={'stock_history'}
+                                                form={form}
+                                                mt={12}
+                                                id={'StockHistory'}
+                                                position={'right'}
+                                                defaultChecked={1}
+                                            />
+
+                                            <SwitchForm
+                                                tooltip={t('ConditionSales')}
+                                                label={t('ConditionSales')}
+                                                nextField={'StoreLedger'}
+                                                name={'condition_sales'}
+                                                form={form}
+                                                mt={12}
+                                                id={'ConditionSales'}
+                                                position={'right'}
+                                                defaultChecked={1}
+                                            />
+
+                                            <SwitchForm
+                                                tooltip={t('StoreLedger')}
+                                                label={t('StoreLedger')}
+                                                nextField={'MarketingExecutive'}
+                                                name={'store_ledger'}
+                                                form={form}
+                                                mt={12}
+                                                id={'StoreLedger'}
+                                                position={'right'}
+                                                defaultChecked={1}
+                                            />
+
+                                            <SwitchForm
+                                                tooltip={t('MarketingExecutive')}
+                                                label={t('MarketingExecutive')}
+                                                nextField={'FuelStation'}
+                                                name={'marketing_executive'}
+                                                form={form}
+                                                mt={12}
+                                                id={'MarketingExecutive'}
+                                                position={'right'}
+                                                defaultChecked={1}
+                                            />
+
+                                            <SwitchForm
+                                                tooltip={t('FuelStation')}
+                                                label={t('FuelStation')}
+                                                nextField={'TLOCommission'}
+                                                name={'fuel_station'}
+                                                form={form}
+                                                mt={12}
+                                                id={'FuelStation'}
+                                                position={'right'}
+                                                defaultChecked={1}
+                                            />
+
+                                            <SwitchForm
+                                                tooltip={t('TLOCommission')}
+                                                label={t('TLOCommission')}
+                                                nextField={'SalesReturn'}
+                                                name={'tlo_commission'}
+                                                form={form}
+                                                mt={12}
+                                                id={'TLOCommission'}
+                                                position={'right'}
+                                                defaultChecked={1}
+                                            />
+
+                                            <SwitchForm
+                                                tooltip={t('SalesReturn')}
+                                                label={t('SalesReturn')}
+                                                nextField={'SRCommission'}
+                                                name={'sales_return'}
+                                                form={form}
+                                                mt={12}
+                                                id={'SalesReturn'}
+                                                position={'right'}
+                                                defaultChecked={1}
+                                            />
+
+                                            <SwitchForm
+                                                tooltip={t('SRCommission')}
+                                                label={t('SRCommission')}
+                                                nextField={'SRCommission'}
+                                                name={'sr_commission'}
+                                                form={form}
+                                                mt={12}
+                                                id={'SRCommission'}
+                                                position={'right'}
+                                                defaultChecked={1}
+                                            />
 
                                         </Box>
                                     </ScrollArea>

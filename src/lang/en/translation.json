@@ -101,6 +101,35 @@
   "ConfigurationInformation": "Configuration Information",
   "ConfigurationInformationFormDetails": "Configuration Information Details",
 
+  "ChooseBusinessModel": "Choose business model",
+  "BusinessModel": "Business Model",
+  "ChooseStockFormat": "Choose stock format",
+  "StockFormat": "Stock format",
+  "VatPercent": "VAT percent",
+  "VatPercentValidateMessage": "VAT percent",
+  "AITPercent": "AIT percent",
+  "AITPercentValidateMessage": "AIT percent",
+  "AddressValidateMessage": "Address",
+  "InvoiceCommentValidateMessage": "Invoice comment",
+  "InvoiceComment": "Invoice comment",
+
+  "SetupInformation": "Setup Information",
+  "PrintSetup": "Print Setup",
+  "CustomInvoice": "Custom Invoice",
+  "BonusFromStock": "Bonus From Stock",
+  "IsUnitPrice": "Is Unit Price",
+  "IsDescription": "Is Description",
+  "ZeroStockAllowed": "Zero stock allowed",
+  "StockItem": "Stock item",
+  "CustomInvoicePrint": "Custom invoice print",
+  "StockHistory": "Stock history",
+  "ConditionSales": "Condition sales",
+  "StoreLedger": "Store ledger",
+  "FuelStation": "Fuel station",
+  "TLOCommission": "TLO commission",
+  "SalesReturn": "Sales return",
+  "SRCommission": "SR commission",
+
   "BasicInformation": "Basic Information",
   "BasicInformationDetails": "Basic Information Details",
   "PrintInformation": "Print Information",
@@ -109,7 +138,6 @@
   "ProductSetupDetails": "Product Setup Details",
   "PriceInformation": "Price Information",
   "PriceInformationDetails": "Price Information Details",
-  "VendorInformationx": "Vendor Information",
 
   "" : ""
 
