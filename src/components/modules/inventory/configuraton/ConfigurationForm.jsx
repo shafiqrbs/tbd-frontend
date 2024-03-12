@@ -295,7 +295,38 @@ function ConfigurationForm() {
                             </Grid>
                         </Box>
                     </Grid.Col>
-                    <Grid.Col span={4}>
+                    <Grid.Col span={2}>
+                        <Box pb={`xs`} pl={`xs`} pr={8}>
+                            <Grid>
+                                <Grid.Col span={12} h={54}>
+                                    <Title order={6} mt={'xs'} pl={'6'}>{t('VendorInformation')}</Title>
+                                </Grid.Col>
+                            </Grid>
+                        </Box>
+                        <Box  h={1} bg={`gray.3`}></Box>
+                        <Box m={'md'}>
+                            <Grid columns={24}>
+                                <Grid.Col span={'auto'}>
+                                    <ScrollArea h={height} scrollbarSize={2} type="never">
+                                        <Box pb={'md'}>
+                                            <Switch
+                                                defaultChecked={'false'}
+                                                labelPosition={'right'}
+                                                mt={'8'}
+                                                label={'PrintSetup'}
+                                                size="md"
+                                                radius="sm"
+                                                id={'PrintSetup'}
+                                            />
+
+
+                                        </Box>
+                                    </ScrollArea>
+                                </Grid.Col>
+                            </Grid>
+                        </Box>
+                    </Grid.Col>
+                    <Grid.Col span={2}>
                         <Box pb={`xs`} pl={`xs`} pr={8}>
                             <Grid>
                                 <Grid.Col span={12} h={54}>
