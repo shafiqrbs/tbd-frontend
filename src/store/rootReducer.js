@@ -2,11 +2,15 @@ import { combineReducers } from 'redux'
 
 import utilitySlice from './core/utilitySlice'
 import crudSlice from './core/crudSlice'
+import inventoryCrudSlice from './inventory/crudSlice'
+import inventoryUtilitySlice from './inventory/utilitySlice.js'
 
 const rootReducer = (asyncReducers) => (state, action) => {
     const combinedReducer = combineReducers({
         utilitySlice,
         crudSlice,
+        inventoryCrudSlice,
+        inventoryUtilitySlice,
         ...asyncReducers,
     })
     return combinedReducer(state, action)

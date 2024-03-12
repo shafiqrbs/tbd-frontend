@@ -183,23 +183,6 @@ function CustomerForm() {
                             data: values
                         }
                         dispatch(storeEntityData(value))
-
-                        /*notifications.show({
-                            color: 'teal',
-                            title: t('CreateSuccessfully'),
-                            icon: <IconCheck style={{width: rem(18), height: rem(18)}}/>,
-                            loading: false,
-                            autoClose: 700,
-                            style: {backgroundColor: 'lightgray'},
-                        });
-
-                        setTimeout(() => {
-                            form.reset()
-                            setMarketingExeData(null)
-                            setCustomerGroupData(null)
-                            setLocationData(null)
-                            dispatch(setFetching(true))
-                        }, 700)*/
                     },
                 });
             })}>

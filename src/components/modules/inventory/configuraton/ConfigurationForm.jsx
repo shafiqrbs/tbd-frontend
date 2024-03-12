@@ -3,24 +3,29 @@ import {useNavigate, useOutletContext} from "react-router-dom";
 import {
     Button,
     rem, Flex,
-    Grid, Box, ScrollArea, Tooltip, Group, Text, LoadingOverlay, Title, Select, Switch,
+    Grid, Box, ScrollArea, Group, Text, Title
 } from "@mantine/core";
 import {useTranslation} from 'react-i18next';
 import {
     IconCheck,
     IconDeviceFloppy,
-    IconRestore,
 } from "@tabler/icons-react";
-import {getHotkeyHandler, useHotkeys} from "@mantine/hooks";
+import { useHotkeys} from "@mantine/hooks";
 import {useDispatch, useSelector} from "react-redux";
-import {hasLength, useForm} from "@mantine/form";
+import {hasLength, isNotEmpty, useForm} from "@mantine/form";
 import {modals} from "@mantine/modals";
 import {notifications} from "@mantine/notifications";
 
 import {
     getCustomerDropdown,
 } from "../../../../store/core/utilitySlice";
-import {setFetching, storeEntityData} from "../../../../store/core/crudSlice.js";
+import {
+    setEntityNewData,
+    setFetching,
+    setFormLoading,
+    setValidationData,
+    storeEntityData
+} from "../../../../store/core/crudSlice.js";
 
 import Shortcut from "../../shortcut/Shortcut";
 import InputForm from "../../../form-builders/InputForm";
@@ -28,6 +33,8 @@ import SelectForm from "../../../form-builders/SelectForm";
 import TextAreaForm from "../../../form-builders/TextAreaForm";
 import SwitchForm from "../../../form-builders/SwitchForm.jsx";
 import ImageUploadDropzone from "../../../form-builders/ImageUploadDropzone.jsx";
+import {getBusinessModelDropdown} from "../../../../store/inventory/utilitySlice.js";
+import {getShowEntityData, updateEntityData} from "../../../../store/inventory/crudSlice.js";
 
 function ConfigurationForm() {
     const {t, i18n} = useTranslation();
@@ -45,33 +52,124 @@ function ConfigurationForm() {
     const [stockFormatData, setStockFormatData] = useState(null);
     const StockFormatDropdown = ['Stock Fotmat 1','Stock Fotmat 2']
 
-    const customerDropdownData = useSelector((state) => state.utilitySlice.customerDropdownData)
-    const formLoading = useSelector((state) => state.crudSlice.formLoading)
+    const businessModelDropdownData = useSelector((state) => state.inventoryUtilitySlice.businessModelDropdownData)
+    const showEntityData = useSelector((state) => state.inventoryCrudSlice.showEntityData)
 
-    let customerDropdown = customerDropdownData && customerDropdownData.length > 0 ?
-        customerDropdownData.map((type, index) => {
+    const validationMessage = useSelector((state) => state.inventoryCrudSlice.validationMessage)
+    const validation = useSelector((state) => state.inventoryCrudSlice.validation)
+
+    // console.log(showEntityData)
+
+    const [setFormData, setFormDataForUpdate] = useState(false);
+    const [formLoad, setFormLoad] = useState(true);
+
+
+    // const formLoading = useSelector((state) => state.inventoryCrudSlice.formLoading)
+
+    let businessModelDropdown = businessModelDropdownData && businessModelDropdownData.length > 0 ?
+        businessModelDropdownData.map((type, index) => {
             return ({'label': type.name, 'value': String(type.id)})
         }) : []
 
     useEffect(() => {
-        dispatch(getCustomerDropdown('core/select/customer'))
+        const value = {
+            url : 'inventory/select/business-model',
+            param : {
+                'dropdown-type' : 'business-model'
+            }
+        }
+        dispatch(getBusinessModelDropdown(value))
+        dispatch(getShowEntityData('inventory/config'))
     }, []);
 
     const form = useForm({
         initialValues: {
-            company_name: '', name: '', mobile: '', tp_percent: '', email: ''
+            business_model_id:'',
+            vat_percent:'',
+            ait_percent:'',
+            address:'',
+            invoice_comment:''
         },
         validate: {
-            company_name: hasLength({min: 2, max: 20}),
-            name: hasLength({min: 2, max: 20}),
-            mobile: (value) => (!/^\d+$/.test(value)),
-            // tp_percent: (value) => (value && !/^\d*\.?\d*$/.test(value)),
-            // email: (value) => (value && !/^\S+@\S+$/.test(value)),
+            business_model_id: isNotEmpty(),
+            vat_percent: (value) => {
+                if (value) {
+                    const isNumberOrFractional = /^-?\d+(\.\d+)?$/.test(value);
+                    if (!isNumberOrFractional) {
+                        return true;
+                    }
+                }
+                return null;
+            },
+            ait_percent: (value) => {
+                if (value) {
+                    const isNumberOrFractional = /^-?\d+(\.\d+)?$/.test(value);
+                    if (!isNumberOrFractional) {
+                        return true;
+                    }
+                }
+                return null;
+            },
         }
     });
 
+
+    useEffect(() => {
+        if (validation) {
+            validationMessage.business_model_id && (form.setFieldError('business_model_id', true));
+            validationMessage.vat_percent && (form.setFieldError('vat_percent', true));
+            validationMessage.ait_percent && (form.setFieldError('ait_percent', true));
+            validationMessage.address && (form.setFieldError('address', true));
+            validationMessage.invoice_comment && (form.setFieldError('invoice_comment', true));
+            dispatch(setValidationData(false))
+            setTimeout(() => {
+                // setSaveCreateLoading(false)
+            }, 700)
+        }
+
+        if (validationMessage.message ==='success'){
+            notifications.show({
+                color: 'teal',
+                title: t('UpdateSuccessfully'),
+                icon: <IconCheck style={{width: rem(18), height: rem(18)}}/>,
+                loading: false,
+                autoClose: 700,
+                style: {backgroundColor: 'lightgray'},
+            });
+
+            setTimeout(() => {
+                // setSaveCreateLoading(false)
+            }, 700)
+        }
+    }, [validation,validationMessage]);
+
+    useEffect(() => {
+        setFormLoad(true)
+        setFormDataForUpdate(true)
+    }, [dispatch])
+
+    useEffect(() => {
+
+        form.setValues({
+            business_model_id: showEntityData.business_model_id?showEntityData.business_model_id:'',
+            vat_percent: showEntityData.vat_percent?showEntityData.vat_percent:'',
+            ait_percent: showEntityData.ait_percent?showEntityData.ait_percent:'',
+            address: showEntityData.address?showEntityData.address:'',
+            invoice_comment: showEntityData.invoice_comment?showEntityData.invoice_comment:'',
+        })
+
+        dispatch(setFormLoading(false))
+        setTimeout(() => {
+            setFormLoad(false)
+            setFormDataForUpdate(false)
+        }, 500)
+
+    }, [dispatch, setFormData])
+
+    // console.log(form.values)
+
     useHotkeys([['alt+n', () => {
-        document.getElementById('CompanyName').focus()
+        document.getElementById('BusinessModel').click()
     }]], []);
 
     useHotkeys([['alt+r', () => {
@@ -86,6 +184,7 @@ function ConfigurationForm() {
     return (
         <Box bg={"white"} mt={`xs`}>
             <form onSubmit={form.onSubmit((values) => {
+                // dispatch(setValidationData(false))
                 modals.openConfirmModal({
                     title: 'Please confirm your action',
                     children: (
@@ -98,28 +197,14 @@ function ConfigurationForm() {
                     labels: {confirm: 'Confirm', cancel: 'Cancel'},
                     onCancel: () => console.log('Cancel'),
                     onConfirm: () => {
-
+                        // setSaveCreateLoading(true)
                         const value = {
-                            url: 'vendor',
+                            url: 'inventory/config-update',
                             data: values
                         }
 
-                        dispatch(storeEntityData(value))
+                        dispatch(updateEntityData(value))
 
-                        notifications.show({
-                            color: 'teal',
-                            title: t('CreateSuccessfully'),
-                            icon: <IconCheck style={{width: rem(18), height: rem(18)}}/>,
-                            loading: false,
-                            autoClose: 700,
-                            style: {backgroundColor: 'lightgray'},
-                        });
-
-                        setTimeout(() => {
-                            form.reset()
-                            setCustomerData(null)
-                            dispatch(setFetching(true))
-                        }, 700)
                     },
                 });
             })}>
@@ -145,13 +230,13 @@ function ConfigurationForm() {
                                                 placeholder={t('ChooseBusinessModel')}
                                                 required={true}
                                                 nextField={'VatPercent'}
-                                                name={'business_model'}
+                                                name={'business_model_id'}
                                                 form={form}
-                                                dropdownValue={BusinessModelDropdown}
+                                                dropdownValue={businessModelDropdown}
                                                 mt={0}
                                                 id={'BusinessModel'}
                                                 searchable={true}
-                                                value={businessModelData}
+                                                value={businessModelData ? String(businessModelData) : (showEntityData.business_model_id ? String(showEntityData.business_model_id) : null)}
                                                 changeValue={setBusinessModelData}
                                             />
 
@@ -203,7 +288,7 @@ function ConfigurationForm() {
                                                 mt={8}
                                                 id={'InvoiceComment'}
                                             />
-                                            <ImageUploadDropzone />
+                                            {/*<ImageUploadDropzone />*/}
                                         </Box>
                                     </ScrollArea>
                                 </Grid.Col>
@@ -220,7 +305,7 @@ function ConfigurationForm() {
                         </Box>
                         <Box  h={1} bg={`gray.3`}></Box>
                         <Box m={'md'}>
-                            <Grid columns={24}>
+                            {/*<Grid columns={24}>
                                 <Grid.Col span={'auto'}>
                                     <ScrollArea h={height} scrollbarSize={2} type="never">
                                         <Box pb={'md'}>
@@ -409,7 +494,7 @@ function ConfigurationForm() {
                                         </Box>
                                     </ScrollArea>
                                 </Grid.Col>
-                            </Grid>
+                            </Grid>*/}
                         </Box>
                     </Grid.Col>
 
@@ -432,13 +517,6 @@ function ConfigurationForm() {
                                                 id="VendorFormSubmit"
                                                 leftSection={<IconDeviceFloppy size={16}/>}
                                             >
-                                                {/*<LoadingOverlay
-                                            visible={saveCreateLoading}
-                                            zIndex={1000}
-                                            overlayProps={{radius: "xs", blur: 2}}
-                                            size={'xs'}
-                                            position="center"
-                                        />*/}
 
                                                 <Flex direction={`column`} gap={0}>
                                                     <Text fz={12} fw={400}>
@@ -455,7 +533,7 @@ function ConfigurationForm() {
                         <Box  h={1} bg={`gray.3`}></Box>
                         <Box m={'md'}>
                             <Grid columns={24}>
-                                <Grid.Col span={'auto'}>
+                                {/*<Grid.Col span={'auto'}>
                                     <ScrollArea h={height} scrollbarSize={2} type="never">
                                         <Box pb={'md'}>
                                             <InputForm
@@ -518,21 +596,6 @@ function ConfigurationForm() {
                                                 mt={8}
                                             />
 
-                                            <SelectForm
-                                                tooltip={t('ChooseCustomer')}
-                                                label={t('ChooseCustomer')}
-                                                placeholder={t('ChooseCustomer')}
-                                                required={false}
-                                                nextField={'Address'}
-                                                name={'customer_id'}
-                                                form={form}
-                                                dropdownValue={customerDropdown}
-                                                mt={8}
-                                                id={'ChooseCustomer'}
-                                                searchable={true}
-                                                value={customerData}
-                                                changeValue={setCustomerData}
-                                            />
 
 
                                             <TextAreaForm
@@ -549,7 +612,7 @@ function ConfigurationForm() {
 
                                         </Box>
                                     </ScrollArea>
-                                </Grid.Col>
+                                </Grid.Col>*/}
                                 <Grid.Col span={3}>
                                     <Shortcut
                                         form={form}
