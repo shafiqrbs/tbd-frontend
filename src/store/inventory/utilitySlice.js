@@ -12,6 +12,16 @@ export const getBusinessModelDropdown = createAsyncThunk("business-model/select"
     }
 });
 
+export const getCategoryDropdown = createAsyncThunk("category/select", async (value) => {
+    try {
+        const response = getDataWithParam(value);
+        return response;
+    } catch (error) {
+        console.log('error', error.message);
+        throw error;
+    }
+});
+
 
 const utilitySlice = createSlice({
     name : "utility",
@@ -19,6 +29,7 @@ const utilitySlice = createSlice({
         isLoading : true,
         fetching : true,
         businessModelDropdownData : [],
+        categoryDropdownData : [],
     },
     reducers : {
         setFetching : (state,action) => {
@@ -30,6 +41,10 @@ const utilitySlice = createSlice({
 
         builder.addCase(getBusinessModelDropdown.fulfilled, (state, action) => {
             state.businessModelDropdownData = action.payload.data
+        })
+
+        builder.addCase(getCategoryDropdown.fulfilled, (state, action) => {
+            state.categoryDropdownData = action.payload.data
         })
 
     }

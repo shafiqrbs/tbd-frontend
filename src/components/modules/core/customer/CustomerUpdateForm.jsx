@@ -21,7 +21,7 @@ import {
     setEditEntityData,
     setFetching, setFormLoading, setInsertType,
     updateEntityData
-} from "../../../../store/core/crudSlice.js";
+} from "../../../../store/inventory/crudSlice.js";
 
 import Shortcut from "../../shortcut/Shortcut.jsx";
 import SelectForm from "../../../form-builders/SelectForm.jsx";
@@ -175,13 +175,6 @@ function VendorUpdateForm() {
                                         id="CustomerFormSubmit"
                                         leftSection={<IconDeviceFloppy size={16}/>}
                                     >
-                                        {/*<LoadingOverlay
-                                            visible={saveCreateLoading}
-                                            zIndex={1000}
-                                            overlayProps={{radius: "xs", blur: 2}}
-                                            size={'xs'}
-                                            position="center"
-                                        />*/}
 
                                         <Flex direction={`column`} gap={0}>
                                             <Text fz={12} fw={400}>

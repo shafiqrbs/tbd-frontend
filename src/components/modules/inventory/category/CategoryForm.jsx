@@ -13,20 +13,22 @@ import {
 } from "@tabler/icons-react";
 import {useDisclosure, useHotkeys} from "@mantine/hooks";
 import {useDispatch, useSelector} from "react-redux";
-import {hasLength, useForm} from "@mantine/form";
+import {hasLength, isNotEmpty, useForm} from "@mantine/form";
 import {modals} from "@mantine/modals";
 import {notifications} from "@mantine/notifications";
 
 import {
     getCustomerDropdown,
 } from "../../../../store/core/utilitySlice";
-import {setFetching, storeEntityData} from "../../../../store/core/crudSlice.js";
+import {setDropdownLoad, setFetching,storeEntityData} from "../../../../store/inventory/crudSlice.js";
 
 import Shortcut from "../../shortcut/Shortcut";
 import InputForm from "../../../form-builders/InputForm";
 import SelectForm from "../../../form-builders/SelectForm";
 import TextAreaForm from "../../../form-builders/TextAreaForm";
 import SwitchForm from "../../../form-builders/SwitchForm";
+import CategoryGroupModal from "./CategoryGroupModal.jsx";
+import {getCategoryDropdown} from "../../../../store/inventory/utilitySlice.js";
 
 
 function CategoryForm() {
@@ -37,12 +39,23 @@ function CategoryForm() {
     const navigate = useNavigate();
     const [opened, {open, close}] = useDisclosure(false);
     const icon = <IconInfoCircle />;
-    const [customerGroupData, setCustomerGroupData] = useState(null);
+    const [categoryGroupData, setCategoryGroupData] = useState(null);
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
     const [customerData, setCustomerData] = useState(null);
 
+    const categoryDropdownData = useSelector((state) => state.inventoryUtilitySlice.categoryDropdownData)
     const customerDropdownData = useSelector((state) => state.utilitySlice.customerDropdownData)
+    const fetching = useSelector((state) => state.inventoryCrudSlice.fetching)
+    const dropdownLoad = useSelector((state) => state.inventoryCrudSlice.dropdownLoad)
+
     const formLoading = useSelector((state) => state.crudSlice.formLoading)
+
+    // console.log(categoryDropdownData)
+
+    let categoryDropdown = categoryDropdownData && categoryDropdownData.length > 0 ?
+        categoryDropdownData.map((type, index) => {
+            return ({'label': type.name, 'value': String(type.id)})
+        }) : []
 
     let customerDropdown = customerDropdownData && customerDropdownData.length > 0 ?
         customerDropdownData.map((type, index) => {
@@ -51,18 +64,24 @@ function CategoryForm() {
 
     useEffect(() => {
         dispatch(getCustomerDropdown('core/select/customer'))
-    }, []);
+
+        const value = {
+            url : 'inventory/select/category-group',
+            param : {
+                type : 'parent'
+            }
+        }
+        dispatch(getCategoryDropdown(value))
+        dispatch(setDropdownLoad(false))
+    }, [dropdownLoad]);
 
     const form = useForm({
         initialValues: {
-            company_name: '', name: '', mobile: '', tp_percent: '', email: ''
+            parent: '', name: '', status: true
         },
         validate: {
-            company_name: hasLength({min: 2, max: 20}),
+            parent: isNotEmpty(),
             name: hasLength({min: 2, max: 20}),
-            mobile: (value) => (!/^\d+$/.test(value)),
-            // tp_percent: (value) => (value && !/^\d*\.?\d*$/.test(value)),
-            // email: (value) => (value && !/^\S+@\S+$/.test(value)),
         }
     });
 
@@ -96,10 +115,9 @@ function CategoryForm() {
                     onConfirm: () => {
 
                         const value = {
-                            url: 'vendor',
-                            data: values
+                            url : 'inventory/category-group',
+                            data : form.values
                         }
-
                         dispatch(storeEntityData(value))
 
                         notifications.show({
@@ -113,7 +131,7 @@ function CategoryForm() {
 
                         setTimeout(() => {
                             form.reset()
-                            setCustomerData(null)
+                            setCategoryGroupData(null)
                             dispatch(setFetching(true))
                         }, 700)
                     },
@@ -122,7 +140,7 @@ function CategoryForm() {
                 <Box pb={`xs`} pl={`xs`} pr={8}>
                     <Grid>
                         <Grid.Col span={6} h={54}>
-                            <Title order={6} mt={'xs'} pl={'6'}>{t('CategoryGroupInformation')}</Title>
+                            <Title order={6} mt={'xs'} pl={'6'}>{t('CategoryInformation')}</Title>
                         </Grid.Col>
                         <Grid.Col span={6}>
                             <Group mr={'md'} pos={`absolute`} right={0}  gap={0}>
@@ -158,31 +176,37 @@ function CategoryForm() {
                                 <Grid gutter={{base: 6}}>
                                     <Grid.Col span={10}>
                                         <SelectForm
-                                            tooltip={t('CategoryGroup')}
+                                            tooltip={t('ChooseCategoryGroup')}
                                             label={t('CategoryGroup')}
                                             placeholder={t('ChooseCategoryGroup')}
                                             required={true}
                                             nextField={'name'}
-                                            name={'category_group'}
+                                            name={'parent'}
                                             form={form}
-                                            dropdownValue={["Family", "Local"]}
+                                            dropdownValue={categoryDropdown}
                                             mt={8}
                                             id={'category_group'}
                                             searchable={false}
-                                            value={customerGroupData}
-                                            changeValue={setCustomerGroupData}
+                                            value={categoryGroupData}
+                                            changeValue={setCategoryGroupData}
                                         />
 
                                     </Grid.Col>
-                                    <Grid.Col span={2}><Button mt={32} color={'gray'} variant={'outline'}
-                                                               onClick={open}><IconPlus size={16}
-                                                                                        opacity={0.5}/></Button></Grid.Col>
+                                    <Grid.Col span={2}>
+                                        <Button
+                                            mt={32}
+                                            color={'gray'}
+                                            variant={'outline'}
+                                            onClick={open}>
+                                            <IconPlus size={12} opacity={0.5}
+                                        /></Button>
+                                    </Grid.Col>
                                     {opened &&
-                                    <CustomerGroupModel openedModel={opened} open={open} close={close}/>
+                                    <CategoryGroupModal openedModel={opened} open={open} close={close}/>
                                     }
                                 </Grid>
                                 <InputForm
-                                    tooltip={t('CompanyNameValidateMessage')}
+                                    tooltip={t('CategoryNameValidateMessage')}
                                     label={t('CategoryName')}
                                     placeholder={t('CategoryName')}
                                     required={true}
@@ -194,18 +218,16 @@ function CategoryForm() {
                                 />
 
                                 <SwitchForm
-                                        tooltip={t('Status')}
-                                        label={t('Status')}
-                                        nextField={'VendorFormSubmit'}
-                                        name={'status'}
-                                        form={form}
-                                        mt={12}
-                                        id={'status'}
-                                        position={'left'}
-                                        // defaultChecked={!!(formLoading && entityEditData.status === 1)}
-                                        defaultChecked={1}
-                                    />
-
+                                    tooltip={t('Status')}
+                                    label={t('Status')}
+                                    nextField={'VendorFormSubmit'}
+                                    name={'status'}
+                                    form={form}
+                                    mt={12}
+                                    id={'status'}
+                                    position={'left'}
+                                    defaultChecked={1}
+                                />
 
                             </Box>
                         </ScrollArea>

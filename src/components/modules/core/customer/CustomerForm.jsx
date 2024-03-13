@@ -25,6 +25,7 @@ import Shortcut from "../../shortcut/Shortcut";
 import InputForm from "../../../form-builders/InputForm";
 import SelectForm from "../../../form-builders/SelectForm";
 import TextAreaForm from "../../../form-builders/TextAreaForm";
+import CustomerGroupModel from "./CustomerGroupModal.jsx";
 
 function CustomerForm() {
     const {t, i18n} = useTranslation();

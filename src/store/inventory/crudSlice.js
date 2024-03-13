@@ -8,8 +8,36 @@ import {
     updateData
 } from "../../services/inventoryApiService.js";
 
+export const getIndexEntityData = createAsyncThunk("index", async (value) => {
+    try {
+        const response = getDataWithParam(value);
+        return response;
+    } catch (error) {
+        console.log('error', error.message);
+        throw error;
+    }
+});
+export const storeEntityData = createAsyncThunk("store", async (value) => {
+    try {
+        const response = createData(value);
+        return response;
+    } catch (error) {
+        console.log('error', error.message);
+        throw error;
+    }
+});
 
-export const getShowEntityData = createAsyncThunk("show", async (value) => {
+export const editEntityData = createAsyncThunk("edit", async (value) => {
+    try {
+        const response = editData(value);
+        return response;
+    } catch (error) {
+        console.log('error', error.message);
+        throw error;
+    }
+});
+
+export const getShowEntityData = createAsyncThunk("config/show", async (value) => {
     try {
         const response = showData(value);
         return response;
@@ -19,6 +47,15 @@ export const getShowEntityData = createAsyncThunk("show", async (value) => {
     }
 });
 
+export const showEntityData = createAsyncThunk("show", async (value) => {
+    try {
+        const response = showData(value);
+        return response;
+    } catch (error) {
+        console.log('error', error.message);
+        throw error;
+    }
+});
 
 export const updateEntityData = createAsyncThunk("update", async (value) => {
     try {
@@ -38,19 +75,63 @@ const crudSlice = createSlice({
         showEntityData : [],
         validation : false,
         validationMessage : [],
+        entityNewData : [],
+        dropdownLoad : false,
+        searchKeyword : '',
+        indexEntityData : [],
+        entityEditData : [],
+        insertType : 'create',
     },
     reducers : {
         setFetching : (state,action) => {
             state.fetching = action.payload
         },
+        setDropdownLoad : (state,action) => {
+            state.dropdownLoad = action.payload
+        },
         setFormLoading : (state,action) => {
             state.formLoading = action.payload
-        }
+        },
+        setEntityNewData : (state,action) => {
+            state.entityNewData = action.payload
+        },
+        setEditEntityData : (state,action)=>{
+            state.entityEditData = action.payload
+        },
+        setInsertType : (state,action)=>{
+            state.insertType = action.payload
+        },
+
+        setSearchKeyword : (state,action)=>{
+            state.searchKeyword = action.payload
+        },
     },
 
     extraReducers : (builder) => {
 
+        builder.addCase(getIndexEntityData.fulfilled, (state, action) => {
+            state.indexEntityData = action.payload
+            state.fetching = false
+        })
+
+        builder.addCase(storeEntityData.fulfilled, (state, action) => {
+            if ('success' === action.payload.data.message){
+                state.entityNewData = action.payload.data
+            }else{
+                state.validationMessage = action.payload.data.data
+                state.validation = true
+            }
+        })
+
+        builder.addCase(editEntityData.fulfilled, (state, action) => {
+            state.entityEditData = action.payload.data.data
+        })
+
         builder.addCase(getShowEntityData.fulfilled, (state, action) => {
+            state.showEntityData = action.payload.data.data
+        })
+
+        builder.addCase(showEntityData.fulfilled, (state, action) => {
             state.showEntityData = action.payload.data.data
         })
 
@@ -66,6 +147,6 @@ const crudSlice = createSlice({
     }
 })
 
-export const { setFetching} = crudSlice.actions
+export const { setFetching,setEntityNewData,setDropdownLoad,setEditEntityData,setFormLoading,setInsertType,setSearchKeyword} = crudSlice.actions
 
 export default crudSlice.reducer;

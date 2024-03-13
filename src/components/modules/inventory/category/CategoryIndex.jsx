@@ -20,7 +20,7 @@ function CategoryIndex() {
     const {t, i18n} = useTranslation();
     const dispatch = useDispatch();
 
-    const insertType = useSelector((state) => state.crudSlice.insertType)
+    const insertType = useSelector((state) => state.inventoryCrudSlice.insertType)
     const vendorFilterData = useSelector((state) => state.crudSlice.vendorFilterData)
 
     const [progress, setProgress] = useState(0);
@@ -39,12 +39,12 @@ function CategoryIndex() {
     useEffect(() => {
         dispatch(setInsertType('create'))
         dispatch(setSearchKeyword(''))
-        dispatch(setVendorFilterData({
+        /*dispatch(setVendorFilterData({
             ...vendorFilterData,
             ['name']: '',
             ['mobile']:'',
             ['company_name']:''
-        }))
+        }))*/
     }, [])
 
     return (
@@ -56,7 +56,7 @@ function CategoryIndex() {
                     <Box pl={`md`} pr={8} pb={'8'} pt={'6'} bg={'gray.1'}>
                         <Grid>
                             <Grid.Col span={12}>
-                                <Title order={6} pl={'md'} fz={'18'} c={'indigo.4'}>{t('VendorInformation')}</Title>
+                                <Title order={6} pl={'md'} fz={'18'} c={'indigo.4'}>{t('Category    Information')}</Title>
                             </Grid.Col>
                         </Grid>
                     </Box>

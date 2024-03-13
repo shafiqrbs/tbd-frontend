@@ -15,7 +15,7 @@ import {
     setFetching, setFormLoading,
     setInsertType,
     showEntityData
-} from "../../../../store/core/crudSlice.js";
+} from "../../../../store/inventory/crudSlice.js";
 import KeywordSearch from "../../filter/KeywordSearch";
 import {modals} from "@mantine/modals";
 import {deleteEntityData} from "../../../../store/core/crudSlice";
@@ -31,21 +31,18 @@ function CategoryTable() {
     const [page,setPage] = useState(1);
     const [vendorViewModel,setVendorViewModel] = useState(false)
 
-    const fetching = useSelector((state) => state.crudSlice.fetching)
+    const fetching = useSelector((state) => state.inventoryCrudSlice.fetching)
     const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword)
-    const indexData = useSelector((state) => state.crudSlice.indexEntityData)
-    const vendorFilterData = useSelector((state) => state.crudSlice.vendorFilterData)
+    const indexData = useSelector((state) => state.inventoryCrudSlice.indexEntityData)
 
 
 
     useEffect(() => {
         const value = {
-            url: 'vendor',
+            url: 'inventory/category-group',
             param: {
                 term: searchKeyword,
-                name: vendorFilterData.name,
-                mobile: vendorFilterData.mobile,
-                company_name: vendorFilterData.company_name,
+                type: 'category',
                 page: page,
                 offset : perPage
             }
@@ -58,7 +55,7 @@ function CategoryTable() {
             <Box>
                 <Box bg={`white`}  >
                     <Box pt={'xs'} pb={`xs`} pl={`md`} pr={'xl'} >
-                        <KeywordSearch module={'vendor'}/>
+                        <KeywordSearch module={'category'}/>
                     </Box>
                 </Box>
                 <Box bg={`white`}>
@@ -74,16 +71,15 @@ function CategoryTable() {
                                     textAlignment: 'right',
                                     render: (item) => (indexData.data.indexOf(item) + 1)
                                 },
+                                { accessor: 'parent_name',  title: "Parent Name" },
                                 { accessor: 'name',  title: "Name" },
-                                { accessor: 'company_name',  title: "Company Name" },
-                                { accessor: 'mobile',  title: "Mobile" },
                                 {
                                     accessor: "action",
                                     title: "Action",
                                     textAlign: "right",
                                     render: (data) => (
                                         <Group gap={4} justify="right" wrap="nowrap">
-                                            <ActionIcon
+                                            {/*<ActionIcon
                                                 size="sm"
                                                 variant="subtle"
                                                 color="green"
@@ -93,20 +89,20 @@ function CategoryTable() {
                                                 }}
                                             >
                                                 <IconEye size={16}/>
-                                            </ActionIcon>
+                                            </ActionIcon>*/}
                                             <ActionIcon
                                                 size="sm"
                                                 variant="subtle"
                                                 color="blue"
                                                 onClick={() => {
                                                     dispatch(setInsertType('update'))
-                                                    dispatch(editEntityData('vendor/' + data.id))
+                                                    dispatch(editEntityData('inventory/category-group/' + data.id))
                                                     dispatch(setFormLoading(true))
                                                 }}
                                             >
                                                 <IconEdit size={16}/>
                                             </ActionIcon>
-                                            <ActionIcon
+                                            {/*<ActionIcon
                                                 size="sm"
                                                 variant="subtle"
                                                 color="red"
@@ -128,7 +124,7 @@ function CategoryTable() {
                                                 }}
                                             >
                                                 <IconTrash size={16}/>
-                                            </ActionIcon>
+                                            </ActionIcon>*/}
                                         </Group>
                                     ),
                                 },
