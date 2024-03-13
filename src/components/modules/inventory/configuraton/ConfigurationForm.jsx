@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import {useNavigate, useOutletContext} from "react-router-dom";
 import {
     Button,
-    rem, Flex,
+    rem, Flex,Switch,
     Grid, Box, ScrollArea, Group, Text, Title
 } from "@mantine/core";
 import {useTranslation} from 'react-i18next';
