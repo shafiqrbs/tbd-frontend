@@ -43,6 +43,8 @@ function Navbar() {
                 childrenOffset={28}
             >
                 <NavLink href="config" label="Configuration" component="button" onClick={(e)=>{navigate('inventory/config')}}  />
+                <NavLink href="inventory/category-group" label={t('CategoryGroup')} component="button" onClick={(e)=>{navigate('inventory/category-group')}}  />
+                <NavLink href="inventory/category" label={t('Category')} component="button" onClick={(e)=>{navigate('inventory/category')}}  />
             </NavLink>
             <NavLink
                 href="#required-for-focus"

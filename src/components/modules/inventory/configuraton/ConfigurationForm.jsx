@@ -220,113 +220,11 @@ function ConfigurationForm() {
                         <Box  h={1} bg={`gray.3`}></Box>
                         <Box m={'md'}>
                             <Grid columns={24}>
-                                <Grid.Col span={'auto'}>
-                                    <ScrollArea h={height} scrollbarSize={2} type="never">
-                                        <Box pb={'md'}>
 
-                                            <SelectForm
-                                                tooltip={t('ChooseBusinessModel')}
-                                                label={t('BusinessModel')}
-                                                placeholder={t('ChooseBusinessModel')}
-                                                required={true}
-                                                nextField={'VatPercent'}
-                                                name={'business_model_id'}
-                                                form={form}
-                                                dropdownValue={businessModelDropdown}
-                                                mt={0}
-                                                id={'BusinessModel'}
-                                                searchable={true}
-                                                value={businessModelData ? String(businessModelData) : (showEntityData.business_model_id ? String(showEntityData.business_model_id) : null)}
-                                                changeValue={setBusinessModelData}
-                                            />
-
-
-                                            <InputForm
-                                                tooltip={t('VatPercentValidateMessage')}
-                                                label={t('VatPercent')}
-                                                placeholder={t('VatPercent')}
-                                                form={form}
-                                                required={false}
-                                                name={'vat_percent'}
-                                                id={'VatPercent'}
-                                                nextField={'AITPercent'}
-                                                mt={8}
-                                            />
-
-                                            <InputForm
-                                                tooltip={t('AITPercentValidateMessage')}
-                                                label={t('AITPercent')}
-                                                placeholder={t('AITPercent')}
-                                                required={false}
-                                                name={'ait_percent'}
-                                                form={form}
-                                                mt={8}
-                                                id={'AITPercent'}
-                                                nextField={'Address'}
-                                            />
-
-                                            <TextAreaForm
-                                                form={form}
-                                                tooltip={t('AddressValidateMessage')}
-                                                label={t('Address')}
-                                                placeholder={t('Address')}
-                                                required={false}
-                                                name={'address'}
-                                                id={'Address'}
-                                                nextField={'InvoiceComment'}
-                                                mt={8}
-                                            />
-
-                                            <TextAreaForm
-                                                tooltip={t('InvoiceCommentValidateMessage')}
-                                                label={t('InvoiceComment')}
-                                                placeholder={t('InvoiceComment')}
-                                                required={false}
-                                                nextField={'InvoiceComment'}
-                                                name={'invoice_comment'}
-                                                form={form}
-                                                mt={8}
-                                                id={'InvoiceComment'}
-                                            />
-                                            {/*<ImageUploadDropzone />*/}
-                                        </Box>
-                                    </ScrollArea>
-                                </Grid.Col>
                             </Grid>
                         </Box>
                     </Grid.Col>
-                    <Grid.Col span={2}>
-                        <Box pb={`xs`} pl={`xs`} pr={8}>
-                            <Grid>
-                                <Grid.Col span={12} h={54}>
-                                    <Title order={6} mt={'xs'} pl={'6'}>{t('VendorInformation')}</Title>
-                                </Grid.Col>
-                            </Grid>
-                        </Box>
-                        <Box  h={1} bg={`gray.3`}></Box>
-                        <Box m={'md'}>
-                            <Grid columns={24}>
-                                <Grid.Col span={'auto'}>
-                                    <ScrollArea h={height} scrollbarSize={2} type="never">
-                                        <Box pb={'md'}>
-                                            <Switch
-                                                defaultChecked={'false'}
-                                                labelPosition={'right'}
-                                                mt={'8'}
-                                                label={'PrintSetup'}
-                                                size="md"
-                                                radius="sm"
-                                                id={'PrintSetup'}
-                                            />
-
-
-                                        </Box>
-                                    </ScrollArea>
-                                </Grid.Col>
-                            </Grid>
-                        </Box>
-                    </Grid.Col>
-                    <Grid.Col span={2}>
+                    <Grid.Col span={4}>
                         <Box pb={`xs`} pl={`xs`} pr={8}>
                             <Grid>
                                 <Grid.Col span={12} h={54}>
@@ -533,7 +431,7 @@ function ConfigurationForm() {
                         <Box pb={`xs`} pl={`xs`} pr={8}>
                             <Grid>
                                 <Grid.Col span={6} h={54}>
-                                    <Title order={6} mt={'xs'} pl={'6'}>{t('VendorInformation')}</Title>
+                                    <Title order={6} mt={'xs'} pl={'6'}>{t('ConfigurationInformation')}</Title>
                                 </Grid.Col>
                                 <Grid.Col span={6}>
                                     <Group mr={'md'} pos={`absolute`} right={0}  gap={0}>
@@ -644,6 +542,78 @@ function ConfigurationForm() {
                                         </Box>
                                     </ScrollArea>
                                 </Grid.Col>*/}
+                                <Grid.Col span={'auto'}>
+                                    <ScrollArea h={height} scrollbarSize={2} type="never">
+                                        <Box pb={'md'}>
+
+                                            <SelectForm
+                                                tooltip={t('ChooseBusinessModel')}
+                                                label={t('BusinessModel')}
+                                                placeholder={t('ChooseBusinessModel')}
+                                                required={true}
+                                                nextField={'VatPercent'}
+                                                name={'business_model_id'}
+                                                form={form}
+                                                dropdownValue={businessModelDropdown}
+                                                mt={0}
+                                                id={'BusinessModel'}
+                                                searchable={true}
+                                                value={businessModelData ? String(businessModelData) : (showEntityData.business_model_id ? String(showEntityData.business_model_id) : null)}
+                                                changeValue={setBusinessModelData}
+                                            />
+
+
+                                            <InputForm
+                                                tooltip={t('VatPercentValidateMessage')}
+                                                label={t('VatPercent')}
+                                                placeholder={t('VatPercent')}
+                                                form={form}
+                                                required={false}
+                                                name={'vat_percent'}
+                                                id={'VatPercent'}
+                                                nextField={'AITPercent'}
+                                                mt={8}
+                                            />
+
+                                            <InputForm
+                                                tooltip={t('AITPercentValidateMessage')}
+                                                label={t('AITPercent')}
+                                                placeholder={t('AITPercent')}
+                                                required={false}
+                                                name={'ait_percent'}
+                                                form={form}
+                                                mt={8}
+                                                id={'AITPercent'}
+                                                nextField={'Address'}
+                                            />
+
+                                            <TextAreaForm
+                                                form={form}
+                                                tooltip={t('AddressValidateMessage')}
+                                                label={t('Address')}
+                                                placeholder={t('Address')}
+                                                required={false}
+                                                name={'address'}
+                                                id={'Address'}
+                                                nextField={'InvoiceComment'}
+                                                mt={8}
+                                            />
+
+                                            <TextAreaForm
+                                                tooltip={t('InvoiceCommentValidateMessage')}
+                                                label={t('InvoiceComment')}
+                                                placeholder={t('InvoiceComment')}
+                                                required={false}
+                                                nextField={'InvoiceComment'}
+                                                name={'invoice_comment'}
+                                                form={form}
+                                                mt={8}
+                                                id={'InvoiceComment'}
+                                            />
+                                            {/*<ImageUploadDropzone />*/}
+                                        </Box>
+                                    </ScrollArea>
+                                </Grid.Col>
                                 <Grid.Col span={3}>
                                     <Shortcut
                                         form={form}

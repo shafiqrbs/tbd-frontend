@@ -7,6 +7,8 @@ import CustomerIndex from "./components/modules/core/customer/CustomerIndex";
 import UserIndex from "./components/modules/core/user/UserIndex";
 import VendorIndex from "./components/modules/core/vendor/VendorIndex";
 import ConfigurationIndex from "./components/modules/inventory/configuraton/ConfigurationIndex";
+import CategoryGroupIndex from "./components/modules/inventory/category-group/CategoryGroupIndex";
+import CategoryIndex from "./components/modules/inventory/category/CategoryIndex";
 function AppRoute() {
 
     return (
@@ -23,6 +25,8 @@ function AppRoute() {
                 </Route>
                 <Route path="/inventory/">
                     <Route path="config" element={<ConfigurationIndex/>}/>
+                    <Route path="category-group" element={<CategoryGroupIndex/>}/>
+                    <Route path="category" element={<CategoryIndex/>}/>
                 </Route>
             </Route>
         </Routes>
