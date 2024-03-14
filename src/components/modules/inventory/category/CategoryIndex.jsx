@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {
-    Box, Button,
-    Grid, Progress, Title
+    Box, Grid, Progress, Title
 } from "@mantine/core";
 import {useTranslation} from 'react-i18next';
 import {useDispatch, useSelector} from "react-redux";
@@ -9,20 +8,14 @@ import {useDispatch, useSelector} from "react-redux";
 import CategoryTable from "./CategoryTable";
 import CategoryForm from "./CategoryForm";
 import CategoryUpdateForm from "./CategoryUpdateForm.jsx";
-import {
-    setCustomerFilterData,
-    setInsertType,
-    setSearchKeyword,
-    setVendorFilterData
-} from "../../../../store/core/crudSlice.js";
+import {setSearchKeyword} from "../../../../store/core/crudSlice.js";
+import {setInsertType} from "../../../../store/inventory/crudSlice.js";
 
 function CategoryIndex() {
     const {t, i18n} = useTranslation();
     const dispatch = useDispatch();
 
     const insertType = useSelector((state) => state.inventoryCrudSlice.insertType)
-    const vendorFilterData = useSelector((state) => state.crudSlice.vendorFilterData)
-
     const [progress, setProgress] = useState(0);
 
     useEffect(() => {
@@ -39,12 +32,6 @@ function CategoryIndex() {
     useEffect(() => {
         dispatch(setInsertType('create'))
         dispatch(setSearchKeyword(''))
-        /*dispatch(setVendorFilterData({
-            ...vendorFilterData,
-            ['name']: '',
-            ['mobile']:'',
-            ['company_name']:''
-        }))*/
     }, [])
 
     return (
@@ -56,7 +43,8 @@ function CategoryIndex() {
                     <Box pl={`md`} pr={8} pb={'8'} pt={'6'} bg={'gray.1'}>
                         <Grid>
                             <Grid.Col span={12}>
-                                <Title order={6} pl={'md'} fz={'18'} c={'indigo.4'}>{t('Category    Information')}</Title>
+                                <Title order={6} pl={'md'} fz={'18'}
+                                       c={'indigo.4'}>{t('CategoryInformation')}</Title>
                             </Grid.Col>
                         </Grid>
                     </Box>

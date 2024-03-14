@@ -29,6 +29,8 @@ function Shortcut(props) {
                         color={`indigo`}
                         radius="xl"
                         onClick={(e) => {
+                            // props.inputType === 'select' ?
+                            // document.getElementById(props.Name).click() :
                             document.getElementById(props.Name).focus()
                         }}
                     >

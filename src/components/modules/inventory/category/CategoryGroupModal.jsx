@@ -1,24 +1,17 @@
 import React, {useEffect, useState} from "react";
 import {useOutletContext} from "react-router-dom";
 import {
-    Button,
-    Group,
-    Text,
-    Tooltip,
-    ScrollArea,
-    TextInput, Switch, Modal, LoadingOverlay, rem,
+    Button, Group, Text, ScrollArea, Modal, rem,
 } from "@mantine/core";
 import {useTranslation} from "react-i18next";
 
 import {
-    IconCheck,
-    IconInfoCircle, IconX, IconXboxX
+    IconCheck, IconXboxX
 } from "@tabler/icons-react";
-import {getHotkeyHandler} from "@mantine/hooks";
 
 import '@mantine/core/styles.css';
-import '@mantine/dates/styles.css'; //if using mantine component features
-import 'mantine-react-table/styles.css'; //make sure MRT styles were imported in your app root (once)
+import '@mantine/dates/styles.css';
+import 'mantine-react-table/styles.css';
 import {modals} from "@mantine/modals";
 import {hasLength, useForm} from "@mantine/form";
 import InputForm from "../../../form-builders/InputForm.jsx";
@@ -27,7 +20,6 @@ import {useDispatch, useSelector} from "react-redux";
 import {
     storeEntityData,
     setEntityNewData,
-    setFetching,
     setDropdownLoad
 } from "../../../../store/inventory/crudSlice.js";
 import {notifications} from "@mantine/notifications";
@@ -42,8 +34,6 @@ function CustomerGroupModel(props) {
     const validationMessage = useSelector((state) => state.inventoryCrudSlice.validationMessage)
     const validation = useSelector((state) => state.inventoryCrudSlice.validation)
     const entityNewData = useSelector((state) => state.inventoryCrudSlice.entityNewData)
-
-
 
     const formModal = useForm({
         initialValues: {
@@ -143,12 +133,10 @@ function CustomerGroupModel(props) {
                                         }
                                         dispatch(storeEntityData(value))
                                         setTimeout((e) => {
-                                            // console.log(formModal.values)
                                             setModelSubmit(false)
                                         }, 1500)
                                     },
                                 });
-
                             }}
                     >
                         Submit

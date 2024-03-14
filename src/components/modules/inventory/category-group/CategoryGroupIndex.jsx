@@ -1,28 +1,21 @@
 import React, {useEffect, useState} from "react";
 import {
-    Box, Button,
-    Grid, Progress, Title
+    Box, Grid, Progress, Title
 } from "@mantine/core";
 import {useTranslation} from 'react-i18next';
 import {useDispatch, useSelector} from "react-redux";
 
-import CategoryGroupTable from "./CategoryGroupTable";
-import CategoryGroupForm from "./CategoryGroupForm";
+import CategoryGroupTable from "./CategoryGroupTable.jsx";
+import CategoryGroupForm from "./CategoryGroupForm.jsx";
 import CategoryGroupUpdateForm from "./CategoryGroupUpdateForm.jsx";
-import {
-    setCustomerFilterData,
-    setInsertType,
-    setSearchKeyword,
-    setVendorFilterData
-} from "../../../../store/core/crudSlice.js";
+import {setSearchKeyword} from "../../../../store/core/crudSlice.js";
+import {setInsertType} from "../../../../store/inventory/crudSlice.js";
 
 function CategoryGroupIndex() {
     const {t, i18n} = useTranslation();
     const dispatch = useDispatch();
 
-    const insertType = useSelector((state) => state.crudSlice.insertType)
-    const vendorFilterData = useSelector((state) => state.crudSlice.vendorFilterData)
-
+    const insertType = useSelector((state) => state.inventoryCrudSlice.insertType)
     const [progress, setProgress] = useState(0);
 
     useEffect(() => {
@@ -39,12 +32,6 @@ function CategoryGroupIndex() {
     useEffect(() => {
         dispatch(setInsertType('create'))
         dispatch(setSearchKeyword(''))
-        dispatch(setVendorFilterData({
-            ...vendorFilterData,
-            ['name']: '',
-            ['mobile']:'',
-            ['company_name']:''
-        }))
     }, [])
 
     return (
@@ -56,7 +43,8 @@ function CategoryGroupIndex() {
                     <Box pl={`md`} pr={8} pb={'8'} pt={'6'} bg={'gray.1'}>
                         <Grid>
                             <Grid.Col span={12}>
-                                <Title order={6} pl={'md'} fz={'18'} c={'indigo.4'}>{t('VendorInformation')}</Title>
+                                <Title order={6} pl={'md'} fz={'18'}
+                                       c={'indigo.4'}>{t('ManageCategoryGroupInformation')}</Title>
                             </Grid.Col>
                         </Grid>
                     </Box>

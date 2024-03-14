@@ -1,70 +1,44 @@
-import React, {useEffect, useState} from "react";
-import {useNavigate, useOutletContext} from "react-router-dom";
+import React, {useState} from "react";
+import {useOutletContext} from "react-router-dom";
 import {
-    Button,
-    rem, Flex,
-    Grid, Box, ScrollArea, Tooltip, Group, Text, LoadingOverlay, Title,
+    Button, rem, Flex, Grid, Box, ScrollArea, Group, Text, Title
 } from "@mantine/core";
 import {useTranslation} from 'react-i18next';
 import {
     IconCheck,
     IconDeviceFloppy,
-    IconRestore,
 } from "@tabler/icons-react";
 import {useHotkeys} from "@mantine/hooks";
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch} from "react-redux";
 import {hasLength, useForm} from "@mantine/form";
 import {modals} from "@mantine/modals";
 import {notifications} from "@mantine/notifications";
 
-import {
-    getCustomerDropdown,
-} from "../../../../store/core/utilitySlice";
-import {setFetching, storeEntityData} from "../../../../store/core/crudSlice.js";
+import {setFetching, storeEntityData} from "../../../../store/inventory/crudSlice.js";
 
 import Shortcut from "../../shortcut/Shortcut";
 import InputForm from "../../../form-builders/InputForm";
-import SelectForm from "../../../form-builders/SelectForm";
-import TextAreaForm from "../../../form-builders/TextAreaForm";
 import SwitchForm from "../../../form-builders/SwitchForm";
+
 
 function CategoryGroupForm() {
     const {t, i18n} = useTranslation();
     const dispatch = useDispatch();
     const {isOnline, mainAreaHeight} = useOutletContext();
     const height = mainAreaHeight - 116; //TabList height 104
-    const navigate = useNavigate();
-
-    const [saveCreateLoading, setSaveCreateLoading] = useState(false);
-    const [customerData, setCustomerData] = useState(null);
-
-    const customerDropdownData = useSelector((state) => state.utilitySlice.customerDropdownData)
-    const formLoading = useSelector((state) => state.crudSlice.formLoading)
-
-    let customerDropdown = customerDropdownData && customerDropdownData.length > 0 ?
-        customerDropdownData.map((type, index) => {
-            return ({'label': type.name, 'value': String(type.id)})
-        }) : []
-
-    useEffect(() => {
-        dispatch(getCustomerDropdown('core/select/customer'))
-    }, []);
+    const [saveCreateLoading, setSaveCreateLoading] = useState(false)
 
     const form = useForm({
         initialValues: {
-            company_name: '', name: '', mobile: '', tp_percent: '', email: ''
+            name: '', status: true
         },
         validate: {
-            company_name: hasLength({min: 2, max: 20}),
             name: hasLength({min: 2, max: 20}),
-            mobile: (value) => (!/^\d+$/.test(value)),
-            // tp_percent: (value) => (value && !/^\d*\.?\d*$/.test(value)),
-            // email: (value) => (value && !/^\S+@\S+$/.test(value)),
         }
     });
 
     useHotkeys([['alt+n', () => {
-        document.getElementById('CompanyName').focus()
+        document.getElementById('name').focus()
     }]], []);
 
     useHotkeys([['alt+r', () => {
@@ -72,7 +46,7 @@ function CategoryGroupForm() {
     }]], []);
 
     useHotkeys([['alt+s', () => {
-        document.getElementById('VendorFormSubmit').click()
+        document.getElementById('CategoryFormSubmit').click()
     }]], []);
 
 
@@ -80,23 +54,20 @@ function CategoryGroupForm() {
         <Box bg={"white"} mt={`xs`}>
             <form onSubmit={form.onSubmit((values) => {
                 modals.openConfirmModal({
-                    title: 'Please confirm your action',
+                    title: (
+                        <Text size="md"> {t("FormConfirmationTitle")}</Text>
+                    ),
                     children: (
-                        <Text size="sm">
-                            This action is so important that you are required to confirm it with a
-                            modal. Please click
-                            one of these buttons to proceed.
-                        </Text>
+                        <Text size="sm"> {t("FormConfirmationMessage")}</Text>
                     ),
                     labels: {confirm: 'Confirm', cancel: 'Cancel'},
                     onCancel: () => console.log('Cancel'),
                     onConfirm: () => {
-
+                        setSaveCreateLoading(true)
                         const value = {
-                            url: 'vendor',
-                            data: values
+                            url: 'inventory/category-group',
+                            data: form.values
                         }
-
                         dispatch(storeEntityData(value))
 
                         notifications.show({
@@ -110,7 +81,7 @@ function CategoryGroupForm() {
 
                         setTimeout(() => {
                             form.reset()
-                            setCustomerData(null)
+                            setSaveCreateLoading(false)
                             dispatch(setFetching(true))
                         }, 700)
                     },
@@ -122,77 +93,75 @@ function CategoryGroupForm() {
                             <Title order={6} mt={'xs'} pl={'6'}>{t('CategoryGroupInformation')}</Title>
                         </Grid.Col>
                         <Grid.Col span={6}>
-                            <Group mr={'md'} pos={`absolute`} right={0}  gap={0}>
+                            <Group mr={'md'} pos={`absolute`} right={0} gap={0}>
                                 <>
-                                    {!saveCreateLoading &&
+                                    {!saveCreateLoading && isOnline &&
                                         <Button
-                                        size="xs"
-                                        color={`indigo.6`}
-                                        type="submit"
-                                        mt={4}
-                                        mr={'xs'}
-                                        id="VendorFormSubmit"
-                                        leftSection={<IconDeviceFloppy size={16}/>}
-                                    >
-                                        <Flex direction={`column`} gap={0}>
-                                            <Text fz={12} fw={400}>
-                                                {t("CreateAndSave")}
-                                            </Text>
-                                        </Flex>
-                                    </Button>
+                                            size="xs"
+                                            color={`indigo.6`}
+                                            type="submit"
+                                            mt={4}
+                                            mr={'xs'}
+                                            id="CategoryFormSubmit"
+                                            leftSection={<IconDeviceFloppy size={16}/>}
+                                        >
+                                            <Flex direction={`column`} gap={0}>
+                                                <Text fz={12} fw={400}>
+                                                    {t("CreateAndSave")}
+                                                </Text>
+                                            </Flex>
+                                        </Button>
                                     }
                                 </>
                             </Group>
                         </Grid.Col>
                     </Grid>
                 </Box>
-                <Box  h={1} bg={`gray.3`}></Box>
+                <Box h={1} bg={`gray.3`}></Box>
                 <Box m={'md'}>
-                 <Grid columns={24}>
-                    <Grid.Col span={'auto'}>
-                        <ScrollArea h={height} scrollbarSize={2} type="never">
-                            <Box pb={'md'}>
-                                <InputForm
-                                    tooltip={t('CompanyNameValidateMessage')}
-                                    label={t('CategoryGroupName')}
-                                    placeholder={t('CategoryGroupName')}
-                                    required={true}
-                                    nextField={'CategoryGroupName'}
-                                    form={form}
-                                    name={'name'}
-                                    mt={0}
-                                    id={'name'}
-                                />
+                    <Grid columns={24}>
+                        <Grid.Col span={'auto'}>
+                            <ScrollArea h={height} scrollbarSize={2} type="never">
+                                <Box pb={'md'}>
 
-                                <SwitchForm
+                                    <InputForm
+                                        tooltip={t('CategoryGroupNameValidateMessage')}
+                                        label={t('CategoryGroupName')}
+                                        placeholder={t('CategoryGroupName')}
+                                        required={true}
+                                        nextField={'status'}
+                                        form={form}
+                                        name={'name'}
+                                        mt={8}
+                                        id={'name'}
+                                    />
+
+                                    <SwitchForm
                                         tooltip={t('Status')}
                                         label={t('Status')}
-                                        nextField={'VendorFormSubmit'}
+                                        nextField={'CategoryFormSubmit'}
                                         name={'status'}
                                         form={form}
                                         mt={12}
-                                        id={'Status'}
+                                        id={'status'}
                                         position={'left'}
-                                        // defaultChecked={!!(formLoading && entityEditData.status === 1)}
                                         defaultChecked={1}
                                     />
-
-
-                            </Box>
-                        </ScrollArea>
-                    </Grid.Col>
-                    <Grid.Col span={3}>
-                        <Shortcut
-                            form={form}
-                            FormSubmit={'VendorFormSubmit'}
-                            Name={'CompanyName'}
-                        />
-                    </Grid.Col>
-                </Grid>
+                                </Box>
+                            </ScrollArea>
+                        </Grid.Col>
+                        <Grid.Col span={3}>
+                            <Shortcut
+                                form={form}
+                                FormSubmit={'CategoryFormSubmit'}
+                                Name={'name'}
+                            />
+                        </Grid.Col>
+                    </Grid>
                 </Box>
             </form>
         </Box>
-
     );
 }
+
 export default CategoryGroupForm;

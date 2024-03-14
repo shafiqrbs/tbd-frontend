@@ -1,15 +1,11 @@
 import React, {useEffect, useState} from "react";
 import {useOutletContext} from "react-router-dom";
 import {
-    Button,
-    rem,
-    Grid, Box, ScrollArea, Tooltip, Group, Text, LoadingOverlay, Title, Flex,
+    Button, rem, Grid, Box, ScrollArea, Group, Text, Title, Flex,
 } from "@mantine/core";
 import {useTranslation} from 'react-i18next';
 import {
-    IconCheck,
-    IconDeviceFloppy,
-    IconRestore, IconPencilBolt, IconPlus
+    IconCheck, IconPencilBolt, IconPlus
 } from "@tabler/icons-react";
 import {useDisclosure, useHotkeys} from "@mantine/hooks";
 import InputForm from "../../../form-builders/InputForm";
@@ -22,14 +18,12 @@ import {
     setEditEntityData,
     setFetching, setFormLoading, setInsertType,
     updateEntityData
-} from "../../../../store/core/crudSlice.js";
-import {getCustomerDropdown} from "../../../../store/core/utilitySlice.js";
+} from "../../../../store/inventory/crudSlice.js";
+import {getCategoryDropdown} from "../../../../store/inventory/utilitySlice.js";
+import {setDropdownLoad} from "../../../../store/inventory/crudSlice.js";
 
 import Shortcut from "../../shortcut/Shortcut.jsx";
 import SelectForm from "../../../form-builders/SelectForm.jsx";
-import TextAreaForm from "../../../form-builders/TextAreaForm.jsx";
-import {getCategoryDropdown} from "../../../../store/inventory/utilitySlice.js";
-import {setDropdownLoad} from "../../../../store/inventory/crudSlice.js";
 import CategoryGroupModal from "./CategoryGroupModal.jsx";
 import SwitchForm from "../../../form-builders/SwitchForm.jsx";
 
@@ -41,19 +35,14 @@ function CategoryUpdateForm() {
 
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
     const [setFormData, setFormDataForUpdate] = useState(false);
-    const [formLoad, setFormLoad] = useState(true);
-    const [customerData, setCustomerData] = useState(null);
     const [opened, {open, close}] = useDisclosure(false);
-
-
-    const customerDropdownData = useSelector((state) => state.utilitySlice.customerDropdownData)
-    const entityEditData = useSelector((state) => state.inventoryCrudSlice.entityEditData)
-    const formLoading = useSelector((state) => state.crudSlice.formLoading)
     const [categoryGroupData, setCategoryGroupData] = useState(null);
 
-
+    const entityEditData = useSelector((state) => state.inventoryCrudSlice.entityEditData)
+    const formLoading = useSelector((state) => state.crudSlice.formLoading)
     const dropdownLoad = useSelector((state) => state.inventoryCrudSlice.dropdownLoad)
     const categoryDropdownData = useSelector((state) => state.inventoryUtilitySlice.categoryDropdownData)
+
     let categoryDropdown = categoryDropdownData && categoryDropdownData.length > 0 ?
         categoryDropdownData.map((type, index) => {
             return ({'label': type.name, 'value': String(type.id)})
@@ -61,16 +50,14 @@ function CategoryUpdateForm() {
 
     useEffect(() => {
         const value = {
-            url : 'inventory/select/category-group',
-            param : {
-                type : 'parent'
+            url: 'inventory/select/category-group',
+            param: {
+                type: 'parent'
             }
         }
         dispatch(getCategoryDropdown(value))
         dispatch(setDropdownLoad(false))
     }, [dropdownLoad]);
-
-
 
     const form = useForm({
         initialValues: {
@@ -83,21 +70,19 @@ function CategoryUpdateForm() {
     });
 
     useEffect(() => {
-        setFormLoad(true)
         setFormDataForUpdate(true)
     }, [dispatch, formLoading])
 
     useEffect(() => {
 
         form.setValues({
-            parent: entityEditData.parent?entityEditData.parent:'',
-            name: entityEditData.name?entityEditData.name:'',
-            status: entityEditData.status?entityEditData.status:''
+            parent: entityEditData.parent ? entityEditData.parent : '',
+            name: entityEditData.name ? entityEditData.name : '',
+            status: entityEditData.status ? entityEditData.status : ''
         })
 
         dispatch(setFormLoading(false))
         setTimeout(() => {
-            setFormLoad(false)
             setFormDataForUpdate(false)
         }, 500)
 
@@ -105,7 +90,7 @@ function CategoryUpdateForm() {
 
 
     useHotkeys([['alt+n', () => {
-        document.getElementById('Name').focus()
+        document.getElementById('category_group').click()
     }]], []);
 
     useHotkeys([['alt+r', () => {
@@ -113,7 +98,7 @@ function CategoryUpdateForm() {
     }]], []);
 
     useHotkeys([['alt+s', () => {
-        document.getElementById('UserFormSubmit').click()
+        document.getElementById('CategoryFormSubmit').click()
     }]], []);
 
 
@@ -121,13 +106,11 @@ function CategoryUpdateForm() {
         <Box bg={"white"} mt={`xs`}>
             <form onSubmit={form.onSubmit((values) => {
                 modals.openConfirmModal({
-                    title: 'Please confirm your action',
+                    title: (
+                        <Text size="md"> {t("FormConfirmationTitle")}</Text>
+                    ),
                     children: (
-                        <Text size="sm">
-                            This action is so important that you are required to confirm it with a
-                            modal. Please click
-                            one of these buttons to proceed.
-                        </Text>
+                        <Text size="sm"> {t("FormConfirmationMessage")}</Text>
                     ),
                     labels: {confirm: 'Confirm', cancel: 'Cancel'},
                     onCancel: () => console.log('Cancel'),
@@ -142,7 +125,7 @@ function CategoryUpdateForm() {
 
                         notifications.show({
                             color: 'teal',
-                            title: t('CreateSuccessfully'),
+                            title: t('UpdateSuccessfully'),
                             icon: <IconCheck style={{width: rem(18), height: rem(18)}}/>,
                             loading: false,
                             autoClose: 700,
@@ -162,28 +145,28 @@ function CategoryUpdateForm() {
                 <Box pb={`xs`} pl={`xs`} pr={8}>
                     <Grid>
                         <Grid.Col span={6} h={54}>
-                            <Title order={6} mt={'xs'} pl={'6'}>{t('VendorInformation')}</Title>
+                            <Title order={6} mt={'xs'} pl={'6'}>{t('CategoryInformation')}</Title>
                         </Grid.Col>
                         <Grid.Col span={6}>
                             <Group mr={'md'} pos={`absolute`} right={0} gap={0}>
                                 <>
-                                    {!saveCreateLoading &&
+                                    {!saveCreateLoading && isOnline &&
                                         <Button
-                                        size="xs"
-                                        color={`indigo.6`}
-                                        type="submit"
-                                        mt={4}
-                                        mr={'xs'}
-                                        id="VendorFormSubmit"
-                                        leftSection={<IconPencilBolt size={16}/>}
-                                    >
+                                            size="xs"
+                                            color={`indigo.6`}
+                                            type="submit"
+                                            mt={4}
+                                            mr={'xs'}
+                                            id="CategoryFormSubmit"
+                                            leftSection={<IconPencilBolt size={16}/>}
+                                        >
 
-                                        <Flex direction={`column`} gap={0}>
-                                            <Text fz={12} fw={400}>
-                                                {t("EditAndSave")}
-                                            </Text>
-                                        </Flex>
-                                    </Button>
+                                            <Flex direction={`column`} gap={0}>
+                                                <Text fz={12} fw={400}>
+                                                    {t("EditAndSave")}
+                                                </Text>
+                                            </Flex>
+                                        </Button>
                                     }
                                 </>
                             </Group>
@@ -211,7 +194,6 @@ function CategoryUpdateForm() {
                                                 id={'category_group'}
                                                 searchable={false}
                                                 value={categoryGroupData ? String(categoryGroupData) : (entityEditData.parent ? String(entityEditData.parent) : null)}
-
                                                 changeValue={setCategoryGroupData}
                                             />
 
@@ -244,13 +226,13 @@ function CategoryUpdateForm() {
                                     <SwitchForm
                                         tooltip={t('Status')}
                                         label={t('Status')}
-                                        nextField={'VendorFormSubmit'}
+                                        nextField={'CategoryFormSubmit'}
                                         name={'status'}
                                         form={form}
                                         mt={12}
                                         id={'status'}
                                         position={'left'}
-                                        defaultChecked={1}
+                                        checked={form.values.status}
                                     />
 
                                 </Box>
@@ -259,8 +241,9 @@ function CategoryUpdateForm() {
                         <Grid.Col span={3}>
                             <Shortcut
                                 form={form}
-                                FormSubmit={'VendorFormSubmit'}
-                                Name={'CompanyName'}
+                                FormSubmit={'CategoryFormSubmit'}
+                                Name={'category_group'}
+                                inputType={'select'}
                             />
                         </Grid.Col>
                     </Grid>

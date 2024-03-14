@@ -141,13 +141,20 @@
 
   "CategoryGroupModel": "Category Group Model",
   "CategoryGroup": "Category Group",
-  "CategoryGroupValidateMessage": "Category Group field must be required",
   "CategoryGroupFormSubmitConfirm": "Please confirm your action",
   "CategoryGroupFormSubmitConfirmDetails": "This action is so important that you are required to confirm it with a\nmodal. Please click\none of these buttons to proceed.",
   "CategoryInformation": "Category Information",
   "ChooseCategoryGroup": "Choose category group",
   "CategoryNameValidateMessage": "Category name field must be required",
   "CategoryName": "Category name",
+  "DeleteSuccessfully": "Delete Successfully",
+
+  "ManageCategoryGroupInformation": "Manage Category Group Information",
+  "CategoryGroupInformation": "Category Group Information",
+  "CategoryGroupName": "Category group name",
+  "CategoryGroupNameValidateMessage": "Category group name field must be required",
+  "CategoryGroupAlreadyExists": "Category group already exists",
+
 
   "" : ""
 

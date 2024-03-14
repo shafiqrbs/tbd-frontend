@@ -3,23 +3,20 @@ import {useOutletContext} from "react-router-dom";
 import {
     Group,
     Box,
-    ActionIcon, Text
+    ActionIcon, Text, rem
 } from "@mantine/core";
 import {useTranslation} from "react-i18next";
-import { IconEye, IconEdit, IconTrash} from "@tabler/icons-react";
+import {IconEdit, IconTrash, IconCheck} from "@tabler/icons-react";
 import {DataTable} from 'mantine-datatable';
 import {useDispatch, useSelector} from "react-redux";
 import {
-    editEntityData,
-    getIndexEntityData, setEditEntityData,
-    setFetching, setFormLoading,
-    setInsertType,
-    showEntityData
-} from "../../../../store/core/crudSlice.js";
+    editEntityData, getIndexEntityData, setDeleteMessage, setFetching, setFormLoading, setInsertType
+} from "../../../../store/inventory/crudSlice.js";
 import KeywordSearch from "../../filter/KeywordSearch";
 import {modals} from "@mantine/modals";
 import {deleteEntityData} from "../../../../store/core/crudSlice";
-import CategoryGroupViewModel from "./CategoryGroupViewModel.jsx";
+import {notifications} from "@mantine/notifications";
+
 function CategoryGroupTable() {
 
     const dispatch = useDispatch();
@@ -28,26 +25,52 @@ function CategoryGroupTable() {
     const height = mainAreaHeight - 100; //TabList height 104
 
     const perPage = 50;
-    const [page,setPage] = useState(1);
-    const [vendorViewModel,setVendorViewModel] = useState(false)
+    const [page, setPage] = useState(1);
 
-    const fetching = useSelector((state) => state.crudSlice.fetching)
+    const fetching = useSelector((state) => state.inventoryCrudSlice.fetching)
     const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword)
-    const indexData = useSelector((state) => state.crudSlice.indexEntityData)
-    const vendorFilterData = useSelector((state) => state.crudSlice.vendorFilterData)
+    const indexData = useSelector((state) => state.inventoryCrudSlice.indexEntityData)
+    const entityDataDelete = useSelector((state) => state.inventoryCrudSlice.entityDataDelete)
 
+
+    useEffect(() => {
+        dispatch(setDeleteMessage(''))
+        if (entityDataDelete === 'delete') {
+            notifications.show({
+                color: 'red',
+                title: t('DeleteSuccessfully'),
+                icon: <IconCheck style={{width: rem(18), height: rem(18)}}/>,
+                loading: false,
+                autoClose: 700,
+                style: {backgroundColor: 'lightgray'},
+            });
+
+            setTimeout(() => {
+                dispatch(setFetching(true))
+            }, 700)
+        }
+
+        if (entityDataDelete === 'exists') {
+            notifications.show({
+                color: 'teal',
+                title: t('CategoryGroupAlreadyExists'),
+                icon: <IconCheck style={{width: rem(18), height: rem(18)}}/>,
+                loading: false,
+                autoClose: 1000,
+                style: {backgroundColor: 'lightgray'},
+            });
+        }
+    }, [entityDataDelete]);
 
 
     useEffect(() => {
         const value = {
-            url: 'vendor',
+            url: 'inventory/category-group',
             param: {
                 term: searchKeyword,
-                name: vendorFilterData.name,
-                mobile: vendorFilterData.mobile,
-                company_name: vendorFilterData.company_name,
+                type: 'parent',
                 page: page,
-                offset : perPage
+                offset: perPage
             }
         }
         dispatch(getIndexEntityData(value))
@@ -56,14 +79,14 @@ function CategoryGroupTable() {
     return (
         <>
             <Box>
-                <Box bg={`white`}  >
-                    <Box pt={'xs'} pb={`xs`} pl={`md`} pr={'xl'} >
-                        <KeywordSearch module={'vendor'}/>
+                <Box bg={`white`}>
+                    <Box pt={'xs'} pb={`xs`} pl={`md`} pr={'xl'}>
+                        <KeywordSearch module={'category'}/>
                     </Box>
                 </Box>
                 <Box bg={`white`}>
 
-                    <Box pb={`xs`} pl={`md`} pr={'md'} >
+                    <Box pb={`xs`} pl={`md`} pr={'md'}>
                         <DataTable
                             withTableBorder
                             records={indexData.data}
@@ -74,9 +97,7 @@ function CategoryGroupTable() {
                                     textAlignment: 'right',
                                     render: (item) => (indexData.data.indexOf(item) + 1)
                                 },
-                                { accessor: 'name',  title: "Name" },
-                                { accessor: 'company_name',  title: "Company Name" },
-                                { accessor: 'mobile',  title: "Mobile" },
+                                {accessor: 'name', title: "Name"},
                                 {
                                     accessor: "action",
                                     title: "Action",
@@ -86,21 +107,10 @@ function CategoryGroupTable() {
                                             <ActionIcon
                                                 size="sm"
                                                 variant="subtle"
-                                                color="green"
-                                                onClick={()=>{
-                                                    setVendorViewModel(true)
-                                                    dispatch(showEntityData('vendor/' + data.id))
-                                                }}
-                                            >
-                                                <IconEye size={16}/>
-                                            </ActionIcon>
-                                            <ActionIcon
-                                                size="sm"
-                                                variant="subtle"
                                                 color="blue"
                                                 onClick={() => {
                                                     dispatch(setInsertType('update'))
-                                                    dispatch(editEntityData('vendor/' + data.id))
+                                                    dispatch(editEntityData('inventory/category-group/' + data.id))
                                                     dispatch(setFormLoading(true))
                                                 }}
                                             >
@@ -121,8 +131,7 @@ function CategoryGroupTable() {
                                                         labels: {confirm: 'Confirm', cancel: 'Cancel'},
                                                         onCancel: () => console.log('Cancel'),
                                                         onConfirm: () => {
-                                                            dispatch(deleteEntityData('vendor/' + data.id))
-                                                            dispatch(setFetching(true))
+                                                            dispatch(deleteEntityData('inventory/category-group/' + data.id))
                                                         },
                                                     });
                                                 }}
@@ -145,14 +154,11 @@ function CategoryGroupTable() {
                             loaderSize="xs"
                             loaderColor="grape"
                             height={height}
-                            scrollAreaProps={{ type: 'never' }}
+                            scrollAreaProps={{type: 'never'}}
                         />
                     </Box>
                 </Box>
             </Box>
-            {
-                vendorViewModel && <CategoryGroupViewModel vendorViewModel={vendorViewModel} setVendorViewModel={setVendorViewModel}/>
-            }
         </>
     );
 }

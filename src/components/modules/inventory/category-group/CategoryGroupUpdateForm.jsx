@@ -1,15 +1,11 @@
 import React, {useEffect, useState} from "react";
 import {useOutletContext} from "react-router-dom";
 import {
-    Button,
-    rem,
-    Grid, Box, ScrollArea, Tooltip, Group, Text, LoadingOverlay, Title, Flex,
+    Button, rem, Grid, Box, ScrollArea, Group, Text, Title, Flex,
 } from "@mantine/core";
 import {useTranslation} from 'react-i18next';
 import {
-    IconCheck,
-    IconDeviceFloppy,
-    IconRestore,IconPencilBolt
+    IconCheck, IconPencilBolt
 } from "@tabler/icons-react";
 import {useHotkeys} from "@mantine/hooks";
 import InputForm from "../../../form-builders/InputForm";
@@ -22,12 +18,10 @@ import {
     setEditEntityData,
     setFetching, setFormLoading, setInsertType,
     updateEntityData
-} from "../../../../store/core/crudSlice.js";
-import {getCustomerDropdown} from "../../../../store/core/utilitySlice.js";
+} from "../../../../store/inventory/crudSlice.js";
 
 import Shortcut from "../../shortcut/Shortcut.jsx";
-import SelectForm from "../../../form-builders/SelectForm.jsx";
-import TextAreaForm from "../../../form-builders/TextAreaForm.jsx";
+import SwitchForm from "../../../form-builders/SwitchForm.jsx";
 
 function CategoryGroupUpdateForm() {
     const {t, i18n} = useTranslation();
@@ -37,56 +31,32 @@ function CategoryGroupUpdateForm() {
 
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
     const [setFormData, setFormDataForUpdate] = useState(false);
-    const [formLoad, setFormLoad] = useState(true);
-    const [customerData, setCustomerData] = useState(null);
 
-    const customerDropdownData = useSelector((state) => state.utilitySlice.customerDropdownData)
-    const entityEditData = useSelector((state) => state.crudSlice.entityEditData)
+    const entityEditData = useSelector((state) => state.inventoryCrudSlice.entityEditData)
     const formLoading = useSelector((state) => state.crudSlice.formLoading)
-
-
-    let customerDropdown = customerDropdownData && customerDropdownData.length > 0 ?
-        customerDropdownData.map((type, index) => {
-            return ({'label': type.name, 'value': String(type.id)})
-        }) : []
-
-    useEffect(() => {
-        dispatch(getCustomerDropdown('core/select/customer'))
-    }, []);
-
 
     const form = useForm({
         initialValues: {
-            company_name: '', name: '', mobile: '', tp_percent: '', email: ''
+            name: '', status: true
         },
         validate: {
-            company_name: hasLength({min: 2, max: 20}),
             name: hasLength({min: 2, max: 20}),
-            mobile: (value) => (!/^\d+$/.test(value)),
-            // tp_percent: (value) => (value && !/^\d*\.?\d*$/.test(value)),
-            // email: (value) => (value && !/^\S+@\S+$/.test(value)),
         }
     });
 
     useEffect(() => {
-        setFormLoad(true)
         setFormDataForUpdate(true)
     }, [dispatch, formLoading])
 
     useEffect(() => {
 
         form.setValues({
-            company_name: entityEditData.company_name?entityEditData.company_name:'',
-            name: entityEditData.name?entityEditData.name:'',
-            mobile: entityEditData.mobile?entityEditData.mobile:'',
-            customer_id: entityEditData.customer_id?entityEditData.customer_id:'',
-            address: entityEditData.address?entityEditData.address:'',
-            email: entityEditData.email?entityEditData.email:''
+            name: entityEditData.name ? entityEditData.name : '',
+            status: entityEditData.status ? entityEditData.status : ''
         })
 
         dispatch(setFormLoading(false))
         setTimeout(() => {
-            setFormLoad(false)
             setFormDataForUpdate(false)
         }, 500)
 
@@ -94,7 +64,7 @@ function CategoryGroupUpdateForm() {
 
 
     useHotkeys([['alt+n', () => {
-        document.getElementById('Name').focus()
+        document.getElementById('name').focus()
     }]], []);
 
     useHotkeys([['alt+r', () => {
@@ -102,7 +72,7 @@ function CategoryGroupUpdateForm() {
     }]], []);
 
     useHotkeys([['alt+s', () => {
-        document.getElementById('UserFormSubmit').click()
+        document.getElementById('CategoryFormSubmit').click()
     }]], []);
 
 
@@ -110,20 +80,18 @@ function CategoryGroupUpdateForm() {
         <Box bg={"white"} mt={`xs`}>
             <form onSubmit={form.onSubmit((values) => {
                 modals.openConfirmModal({
-                    title: 'Please confirm your action',
+                    title: (
+                        <Text size="md"> {t("FormConfirmationTitle")}</Text>
+                    ),
                     children: (
-                        <Text size="sm">
-                            This action is so important that you are required to confirm it with a
-                            modal. Please click
-                            one of these buttons to proceed.
-                        </Text>
+                        <Text size="sm"> {t("FormConfirmationMessage")}</Text>
                     ),
                     labels: {confirm: 'Confirm', cancel: 'Cancel'},
                     onCancel: () => console.log('Cancel'),
                     onConfirm: () => {
                         setSaveCreateLoading(true)
                         const value = {
-                            url: 'vendor/' + entityEditData.id,
+                            url: 'inventory/category-group/' + entityEditData.id,
                             data: values
                         }
 
@@ -131,7 +99,7 @@ function CategoryGroupUpdateForm() {
 
                         notifications.show({
                             color: 'teal',
-                            title: t('CreateSuccessfully'),
+                            title: t('UpdateSuccessfully'),
                             icon: <IconCheck style={{width: rem(18), height: rem(18)}}/>,
                             loading: false,
                             autoClose: 700,
@@ -151,35 +119,28 @@ function CategoryGroupUpdateForm() {
                 <Box pb={`xs`} pl={`xs`} pr={8}>
                     <Grid>
                         <Grid.Col span={6} h={54}>
-                            <Title order={6} mt={'xs'} pl={'6'}>{t('VendorInformation')}</Title>
+                            <Title order={6} mt={'xs'} pl={'6'}>{t('CategoryGroupInformation')}</Title>
                         </Grid.Col>
                         <Grid.Col span={6}>
                             <Group mr={'md'} pos={`absolute`} right={0} gap={0}>
                                 <>
-                                    {!saveCreateLoading &&
+                                    {!saveCreateLoading && isOnline &&
                                         <Button
-                                        size="xs"
-                                        color={`indigo.6`}
-                                        type="submit"
-                                        mt={4}
-                                        mr={'xs'}
-                                        id="VendorFormSubmit"
-                                        leftSection={<IconPencilBolt size={16}/>}
-                                    >
-                                        {/*<LoadingOverlay
-                                            visible={saveCreateLoading}
-                                            zIndex={1000}
-                                            overlayProps={{radius: "xs", blur: 2}}
-                                            size={'xs'}
-                                            position="center"
-                                        />*/}
+                                            size="xs"
+                                            color={`indigo.6`}
+                                            type="submit"
+                                            mt={4}
+                                            mr={'xs'}
+                                            id="CategoryFormSubmit"
+                                            leftSection={<IconPencilBolt size={16}/>}
+                                        >
 
-                                        <Flex direction={`column`} gap={0}>
-                                            <Text fz={12} fw={400}>
-                                                {t("EditAndSave")}
-                                            </Text>
-                                        </Flex>
-                                    </Button>
+                                            <Flex direction={`column`} gap={0}>
+                                                <Text fz={12} fw={400}>
+                                                    {t("EditAndSave")}
+                                                </Text>
+                                            </Flex>
+                                        </Button>
                                     }
                                 </>
                             </Group>
@@ -192,93 +153,29 @@ function CategoryGroupUpdateForm() {
                         <Grid.Col span={'auto'}>
                             <ScrollArea h={height} scrollbarSize={2} type="never">
                                 <Box pb={'md'}>
-                                    <InputForm
-                                        tooltip={t('CompanyNameValidateMessage')}
-                                        label={t('CompanyName')}
-                                        placeholder={t('CompanyName')}
-                                        required={true}
-                                        nextField={'VendorName'}
-                                        form={form}
-                                        name={'company_name'}
-                                        mt={0}
-                                        id={'CompanyName'}
-                                    />
 
                                     <InputForm
-                                        form={form}
-                                        tooltip={t('VendorNameValidateMessage')}
-                                        label={t('VendorName')}
-                                        placeholder={t('VendorName')}
+                                        tooltip={t('CategoryGroupNameValidateMessage')}
+                                        label={t('CategoryGroupName')}
+                                        placeholder={t('CategoryGroupName')}
                                         required={true}
+                                        nextField={'status'}
+                                        form={form}
                                         name={'name'}
-                                        id={'VendorName'}
-                                        nextField={'VendorMobile'}
                                         mt={8}
+                                        id={'name'}
                                     />
 
-                                    <InputForm
+                                    <SwitchForm
+                                        tooltip={t('Status')}
+                                        label={t('Status')}
+                                        nextField={'CategoryFormSubmit'}
+                                        name={'status'}
                                         form={form}
-                                        tooltip={t('MobileValidateMessage')}
-                                        label={t('VendorMobile')}
-                                        placeholder={t('VendorMobile')}
-                                        required={true}
-                                        name={'mobile'}
-                                        id={'VendorMobile'}
-                                        nextField={'TPPercent'}
-                                        mt={8}
-                                    />
-
-                                    <InputForm
-                                        tooltip={t('TPPercentValidateMessage')}
-                                        label={t('TPPercent')}
-                                        placeholder={t('TPPercent')}
-                                        required={false}
-                                        nextField={'Email'}
-                                        name={'tp_percent'}
-                                        form={form}
-                                        mt={8}
-                                        id={'TPPercent'}
-                                    />
-
-                                    <InputForm
-                                        form={form}
-                                        tooltip={t('RequiredAndInvalidEmail')}
-                                        label={t('Email')}
-                                        placeholder={t('Email')}
-                                        required={false}
-                                        name={'email'}
-                                        id={'Email'}
-                                        nextField={'ChooseCustomer'}
-                                        mt={8}
-                                    />
-
-                                    <SelectForm
-                                        tooltip={t('ChooseCustomer')}
-                                        label={t('ChooseCustomer')}
-                                        placeholder={t('ChooseCustomer')}
-                                        required={false}
-                                        nextField={'Address'}
-                                        name={'customer_id'}
-                                        form={form}
-                                        dropdownValue={customerDropdown}
-                                        mt={8}
-                                        id={'ChooseCustomer'}
-                                        searchable={true}
-                                        value={customerData}
-                                        changeValue={setCustomerData}
-                                    />
-
-
-                                    <TextAreaForm
-                                        tooltip={t('Address')}
-                                        label={t('Address')}
-                                        placeholder={t('Address')}
-                                        required={false}
-                                        nextField={'Status'}
-                                        name={'address'}
-                                        form={form}
-                                        mt={8}
-                                        id={'Address'}
+                                        mt={12}
+                                        id={'status'}
+                                        position={'left'}
+                                        checked={form.values.status}
                                     />
 
                                 </Box>
@@ -287,8 +184,9 @@ function CategoryGroupUpdateForm() {
                         <Grid.Col span={3}>
                             <Shortcut
                                 form={form}
-                                FormSubmit={'VendorFormSubmit'}
-                                Name={'CompanyName'}
+                                FormSubmit={'CategoryFormSubmit'}
+                                Name={'category_group'}
+                                inputType={'select'}
                             />
                         </Grid.Col>
                     </Grid>

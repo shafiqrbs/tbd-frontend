@@ -3,7 +3,7 @@ import {Tooltip, Switch} from "@mantine/core";
 import {getHotkeyHandler} from "@mantine/hooks";
 
 function SwitchForm(props) {
-    const {label, nextField, name, form, tooltip, mt, id, position, defaultChecked} = props
+    const {label, nextField, name, form, tooltip, mt, id, position, defaultChecked,checked} = props
     return (
         <>
             {
@@ -21,6 +21,7 @@ function SwitchForm(props) {
                     transitionProps={{transition: "pop-bottom-left", duration: 500}}
                 >
                     <Switch
+                        checked={checked}
                         defaultChecked={defaultChecked}
                         labelPosition={position}
                         mt={mt}

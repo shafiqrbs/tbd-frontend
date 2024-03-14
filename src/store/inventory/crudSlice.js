@@ -67,6 +67,16 @@ export const updateEntityData = createAsyncThunk("update", async (value) => {
     }
 });
 
+export const deleteEntityData = createAsyncThunk("delete", async (value) => {
+    try {
+        const response = deleteData(value);
+        return response;
+    } catch (error) {
+        console.log('error', error.message);
+        throw error;
+    }
+});
+
 const crudSlice = createSlice({
     name : "crud",
     initialState : {
@@ -81,6 +91,7 @@ const crudSlice = createSlice({
         indexEntityData : [],
         entityEditData : [],
         insertType : 'create',
+        entityDataDelete : null,
     },
     reducers : {
         setFetching : (state,action) => {
@@ -101,9 +112,11 @@ const crudSlice = createSlice({
         setInsertType : (state,action)=>{
             state.insertType = action.payload
         },
-
         setSearchKeyword : (state,action)=>{
             state.searchKeyword = action.payload
+        },
+        setDeleteMessage : (state,action)=>{
+            state.entityDataDelete = action.payload
         },
     },
 
@@ -144,9 +157,13 @@ const crudSlice = createSlice({
             }
         })
 
+        builder.addCase(deleteEntityData.fulfilled, (state, action) => {
+            state.entityDataDelete = action.payload.data.message
+        })
+
     }
 })
 
-export const { setFetching,setEntityNewData,setDropdownLoad,setEditEntityData,setFormLoading,setInsertType,setSearchKeyword} = crudSlice.actions
+export const { setFetching,setEntityNewData,setDropdownLoad,setEditEntityData,setFormLoading,setInsertType,setSearchKeyword,setDeleteMessage} = crudSlice.actions
 
 export default crudSlice.reducer;
