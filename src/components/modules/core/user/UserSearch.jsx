@@ -36,10 +36,7 @@ import {notifications} from "@mantine/notifications";
 function UserSearch() {
     const {t, i18n} = useTranslation();
     const dispatch = useDispatch();
-    const {isOnline, mainAreaHeight} = useOutletContext();
-    const height = mainAreaHeight - 104; //TabList height 104
 
-    // const [searchKeyword, setSearchKeyword] = useState(null)
     const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword)
 
     const [searchKeywordTooltip, setSearchKeywordTooltip] = useState(false)

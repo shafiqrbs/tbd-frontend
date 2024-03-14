@@ -123,7 +123,7 @@ function VendorUpdateForm() {
                     onConfirm: () => {
                         setSaveCreateLoading(true)
                         const value = {
-                            url: 'vendor/' + entityEditData.id,
+                            url: 'core/vendor/' + entityEditData.id,
                             data: values
                         }
 
@@ -131,7 +131,7 @@ function VendorUpdateForm() {
 
                         notifications.show({
                             color: 'teal',
-                            title: t('CreateSuccessfully'),
+                            title: t('UpdateSuccessfully'),
                             icon: <IconCheck style={{width: rem(18), height: rem(18)}}/>,
                             loading: false,
                             autoClose: 700,
@@ -156,7 +156,7 @@ function VendorUpdateForm() {
                         <Grid.Col span={6}>
                             <Group mr={'md'} pos={`absolute`} right={0} gap={0}>
                                 <>
-                                    {!saveCreateLoading &&
+                                    {!saveCreateLoading && isOnline &&
                                         <Button
                                         size="xs"
                                         color={`indigo.6`}
@@ -166,13 +166,6 @@ function VendorUpdateForm() {
                                         id="VendorFormSubmit"
                                         leftSection={<IconPencilBolt size={16}/>}
                                     >
-                                        {/*<LoadingOverlay
-                                            visible={saveCreateLoading}
-                                            zIndex={1000}
-                                            overlayProps={{radius: "xs", blur: 2}}
-                                            size={'xs'}
-                                            position="center"
-                                        />*/}
 
                                         <Flex direction={`column`} gap={0}>
                                             <Text fz={12} fw={400}>
@@ -264,7 +257,7 @@ function VendorUpdateForm() {
                                         mt={8}
                                         id={'ChooseCustomer'}
                                         searchable={true}
-                                        value={customerData}
+                                        value={customerData ? String(customerData) : (entityEditData.customer_id ? String(entityEditData.customer_id) : null)}
                                         changeValue={setCustomerData}
                                     />
 

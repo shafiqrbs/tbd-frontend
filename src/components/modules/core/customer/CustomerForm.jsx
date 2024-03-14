@@ -33,21 +33,17 @@ function CustomerForm() {
     const {isOnline, mainAreaHeight} = useOutletContext();
     const height = mainAreaHeight - 80; //TabList height 104
     const [opened, {open, close}] = useDisclosure(false);
-    const icon = <IconInfoCircle />;
-
 
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
     const [customerGroupData, setCustomerGroupData] = useState(null);
     const [locationData, setLocationData] = useState(null);
     const [marketingExeData, setMarketingExeData] = useState(null);
 
-
     const locationDropdownData = useSelector((state) => state.utilitySlice.locationDropdownData)
     const executiveDropdownData = useSelector((state) => state.utilitySlice.executiveDropdownData)
     const validationMessage = useSelector((state) => state.crudSlice.validationMessage)
     const validation = useSelector((state) => state.crudSlice.validation)
     const entityNewData = useSelector((state) => state.crudSlice.entityNewData)
-    // console.log(validationMessage)
 
 
     let locationDropdown = locationDropdownData && locationDropdownData.length > 0 ? locationDropdownData.map((type, index) => {
@@ -180,7 +176,7 @@ function CustomerForm() {
                     onCancel: () => console.log('Cancel'),
                     onConfirm: () => {
                         const value = {
-                            url: 'customer',
+                            url: 'core/customer',
                             data: values
                         }
                         dispatch(storeEntityData(value))
@@ -197,7 +193,7 @@ function CustomerForm() {
 
                                 <>
                                     {
-                                        !saveCreateLoading &&
+                                        !saveCreateLoading && isOnline &&
                                         <Button
                                             size="xs"
                                             color={`indigo.6`}
@@ -269,7 +265,7 @@ function CustomerForm() {
 
                                         </Grid.Col>
                                         <Grid.Col span={2}><Button mt={32} color={'gray'} variant={'outline'}
-                                                                   onClick={open}><IconPlus size={16}
+                                                                   onClick={open}><IconPlus size={12}
                                                                                             opacity={0.5}/></Button></Grid.Col>
                                         {opened &&
                                             <CustomerGroupModel openedModel={opened} open={open} close={close}/>
@@ -381,19 +377,6 @@ function CustomerForm() {
                                         mt={8}
                                         id={'Address'}
                                     />
-
-                                    {/*<SwitchForm
-                                        tooltip={t('Status')}
-                                        label={t('Status')}
-                                        nextField={'Address'}
-                                        name={'status'}
-                                        form={form}
-                                        mt={12}
-                                        id={'Status'}
-                                        position={'left'}
-                                        // defaultChecked={!!(formLoading && entityEditData.status === 1)}
-                                        defaultChecked={1}
-                                    />*/}
 
                                 </Box>
                             </ScrollArea>

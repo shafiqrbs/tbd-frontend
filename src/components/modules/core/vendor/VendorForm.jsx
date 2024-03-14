@@ -1,15 +1,14 @@
 import React, {useEffect, useState} from "react";
-import {useNavigate, useOutletContext} from "react-router-dom";
+import {useOutletContext} from "react-router-dom";
 import {
     Button,
     rem, Flex,
-    Grid, Box, ScrollArea, Tooltip, Group, Text, LoadingOverlay, Title,
+    Grid, Box, ScrollArea, Group, Text, Title,
 } from "@mantine/core";
 import {useTranslation} from 'react-i18next';
 import {
     IconCheck,
     IconDeviceFloppy,
-    IconRestore,
 } from "@tabler/icons-react";
 import {useHotkeys} from "@mantine/hooks";
 import {useDispatch, useSelector} from "react-redux";
@@ -32,13 +31,11 @@ function VendorForm() {
     const dispatch = useDispatch();
     const {isOnline, mainAreaHeight} = useOutletContext();
     const height = mainAreaHeight - 116; //TabList height 104
-    const navigate = useNavigate();
 
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
     const [customerData, setCustomerData] = useState(null);
 
     const customerDropdownData = useSelector((state) => state.utilitySlice.customerDropdownData)
-    const formLoading = useSelector((state) => state.crudSlice.formLoading)
 
     let customerDropdown = customerDropdownData && customerDropdownData.length > 0 ?
         customerDropdownData.map((type, index) => {
@@ -57,8 +54,6 @@ function VendorForm() {
             company_name: hasLength({min: 2, max: 20}),
             name: hasLength({min: 2, max: 20}),
             mobile: (value) => (!/^\d+$/.test(value)),
-            // tp_percent: (value) => (value && !/^\d*\.?\d*$/.test(value)),
-            // email: (value) => (value && !/^\S+@\S+$/.test(value)),
         }
     });
 
@@ -92,7 +87,7 @@ function VendorForm() {
                     onConfirm: () => {
 
                         const value = {
-                            url: 'vendor',
+                            url: 'core/vendor',
                             data: values
                         }
 
@@ -123,7 +118,7 @@ function VendorForm() {
                         <Grid.Col span={6}>
                             <Group mr={'md'} pos={`absolute`} right={0}  gap={0}>
                                 <>
-                                    {!saveCreateLoading &&
+                                    {!saveCreateLoading && isOnline &&
                                         <Button
                                         size="xs"
                                         color={`indigo.6`}
@@ -133,13 +128,6 @@ function VendorForm() {
                                         id="VendorFormSubmit"
                                         leftSection={<IconDeviceFloppy size={16}/>}
                                     >
-                                        {/*<LoadingOverlay
-                                            visible={saveCreateLoading}
-                                            zIndex={1000}
-                                            overlayProps={{radius: "xs", blur: 2}}
-                                            size={'xs'}
-                                            position="center"
-                                        />*/}
 
                                         <Flex direction={`column`} gap={0}>
                                             <Text fz={12} fw={400}>

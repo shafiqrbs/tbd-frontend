@@ -42,7 +42,7 @@ function UserTable() {
 
     useEffect(() => {
         const value = {
-            url: 'user',
+            url: 'core/user',
             param: {
                 term: searchKeyword,
                 name: userFilterData.name,
@@ -93,7 +93,7 @@ function UserTable() {
                                                 color="green"
                                                 onClick={()=>{
                                                     setUserViewModel(true)
-                                                    dispatch(editEntityData('user/' + data.id))
+                                                    dispatch(editEntityData('core/user/' + data.id))
                                                 }}
                                             >
                                                 <IconEye size={16}/>
@@ -104,7 +104,7 @@ function UserTable() {
                                                 color="blue"
                                                 onClick={() => {
                                                     dispatch(setInsertType('update'))
-                                                    dispatch(editEntityData('user/' + data.id))
+                                                    dispatch(editEntityData('core/user/' + data.id))
                                                     dispatch(setFormLoading(true))
                                                 }}
                                             >
@@ -125,7 +125,7 @@ function UserTable() {
                                                         labels: {confirm: 'Confirm', cancel: 'Cancel'},
                                                         onCancel: () => console.log('Cancel'),
                                                         onConfirm: () => {
-                                                            dispatch(deleteEntityData('user/' + data.id))
+                                                            dispatch(deleteEntityData('core/user/' + data.id))
                                                             dispatch(setFetching(true))
                                                         },
                                                     });

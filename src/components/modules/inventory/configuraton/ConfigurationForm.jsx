@@ -41,16 +41,9 @@ function ConfigurationForm() {
     const dispatch = useDispatch();
     const {isOnline, mainAreaHeight} = useOutletContext();
     const height = mainAreaHeight - 132; //TabList height 104
-    const navigate = useNavigate();
 
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
-    const [customerData, setCustomerData] = useState(null);
-
     const [businessModelData, setBusinessModelData] = useState(null);
-    const BusinessModelDropdown = ['Model 1','Model 2']
-
-    const [stockFormatData, setStockFormatData] = useState(null);
-    const StockFormatDropdown = ['Stock Fotmat 1','Stock Fotmat 2']
 
     const businessModelDropdownData = useSelector((state) => state.inventoryUtilitySlice.businessModelDropdownData)
     const showEntityData = useSelector((state) => state.inventoryCrudSlice.showEntityData)
@@ -58,13 +51,9 @@ function ConfigurationForm() {
     const validationMessage = useSelector((state) => state.inventoryCrudSlice.validationMessage)
     const validation = useSelector((state) => state.inventoryCrudSlice.validation)
 
-    // console.log(showEntityData)
 
     const [setFormData, setFormDataForUpdate] = useState(false);
     const [formLoad, setFormLoad] = useState(true);
-
-
-    // const formLoading = useSelector((state) => state.inventoryCrudSlice.formLoading)
 
     let businessModelDropdown = businessModelDropdownData && businessModelDropdownData.length > 0 ?
         businessModelDropdownData.map((type, index) => {

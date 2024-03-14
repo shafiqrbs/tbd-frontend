@@ -118,6 +118,9 @@ const crudSlice = createSlice({
         setDeleteMessage : (state,action)=>{
             state.entityDataDelete = action.payload
         },
+        setValidationMessage : (state,action)=>{
+            state.validationMessage = action.payload
+        },
     },
 
     extraReducers : (builder) => {
@@ -164,6 +167,6 @@ const crudSlice = createSlice({
     }
 })
 
-export const { setFetching,setEntityNewData,setDropdownLoad,setEditEntityData,setFormLoading,setInsertType,setSearchKeyword,setDeleteMessage} = crudSlice.actions
+export const { setFetching,setEntityNewData,setDropdownLoad,setEditEntityData,setFormLoading,setInsertType,setSearchKeyword,setDeleteMessage,setValidationMessage} = crudSlice.actions
 
 export default crudSlice.reducer;

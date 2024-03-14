@@ -132,7 +132,7 @@ function VendorUpdateForm() {
                     onConfirm: () => {
                         setSaveCreateLoading(true)
                         const value = {
-                            url: 'customer/' + entityEditData.id,
+                            url: 'core/customer/' + entityEditData.id,
                             data: values
                         }
 
@@ -140,7 +140,7 @@ function VendorUpdateForm() {
 
                         notifications.show({
                             color: 'teal',
-                            title: t('CreateSuccessfully'),
+                            title: t('UpdateSuccessfully'),
                             icon: <IconCheck style={{width: rem(18), height: rem(18)}}/>,
                             loading: false,
                             autoClose: 700,
@@ -166,7 +166,7 @@ function VendorUpdateForm() {
                             <Group mr={'md'} pos={`absolute`} right={0} gap={0}>
 
                                 <>
-                                    {!saveCreateLoading &&
+                                    {!saveCreateLoading && isOnline &&
                                     <Button
                                         size="xs"
                                         color={`indigo.6`}
@@ -228,7 +228,7 @@ function VendorUpdateForm() {
                                         />
 
                                     </Grid.Col>
-                                    <Grid.Col span={2}><Button mt={32} color={'gray'} variant={'outline'} onClick={open}><IconPlus size={16} opacity={0.5}/></Button></Grid.Col>
+                                    <Grid.Col span={2}><Button mt={32} color={'gray'} variant={'outline'} onClick={open}><IconPlus size={12} opacity={0.5}/></Button></Grid.Col>
                                     {opened &&
                                         <CustomerGroupModel openedModel={opened} open={open} close={close}/>
                                     }

@@ -40,7 +40,7 @@ function VendorTable() {
 
     useEffect(() => {
         const value = {
-            url: 'vendor',
+            url: 'core/vendor',
             param: {
                 term: searchKeyword,
                 name: vendorFilterData.name,
@@ -89,7 +89,7 @@ function VendorTable() {
                                                 color="green"
                                                 onClick={()=>{
                                                     setVendorViewModel(true)
-                                                    dispatch(showEntityData('vendor/' + data.id))
+                                                    dispatch(showEntityData('core/vendor/' + data.id))
                                                 }}
                                             >
                                                 <IconEye size={16}/>
@@ -100,7 +100,7 @@ function VendorTable() {
                                                 color="blue"
                                                 onClick={() => {
                                                     dispatch(setInsertType('update'))
-                                                    dispatch(editEntityData('vendor/' + data.id))
+                                                    dispatch(editEntityData('core/vendor/' + data.id))
                                                     dispatch(setFormLoading(true))
                                                 }}
                                             >
@@ -121,7 +121,7 @@ function VendorTable() {
                                                         labels: {confirm: 'Confirm', cancel: 'Cancel'},
                                                         onCancel: () => console.log('Cancel'),
                                                         onConfirm: () => {
-                                                            dispatch(deleteEntityData('vendor/' + data.id))
+                                                            dispatch(deleteEntityData('core/vendor/' + data.id))
                                                             dispatch(setFetching(true))
                                                         },
                                                     });

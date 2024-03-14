@@ -39,7 +39,7 @@ function CustomerTable() {
 
     useEffect(() => {
         const value = {
-            url: 'customer',
+            url: 'core/customer',
             param: {
                 term: searchKeyword,
                 name: customerFilterData.name,
@@ -87,7 +87,7 @@ function CustomerTable() {
                                                     color="green"
                                                     onClick={() => {
                                                         setCustomerViewModel(true)
-                                                        dispatch(showEntityData('customer/' + data.id))
+                                                        dispatch(showEntityData('core/customer/' + data.id))
                                                     }}
                                                 >
                                                     <IconEye size={16}/>
@@ -98,7 +98,7 @@ function CustomerTable() {
                                                     color="blue"
                                                     onClick={() => {
                                                         dispatch(setInsertType('update'))
-                                                        dispatch(editEntityData('customer/' + data.id))
+                                                        dispatch(editEntityData('core/customer/' + data.id))
                                                         dispatch(setFormLoading(true))
                                                     }}
                                                 >
@@ -119,7 +119,7 @@ function CustomerTable() {
                                                             labels: {confirm: 'Confirm', cancel: 'Cancel'},
                                                             onCancel: () => console.log('Cancel'),
                                                             onConfirm: () => {
-                                                                dispatch(deleteEntityData('customer/' + data.id))
+                                                                dispatch(deleteEntityData('core/customer/' + data.id))
                                                                 dispatch(setFetching(true))
                                                             },
                                                         });

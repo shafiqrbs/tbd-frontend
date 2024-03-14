@@ -14,12 +14,12 @@ import {
 } from "../../../../store/core/crudSlice.js";
 
 import ConfigurationForm from "./ConfigurationForm";
+import {setValidationMessage} from "../../../../store/inventory/crudSlice.js";
 
 function ConfigurationIndex() {
     const {t, i18n} = useTranslation();
     const dispatch = useDispatch();
 
-    const insertType = useSelector((state) => state.crudSlice.insertType)
     const vendorFilterData = useSelector((state) => state.crudSlice.vendorFilterData)
 
     const [progress, setProgress] = useState(0);
@@ -38,6 +38,7 @@ function ConfigurationIndex() {
     useEffect(() => {
         dispatch(setInsertType('create'))
         dispatch(setSearchKeyword(''))
+        dispatch(setValidationMessage(''))
         dispatch(setVendorFilterData({
             ...vendorFilterData,
             ['name']: '',

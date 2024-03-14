@@ -144,7 +144,6 @@ function CustomerGroupModel(props) {
                                         onConfirm: () => {
                                             setModelSubmit(true)
                                             setTimeout((e) => {
-                                                console.log(formModal.values)
                                                 setModelSubmit(false)
                                             }, 2000000)
                                         },
