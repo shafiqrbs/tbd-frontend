@@ -233,7 +233,7 @@ function ItemForm() {
                                     dropdownValue={productTypeDropdown}
                                     mt={0}
                                     id={'product_type'}
-                                    nextField={'category'}
+                                    nextField={'category_id'}
                                     searchable={false}
                                     value={productTypeData}
                                     changeValue={setProductTypeData}
@@ -246,11 +246,11 @@ function ItemForm() {
                                             placeholder={t('Category')}
                                             required={true}
                                             nextField={'name'}
-                                            name={'category'}
+                                            name={'category_id'}
                                             form={form}
                                             dropdownValue={categoryDropdown}
                                             mt={8}
-                                            id={'category'}
+                                            id={'category_id'}
                                             searchable={false}
                                             value={categoryData}
                                             changeValue={setCategoryData}
@@ -330,13 +330,13 @@ function ItemForm() {
                                             tooltip={t('BrandNameValidateMessage')}
                                             label={t('Brand')}
                                             placeholder={t('ChoseBrand')}
-                                            required={true}
+                                            required={false}
                                             nextField={'name'}
-                                            name={'brand'}
+                                            name={'brand_id'}
                                             form={form}
                                             dropdownValue={brandDropdown}
                                             mt={8}
-                                            id={'brand'}
+                                            id={'brand_id'}
                                             searchable={false}
                                             value={brandData}
                                             changeValue={setBrandData}
@@ -355,11 +355,11 @@ function ItemForm() {
                                     label={t('OpeningQuantity')}
                                     placeholder={t('OpeningQuantity')}
                                     required={false}
-                                    nextField={'status'}
+                                    nextField={'sales_price'}
                                     form={form}
-                                    name={'name'}
+                                    name={'opening_quantity'}
                                     mt={8}
-                                    id={'name'}
+                                    id={'opening_quantity'}
                                 />
                                 <Grid gutter={{base: 6}}>
                                     <Grid.Col span={6}>
