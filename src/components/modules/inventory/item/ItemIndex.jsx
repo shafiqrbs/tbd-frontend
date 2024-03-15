@@ -19,33 +19,18 @@ import {
 function ItemIndex() {
     const {t, i18n} = useTranslation();
     const dispatch = useDispatch();
-
-    const insertType = useSelector((state) => state.crudSlice.insertType)
-    const vendorFilterData = useSelector((state) => state.crudSlice.vendorFilterData)
-
     const [progress, setProgress] = useState(0);
-
+    const insertType = useSelector((state) => state.crudSlice.insertType)
     useEffect(() => {
         const updateProgress = () => setProgress((oldProgress) => {
             if (oldProgress === 100) return 100;
             const diff = Math.random() * 20;
             return Math.min(oldProgress + diff, 100);
         });
-
         const timer = setInterval(updateProgress, 100);
         return () => clearInterval(timer);
     }, []);
 
-    useEffect(() => {
-        dispatch(setInsertType('create'))
-        dispatch(setSearchKeyword(''))
-        dispatch(setVendorFilterData({
-            ...vendorFilterData,
-            ['name']: '',
-            ['mobile']:'',
-            ['company_name']:''
-        }))
-    }, [])
 
     return (
         <>

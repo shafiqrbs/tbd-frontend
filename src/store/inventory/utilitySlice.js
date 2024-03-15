@@ -2,27 +2,17 @@ import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import {getDataWithParam} from "../../services/inventoryApiService.js";
 
 
-export const getSettingDropdown = createAsyncThunk("setting/select", async (value) => {
-    try {
-        const response = getDataWithParam(value);
-        return response;
-    } catch (error) {
-        console.log('error', error.message);
-        throw error;
-    }
-});
-
-export const getBusinessModelDropdown = createAsyncThunk("business-model/select", async (value) => {
-    try {
-        const response = getDataWithParam(value);
-        return response;
-    } catch (error) {
-        console.log('error', error.message);
-        throw error;
-    }
-});
-
 export const getCategoryDropdown = createAsyncThunk("category/select", async (value) => {
+    try {
+        const response = getDataWithParam(value);
+        return response;
+    } catch (error) {
+        console.log('error', error.message);
+        throw error;
+    }
+});
+
+export const getBrandDropdown = createAsyncThunk("brand/select", async (value) => {
     try {
         const response = getDataWithParam(value);
         return response;
@@ -48,8 +38,7 @@ const utilitySlice = createSlice({
     initialState : {
         isLoading : true,
         fetching : true,
-        settingDropdownData : [],
-        businessModelDropdownData : [],
+        brandDropdownData : [],
         categoryDropdownData : [],
         groupCategoryDropdownData : [],
     },
@@ -61,12 +50,8 @@ const utilitySlice = createSlice({
 
     extraReducers : (builder) => {
 
-        builder.addCase(getSettingDropdown.fulfilled, (state, action) => {
-            state.settingDropdown = action.payload.data
-        })
-
-        builder.addCase(getBusinessModelDropdown.fulfilled, (state, action) => {
-            state.businessModelDropdownData = action.payload.data
+        builder.addCase(getBrandDropdown.fulfilled, (state, action) => {
+            state.brandDropdownData = action.payload.data
         })
 
         builder.addCase(getCategoryDropdown.fulfilled, (state, action) => {

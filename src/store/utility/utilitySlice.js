@@ -29,7 +29,7 @@ const utilitySlice = createSlice({
         isLoading : true,
         fetching : true,
         settingDropdownData : [],
-        getProductUnitDropdown : [],
+        productUnitDropdown : [],
     },
     reducers : {
         setFetching : (state,action) => {

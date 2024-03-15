@@ -22,7 +22,7 @@ import SelectForm from "../../../form-builders/SelectForm";
 import TextAreaForm from "../../../form-builders/TextAreaForm";
 import SwitchForm from "../../../form-builders/SwitchForm.jsx";
 import ImageUploadDropzone from "../../../form-builders/ImageUploadDropzone.jsx";
-import {getSettingDropdown} from "../../../../store/inventory/utilitySlice.js";
+import {getSettingDropdown} from "../../../../store/utility/utilitySlice.js";
 import {
     setEntityNewData,
     setFetching,
@@ -43,7 +43,7 @@ function ConfigurationForm() {
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
     const [businessModelData, setBusinessModelData] = useState(null);
 
-    const businessModelDropdownData = useSelector((state) => state.inventoryUtilitySlice.settingDropdown)
+    const businessModelDropdownData = useSelector((state) => state.utilityUtilitySlice.settingDropdown)
     const showEntityData = useSelector((state) => state.inventoryCrudSlice.showEntityData)
 
     const validationMessage = useSelector((state) => state.inventoryCrudSlice.validationMessage)

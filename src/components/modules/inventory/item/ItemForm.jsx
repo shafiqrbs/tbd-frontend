@@ -22,9 +22,9 @@ import InputForm from "../../../form-builders/InputForm";
 import SelectForm from "../../../form-builders/SelectForm";
 import TextAreaForm from "../../../form-builders/TextAreaForm";
 import SwitchForm from "../../../form-builders/SwitchForm";
-import {getBusinessModelDropdown, getCategoryDropdown} from "../../../../store/inventory/utilitySlice";
-import {getSettingDropdown} from "../../../../store/inventory/utilitySlice.js";
-import {getProductUnitDropdown} from "../../../../store/utility/utilitySlice.js";
+import {getBrandDropdown, getCategoryDropdown} from "../../../../store/inventory/utilitySlice";
+import {getSettingDropdown,getProductUnitDropdown} from "../../../../store/utility/utilitySlice.js";
+
 import {
     setEntityNewData,
     setFetching,
@@ -58,24 +58,6 @@ function ItemForm() {
     const [setFormData, setFormDataForUpdate] = useState(false);
     const [formLoad, setFormLoad] = useState(true);
 
-    const [productTypeData, setProductTypeData] = useState(null);
-    const productTypeDropdownData = useSelector((state) => state.inventoryUtilitySlice.settingDropdown)
-
-    let productTypeDropdown = productTypeDropdownData && productTypeDropdownData.length > 0 ?
-        productTypeDropdownData.map((type, index) => {
-            return ({'label': type.name, 'value': String(type.id)})
-        }) : []
-
-    useEffect(() => {
-        const value = {
-            url : 'utility/select/setting',
-            param : {
-                'dropdown-type' : 'product-type'
-            }
-        }
-        dispatch(getSettingDropdown(value))
-    }, []);
-
     const [categoryData, setCategoryData] = useState(null);
     const categoryDropdownData = useSelector((state) => state.inventoryUtilitySlice.categoryDropdownData)
     const dropdownLoad = useSelector((state) => state.inventoryCrudSlice.dropdownLoad)
@@ -91,14 +73,45 @@ function ItemForm() {
             }
         }
         dispatch(getCategoryDropdown(value))
-      //  dispatch(setDropdownLoad(false))
+        //  dispatch(setDropdownLoad(false))
     }, [dropdownLoad]);
 
+    const [brandData, setBrandData] = useState(null);
+    const brandDropdownData = useSelector((state) => state.inventoryUtilitySlice.brandDropdownData)
+    const dropdownBrandLoad = useSelector((state) => state.inventoryCrudSlice.dropdownLoad)
+    let brandDropdown = brandDropdownData && brandDropdownData.length > 0 ?
+        brandDropdownData.map((type, index) => {
+            return ({'label': type.name, 'value': String(type.id)})
+        }) : []
+    useEffect(() => {
+        const value = {
+            url: 'inventory/select/product-brand',
+        }
+        dispatch(getBrandDropdown(value))
+        //  dispatch(setDropdownLoad(false))
+    }, [dropdownBrandLoad]);
+
+    const [productTypeData, setProductTypeData] = useState(null);
+    const productTypeDropdownData = useSelector((state) => state.utilityUtilitySlice.settingDropdown)
+    let productTypeDropdown = productTypeDropdownData && productTypeDropdownData.length > 0 ?
+        productTypeDropdownData.map((type, index) => {
+            return ({'label': type.name, 'value': String(type.id)})
+        }) : []
+
+    useEffect(() => {
+        const value = {
+            url : 'utility/select/setting',
+            param : {
+                'dropdown-type' : 'product-type'
+            }
+        }
+        dispatch(getSettingDropdown(value))
+    }, []);
 
     const [productUnitData, setProductUnitData] = useState(null);
-    const productUnitDropdownData = useSelector((state) => state.utilitySlice.productUnitDropdownData)
+    const productUnitDropdownData = useSelector((state) => state.utilityUtilitySlice.productUnitDropdown)
     let productUnitDropdown = productUnitDropdownData && productUnitDropdownData.length > 0 ?
-        productUnitDropdown.map((type, index) => {
+        productUnitDropdownData.map((type, index) => {
             return ({'label': type.name, 'value': String(type.id)})
         }) : []
     useEffect(() => {
@@ -106,9 +119,7 @@ function ItemForm() {
             url: 'utility/select/product-unit'
         }
         dispatch(getProductUnitDropdown(value))
-        //  dispatch(setDropdownLoad(false))
-    }, [dropdownLoad]);
-
+    }, []);
 
     const form = useForm({
         initialValues: {
@@ -153,7 +164,7 @@ function ItemForm() {
                     onConfirm: () => {
 
                         const value = {
-                            url: 'vendor',
+                            url: 'item',
                             data: values
                         }
 
@@ -227,39 +238,6 @@ function ItemForm() {
                                     value={productTypeData}
                                     changeValue={setProductTypeData}
                                 />
-                                 <SelectForm
-                                    tooltip={t('ProductType')}
-                                    label={t('ProductType')}
-                                    placeholder={t('ChooseProductType')}
-                                    required={true}
-                                    name={'product_type'}
-                                    form={form}
-                                    dropdownValue={productUnitDropdown}
-                                    mt={0}
-                                    id={'product_type'}
-                                    nextField={'category'}
-                                    searchable={false}
-                                    value={productUnitData}
-                                    changeValue={setProductUnitData}
-                                />
-                                <Grid gutter={{base: 6}}>
-                                    <Grid.Col span={10}>
-
-
-                                    </Grid.Col>
-                                    <Grid.Col span={2}>
-                                        <Button
-                                            mt={32}
-                                            color={'gray'}
-                                            variant={'outline'}
-                                            onClick={open}>
-                                            <IconPlus size={12} opacity={0.5}
-                                            /></Button>
-                                    </Grid.Col>
-                                    {opened &&
-                                    <CategoryGroupModal openedModel={opened} open={open} close={close}/>
-                                    }
-                                </Grid>
                                 <Grid gutter={{base: 6}}>
                                     <Grid.Col span={10}>
                                         <SelectForm
@@ -308,12 +286,27 @@ function ItemForm() {
                                     mt={8}
                                     id={'name'}
                                 />
+                                <SelectForm
+                                    tooltip={t('ProductUnitValidateMessage')}
+                                    label={t('ProductUnit')}
+                                    placeholder={t('ChooseProductUnit')}
+                                    required={true}
+                                    name={'product_unit'}
+                                    form={form}
+                                    dropdownValue={productUnitDropdown}
+                                    mt={8}
+                                    id={'product_unit'}
+                                    nextField={'barcode'}
+                                    searchable={false}
+                                    value={productUnitData}
+                                    changeValue={setProductUnitData}
+                                />
                                 <InputForm
                                     tooltip={t('BarcodeValidateMessage')}
                                     label={t('Barcode')}
                                     placeholder={t('Barcode')}
                                     required={false}
-                                    nextField={'product_unit'}
+                                    nextField={'sku'}
                                     form={form}
                                     name={'barcode'}
                                     mt={8}
@@ -332,38 +325,42 @@ function ItemForm() {
                                 />
 
                                 <Grid gutter={{base: 6}}>
-                                    <Grid.Col span={6}>
-                                        <InputForm
-                                            tooltip={t('OpeningQuantityValidateMessage')}
-                                            label={t('OpeningQuantity')}
-                                            placeholder={t('OpeningQuantity')}
-                                            required={true}
-                                            nextField={'status'}
-                                            form={form}
-                                            name={'name'}
-                                            mt={8}
-                                            id={'name'}
-                                        />
-                                    </Grid.Col>
-                                    <Grid.Col span={6}>
+                                    <Grid.Col span={10}>
                                         <SelectForm
-                                            tooltip={t('ProductUnit')}
-                                            label={t('ProductUnit')}
-                                            placeholder={t('ChooseProductUnit')}
+                                            tooltip={t('BrandNameValidateMessage')}
+                                            label={t('Brand')}
+                                            placeholder={t('ChoseBrand')}
                                             required={true}
-                                            name={'product_unit'}
+                                            nextField={'name'}
+                                            name={'brand'}
                                             form={form}
-                                            dropdownValue={["Family", "Local"]}
+                                            dropdownValue={brandDropdown}
                                             mt={8}
-                                            id={'product_unit'}
-                                            nextField={'category'}
+                                            id={'brand'}
                                             searchable={false}
-                                            value={customerGroupData}
-                                            changeValue={setCustomerGroupData}
+                                            value={brandData}
+                                            changeValue={setBrandData}
                                         />
 
                                     </Grid.Col>
+                                    <Grid.Col span={2}><Button mt={32} color={'gray'} variant={'outline'}
+                                                               onClick={open}><IconPlus size={16}
+                                                                                        opacity={0.5}/></Button></Grid.Col>
+                                    {opened &&
+                                    <CustomerGroupModel openedModel={opened} open={open} close={close}/>
+                                    }
                                 </Grid>
+                                <InputForm
+                                    tooltip={t('OpeningQuantityValidateMessage')}
+                                    label={t('OpeningQuantity')}
+                                    placeholder={t('OpeningQuantity')}
+                                    required={false}
+                                    nextField={'status'}
+                                    form={form}
+                                    name={'name'}
+                                    mt={8}
+                                    id={'name'}
+                                />
                                 <Grid gutter={{base: 6}}>
                                     <Grid.Col span={6}>
                                         <InputForm
@@ -420,21 +417,7 @@ function ItemForm() {
                                         />
                                     </Grid.Col>
                                 </Grid>
-                                <SelectForm
-                                    tooltip={t('BrandNameValidateMessage')}
-                                    label={t('Brand')}
-                                    placeholder={t('ChooseBrand')}
-                                    required={true}
-                                    name={'brand'}
-                                    form={form}
-                                    dropdownValue={["Family", "Local"]}
-                                    mt={8}
-                                    id={'brand'}
-                                    nextField={'category'}
-                                    searchable={false}
-                                    value={customerGroupData}
-                                    changeValue={setCustomerGroupData}
-                                />
+
 
                                 <SwitchForm
                                         tooltip={t('Status')}
