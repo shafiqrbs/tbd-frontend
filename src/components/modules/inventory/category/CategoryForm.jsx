@@ -16,7 +16,7 @@ import {notifications} from "@mantine/notifications";
 
 import {getCustomerDropdown} from "../../../../store/core/utilitySlice";
 import {setDropdownLoad, setFetching, storeEntityData} from "../../../../store/inventory/crudSlice.js";
-import {getCategoryDropdown} from "../../../../store/inventory/utilitySlice.js";
+import {getGroupCategoryDropdown} from "../../../../store/inventory/utilitySlice.js";
 
 import Shortcut from "../../shortcut/Shortcut";
 import InputForm from "../../../form-builders/InputForm";
@@ -34,25 +34,17 @@ function CategoryForm() {
     const [categoryGroupData, setCategoryGroupData] = useState(null);
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
 
-    const categoryDropdownData = useSelector((state) => state.inventoryUtilitySlice.categoryDropdownData)
+    const groupCategoryDropdownData = useSelector((state) => state.inventoryUtilitySlice.groupCategoryDropdown)
     const dropdownLoad = useSelector((state) => state.inventoryCrudSlice.dropdownLoad)
-
-
-    let categoryDropdown = categoryDropdownData && categoryDropdownData.length > 0 ?
-        categoryDropdownData.map((type, index) => {
+    let groupCategoryDropdown = groupCategoryDropdownData && groupCategoryDropdownData.length > 0 ?
+        groupCategoryDropdownData.map((type, index) => {
             return ({'label': type.name, 'value': String(type.id)})
         }) : []
-
-
     useEffect(() => {
-        dispatch(getCustomerDropdown('core/select/customer'))
         const value = {
-            url: 'inventory/select/category-group',
-            param: {
-                type: 'parent'
-            }
+            url: 'inventory/select/group-category',
         }
-        dispatch(getCategoryDropdown(value))
+        dispatch(getGroupCategoryDropdown(value))
         dispatch(setDropdownLoad(false))
     }, [dropdownLoad]);
 
@@ -163,7 +155,7 @@ function CategoryForm() {
                                                 nextField={'name'}
                                                 name={'parent'}
                                                 form={form}
-                                                dropdownValue={categoryDropdown}
+                                                dropdownValue={groupCategoryDropdown}
                                                 mt={8}
                                                 id={'category_group'}
                                                 searchable={false}
