@@ -26,6 +26,7 @@ import FullForm from "./FullForm";
 import FullTable from "./FullTable";
 import FormAndFile from "./FormAndFile";
 
+
 function DashBoard() {
     const {t, i18n} = useTranslation();
     const iconStyle = {width: rem(12), height: rem(12)};
@@ -184,7 +185,9 @@ function DashBoard() {
             >
                 <Tabs.List pos={`relative`}>
 
-                    <Tabs.Tab
+
+
+                     <Tabs.Tab
                         value="ThreeGrid"
                         leftSection={<IconList style={iconStyle}/>}
                     >
@@ -222,6 +225,8 @@ function DashBoard() {
                     {activeTab === "FullTable" && tabDataListRightButtons}
                     {activeTab === "ThreeGrid" && tabCreateNewRightButtons}
                 </Tabs.List>
+
+
 
                 <Tabs.Panel value="ThreeGrid">
                     <ThreeGrid

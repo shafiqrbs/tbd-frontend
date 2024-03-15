@@ -16,25 +16,23 @@ import {hasLength, isNotEmpty, useForm} from "@mantine/form";
 import {modals} from "@mantine/modals";
 import {notifications} from "@mantine/notifications";
 
-import {
-    getCustomerDropdown,
-} from "../../../../store/core/utilitySlice";
-import {
-    setEntityNewData,
-    setFetching,
-    setFormLoading,
-    setValidationData,
-    storeEntityData
-} from "../../../../store/core/crudSlice.js";
-
 import Shortcut from "../../shortcut/Shortcut";
 import InputForm from "../../../form-builders/InputForm";
 import SelectForm from "../../../form-builders/SelectForm";
 import TextAreaForm from "../../../form-builders/TextAreaForm";
 import SwitchForm from "../../../form-builders/SwitchForm.jsx";
 import ImageUploadDropzone from "../../../form-builders/ImageUploadDropzone.jsx";
-import {getBusinessModelDropdown} from "../../../../store/inventory/utilitySlice.js";
-import {getShowEntityData, updateEntityData} from "../../../../store/inventory/crudSlice.js";
+import {getSettingDropdown} from "../../../../store/inventory/utilitySlice.js";
+import {
+    setEntityNewData,
+    setFetching,
+    setFormLoading,
+    setValidationData,
+    storeEntityData,
+    getShowEntityData,
+    updateEntityData,
+
+} from "../../../../store/inventory/crudSlice.js";
 
 function ConfigurationForm() {
     const {t, i18n} = useTranslation();
@@ -45,12 +43,11 @@ function ConfigurationForm() {
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
     const [businessModelData, setBusinessModelData] = useState(null);
 
-    const businessModelDropdownData = useSelector((state) => state.inventoryUtilitySlice.businessModelDropdownData)
+    const businessModelDropdownData = useSelector((state) => state.inventoryUtilitySlice.settingDropdown)
     const showEntityData = useSelector((state) => state.inventoryCrudSlice.showEntityData)
 
     const validationMessage = useSelector((state) => state.inventoryCrudSlice.validationMessage)
     const validation = useSelector((state) => state.inventoryCrudSlice.validation)
-
 
     const [setFormData, setFormDataForUpdate] = useState(false);
     const [formLoad, setFormLoad] = useState(true);
@@ -62,12 +59,12 @@ function ConfigurationForm() {
 
     useEffect(() => {
         const value = {
-            url : 'inventory/select/business-model',
+            url : 'utility/select/setting',
             param : {
                 'dropdown-type' : 'business-model'
             }
         }
-        dispatch(getBusinessModelDropdown(value))
+        dispatch(getSettingDropdown(value))
         dispatch(getShowEntityData('inventory/config'))
     }, []);
 
@@ -415,7 +412,6 @@ function ConfigurationForm() {
                             </Grid>*/}
                         </Box>
                     </Grid.Col>
-
                     <Grid.Col span={4}>
                         <Box pb={`xs`} pl={`xs`} pr={8}>
                             <Grid>
@@ -534,7 +530,6 @@ function ConfigurationForm() {
                                 <Grid.Col span={'auto'}>
                                     <ScrollArea h={height} scrollbarSize={2} type="never">
                                         <Box pb={'md'}>
-
                                             <SelectForm
                                                 tooltip={t('ChooseBusinessModel')}
                                                 label={t('BusinessModel')}
@@ -550,8 +545,6 @@ function ConfigurationForm() {
                                                 value={businessModelData ? String(businessModelData) : (showEntityData.business_model_id ? String(showEntityData.business_model_id) : null)}
                                                 changeValue={setBusinessModelData}
                                             />
-
-
                                             <InputForm
                                                 tooltip={t('VatPercentValidateMessage')}
                                                 label={t('VatPercent')}

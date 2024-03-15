@@ -46,7 +46,6 @@ function CategoryForm() {
 
     useEffect(() => {
         dispatch(getCustomerDropdown('core/select/customer'))
-
         const value = {
             url: 'inventory/select/category-group',
             param: {
