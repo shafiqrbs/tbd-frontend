@@ -6,17 +6,11 @@ import {
 import {useTranslation} from 'react-i18next';
 import {useDispatch, useSelector} from "react-redux";
 
-import ItemTable from "./ItemTable";
-import ItemForm from "./ItemForm";
-import ItemUpdateForm from "./ItemUpdateForm.jsx";
-import {
-    setCustomerFilterData,
-    setInsertType,
-    setSearchKeyword,
-    setVendorFilterData
-} from "../../../../store/core/crudSlice.js";
+import ProductTable from "./ProductTable.jsx";
+import ProductForm from "./ProductForm.jsx";
+import ProductUpdateForm from "./ProductUpdateForm.jsx";
 
-function ItemIndex() {
+function ProductIndex() {
     const {t, i18n} = useTranslation();
     const dispatch = useDispatch();
     const [progress, setProgress] = useState(0);
@@ -41,18 +35,18 @@ function ItemIndex() {
                     <Box pl={`md`} pr={8} pb={'8'} pt={'6'} bg={'gray.1'}>
                         <Grid>
                             <Grid.Col span={12}>
-                                <Title order={6} pl={'md'} fz={'18'} c={'indigo.4'}>{t('VendorInformation')}</Title>
+                                <Title order={6} pl={'md'} fz={'18'} c={'indigo.4'}>{t('ManageProductInformation')}</Title>
                             </Grid.Col>
                         </Grid>
                     </Box>
                     <Box pr={'12'} pl={'12'}>
                         <Grid>
                             <Grid.Col span={8}>
-                                <ItemTable/>
+                                <ProductTable/>
                             </Grid.Col>
                             <Grid.Col span={4}>
                                 {
-                                    insertType === 'create' ? <ItemForm/> : <ItemUpdateForm/>
+                                    insertType === 'create' ? <ProductForm/> : <ProductUpdateForm/>
                                 }
                             </Grid.Col>
                         </Grid>
@@ -63,4 +57,4 @@ function ItemIndex() {
     );
 }
 
-export default ItemIndex;
+export default ProductIndex;

@@ -19,8 +19,8 @@ import {
 import KeywordSearch from "../../filter/KeywordSearch";
 import {modals} from "@mantine/modals";
 import {deleteEntityData} from "../../../../store/core/crudSlice";
-import ItemViewModel from "./ItemViewModel.jsx";
-function ItemTable() {
+import ProductViewModel from "./ProductViewModel.jsx";
+function ProductTable() {
 
     const dispatch = useDispatch();
     const {t, i18n} = useTranslation();
@@ -29,23 +29,24 @@ function ItemTable() {
 
     const perPage = 50;
     const [page,setPage] = useState(1);
-    const [vendorViewModel,setVendorViewModel] = useState(false)
+    const [productViewModel,setProductViewModel] = useState(false)
 
     const fetching = useSelector((state) => state.crudSlice.fetching)
     const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword)
     const indexData = useSelector((state) => state.crudSlice.indexEntityData)
-    const vendorFilterData = useSelector((state) => state.crudSlice.vendorFilterData)
+    const productFilterData = useSelector((state) => state.inventoryCrudSlice.productFilterData)
 
 
 
     useEffect(() => {
         const value = {
-            url: 'vendor',
+            url: 'inventory/product',
             param: {
                 term: searchKeyword,
-                name: vendorFilterData.name,
-                mobile: vendorFilterData.mobile,
-                company_name: vendorFilterData.company_name,
+                name: productFilterData.name,
+                alternative_name: productFilterData.alternative_name,
+                sku: productFilterData.sku,
+                sales_price: productFilterData.sales_price,
                 page: page,
                 offset : perPage
             }
@@ -58,7 +59,7 @@ function ItemTable() {
             <Box>
                 <Box bg={`white`}  >
                     <Box pt={'xs'} pb={`xs`} pl={`md`} pr={'xl'} >
-                        <KeywordSearch module={'vendor'}/>
+                        <KeywordSearch module={'product'}/>
                     </Box>
                 </Box>
                 <Box bg={`white`}>
@@ -74,9 +75,12 @@ function ItemTable() {
                                     textAlignment: 'right',
                                     render: (item) => (indexData.data.indexOf(item) + 1)
                                 },
-                                { accessor: 'name',  title: "Name" },
-                                { accessor: 'company_name',  title: "Company Name" },
-                                { accessor: 'mobile',  title: "Mobile" },
+                                { accessor: 'product_name',  title: "Name" },
+                                { accessor: 'category_name',  title: "Category" },
+                                { accessor: 'unit_name',  title: "Unit" },
+                                { accessor: 'brand_name',  title: "Brand" },
+                                { accessor: 'purchase_price',  title: "Purchase Price" },
+                                { accessor: 'sales_price',  title: "Sales Price" },
                                 {
                                     accessor: "action",
                                     title: "Action",
@@ -88,8 +92,8 @@ function ItemTable() {
                                                 variant="subtle"
                                                 color="green"
                                                 onClick={()=>{
-                                                    setVendorViewModel(true)
-                                                    dispatch(showEntityData('vendor/' + data.id))
+                                                    setProductViewModel(true)
+                                                    dispatch(showEntityData('inventory/product/' + data.id))
                                                 }}
                                             >
                                                 <IconEye size={16}/>
@@ -100,7 +104,7 @@ function ItemTable() {
                                                 color="blue"
                                                 onClick={() => {
                                                     dispatch(setInsertType('update'))
-                                                    dispatch(editEntityData('vendor/' + data.id))
+                                                    dispatch(editEntityData('inventory/product/' + data.id))
                                                     dispatch(setFormLoading(true))
                                                 }}
                                             >
@@ -121,7 +125,7 @@ function ItemTable() {
                                                         labels: {confirm: 'Confirm', cancel: 'Cancel'},
                                                         onCancel: () => console.log('Cancel'),
                                                         onConfirm: () => {
-                                                            dispatch(deleteEntityData('vendor/' + data.id))
+                                                            dispatch(deleteEntityData('inventory/product/' + data.id))
                                                             dispatch(setFetching(true))
                                                         },
                                                     });
@@ -151,10 +155,10 @@ function ItemTable() {
                 </Box>
             </Box>
             {
-                vendorViewModel && <ItemViewModel vendorViewModel={vendorViewModel} setVendorViewModel={setVendorViewModel}/>
+                productViewModel && <ProductViewModel productViewModel={productViewModel} setProductViewModel={setProductViewModel}/>
             }
         </>
     );
 }
 
-export default ItemTable;
+export default ProductTable;

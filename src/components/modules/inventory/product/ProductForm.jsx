@@ -13,7 +13,7 @@ import {
 } from "@tabler/icons-react";
 import {useDisclosure, useHotkeys} from "@mantine/hooks";
 import {useDispatch, useSelector} from "react-redux";
-import {hasLength, useForm} from "@mantine/form";
+import {hasLength, isNotEmpty, useForm} from "@mantine/form";
 import {modals} from "@mantine/modals";
 import {notifications} from "@mantine/notifications";
 
@@ -38,7 +38,7 @@ import {
 import CategoryGroupModal from "../category/CategoryGroupModal";
 import {setDropdownLoad} from "../../../../store/inventory/crudSlice";
 
-function ItemForm() {
+function ProductForm() {
     const {t, i18n} = useTranslation();
     const dispatch = useDispatch();
     const {isOnline, mainAreaHeight} = useOutletContext();
@@ -88,7 +88,6 @@ function ItemForm() {
             url: 'inventory/select/product-brand',
         }
         dispatch(getBrandDropdown(value))
-        //  dispatch(setDropdownLoad(false))
     }, [dropdownBrandLoad]);
 
     const [productTypeData, setProductTypeData] = useState(null);
@@ -123,14 +122,19 @@ function ItemForm() {
 
     const form = useForm({
         initialValues: {
-            company_name: '', name: '', mobile: '', tp_percent: '', email: ''
+            product_type_id: '', category_id: '', unit_id: '', name: '', alternative_name: '',barcode:'',sku:'',brand_id:'',opening_quantity:'',sales_price:'',purchase_price:'',min_quantity:'',reorder_quantity:'',status:true
         },
         validate: {
-            company_name: hasLength({min: 2, max: 20}),
+            product_type_id: isNotEmpty(),
+            category_id: isNotEmpty(),
+            unit_id: isNotEmpty(),
             name: hasLength({min: 2, max: 20}),
-            mobile: (value) => (!/^\d+$/.test(value)),
-            // tp_percent: (value) => (value && !/^\d*\.?\d*$/.test(value)),
-            // email: (value) => (value && !/^\S+@\S+$/.test(value)),
+            sales_price: (value) => {
+                    const isNumberOrFractional = /^-?\d+(\.\d+)?$/.test(value);
+                    if (!isNumberOrFractional) {
+                        return true;
+                    }
+            },
         }
     });
 
@@ -164,7 +168,7 @@ function ItemForm() {
                     onConfirm: () => {
 
                         const value = {
-                            url: 'item',
+                            url: 'inventory/product',
                             data: values
                         }
 
@@ -181,7 +185,10 @@ function ItemForm() {
 
                         setTimeout(() => {
                             form.reset()
-                            setCustomerData(null)
+                            setCategoryData(null)
+                            setBrandData(null)
+                            setProductTypeData(null)
+                            setProductUnitData(null)
                             dispatch(setFetching(true))
                         }, 700)
                     },
@@ -190,7 +197,7 @@ function ItemForm() {
                 <Box pb={`xs`} pl={`xs`} pr={8}>
                     <Grid>
                         <Grid.Col span={6} h={54}>
-                            <Title order={6} mt={'xs'} pl={'6'}>{t('CategoryGroupInformation')}</Title>
+                            <Title order={6} mt={'xs'} pl={'6'}>{t('ProductInformation')}</Title>
                         </Grid.Col>
                         <Grid.Col span={6}>
                             <Group mr={'md'} pos={`absolute`} right={0}  gap={0}>
@@ -224,11 +231,11 @@ function ItemForm() {
                         <ScrollArea h={height} scrollbarSize={2} type="never">
                             <Box pb={'md'}>
                                 <SelectForm
-                                    tooltip={t('ProductType')}
+                                    tooltip={t('ChooseProductType')}
                                     label={t('ProductType')}
                                     placeholder={t('ChooseProductType')}
                                     required={true}
-                                    name={'product_type'}
+                                    name={'product_type_id'}
                                     form={form}
                                     dropdownValue={productTypeDropdown}
                                     mt={0}
@@ -241,9 +248,9 @@ function ItemForm() {
                                 <Grid gutter={{base: 6}}>
                                     <Grid.Col span={10}>
                                         <SelectForm
-                                            tooltip={t('Category')}
+                                            tooltip={t('ChooseCategory')}
                                             label={t('Category')}
-                                            placeholder={t('Category')}
+                                            placeholder={t('ChooseCategory')}
                                             required={true}
                                             nextField={'name'}
                                             name={'category_id'}
@@ -258,7 +265,7 @@ function ItemForm() {
 
                                     </Grid.Col>
                                     <Grid.Col span={2}><Button mt={32} color={'gray'} variant={'outline'}
-                                                               onClick={open}><IconPlus size={16}
+                                                               onClick={open}><IconPlus size={12}
                                                                                         opacity={0.5}/></Button></Grid.Col>
                                     {opened &&
                                     <CustomerGroupModel openedModel={opened} open={open} close={close}/>
@@ -269,33 +276,33 @@ function ItemForm() {
                                     label={t('ProductName')}
                                     placeholder={t('ProductName')}
                                     required={true}
-                                    nextField={'product_unit'}
+                                    nextField={'alternative_name'}
                                     form={form}
                                     name={'name'}
                                     mt={8}
                                     id={'name'}
                                 />
                                 <InputForm
-                                    tooltip={t('ProductNameValidateMessage')}
+                                    tooltip={t('AlternativeProductNameValidateMessage')}
                                     label={t('AlternativeProductName')}
                                     placeholder={t('AlternativeProductName')}
                                     required={false}
-                                    nextField={'product_unit'}
+                                    nextField={'unit_id'}
                                     form={form}
-                                    name={'name'}
+                                    name={'alternative_name'}
                                     mt={8}
-                                    id={'name'}
+                                    id={'alternative_name'}
                                 />
                                 <SelectForm
-                                    tooltip={t('ProductUnitValidateMessage')}
+                                    tooltip={t('ChooseProductUnit')}
                                     label={t('ProductUnit')}
                                     placeholder={t('ChooseProductUnit')}
                                     required={true}
-                                    name={'product_unit'}
+                                    name={'unit_id'}
                                     form={form}
                                     dropdownValue={productUnitDropdown}
                                     mt={8}
-                                    id={'product_unit'}
+                                    id={'unit_id'}
                                     nextField={'barcode'}
                                     searchable={false}
                                     value={productUnitData}
@@ -313,11 +320,11 @@ function ItemForm() {
                                     id={'barcode'}
                                 />
                                 <InputForm
-                                    tooltip={t('SkuValidateMessage')}
+                                    tooltip={t('ProductSkuValidateMessage')}
                                     label={t('ProductSku')}
                                     placeholder={t('ProductSku')}
                                     required={false}
-                                    nextField={'product_unit'}
+                                    nextField={'brand_id'}
                                     form={form}
                                     name={'sku'}
                                     mt={8}
@@ -327,11 +334,11 @@ function ItemForm() {
                                 <Grid gutter={{base: 6}}>
                                     <Grid.Col span={10}>
                                         <SelectForm
-                                            tooltip={t('BrandNameValidateMessage')}
+                                            tooltip={t('ChooseBrand')}
                                             label={t('Brand')}
-                                            placeholder={t('ChoseBrand')}
+                                            placeholder={t('ChooseBrand')}
                                             required={false}
-                                            nextField={'name'}
+                                            nextField={'opening_quantity'}
                                             name={'brand_id'}
                                             form={form}
                                             dropdownValue={brandDropdown}
@@ -344,14 +351,14 @@ function ItemForm() {
 
                                     </Grid.Col>
                                     <Grid.Col span={2}><Button mt={32} color={'gray'} variant={'outline'}
-                                                               onClick={open}><IconPlus size={16}
+                                                               onClick={open}><IconPlus size={12}
                                                                                         opacity={0.5}/></Button></Grid.Col>
                                     {opened &&
                                     <CustomerGroupModel openedModel={opened} open={open} close={close}/>
                                     }
                                 </Grid>
                                 <InputForm
-                                    tooltip={t('OpeningQuantityValidateMessage')}
+                                    tooltip={t('OpeningQuantity')}
                                     label={t('OpeningQuantity')}
                                     placeholder={t('OpeningQuantity')}
                                     required={false}
@@ -368,7 +375,7 @@ function ItemForm() {
                                             label={t('SalesPrice')}
                                             placeholder={t('SalesPrice')}
                                             required={true}
-                                            nextField={'status'}
+                                            nextField={'purchase_price'}
                                             form={form}
                                             name={'sales_price'}
                                             mt={8}
@@ -377,15 +384,15 @@ function ItemForm() {
                                     </Grid.Col>
                                     <Grid.Col span={6}>
                                         <InputForm
-                                            tooltip={t('PurchasePriceValidateMessage')}
+                                            tooltip={t('PurchasePrice')}
                                             label={t('PurchasePrice')}
                                             placeholder={t('PurchasePrice')}
-                                            required={true}
-                                            nextField={'brand'}
+                                            required={false}
+                                            nextField={'min_quantity'}
                                             form={form}
-                                            name={'sales_price'}
+                                            name={'purchase_price'}
                                             mt={8}
-                                            id={'sales_price'}
+                                            id={'purchase_price'}
                                         />
                                     </Grid.Col>
                                 </Grid>
@@ -395,8 +402,8 @@ function ItemForm() {
                                             tooltip={t('MinimumQuantityValidateMessage')}
                                             label={t('MinimumQuantity')}
                                             placeholder={t('MinimumQuantity')}
-                                            required={true}
-                                            nextField={'status'}
+                                            required={false}
+                                            nextField={'reorder_quantity'}
                                             form={form}
                                             name={'min_quantity'}
                                             mt={8}
@@ -405,15 +412,15 @@ function ItemForm() {
                                     </Grid.Col>
                                     <Grid.Col span={6}>
                                         <InputForm
-                                            tooltip={t('ReorderQuantityValidateMessage')}
+                                            tooltip={t('ReorderQuantity')}
                                             label={t('ReorderQuantity')}
                                             placeholder={t('ReorderQuantity')}
-                                            required={true}
+                                            required={false}
                                             nextField={'status'}
                                             form={form}
-                                            name={'name'}
+                                            name={'reorder_quantity'}
                                             mt={8}
-                                            id={'name'}
+                                            id={'reorder_quantity'}
                                         />
                                     </Grid.Col>
                                 </Grid>
@@ -428,10 +435,8 @@ function ItemForm() {
                                         mt={12}
                                         id={'status'}
                                         position={'left'}
-                                        // defaultChecked={!!(formLoading && entityEditData.status === 1)}
                                         defaultChecked={1}
                                     />
-
 
                             </Box>
                         </ScrollArea>
@@ -450,4 +455,4 @@ function ItemForm() {
 
     );
 }
-export default ItemForm;
+export default ProductForm;
