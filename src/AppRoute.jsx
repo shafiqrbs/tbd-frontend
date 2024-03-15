@@ -9,7 +9,7 @@ import VendorIndex from "./components/modules/core/vendor/VendorIndex";
 import ConfigurationIndex from "./components/modules/inventory/configuraton/ConfigurationIndex";
 import CategoryGroupIndex from "./components/modules/inventory/category-group/CategoryGroupIndex";
 import CategoryIndex from "./components/modules/inventory/category/CategoryIndex";
-import ItemIndex from "./components/modules/inventory/item/ItemIndex";
+import ProductIndex from "./components/modules/inventory/product/ProductIndex.jsx";
 function AppRoute() {
 
     return (
@@ -25,7 +25,7 @@ function AppRoute() {
                     <Route path="vendor" element={<VendorIndex/>}/>
                 </Route>
                 <Route path="/inventory/">
-                    <Route path="item" element={<ItemIndex/>}/>
+                    <Route path="product" element={<ProductIndex/>}/>
                     <Route path="category" element={<CategoryIndex/>}/>
                     <Route path="category-group" element={<CategoryGroupIndex/>}/>
                     <Route path="config" element={<ConfigurationIndex/>}/>

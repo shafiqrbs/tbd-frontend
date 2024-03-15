@@ -10,13 +10,12 @@ function ProductFilterForm(props) {
         document.getElementById('Name').focus()
     }]], []);
 
-
     return (
         <>
             <InputForm
                 label={t("Name")}
-                placeholder = {t("Name")}
-                nextField = {"alternative_name"}
+                placeholder={t("Name")}
+                nextField={"alternative_name"}
                 id={'Name'}
                 name={'name'}
                 module={props.module}
@@ -24,8 +23,8 @@ function ProductFilterForm(props) {
 
             <InputForm
                 label={t("AlternativeProductName")}
-                placeholder = {t("AlternativeProductName")}
-                nextField = {"sku"}
+                placeholder={t("AlternativeProductName")}
+                nextField={"sku"}
                 id={'alternative_name'}
                 name={'alternative_name'}
                 module={props.module}
@@ -33,8 +32,8 @@ function ProductFilterForm(props) {
 
             <InputForm
                 label={t("ProductSku")}
-                placeholder = {t("ProductSku")}
-                nextField = {"sales_price"}
+                placeholder={t("ProductSku")}
+                nextField={"sales_price"}
                 id={'sku'}
                 name={'sku'}
                 module={props.module}
@@ -42,7 +41,7 @@ function ProductFilterForm(props) {
 
             <InputForm
                 label={t("SalesPrice")}
-                placeholder = {t("SalesPrice")}
+                placeholder={t("SalesPrice")}
                 id={'sales_price'}
                 name={'sales_price'}
                 module={props.module}

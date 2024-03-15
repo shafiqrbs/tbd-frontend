@@ -155,6 +155,28 @@
   "CategoryGroupNameValidateMessage": "Category group name field must be required",
   "CategoryGroupAlreadyExists": "Category group already exists",
 
+  "ManageProductInformation": "Manage Product Information",
+  "ProductInformation": "Product Information",
+  "ChooseProductType": "Choose product type",
+  "ProductType": "Product type",
+  "ChooseCategory": "Choose category",
+  "ProductName": "Product Name",
+  "ProductNameValidateMessage": "Product Name must be 2-20 characters long",
+  "AlternativeProductName": "Alternative product name",
+  "AlternativeProductNameValidateMessage": "Alternative product name must be 2-20 characters long",
+  "ProductUnit": "Product Unit",
+  "ChooseProductUnit": "Choose product unit",
+  "BarcodeValidateMessage": "Barcode must be 2-20 characters long",
+  "ProductSku": "Product Sku",
+  "ProductSkuValidateMessage": "Product Sku must be 2-20 characters long",
+  "ChooseBrand": "Choose Brand",
+  "OpeningQuantity": "Opening Quantity",
+  "SalesPrice": "Sales Price",
+  "SalesPriceValidateMessage": "Sales price must be digit & fraction",
+  "PurchasePrice": "Purchase price",
+  "MinimumQuantity": "Minimum quantity",
+  "ReorderQuantity": "Reorder quantity",
+
 
   "" : ""
 

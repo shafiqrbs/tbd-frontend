@@ -3,13 +3,11 @@ import {useOutletContext} from "react-router-dom";
 import {
     Button,
     rem,
-    Grid, Box, ScrollArea, Tooltip, Group, Text, LoadingOverlay, Title, Flex,
+    Grid, Box, ScrollArea, Group, Text, Title, Flex,
 } from "@mantine/core";
 import {useTranslation} from 'react-i18next';
 import {
-    IconCheck,
-    IconDeviceFloppy,
-    IconRestore, IconPencilBolt, IconPlus
+    IconCheck, IconPencilBolt, IconPlus
 } from "@tabler/icons-react";
 import {useDisclosure, useHotkeys} from "@mantine/hooks";
 import InputForm from "../../../form-builders/InputForm";
@@ -27,7 +25,6 @@ import {getCustomerDropdown} from "../../../../store/core/utilitySlice.js";
 
 import Shortcut from "../../shortcut/Shortcut.jsx";
 import SelectForm from "../../../form-builders/SelectForm.jsx";
-import TextAreaForm from "../../../form-builders/TextAreaForm.jsx";
 import SwitchForm from "../../../form-builders/SwitchForm.jsx";
 import {getBrandDropdown, getCategoryDropdown} from "../../../../store/inventory/utilitySlice.js";
 import {getProductUnitDropdown, getSettingDropdown} from "../../../../store/utility/utilitySlice.js";
@@ -41,14 +38,11 @@ function ProductUpdateForm() {
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
     const [setFormData, setFormDataForUpdate] = useState(false);
     const [formLoad, setFormLoad] = useState(true);
-    const [customerData, setCustomerData] = useState(null);
     const [opened, {open, close}] = useDisclosure(false);
-
 
     const customerDropdownData = useSelector((state) => state.utilitySlice.customerDropdownData)
     const entityEditData = useSelector((state) => state.crudSlice.entityEditData)
     const formLoading = useSelector((state) => state.crudSlice.formLoading)
-
 
     const [categoryData, setCategoryData] = useState(null);
     const categoryDropdownData = useSelector((state) => state.inventoryUtilitySlice.categoryDropdownData)
@@ -65,7 +59,6 @@ function ProductUpdateForm() {
             }
         }
         dispatch(getCategoryDropdown(value))
-        //  dispatch(setDropdownLoad(false))
     }, [dropdownLoad]);
 
     const [brandData, setBrandData] = useState(null);
@@ -172,7 +165,7 @@ function ProductUpdateForm() {
 
 
     useHotkeys([['alt+n', () => {
-        document.getElementById('Name').focus()
+        document.getElementById('product_type_id').focus()
     }]], []);
 
     useHotkeys([['alt+r', () => {
@@ -276,9 +269,9 @@ function ProductUpdateForm() {
                                         form={form}
                                         dropdownValue={productTypeDropdown}
                                         mt={0}
-                                        id={'product_type'}
+                                        id={'product_type_id'}
                                         nextField={'category_id'}
-                                        searchable={false}
+                                        searchable={true}
                                         value={productTypeData ? String(productTypeData) : (entityEditData.product_type_id ? String(entityEditData.product_type_id) : null)}
                                         changeValue={setProductTypeData}
                                     />
@@ -295,7 +288,7 @@ function ProductUpdateForm() {
                                                 dropdownValue={categoryDropdown}
                                                 mt={8}
                                                 id={'category_id'}
-                                                searchable={false}
+                                                searchable={true}
                                                 value={categoryData ? String(categoryData) : (entityEditData.category_id ? String(entityEditData.category_id) : null)}
                                                 changeValue={setCategoryData}
                                             />
@@ -341,7 +334,7 @@ function ProductUpdateForm() {
                                         mt={8}
                                         id={'unit_id'}
                                         nextField={'barcode'}
-                                        searchable={false}
+                                        searchable={true}
                                         value={productUnitData ? String(productUnitData) : (entityEditData.unit_id ? String(entityEditData.unit_id) : null)}
                                         changeValue={setProductUnitData}
                                     />
@@ -381,7 +374,7 @@ function ProductUpdateForm() {
                                                 dropdownValue={brandDropdown}
                                                 mt={8}
                                                 id={'brand_id'}
-                                                searchable={false}
+                                                searchable={true}
                                                 value={brandData ? String(brandData) : (entityEditData.brand_id ? String(entityEditData.brand_id) : null)}
                                                 changeValue={setBrandData}
                                             />
@@ -481,8 +474,8 @@ function ProductUpdateForm() {
                         <Grid.Col span={3}>
                             <Shortcut
                                 form={form}
-                                FormSubmit={'VendorFormSubmit'}
-                                Name={'CompanyName'}
+                                FormSubmit={'EntityFormSubmit'}
+                                Name={'product_type_id'}
                             />
                         </Grid.Col>
                     </Grid>

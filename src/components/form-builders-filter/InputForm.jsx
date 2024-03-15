@@ -8,6 +8,7 @@ import {IconInfoCircle, IconSearch, IconX} from "@tabler/icons-react";
 import {getHotkeyHandler} from "@mantine/hooks";
 import {setCustomerFilterData, setUserFilterData, setVendorFilterData} from "../../store/core/crudSlice.js";
 import {useDispatch, useSelector} from "react-redux";
+import {setProductFilterData} from "../../store/inventory/crudSlice.js";
 
 function InputForm(props) {
 
@@ -19,6 +20,7 @@ function InputForm(props) {
     const customerFilterData = useSelector((state) => state.crudSlice.customerFilterData)
     const vendorFilterData = useSelector((state) => state.crudSlice.vendorFilterData)
     const userFilterData = useSelector((state) => state.crudSlice.userFilterData)
+    const productFilterData = useSelector((state) => state.inventoryCrudSlice.productFilterData)
 
     return (
         <>
@@ -44,17 +46,20 @@ function InputForm(props) {
                         if(module==='customer'){dispatch(setCustomerFilterData({...customerFilterData, [name]: e.currentTarget.value}))}
                         if(module==='vendor'){dispatch(setVendorFilterData({...vendorFilterData, [name]: e.currentTarget.value}))}
                         if(module==='user'){dispatch(setUserFilterData({...userFilterData, [name]: e.currentTarget.value}))}
+                        if(module==='product'){dispatch(setProductFilterData({...productFilterData, [name]: e.currentTarget.value}))}
                     }}
                     value={
                         module === 'customer' ? customerFilterData[name] :
                         module === 'vendor' ? vendorFilterData[name] :
                         module === 'user' ? userFilterData[name] :
+                        module === 'product' ? productFilterData[name] :
                         ''
                     }
                     id={id}
                     rightSection={
                         (module === 'customer' && customerFilterData[name]) ||
                         (module === 'user' && userFilterData[name]) ||
+                        (module === 'product' && productFilterData[name]) ||
                         (module === 'vendor' && vendorFilterData[name]) ? (
                             <Tooltip label={t("Close")} withArrow bg={`red.5`}>
                                 <IconX color={`red`} size={16} opacity={0.5} onClick={() => {
@@ -71,6 +76,11 @@ function InputForm(props) {
                                     }else if (module === 'user') {
                                         dispatch(setUserFilterData({
                                             ...userFilterData,
+                                            [name]: ''
+                                        }));
+                                    }else if (module === 'product') {
+                                        dispatch(setProductFilterData({
+                                            ...productFilterData,
                                             [name]: ''
                                         }));
                                     }

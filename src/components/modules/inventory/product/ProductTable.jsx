@@ -6,12 +6,12 @@ import {
     ActionIcon, Text
 } from "@mantine/core";
 import {useTranslation} from "react-i18next";
-import { IconEye, IconEdit, IconTrash} from "@tabler/icons-react";
+import {IconEye, IconEdit, IconTrash} from "@tabler/icons-react";
 import {DataTable} from 'mantine-datatable';
 import {useDispatch, useSelector} from "react-redux";
 import {
     editEntityData,
-    getIndexEntityData, setEditEntityData,
+    getIndexEntityData,
     setFetching, setFormLoading,
     setInsertType,
     showEntityData
@@ -20,6 +20,7 @@ import KeywordSearch from "../../filter/KeywordSearch";
 import {modals} from "@mantine/modals";
 import {deleteEntityData} from "../../../../store/core/crudSlice";
 import ProductViewModel from "./ProductViewModel.jsx";
+
 function ProductTable() {
 
     const dispatch = useDispatch();
@@ -28,15 +29,13 @@ function ProductTable() {
     const height = mainAreaHeight - 100; //TabList height 104
 
     const perPage = 50;
-    const [page,setPage] = useState(1);
-    const [productViewModel,setProductViewModel] = useState(false)
+    const [page, setPage] = useState(1);
+    const [productViewModel, setProductViewModel] = useState(false)
 
     const fetching = useSelector((state) => state.crudSlice.fetching)
     const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword)
     const indexData = useSelector((state) => state.crudSlice.indexEntityData)
     const productFilterData = useSelector((state) => state.inventoryCrudSlice.productFilterData)
-
-
 
     useEffect(() => {
         const value = {
@@ -48,7 +47,7 @@ function ProductTable() {
                 sku: productFilterData.sku,
                 sales_price: productFilterData.sales_price,
                 page: page,
-                offset : perPage
+                offset: perPage
             }
         }
         dispatch(getIndexEntityData(value))
@@ -57,14 +56,14 @@ function ProductTable() {
     return (
         <>
             <Box>
-                <Box bg={`white`}  >
-                    <Box pt={'xs'} pb={`xs`} pl={`md`} pr={'xl'} >
+                <Box bg={`white`}>
+                    <Box pt={'xs'} pb={`xs`} pl={`md`} pr={'xl'}>
                         <KeywordSearch module={'product'}/>
                     </Box>
                 </Box>
                 <Box bg={`white`}>
 
-                    <Box pb={`xs`} pl={`md`} pr={'md'} >
+                    <Box pb={`xs`} pl={`md`} pr={'md'}>
                         <DataTable
                             withTableBorder
                             records={indexData.data}
@@ -75,12 +74,12 @@ function ProductTable() {
                                     textAlignment: 'right',
                                     render: (item) => (indexData.data.indexOf(item) + 1)
                                 },
-                                { accessor: 'product_name',  title: "Name" },
-                                { accessor: 'category_name',  title: "Category" },
-                                { accessor: 'unit_name',  title: "Unit" },
-                                { accessor: 'brand_name',  title: "Brand" },
-                                { accessor: 'purchase_price',  title: "Purchase Price" },
-                                { accessor: 'sales_price',  title: "Sales Price" },
+                                {accessor: 'product_name', title: "Name"},
+                                {accessor: 'category_name', title: "Category"},
+                                {accessor: 'unit_name', title: "Unit"},
+                                {accessor: 'brand_name', title: "Brand"},
+                                {accessor: 'purchase_price', title: "Purchase Price"},
+                                {accessor: 'sales_price', title: "Sales Price"},
                                 {
                                     accessor: "action",
                                     title: "Action",
@@ -91,7 +90,7 @@ function ProductTable() {
                                                 size="sm"
                                                 variant="subtle"
                                                 color="green"
-                                                onClick={()=>{
+                                                onClick={() => {
                                                     setProductViewModel(true)
                                                     dispatch(showEntityData('inventory/product/' + data.id))
                                                 }}
@@ -149,13 +148,14 @@ function ProductTable() {
                             loaderSize="xs"
                             loaderColor="grape"
                             height={height}
-                            scrollAreaProps={{ type: 'never' }}
+                            scrollAreaProps={{type: 'never'}}
                         />
                     </Box>
                 </Box>
             </Box>
             {
-                productViewModel && <ProductViewModel productViewModel={productViewModel} setProductViewModel={setProductViewModel}/>
+                productViewModel &&
+                <ProductViewModel productViewModel={productViewModel} setProductViewModel={setProductViewModel}/>
             }
         </>
     );

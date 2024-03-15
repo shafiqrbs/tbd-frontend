@@ -8,6 +8,7 @@ import {useDispatch} from "react-redux";
 import CustomerFilterForm from "../core/customer/CustomerFilterForm.jsx";
 import VendorFilterForm from "../core/vendor/VendorFilterForm.jsx";
 import UserFilterForm from "../core/user/UserFilterForm.jsx";
+import ProductFilterForm from "../inventory/product/ProductFilterForm.jsx";
 
 function FilterModel(props) {
     const {t, i18n} = useTranslation();
@@ -24,6 +25,7 @@ function FilterModel(props) {
             {props.module === 'customer' && <CustomerFilterForm module={props.module}/> }
             {props.module === 'vendor' && <VendorFilterForm module={props.module}/> }
             {props.module === 'user' && <UserFilterForm module={props.module}/> }
+            {props.module === 'product' && <ProductFilterForm module={props.module}/> }
             <Button
                 id={'submit'}
                 mt={8}

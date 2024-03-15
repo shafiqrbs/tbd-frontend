@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {
-    Box, Button,
-    Grid, Progress, Title
+    Box, Grid, Progress, Title
 } from "@mantine/core";
 import {useTranslation} from 'react-i18next';
 import {useDispatch, useSelector} from "react-redux";
@@ -12,7 +11,6 @@ import ProductUpdateForm from "./ProductUpdateForm.jsx";
 
 function ProductIndex() {
     const {t, i18n} = useTranslation();
-    const dispatch = useDispatch();
     const [progress, setProgress] = useState(0);
     const insertType = useSelector((state) => state.crudSlice.insertType)
     useEffect(() => {
@@ -35,7 +33,8 @@ function ProductIndex() {
                     <Box pl={`md`} pr={8} pb={'8'} pt={'6'} bg={'gray.1'}>
                         <Grid>
                             <Grid.Col span={12}>
-                                <Title order={6} pl={'md'} fz={'18'} c={'indigo.4'}>{t('ManageProductInformation')}</Title>
+                                <Title order={6} pl={'md'} fz={'18'}
+                                       c={'indigo.4'}>{t('ManageProductInformation')}</Title>
                             </Grid.Col>
                         </Grid>
                     </Box>

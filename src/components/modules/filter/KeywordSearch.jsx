@@ -21,6 +21,7 @@ import {
     setVendorFilterData
 } from "../../../store/core/crudSlice.js";
 import FilterModel from "./FilterModel.jsx";
+import {setProductFilterData} from "../../../store/inventory/crudSlice.js";
 
 function KeywordSearch(props) {
     const {t, i18n} = useTranslation();
@@ -34,6 +35,7 @@ function KeywordSearch(props) {
     const customerFilterData = useSelector((state) => state.crudSlice.customerFilterData)
     const vendorFilterData = useSelector((state) => state.crudSlice.vendorFilterData)
     const userFilterData = useSelector((state) => state.crudSlice.userFilterData)
+    const productFilterData = useSelector((state) => state.inventoryCrudSlice.productFilterData)
 
     useHotkeys(
         [['alt+F', () => {
@@ -187,6 +189,14 @@ function KeywordSearch(props) {
                                             name: '',
                                             mobile: '',
                                             email: ''
+                                        }));
+                                    }else if (props.module === 'product') {
+                                        dispatch(setProductFilterData({
+                                            ...productFilterData,
+                                            name: '',
+                                            alternative_name: '',
+                                            sales_price: '',
+                                            sku: ''
                                         }));
                                     }
                                 }}/>

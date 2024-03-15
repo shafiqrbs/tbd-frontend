@@ -40,21 +40,20 @@ function CategoryUpdateForm() {
 
     const entityEditData = useSelector((state) => state.inventoryCrudSlice.entityEditData)
     const formLoading = useSelector((state) => state.crudSlice.formLoading)
-    const dropdownLoad = useSelector((state) => state.inventoryCrudSlice.dropdownLoad)
-    const categoryDropdownData = useSelector((state) => state.inventoryUtilitySlice.categoryDropdownData)
 
-    let categoryDropdown = categoryDropdownData && categoryDropdownData.length > 0 ?
-        categoryDropdownData.map((type, index) => {
+    const groupCategoryDropdownData = useSelector((state) => state.inventoryUtilitySlice.groupCategoryDropdown)
+    const dropdownLoad = useSelector((state) => state.inventoryCrudSlice.dropdownLoad)
+    let groupCategoryDropdown = groupCategoryDropdownData && groupCategoryDropdownData.length > 0 ?
+        groupCategoryDropdownData.map((type, index) => {
             return ({'label': type.name, 'value': String(type.id)})
         }) : []
 
     useEffect(() => {
+
         const value = {
-            url: 'inventory/select/category-group',
-            param: {
-                type: 'parent'
-            }
+            url: 'inventory/select/group-category',
         }
+
         dispatch(getCategoryDropdown(value))
         dispatch(setDropdownLoad(false))
     }, [dropdownLoad]);
@@ -189,7 +188,7 @@ function CategoryUpdateForm() {
                                                 nextField={'name'}
                                                 name={'parent'}
                                                 form={form}
-                                                dropdownValue={categoryDropdown}
+                                                dropdownValue={groupCategoryDropdown}
                                                 mt={8}
                                                 id={'category_group'}
                                                 searchable={false}
