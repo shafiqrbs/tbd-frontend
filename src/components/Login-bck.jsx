@@ -2,14 +2,12 @@ import {
     Paper,
     TextInput,
     PasswordInput,
-    Checkbox,
-    Button,
-    Title,
-    Text,
-    Anchor, Alert, Tooltip, Group, Center, rem, Box, Loader, Card,
+    Button,Group,Container,
+    Box, Tooltip,Text,
+    Center,Flex,Card,Avatar,
+    Image, Alert, Loader,Anchor,rem
 } from '@mantine/core';
 import LoginPage from './../assets/css/LoginPage.module.css';
-import classes from './../assets/css/AuthenticationImage.module.css';
 import {useViewportSize, getHotkeyHandler, useHotkeys} from '@mantine/hooks'
 import {IconInfoCircle, IconLogin,IconArrowLeft} from '@tabler/icons-react';
 import {isNotEmpty, useForm} from '@mantine/form';
@@ -20,8 +18,7 @@ import React, {useState} from "react";
 import {useTranslation} from "react-i18next";
 import axios from "axios";
 
-export default function Login() {
-
+export default function LoginBack() {
     const {t, i18n} = useTranslation();
     const navigate = useNavigate()
     const {height, width} = useViewportSize()
@@ -82,29 +79,46 @@ export default function Login() {
     useHotkeys([['alt+n', () => {
         document.getElementById('Username').focus()
     }]], []);
-    //  console.log(height)
-
+  //  console.log(height)
 
     return (
-        <div className={classes.wrapper}>
+        <Container >
+        <Center>
+            <Card withBorder padding="xl" w={'420'} mt={'120'} radius="md" className={LoginPage.card}>
+            <Card.Section
+                h={140}
+                className={LoginPage.wrapper}
+            />
+            <Avatar
+                src={Logo}
+                size={90}
+                radius={90}
+                mx="auto"
+                mt={-30}
+                className={LoginPage.avatar}
+            />
+            <Text ta="center" fz="lg" fw={500} mt="sm">
+                Login Information
+            </Text>
+            <Text ta="center" fz="sm" c="dimmed" mb={'xl'}>
+                Lets go the credential information.
+            </Text>
             <Box
                 component='form'
                 onSubmit={form.onSubmit((values) => login(values))}
             >
-            <Paper className={classes.form} radius={0} p={30} >
-                <Title order={2} className={classes.title} ta="center" mt="md" mb={80}>
-                    Welcome back to POSH!
-                </Title>
+            <Paper>
                 {
                     errorMessage &&
                     <Alert variant="light" color="red" radius="md" title={errorMessage} icon={icon}></Alert>
                 }
+
                 <Tooltip
                     label={t('UserNameRequired')}
                     px={20}
                     py={3}
                     opened={!!form.errors.username}
-                    position="top-end"
+                        position="top-end"
                     color='red'
                     withArrow
                     offset={2}
@@ -114,7 +128,7 @@ export default function Login() {
                         withAsterisk
                         label={t('Username')}
                         placeholder={t('Username')}
-                        size='md'
+                        size='xs'
                         id={"Username"}
                         {...form.getInputProps('username')}
                         onKeyDown={getHotkeyHandler([
@@ -141,7 +155,7 @@ export default function Login() {
                         label={t('Password')}
                         placeholder={t('Password')}
                         mt="md"
-                        size="md"
+                        size="xs"
                         {...form.getInputProps('password')}
                         id={"Password"}
                         onKeyDown={getHotkeyHandler([
@@ -152,7 +166,7 @@ export default function Login() {
                     />
 
                 </Tooltip>
-                <Checkbox label="Keep me logged in" mt="xl" size="md" />
+
                 <Group justify="space-between" mt="lg" className={LoginPage.controls}>
                     <Anchor c="dimmed" size="sm" className={LoginPage.control}>
                         <Center inline>
@@ -160,14 +174,18 @@ export default function Login() {
                             <Box ml={5}>Back to the signup page</Box>
                         </Center>
                     </Anchor>
-                    <Button fullWidth mt="xl" size="md" type='submit' id={"LoginSubmit"} className={LoginPage.control} rightSection={<IconLogin/>}>
+                    <Button type='submit' id={"LoginSubmit"} className={LoginPage.control} rightSection={<IconLogin/>}>
                         {
                             spinner ? <Loader color="red" type="dots" size={30} /> : 'Login'
                         }
                     </Button>
                 </Group>
+
             </Paper>
             </Box>
-    </div>
-  );
+        </Card>
+        </Center>
+        </Container>
+
+    );
 }
