@@ -6,9 +6,9 @@ import {
 import {useTranslation} from 'react-i18next';
 import {useDispatch, useSelector} from "react-redux";
 
-import ItemTable from "./ItemTable";
-import ItemForm from "./ItemForm";
-import ItemUpdateForm from "./ItemUpdateForm.jsx";
+import SalesTable from "./SalesTable";
+import SalesForm from "./SalesForm";
+import SalesUpdateForm from "./SalesUpdateForm.jsx";
 import {
     setCustomerFilterData,
     setInsertType,
@@ -16,7 +16,7 @@ import {
     setVendorFilterData
 } from "../../../../store/core/crudSlice.js";
 
-function ItemIndex() {
+function SalesIndex() {
     const {t, i18n} = useTranslation();
     const dispatch = useDispatch();
     const [progress, setProgress] = useState(0);
@@ -41,21 +41,14 @@ function ItemIndex() {
                     <Box pl={`md`} pr={8} pb={'8'} pt={'6'} bg={'gray.1'}>
                         <Grid>
                             <Grid.Col span={12}>
-                                <Title order={6} pl={'md'} fz={'18'} c={'indigo.4'}>{t('VendorInformation')}</Title>
+                                <Title order={6} pl={'md'} fz={'18'} c={'indigo.4'}>{t('SalesInformation')}</Title>
                             </Grid.Col>
                         </Grid>
                     </Box>
                     <Box pr={'12'} pl={'12'}>
-                        <Grid>
-                            <Grid.Col span={8}>
-                                <ItemTable/>
-                            </Grid.Col>
-                            <Grid.Col span={4}>
-                                {
-                                    insertType === 'create' ? <ItemForm/> : <ItemUpdateForm/>
-                                }
-                            </Grid.Col>
-                        </Grid>
+                        {
+                            insertType === 'create' ? <SalesForm/> : <SalesUpdateForm/>
+                        }
                     </Box>
                 </Box>
             }
@@ -63,4 +56,4 @@ function ItemIndex() {
     );
 }
 
-export default ItemIndex;
+export default SalesIndex;

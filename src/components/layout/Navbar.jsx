@@ -42,6 +42,7 @@ function Navbar() {
                 leftSection={<IconGauge size="1rem" stroke={1.5} />}
                 childrenOffset={28}
             >
+                <NavLink href="inventory/sales" label={t('Sales')} component="button" onClick={(e)=>{navigate('inventory/sales')}}  />
                 <NavLink href="inventory/product" label={t('Product')} component="button" onClick={(e)=>{navigate('inventory/product')}}  />
                 <NavLink href="inventory/category" label={t('Category')} component="button" onClick={(e)=>{navigate('inventory/category')}}  />
                 <NavLink href="inventory/category-group" label={t('CategoryGroup')} component="button" onClick={(e)=>{navigate('inventory/category-group')}}  />

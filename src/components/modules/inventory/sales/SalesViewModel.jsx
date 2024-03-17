@@ -12,7 +12,7 @@ import InputForm from "../../../form-builders/InputForm";
 import SelectForm from "../../../form-builders/SelectForm";
 import TextAreaForm from "../../../form-builders/TextAreaForm";
 
-function ItemViewModel(props) {
+function SalesViewModel(props) {
     const {t, i18n} = useTranslation();
     const showEntityData = useSelector((state) => state.crudSlice.showEntityData)
     const theme = useMantineTheme();
@@ -61,4 +61,4 @@ function ItemViewModel(props) {
     );
 }
 
-export default ItemViewModel;
+export default SalesViewModel;

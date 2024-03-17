@@ -29,7 +29,7 @@ import Shortcut from "../../shortcut/Shortcut.jsx";
 import SelectForm from "../../../form-builders/SelectForm.jsx";
 import TextAreaForm from "../../../form-builders/TextAreaForm.jsx";
 
-function ItemUpdateForm() {
+function SalesUpdateForm() {
     const {t, i18n} = useTranslation();
     const dispatch = useDispatch();
     const {isOnline, mainAreaHeight} = useOutletContext();
@@ -298,4 +298,4 @@ function ItemUpdateForm() {
     )
 }
 
-export default ItemUpdateForm;
+export default SalesUpdateForm;

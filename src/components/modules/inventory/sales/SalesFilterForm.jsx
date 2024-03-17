@@ -3,7 +3,7 @@ import {useTranslation} from 'react-i18next';
 import InputForm from "../../../form-builders-filter/InputForm.jsx";
 import {useHotkeys} from "@mantine/hooks";
 
-function ItemFilterForm(props) {
+function SalesFilterForm(props) {
     const {t, i18n} = useTranslation();
 
     useHotkeys([['alt+n', () => {
@@ -43,4 +43,4 @@ function ItemFilterForm(props) {
     );
 }
 
-export default ItemFilterForm;
+export default SalesFilterForm;

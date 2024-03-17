@@ -19,8 +19,8 @@ import {
 import KeywordSearch from "../../filter/KeywordSearch";
 import {modals} from "@mantine/modals";
 import {deleteEntityData} from "../../../../store/core/crudSlice";
-import ItemViewModel from "./ItemViewModel.jsx";
-function ItemTable() {
+import SalesViewModel from "./SalesViewModel.jsx";
+function SalesTable() {
 
     const dispatch = useDispatch();
     const {t, i18n} = useTranslation();
@@ -151,10 +151,10 @@ function ItemTable() {
                 </Box>
             </Box>
             {
-                vendorViewModel && <ItemViewModel vendorViewModel={vendorViewModel} setVendorViewModel={setVendorViewModel}/>
+                vendorViewModel && <SalesViewModel vendorViewModel={vendorViewModel} setVendorViewModel={setVendorViewModel}/>
             }
         </>
     );
 }
 
-export default ItemTable;
+export default SalesTable;
