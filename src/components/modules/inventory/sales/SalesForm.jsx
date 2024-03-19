@@ -39,6 +39,8 @@ import CategoryGroupModal from "../category/CategoryGroupModal";
 import {setDropdownLoad} from "../../../../store/inventory/crudSlice";
 import ProductForm from "../product/ProductForm";
 import ProductUpdateForm from "../product/ProductUpdateForm";
+import SelectServerSideForm from "../../../form-builders/SelectServerSideForm.jsx";
+import SalesCardItems from "./SalesCardItems.jsx";
 
 function SalesForm() {
     const {t, i18n} = useTranslation();
@@ -66,71 +68,98 @@ function SalesForm() {
     const [productDropdown, setProductDropdown] = useState([]);
     const [selectedValue, setSelectedValue] = useState('');
 
+    const [tempCardProducts,setTempCardProducts] = useState([])
+    const [loadCardProducts,setLoadCardProducts] = useState(false)
+
+    useEffect(() => {
+        const tempProducts = localStorage.getItem('temp-sales-products');
+        setTempCardProducts(tempProducts ? JSON.parse(tempProducts) : [])
+        setLoadCardProducts(false)
+    },[loadCardProducts])
+
+
     useEffect(() => {
         if (searchValue.length > 0) {
             const storedProducts = localStorage.getItem('user-products');
             const localProducts = storedProducts ? JSON.parse(storedProducts) : [];
 
-
             const lowerCaseSearchTerm = searchValue.toLowerCase();
-            const fieldsToSearch = ['product_name','slug','alternative_name'];
-            // const fieldsToSearch = ['purchase_price'];
+            const fieldsToSearch = ['product_name'];
 
             const productFilterData = localProducts.filter(product =>
                 fieldsToSearch.some(field =>
-                    // product[field] && product[field].toLowerCase().includes(lowerCaseSearchTerm)
                     product[field] && String(product[field]).toLowerCase().includes(lowerCaseSearchTerm)
                 )
             );
 
             const formattedProductData = productFilterData.map(type => ({
-                label: type.product_name+' '+type.slug+' '+type.alternative_name, value: String(type.id)
+                label: type.product_name, value: String(type.id)
             }));
 
             setProductDropdown(formattedProductData);
         } else {
-            // Optionally reset dropdown when there's no search value
             setProductDropdown([]);
         }
     }, [searchValue]);
 
 
-    // const [searchValue, setSearchValue] = useState('');
-    // const [productDropdown, setProductDropdown] = useState([]);
-    // console.log(productDropdown)
-    /*let productDropdown
+    function handleAddProductByProductId(values, myCardProducts, localProducts) {
+        const addProducts = localProducts.reduce((acc, product) => {
+            if (product.id === Number(values.product_id)) {
+                acc.push({
+                    product_id: product.id,
+                    product_name: product.product_name,
+                    sales_price: values.sales_price,
+                    purchase_price: values.purchase_price,
+                    percent: values.percent,
+                });
+            }
+            return acc;
+        }, myCardProducts);
 
-    useEffect(() => {
-        if (searchValue.length > 0) {
-            let localProducts = JSON.parse(localStorage.getItem('user-products'))
-            console.log(localProducts)
+        updateLocalStorageAndResetForm(addProducts);
+    }
 
-            const lowerCaseSearchTerm = searchValue.toLowerCase();
-            // const fieldsToSearch = ['product_name', 'brand_name', 'barcode', 'alternative_name','category_name'];
-            const fieldsToSearch = ['product_name','slug','unit_name'];
-            const productFilterData = localProducts.filter(product =>
-                fieldsToSearch.some(field =>
-                    product[field] && product[field].toLowerCase().includes(lowerCaseSearchTerm)
-                )
-            );
-            // console.log(productFilterData,'filter data')
+    function handleAddProductByBarcode(values, myCardProducts, localProducts) {
+        const barcodeExists = localProducts.some(product => product.barcode === values.barcode);
 
-            productDropdown = productFilterData && productFilterData.length > 0 ?
-                productFilterData.map((type, index) => {
-                    return ({'label': type.product_name, 'value': String(type.id)})
-                }) : []
-            /!*setProductDropdown(
-                productFilterData && productFilterData.length > 0 ?
-                    productFilterData.map((type, index) => {
-                        return ({'label': type.product_name, 'value': String(type.id)})
-                    }) : []
-            )*!/
-            // console.log(productFilterData,productDropdown)
+        if (barcodeExists) {
+            const addProducts = localProducts.reduce((acc, product) => {
+                if (String(product.barcode) === String(values.barcode)) {
+                    acc.push(createProductFromValues(product));
+                }
+                return acc;
+            }, myCardProducts);
 
+            updateLocalStorageAndResetForm(addProducts);
+        } else {
+            notifications.show({
+                loading: true,
+                color: 'red',
+                title: 'Product not found with this barcode',
+                message: 'Data will be loaded in 3 seconds, you cannot close this yet',
+                autoClose: 1000,
+                withCloseButton: true,
+            });
         }
-    }, [searchValue]);*/
+    }
 
-    // console.log(productDropdown)
+    function updateLocalStorageAndResetForm(addProducts) {
+        localStorage.setItem('temp-sales-products', JSON.stringify(addProducts));
+        setSearchValue('');
+        form.reset();
+        setLoadCardProducts(true);
+    }
+
+    function createProductFromValues(product) {
+        return {
+            product_id: product.id,
+            product_name: product.product_name,
+            sales_price: product.sales_price,
+            purchase_price: product.purchase_price,
+            percent: product.percent,
+        };
+    }
 
 
     const [categoryData, setCategoryData] = useState(null);
@@ -198,14 +227,34 @@ function SalesForm() {
 
     const form = useForm({
         initialValues: {
-            company_name: '', name: '', mobile: '', tp_percent: '', email: ''
+            product_id: '', sales_price: '',purchase_price:'',percent:'',barcode:''
         },
         validate: {
-            company_name: hasLength({min: 2, max: 20}),
-            name: hasLength({min: 2, max: 20}),
-            mobile: (value) => (!/^\d+$/.test(value)),
-            // tp_percent: (value) => (value && !/^\d*\.?\d*$/.test(value)),
-            // email: (value) => (value && !/^\S+@\S+$/.test(value)),
+            product_id: (value,values) => {
+                const isDigitsOnly = /^\d+$/.test(value);
+                if (!isDigitsOnly && values.product_id) {
+                    return true;
+                }
+                return null;
+            },
+            sales_price: (value, values) => {
+                if (values.product_id) {
+                    const isNumberOrFractional = /^-?\d+(\.\d+)?$/.test(value);
+                    if (!isNumberOrFractional) {
+                        return true;
+                    }
+                }
+                return null;
+            },
+            purchase_price: (value, values) => {
+                if (values.product_id) {
+                    const isNumberOrFractional = /^-?\d+(\.\d+)?$/.test(value);
+                    if (!isNumberOrFractional) {
+                        return true;
+                    }
+                }
+                return null;
+            },
         }
     });
 
@@ -226,6 +275,7 @@ function SalesForm() {
     return (
         <Box bg={"white"} mt={`xs`}>
             <form onSubmit={form.onSubmit((values) => {
+
                 modals.openConfirmModal({
                     title: 'Please confirm your action',
                     children: (
@@ -239,27 +289,32 @@ function SalesForm() {
                     onCancel: () => console.log('Cancel'),
                     onConfirm: () => {
 
-                        const value = {
-                            url: 'item',
-                            data: values
+                        if (!values.barcode && !values.product_id){
+                            form.setFieldError('barcode', true);
+                            form.setFieldError('product_id', true);
+                            setTimeout(() => {
+                                notifications.show({
+                                    loading: true,
+                                    color: 'red',
+                                    title: 'Loading your data',
+                                    message: 'Data will be loaded in 3 seconds, you cannot close this yet',
+                                    autoClose: 1000,
+                                    withCloseButton: true,
+                                });
+                            },1000)
+                        }else {
+                            const cardProducts = localStorage.getItem('temp-sales-products');
+                            const myCardProducts = cardProducts ? JSON.parse(cardProducts) : [];
+                            const storedProducts = localStorage.getItem('user-products');
+                            const localProducts = storedProducts ? JSON.parse(storedProducts) : [];
+
+                            if (values.product_id && !values.barcode) {
+                                handleAddProductByProductId(values, myCardProducts, localProducts);
+                            } else if (!values.product_id && values.barcode) {
+                                handleAddProductByBarcode(values, myCardProducts, localProducts);
+                            }
+
                         }
-
-                        dispatch(storeEntityData(value))
-
-                        notifications.show({
-                            color: 'teal',
-                            title: t('CreateSuccessfully'),
-                            icon: <IconCheck style={{width: rem(18), height: rem(18)}}/>,
-                            loading: false,
-                            autoClose: 700,
-                            style: {backgroundColor: 'lightgray'},
-                        });
-
-                        setTimeout(() => {
-                            form.reset()
-                            setCustomerData(null)
-                            dispatch(setFetching(true))
-                        }, 700)
                     },
                 });
             })}>
@@ -269,99 +324,42 @@ function SalesForm() {
                             <Grid gutter={{base: 6}} >
                                 <Grid.Col span={3}>
                                     <InputForm
-                                        tooltip={t('SalesPriceValidateMessage')}
+                                        tooltip={t('BarcodeValidateMessage')}
                                         label=''
                                         placeholder={t('barcode')}
                                         required={true}
-                                        nextField={'status'}
+                                        nextField={'EntityFormSubmit'}
                                         form={form}
-                                        name={'sales_price'}
-                                        id={'sales_price'}
+                                        name={'barcode'}
+                                        id={'barcode'}
                                     />
                                 </Grid.Col>
                                 <Grid.Col span={6}>
 
-                                    <Tooltip
-                                        label={t('SelectStockItem')}
-                                        opened={false}
-                                        px={16}
-                                        py={2}
-                                        position="top-end"
-                                        color="red"
-                                        withArrow
-                                        offset={2}
-                                        zIndex={0}
-                                        transitionProps={{transition: "pop-bottom-left", duration: 500}}
-                                    >
-
-                                        <Select
-                                            id={'product'}
-                                            label={''}
-                                            placeholder={'product'}
-                                            size="sm"
-                                            data={productDropdown}
-                                            autoComplete="off"
-                                            clearable
-                                            searchable
-                                            {...form.getInputProps('name')} // Use the correct form field name here
-                                            searchValue={searchValue}
-                                            onSearchChange={setSearchValue}
-                                            value={selectedValue}
-                                            onChange={(value) => {
-                                                console.log(value);
-                                                setSelectedValue(value); // Update the selectedValue state
-                                                // Update form field value if needed:
-                                                // form.setFieldValue('fieldName', value); // Replace 'fieldName' with the correct name
-                                            }}
-                                        />
-
-
-                                        {/*<Select
-                                            id={'product'}
-                                            label={''}
-                                            placeholder={t('product')}
-                                            size="sm"
-                                            data={productDropdown}
-                                            autoComplete="off"
-                                            clearable
-                                            searchable
-                                            {...form.getInputProps(name)}
-                                            onKeyDown={getHotkeyHandler([
-                                                ['Enter', (e) => {
-                                                    document.getElementById('product').focus();
-                                                }],
-                                            ])}
-                                            searchValue={searchValue}
-                                            onSearchChange={setSearchValue}
-                                            // value={value}
-                                            onChange={(e) => {
-                                                console.log(e)
-                                                // changeValue(e)
-                                                // form.setFieldValue(name, e)
-                                            }}
-                                            // withAsterisk={required}
-                                        />*/}
-                                    </Tooltip>
-
-                                    {/*<SelectForm
-                                        tooltip={t('Category')}
+                                    <SelectServerSideForm
+                                        tooltip={t('ChooseStockProduct')}
                                         label=''
-                                        placeholder={t('SelectStockItem')}
-                                        required={true}
-                                        nextField={'name'}
-                                        name={'category_id'}
-                                        form={form}
-                                        dropdownValue={categoryDropdown}
-                                        id={'category_id'}
+                                        placeholder={t('ChooseStockProduct')}
+                                        required = {false}
+                                        nextField = {'sales_price'}
+                                        name = {'product_id'}
+                                        form = {form}
+                                        mt={8}
+                                        id = {'product_id'}
                                         searchable={true}
-                                        value={categoryData}
-                                        changeValue={setCategoryData}
-                                    />*/}
+                                        searchValue={searchValue}
+                                        setSearchValue={setSearchValue}
+                                        dropdownValue={productDropdown}
+                                    />
 
                                 </Grid.Col>
-                                <Grid.Col span={1}><Button color={'gray'} variant={'outline'}
-                                                           onClick={open}><IconPlus size={16}
-                                                                                    opacity={0.5}/></Button></Grid.Col>
+                                <Grid.Col span={1}>
+                                    <Button
+                                        color={'gray'}
+                                        variant={'outline'}
+                                        onClick={open}>
+                                        <IconPlus size={16} opacity={0.5}/></Button>
+                                </Grid.Col>
                                 {opened &&
                                 <CustomerGroupModel openedModel={opened} open={open} close={close}/>
                                 }
@@ -376,7 +374,7 @@ function SalesForm() {
                                         label=''
                                         placeholder={t('SalesPrice')}
                                         required={true}
-                                        nextField={'status'}
+                                        nextField={'purchase_price'}
                                         form={form}
                                         name={'sales_price'}
                                         id={'sales_price'}
@@ -386,24 +384,24 @@ function SalesForm() {
                                     <InputForm
                                         tooltip={t('PurchasePriceValidateMessage')}
                                         label=''
-                                        placeholder={t('quantity')}
+                                        placeholder={t('PurchasePrice')}
                                         required={true}
-                                        nextField={'brand'}
+                                        nextField={'percent'}
                                         form={form}
-                                        name={'sales_price'}
-                                        id={'sales_price'}
+                                        name={'purchase_price'}
+                                        id={'purchase_price'}
                                     />
                                 </Grid.Col>
                                 <Grid.Col span={3}>
                                     <InputForm
-                                        tooltip={t('SalesPriceValidateMessage')}
+                                        tooltip={t('PercentValidateMessage')}
                                         label=''
                                         placeholder={t('percent')}
                                         required={true}
-                                        nextField={'status'}
+                                        nextField={'EntityFormSubmit'}
                                         form={form}
-                                        name={'sales_price'}
-                                        id={'sales_price'}
+                                        name={'percent'}
+                                        id={'percent'}
                                     />
                                 </Grid.Col>
                                 <Grid.Col span={1}><Text  pt={'4'} ta={'center'} ></Text></Grid.Col>
@@ -439,7 +437,7 @@ function SalesForm() {
                  <Grid columns={24}>
                     <Grid.Col span={16}>
                         <Grid columns={'32'} gutter={{base: 6}} bg={'gray.2'} pt={4} p={'xs'}>
-                            <Grid.Col span={4}>{t('ItemName')}</Grid.Col>
+                            <Grid.Col span={4}>{t('ProductName')}</Grid.Col>
                             <Grid.Col span={4}>{t('MRP')}</Grid.Col>
                             <Grid.Col span={4}>{t('Stock')}</Grid.Col>
                             <Grid.Col span={4}>{t('Quantity')}</Grid.Col>
@@ -449,102 +447,13 @@ function SalesForm() {
                             <Grid.Col span={4}>{t('Action')}</Grid.Col>
                         </Grid>
                         <ScrollArea  p={'xs'} h={height} scrollbarSize={2} type="never">
-                            <Grid columns={'32'} gutter={{base: 6}}>
-                                <Grid.Col span={4}>Pencil</Grid.Col>
-                                <Grid.Col span={4}>12.50</Grid.Col>
-                                <Grid.Col span={4}>200</Grid.Col>
-                                <Grid.Col span={4}>20</Grid.Col>
-                                <Grid.Col span={4}>11.50</Grid.Col>
-                                <Grid.Col span={4}>5</Grid.Col>
-                                <Grid.Col span={4}>560.50</Grid.Col>
-                                <Grid.Col span={4}>
-                                    <Group>
-                                        <ActionIcon variant="outline" color="red" size="sm" aria-label="Settings">
-                                            <IconTrash style={{ width: '70%', height: '70%' }} stroke={1.5} />
-                                        </ActionIcon>
-                                    </Group>
-                                </Grid.Col>
-                            </Grid>
-                            <Grid columns={'32'} gutter={{base: 6}}>
-                                <Grid.Col span={4}>Pencil</Grid.Col>
-                                <Grid.Col span={4}>12.50</Grid.Col>
-                                <Grid.Col span={4}>200</Grid.Col>
-                                <Grid.Col span={4}>20</Grid.Col>
-                                <Grid.Col span={4}>11.50</Grid.Col>
-                                <Grid.Col span={4}>5</Grid.Col>
-                                <Grid.Col span={4}>560.50</Grid.Col>
-                                <Grid.Col span={4}>
-                                    <Group>
-                                        <ActionIcon variant="outline" color="red" size="sm" aria-label="Settings">
-                                            <IconTrash style={{ width: '70%', height: '70%' }} stroke={1.5} />
-                                        </ActionIcon>
-                                    </Group>
-                                </Grid.Col>
-                            </Grid>
-                            <Grid columns={'32'} gutter={{base: 6}}>
-                                <Grid.Col span={4}>Pencil</Grid.Col>
-                                <Grid.Col span={4}>12.50</Grid.Col>
-                                <Grid.Col span={4}>200</Grid.Col>
-                                <Grid.Col span={4}>20</Grid.Col>
-                                <Grid.Col span={4}>11.50</Grid.Col>
-                                <Grid.Col span={4}>5</Grid.Col>
-                                <Grid.Col span={4}>560.50</Grid.Col>
-                                <Grid.Col span={4}>
-                                    <Group>
-                                        <ActionIcon variant="outline" color="red" size="sm" aria-label="Settings">
-                                            <IconTrash style={{ width: '70%', height: '70%' }} stroke={1.5} />
-                                        </ActionIcon>
-                                    </Group>
-                                </Grid.Col>
-                            </Grid>
-                            <Grid columns={'32'} gutter={{base: 6}}>
-                                <Grid.Col span={4}>Pencil</Grid.Col>
-                                <Grid.Col span={4}>12.50</Grid.Col>
-                                <Grid.Col span={4}>200</Grid.Col>
-                                <Grid.Col span={4}>20</Grid.Col>
-                                <Grid.Col span={4}>11.50</Grid.Col>
-                                <Grid.Col span={4}>5</Grid.Col>
-                                <Grid.Col span={4}>560.50</Grid.Col>
-                                <Grid.Col span={4}>
-                                    <Group>
-                                        <ActionIcon variant="outline" color="red" size="sm" aria-label="Settings">
-                                            <IconTrash style={{ width: '70%', height: '70%' }} stroke={1.5} />
-                                        </ActionIcon>
-                                    </Group>
-                                </Grid.Col>
-                            </Grid>
-                            <Grid columns={'32'} gutter={{base: 6}}>
-                                <Grid.Col span={4}>Pencil</Grid.Col>
-                                <Grid.Col span={4}>12.50</Grid.Col>
-                                <Grid.Col span={4}>200</Grid.Col>
-                                <Grid.Col span={4}>20</Grid.Col>
-                                <Grid.Col span={4}>11.50</Grid.Col>
-                                <Grid.Col span={4}>5</Grid.Col>
-                                <Grid.Col span={4}>560.50</Grid.Col>
-                                <Grid.Col span={4}>
-                                    <Group>
-                                        <ActionIcon variant="outline" color="red" size="sm" aria-label="Settings">
-                                            <IconTrash style={{ width: '70%', height: '70%' }} stroke={1.5} />
-                                        </ActionIcon>
-                                    </Group>
-                                </Grid.Col>
-                            </Grid>
-                            <Grid columns={'32'} gutter={{base: 6}}>
-                                <Grid.Col span={4}>Pencil</Grid.Col>
-                                <Grid.Col span={4}>12.50</Grid.Col>
-                                <Grid.Col span={4}>200</Grid.Col>
-                                <Grid.Col span={4}>20</Grid.Col>
-                                <Grid.Col span={4}>11.50</Grid.Col>
-                                <Grid.Col span={4}>5</Grid.Col>
-                                <Grid.Col span={4}>560.50</Grid.Col>
-                                <Grid.Col span={4}>
-                                    <Group>
-                                        <ActionIcon variant="outline" color="red" size="sm" aria-label="Settings">
-                                            <IconTrash style={{ width: '70%', height: '70%' }} stroke={1.5} />
-                                        </ActionIcon>
-                                    </Group>
-                                </Grid.Col>
-                            </Grid>
+
+                            {tempCardProducts && tempCardProducts.length > 0 && (
+                                    tempCardProducts.map((item, index) => (
+                                            <SalesCardItems item={item} index={index} setLoadCardProducts={setLoadCardProducts}/>
+                                    ))
+                            )}
+
                         </ScrollArea>
                     </Grid.Col>
                     <Grid.Col span={7} bg={'gray.1'}>

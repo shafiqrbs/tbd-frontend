@@ -75,22 +75,13 @@ export default function Login() {
 
                         axios({
                             method: 'get',
-                            url: `${import.meta.env.VITE_API_GATEWAY_URL+'inventory/product'}`,
+                            url: `${import.meta.env.VITE_API_GATEWAY_URL+'inventory/product-for-sales'}`,
                             headers: {
                                 "Accept": `application/json`,
                                 "Content-Type": `application/json`,
                                 "Access-Control-Allow-Origin": '*',
                                 "X-Api-Key": import.meta.env.VITE_API_KEY,
                                 "X-Api-User": res.data.data.id
-                            },
-                            params : {
-                                term: '',
-                                name: '',
-                                alternative_name: '',
-                                sku: '',
-                                sales_price: '',
-                                page: 1,
-                                offset: 100
                             }
                         })
                             .then(res => {

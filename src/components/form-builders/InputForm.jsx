@@ -39,7 +39,9 @@ function InputForm(props) {
                         {...form.getInputProps(name)}
                         onKeyDown={getHotkeyHandler([
                             ['Enter', (e) => {
-                                document.getElementById(nextField).focus();
+                                nextField === 'EntityFormSubmit'?
+                                document.getElementById(nextField).click() :
+                                    document.getElementById(nextField).focus()
                             }],
                         ])}
                         rightSection={
