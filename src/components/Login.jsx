@@ -16,12 +16,15 @@ import {isNotEmpty, useForm} from '@mantine/form';
 import {Navigate, useNavigate} from 'react-router-dom'
 import Logo from '../assets/images/logo.png'
 import TerminalbdBg from '../assets/images/terminalbd-bg.png'
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {useTranslation} from "react-i18next";
 import axios from "axios";
+import {getIndexEntityData} from "../store/core/crudSlice.js";
+import {useDispatch, useSelector} from "react-redux";
 
 export default function Login() {
 
+    const dispatch = useDispatch();
     const {t, i18n} = useTranslation();
     const navigate = useNavigate()
     const {height, width} = useViewportSize()
@@ -31,6 +34,11 @@ export default function Login() {
     const [errorMessage,setErrorMessage] = useState('')
 
     const user = localStorage.getItem("user");
+
+    const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword)
+    const indexData = useSelector((state) => state.crudSlice.indexEntityData)
+    const productFilterData = useSelector((state) => state.inventoryCrudSlice.productFilterData)
+
 
     if(user){
         return <Navigate replace to="/"/>;
@@ -62,9 +70,40 @@ export default function Login() {
             .then(res => {
                 setTimeout(()=>{
                     if (res.data.status === 200){
+
                         localStorage.setItem("user", JSON.stringify(res.data.data));
+
+                        axios({
+                            method: 'get',
+                            url: `${import.meta.env.VITE_API_GATEWAY_URL+'inventory/product'}`,
+                            headers: {
+                                "Accept": `application/json`,
+                                "Content-Type": `application/json`,
+                                "Access-Control-Allow-Origin": '*',
+                                "X-Api-Key": import.meta.env.VITE_API_KEY,
+                                "X-Api-User": res.data.data.id
+                            },
+                            params : {
+                                term: '',
+                                name: '',
+                                alternative_name: '',
+                                sku: '',
+                                sales_price: '',
+                                page: 1,
+                                offset: 100
+                            }
+                        })
+                            .then(res => {
+                                if (res.data.data){
+                                    localStorage.setItem("user-products", JSON.stringify(res.data.data));
+                                }
+                            })
+                            .catch(function (error) {
+                                console.log(error)
+                            })
+
                         setErrorMessage('')
-                        setSpinner(false);
+                        setSpinner(false)
                         navigate('/')
                     }
                     setErrorMessage(res.data.message)
@@ -78,6 +117,14 @@ export default function Login() {
                 },500)
             })
     }
+
+    /*useEffect(() => {
+        console.log('ok')
+        /!*if (spinner) {
+            console.log(indexData)
+            setSpinner(false);
+        }*!/
+    }, [spinner]);*/
 
     useHotkeys([['alt+n', () => {
         document.getElementById('Username').focus()

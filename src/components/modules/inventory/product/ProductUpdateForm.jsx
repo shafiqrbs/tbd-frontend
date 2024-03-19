@@ -193,6 +193,22 @@ function ProductUpdateForm() {
                     onCancel: () => console.log('Cancel'),
                     onConfirm: () => {
                         setSaveCreateLoading(true)
+
+                        const storedProducts = localStorage.getItem('user-products');
+                        const localProducts = storedProducts ? JSON.parse(storedProducts) : [];
+
+                        const updatedProducts = localProducts.map(product => {
+                            if (product.id === entityEditData.id) {
+                                return {
+                                    ...product,
+                                    product_name: values.name,
+                                    alternative_name : values.alternative_name
+                                };
+                            }
+                            return product
+                        });
+                        localStorage.setItem('user-products', JSON.stringify(updatedProducts));
+
                         const value = {
                             url: 'inventory/product/' + entityEditData.id,
                             data: values

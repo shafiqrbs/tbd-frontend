@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from "react";
-import {useNavigate, useOutletContext} from "react-router-dom";
+import {json, useNavigate, useOutletContext} from "react-router-dom";
 import {
     Button,
-    rem, Flex,Tabs,Center,Switch,ActionIcon,
-    Grid, Box, ScrollArea, Tooltip, Group, Text, LoadingOverlay, Title,
+    rem, Flex, Tabs, Center, Switch, ActionIcon,
+    Grid, Box, ScrollArea, Tooltip, Group, Text, LoadingOverlay, Title, Select,
 } from "@mantine/core";
 import {useTranslation} from 'react-i18next';
 import {
@@ -11,7 +11,7 @@ import {
     IconDeviceFloppy, IconInfoCircle, IconPlus,IconUserCog,IconStackPush,IconPrinter,IconReceipt,IconPercentage,IconCurrencyTaka,
     IconRestore,IconPhoto,IconMessage,IconEyeEdit,IconRowRemove,IconTrash
 } from "@tabler/icons-react";
-import {useDisclosure, useHotkeys,useToggle} from "@mantine/hooks";
+import {getHotkeyHandler, useDisclosure, useHotkeys, useToggle} from "@mantine/hooks";
 import {useDispatch, useSelector} from "react-redux";
 import {hasLength, useForm} from "@mantine/form";
 import {modals} from "@mantine/modals";
@@ -60,6 +60,78 @@ function SalesForm() {
 
     const [setFormData, setFormDataForUpdate] = useState(false);
     const [formLoad, setFormLoad] = useState(true);
+
+
+    const [searchValue, setSearchValue] = useState('');
+    const [productDropdown, setProductDropdown] = useState([]);
+    const [selectedValue, setSelectedValue] = useState('');
+
+    useEffect(() => {
+        if (searchValue.length > 0) {
+            const storedProducts = localStorage.getItem('user-products');
+            const localProducts = storedProducts ? JSON.parse(storedProducts) : [];
+
+
+            const lowerCaseSearchTerm = searchValue.toLowerCase();
+            const fieldsToSearch = ['product_name','slug','alternative_name'];
+            // const fieldsToSearch = ['purchase_price'];
+
+            const productFilterData = localProducts.filter(product =>
+                fieldsToSearch.some(field =>
+                    // product[field] && product[field].toLowerCase().includes(lowerCaseSearchTerm)
+                    product[field] && String(product[field]).toLowerCase().includes(lowerCaseSearchTerm)
+                )
+            );
+
+            const formattedProductData = productFilterData.map(type => ({
+                label: type.product_name+' '+type.slug+' '+type.alternative_name, value: String(type.id)
+            }));
+
+            setProductDropdown(formattedProductData);
+        } else {
+            // Optionally reset dropdown when there's no search value
+            setProductDropdown([]);
+        }
+    }, [searchValue]);
+
+
+    // const [searchValue, setSearchValue] = useState('');
+    // const [productDropdown, setProductDropdown] = useState([]);
+    // console.log(productDropdown)
+    /*let productDropdown
+
+    useEffect(() => {
+        if (searchValue.length > 0) {
+            let localProducts = JSON.parse(localStorage.getItem('user-products'))
+            console.log(localProducts)
+
+            const lowerCaseSearchTerm = searchValue.toLowerCase();
+            // const fieldsToSearch = ['product_name', 'brand_name', 'barcode', 'alternative_name','category_name'];
+            const fieldsToSearch = ['product_name','slug','unit_name'];
+            const productFilterData = localProducts.filter(product =>
+                fieldsToSearch.some(field =>
+                    product[field] && product[field].toLowerCase().includes(lowerCaseSearchTerm)
+                )
+            );
+            // console.log(productFilterData,'filter data')
+
+            productDropdown = productFilterData && productFilterData.length > 0 ?
+                productFilterData.map((type, index) => {
+                    return ({'label': type.product_name, 'value': String(type.id)})
+                }) : []
+            /!*setProductDropdown(
+                productFilterData && productFilterData.length > 0 ?
+                    productFilterData.map((type, index) => {
+                        return ({'label': type.product_name, 'value': String(type.id)})
+                    }) : []
+            )*!/
+            // console.log(productFilterData,productDropdown)
+
+        }
+    }, [searchValue]);*/
+
+    // console.log(productDropdown)
+
 
     const [categoryData, setCategoryData] = useState(null);
     const categoryDropdownData = useSelector((state) => state.inventoryUtilitySlice.categoryDropdownData)
@@ -208,7 +280,70 @@ function SalesForm() {
                                     />
                                 </Grid.Col>
                                 <Grid.Col span={6}>
-                                    <SelectForm
+
+                                    <Tooltip
+                                        label={t('SelectStockItem')}
+                                        opened={false}
+                                        px={16}
+                                        py={2}
+                                        position="top-end"
+                                        color="red"
+                                        withArrow
+                                        offset={2}
+                                        zIndex={0}
+                                        transitionProps={{transition: "pop-bottom-left", duration: 500}}
+                                    >
+
+                                        <Select
+                                            id={'product'}
+                                            label={''}
+                                            placeholder={'product'}
+                                            size="sm"
+                                            data={productDropdown}
+                                            autoComplete="off"
+                                            clearable
+                                            searchable
+                                            {...form.getInputProps('name')} // Use the correct form field name here
+                                            searchValue={searchValue}
+                                            onSearchChange={setSearchValue}
+                                            value={selectedValue}
+                                            onChange={(value) => {
+                                                console.log(value);
+                                                setSelectedValue(value); // Update the selectedValue state
+                                                // Update form field value if needed:
+                                                // form.setFieldValue('fieldName', value); // Replace 'fieldName' with the correct name
+                                            }}
+                                        />
+
+
+                                        {/*<Select
+                                            id={'product'}
+                                            label={''}
+                                            placeholder={t('product')}
+                                            size="sm"
+                                            data={productDropdown}
+                                            autoComplete="off"
+                                            clearable
+                                            searchable
+                                            {...form.getInputProps(name)}
+                                            onKeyDown={getHotkeyHandler([
+                                                ['Enter', (e) => {
+                                                    document.getElementById('product').focus();
+                                                }],
+                                            ])}
+                                            searchValue={searchValue}
+                                            onSearchChange={setSearchValue}
+                                            // value={value}
+                                            onChange={(e) => {
+                                                console.log(e)
+                                                // changeValue(e)
+                                                // form.setFieldValue(name, e)
+                                            }}
+                                            // withAsterisk={required}
+                                        />*/}
+                                    </Tooltip>
+
+                                    {/*<SelectForm
                                         tooltip={t('Category')}
                                         label=''
                                         placeholder={t('SelectStockItem')}
@@ -218,10 +353,10 @@ function SalesForm() {
                                         form={form}
                                         dropdownValue={categoryDropdown}
                                         id={'category_id'}
-                                        searchable={false}
+                                        searchable={true}
                                         value={categoryData}
                                         changeValue={setCategoryData}
-                                    />
+                                    />*/}
 
                                 </Grid.Col>
                                 <Grid.Col span={1}><Button color={'gray'} variant={'outline'}
