@@ -3,7 +3,7 @@ import {json, useNavigate, useOutletContext} from "react-router-dom";
 import {
     Button,
     rem, Flex, Tabs, Center, Switch, ActionIcon,
-    Grid, Box, ScrollArea, Tooltip, Group, Text, LoadingOverlay, Title, Select,
+    Grid, Box, ScrollArea, Tooltip, Group, Text, LoadingOverlay, Title, Select, Table,
 } from "@mantine/core";
 import {useTranslation} from 'react-i18next';
 import {
@@ -41,8 +41,12 @@ import ProductForm from "../product/ProductForm";
 import ProductUpdateForm from "../product/ProductUpdateForm";
 import SelectServerSideForm from "../../../form-builders/SelectServerSideForm.jsx";
 import SalesCardItems from "./SalesCardItems.jsx";
+import SalesAddStockProductModel from "./model/SalesAddStockProductModel.jsx";
+import SalesAddCustomerModel from "./model/SalesAddCustomerModel.jsx";
+import SalesViewCustomerModel from "./model/SalesViewCustomerModel.jsx";
 
-function SalesForm() {
+function SalesForm(props) {
+    const { currancySymbol,allowZeroPercentage } = props
     const {t, i18n} = useTranslation();
     const dispatch = useDispatch();
     const {isOnline, mainAreaHeight} = useOutletContext();
@@ -62,14 +66,17 @@ function SalesForm() {
 
     const [setFormData, setFormDataForUpdate] = useState(false);
     const [formLoad, setFormLoad] = useState(true);
+    const [addStockProductModel, setAddStockProductModel] = useState(false);
+    const [addCustomerModel, setAddCustomerModel] = useState(false);
+    const [viewCustomerModel, setCustomerViewModel] = useState(false);
 
 
     const [searchValue, setSearchValue] = useState('');
     const [productDropdown, setProductDropdown] = useState([]);
-    const [selectedValue, setSelectedValue] = useState('');
 
     const [tempCardProducts,setTempCardProducts] = useState([])
     const [loadCardProducts,setLoadCardProducts] = useState(false)
+
 
     useEffect(() => {
         const tempProducts = localStorage.getItem('temp-sales-products');
@@ -92,8 +99,13 @@ function SalesForm() {
                 )
             );
 
-            const formattedProductData = productFilterData.map(type => ({
+            /*const formattedProductData = productFilterData.map(type => ({
                 label: type.product_name, value: String(type.id)
+            }));*/
+
+            const formattedProductData = productFilterData.map(product => ({
+                label: `${product.product_name} [${product.quantity}] ${product.unit_name}`,
+                value: String(product.id)
             }));
 
             setProductDropdown(formattedProductData);
@@ -103,6 +115,7 @@ function SalesForm() {
     }, [searchValue]);
 
 
+
     function handleAddProductByProductId(values, myCardProducts, localProducts) {
         const addProducts = localProducts.reduce((acc, product) => {
             if (product.id === Number(values.product_id)) {
@@ -110,8 +123,11 @@ function SalesForm() {
                     product_id: product.id,
                     product_name: product.product_name,
                     sales_price: values.sales_price,
-                    purchase_price: values.purchase_price,
+                    mrp: values.mrp,
                     percent: values.percent,
+                    stock: product.quantity,
+                    quantity: values.quantity,
+                    sub_total: selectProductDetails.sub_total,
                 });
             }
             return acc;
@@ -156,8 +172,11 @@ function SalesForm() {
             product_id: product.id,
             product_name: product.product_name,
             sales_price: product.sales_price,
-            purchase_price: product.purchase_price,
-            percent: product.percent,
+            mrp: product.sales_price,
+            percent: '',
+            stock: product.quantity,
+            quantity: 1,
+            sub_total: product.sales_price,
         };
     }
 
@@ -227,13 +246,31 @@ function SalesForm() {
 
     const form = useForm({
         initialValues: {
-            product_id: '', sales_price: '',purchase_price:'',percent:'',barcode:''
+            product_id: '',mrp:'', sales_price: '',percent:'',barcode:'',sub_total:'',quantity:''
         },
         validate: {
             product_id: (value,values) => {
                 const isDigitsOnly = /^\d+$/.test(value);
                 if (!isDigitsOnly && values.product_id) {
                     return true;
+                }
+                return null;
+            },
+            quantity: (value, values) => {
+                if (values.product_id) {
+                    const isNumberOrFractional = /^-?\d+(\.\d+)?$/.test(value);
+                    if (!isNumberOrFractional) {
+                        return true;
+                    }
+                }
+                return null;
+            },
+            percent: (value, values) => {
+                if (value && values.product_id) {
+                    const isNumberOrFractional = /^-?\d+(\.\d+)?$/.test(value);
+                    if (!isNumberOrFractional) {
+                        return true;
+                    }
                 }
                 return null;
             },
@@ -245,18 +282,60 @@ function SalesForm() {
                     }
                 }
                 return null;
-            },
-            purchase_price: (value, values) => {
-                if (values.product_id) {
-                    const isNumberOrFractional = /^-?\d+(\.\d+)?$/.test(value);
-                    if (!isNumberOrFractional) {
-                        return true;
-                    }
-                }
-                return null;
-            },
+            }
         }
     });
+
+
+    const [selectProductDetails,setSelectProductDetails] = useState('')
+
+    useEffect(() => {
+        const storedProducts = localStorage.getItem('user-products');
+        const localProducts = storedProducts ? JSON.parse(storedProducts) : [];
+
+        const filteredProducts = localProducts.filter(product => product.id === Number(form.values.product_id));
+
+        if (filteredProducts.length > 0) {
+            const selectedProduct = filteredProducts[0];
+
+            setSelectProductDetails(selectedProduct);
+
+            form.setFieldValue('mrp', selectedProduct.sales_price);
+            form.setFieldValue('sales_price', selectedProduct.sales_price);
+        } else {
+            setSelectProductDetails(null);
+            form.setFieldValue('mrp', '');
+            form.setFieldValue('sales_price', '');
+        }
+    }, [form.values.product_id]);
+
+
+    useEffect(() => {
+        const quantity = Number(form.values.quantity);
+        const salesPrice = Number(form.values.sales_price);
+        /*if (!allowZeroPercentage){
+            alert('System not permit to 0 quantity as order')
+        }*/
+        if (!isNaN(quantity) && !isNaN(salesPrice) && quantity > 0 && salesPrice >= 0) {
+            setSelectProductDetails(prevDetails => ({
+                ...prevDetails,
+                sub_total: quantity * salesPrice,
+                sales_price: salesPrice,
+            }));
+        }
+
+    }, [form.values.quantity, form.values.sales_price]);
+
+
+    useEffect(() => {
+        if (form.values.quantity && form.values.mrp) {
+            const discountAmount = (form.values.mrp * form.values.percent) / 100;
+            const salesPrice = form.values.mrp - discountAmount;
+
+            form.setFieldValue('sales_price', salesPrice);
+        }
+    }, [form.values.percent]);
+
 
     useHotkeys([['alt+n', () => {
         document.getElementById('CompanyName').focus()
@@ -276,47 +355,33 @@ function SalesForm() {
         <Box bg={"white"} mt={`xs`}>
             <form onSubmit={form.onSubmit((values) => {
 
-                modals.openConfirmModal({
-                    title: 'Please confirm your action',
-                    children: (
-                        <Text size="sm">
-                            This action is so important that you are required to confirm it with a
-                            modal. Please click
-                            one of these buttons to proceed.
-                        </Text>
-                    ),
-                    labels: {confirm: 'Confirm', cancel: 'Cancel'},
-                    onCancel: () => console.log('Cancel'),
-                    onConfirm: () => {
+                if (!values.barcode && !values.product_id){
+                    form.setFieldError('barcode', true);
+                    form.setFieldError('product_id', true);
+                    setTimeout(() => {
+                        notifications.show({
+                            loading: true,
+                            color: 'red',
+                            title: 'Loading your data',
+                            message: 'Data will be loaded in 3 seconds, you cannot close this yet',
+                            autoClose: 1000,
+                            withCloseButton: true,
+                        });
+                    },1000)
+                }else {
+                    const cardProducts = localStorage.getItem('temp-sales-products');
+                    const myCardProducts = cardProducts ? JSON.parse(cardProducts) : [];
+                    const storedProducts = localStorage.getItem('user-products');
+                    const localProducts = storedProducts ? JSON.parse(storedProducts) : [];
 
-                        if (!values.barcode && !values.product_id){
-                            form.setFieldError('barcode', true);
-                            form.setFieldError('product_id', true);
-                            setTimeout(() => {
-                                notifications.show({
-                                    loading: true,
-                                    color: 'red',
-                                    title: 'Loading your data',
-                                    message: 'Data will be loaded in 3 seconds, you cannot close this yet',
-                                    autoClose: 1000,
-                                    withCloseButton: true,
-                                });
-                            },1000)
-                        }else {
-                            const cardProducts = localStorage.getItem('temp-sales-products');
-                            const myCardProducts = cardProducts ? JSON.parse(cardProducts) : [];
-                            const storedProducts = localStorage.getItem('user-products');
-                            const localProducts = storedProducts ? JSON.parse(storedProducts) : [];
+                    if (values.product_id && !values.barcode) {
+                        handleAddProductByProductId(values, myCardProducts, localProducts);
+                    } else if (!values.product_id && values.barcode) {
+                        handleAddProductByBarcode(values, myCardProducts, localProducts);
+                    }
 
-                            if (values.product_id && !values.barcode) {
-                                handleAddProductByProductId(values, myCardProducts, localProducts);
-                            } else if (!values.product_id && values.barcode) {
-                                handleAddProductByBarcode(values, myCardProducts, localProducts);
-                            }
+                }
 
-                        }
-                    },
-                });
             })}>
                 <Box pb={`xs`} pl={`xs`} pr={8} bg={'indigo.1'}>
                     <Grid columns={48} >
@@ -341,7 +406,7 @@ function SalesForm() {
                                         label=''
                                         placeholder={t('ChooseStockProduct')}
                                         required = {false}
-                                        nextField = {'sales_price'}
+                                        nextField = {'quantity'}
                                         name = {'product_id'}
                                         form = {form}
                                         mt={8}
@@ -357,46 +422,41 @@ function SalesForm() {
                                     <Button
                                         color={'gray'}
                                         variant={'outline'}
-                                        onClick={open}>
+                                        onClick={setAddStockProductModel}>
                                         <IconPlus size={16} opacity={0.5}/></Button>
                                 </Grid.Col>
-                                {opened &&
-                                <CustomerGroupModel openedModel={opened} open={open} close={close}/>
+                                {addStockProductModel &&
+                                    <SalesAddStockProductModel
+                                        addStockProductModel={addStockProductModel}
+                                        setAddStockProductModel={setAddStockProductModel}
+                                    />
                                 }
-                                <Grid.Col span={1}><Center  mt={4} ></Center></Grid.Col>
+                                <Grid.Col span={2}>
+                                    <Center  mt={4} >{selectProductDetails && form.values.mrp}</Center>
+                                </Grid.Col>
                             </Grid>
                         </Grid.Col>
                         <Grid.Col span={16}>
                             <Grid gutter={{base: 6}}>
-                                <Grid.Col span={4}>
-                                    <InputForm
-                                        tooltip={t('SalesPriceValidateMessage')}
-                                        label=''
-                                        placeholder={t('SalesPrice')}
-                                        required={true}
-                                        nextField={'purchase_price'}
-                                        form={form}
-                                        name={'sales_price'}
-                                        id={'sales_price'}
-                                    />
-                                </Grid.Col>
+
                                 <Grid.Col span={3}>
                                     <InputForm
-                                        tooltip={t('PurchasePriceValidateMessage')}
+                                        tooltip={t('QuantityValidateMessage')}
                                         label=''
-                                        placeholder={t('PurchasePrice')}
+                                        placeholder={t('Quantity')}
                                         required={true}
                                         nextField={'percent'}
                                         form={form}
-                                        name={'purchase_price'}
-                                        id={'purchase_price'}
+                                        name={'quantity'}
+                                        id={'quantity'}
                                     />
                                 </Grid.Col>
+
                                 <Grid.Col span={3}>
                                     <InputForm
                                         tooltip={t('PercentValidateMessage')}
                                         label=''
-                                        placeholder={t('percent')}
+                                        placeholder={t('Percent')}
                                         required={true}
                                         nextField={'EntityFormSubmit'}
                                         form={form}
@@ -404,7 +464,24 @@ function SalesForm() {
                                         id={'percent'}
                                     />
                                 </Grid.Col>
-                                <Grid.Col span={1}><Text  pt={'4'} ta={'center'} ></Text></Grid.Col>
+
+                                <Grid.Col span={4}>
+                                    <InputForm
+                                        tooltip={t('SalesPriceValidateMessage')}
+                                        label=''
+                                        placeholder={t('SalesPrice')}
+                                        required={true}
+                                        nextField={'EntityFormSubmit'}
+                                        form={form}
+                                        name={'sales_price'}
+                                        id={'sales_price'}
+                                        disabled={form.values.percent}
+                                    />
+                                </Grid.Col>
+
+                                <Grid.Col span={2}>
+                                    <Center  mt={2} >{selectProductDetails && selectProductDetails.sub_total && (selectProductDetails.sub_total).toFixed(2)}</Center>
+                                </Grid.Col>
                             </Grid>
                         </Grid.Col>
                         <Grid.Col span={4}>
@@ -436,7 +513,7 @@ function SalesForm() {
                 <Box mt={'xs'}>
                  <Grid columns={24}>
                     <Grid.Col span={16}>
-                        <Grid columns={'32'} gutter={{base: 6}} bg={'gray.2'} pt={4} p={'xs'}>
+                        {/*<Grid columns={'32'} gutter={{base: 6}} bg={'gray.2'} pt={4} p={'xs'}>
                             <Grid.Col span={4}>{t('ProductName')}</Grid.Col>
                             <Grid.Col span={4}>{t('MRP')}</Grid.Col>
                             <Grid.Col span={4}>{t('Stock')}</Grid.Col>
@@ -445,16 +522,37 @@ function SalesForm() {
                             <Grid.Col span={4}>{t('Discount')}(%)</Grid.Col>
                             <Grid.Col span={4}>{t('SubTotal')}</Grid.Col>
                             <Grid.Col span={4}>{t('Action')}</Grid.Col>
-                        </Grid>
-                        <ScrollArea  p={'xs'} h={height} scrollbarSize={2} type="never">
+                        </Grid>*/}
+                        <Table.ScrollContainer minWidth={500} type="native">
+                        <Table>
+                            <Table.Thead>
+                                <Table.Tr>
+                                    <Table.Th>{t('ProductName')}</Table.Th>
+                                    <Table.Th>{t('MRP')}</Table.Th>
+                                    <Table.Th>{t('Stock')}</Table.Th>
+                                    <Table.Th>{t('Quantity')}</Table.Th>
+                                    <Table.Th>{t('Price')}</Table.Th>
+                                    <Table.Th>{t('Discount')}</Table.Th>
+                                    <Table.Th>{t('SubTotal')}</Table.Th>
+                                    <Table.Th>{t('Action')}</Table.Th>
+                                </Table.Tr>
+                            </Table.Thead>
+                            <Table.Tbody>
+                                {/*<ScrollArea  p={'xs'} h={height} scrollbarSize={2} type="never">*/}
+
 
                             {tempCardProducts && tempCardProducts.length > 0 && (
                                     tempCardProducts.map((item, index) => (
-                                            <SalesCardItems item={item} index={index} setLoadCardProducts={setLoadCardProducts}/>
+                                            <SalesCardItems item={item} index={index} setLoadCardProducts={setLoadCardProducts} symbol={currancySymbol}/>
                                     ))
                             )}
+                                {/*</ScrollArea>*/}
 
-                        </ScrollArea>
+                            </Table.Tbody>
+
+                        </Table>
+                        </Table.ScrollContainer>
+
                     </Grid.Col>
                     <Grid.Col span={7} bg={'gray.1'}>
                         <Box bg={'indigo.3'}>
@@ -475,11 +573,18 @@ function SalesForm() {
                                         changeValue={setCategoryData}
                                     />
                                 </Grid.Col>
-                                <Grid.Col span={2}><Button mt={1} color={'red'} variant={'filled'}
-                                                           onClick={open}><IconUserCog size={16}
-                                                                                       opacity={0.5}/></Button></Grid.Col>
-                                {opened &&
-                                <CustomerGroupModel openedModel={opened} open={open} close={close}/>
+                                <Grid.Col span={2}>
+                                    <Button
+                                        mt={1}
+                                        color={'red'}
+                                        variant={'filled'}
+                                        onClick={setAddCustomerModel}
+                                    >
+                                        <IconUserCog size={16} opacity={0.5}/>
+                                    </Button>
+                                </Grid.Col>
+                                {addCustomerModel &&
+                                    <SalesAddCustomerModel addCustomerModel={addCustomerModel} setAddCustomerModel={setAddCustomerModel} />
                                 }
                             </Grid>
                             <Box  h={1} mt={'4'} bg={`gray.3`}></Box>
@@ -495,9 +600,18 @@ function SalesForm() {
                                                 <ActionIcon >
                                                     <IconMessage size={18} stroke={1.5} />
                                                 </ActionIcon>
-                                                <ActionIcon variant="light" >
-                                                    <IconEyeEdit size={18} stroke={1.5} />
+                                                <ActionIcon
+                                                    variant="light"
+                                                    onClick={setCustomerViewModel}
+                                                >
+                                                    <IconEyeEdit
+                                                        size={18}
+                                                        stroke={1.5}
+                                                    />
                                                 </ActionIcon>
+                                                {viewCustomerModel &&
+                                                    <SalesViewCustomerModel viewCustomerModel={viewCustomerModel} setCustomerViewModel={setCustomerViewModel} />
+                                                }
                                             </Group>
                                         </Center>
                                     </Grid.Col>

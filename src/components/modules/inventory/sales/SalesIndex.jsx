@@ -15,6 +15,7 @@ import {
     setSearchKeyword,
     setVendorFilterData
 } from "../../../../store/core/crudSlice.js";
+import {getShowEntityData} from "../../../../store/inventory/crudSlice.js";
 
 function SalesIndex() {
     const {t, i18n} = useTranslation();
@@ -29,6 +30,12 @@ function SalesIndex() {
         });
         const timer = setInterval(updateProgress, 100);
         return () => clearInterval(timer);
+    }, []);
+
+    const configData = useSelector((state) => state.inventoryCrudSlice.showEntityData)
+
+    useEffect(() => {
+        dispatch(getShowEntityData('inventory/config'))
     }, []);
 
 
@@ -47,7 +54,11 @@ function SalesIndex() {
                     </Box>
                     <Box pr={'12'} pl={'12'}>
                         {
-                            insertType === 'create' ? <SalesForm/> : <SalesUpdateForm/>
+                            insertType === 'create' && configData.business_model.slug==='general' &&
+                            <SalesForm
+                                allowZeroPercentage = {configData.zero_stock}
+                                currancySymbol = {configData.currency.symbol}
+                            />
                         }
                     </Box>
                 </Box>

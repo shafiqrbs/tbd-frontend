@@ -3,7 +3,7 @@ import {json, useNavigate, useOutletContext} from "react-router-dom";
 import {
     Button,
     rem, Flex, Tabs, Center, Switch, ActionIcon,
-    Grid, Box, ScrollArea, Tooltip, Group, Text, LoadingOverlay, Title, Select,
+    Grid, Box, ScrollArea, Tooltip, Group, Text, LoadingOverlay, Title, Select, Table,
 } from "@mantine/core";
 import {useTranslation} from 'react-i18next';
 import {
@@ -53,7 +53,54 @@ function SalesCardItems(props) {
 
 
     return (
-        <Grid columns={'32'} gutter={{base: 6}} index={index}>
+
+        <Table.Tr key={index}>
+            <Table.Td>{item.product_name ?item.product_name:''}</Table.Td>
+            <Table.Td>{item.mrp ?item.mrp:''}</Table.Td>
+            <Table.Td>{item.stock ?item.stock:''}</Table.Td>
+            <Table.Td>{item.quantity ?item.quantity:''}</Table.Td>
+            <Table.Td>{item.sales_price ?item.sales_price:''}</Table.Td>
+            <Table.Td>{item.percent ?item.percent+' %':''}</Table.Td>
+            <Table.Td>{item.quantity && item.sales_price ? props.symbol +' '+ (item.sub_total).toFixed(2) : ''}</Table.Td>
+            <Table.Td>
+                <Group>
+                    <ActionIcon
+                        variant="outline"
+                        color="red"
+                        size="sm"
+                        aria-label="Settings"
+                        onClick={() => {
+                            modals.openConfirmModal({
+                                title: t('AreYouSureYouWantToDeleteThisItem'),
+                                children: (
+                                    <Text size="sm">
+                                        {t('DeleteDetails')}
+                                    </Text>
+                                ),
+                                labels: {confirm: 'Confirm', cancel: 'Cancel'},
+                                onCancel: () => console.log('Cancel'),
+                                confirmProps: { color: 'red' },
+                                onConfirm: () => {
+                                    const dataString = localStorage.getItem('temp-sales-products');
+                                    let data = dataString ? JSON.parse(dataString) : [];
+
+                                    data = data.filter(d => d.product_id !== item.product_id);
+
+                                    const updatedDataString = JSON.stringify(data);
+
+                                    localStorage.setItem('temp-sales-products', updatedDataString);
+                                    setLoadCardProducts(true)
+                                },
+                            });
+                        }}
+                    >
+                        <IconTrash style={{ width: '70%', height: '70%' }} stroke={1.5} />
+                    </ActionIcon>
+                </Group>
+            </Table.Td>
+        </Table.Tr>
+
+        /*<Grid columns={'32'} gutter={{base: 6}} index={index}>
             <Grid.Col span={4}>{item.product_name ?item.product_name:''}</Grid.Col>
             <Grid.Col span={4}>{item.sales_price ?item.sales_price:''}</Grid.Col>
             <Grid.Col span={4}>200</Grid.Col>
@@ -97,7 +144,7 @@ function SalesCardItems(props) {
                     </ActionIcon>
                 </Group>
             </Grid.Col>
-        </Grid>
+        </Grid>*/
     );
 }
 export default SalesCardItems;

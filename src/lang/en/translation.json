@@ -183,6 +183,9 @@
   "ProductName": "Name",
   "AreYouSureYouWantToDeleteThisItem": "Are you sure you want to delete this item?",
   "DeleteDetails": "This action is so important that you are required to confirm it with a\nmodal. Please click\none of these buttons to proceed.",
+  "QuantityValidateMessage": "Quantity must be number or fractional value",
+  "PercentValidateMessage": "Percent must be number or fractional value",
+
 
 
   "" : ""

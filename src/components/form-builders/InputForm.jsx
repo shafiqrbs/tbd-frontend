@@ -9,7 +9,7 @@ import {getHotkeyHandler} from "@mantine/hooks";
 
 function InputForm(props) {
 
-    const {label, placeholder, required, nextField, name, form, tooltip, mt, id} = props
+    const {label, placeholder, required, nextField, name, form, tooltip, mt, id, disabled} = props
 
     const {t, i18n} = useTranslation();
 
@@ -35,6 +35,7 @@ function InputForm(props) {
                         label={label}
                         placeholder={placeholder}
                         mt={mt}
+                        disabled={disabled}
                         autoComplete="off"
                         {...form.getInputProps(name)}
                         onKeyDown={getHotkeyHandler([
