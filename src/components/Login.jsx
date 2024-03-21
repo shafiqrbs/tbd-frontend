@@ -75,7 +75,7 @@ export default function Login() {
 
                         axios({
                             method: 'get',
-                            url: `${import.meta.env.VITE_API_GATEWAY_URL+'inventory/product-for-sales'}`,
+                            url: `${import.meta.env.VITE_API_GATEWAY_URL+'inventory/stock-item'}`,
                             headers: {
                                 "Accept": `application/json`,
                                 "Content-Type": `application/json`,

@@ -8,14 +8,28 @@ import {
 import {useTranslation} from 'react-i18next';
 import {
     IconCheck,
-    IconDeviceFloppy, IconInfoCircle, IconPlus,IconUserCog,IconStackPush,IconPrinter,IconReceipt,IconPercentage,IconCurrencyTaka,
-    IconRestore,IconPhoto,IconMessage,IconEyeEdit,IconRowRemove,IconTrash
+    IconDeviceFloppy,
+    IconInfoCircle,
+    IconPlus,
+    IconUserCog,
+    IconStackPush,
+    IconPrinter,
+    IconReceipt,
+    IconPercentage,
+    IconCurrencyTaka,
+    IconRestore,
+    IconPhoto,
+    IconMessage,
+    IconEyeEdit,
+    IconRowRemove,
+    IconTrash,
+    IconX
 } from "@tabler/icons-react";
 import {getHotkeyHandler, useDisclosure, useHotkeys, useToggle} from "@mantine/hooks";
 import {useDispatch, useSelector} from "react-redux";
 import {hasLength, useForm} from "@mantine/form";
 import {modals} from "@mantine/modals";
-import {notifications} from "@mantine/notifications";
+import {notifications, showNotification} from "@mantine/notifications";
 
 import Shortcut from "../../shortcut/Shortcut";
 import InputForm from "../../../form-builders/InputForm";
@@ -77,6 +91,9 @@ function SalesForm(props) {
     const [tempCardProducts,setTempCardProducts] = useState([])
     const [loadCardProducts,setLoadCardProducts] = useState(false)
 
+    // const [salesSubTotal,setSalesSubTotal] = useState(0)
+    let salesSubTotalAmount = 0
+
 
     useEffect(() => {
         const tempProducts = localStorage.getItem('temp-sales-products');
@@ -99,13 +116,8 @@ function SalesForm(props) {
                 )
             );
 
-            /*const formattedProductData = productFilterData.map(type => ({
+            const formattedProductData = productFilterData.map(type => ({
                 label: type.product_name, value: String(type.id)
-            }));*/
-
-            const formattedProductData = productFilterData.map(product => ({
-                label: `${product.product_name} [${product.quantity}] ${product.unit_name}`,
-                value: String(product.id)
             }));
 
             setProductDropdown(formattedProductData);
@@ -121,7 +133,7 @@ function SalesForm(props) {
             if (product.id === Number(values.product_id)) {
                 acc.push({
                     product_id: product.id,
-                    product_name: product.product_name,
+                    display_name: product.display_name,
                     sales_price: values.sales_price,
                     mrp: values.mrp,
                     percent: values.percent,
@@ -170,7 +182,7 @@ function SalesForm(props) {
     function createProductFromValues(product) {
         return {
             product_id: product.id,
-            product_name: product.product_name,
+            display_name: product.display_name,
             sales_price: product.sales_price,
             mrp: product.sales_price,
             percent: '',
@@ -313,15 +325,26 @@ function SalesForm(props) {
     useEffect(() => {
         const quantity = Number(form.values.quantity);
         const salesPrice = Number(form.values.sales_price);
-        /*if (!allowZeroPercentage){
-            alert('System not permit to 0 quantity as order')
-        }*/
+
         if (!isNaN(quantity) && !isNaN(salesPrice) && quantity > 0 && salesPrice >= 0) {
-            setSelectProductDetails(prevDetails => ({
-                ...prevDetails,
-                sub_total: quantity * salesPrice,
-                sales_price: salesPrice,
-            }));
+            if (!allowZeroPercentage){
+                showNotification({
+                    color: 'pink',
+                    title: t('WeNotifyYouThat'),
+                    message: t('ZeroQuantityNotAllow'),
+                    autoClose: 1500,
+                    loading : true,
+                    withCloseButton: true,
+                    position: 'top-center',
+                    style: { backgroundColor: 'mistyrose' },
+                });
+            }else {
+                setSelectProductDetails(prevDetails => ({
+                    ...prevDetails,
+                    sub_total: quantity * salesPrice,
+                    sales_price: salesPrice,
+                }));
+            }
         }
 
     }, [form.values.quantity, form.values.sales_price]);
@@ -375,7 +398,20 @@ function SalesForm(props) {
                     const localProducts = storedProducts ? JSON.parse(storedProducts) : [];
 
                     if (values.product_id && !values.barcode) {
-                        handleAddProductByProductId(values, myCardProducts, localProducts);
+                        if (!allowZeroPercentage){
+                            showNotification({
+                                color: 'pink',
+                                title: t('WeNotifyYouThat'),
+                                message: t('ZeroQuantityNotAllow'),
+                                autoClose: 1500,
+                                loading : true,
+                                withCloseButton: true,
+                                position: 'top-center',
+                                style: { backgroundColor: 'mistyrose' },
+                            });
+                        }else {
+                            handleAddProductByProductId(values, myCardProducts, localProducts);
+                        }
                     } else if (!values.product_id && values.barcode) {
                         handleAddProductByBarcode(values, myCardProducts, localProducts);
                     }
@@ -528,25 +564,36 @@ function SalesForm(props) {
                             <Table.Thead>
                                 <Table.Tr>
                                     <Table.Th>{t('ProductName')}</Table.Th>
-                                    <Table.Th>{t('MRP')}</Table.Th>
+                                    <Table.Th style={{ textAlign: 'right' }}>{t('MRP')}</Table.Th>
                                     <Table.Th>{t('Stock')}</Table.Th>
                                     <Table.Th>{t('Quantity')}</Table.Th>
-                                    <Table.Th>{t('Price')}</Table.Th>
+                                    <Table.Th style={{ textAlign: 'right' }}>{t('Price')}</Table.Th>
                                     <Table.Th>{t('Discount')}</Table.Th>
-                                    <Table.Th>{t('SubTotal')}</Table.Th>
+                                    <Table.Th style={{ textAlign: 'right' }}>{t('SubTotal')}</Table.Th>
                                     <Table.Th>{t('Action')}</Table.Th>
                                 </Table.Tr>
                             </Table.Thead>
                             <Table.Tbody>
                                 {/*<ScrollArea  p={'xs'} h={height} scrollbarSize={2} type="never">*/}
 
-
                             {tempCardProducts && tempCardProducts.length > 0 && (
-                                    tempCardProducts.map((item, index) => (
+                                    tempCardProducts.map((item, index) => {
+                                        salesSubTotalAmount = salesSubTotalAmount + item.sub_total
+                                        return(
                                             <SalesCardItems item={item} index={index} setLoadCardProducts={setLoadCardProducts} symbol={currancySymbol}/>
-                                    ))
+                                        )
+                                    })
                             )}
                                 {/*</ScrollArea>*/}
+                                <Table.Tr>
+                                    {/*<Table.Td>{item.product_name ?item.product_name:''}</Table.Td>*/}
+                                    {/*<Table.Td style={{ textAlign: 'right' }}>{item.mrp && Number(item.mrp).toFixed(2)}</Table.Td>*/}
+                                    {/*<Table.Td>{item.stock ?item.stock:''}</Table.Td>*/}
+                                    {/*<Table.Td style={{ textAlign: 'center' }}>{item.quantity ?item.quantity:''}</Table.Td>*/}
+                                    {/*<Table.Td style={{ textAlign: 'right' }}>{item.sales_price && (Number(item.sales_price)).toFixed(2)}</Table.Td>*/}
+                                    {/*<Table.Td style={{ textAlign: 'center' }}>{item.percent ?item.percent+' %':''}</Table.Td>*/}
+                                    <Table.Td style={{ textAlign: 'right' }}>{salesSubTotalAmount}</Table.Td>
+                                </Table.Tr>
 
                             </Table.Tbody>
 

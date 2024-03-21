@@ -11,6 +11,7 @@ import {useDispatch, useSelector} from "react-redux";
 import InputForm from "../../../../form-builders/InputForm.jsx";
 import SelectForm from "../../../../form-builders/SelectForm.jsx";
 import TextAreaForm from "../../../../form-builders/TextAreaForm.jsx";
+import ProductForm from "../../product/ProductForm.jsx";
 
 function SalesAddStockProductModel(props) {
     const {t, i18n} = useTranslation();
@@ -35,6 +36,8 @@ function SalesAddStockProductModel(props) {
                 </Grid>
 
             </Box>
+
+            <ProductForm />
         </Modal>
 
     );

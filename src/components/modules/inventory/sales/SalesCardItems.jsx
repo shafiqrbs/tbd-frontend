@@ -55,13 +55,13 @@ function SalesCardItems(props) {
     return (
 
         <Table.Tr key={index}>
-            <Table.Td>{item.product_name ?item.product_name:''}</Table.Td>
-            <Table.Td>{item.mrp ?item.mrp:''}</Table.Td>
+            <Table.Td>{item.display_name ?item.display_name:''}</Table.Td>
+            <Table.Td style={{ textAlign: 'right' }}>{item.mrp && Number(item.mrp).toFixed(2)}</Table.Td>
             <Table.Td>{item.stock ?item.stock:''}</Table.Td>
-            <Table.Td>{item.quantity ?item.quantity:''}</Table.Td>
-            <Table.Td>{item.sales_price ?item.sales_price:''}</Table.Td>
-            <Table.Td>{item.percent ?item.percent+' %':''}</Table.Td>
-            <Table.Td>{item.quantity && item.sales_price ? props.symbol +' '+ (item.sub_total).toFixed(2) : ''}</Table.Td>
+            <Table.Td style={{ textAlign: 'center' }}>{item.quantity ?item.quantity:''}</Table.Td>
+            <Table.Td style={{ textAlign: 'right' }}>{item.sales_price && (Number(item.sales_price)).toFixed(2)}</Table.Td>
+            <Table.Td style={{ textAlign: 'center' }}>{item.percent ?item.percent+' %':''}</Table.Td>
+            <Table.Td style={{ textAlign: 'right' }}>{item.quantity && item.sales_price && props.symbol +' '+ (Number(item.sub_total)).toFixed(2)}</Table.Td>
             <Table.Td>
                 <Group>
                     <ActionIcon

@@ -185,6 +185,8 @@
   "DeleteDetails": "This action is so important that you are required to confirm it with a\nmodal. Please click\none of these buttons to proceed.",
   "QuantityValidateMessage": "Quantity must be number or fractional value",
   "PercentValidateMessage": "Percent must be number or fractional value",
+  "WeNotifyYouThat": "We notify you that !",
+  "ZeroQuantityNotAllow": "Zero quantity not allow",
 
 
 
