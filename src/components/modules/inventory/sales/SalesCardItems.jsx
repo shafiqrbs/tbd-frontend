@@ -59,9 +59,11 @@ function SalesCardItems(props) {
             <Table.Td style={{ textAlign: 'right' }}>{item.mrp && Number(item.mrp).toFixed(2)}</Table.Td>
             <Table.Td>{item.stock ?item.stock:''}</Table.Td>
             <Table.Td style={{ textAlign: 'center' }}>{item.quantity ?item.quantity:''}</Table.Td>
+            <Table.Td style={{ textAlign: 'center' }}>{item.unit_name ?item.unit_name:''}</Table.Td>
             <Table.Td style={{ textAlign: 'right' }}>{item.sales_price && (Number(item.sales_price)).toFixed(2)}</Table.Td>
-            <Table.Td style={{ textAlign: 'center' }}>{item.percent ?item.percent+' %':''}</Table.Td>
-            <Table.Td style={{ textAlign: 'right' }}>{item.quantity && item.sales_price && props.symbol +' '+ (Number(item.sub_total)).toFixed(2)}</Table.Td>
+            <Table.Td style={{ textAlign: 'center' }}>{item.percent ? item.percent+' %':''}</Table.Td>
+            <Table.Td style={{ textAlign: 'right' }}>{(Number(item.sub_total)).toFixed(2)}</Table.Td>
+            {/*<Table.Td style={{ textAlign: 'right' }}>{item.quantity && item.sales_price && props.symbol +' '+ (Number(item.sub_total)).toFixed(2)}</Table.Td>*/}
             <Table.Td>
                 <Group>
                     <ActionIcon

@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {json, useNavigate, useOutletContext} from "react-router-dom";
+import classes from '../../../../assets/css/Tab.module.css';
 import {
     Button,
     rem, Flex, Tabs, Center, Switch, ActionIcon,
@@ -65,7 +66,7 @@ function SalesForm(props) {
     const dispatch = useDispatch();
     const {isOnline, mainAreaHeight} = useOutletContext();
     const height = mainAreaHeight - 200; //TabList height 104
-    const formHeight = mainAreaHeight - 380; //TabList height 104
+    const formHeight = mainAreaHeight - 250; //TabList height 104
     const navigate = useNavigate();
     const [opened, {open, close}] = useDisclosure(false);
     const icon = <IconInfoCircle />;
@@ -139,6 +140,7 @@ function SalesForm(props) {
                     percent: values.percent,
                     stock: product.quantity,
                     quantity: values.quantity,
+                    unit_name: product.unit_name,
                     sub_total: selectProductDetails.sub_total,
                 });
             }
@@ -188,6 +190,7 @@ function SalesForm(props) {
             percent: '',
             stock: product.quantity,
             quantity: 1,
+            unit_name: product.unit_name,
             sub_total: product.sales_price,
         };
     }
@@ -419,7 +422,7 @@ function SalesForm(props) {
                 }
 
             })}>
-                <Box pb={`xs`} pl={`xs`} pr={8} bg={'indigo.1'}>
+                <Box pl={`xs`} pr={8}  style={{ background:'#fab00533'}}>
                     <Grid columns={48} >
                         <Grid.Col span={28}>
                             <Grid gutter={{base: 6}} >
@@ -526,7 +529,7 @@ function SalesForm(props) {
                                     {!saveCreateLoading &&
                                         <Button
                                         size="xs"
-                                        color={`indigo.6`}
+                                        color={`red`}
                                         type="submit"
                                         mt={4}
                                         mr={'xs'}
@@ -545,7 +548,6 @@ function SalesForm(props) {
                         </Grid.Col>
                     </Grid>
                 </Box>
-                <Box  h={1} bg={`gray.3`}></Box>
                 <Box mt={'xs'}>
                  <Grid columns={24}>
                     <Grid.Col span={16}>
@@ -559,14 +561,14 @@ function SalesForm(props) {
                             <Grid.Col span={4}>{t('SubTotal')}</Grid.Col>
                             <Grid.Col span={4}>{t('Action')}</Grid.Col>
                         </Grid>*/}
-                        <Table.ScrollContainer minWidth={500} type="native">
-                        <Table>
-                            <Table.Thead>
+                        <Table highlightOnHover withTableBorder striped>
+                            <Table.Thead bg="rgba(230, 233, 235, 1)"  >
                                 <Table.Tr>
-                                    <Table.Th>{t('ProductName')}</Table.Th>
-                                    <Table.Th style={{ textAlign: 'right' }}>{t('MRP')}</Table.Th>
+                                    <Table.Th style={{ width: '30%' }} >{t('ProductName')}</Table.Th>
+                                    <Table.Th style={{ textAlign: 'center' }}>{t('MRP')}</Table.Th>
                                     <Table.Th>{t('Stock')}</Table.Th>
                                     <Table.Th>{t('Quantity')}</Table.Th>
+                                    <Table.Th>{t('UOM')}</Table.Th>
                                     <Table.Th style={{ textAlign: 'right' }}>{t('Price')}</Table.Th>
                                     <Table.Th>{t('Discount')}</Table.Th>
                                     <Table.Th style={{ textAlign: 'right' }}>{t('SubTotal')}</Table.Th>
@@ -576,35 +578,41 @@ function SalesForm(props) {
                             <Table.Tbody>
                                 {/*<ScrollArea  p={'xs'} h={height} scrollbarSize={2} type="never">*/}
 
-                            {tempCardProducts && tempCardProducts.length > 0 && (
+                                {tempCardProducts && tempCardProducts.length > 0 && (
                                     tempCardProducts.map((item, index) => {
                                         salesSubTotalAmount = salesSubTotalAmount + item.sub_total
                                         return(
                                             <SalesCardItems item={item} index={index} setLoadCardProducts={setLoadCardProducts} symbol={currancySymbol}/>
                                         )
                                     })
-                            )}
+                                )}
                                 {/*</ScrollArea>*/}
-                                <Table.Tr>
+                            </Table.Tbody>
+                            <Table.Tfoot>
+                                <Table.Tr style={{ borderTop: '1px solid red'}}>
                                     {/*<Table.Td>{item.product_name ?item.product_name:''}</Table.Td>*/}
                                     {/*<Table.Td style={{ textAlign: 'right' }}>{item.mrp && Number(item.mrp).toFixed(2)}</Table.Td>*/}
                                     {/*<Table.Td>{item.stock ?item.stock:''}</Table.Td>*/}
                                     {/*<Table.Td style={{ textAlign: 'center' }}>{item.quantity ?item.quantity:''}</Table.Td>*/}
                                     {/*<Table.Td style={{ textAlign: 'right' }}>{item.sales_price && (Number(item.sales_price)).toFixed(2)}</Table.Td>*/}
                                     {/*<Table.Td style={{ textAlign: 'center' }}>{item.percent ?item.percent+' %':''}</Table.Td>*/}
-                                    <Table.Td style={{ textAlign: 'right' }}>{salesSubTotalAmount}</Table.Td>
+                                    <Table.Td style={{ textAlign: 'right' }}>&nbsp;</Table.Td>
+                                    <Table.Td style={{ textAlign: 'right' }}>&nbsp;</Table.Td>
+                                    <Table.Td style={{ textAlign: 'right' }}>&nbsp;</Table.Td>
+                                    <Table.Td style={{ textAlign: 'right' }}>&nbsp;</Table.Td>
+                                    <Table.Td style={{ textAlign: 'right' }}>&nbsp;</Table.Td>
+                                    <Table.Td style={{ textAlign: 'right' }}>&nbsp;</Table.Td>
+                                    <Table.Td style={{ textAlign: 'right' }}>&nbsp;</Table.Td>
+                                    <Table.Td style={{ textAlign: 'right' }}>{currancySymbol} {salesSubTotalAmount.toFixed(2)}</Table.Td>
+                                    <Table.Td style={{ textAlign: 'right' }}>&nbsp;</Table.Td>
                                 </Table.Tr>
-
-                            </Table.Tbody>
-
+                            </Table.Tfoot>
                         </Table>
-                        </Table.ScrollContainer>
-
                     </Grid.Col>
                     <Grid.Col span={7} bg={'gray.1'}>
-                        <Box bg={'indigo.3'}>
+                        <Box>
                             <Grid gutter={{base: 6}} >
-                                <Grid.Col span={10} pl={'xs'}>
+                                <Grid.Col pt={'4'} span={10} pl={'xs'} mb={'4'}>
                                     <SelectForm
                                         tooltip={t('CustomerValidateMessage')}
                                         label=''
@@ -615,6 +623,7 @@ function SalesForm(props) {
                                         form={form}
                                         dropdownValue={categoryDropdown}
                                         id={'category_id'}
+                                        mt={1}
                                         searchable={false}
                                         value={categoryData}
                                         changeValue={setCategoryData}
@@ -623,11 +632,11 @@ function SalesForm(props) {
                                 <Grid.Col span={2}>
                                     <Button
                                         mt={1}
-                                        color={'red'}
+                                        color={'yellow'}
                                         variant={'filled'}
                                         onClick={setAddCustomerModel}
                                     >
-                                        <IconUserCog size={16} opacity={0.5}/>
+                                        <IconUserCog size={16} />
                                     </Button>
                                 </Grid.Col>
                                 {addCustomerModel &&
@@ -635,14 +644,16 @@ function SalesForm(props) {
                                 }
                             </Grid>
                             <Box  h={1} mt={'4'} bg={`gray.3`}></Box>
-                            <Box mt={'1'}>
+                            <Box mt={'2'} mb={'xs'}>
                                 <Grid gutter={{base:6}} bg={'gray.2'}>
                                     <Grid.Col span={6}>
-                                        <Center fz={'xl'}>1200000</Center>
-                                        <Center fz={'xs'}>{t('Outstanding')}</Center>
+                                        <Box pl={'xl'}>
+                                            <Text fz={'md'} order={1} fw={'800'}>1200000</Text>
+                                            <Text fz={'xs'}>{t('Outstanding')}</Text>
+                                        </Box>
                                     </Grid.Col>
                                     <Grid.Col span={6}>
-                                        <Center mt={'xs'}>
+                                        <Text mt={'8'} mr={'xl'} style={{ textAlign: 'right',float:'right' }}>
                                             <Group>
                                                 <ActionIcon >
                                                     <IconMessage size={18} stroke={1.5} />
@@ -660,20 +671,20 @@ function SalesForm(props) {
                                                     <SalesViewCustomerModel viewCustomerModel={viewCustomerModel} setCustomerViewModel={setCustomerViewModel} />
                                                 }
                                             </Group>
-                                        </Center>
+                                        </Text>
                                     </Grid.Col>
                                 </Grid>
                             </Box>
                         </Box>
-                        <ScrollArea h={formHeight} scrollbarSize={2} type="never" bg={'white'}>
-                            <Box>
+                        <ScrollArea h={formHeight} scrollbarSize={2} type="never" bg={'white'} >
+                            <Box p={'xs'}>
                                 <Grid gutter={{base: 6}}>
                                     <Grid.Col span={6}>
-                                        <Center>1200000</Center>
+                                        <Center fz={'md'} fw={'800'}>{currancySymbol} {salesSubTotalAmount.toFixed(2)}</Center>
                                         <Center fz={'xs'}>{t('SubTotal')}</Center>
                                     </Grid.Col>
                                     <Grid.Col span={6}>
-                                        <Center>asdas</Center>
+                                        <Center fz={'md'} fw={'800'}>{currancySymbol} {salesSubTotalAmount.toFixed(2)}</Center>
                                         <Center fz={'xs'}>{t('VAT')}</Center>
                                     </Grid.Col>
                                 </Grid>
@@ -687,28 +698,38 @@ function SalesForm(props) {
                                 </Grid>
                                 <Grid gutter={{base: 6}}>
                                     <Grid.Col span={6}>
-                                        <Center>2000</Center>
+                                        <Center fz={'md'} fw={'800'}>{currancySymbol} {salesSubTotalAmount.toFixed(2)}</Center>
                                         <Center fz={'xs'}>{t('Discount')}</Center>
                                     </Grid.Col>
                                     <Grid.Col span={6}>
-                                        <Center>12341241</Center>
+                                        <Center fz={'md'} fw={'800'}>{currancySymbol} {salesSubTotalAmount.toFixed(2)}</Center>
                                         <Center fz={'xs'}>{t('Total')}</Center>
                                     </Grid.Col>
                                 </Grid>
                             </Box>
-                            <Box>
-                                <Tabs variant="outline" defaultValue="cash">
-                                    <Tabs.List grow position="apart">
-                                        <Tabs.Tab value="cash" icon={<IconPhoto size="0.8rem" />}>CASH</Tabs.Tab>
-                                        <Tabs.Tab value="mobile" icon={<IconInfoCircle size="0.8rem" />}>MOBILE</Tabs.Tab>
-                                        <Tabs.Tab value="bank" icon={<IconInfoCircle size="0.8rem" />}>BANK</Tabs.Tab>
+                            <Box mt={'xs'} bg={`gray.2`}>
+                                <Tabs variant="unstyled" defaultValue="mobile" classNames={classes}>
+                                    <Tabs.List grow>
+                                        <Tabs.Tab
+                                            value="cash"
+                                            leftSection={<IconPhoto style={{ width: rem(16), height: rem(16) }} />}
+                                        >
+                                            {t('Cash')}
+                                        </Tabs.Tab>
+                                        <Tabs.Tab
+                                            value="mobile"
+                                            leftSection={<IconPhoto style={{ width: rem(16), height: rem(16) }} />}
+                                        >
+                                            {t('mobile')}
+                                        </Tabs.Tab>
+                                        <Tabs.Tab
+                                            value="bank"
+                                            leftSection={<IconPhoto style={{ width: rem(16), height: rem(16) }} />}
+                                        >
+                                            {t('bank')}
+                                        </Tabs.Tab>
                                     </Tabs.List>
-
-                                    <Tabs.Panel value="cash" pt="xs">
-
-                                    </Tabs.Panel>
-                                    <Tabs.Panel value="mobile" pt="xs">
-
+                                    <Tabs.Panel p={'xs'} pb={0} value="mobile" pt="xs">
                                         <Grid gutter={{base: 6}}>
                                             <Grid.Col span={'auto'}>
                                                 <SelectForm
@@ -728,8 +749,7 @@ function SalesForm(props) {
                                                 />
                                             </Grid.Col>
                                         </Grid>
-
-                                        <Grid gutter={{base: 6}}>
+                                        <Grid gutter={{base: 6}} mt={'6'}>
                                             <Grid.Col span={6}>
                                                 <InputForm
                                                     tooltip={t('ReorderQuantityValidateMessage')}
@@ -739,7 +759,7 @@ function SalesForm(props) {
                                                     nextField={'transaction_id'}
                                                     form={form}
                                                     name={'payment_mobile'}
-                                                    mt={8}
+                                                    mt={16}
                                                     id={'payment_mobile'}
                                                 />
                                             </Grid.Col>
@@ -758,7 +778,7 @@ function SalesForm(props) {
                                             </Grid.Col>
                                         </Grid>
                                     </Tabs.Panel>
-                                    <Tabs.Panel value="bank" pt="xs">
+                                    <Tabs.Panel p={'xs'} pb={0} value="bank" pt="xs">
 
                                         <Grid gutter={{base: 6}}>
                                             <Grid.Col span={'auto'}>
@@ -780,7 +800,7 @@ function SalesForm(props) {
                                             </Grid.Col>
                                         </Grid>
 
-                                        <Grid gutter={{base: 6}}>
+                                        <Grid gutter={{base: 6}} mt={'6'}>
                                             <Grid.Col span={6}>
                                                 <SelectForm
                                                     tooltip={t('ProductUnitValidateMessage')}
@@ -790,7 +810,7 @@ function SalesForm(props) {
                                                     name={'BankAccountCard'}
                                                     form={form}
                                                     dropdownValue={productUnitDropdown}
-                                                    mt={8}
+                                                    mt={16}
                                                     id={'paymentCard_id'}
                                                     nextField={'transaction_id'}
                                                     searchable={false}
@@ -816,120 +836,121 @@ function SalesForm(props) {
                                     </Tabs.Panel>
                                 </Tabs>
                             </Box>
-                            <Box>
-                                <TextAreaForm
-                                    tooltip={t('Address')}
-                                    label=''
-                                    placeholder={t('Narration')}
-                                    required={false}
-                                    nextField={'Status'}
-                                    name={'address'}
-                                    form={form}
-                                    mt={8}
-                                    id={'Address'}
-                                />
-                            </Box>
-                            <Box>
-                                <SelectForm
-                                    tooltip={t('ProductUnitValidateMessage')}
-                                    label=''
-                                    placeholder={t('SalesBy')}
-                                    required={true}
-                                    name={'mobile_account'}
-                                    form={form}
-                                    dropdownValue={productUnitDropdown}
-                                    mt={8}
-                                    id={'mobile_account'}
-                                    nextField={'payment_mobile'}
-                                    searchable={false}
-                                    value={productUnitData}
-                                    changeValue={setProductUnitData}
-                                />
+                            <Box p={'xs'}  bg={`gray.2`}>
+                                <Box>
+                                    <SelectForm
+                                        tooltip={t('ProductUnitValidateMessage')}
+                                        label=''
+                                        placeholder={t('SalesBy')}
+                                        required={true}
+                                        name={'mobile_account'}
+                                        form={form}
+                                        dropdownValue={productUnitDropdown}
+                                        mt={8}
+                                        id={'mobile_account'}
+                                        nextField={'payment_mobile'}
+                                        searchable={false}
+                                        value={productUnitData}
+                                        changeValue={setProductUnitData}
+                                    />
+                                </Box>
+                                <Box style={{ background:'rgba(226,194,194,0.39)'}} mt={'xs'} pb={'xs'} mb={'xs'}>
+                                    <Grid gutter={{base: 6}} pt={'xs'}>
+                                        <Grid.Col span={3}>
+                                            <Button fullWidth  onClick={() => discountType()} variant="filled" fz={'xs'}
+                                                    leftSection= {
+                                                        value === 'Flat' ? <IconCurrencyTaka size={14} />:<IconPercentage size={14} />
+                                                    }   color="red">{value}</Button>
+                                        </Grid.Col>
+                                        <Grid.Col span={3}>
+                                            <InputForm
+                                                tooltip={t('DiscountValidateMessage')}
+                                                label=''
+                                                placeholder={t('discount')}
+                                                required={false}
+                                                nextField={'status'}
+                                                form={form}
+                                                name={'transaction_id'}
+                                                mt={16}
+                                                id={'transaction_id'}
+                                            />
+                                        </Grid.Col>
+                                        <Grid.Col span={6}>
+                                            <InputForm
+                                                tooltip={t('DeliveryChargeValidateMessage')}
+                                                label=''
+                                                placeholder={t('Amount')}
+                                                required={false}
+                                                nextField={'status'}
+                                                form={form}
+                                                name={'amount'}
+                                                mt={8}
+                                                id={'amount'}
+                                            />
+                                        </Grid.Col>
+                                    </Grid>
+                                </Box>
+                                <Box >
+                                    <Grid gutter={{base: 6}}  bg={'white'}>
+                                        <Grid.Col span={3} bg={'white'}>
+                                            <Switch fullWidth size="lg" mt={'4'} ml={'6'} onLabel={t('Profit')} offLabel={t('Hide')} radius="xs" />
+                                        </Grid.Col>
+                                        <Grid.Col span={3}><Center fz={'md'} mt={'xs'}>1200</Center></Grid.Col>
+                                        <Grid.Col span={6}>
+                                            <InputForm
+                                                tooltip={t('AmountValidateMessage')}
+                                                label=''
+                                                placeholder={t('Amount')}
+                                                required={false}
+                                                nextField={'status'}
+                                                form={form}
+                                                name={'amount'}
+                                                mt={8}
+                                                id={'amount'}
+                                            />
+                                        </Grid.Col>
+                                    </Grid>
+                                </Box>
+                                <Box pt={'xs'}>
+                                    <SelectForm
+                                        tooltip={t('ProductUnitValidateMessage')}
+                                        label=''
+                                        placeholder={t('OrderProcess')}
+                                        required={true}
+                                        name={'mobile_account'}
+                                        form={form}
+                                        dropdownValue={productUnitDropdown}
+                                        mt={8}
+                                        id={'mobile_account'}
+                                        nextField={'payment_mobile'}
+                                        searchable={false}
+                                        value={productUnitData}
+                                        changeValue={setProductUnitData}
+                                    />
+                                </Box>
+                                <Box pt={'xs'}>
+                                    <TextAreaForm
+                                        tooltip={t('Address')}
+                                        label=''
+                                        placeholder={t('Narration')}
+                                        required={false}
+                                        nextField={'Status'}
+                                        name={'address'}
+                                        form={form}
+                                        mt={8}
+                                        id={'Address'}
+                                    />
+                                </Box>
                             </Box>
                         </ScrollArea>
-                        <Box bg={'gray.2'}>
-                            <Box>
-                                <Grid gutter={{base: 6}}>
-                                    <Grid.Col span={3}>
-                                        <Button fullWidth mt={'8'} onClick={() => discountType()} variant="filled" fz={'xs'}
-                                                leftSection= {
-                                                    value === 'Flat' ? <IconCurrencyTaka size={14} />:<IconPercentage size={14} />
-                                                }   color="red">{value}</Button>
-                                    </Grid.Col>
-                                    <Grid.Col span={3}>
-                                        <InputForm
-                                            tooltip={t('DiscountValidateMessage')}
-                                            label=''
-                                            placeholder={t('discount')}
-                                            required={false}
-                                            nextField={'status'}
-                                            form={form}
-                                            name={'transaction_id'}
-                                            mt={8}
-                                            id={'transaction_id'}
-                                        />
-                                    </Grid.Col>
-                                    <Grid.Col span={6}>
-                                        <InputForm
-                                            tooltip={t('DeliveryChargeValidateMessage')}
-                                            label=''
-                                            placeholder={t('Amount')}
-                                            required={false}
-                                            nextField={'status'}
-                                            form={form}
-                                            name={'amount'}
-                                            mt={8}
-                                            id={'amount'}
-                                        />
-                                    </Grid.Col>
-                                </Grid>
-                            </Box>
-                            <Box bg={'white'}>
-                                <Grid gutter={{base: 6}}>
-                                    <Grid.Col span={3}>
-                                        <Switch fullWidth size="lg" mt={'6'} onLabel={t('Profit')} offLabel={t('Hide')} radius="xs" />
-                                    </Grid.Col>
-                                    <Grid.Col span={3}><Center fz={'md'} mt={'xs'}>1200</Center></Grid.Col>
-                                    <Grid.Col span={6}>
-                                        <InputForm
-                                            tooltip={t('AmountValidateMessage')}
-                                            label=''
-                                            placeholder={t('Amount')}
-                                            required={false}
-                                            nextField={'status'}
-                                            form={form}
-                                            name={'amount'}
-                                            mt={8}
-                                            id={'amount'}
-                                        />
-                                    </Grid.Col>
-                                </Grid>
-                            </Box>
-                            <Box>
-                                <SelectForm
-                                    tooltip={t('ProductUnitValidateMessage')}
-                                    label=''
-                                    placeholder={t('OrderProcess')}
-                                    required={true}
-                                    name={'mobile_account'}
-                                    form={form}
-                                    dropdownValue={productUnitDropdown}
-                                    mt={8}
-                                    id={'mobile_account'}
-                                    nextField={'payment_mobile'}
-                                    searchable={false}
-                                    value={productUnitData}
-                                    changeValue={setProductUnitData}
-                                />
-                            </Box>
-                            <Box mt={'xs'}>
-                                <Button.Group fullWidth>
-                                    <Button fullWidth variant="filled" leftSection={<IconPrinter size={14} />}  color="violet">Print</Button>
-                                    <Button fullWidth variant="filled" leftSection={<IconReceipt size={14} />}  color="red">Pos</Button>
-                                    <Button fullWidth variant="filled" leftSection={<IconDeviceFloppy size={14} />}  color="blue">Save</Button>
-                                    <Button fullWidth variant="filled" leftSection={<IconStackPush size={14} />}  color="yellow">Hold</Button>
-                                </Button.Group>
-                            </Box>
+
+                        <Box mt={'xs'} style={{ borderTop: '1px solid red'}} pt={'xs'}>
+                            <Button.Group fullWidth>
+                                <Button fullWidth variant="filled" leftSection={<IconPrinter size={14} />}  color="green">Print</Button>
+                                <Button fullWidth variant="filled" leftSection={<IconReceipt size={14} />}  color="red">Pos</Button>
+                                <Button fullWidth variant="filled" leftSection={<IconDeviceFloppy size={14} />}  color="indigo">Save</Button>
+                                <Button fullWidth variant="filled" leftSection={<IconStackPush size={14} />}  color="yellow">Hold</Button>
+                            </Button.Group>
                         </Box>
                      </Grid.Col>
                     <Grid.Col span={1}>

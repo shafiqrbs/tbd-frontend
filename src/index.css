@@ -11,14 +11,10 @@
 }
 
 .mantine-Tabs-list{
-    height: 52px !important;
+/*    height: 52px !important;*/
   /*  border-bottom: 1px solid red!important;*/
 }
 
-.mantine-Tabs-list{
-    height: 52px !important;
-  /*  border-bottom: 1px solid red!important;*/
-}
 
 .table-fixed{
     overflow: hidden!important;
