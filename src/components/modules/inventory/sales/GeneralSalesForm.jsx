@@ -60,7 +60,7 @@ import SalesAddStockProductModel from "./model/SalesAddStockProductModel.jsx";
 import SalesAddCustomerModel from "./model/SalesAddCustomerModel.jsx";
 import SalesViewCustomerModel from "./model/SalesViewCustomerModel.jsx";
 
-function SalesForm(props) {
+function GeneralSalesForm(props) {
     const { currancySymbol,allowZeroPercentage } = props
     const {t, i18n} = useTranslation();
     const dispatch = useDispatch();
@@ -916,7 +916,7 @@ function SalesForm(props) {
                                         changeValue={setProductUnitData}
                                     />
                                 </Box>
-                                <Box p={'xs'} pt={'0'}>
+                                <Box p={'xs'} >
                                     <TextAreaForm
                                         tooltip={t('Address')}
                                         label=''
@@ -955,4 +955,4 @@ function SalesForm(props) {
 
     );
 }
-export default SalesForm;
+export default GeneralSalesForm;
