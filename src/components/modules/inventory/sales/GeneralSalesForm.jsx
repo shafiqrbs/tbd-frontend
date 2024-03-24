@@ -3,7 +3,7 @@ import {json, useNavigate, useOutletContext} from "react-router-dom";
 import classes from '../../../../assets/css/Tab.module.css';
 import {
     Button,
-    rem, Flex, Tabs, Center, Switch, ActionIcon,
+    rem, Flex, Tabs, Center, Switch, ActionIcon,TextInput,NativeSelect,
     Grid, Box, ScrollArea, Tooltip, Group, Text, LoadingOverlay, Title, Select, Table,
 } from "@mantine/core";
 import {useTranslation} from 'react-i18next';
@@ -59,6 +59,8 @@ import SalesCardItems from "./SalesCardItems.jsx";
 import SalesAddStockProductModel from "./model/SalesAddStockProductModel.jsx";
 import SalesAddCustomerModel from "./model/SalesAddCustomerModel.jsx";
 import SalesViewCustomerModel from "./model/SalesViewCustomerModel.jsx";
+import InputButtonForm from "../../../form-builders/InputButtonForm";
+import InputNumberForm from "../../../form-builders/InputNumberForm";
 
 function GeneralSalesForm(props) {
     const { currancySymbol,allowZeroPercentage } = props
@@ -377,6 +379,33 @@ function GeneralSalesForm(props) {
 
     const [value, discountType] = useToggle(['Flat', 'Percent']);
 
+
+    const inputGroupButton = (
+        <Button
+            color={'gray'}
+            variant={'outline'}
+            styles={{
+                button: {
+                    fontWeight: 500,
+                    borderTopLeftRadius: 0,
+                    borderBottomLeftRadius: 0,
+                    width: rem(1000),
+                },
+            }}
+        >
+            {selectProductDetails && selectProductDetails.unit_name}
+        </Button>
+    );
+
+    const inputGroupText = (
+        <Text  style={{ textAlign: 'right',width:'100%',paddingRight:16 }}
+            color={'gray'}
+        >
+            {selectProductDetails && selectProductDetails.unit_name}
+        </Text>
+    );
+
+
     return (
         <Box bg={"white"} mt={`xs`}>
             <form onSubmit={form.onSubmit((values) => {
@@ -422,131 +451,7 @@ function GeneralSalesForm(props) {
                 }
 
             })}>
-                <Box pl={`xs`} pr={8}  style={{ background:'#fab00533'}}>
-                    <Grid columns={48} >
-                        <Grid.Col span={28}>
-                            <Grid gutter={{base: 6}} >
-                                <Grid.Col span={3}>
-                                    <InputForm
-                                        tooltip={t('BarcodeValidateMessage')}
-                                        label=''
-                                        placeholder={t('barcode')}
-                                        required={true}
-                                        nextField={'EntityFormSubmit'}
-                                        form={form}
-                                        name={'barcode'}
-                                        id={'barcode'}
-                                    />
-                                </Grid.Col>
-                                <Grid.Col span={6}>
 
-                                    <SelectServerSideForm
-                                        tooltip={t('ChooseStockProduct')}
-                                        label=''
-                                        placeholder={t('ChooseStockProduct')}
-                                        required = {false}
-                                        nextField = {'quantity'}
-                                        name = {'product_id'}
-                                        form = {form}
-                                        mt={8}
-                                        id = {'product_id'}
-                                        searchable={true}
-                                        searchValue={searchValue}
-                                        setSearchValue={setSearchValue}
-                                        dropdownValue={productDropdown}
-                                    />
-
-                                </Grid.Col>
-                                <Grid.Col span={1}>
-                                    <Button
-                                        color={'gray'}
-                                        variant={'outline'}
-                                        onClick={setAddStockProductModel}>
-                                        <IconPlus size={16} opacity={0.5}/></Button>
-                                </Grid.Col>
-                                {addStockProductModel &&
-                                    <SalesAddStockProductModel
-                                        addStockProductModel={addStockProductModel}
-                                        setAddStockProductModel={setAddStockProductModel}
-                                    />
-                                }
-                                <Grid.Col span={2}>
-                                    <Center  mt={4} >{selectProductDetails && form.values.mrp}</Center>
-                                </Grid.Col>
-                            </Grid>
-                        </Grid.Col>
-                        <Grid.Col span={16}>
-                            <Grid gutter={{base: 6}}>
-                                <Grid.Col span={3}>
-                                    <InputForm
-                                        tooltip={t('QuantityValidateMessage')}
-                                        label=''
-                                        placeholder={t('Quantity')}
-                                        required={true}
-                                        nextField={'percent'}
-                                        form={form}
-                                        name={'quantity'}
-                                        id={'quantity'}
-                                    />
-                                </Grid.Col>
-
-                                <Grid.Col span={3}>
-                                    <InputForm
-                                        tooltip={t('PercentValidateMessage')}
-                                        label=''
-                                        placeholder={t('Percent')}
-                                        required={true}
-                                        nextField={'EntityFormSubmit'}
-                                        form={form}
-                                        name={'percent'}
-                                        id={'percent'}
-                                    />
-                                </Grid.Col>
-
-                                <Grid.Col span={4}>
-                                    <InputForm
-                                        tooltip={t('SalesPriceValidateMessage')}
-                                        label=''
-                                        placeholder={t('SalesPrice')}
-                                        required={true}
-                                        nextField={'EntityFormSubmit'}
-                                        form={form}
-                                        name={'sales_price'}
-                                        id={'sales_price'}
-                                        disabled={form.values.percent}
-                                    />
-                                </Grid.Col>
-
-                                <Grid.Col span={2}>
-                                    <Center  mt={2} >{selectProductDetails && selectProductDetails.sub_total && (selectProductDetails.sub_total).toFixed(2)}</Center>
-                                </Grid.Col>
-                            </Grid>
-                        </Grid.Col>
-                        <Grid.Col span={4}>
-                            <Group mr={'md'} pos={`absolute`} right={0}  gap={0}>
-                                <>
-                                    {!saveCreateLoading &&
-                                        <Button
-                                        size="xs"
-                                        color={`red`}
-                                        type="submit"
-                                        mt={4}
-                                        mr={'xs'}
-                                        id="EntityFormSubmit"
-                                        leftSection={<IconDeviceFloppy size={16}/>}
-                                    >
-                                        <Flex direction={`column`} gap={0}>
-                                            <Text fz={12} fw={400}>
-                                                {t("Add")}
-                                            </Text>
-                                        </Flex>
-                                    </Button>
-                                    }
-                                </>
-                            </Group>
-                        </Grid.Col>
-                    </Grid>
-                </Box>
                 <Box mt={'xs'}>
                  <Grid columns={24}>
                     <Grid.Col span={16}>
@@ -560,6 +465,149 @@ function GeneralSalesForm(props) {
                             <Grid.Col span={4}>{t('SubTotal')}</Grid.Col>
                             <Grid.Col span={4}>{t('Action')}</Grid.Col>
                         </Grid>*/}
+                        <Box>
+                            <Box pl={`xs`} pr={8}  style={{ background:'#fab00533'}}>
+                                <Grid columns={24} gutter={{base: 2}} >
+                                    <Grid.Col span={4}>
+                                        <InputForm
+                                            tooltip={t('BarcodeValidateMessage')}
+                                            label=''
+                                            placeholder={t('barcode')}
+                                            required={true}
+                                            nextField={'EntityFormSubmit'}
+                                            form={form}
+                                            name={'barcode'}
+                                            id={'barcode'}
+                                        />
+                                    </Grid.Col>
+                                    <Grid.Col span={12}>
+
+                                        <SelectServerSideForm
+                                            tooltip={t('ChooseStockProduct')}
+                                            label=''
+                                            placeholder={t('ChooseStockProduct')}
+                                            required = {false}
+                                            nextField = {'quantity'}
+                                            name = {'product_id'}
+                                            form = {form}
+                                            mt={8}
+                                            id = {'product_id'}
+                                            searchable={true}
+                                            searchValue={searchValue}
+                                            setSearchValue={setSearchValue}
+                                            dropdownValue={productDropdown}
+                                        />
+
+                                    </Grid.Col>
+                                    <Grid.Col span={2}>
+                                        <Button
+                                            color={'gray'}
+                                            variant={'outline'}
+                                            onClick={setAddStockProductModel}>
+                                            <IconPlus size={16} opacity={0.5}/>
+                                        </Button>
+                                    </Grid.Col>
+                                    {addStockProductModel &&
+                                    <SalesAddStockProductModel
+                                        addStockProductModel={addStockProductModel}
+                                        setAddStockProductModel={setAddStockProductModel}
+                                    />
+                                    }
+                                    <Grid.Col span={6}>
+
+                                        <InputNumberForm
+                                            tooltip={t('PercentValidateMessage')}
+                                            label=''
+                                            placeholder={t('Percent')}
+                                            required={true}
+                                            nextField={'EntityFormSubmit'}
+                                            form={form}
+                                            name={'percent'}
+                                            id={'percent'}
+                                        />
+                                        <InputButtonForm
+                                            type="number"
+                                            placeholder={t('Percent')}
+                                            required={true}
+                                            nextField={'EntityFormSubmit'}
+                                            form={form}
+                                            name={'percent'}
+                                            id={'percent'}
+                                            rightSection={inputGroupText}
+                                            rightSectionWidth={120}
+                                        />
+
+
+                                    </Grid.Col>
+
+                                </Grid>
+                                <Grid columns={48} >
+                                    <Grid.Col span={3}>
+                                        <Center mt={4}>{selectProductDetails && form.values.mrp}345678.00</Center>
+                                    </Grid.Col>
+                                    <Grid.Col span={16}>
+                                        <Grid gutter={{base: 6}}>
+
+
+                                            <Grid.Col span={3}>
+                                                <InputForm
+                                                    tooltip={t('PercentValidateMessage')}
+                                                    label=''
+                                                    placeholder={t('Percent')}
+                                                    required={true}
+                                                    nextField={'EntityFormSubmit'}
+                                                    form={form}
+                                                    name={'percent'}
+                                                    id={'percent'}
+                                                />
+                                            </Grid.Col>
+
+                                            <Grid.Col span={4}>
+                                                <InputForm
+                                                    tooltip={t('SalesPriceValidateMessage')}
+                                                    label=''
+                                                    placeholder={t('SalesPrice')}
+                                                    required={true}
+                                                    nextField={'EntityFormSubmit'}
+                                                    form={form}
+                                                    name={'sales_price'}
+                                                    id={'sales_price'}
+                                                    disabled={form.values.percent}
+                                                />
+                                            </Grid.Col>
+
+                                            <Grid.Col span={2}>
+                                                <Center  mt={2} >{selectProductDetails && selectProductDetails.sub_total && (selectProductDetails.sub_total).toFixed(2)}</Center>
+                                            </Grid.Col>
+                                        </Grid>
+                                    </Grid.Col>
+                                    <Grid.Col span={4}>
+                                        <Group mr={'md'} pos={`absolute`} right={0}  gap={0}>
+                                            <>
+                                                {!saveCreateLoading &&
+                                                <Button
+                                                    size="xs"
+                                                    color={`red`}
+                                                    type="submit"
+                                                    mt={4}
+                                                    mr={'xs'}
+                                                    id="EntityFormSubmit"
+                                                    leftSection={<IconDeviceFloppy size={16}/>}
+                                                >
+                                                    <Flex direction={`column`} gap={0}>
+                                                        <Text fz={12} fw={400}>
+                                                            {t("Add")}
+                                                        </Text>
+                                                    </Flex>
+                                                </Button>
+                                                }
+                                            </>
+                                        </Group>
+                                    </Grid.Col>
+                                </Grid>
+                            </Box>
+                        </Box>
+                        <Box>
                         <Table highlightOnHover withTableBorder striped>
                             <Table.Thead bg="rgba(230, 233, 235, 1)"  >
                                 <Table.Tr>
@@ -607,6 +655,7 @@ function GeneralSalesForm(props) {
                                 </Table.Tr>
                             </Table.Tfoot>
                         </Table>
+                        </Box>
                     </Grid.Col>
                     <Grid.Col span={7} bg={'gray.1'}>
                         <Box>
