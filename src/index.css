@@ -20,8 +20,9 @@
     overflow: hidden!important;
 }
 
-.m-82577fc2{
 
+input:focus {
+    border: 1px solid darkgray;
 }
 
 .mantine-AppShell-main{

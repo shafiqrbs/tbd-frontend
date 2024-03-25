@@ -44,6 +44,8 @@ function Navbar() {
             >
                 <NavLink href="inventory/sales" label={t('Sales')} component="button" onClick={(e)=>{navigate('inventory/sales')}}  />
                 <NavLink href="inventory/pos-sales" label={t('Manage POS')} component="button" onClick={(e)=>{navigate('inventory/pos-sales')}}  />
+                <NavLink href="inventory/purchase" label={t('Manage Purchase')} component="button" onClick={(e)=>{navigate('inventory/purchase')}}  />
+                <NavLink href="inventory/purchase-invoice" label={t('Purchase Invoice')} component="button" onClick={(e)=>{navigate('inventory/purchase-invoice')}}  />
                 <NavLink href="inventory/product" label={t('Product')} component="button" onClick={(e)=>{navigate('inventory/product')}}  />
                 <NavLink href="inventory/category" label={t('Category')} component="button" onClick={(e)=>{navigate('inventory/category')}}  />
                 <NavLink href="inventory/category-group" label={t('CategoryGroup')} component="button" onClick={(e)=>{navigate('inventory/category-group')}}  />
