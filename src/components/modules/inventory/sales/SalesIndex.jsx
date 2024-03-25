@@ -16,6 +16,7 @@ import {
     setVendorFilterData
 } from "../../../../store/core/crudSlice.js";
 import {getShowEntityData} from "../../../../store/inventory/crudSlice.js";
+import GeneralSalesForm from "./GeneralSalesForm";
 
 function SalesIndex() {
     const {t, i18n} = useTranslation();
@@ -55,7 +56,7 @@ function SalesIndex() {
                     <Box pr={'12'} pl={'12'}>
                         {
                             insertType === 'create' && configData.business_model.slug==='general' &&
-                            <SalesForm
+                            <GeneralSalesForm
                                 allowZeroPercentage = {configData.zero_stock}
                                 currancySymbol = {configData.currency.symbol}
                             />

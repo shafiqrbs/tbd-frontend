@@ -23,6 +23,8 @@
     "@mantine/nprogress": "^7.4.2",
     "@mantine/spotlight": "^7.4.2",
     "@mantine/tiptap": "^7.4.2",
+    "@picovoice/leopard-react": "^2.0.2",
+    "@picovoice/web-voice-processor": "^4.0.9",
     "@reduxjs/toolkit": "^2.2.1",
     "@tabler/icons-react": "^2.47.0",
     "@tiptap/extension-link": "^2.1.16",

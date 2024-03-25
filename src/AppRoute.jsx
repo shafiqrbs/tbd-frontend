@@ -11,6 +11,7 @@ import CategoryGroupIndex from "./components/modules/inventory/category-group/Ca
 import CategoryIndex from "./components/modules/inventory/category/CategoryIndex";
 import ProductIndex from "./components/modules/inventory/product/ProductIndex.jsx";
 import SalesIndex from "./components/modules/inventory/sales/SalesIndex";
+import SalesForm from "./components/modules/inventory/sales/SalesForm";
 function AppRoute() {
 
     return (
@@ -27,6 +28,7 @@ function AppRoute() {
                 </Route>
                 <Route path="/inventory/">
                     <Route path="sales" element={<SalesIndex/>}/>
+                    <Route path="pos-sales" element={<SalesForm/>}/>
                     <Route path="product" element={<ProductIndex/>}/>
                     <Route path="category" element={<CategoryIndex/>}/>
                     <Route path="category-group" element={<CategoryGroupIndex/>}/>

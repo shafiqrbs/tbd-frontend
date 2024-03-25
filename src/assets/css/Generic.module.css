@@ -1,0 +1,12 @@
+.bodyBackground {
+    background-color:rgba(226,194,194,0.39);
+}
+.boxBackground {
+    background-color:rgba(226,194,194,0.39);
+}
+
+.boxBorderBackground {
+    background-color:rgba(226,194,194,0.39);
+    border: 1px solid rgba(226,194,194,0.39);;
+}
+
