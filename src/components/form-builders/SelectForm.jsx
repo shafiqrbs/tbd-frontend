@@ -49,15 +49,16 @@ function SelectForm(props) {
                         clearable
                         searchable={searchable}
                         {...form.getInputProps(name)}
-                        onKeyDown={getHotkeyHandler([
+                        /*onKeyDown={getHotkeyHandler([
                             ['Enter', (e) => {
                                 document.getElementById(nextField).focus();
                             }],
-                        ])}
+                        ])}*/
                         value={value}
                         onChange={(e) => {
                             changeValue(e)
                             form.setFieldValue(name, e)
+                            document.getElementById(nextField).focus();
                         }}
                         withAsterisk={required}
                     />

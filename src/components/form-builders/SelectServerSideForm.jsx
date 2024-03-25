@@ -39,11 +39,11 @@ function SelectServerSideForm(props) {
                         clearable
                         searchable={searchable}
                         {...form.getInputProps(name)}
-                        onKeyDown={getHotkeyHandler([
+                        /*onKeyDown={getHotkeyHandler([
                             ['Enter', (e) => {
                                 document.getElementById(nextField).focus();
                             }],
-                        ])}
+                        ])}*/
                         value={value}
                         withAsterisk={required}
                     />

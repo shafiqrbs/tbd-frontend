@@ -59,6 +59,7 @@ import SalesAddCustomerModel from "./model/SalesAddCustomerModel.jsx";
 import SalesViewCustomerModel from "./model/SalesViewCustomerModel.jsx";
 
 function SalesForm(props) {
+    // console.log(props.totalPurchaseAmount)
     const {t, i18n} = useTranslation();
     const dispatch = useDispatch();
     const [progress, setProgress] = useState(0);
@@ -85,8 +86,17 @@ function SalesForm(props) {
     }, [configData.currency.symbol]);
 */
     const [salesSubTotalAmount, setSalesSubTotalAmount] = useState(0);
+    const [salesProfitAmount, setSalesProfitAmount] = useState(0);
+    const [salesVatAmount, setSalesVatAmount] = useState(0);
+    const [salesDiscountAmount, setSalesDiscountAmount] = useState(0);
+    // const [salesDueAmount, setSalesDueAmount] = useState(props.salesSubTotalAmount);
+    const [salesTotalAmount, setSalesTotalAmount] = useState(0);
+    const [salesDueAmount, setSalesDueAmount] = useState(props.salesSubTotalAmount);
 
-    console.log(salesSubTotalAmount);
+
+
+
+    // console.log(salesSubTotalAmount);
     const {isOnline, mainAreaHeight} = useOutletContext();
     const height = mainAreaHeight - 200; //TabList height 104
     const formHeight = mainAreaHeight - 195; //TabList height 104
@@ -115,6 +125,7 @@ function SalesForm(props) {
     const [tempCardProducts,setTempCardProducts] = useState([])
     const [loadCardProducts,setLoadCardProducts] = useState(false)
 
+    const [discountType, setDiscountType] = useToggle(['Flat', 'Percent']);
 
 
 
@@ -283,7 +294,7 @@ function SalesForm(props) {
 
     const form = useForm({
         initialValues: {
-            product_id: ''
+            discount: '',receive_amount:'',sales_by:'',order_process:'',narration:''
         },
       /*  validate: {
             product_id: (value,values) => {
@@ -322,6 +333,45 @@ function SalesForm(props) {
             }
         }*/
     });
+
+    const [returnOrDueText, setReturnOrDueText] = useState('Due');
+
+    useEffect(() => {
+        setSalesSubTotalAmount(props.salesSubTotalAmount);
+        setSalesDueAmount(props.salesSubTotalAmount);
+    }, [props.salesSubTotalAmount]);
+
+    useEffect(() => {
+        const totalAmount = salesSubTotalAmount - salesDiscountAmount;
+        setSalesTotalAmount(totalAmount);
+        setSalesDueAmount(totalAmount);
+        setSalesProfitAmount(totalAmount-props.totalPurchaseAmount)
+    }, [salesSubTotalAmount, salesDiscountAmount]);
+
+    useEffect(() => {
+        let discountAmount = 0;
+        if (form.values.discount && Number(form.values.discount) > 0) {
+            if (discountType === 'Flat') {
+                discountAmount = form.values.discount;
+            } else if (discountType === 'Percent') {
+                discountAmount = (salesSubTotalAmount * form.values.discount) / 100;
+            }
+        }
+        setSalesDiscountAmount(discountAmount);
+
+        let returnOrDueAmount = 0;
+        if (form.values.receive_amount) {
+            const text = salesTotalAmount < form.values.receive_amount ? 'Return' : 'Due';
+            setReturnOrDueText(text);
+            returnOrDueAmount = salesTotalAmount - form.values.receive_amount;
+            setSalesDueAmount(returnOrDueAmount);
+        }
+    }, [form.values.discount, discountType, form.values.receive_amount, salesSubTotalAmount, salesTotalAmount]);
+
+
+    const [profitShow, setProfitShow] = useState(false);
+
+
     const [selectProductDetails,setSelectProductDetails] = useState('')
     useHotkeys([['alt+n', () => {
         document.getElementById('CompanyName').focus()
@@ -335,13 +385,26 @@ function SalesForm(props) {
         document.getElementById('EntityFormSubmit').click()
     }]], []);
 
-    const [value, discountType] = useToggle(['Flat', 'Percent']);
 
     return (
         <>
             <form onSubmit={form.onSubmit((values) => {
+                const tempProducts = localStorage.getItem('temp-sales-products');
+                // setTempCardProducts(tempProducts ? JSON.parse(tempProducts) : [])
 
-                if (!values.barcode && !values.product_id){
+                const formValue = {...form.values};
+                formValue['sub_total'] = salesSubTotalAmount;
+                formValue['vat'] = salesVatAmount;
+                formValue['discount_amount'] = salesDiscountAmount;
+                formValue['discount_type'] = discountType;
+                formValue['return_due_text'] = returnOrDueText;
+                formValue['return_due_amount'] = salesDueAmount;
+                formValue['total_amount'] = salesTotalAmount;
+                formValue['items'] = tempProducts ? JSON.parse(tempProducts) : [];
+
+                console.log(formValue)
+
+                /*if (!values.barcode && !values.product_id){
                     form.setFieldError('barcode', true);
                     form.setFieldError('product_id', true);
                     setTimeout(() => {
@@ -379,7 +442,7 @@ function SalesForm(props) {
                         handleAddProductByBarcode(values, myCardProducts, localProducts);
                     }
 
-                }
+                }*/
 
             })}>
                 <Box>
@@ -436,8 +499,9 @@ function SalesForm(props) {
                                         <Grid.Col span={6}>
                                             <Text mt={'8'} mr={'xl'} style={{textAlign: 'right', float: 'right'}}>
                                                 <Group>
-                                                    <ActionIcon  variant="outline"
-                                                                 color={'red'} >
+                                                    <ActionIcon
+                                                        variant="outline"
+                                                        color={'red'} >
                                                         <IconMessage size={18} stroke={1.5}/>
                                                     </ActionIcon>
                                                     <ActionIcon
@@ -460,20 +524,25 @@ function SalesForm(props) {
                                     </Grid>
                                 </Box>
                             </Box>
+
                             <ScrollArea h={formHeight} scrollbarSize={2} type="never" bg={'gray.1'}>
                                 <Box p={'xs'}>
+
                                     <Grid gutter={{base: 6}}>
                                         <Grid.Col span={6}>
-                                            <Center fz={'md'}
-                                                    fw={'800'}>{currencySymbol} {salesSubTotalAmount.toFixed(2)}</Center>
+                                            <Center fz={'md'} fw={'800'}>
+                                                {currencySymbol} {salesSubTotalAmount.toFixed(2)}
+                                            </Center>
                                             <Center fz={'xs'} c="dimmed" >{t('SubTotal')}</Center>
                                         </Grid.Col>
                                         <Grid.Col span={6}>
-                                            <Center fz={'md'}
-                                                    fw={'800'}>{currencySymbol} {salesSubTotalAmount.toFixed(2)}</Center>
+                                            <Center fz={'md'} fw={'800'}>
+                                                {currencySymbol} {salesVatAmount.toFixed(2)}
+                                            </Center>
                                             <Center fz={'xs'} c="dimmed">{t('VAT')}</Center>
                                         </Grid.Col>
                                     </Grid>
+
                                     <Grid gutter={{base: 6}}>
                                         <Grid.Col span={6}>
                                             <Box h={1} ml={'xl'} mr={'xl'} bg={`red.3`}></Box>
@@ -484,13 +553,15 @@ function SalesForm(props) {
                                     </Grid>
                                     <Grid gutter={{base: 6}}>
                                         <Grid.Col span={6}>
-                                            <Center fz={'md'}
-                                                    fw={'800'}>{currencySymbol} {salesSubTotalAmount.toFixed(2)}</Center>
+                                            <Center fz={'md'} fw={'800'}>
+                                                {currencySymbol} {salesDiscountAmount && Number(salesDiscountAmount).toFixed(2)}
+                                            </Center>
                                             <Center fz={'xs'} c="dimmed" >{t('Discount')}</Center>
                                         </Grid.Col>
                                         <Grid.Col span={6}>
-                                            <Center fz={'md'}
-                                                    fw={'800'}>{currencySymbol} {salesSubTotalAmount.toFixed(2)}</Center>
+                                            <Center fz={'md'} fw={'800'}>
+                                                {currencySymbol} {salesTotalAmount.toFixed(2)}
+                                            </Center>
                                             <Center fz={'xs'} c="dimmed">{t('Total')}</Center>
                                         </Grid.Col>
                                     </Grid>
@@ -634,11 +705,11 @@ function SalesForm(props) {
                                             label=''
                                             placeholder={t('SalesBy')}
                                             required={true}
-                                            name={'mobile_account'}
+                                            name={'sales_by'}
                                             form={form}
                                             dropdownValue={productUnitDropdown}
                                             mt={8}
-                                            id={'mobile_account'}
+                                            id={'sales_by'}
                                             nextField={'payment_mobile'}
                                             searchable={false}
                                             value={productUnitData}
@@ -648,38 +719,60 @@ function SalesForm(props) {
                                     <Box p={'xs'} pt={0}>
                                         <Grid gutter={{base: 6}}>
                                             <Grid.Col span={3}>
-                                                <Switch fullWidth size="lg" w={'100%'} color={'red.3'} mt={'2'}
-                                                        ml={'6'} onLabel={t('Profit')} offLabel={t('Hide')}
-                                                        radius="xs"/>
+                                                <Switch
+                                                    fullWidth
+                                                    size="lg"
+                                                    w={'100%'}
+                                                    color={'red.3'}
+                                                    mt={'2'}
+                                                    ml={'6'}
+                                                    onLabel={t('Profit')}
+                                                    offLabel={t('Hide')}
+                                                    radius="xs"
+                                                    onChange={(event) => setProfitShow(event.currentTarget.checked)}
+                                                />
                                             </Grid.Col>
-                                            <Grid.Col span={3}><Center fz={'xs'} mt={'xs'}
-                                                                       c={'red'}>{currencySymbol} 1200</Center></Grid.Col>
-                                            <Grid.Col span={3}><Center fz={'md'} mt={'4'}>Due</Center></Grid.Col>
-                                            <Grid.Col span={3}><Center fz={'md'} mt={'4'} c={'red'}
-                                                                       fw={'800'}>{currencySymbol} {salesSubTotalAmount.toFixed(2)}</Center></Grid.Col>
+                                            <Grid.Col span={3}>
+                                                <Center fz={'xs'} mt={'xs'} c={'red'}>
+                                                    {currencySymbol} {profitShow && salesProfitAmount}
+                                                </Center>
+                                            </Grid.Col>
+                                            <Grid.Col span={3}>
+                                                <Center fz={'md'} mt={'4'}>{returnOrDueText}</Center>
+                                            </Grid.Col>
+                                            <Grid.Col span={3}>
+                                                <Center fz={'md'} mt={'4'} c={'red'} fw={'800'}>
+                                                    {currencySymbol} {salesDueAmount.toFixed(2)}
+                                                </Center>
+                                            </Grid.Col>
                                         </Grid>
                                     </Box>
                                     <Box p={'xs'} className={genericCss.boxBackground}>
                                         <Grid gutter={{base: 6}}>
                                             <Grid.Col span={4}>
-                                                <Button fullWidth onClick={() => discountType()} variant="filled"
-                                                        fz={'xs'}
-                                                        leftSection={
-                                                            value === 'Flat' ? <IconCurrencyTaka size={14}/> :
+                                                <Button
+                                                    fullWidth
+                                                    onClick={() => setDiscountType()}
+                                                    variant="filled"
+                                                    fz={'xs'}
+                                                    leftSection={
+                                                        discountType === 'Flat' ? <IconCurrencyTaka size={14}/> :
                                                                 <IconPercentage size={14}/>
-                                                        } color="red.4">{value}</Button>
+                                                        } color="red.4">
+                                                    {discountType}
+                                                </Button>
                                             </Grid.Col>
                                             <Grid.Col span={4}>
                                                 <InputForm
                                                     tooltip={t('DiscountValidateMessage')}
                                                     label=''
-                                                    placeholder={t('discount')}
+                                                    placeholder={t('Discount')}
                                                     required={false}
-                                                    nextField={'status'}
+                                                    nextField={'receive_amount'}
                                                     form={form}
-                                                    name={'transaction_id'}
+                                                    name={'discount'}
                                                     mt={16}
-                                                    id={'transaction_id'}
+                                                    id={'discount'}
                                                 />
                                             </Grid.Col>
                                             <Grid.Col span={4}>
@@ -690,9 +783,9 @@ function SalesForm(props) {
                                                     required={false}
                                                     nextField={'status'}
                                                     form={form}
-                                                    name={'amount'}
+                                                    name={'receive_amount'}
                                                     mt={8}
-                                                    id={'amount'}
+                                                    id={'receive_amount'}
                                                 />
                                             </Grid.Col>
                                         </Grid>
@@ -703,12 +796,13 @@ function SalesForm(props) {
                                             label=''
                                             placeholder={t('OrderProcess')}
                                             required={true}
-                                            name={'mobile_account'}
+                                            name={'order_process'}
                                             form={form}
-                                            dropdownValue={productUnitDropdown}
+                                            // dropdownValue={productUnitDropdown}
+                                            dropdownValue={['Order','Process']}
                                             mt={8}
-                                            id={'mobile_account'}
-                                            nextField={'payment_mobile'}
+                                            id={'order_process'}
+                                            nextField={'narration'}
                                             searchable={false}
                                             value={productUnitData}
                                             changeValue={setProductUnitData}
@@ -716,15 +810,15 @@ function SalesForm(props) {
                                     </Box>
                                     <Box p={'xs'} pt={'0'}>
                                         <TextAreaForm
-                                            tooltip={t('Address')}
+                                            tooltip={t('Narration')}
                                             label=''
                                             placeholder={t('Narration')}
                                             required={false}
                                             nextField={'Status'}
-                                            name={'address'}
+                                            name={'narration'}
                                             form={form}
                                             mt={8}
-                                            id={'Address'}
+                                            id={'narration'}
                                         />
                                     </Box>
                                 </Box>

@@ -9,7 +9,7 @@ import {getHotkeyHandler} from "@mantine/hooks";
 
 function InputNumberForm(props) {
 
-    const {label, placeholder, required, nextField, name, form, tooltip, mt, id, disabled} = props
+    const {label, placeholder, required, nextField, name, form, tooltip, mt, id, disabled,closeIcon} = props
 
     const {t, i18n} = useTranslation();
 
@@ -48,7 +48,7 @@ function InputNumberForm(props) {
                         ])}
                         leftSection={props.leftSection}
                         rightSection={
-                            form.values[name] ?
+                            form.values[name] && closeIcon ?
                                 <Tooltip
                                     label={t("Close")}
                                     withArrow

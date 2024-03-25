@@ -81,8 +81,9 @@ function GeneralSalesForm(props) {
     const [tempCardProducts,setTempCardProducts] = useState([])
     const [loadCardProducts,setLoadCardProducts] = useState(false)
 
-    // const [salesSubTotal,setSalesSubTotal] = useState(0)
+    const [salesSubTotalForSalesForm,setSalesSubTotalforSalesForm] = useState(0)
     let salesSubTotalAmount = 0
+    let totalPurchaseAmount = 0
 
 
     useEffect(() => {
@@ -130,6 +131,7 @@ function GeneralSalesForm(props) {
                     stock: product.quantity,
                     quantity: values.quantity,
                     unit_name: product.unit_name,
+                    purchase_price: product.purchase_price,
                     sub_total: selectProductDetails.sub_total,
                 });
             }
@@ -180,6 +182,7 @@ function GeneralSalesForm(props) {
             stock: product.quantity,
             quantity: 1,
             unit_name: product.unit_name,
+            purchase_price: product.purchase_price,
             sub_total: product.sales_price,
         };
     }
@@ -306,6 +309,7 @@ function GeneralSalesForm(props) {
 
             form.setFieldValue('mrp', selectedProduct.sales_price);
             form.setFieldValue('sales_price', selectedProduct.sales_price);
+            document.getElementById('quantity').focus();
         } else {
             setSelectProductDetails(null);
             form.setFieldValue('mrp', '');
@@ -336,6 +340,7 @@ function GeneralSalesForm(props) {
                     sub_total: quantity * salesPrice,
                     sales_price: salesPrice,
                 }));
+                form.setFieldValue('sub_total', quantity * salesPrice);
             }
         }
 
@@ -348,6 +353,7 @@ function GeneralSalesForm(props) {
             const salesPrice = form.values.mrp - discountAmount;
 
             form.setFieldValue('sales_price', salesPrice);
+            form.setFieldValue('sub_total', salesPrice);
         }
     }, [form.values.percent]);
 
@@ -446,7 +452,6 @@ function GeneralSalesForm(props) {
                                 } else if (!values.product_id && values.barcode) {
                                     handleAddProductByBarcode(values, myCardProducts, localProducts);
                                 }
-
                             }
 
                         })}>
@@ -457,7 +462,7 @@ function GeneralSalesForm(props) {
                                         <InputForm
                                             tooltip={t('BarcodeValidateMessage')}
                                             label=''
-                                            placeholder={t('barcode')}
+                                            placeholder={t('Barcode')}
                                             required={true}
                                             nextField={'EntityFormSubmit'}
                                             form={form}
@@ -490,15 +495,16 @@ function GeneralSalesForm(props) {
                                             type="number"
                                             tooltip={t('PercentValidateMessage')}
                                             label=''
-                                            placeholder={t('Quantity')}
+                                            placeholder={t('MRP')}
                                             required={true}
-                                            nextField={'EntityFormSubmit'}
+                                            // nextField={'EntityFormSubmit'}
                                             form={form}
-                                            name={'quantity'}
-                                            id={'quantity'}
+                                            name={'mrp'}
+                                            id={'mrp'}
                                             rightSection={inputGroupCurrency}
                                             leftSection={<IconUserCircle size={16} opacity={0.5}/>}
                                             rightSectionWidth={80}
+                                            disabled={true}
                                         />
                                     </Grid.Col>
                                     <Grid.Col span={4}>
@@ -508,7 +514,7 @@ function GeneralSalesForm(props) {
                                             label=''
                                             placeholder={t('Quantity')}
                                             required={true}
-                                            nextField={'EntityFormSubmit'}
+                                            nextField={'percent'}
                                             form={form}
                                             name={'quantity'}
                                             id={'quantity'}
@@ -523,12 +529,14 @@ function GeneralSalesForm(props) {
                                             label=''
                                             placeholder={t('Percent')}
                                             required={true}
-                                            nextField={'EntityFormSubmit'}
+                                            // nextField={'EntityFormSubmit'}
+                                            nextField={form.values.percent?'EntityFormSubmit':'sales_price'}
                                             form={form}
                                             name={'percent'}
                                             id={'percent'}
                                             leftSection={<IconUserCircle size={16} opacity={0.5}/>}
                                             rightIcon={<IconUserCircle size={16} opacity={0.5}/>}
+                                            closeIcon={true}
                                         />
                                     </Grid.Col>
                                     <Grid.Col span={4}>
@@ -558,7 +566,8 @@ function GeneralSalesForm(props) {
                                             id={'sub_total'}
                                             leftSection={<IconDeviceFloppy size={16} opacity={0.5}/>}
                                             rightIcon={<IconUserCircle size={16} opacity={0.5}/>}
-                                            disabled={selectProductDetails && selectProductDetails.sub_total && (selectProductDetails.sub_total).toFixed(2)}
+                                            disabled={selectProductDetails && selectProductDetails.sub_total}
+                                            closeIcon={false}
                                         />
                                     </Grid.Col>
                                     <Grid.Col span={3}>
@@ -619,17 +628,20 @@ function GeneralSalesForm(props) {
                                 </Table.Tr>
                             </Table.Thead>
                             <Table.Tbody>
-                                {/*<ScrollArea  p={'xs'} h={height} scrollbarSize={2} type="never">*/}
-
                                 {tempCardProducts && tempCardProducts.length > 0 && (
                                     tempCardProducts.map((item, index) => {
                                         salesSubTotalAmount = salesSubTotalAmount + item.sub_total
+                                        totalPurchaseAmount = totalPurchaseAmount + (item.purchase_price*item.quantity)
                                         return(
-                                            <SalesCardItems item={item} index={index} setLoadCardProducts={setLoadCardProducts} symbol={currancySymbol}/>
+                                            <SalesCardItems
+                                                item={item}
+                                                index={index}
+                                                setLoadCardProducts={setLoadCardProducts}
+                                                symbol={currancySymbol}
+                                            />
                                         )
                                     })
                                 )}
-                                {/*</ScrollArea>*/}
                             </Table.Tbody>
                             <Table.Tfoot>
                                 <Table.Tr style={{ borderTop: '1px solid #d6dce3'}} className={genericCss.boxBackground}>
@@ -649,7 +661,7 @@ function GeneralSalesForm(props) {
                         </Box>
                     </Grid.Col>
                     <Grid.Col span={8} bg={'white'} >
-                       <SalesForm />
+                       <SalesForm salesSubTotalAmount={salesSubTotalAmount} tempCardProducts={tempCardProducts} totalPurchaseAmount={totalPurchaseAmount}/>
                     </Grid.Col>
 
                 </Grid>
