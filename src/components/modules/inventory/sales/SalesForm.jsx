@@ -42,7 +42,6 @@ import Shortcut from "../../shortcut/Shortcut";
 import InputForm from "../../../form-builders/InputForm";
 import SelectForm from "../../../form-builders/SelectForm";
 import TextAreaForm from "../../../form-builders/TextAreaForm";
-import SwitchForm from "../../../form-builders/SwitchForm";
 import {getBrandDropdown, getCategoryDropdown} from "../../../../store/inventory/utilitySlice";
 import {getSettingDropdown,getProductUnitDropdown} from "../../../../store/utility/utilitySlice.js";
 
@@ -56,13 +55,6 @@ import {
     updateEntityData,
 
 } from "../../../../store/inventory/crudSlice.js";
-import CategoryGroupModal from "../category/CategoryGroupModal";
-import {setDropdownLoad} from "../../../../store/inventory/crudSlice";
-import ProductForm from "../product/ProductForm";
-import ProductUpdateForm from "../product/ProductUpdateForm";
-import SelectServerSideForm from "../../../form-builders/SelectServerSideForm.jsx";
-import SalesCardItems from "./SalesCardItems.jsx";
-import SalesAddStockProductModel from "./model/SalesAddStockProductModel.jsx";
 import SalesAddCustomerModel from "./model/SalesAddCustomerModel.jsx";
 import SalesViewCustomerModel from "./model/SalesViewCustomerModel.jsx";
 
@@ -97,7 +89,7 @@ function SalesForm(props) {
     console.log(salesSubTotalAmount);
     const {isOnline, mainAreaHeight} = useOutletContext();
     const height = mainAreaHeight - 200; //TabList height 104
-    const formHeight = mainAreaHeight - 200; //TabList height 104
+    const formHeight = mainAreaHeight - 195; //TabList height 104
     const navigate = useNavigate();
     const [opened, {open, close}] = useDisclosure(false);
     const icon = <IconInfoCircle />;
@@ -392,10 +384,10 @@ function SalesForm(props) {
             })}>
                 <Box>
                     <Grid columns={48}>
-                        <Grid.Col span={42} >
+                        <Grid.Col span={42}>
                             <Box style={{ border: '1px solid rgba(226, 194, 194, 0.39)', borderRadius:'4px'}} >
                             <Box>
-                                <Grid gutter={{base: 6}}>
+                                <Grid gutter={{base:1}}>
                                     <Grid.Col pt={'4'} span={10} mb={'4'}>
                                         <Box pl={'xs'} pt={'6'}>
                                         <SelectForm
@@ -416,14 +408,16 @@ function SalesForm(props) {
                                         </Box>
                                     </Grid.Col>
                                     <Grid.Col span={2}>
+                                        <Box pr={'xs'} pt={'xs'}>
                                         <Button
-                                            mt={'8'}
-                                            color={'yellow'}
+                                            w={'100%'}
+                                            color={'red.2'}
                                             variant={'filled'}
                                             onClick={setAddCustomerModel}
                                         >
                                             <IconUserCog size={16}/>
                                         </Button>
+                                        </Box>
                                     </Grid.Col>
                                     {addCustomerModel &&
                                     <SalesAddCustomerModel addCustomerModel={addCustomerModel}
@@ -436,17 +430,19 @@ function SalesForm(props) {
                                         <Grid.Col span={6}>
                                             <Box pl={'xl'}>
                                                 <Text fz={'md'} order={1} fw={'800'}>1200000</Text>
-                                                <Text fz={'xs'}>{t('Outstanding')}</Text>
+                                                <Text fz={'xs'} c="dimmed" >{t('Outstanding')}</Text>
                                             </Box>
                                         </Grid.Col>
                                         <Grid.Col span={6}>
                                             <Text mt={'8'} mr={'xl'} style={{textAlign: 'right', float: 'right'}}>
                                                 <Group>
-                                                    <ActionIcon>
+                                                    <ActionIcon  variant="outline"
+                                                                 color={'red'} >
                                                         <IconMessage size={18} stroke={1.5}/>
                                                     </ActionIcon>
                                                     <ActionIcon
-                                                        variant="light"
+                                                        variant="filled"
+                                                        color={'red'}
                                                         onClick={setCustomerViewModel}
                                                     >
                                                         <IconEyeEdit
@@ -470,12 +466,12 @@ function SalesForm(props) {
                                         <Grid.Col span={6}>
                                             <Center fz={'md'}
                                                     fw={'800'}>{currencySymbol} {salesSubTotalAmount.toFixed(2)}</Center>
-                                            <Center fz={'xs'}>{t('SubTotal')}</Center>
+                                            <Center fz={'xs'} c="dimmed" >{t('SubTotal')}</Center>
                                         </Grid.Col>
                                         <Grid.Col span={6}>
                                             <Center fz={'md'}
                                                     fw={'800'}>{currencySymbol} {salesSubTotalAmount.toFixed(2)}</Center>
-                                            <Center fz={'xs'}>{t('VAT')}</Center>
+                                            <Center fz={'xs'} c="dimmed">{t('VAT')}</Center>
                                         </Grid.Col>
                                     </Grid>
                                     <Grid gutter={{base: 6}}>
@@ -490,12 +486,12 @@ function SalesForm(props) {
                                         <Grid.Col span={6}>
                                             <Center fz={'md'}
                                                     fw={'800'}>{currencySymbol} {salesSubTotalAmount.toFixed(2)}</Center>
-                                            <Center fz={'xs'}>{t('Discount')}</Center>
+                                            <Center fz={'xs'} c="dimmed" >{t('Discount')}</Center>
                                         </Grid.Col>
                                         <Grid.Col span={6}>
                                             <Center fz={'md'}
                                                     fw={'800'}>{currencySymbol} {salesSubTotalAmount.toFixed(2)}</Center>
-                                            <Center fz={'xs'}>{t('Total')}</Center>
+                                            <Center fz={'xs'} c="dimmed">{t('Total')}</Center>
                                         </Grid.Col>
                                     </Grid>
                                 </Box>
@@ -665,15 +661,15 @@ function SalesForm(props) {
                                     </Box>
                                     <Box p={'xs'} className={genericCss.boxBackground}>
                                         <Grid gutter={{base: 6}}>
-                                            <Grid.Col span={3}>
+                                            <Grid.Col span={4}>
                                                 <Button fullWidth onClick={() => discountType()} variant="filled"
                                                         fz={'xs'}
                                                         leftSection={
                                                             value === 'Flat' ? <IconCurrencyTaka size={14}/> :
                                                                 <IconPercentage size={14}/>
-                                                        } color="red">{value}</Button>
+                                                        } color="red.4">{value}</Button>
                                             </Grid.Col>
-                                            <Grid.Col span={3}>
+                                            <Grid.Col span={4}>
                                                 <InputForm
                                                     tooltip={t('DiscountValidateMessage')}
                                                     label=''
@@ -686,7 +682,7 @@ function SalesForm(props) {
                                                     id={'transaction_id'}
                                                 />
                                             </Grid.Col>
-                                            <Grid.Col span={6}>
+                                            <Grid.Col span={4}>
                                                 <InputForm
                                                     tooltip={t('DeliveryChargeValidateMessage')}
                                                     label=''
@@ -736,13 +732,13 @@ function SalesForm(props) {
                             <Box>
                                 <Button.Group fullWidth>
                                     <Button fullWidth variant="filled" leftSection={<IconPrinter size={14}/>}
-                                            color="green">Print</Button>
+                                            color="green.5">Print</Button>
                                     <Button fullWidth variant="filled" leftSection={<IconReceipt size={14}/>}
-                                            color="red">Pos</Button>
+                                            color="red.5">Pos</Button>
                                     <Button type={'submit'} fullWidth variant="filled" leftSection={<IconDeviceFloppy size={14}/>}
-                                            color="indigo">Save</Button>
+                                            color="cyan.5">Save</Button>
                                     <Button fullWidth variant="filled" leftSection={<IconStackPush size={14}/>}
-                                            color="yellow">Hold</Button>
+                                            color="orange.5">Hold</Button>
                                 </Button.Group>
                             </Box>
                             </Box>

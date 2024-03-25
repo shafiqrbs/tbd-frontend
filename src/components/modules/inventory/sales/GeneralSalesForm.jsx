@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {json, useNavigate, useOutletContext} from "react-router-dom";
 import genericCss from '../../../../assets/css/Generic.module.css';
-import classes from '../../../../assets/css/Tab.module.css';
 
 import {
     Button,
@@ -13,20 +12,7 @@ import {
     IconCheck,
     IconDeviceFloppy,
     IconInfoCircle,
-    IconPlus,
-    IconUserCog,
-    IconStackPush,
-    IconPrinter,
-    IconReceipt,
-    IconPercentage,
-    IconCurrencyTaka,
-    IconRestore,
-    IconPhoto,
-    IconMessage,
-    IconEyeEdit,
-    IconRowRemove,
-    IconTrash,
-    IconX
+    IconPlus, IconUserCircle,
 } from "@tabler/icons-react";
 import {getHotkeyHandler, useDisclosure, useHotkeys, useToggle} from "@mantine/hooks";
 import {useDispatch, useSelector} from "react-redux";
@@ -36,9 +22,6 @@ import {notifications, showNotification} from "@mantine/notifications";
 
 import Shortcut from "../../shortcut/Shortcut";
 import InputForm from "../../../form-builders/InputForm";
-import SelectForm from "../../../form-builders/SelectForm";
-import TextAreaForm from "../../../form-builders/TextAreaForm";
-import SwitchForm from "../../../form-builders/SwitchForm";
 import {getBrandDropdown, getCategoryDropdown} from "../../../../store/inventory/utilitySlice";
 import {getSettingDropdown,getProductUnitDropdown} from "../../../../store/utility/utilitySlice.js";
 
@@ -409,6 +392,13 @@ function GeneralSalesForm(props) {
         </Text>
     );
 
+    const inputGroupCurrency = (
+        <Text  style={{ textAlign: 'right',width:'100%',paddingRight:16 }}
+               color={'gray'}
+        >
+            {currancySymbol}
+        </Text>
+    );
 
     return (
         <Box bg={"white"} mt={`xs`}>
@@ -475,7 +465,7 @@ function GeneralSalesForm(props) {
                                             id={'barcode'}
                                         />
                                     </Grid.Col>
-                                    <Grid.Col span={18}>
+                                    <Grid.Col span={20}>
                                         <SelectServerSideForm
                                             tooltip={t('ChooseStockProduct')}
                                             label=''
@@ -491,38 +481,24 @@ function GeneralSalesForm(props) {
                                             setSearchValue={setSearchValue}
                                             dropdownValue={productDropdown}
                                         />
-
                                     </Grid.Col>
-                                    <Grid.Col span={2}>
-                                        <Button
-                                            w={'100%'}
-                                            color={'orange.3'}
-                                            variant={'filled'}
-                                            onClick={setAddStockProductModel}>
-                                            <IconPlus size={16} />
-                                        </Button>
-                                    </Grid.Col>
-                                    {addStockProductModel &&
-                                    <SalesAddStockProductModel
-                                        addStockProductModel={addStockProductModel}
-                                        setAddStockProductModel={setAddStockProductModel}
-                                    />
-                                    }
-
                                 </Grid>
                                 <Box mt={'xs'} pb={'xs'}>
                                 <Grid columns={24} gutter={{base: 2}}>
                                     <Grid.Col span={4}>
-                                        <InputForm
-                                            tooltip={t('SalesPriceValidateMessage')}
+                                        <InputButtonForm
+                                            type="number"
+                                            tooltip={t('PercentValidateMessage')}
                                             label=''
-                                            placeholder={t('MRP')}
+                                            placeholder={t('Quantity')}
                                             required={true}
                                             nextField={'EntityFormSubmit'}
                                             form={form}
-                                            name={'sales_price'}
-                                            id={'sales_price'}
-                                            disabled={selectProductDetails && form.values.mrp}
+                                            name={'quantity'}
+                                            id={'quantity'}
+                                            rightSection={inputGroupCurrency}
+                                            leftSection={<IconUserCircle size={16} opacity={0.5}/>}
+                                            rightSectionWidth={80}
                                         />
                                     </Grid.Col>
                                     <Grid.Col span={4}>
@@ -537,11 +513,12 @@ function GeneralSalesForm(props) {
                                             name={'quantity'}
                                             id={'quantity'}
                                             rightSection={inputGroupText}
+                                            leftSection={<IconUserCircle size={16} opacity={0.5}/>}
                                             rightSectionWidth={80}
                                         />
                                     </Grid.Col>
                                     <Grid.Col span={4}>
-                                        <InputForm
+                                        <InputNumberForm
                                             tooltip={t('PercentValidateMessage')}
                                             label=''
                                             placeholder={t('Percent')}
@@ -550,10 +527,12 @@ function GeneralSalesForm(props) {
                                             form={form}
                                             name={'percent'}
                                             id={'percent'}
+                                            leftSection={<IconUserCircle size={16} opacity={0.5}/>}
+                                            rightIcon={<IconUserCircle size={16} opacity={0.5}/>}
                                         />
                                     </Grid.Col>
                                     <Grid.Col span={4}>
-                                        <InputForm
+                                        <InputNumberForm
                                             tooltip={t('SalesPriceValidateMessage')}
                                             label=''
                                             placeholder={t('SalesPrice')}
@@ -563,10 +542,12 @@ function GeneralSalesForm(props) {
                                             name={'sales_price'}
                                             id={'sales_price'}
                                             disabled={form.values.percent}
+                                            leftSection={<IconUserCircle size={16} opacity={0.5}/>}
+                                            rightIcon={<IconUserCircle size={16} opacity={0.5}/>}
                                         />
                                     </Grid.Col>
                                     <Grid.Col span={4}>
-                                        <InputForm
+                                        <InputNumberForm
                                             tooltip={t('SalesPriceValidateMessage')}
                                             label=''
                                             placeholder={t('SubTotal')}
@@ -575,15 +556,17 @@ function GeneralSalesForm(props) {
                                             form={form}
                                             name={'sub_total'}
                                             id={'sub_total'}
+                                            leftSection={<IconDeviceFloppy size={16} opacity={0.5}/>}
+                                            rightIcon={<IconUserCircle size={16} opacity={0.5}/>}
                                             disabled={selectProductDetails && selectProductDetails.sub_total && (selectProductDetails.sub_total).toFixed(2)}
                                         />
                                     </Grid.Col>
-                                    <Grid.Col span={4}>
+                                    <Grid.Col span={3}>
                                         <>
                                             {!saveCreateLoading &&
                                             <Button
                                                 size="sm"
-                                                color={`red`}
+                                                color={`red.5`}
                                                 type="submit"
                                                 mt={0}
                                                 mr={'xs'}
@@ -593,11 +576,25 @@ function GeneralSalesForm(props) {
                                             >
                                                 <Flex direction={`column`} gap={0}>
                                                     <Text fz={12} fw={400}>
-                                                        {t("AddNew")}
+                                                        {t("Add")}
                                                     </Text>
                                                 </Flex>
                                             </Button>
                                             }
+                                        </>
+                                    </Grid.Col>
+                                    <Grid.Col span={1}>
+                                        <>
+                                            <ActionIcon   w={'100%'} variant="filled" size={'lg'} color="red.2" mt={'1'} aria-label="Settings">
+                                                <IconPlus style={{ width: '100%', height: '70%' }} stroke={1.5} />
+                                            </ActionIcon>
+
+                                    {addStockProductModel &&
+                                    <SalesAddStockProductModel
+                                        addStockProductModel={addStockProductModel}
+                                        setAddStockProductModel={setAddStockProductModel}
+                                    />
+                                    }
                                         </>
                                     </Grid.Col>
                                 </Grid>
@@ -609,15 +606,16 @@ function GeneralSalesForm(props) {
                         <Table highlightOnHover withTableBorder striped>
                             <Table.Thead bg="rgba(230, 233, 235, 1)"  >
                                 <Table.Tr>
-                                    <Table.Th style={{ width: '30%' }} >{t('ProductName')}</Table.Th>
-                                    <Table.Th style={{ textAlign: 'center' }}>{t('MRP')}</Table.Th>
-                                    <Table.Th>{t('Stock')}</Table.Th>
-                                    <Table.Th>{t('Quantity')}</Table.Th>
-                                    <Table.Th>{t('UOM')}</Table.Th>
-                                    <Table.Th style={{ textAlign: 'right' }}>{t('Price')}</Table.Th>
-                                    <Table.Th>{t('Discount')}</Table.Th>
-                                    <Table.Th style={{ textAlign: 'right' }}>{t('SubTotal')}</Table.Th>
-                                    <Table.Th>{t('Action')}</Table.Th>
+                                    <Table.Td></Table.Td>
+                                    <Table.Td style={{ width: '30%' }} >{t('ProductName')}</Table.Td>
+                                    <Table.Td style={{ textAlign: 'center' }}>{t('MRP')}</Table.Td>
+                                    <Table.Td>{t('Stock')}</Table.Td>
+                                    <Table.Td style={{ textAlign: 'center' }}>{t('Quantity')}</Table.Td>
+                                    <Table.Td style={{ textAlign: 'center' }}>{t('UOM')}</Table.Td>
+                                    <Table.Td style={{ textAlign: 'right' }}>{t('Price')}</Table.Td>
+                                    <Table.Td style={{ textAlign: 'right' }}>{t('Discount')}</Table.Td>
+                                    <Table.Td style={{ textAlign: 'right' }}>{t('SubTotal')}</Table.Td>
+                                    <Table.Td style={{ textAlign: 'center' }}>{t('Action')}</Table.Td>
                                 </Table.Tr>
                             </Table.Thead>
                             <Table.Tbody>
@@ -634,13 +632,7 @@ function GeneralSalesForm(props) {
                                 {/*</ScrollArea>*/}
                             </Table.Tbody>
                             <Table.Tfoot>
-                                <Table.Tr style={{ borderTop: '1px solid #d6dce3'}}>
-                                    {/*<Table.Td>{item.product_name ?item.product_name:''}</Table.Td>*/}
-                                    {/*<Table.Td style={{ textAlign: 'right' }}>{item.mrp && Number(item.mrp).toFixed(2)}</Table.Td>*/}
-                                    {/*<Table.Td>{item.stock ?item.stock:''}</Table.Td>*/}
-                                    {/*<Table.Td style={{ textAlign: 'center' }}>{item.quantity ?item.quantity:''}</Table.Td>*/}
-                                    {/*<Table.Td style={{ textAlign: 'right' }}>{item.sales_price && (Number(item.sales_price)).toFixed(2)}</Table.Td>*/}
-                                    {/*<Table.Td style={{ textAlign: 'center' }}>{item.percent ?item.percent+' %':''}</Table.Td>*/}
+                                <Table.Tr style={{ borderTop: '1px solid #d6dce3'}} className={genericCss.boxBackground}>
                                     <Table.Td style={{ textAlign: 'right' }}>&nbsp;</Table.Td>
                                     <Table.Td style={{ textAlign: 'right' }}>&nbsp;</Table.Td>
                                     <Table.Td style={{ textAlign: 'right' }}>&nbsp;</Table.Td>
@@ -648,7 +640,8 @@ function GeneralSalesForm(props) {
                                     <Table.Td style={{ textAlign: 'right' }}>&nbsp;</Table.Td>
                                     <Table.Td style={{ textAlign: 'right' }}>&nbsp;</Table.Td>
                                     <Table.Td style={{ textAlign: 'right' }}>&nbsp;</Table.Td>
-                                    <Table.Td style={{ textAlign: 'right' }}>{currancySymbol} {salesSubTotalAmount.toFixed(2)}</Table.Td>
+                                    <Table.Td style={{ textAlign: 'right' }}>&nbsp;</Table.Td>
+                                    <Table.Th style={{ textAlign: 'right' }}>{currancySymbol} {salesSubTotalAmount.toFixed(2)}</Table.Th>
                                     <Table.Td style={{ textAlign: 'right' }}>&nbsp;</Table.Td>
                                 </Table.Tr>
                             </Table.Tfoot>

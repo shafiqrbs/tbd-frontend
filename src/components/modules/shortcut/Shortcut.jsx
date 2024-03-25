@@ -16,8 +16,8 @@ function Shortcut(props) {
                     py={2}
                     withArrow
                     position={"left"}
-                    c={'indigo'}
-                    bg={`gray.1`}
+                    c={'white'}
+                    bg={`red.5`}
                     transitionProps={{transition: "pop-bottom-left", duration: 500}}
                 >
                     <Button
@@ -26,7 +26,7 @@ function Shortcut(props) {
                         pl={'12'}
                         pr={'12'}
                         variant={'light'}
-                        color={`indigo`}
+                        color={`red.5`}
                         radius="xl"
                         onClick={(e) => {
                             // props.inputType === 'select' ?
@@ -45,8 +45,8 @@ function Shortcut(props) {
                     py={2}
                     withArrow
                     position={"left"}
-                    c={'indigo'}
-                    bg={`gray.1`}
+                    c={'white'}
+                    bg={`red.5`}
                     transitionProps={{transition: "pop-bottom-left", duration: 500}}
                 >
                     <Button
@@ -55,7 +55,7 @@ function Shortcut(props) {
                         pl={'12'}
                         pr={'12'}
                         variant={'light'}
-                        color={`indigo`}
+                        color={`red`}
                         radius="xl"
                         onClick={(e) => {
                             props.form.reset()
@@ -72,8 +72,8 @@ function Shortcut(props) {
                     py={2}
                     withArrow
                     position={"left"}
-                    c={'indigo'}
-                    bg={`gray.1`}
+                    c={'white'}
+                    bg={`red.5`}
                     transitionProps={{transition: "pop-bottom-left", duration: 500}}
                 >
                     <Button
@@ -82,7 +82,7 @@ function Shortcut(props) {
                         pl={'12'}
                         pr={'12'}
                         variant={'filled'}
-                        color={`indigo`}
+                        color={`red`}
                         radius="xl"
                         onClick={(e) => {
                             document.getElementById(props.FormSubmit).click()

@@ -4,7 +4,7 @@ import {
     TextInput
 } from "@mantine/core";
 import {useTranslation} from "react-i18next";
-import {IconInfoCircle, IconX} from "@tabler/icons-react";
+import {IconInfoCircle, IconUserCircle, IconX} from "@tabler/icons-react";
 import {getHotkeyHandler} from "@mantine/hooks";
 
 function InputButtonForm(props) {
@@ -35,6 +35,7 @@ function InputButtonForm(props) {
                         ])}
                         rightSection={props.rightSection}
                         rightSectionWidth={props.rightSectionWidth}
+                        leftSection={props.leftSection}
                         withAsterisk={required}
                     />
 

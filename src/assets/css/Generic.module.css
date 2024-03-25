@@ -1,8 +1,13 @@
+.titleBackground {
+    background-color: #ffc9c91a;
+}
+
 .bodyBackground {
     background-color:rgba(226,194,194,0.39);
 }
+
 .boxBackground {
-    background-color:rgba(226,194,194,0.39);
+    background-color:rgba(226,194,194,0.39)!important;
 }
 
 .boxBorderBackground {

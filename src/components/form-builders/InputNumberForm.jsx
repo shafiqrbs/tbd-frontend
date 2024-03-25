@@ -46,6 +46,7 @@ function InputNumberForm(props) {
                                     document.getElementById(nextField).focus()
                             }],
                         ])}
+                        leftSection={props.leftSection}
                         rightSection={
                             form.values[name] ?
                                 <Tooltip
@@ -68,7 +69,7 @@ function InputNumberForm(props) {
                                     bg={`gray.1`}
                                     transitionProps={{transition: "pop-bottom-left", duration: 500}}
                                 >
-                                    <IconInfoCircle size={16} opacity={0.5}/>
+                                    { props.rightIcon ?  props.rightIcon : <IconInfoCircle size={16} opacity={0.5}/> }
                                 </Tooltip>
                         }
                         withAsterisk={required}

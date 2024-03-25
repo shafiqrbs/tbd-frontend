@@ -5,6 +5,7 @@ import {
 } from "@mantine/core";
 import {useTranslation} from 'react-i18next';
 import {useDispatch, useSelector} from "react-redux";
+import genericCss from '../../../../assets/css/Generic.module.css';
 
 import SalesTable from "./SalesTable";
 import SalesForm from "./SalesForm";
@@ -46,10 +47,10 @@ function SalesIndex() {
                 <Progress color="red" size={"xs"} striped animated value={progress} transitionDuration={200}/>}
             {progress === 100 &&
                 <Box>
-                    <Box pl={`md`} pr={8} pb={'8'} pt={'6'} bg={'gray.1'}>
+                    <Box pl={`md`} pr={8} pb={'8'} pt={'6'}  className={genericCss.titleBackground} >
                         <Grid>
                             <Grid.Col span={12}>
-                                <Title order={6} pl={'md'} fz={'18'} c={'indigo.4'}>{t('SalesInformation')}</Title>
+                                <Title order={6} pl={'md'} fz={'18'} c={'black'}>{t('SalesInformation')}</Title>
                             </Grid.Col>
                         </Grid>
                     </Box>

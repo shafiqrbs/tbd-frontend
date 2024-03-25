@@ -63,8 +63,8 @@ function InputForm(props) {
                                     py={2}
                                     withArrow
                                     position={"left"}
-                                    c={'indigo'}
-                                    bg={`gray.1`}
+                                    c={'white'}
+                                    bg={`red.5`}
                                     transitionProps={{transition: "pop-bottom-left", duration: 500}}
                                 >
                                     <IconInfoCircle size={16} opacity={0.5}/>
