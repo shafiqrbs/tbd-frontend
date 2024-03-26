@@ -58,6 +58,7 @@ import {
 import SalesAddCustomerModel from "./model/SalesAddCustomerModel.jsx";
 import SalesViewCustomerModel from "./model/SalesViewCustomerModel.jsx";
 import InputNumberForm from "../../../form-builders/InputNumberForm";
+import InputButtonForm from "../../../form-builders/InputButtonForm";
 
 function PurchaseForm(props) {
     const {t, i18n} = useTranslation();
@@ -86,11 +87,10 @@ function PurchaseForm(props) {
     }, [configData.currency.symbol]);
 */
     const [salesSubTotalAmount, setSalesSubTotalAmount] = useState(0);
-
-    console.log(salesSubTotalAmount);
+    const { currancySymbol,allowZeroPercentage } = props
     const {isOnline, mainAreaHeight} = useOutletContext();
     const height = mainAreaHeight - 200; //TabList height 104
-    const formHeight = mainAreaHeight - 195; //TabList height 104
+    const formHeight = mainAreaHeight - 216; //TabList height 104
     const navigate = useNavigate();
     const [opened, {open, close}] = useDisclosure(false);
     const icon = <IconInfoCircle />;
@@ -338,6 +338,22 @@ function PurchaseForm(props) {
 
     const [value, discountType] = useToggle(['Flat', 'Percent']);
 
+    const inputGroupText = (
+        <Text  style={{ textAlign: 'right',width:'100%',paddingRight:16 }}
+               color={'gray'}
+        >
+            {selectProductDetails && selectProductDetails.unit_name}
+        </Text>
+    );
+
+    const inputGroupCurrency = (
+        <Text  style={{ textAlign: 'right',width:'100%',paddingRight:16 }}
+               color={'gray'}
+        >
+            {currancySymbol}
+        </Text>
+    );
+
     return (
         <>
             <form onSubmit={form.onSubmit((values) => {
@@ -383,14 +399,16 @@ function PurchaseForm(props) {
                 }
 
             })}>
+
+
                 <Box>
                     <Grid columns={48}>
                         <Grid.Col span={42}>
-                            <Box style={{ border: '1px solid rgba(226, 194, 194, 0.39)', borderRadius:'4px'}} >
+                            <Box className={'borderRadiusAll'} >
                             <Box>
-                                <Box pl={'xs'} pr={'xs'}>
+                                <Box pl={'xs'} pr={'xs'} pb={'xs'} className={genericCss.boxBackground}>
                                     <Grid gutter={{base:1}}>
-                                        <Grid.Col span={11} pt={'4'}  mb={'4'}>
+                                        <Grid.Col span={11} pt={'4'} >
                                             <Box  pt={'6'}>
                                                 <SelectForm
                                                     tooltip={t('CustomerValidateMessage')}
@@ -420,7 +438,7 @@ function PurchaseForm(props) {
                                                             transitionProps={{ duration: 200 }}
                                                             label="Use this button to save this information in your profile, after that you will be able to access it any time and share it via email."
                                                         >
-                                                            <ActionIcon fullWidth variant="outline" size={'lg'} color="red.5" mt={'1'} aria-label="Settings">
+                                                            <ActionIcon fullWidth variant="outline" bg={'white'} size={'lg'} color="red.5" mt={'1'} aria-label="Settings">
                                                                 <IconUserCog style={{ width: '100%', height: '70%' }} stroke={1.5} />
                                                             </ActionIcon>
                                                         </Tooltip>
@@ -500,11 +518,11 @@ function PurchaseForm(props) {
                                         }
                                     </Grid>
                                 </Box>
-                                <Box h={1} mt={'4'} bg={`gray.3`}></Box>
-                                <Box mt={'2'} mb={'xs'}>
+
+                                <Box>
                                     <Grid gutter={{base: 6}} bg={'gray.2'}>
                                         <Grid.Col span={6}>
-                                            <Box pl={'xl'}>
+                                            <Box pl={'xl'} pb={'6'}>
                                                 <Text fz={'md'} order={1} fw={'800'}>1200000</Text>
                                                 <Text fz={'xs'} c="dimmed" >{t('Outstanding')}</Text>
                                             </Box>
@@ -537,7 +555,7 @@ function PurchaseForm(props) {
                                 </Box>
                             </Box>
                             <ScrollArea h={formHeight} scrollbarSize={2} type="never" bg={'gray.1'}>
-                                <Box p={'xs'}>
+                                <Box p={'xs'} pb={'0'}>
                                     <Grid gutter={{base: 6}}>
                                         <Grid.Col span={6}>
                                             <Center fz={'md'}
@@ -724,14 +742,14 @@ function PurchaseForm(props) {
                                     <Box p={'xs'} pt={0}>
                                         <Grid gutter={{base: 6}}>
                                             <Grid.Col span={3}>
-                                                <Switch fullWidth size="lg" w={'100%'} color={'red.3'} mt={'2'}
+                                                <Switch fullWidth size="lg" w={'100%'} color={'red.3'} mt={'0'}
                                                         ml={'6'} onLabel={t('Profit')} offLabel={t('Hide')}
                                                         radius="xs"/>
                                             </Grid.Col>
-                                            <Grid.Col span={3}><Center fz={'xs'} mt={'xs'}
+                                            <Grid.Col span={3}><Center fz={'xs'} mt={'4'}
                                                                        c={'red'}>{currencySymbol} 1200</Center></Grid.Col>
-                                            <Grid.Col span={3}><Center fz={'md'} mt={'4'}>Due</Center></Grid.Col>
-                                            <Grid.Col span={3}><Center fz={'md'} mt={'4'} c={'red'}
+                                            <Grid.Col span={3}><Center fz={'md'} mt={'0'}>Due</Center></Grid.Col>
+                                            <Grid.Col span={3}><Center fz={'md'} mt={'0'} c={'red'}
                                                                        fw={'800'}>{currencySymbol} {salesSubTotalAmount.toFixed(2)}</Center></Grid.Col>
                                         </Grid>
                                     </Box>
@@ -757,8 +775,32 @@ function PurchaseForm(props) {
                                                     mt={16}
                                                     id={'transaction_id'}
                                                 />
+                                                <InputButtonForm
+                                                    tooltip={t('PercentValidateMessage')}
+                                                    label=''
+                                                    placeholder={t('Percent')}
+                                                    required={true}
+                                                    nextField={'EntityFormSubmit'}
+                                                    form={form}
+                                                    name={'percent'}
+                                                    id={'percent'}
+                                                    leftSection={<IconPercentage size={16} opacity={0.5}/>}
+                                                    rightSection={inputGroupCurrency}
+                                                />
                                             </Grid.Col>
                                             <Grid.Col span={4}>
+                                                <InputButtonForm
+                                                    tooltip={t('PercentValidateMessage')}
+                                                    label=''
+                                                    placeholder={t('Percent')}
+                                                    required={true}
+                                                    nextField={'EntityFormSubmit'}
+                                                    form={form}
+                                                    name={'percent'}
+                                                    id={'percent'}
+                                                    leftSection={<IconPercentage size={16} opacity={0.5}/>}
+                                                    rightSection={inputGroupCurrency}
+                                                />
                                                 <InputForm
                                                     tooltip={t('DeliveryChargeValidateMessage')}
                                                     label=''

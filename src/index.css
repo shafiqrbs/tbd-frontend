@@ -15,6 +15,32 @@
   /*  border-bottom: 1px solid red!important;*/
 }
 
+.titleBackground {
+    background-color: #ffc9c91a;
+}
+
+.bodyBackground {
+    background-color:rgba(226,194,194,0.39);
+}
+
+.boxBackground {
+    background-color:rgba(226,194,194,0.39)!important;
+}
+
+.boxBorderBackground {
+    background-color:rgba(226,194,194,0.39);
+    border: 1px solid rgba(226,194,194,0.39);;
+}
+
+
+
+.borderTop,.borderBottom,.borderLeft,.borderRight{
+    border: 1px solid rgba(226, 194, 194, 0.39);
+}
+
+.border-radius{
+    border-radius:4px;
+}
 
 .table-fixed{
     overflow: hidden!important;
@@ -22,15 +48,17 @@
 
 
 input:focus {
-    border: 1px solid darkgray;
+    border: 1px solid rgba(226,194,194,0.39);
 }
 
+.borderRadiusAll{
+    border: 1px solid rgba(226, 194, 194, 0.39);
+    border-radius:4px;
+}
 .mantine-AppShell-main{
     padding-top: 60px !important;
     padding-bottom: 0 !important;
     background: #f0f1f9;
-
-
 }
 .mantine-Tabs-list{
     background: #ffffff;

@@ -57,6 +57,7 @@ import {
 } from "../../../../store/inventory/crudSlice.js";
 import SalesAddCustomerModel from "./model/SalesAddCustomerModel.jsx";
 import SalesViewCustomerModel from "./model/SalesViewCustomerModel.jsx";
+import {getCustomerDropdown} from "../../../../store/core/utilitySlice";
 
 function SalesForm(props) {
     // console.log(props.totalPurchaseAmount)
@@ -292,6 +293,18 @@ function SalesForm(props) {
         dispatch(getProductUnitDropdown(value))
     }, []);
 
+    const customerDropdownData = useSelector((state) => state.utilitySlice.customerDropdownData)
+
+    let customerDropdown = customerDropdownData && customerDropdownData.length > 0 ?
+        customerDropdownData.map((type, index) => {
+            return ({'label': type.name, 'value': String(type.id)})
+        }) : []
+
+    useEffect(() => {
+        dispatch(getCustomerDropdown('core/select/customer'))
+    }, []);
+
+
     const form = useForm({
         initialValues: {
             discount: '',receive_amount:'',sales_by:'',order_process:'',narration:''
@@ -461,7 +474,7 @@ function SalesForm(props) {
                                             nextField={'name'}
                                             name={'category_id'}
                                             form={form}
-                                            dropdownValue={categoryDropdown}
+                                            dropdownValue={customerDropdown}
                                             id={'category_id'}
                                             mt={1}
                                             searchable={false}

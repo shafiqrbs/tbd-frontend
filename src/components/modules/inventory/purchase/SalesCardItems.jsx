@@ -25,10 +25,7 @@ function SalesCardItems(props) {
     const formHeight = mainAreaHeight - 380; //TabList height 104
     const navigate = useNavigate();
     const [opened, {open, close}] = useDisclosure(false);
-
-
     return (
-
         <Table.Tr key={index}>
             <Table.Td><Button fz={'xs'} variant="default" size="xs" radius="xs">{index+1}.</Button></Table.Td>
             <Table.Td fz={'xs'}>{item.display_name ?item.display_name:''}</Table.Td>
