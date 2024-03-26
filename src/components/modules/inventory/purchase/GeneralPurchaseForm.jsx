@@ -4,7 +4,7 @@ import genericCss from '../../../../assets/css/Generic.module.css';
 
 import {
     Button,
-    rem, Flex, Tabs, Center, Switch, ActionIcon,TextInput,NativeSelect,
+    rem, Flex, Tabs, Center, Switch, ActionIcon,TextInput,NativeSelect,Fieldset,
     Grid, Box, ScrollArea, Tooltip, Group, Text, LoadingOverlay, Title, Select, Table,Popover
 } from "@mantine/core";
 import {useTranslation} from 'react-i18next';
@@ -600,70 +600,73 @@ function GeneralPurchaseForm(props) {
                                                     </Tooltip>
                                                 </Popover.Target>
                                                 <Popover.Dropdown>
-                                                    <InputNumberForm
-                                                        tooltip={t('SalesPriceValidateMessage')}
-                                                        label={t('Name')}
-                                                        placeholder={t('SalesPrice')}
-                                                        required={true}
-                                                        nextField={'EntityFormSubmit'}
-                                                        form={form}
-                                                        name={'sales_price'}
-                                                        id={'sales_price'}
-                                                        disabled={form.values.percent}
-                                                        leftSection={<IconUserCircle size={16} opacity={0.5}/>}
-                                                        rightIcon={<IconUserCircle size={16} opacity={0.5}/>}
-                                                    />
-                                                    <InputNumberForm
-                                                        tooltip={t('SalesPriceValidateMessage')}
-                                                        label={t('Name')}
-                                                        placeholder={t('SalesPrice')}
-                                                        required={true}
-                                                        nextField={'EntityFormSubmit'}
-                                                        form={form}
-                                                        mt={'md'}
-                                                        name={'sales_price'}
-                                                        id={'sales_price'}
-                                                        disabled={form.values.percent}
-                                                        leftSection={<IconUserCircle size={16} opacity={0.5}/>}
-                                                        rightIcon={<IconUserCircle size={16} opacity={0.5}/>}
-                                                    />
-                                                    <Box mt={'xs'}>
-                                                        <Grid columns={12} gutter={{base: 1}} >
-                                                            <Grid.Col span={6}>&nbsp;</Grid.Col>
-                                                            <Grid.Col span={2}>
-                                                                <Button
-                                                                    variant="transparent"
-                                                                    size="sm"
-                                                                    color={`red.5`}
-                                                                    type="submit"
-                                                                    mt={0}
-                                                                    mr={'xs'}
-                                                                    fullWidth
-                                                                    id="EntityFormSubmit"
-                                                                >
-                                                                    <IconRefreshDot style={{ width: '100%', height: '70%' }} stroke={1.5} />
-                                                                </Button>
-                                                            </Grid.Col>
-                                                            <Grid.Col span={4}>
-                                                                <Button
-                                                                    size="sm"
-                                                                    color={`red.5`}
-                                                                    type="submit"
-                                                                    mt={0}
-                                                                    mr={'xs'}
-                                                                    fullWidth
-                                                                    id="EntityFormSubmit"
-                                                                    leftSection={<IconDeviceFloppy size={16}/>}
-                                                                >
-                                                                    <Flex direction={`column`} gap={0}>
-                                                                        <Text fz={12} fw={400}>
-                                                                            {t("Add")}
-                                                                        </Text>
-                                                                    </Flex>
-                                                                </Button>
-                                                            </Grid.Col>
-                                                        </Grid>
-                                                    </Box>
+                                                    <Fieldset legend="Personal information" variant="filled">
+                                                        <InputNumberForm
+                                                            tooltip={t('SalesPriceValidateMessage')}
+                                                            label={t('Name')}
+                                                            placeholder={t('SalesPrice')}
+                                                            required={true}
+                                                            nextField={'EntityFormSubmit'}
+                                                            form={form}
+                                                            name={'sales_price'}
+                                                            id={'sales_price'}
+                                                            disabled={form.values.percent}
+                                                            leftSection={<IconUserCircle size={16} opacity={0.5}/>}
+                                                            rightIcon={<IconUserCircle size={16} opacity={0.5}/>}
+                                                        />
+                                                        <InputNumberForm
+                                                            tooltip={t('SalesPriceValidateMessage')}
+                                                            label={t('Name')}
+                                                            placeholder={t('SalesPrice')}
+                                                            required={true}
+                                                            nextField={'EntityFormSubmit'}
+                                                            form={form}
+                                                            mt={'md'}
+                                                            name={'sales_price'}
+                                                            id={'sales_price'}
+                                                            disabled={form.values.percent}
+                                                            leftSection={<IconUserCircle size={16} opacity={0.5}/>}
+                                                            rightIcon={<IconUserCircle size={16} opacity={0.5}/>}
+                                                        />
+                                                        <Box mt={'xs'}>
+                                                            <Grid columns={12} gutter={{base: 1}} >
+                                                                <Grid.Col span={6}>&nbsp;</Grid.Col>
+                                                                <Grid.Col span={2}>
+                                                                    <Button
+                                                                        variant="transparent"
+                                                                        size="sm"
+                                                                        color={`red.5`}
+                                                                        type="submit"
+                                                                        mt={0}
+                                                                        mr={'xs'}
+                                                                        fullWidth
+                                                                        id="EntityFormSubmit"
+                                                                    >
+                                                                        <IconRefreshDot style={{ width: '100%', height: '70%' }} stroke={1.5} />
+                                                                    </Button>
+                                                                </Grid.Col>
+                                                                <Grid.Col span={4}>
+                                                                    <Button
+                                                                        size="sm"
+                                                                        color={`red.5`}
+                                                                        type="submit"
+                                                                        mt={0}
+                                                                        mr={'xs'}
+                                                                        fullWidth
+                                                                        id="EntityFormSubmit"
+                                                                        leftSection={<IconDeviceFloppy size={16}/>}
+                                                                    >
+                                                                        <Flex direction={`column`} gap={0}>
+                                                                            <Text fz={12} fw={400}>
+                                                                                {t("Add")}
+                                                                            </Text>
+                                                                        </Flex>
+                                                                    </Button>
+                                                                </Grid.Col>
+                                                            </Grid>
+                                                        </Box>
+                                                    </Fieldset>
+
                                                 </Popover.Dropdown>
                                             </Popover>
 
