@@ -89,8 +89,7 @@ function PurchaseForm(props) {
     const [salesSubTotalAmount, setSalesSubTotalAmount] = useState(0);
     const { currancySymbol,allowZeroPercentage } = props
     const {isOnline, mainAreaHeight} = useOutletContext();
-    const height = mainAreaHeight - 200; //TabList height 104
-    const formHeight = mainAreaHeight - 216; //TabList height 104
+    const formHeight = mainAreaHeight - 206; //TabList height 104
     const navigate = useNavigate();
     const [opened, {open, close}] = useDisclosure(false);
     const icon = <IconInfoCircle />;

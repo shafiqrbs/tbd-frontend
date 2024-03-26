@@ -59,8 +59,7 @@ function GeneralPurchaseForm(props) {
     const {t, i18n} = useTranslation();
     const dispatch = useDispatch();
     const {isOnline, mainAreaHeight} = useOutletContext();
-    const height = mainAreaHeight - 190; //TabList height 104
-    const formHeight = mainAreaHeight - 220; //TabList height 104
+    const height = mainAreaHeight - 180; //TabList height 104
     const navigate = useNavigate();
     const [opened, {open, close}] = useDisclosure(false);
     const icon = <IconInfoCircle />;
