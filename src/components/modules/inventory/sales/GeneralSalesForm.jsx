@@ -4,19 +4,19 @@ import genericCss from '../../../../assets/css/Generic.module.css';
 
 import {
     Button,
-    rem, Flex, Tabs, Center, Switch, ActionIcon,TextInput,NativeSelect,
-    Grid, Box, ScrollArea, Tooltip, Group, Text, LoadingOverlay, Title, Select, Table,
+    rem, Flex, Tabs, Center, Switch, ActionIcon, TextInput, NativeSelect,
+    Grid, Box, ScrollArea, Tooltip, Group, Text, LoadingOverlay, Title, Select, Table, Popover, Fieldset,
 } from "@mantine/core";
 import {useTranslation} from 'react-i18next';
 import {
     IconCheck,
     IconDeviceFloppy,
     IconInfoCircle,
-    IconPlus, IconUserCircle,
+    IconPlus, IconRefreshDot, IconSum, IconUserCircle, IconX,
 } from "@tabler/icons-react";
 import {getHotkeyHandler, useDisclosure, useHotkeys, useToggle} from "@mantine/hooks";
 import {useDispatch, useSelector} from "react-redux";
-import {hasLength, useForm} from "@mantine/form";
+import {hasLength, isNotEmpty, useForm} from "@mantine/form";
 import {modals} from "@mantine/modals";
 import {notifications, showNotification} from "@mantine/notifications";
 
@@ -25,28 +25,12 @@ import InputForm from "../../../form-builders/InputForm";
 import {getBrandDropdown, getCategoryDropdown} from "../../../../store/inventory/utilitySlice";
 import {getSettingDropdown,getProductUnitDropdown} from "../../../../store/utility/utilitySlice.js";
 
-import {
-    setEntityNewData,
-    setFetching,
-    setFormLoading,
-    setValidationData,
-    storeEntityData,
-    getShowEntityData,
-    updateEntityData,
-
-} from "../../../../store/inventory/crudSlice.js";
-import CategoryGroupModal from "../category/CategoryGroupModal";
-import {setDropdownLoad} from "../../../../store/inventory/crudSlice";
-import ProductForm from "../product/ProductForm";
-import ProductUpdateForm from "../product/ProductUpdateForm";
 import SelectServerSideForm from "../../../form-builders/SelectServerSideForm.jsx";
-import SalesCardItems from "./SalesCardItems.jsx";
 import SalesAddStockProductModel from "./model/SalesAddStockProductModel.jsx";
-import SalesAddCustomerModel from "./model/SalesAddCustomerModel.jsx";
-import SalesViewCustomerModel from "./model/SalesViewCustomerModel.jsx";
 import InputButtonForm from "../../../form-builders/InputButtonForm";
 import InputNumberForm from "../../../form-builders/InputNumberForm";
 import SalesForm from "./SalesForm";
+import {DataTable} from "mantine-datatable";
 
 
 function GeneralSalesForm(props) {
@@ -81,9 +65,9 @@ function GeneralSalesForm(props) {
     const [tempCardProducts,setTempCardProducts] = useState([])
     const [loadCardProducts,setLoadCardProducts] = useState(false)
 
-    const [salesSubTotalForSalesForm,setSalesSubTotalforSalesForm] = useState(0)
-    let salesSubTotalAmount = 0
-    let totalPurchaseAmount = 0
+    let salesSubTotalAmount = tempCardProducts?.reduce((total, item) => total + item.sub_total, 0) || 0;
+    let totalPurchaseAmount = tempCardProducts?.reduce((total, item) => total + (item.purchase_price*item.quantity), 0) || 0;
+
 
 
     useEffect(() => {
@@ -293,6 +277,15 @@ function GeneralSalesForm(props) {
         }
     });
 
+    const productAddedForm = useForm({
+        initialValues: {
+            name: ''
+        },
+        validate: {
+            name: isNotEmpty()
+        }
+    });
+
 
     const [selectProductDetails,setSelectProductDetails] = useState('')
 
@@ -405,6 +398,10 @@ function GeneralSalesForm(props) {
             {currancySymbol}
         </Text>
     );
+
+    const [productAddFormOpened, setProductAddFormOpened] = useState(true);
+
+
 
     return (
         <Box bg={"white"} mt={`xs`}>
@@ -592,7 +589,15 @@ function GeneralSalesForm(props) {
                                             }
                                         </>
                                     </Grid.Col>
-                                    <Grid.Col span={1}>
+
+                                    <Grid.Col span={1} bg={'white'}>
+                                        <>
+
+
+                                        </>
+                                    </Grid.Col>
+
+                                    {/*<Grid.Col span={1}>
                                         <>
                                             <ActionIcon   w={'100%'} variant="filled" size={'lg'} color="red.2" mt={'1'} aria-label="Settings">
                                                 <IconPlus style={{ width: '100%', height: '70%' }} stroke={1.5} />
@@ -605,59 +610,183 @@ function GeneralSalesForm(props) {
                                     />
                                     }
                                         </>
-                                    </Grid.Col>
+                                    </Grid.Col>*/}
                                 </Grid>
                                 </Box>
                             </Box>
                         </Box>
                         </form>
                         <Box>
-                        <Table highlightOnHover withTableBorder striped>
-                            <Table.Thead bg="rgba(230, 233, 235, 1)"  >
-                                <Table.Tr>
-                                    <Table.Td></Table.Td>
-                                    <Table.Td style={{ width: '30%' }} >{t('ProductName')}</Table.Td>
-                                    <Table.Td style={{ textAlign: 'center' }}>{t('MRP')}</Table.Td>
-                                    <Table.Td>{t('Stock')}</Table.Td>
-                                    <Table.Td style={{ textAlign: 'center' }}>{t('Quantity')}</Table.Td>
-                                    <Table.Td style={{ textAlign: 'center' }}>{t('UOM')}</Table.Td>
-                                    <Table.Td style={{ textAlign: 'right' }}>{t('Price')}</Table.Td>
-                                    <Table.Td style={{ textAlign: 'right' }}>{t('Discount')}</Table.Td>
-                                    <Table.Td style={{ textAlign: 'right' }}>{t('SubTotal')}</Table.Td>
-                                    <Table.Td style={{ textAlign: 'center' }}>{t('Action')}</Table.Td>
-                                </Table.Tr>
-                            </Table.Thead>
-                            <Table.Tbody>
-                                {tempCardProducts && tempCardProducts.length > 0 && (
-                                    tempCardProducts.map((item, index) => {
-                                        salesSubTotalAmount = salesSubTotalAmount + item.sub_total
-                                        totalPurchaseAmount = totalPurchaseAmount + (item.purchase_price*item.quantity)
-                                        return(
-                                            <SalesCardItems
-                                                item={item}
-                                                index={index}
-                                                setLoadCardProducts={setLoadCardProducts}
-                                                symbol={currancySymbol}
-                                            />
-                                        )
-                                    })
-                                )}
-                            </Table.Tbody>
-                            <Table.Tfoot>
-                                <Table.Tr style={{ borderTop: '1px solid #d6dce3'}} className={genericCss.boxBackground}>
-                                    <Table.Td style={{ textAlign: 'right' }}>&nbsp;</Table.Td>
-                                    <Table.Td style={{ textAlign: 'right' }}>&nbsp;</Table.Td>
-                                    <Table.Td style={{ textAlign: 'right' }}>&nbsp;</Table.Td>
-                                    <Table.Td style={{ textAlign: 'right' }}>&nbsp;</Table.Td>
-                                    <Table.Td style={{ textAlign: 'right' }}>&nbsp;</Table.Td>
-                                    <Table.Td style={{ textAlign: 'right' }}>&nbsp;</Table.Td>
-                                    <Table.Td style={{ textAlign: 'right' }}>&nbsp;</Table.Td>
-                                    <Table.Td style={{ textAlign: 'right' }}>&nbsp;</Table.Td>
-                                    <Table.Th style={{ textAlign: 'right' }}>{currancySymbol} {salesSubTotalAmount.toFixed(2)}</Table.Th>
-                                    <Table.Td style={{ textAlign: 'right' }}>&nbsp;</Table.Td>
-                                </Table.Tr>
-                            </Table.Tfoot>
-                        </Table>
+                            <Box className={'borderRadiusAll'}>
+
+                                <DataTable
+                                    records={tempCardProducts}
+                                    columns={[
+                                        {
+                                            accessor: 'index',
+                                            title: 'SL#',
+                                            textAlignment: 'right',
+                                            render: (item) => (tempCardProducts.indexOf(item) + 1)
+                                        },
+                                        {
+                                            accessor: 'display_name',
+                                            title: "Name",
+                                            footer: (
+                                                <Group spacing="xs">
+                                                    <IconSum size="1.25em" />
+                                                    <Text mb={-2}>{tempCardProducts.length} Items</Text>
+                                                </Group>
+                                            ),
+                                            render: (item) => {
+                                                const [editedName, setEditedName] = useState(item.display_name);
+
+                                                const handleNameChange = (e) => {
+                                                    const newName = e.currentTarget.value;
+                                                    setEditedName(newName);
+
+                                                    console.log("Old Name:", item.display_name);
+                                                    console.log("New Name:", newName);
+                                                };
+
+                                                return (
+                                                    <>
+                                                        <TextInput
+                                                            label=""
+                                                            size="xs"
+                                                            value={editedName}
+                                                            onChange={handleNameChange}
+                                                        />
+                                                    </>
+                                                );
+                                            }
+                                        },
+                                        {
+                                            accessor: 'mrp',
+                                            title: "MRP",
+                                            textAlign : "right",
+                                            render: (item) => {
+
+
+                                                return (
+                                                    item.mrp && Number(item.mrp).toFixed(2)
+                                                );
+                                            }
+                                        },
+
+                                        {
+                                            accessor: 'stock',
+                                            title: t('Stock'),
+                                            textAlign : "center"
+                                        },
+                                        {
+                                            accessor: 'quantity',
+                                            title: t('Quantity'),
+                                            textAlign : "center"
+                                        },
+                                        {
+                                            accessor: 'unit_name',
+                                            title: t('UOM'),
+                                            textAlign : "center"
+                                        },
+                                        {
+                                            accessor: 'sales_price',
+                                            title: t('Price'),
+                                            textAlign : "right",
+                                            render: (item) => {
+                                                return (
+                                                    item.sales_price && Number(item.sales_price).toFixed(2)
+                                                );
+                                            }
+                                        },
+                                        {
+                                            accessor: 'percent',
+                                            title: t('Discount'),
+                                            textAlign : "center",
+                                            render: (item) => {
+                                                return (
+                                                    item.percent && item.percent+' %'
+                                                );
+                                            },
+                                            footer: (
+                                                <Group spacing="xs">
+                                                    <Text mb={-2}>SubTotal</Text>
+                                                    <IconSum size="1.25em" />
+                                                </Group>
+                                            ),
+                                        },
+
+                                        {
+                                            accessor: 'sub_total',
+                                            title: t('SubTotal'),
+                                            textAlign : "right",
+                                            render: (item) => {
+                                                return (
+                                                    item.sub_total && Number(item.sub_total).toFixed(2)
+                                                );
+                                            },
+                                            footer: (
+                                                <Group spacing="xs">
+                                                    <Text fw={'800'}>{
+                                                        salesSubTotalAmount.toFixed(2)
+                                                    }</Text>
+                                                </Group>
+                                            ),
+                                        },
+
+
+                                        {
+                                            accessor: "action",
+                                            title: "Action",
+                                            textAlign: "right",
+                                            render: (item) => (
+                                                <Group gap={4} justify="right" wrap="nowrap">
+
+                                                    <ActionIcon
+                                                        size="sm"
+                                                        variant="subtle"
+                                                        color="red"
+                                                        onClick={() => {
+                                                            modals.openConfirmModal({
+                                                                title: t('AreYouSureYouWantToDeleteThisItem'),
+                                                                children: (
+                                                                    <Text size="sm">
+                                                                        {t('DeleteDetails')}
+                                                                    </Text>
+                                                                ),
+                                                                labels: {confirm: 'Confirm', cancel: 'Cancel'},
+                                                                onCancel: () => console.log('Cancel'),
+                                                                confirmProps: { color: 'red' },
+                                                                onConfirm: () => {
+                                                                    const dataString = localStorage.getItem('temp-sales-products');
+                                                                    let data = dataString ? JSON.parse(dataString) : [];
+
+
+                                                                    data = data.filter(d => d.product_id !== item.product_id);
+
+                                                                    const updatedDataString = JSON.stringify(data);
+
+                                                                    localStorage.setItem('temp-sales-products', updatedDataString);
+                                                                    setLoadCardProducts(true)
+                                                                },
+                                                            });
+                                                        }}
+                                                    >
+                                                        <IconX size={16} style={{ width: '70%', height: '70%' }} stroke={1.5} />
+                                                    </ActionIcon>
+                                                </Group>
+                                            ),
+                                        },
+                                    ]
+                                    }
+                                    fetching={false}
+                                    totalRecords={ 100}
+                                    recordsPerPage={10}
+                                    loaderSize="xs"
+                                    loaderColor="grape"
+                                    height={height}
+                                    scrollAreaProps={{type: 'never'}}
+                                />
+                            </Box>
                         </Box>
                     </Grid.Col>
                     <Grid.Col span={8} bg={'white'} >
@@ -666,7 +795,102 @@ function GeneralSalesForm(props) {
 
                 </Grid>
                 </Box>
+            {
+                productAddFormOpened &&
+                <Popover
+                    width={'450'}
+                    trapFocus
+                    position="bottom"
+                    withArrow
+                    shadow="xl"
+                    opened={productAddFormOpened}
+                    onChange={setProductAddFormOpened}
+                >
+                    <Popover.Target>
+                        <Tooltip
+                            multiline
+                            w={420}
+                            withArrow
+                            transitionProps={{ duration: 200 }}
+                            label="Use this button to save this information in your profile, after that you will be able to access it any time and share it via email."
+                        >
 
+                            <ActionIcon
+                                fullWidth
+                                variant="outline"
+                                size={'lg'}
+                                color="red.5"
+                                mt={'1'}
+                                aria-label="Settings"
+                                onClick={() => setProductAddFormOpened((o) => !o)}
+                            >
+                                <IconPlus style={{ width: '100%', height: '70%' }} stroke={1.5} />
+                            </ActionIcon>
+                        </Tooltip>
+                    </Popover.Target>
+                    <Popover.Dropdown>
+                        <Fieldset legend="Add Product information" variant="filled">
+                            <form onSubmit={productAddedForm.onSubmit((values) => {
+                                console.log(productAddedForm.values)
+
+                            })}>
+
+                                <InputForm
+                                    tooltip={t('NameValidateMessage')}
+                                    label={t('Name')}
+                                    placeholder={t('Name')}
+                                    required={true}
+                                    nextField={'EntityFormSubmit'}
+                                    form={productAddedForm}
+                                    name={'name'}
+                                    id={'name'}
+                                    // disabled={form.values.percent}
+                                    leftSection={<IconUserCircle size={16} opacity={0.5}/>}
+                                    rightIcon={<IconUserCircle size={16} opacity={0.5}/>}
+                                />
+
+                                <Box mt={'xs'}>
+                                    <Grid columns={12} gutter={{base: 1}}>
+                                        <Grid.Col span={6}>&nbsp;</Grid.Col>
+                                        <Grid.Col span={2}>
+                                            <Button
+                                                variant="transparent"
+                                                size="sm"
+                                                color={`red.5`}
+                                                type="submit"
+                                                mt={0}
+                                                mr={'xs'}
+                                                fullWidth
+                                                id="EntityFormSubmit"
+                                            >
+                                                <IconRefreshDot style={{width: '100%', height: '70%'}} stroke={1.5}/>
+                                            </Button>
+                                        </Grid.Col>
+                                        <Grid.Col span={4}>
+                                            <Button
+                                                size="sm"
+                                                color={`red.5`}
+                                                type="submit"
+                                                mt={0}
+                                                mr={'xs'}
+                                                fullWidth
+                                                id="EntityFormSubmit"
+                                                leftSection={<IconDeviceFloppy size={16}/>}
+                                            >
+                                                <Flex direction={`column`} gap={0}>
+                                                    <Text fz={12} fw={400}>
+                                                        {t("Add")}
+                                                    </Text>
+                                                </Flex>
+                                            </Button>
+                                        </Grid.Col>
+                                    </Grid>
+                                </Box>
+                            </form>
+                        </Fieldset>
+                    </Popover.Dropdown>
+                </Popover>
+            }
         </Box>
 
     );
