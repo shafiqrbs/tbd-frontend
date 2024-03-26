@@ -592,8 +592,99 @@ function GeneralSalesForm(props) {
 
                                     <Grid.Col span={1} bg={'white'}>
                                         <>
+                                            <Popover
+                                                width={'450'}
+                                                trapFocus
+                                                position="bottom"
+                                                withArrow
+                                                shadow="xl"
+                                                opened={productAddFormOpened}
+                                                onChange={setProductAddFormOpened}
+                                            >
+                                                <Popover.Target>
+                                                    <Tooltip
+                                                        multiline
+                                                        w={420}
+                                                        withArrow
+                                                        transitionProps={{ duration: 200 }}
+                                                        label="Use this button to save this information in your profile, after that you will be able to access it any time and share it via email."
+                                                    >
 
+                                                        <ActionIcon
+                                                            fullWidth
+                                                            variant="outline"
+                                                            size={'lg'}
+                                                            color="red.5"
+                                                            mt={'1'}
+                                                            aria-label="Settings"
+                                                            onClick={() => setProductAddFormOpened((o) => !o)}
+                                                        >
+                                                            <IconPlus style={{ width: '100%', height: '70%' }} stroke={1.5} />
+                                                        </ActionIcon>
+                                                    </Tooltip>
+                                                </Popover.Target>
+                                                <Popover.Dropdown>
+                                                    <Fieldset legend="Add Product information" variant="filled">
+                                                        {/*<form onSubmit={productAddedForm.onSubmit((values) => {
+                                                            console.log(productAddedForm.values)
 
+                                                        })}>
+
+                                                            <InputForm
+                                                                tooltip={t('NameValidateMessage')}
+                                                                label={t('Name')}
+                                                                placeholder={t('Name')}
+                                                                required={true}
+                                                                nextField={'EntityFormSubmit'}
+                                                                form={productAddedForm}
+                                                                name={'name'}
+                                                                id={'name'}
+                                                                // disabled={form.values.percent}
+                                                                leftSection={<IconUserCircle size={16} opacity={0.5}/>}
+                                                                rightIcon={<IconUserCircle size={16} opacity={0.5}/>}
+                                                            />
+
+                                                            <Box mt={'xs'}>
+                                                                <Grid columns={12} gutter={{base: 1}}>
+                                                                    <Grid.Col span={6}>&nbsp;</Grid.Col>
+                                                                    <Grid.Col span={2}>
+                                                                        <Button
+                                                                            variant="transparent"
+                                                                            size="sm"
+                                                                            color={`red.5`}
+                                                                            type="submit"
+                                                                            mt={0}
+                                                                            mr={'xs'}
+                                                                            fullWidth
+                                                                            id="EntityFormSubmit"
+                                                                        >
+                                                                            <IconRefreshDot style={{width: '100%', height: '70%'}} stroke={1.5}/>
+                                                                        </Button>
+                                                                    </Grid.Col>
+                                                                    <Grid.Col span={4}>
+                                                                        <Button
+                                                                            size="sm"
+                                                                            color={`red.5`}
+                                                                            type="submit"
+                                                                            mt={0}
+                                                                            mr={'xs'}
+                                                                            fullWidth
+                                                                            id="EntityFormSubmit"
+                                                                            leftSection={<IconDeviceFloppy size={16}/>}
+                                                                        >
+                                                                            <Flex direction={`column`} gap={0}>
+                                                                                <Text fz={12} fw={400}>
+                                                                                    {t("Add")}
+                                                                                </Text>
+                                                                            </Flex>
+                                                                        </Button>
+                                                                    </Grid.Col>
+                                                                </Grid>
+                                                            </Box>
+                                                        </form>*/}
+                                                    </Fieldset>
+                                                </Popover.Dropdown>
+                                            </Popover>
                                         </>
                                     </Grid.Col>
 
