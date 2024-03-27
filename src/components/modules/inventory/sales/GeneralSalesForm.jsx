@@ -11,7 +11,7 @@ import {useTranslation} from 'react-i18next';
 import {
     IconCheck,
     IconDeviceFloppy,
-    IconInfoCircle,
+    IconInfoCircle, IconPercentage,
     IconPlus, IconRefreshDot, IconSum, IconUserCircle, IconX,
 } from "@tabler/icons-react";
 import {getHotkeyHandler, useDisclosure, useHotkeys, useToggle} from "@mantine/hooks";
@@ -31,6 +31,9 @@ import InputButtonForm from "../../../form-builders/InputButtonForm";
 import InputNumberForm from "../../../form-builders/InputNumberForm";
 import SalesForm from "./SalesForm";
 import {DataTable} from "mantine-datatable";
+import SelectForm from "../../../form-builders/SelectForm.jsx";
+import {storeEntityData} from "../../../../store/inventory/crudSlice.js";
+import axios from "axios";
 
 
 function GeneralSalesForm(props) {
@@ -57,6 +60,7 @@ function GeneralSalesForm(props) {
     const [addStockProductModel, setAddStockProductModel] = useState(false);
     const [addCustomerModel, setAddCustomerModel] = useState(false);
     const [viewCustomerModel, setCustomerViewModel] = useState(false);
+    const [fetching, setFetching] = useState(false);
 
 
     const [searchValue, setSearchValue] = useState('');
@@ -75,7 +79,6 @@ function GeneralSalesForm(props) {
         setTempCardProducts(tempProducts ? JSON.parse(tempProducts) : [])
         setLoadCardProducts(false)
     },[loadCardProducts])
-
 
     useEffect(() => {
         if (searchValue.length > 0) {
@@ -279,7 +282,15 @@ function GeneralSalesForm(props) {
 
     const productAddedForm = useForm({
         initialValues: {
-            name: ''
+            name: '',
+            purchase_price:'',
+            sales_price:'',
+            unit_id :'',
+            category_id : '',
+            product_type_id : '',
+            product_name : '',
+            quantity : '',
+            status : 1
         },
         validate: {
             name: isNotEmpty()
@@ -336,7 +347,6 @@ function GeneralSalesForm(props) {
                 form.setFieldValue('sub_total', quantity * salesPrice);
             }
         }
-
     }, [form.values.quantity, form.values.sales_price]);
 
 
@@ -399,7 +409,7 @@ function GeneralSalesForm(props) {
         </Text>
     );
 
-    const [productAddFormOpened, setProductAddFormOpened] = useState(true);
+    const [productAddFormOpened, setProductAddFormOpened] = useState(false);
 
 
 
@@ -598,6 +608,7 @@ function GeneralSalesForm(props) {
                                                 position="bottom"
                                                 withArrow
                                                 shadow="xl"
+                                                // clickOutsideEvents={['mouseup', 'touchend']}
                                                 opened={productAddFormOpened}
                                                 onChange={setProductAddFormOpened}
                                             >
@@ -617,7 +628,7 @@ function GeneralSalesForm(props) {
                                                             color="red.5"
                                                             mt={'1'}
                                                             aria-label="Settings"
-                                                            onClick={() => setProductAddFormOpened((o) => !o)}
+                                                            onClick={() => setProductAddFormOpened(true)}
                                                         >
                                                             <IconPlus style={{ width: '100%', height: '70%' }} stroke={1.5} />
                                                         </ActionIcon>
@@ -625,24 +636,93 @@ function GeneralSalesForm(props) {
                                                 </Popover.Target>
                                                 <Popover.Dropdown>
                                                     <Fieldset legend="Add Product information" variant="filled">
-                                                        {/*<form onSubmit={productAddedForm.onSubmit((values) => {
-                                                            console.log(productAddedForm.values)
 
-                                                        })}>
+                                                        <SelectForm
+                                                            tooltip={t('ChooseProductType')}
+                                                            label={t('ProductType')}
+                                                            placeholder={t('ChooseProductType')}
+                                                            required={true}
+                                                            name={'product_type_id'}
+                                                            form={productAddedForm}
+                                                            dropdownValue={productTypeDropdown}
+                                                            mt={0}
+                                                            id={'product_type_id'}
+                                                            nextField={'category_id'}
+                                                            searchable={true}
+                                                            value={productTypeData}
+                                                            changeValue={setProductTypeData}
+                                                            comboboxProps={{ withinPortal: false }}
+                                                        />
 
-                                                            <InputForm
-                                                                tooltip={t('NameValidateMessage')}
-                                                                label={t('Name')}
-                                                                placeholder={t('Name')}
-                                                                required={true}
-                                                                nextField={'EntityFormSubmit'}
-                                                                form={productAddedForm}
-                                                                name={'name'}
-                                                                id={'name'}
-                                                                // disabled={form.values.percent}
-                                                                leftSection={<IconUserCircle size={16} opacity={0.5}/>}
-                                                                rightIcon={<IconUserCircle size={16} opacity={0.5}/>}
-                                                            />
+                                                        <SelectForm
+                                                            tooltip={t('ChooseCategory')}
+                                                            label={t('Category')}
+                                                            placeholder={t('ChooseCategory')}
+                                                            required={true}
+                                                            nextField={'name'}
+                                                            name={'category_id'}
+                                                            form={productAddedForm}
+                                                            dropdownValue={categoryDropdown}
+                                                            mt={8}
+                                                            id={'category_id'}
+                                                            searchable={true}
+                                                            value={categoryData}
+                                                            changeValue={setCategoryData}
+                                                            comboboxProps={{ withinPortal: false }}
+                                                        />
+
+                                                        <InputForm
+                                                            tooltip={t('ProductNameValidateMessage')}
+                                                            label={t('ProductName')}
+                                                            placeholder={t('ProductName')}
+                                                            required={true}
+                                                            nextField={'unit_id'}
+                                                            form={productAddedForm}
+                                                            name={'name'}
+                                                            mt={8}
+                                                            id={'name'}
+                                                        />
+
+                                                        <SelectForm
+                                                            tooltip={t('ChooseProductUnit')}
+                                                            label={t('ProductUnit')}
+                                                            placeholder={t('ChooseProductUnit')}
+                                                            required={true}
+                                                            name={'unit_id'}
+                                                            form={productAddedForm}
+                                                            dropdownValue={productUnitDropdown}
+                                                            mt={8}
+                                                            id={'unit_id'}
+                                                            nextField={'sales_price'}
+                                                            searchable={true}
+                                                            value={productUnitData}
+                                                            changeValue={setProductUnitData}
+                                                            comboboxProps={{ withinPortal: false }}
+                                                        />
+
+                                                        <InputForm
+                                                            tooltip={t('SalesPriceValidateMessage')}
+                                                            label={t('SalesPrice')}
+                                                            placeholder={t('SalesPrice')}
+                                                            required={true}
+                                                            nextField={'purchase_price'}
+                                                            form={productAddedForm}
+                                                            name={'sales_price'}
+                                                            mt={8}
+                                                            id={'sales_price'}
+                                                        />
+
+                                                        <InputForm
+                                                            tooltip={t('PurchasePrice')}
+                                                            label={t('PurchasePrice')}
+                                                            placeholder={t('PurchasePrice')}
+                                                            required={true}
+                                                            nextField={'EntityFormSubmit'}
+                                                            form={productAddedForm}
+                                                            name={'purchase_price'}
+                                                            mt={8}
+                                                            id={'purchase_price'}
+                                                        />
 
                                                             <Box mt={'xs'}>
                                                                 <Grid columns={12} gutter={{base: 1}}>
@@ -671,6 +751,86 @@ function GeneralSalesForm(props) {
                                                                             fullWidth
                                                                             id="EntityFormSubmit"
                                                                             leftSection={<IconDeviceFloppy size={16}/>}
+                                                                            onClick={() => {
+                                                                                let validation = true
+                                                                                if (!productAddedForm.values.name) {
+                                                                                    validation = false
+                                                                                    productAddedForm.setFieldError('name', true);
+                                                                                }
+                                                                                if (!productAddedForm.values.purchase_price) {
+                                                                                    validation = false
+                                                                                    productAddedForm.setFieldError('purchase_price', true);
+                                                                                }
+                                                                                if (!productAddedForm.values.sales_price) {
+                                                                                    validation = false
+                                                                                    productAddedForm.setFieldError('sales_price', true);
+                                                                                }
+                                                                                if (!productAddedForm.values.unit_id) {
+                                                                                    validation = false
+                                                                                    productAddedForm.setFieldError('unit_id', true);
+                                                                                }
+                                                                                if (!productAddedForm.values.category_id) {
+                                                                                    validation = false
+                                                                                    productAddedForm.setFieldError('category_id', true);
+                                                                                }
+                                                                                if (!productAddedForm.values.product_type_id) {
+                                                                                    validation = false
+                                                                                    productAddedForm.setFieldError('product_type_id', true);
+                                                                                }
+
+                                                                                productAddedForm.values['product_name'] = 'test';
+                                                                                productAddedForm.values['quantity'] = '100';
+
+                                                                                // console.log(productAddedForm.values)
+
+                                                                                if (validation) {
+                                                                                    const value = {
+                                                                                        url: 'inventory/product',
+                                                                                        data: productAddedForm.values
+                                                                                    }
+                                                                                    dispatch(storeEntityData(value))
+
+
+                                                                                    axios({
+                                                                                        method: 'get',
+                                                                                        url: `${import.meta.env.VITE_API_GATEWAY_URL+'inventory/stock-item'}`,
+                                                                                        headers: {
+                                                                                            "Accept": `application/json`,
+                                                                                            "Content-Type": `application/json`,
+                                                                                            "Access-Control-Allow-Origin": '*',
+                                                                                            "X-Api-Key": import.meta.env.VITE_API_KEY,
+                                                                                            "X-Api-User": JSON.parse(localStorage.getItem('user')).id
+                                                                                        }
+                                                                                    })
+                                                                                        .then(res => {
+                                                                                            if (res.data.data){
+                                                                                                localStorage.setItem("user-products", JSON.stringify(res.data.data));
+                                                                                            }
+                                                                                        })
+                                                                                        .catch(function (error) {
+                                                                                            console.log(error)
+                                                                                        })
+
+
+                                                                                    /*
+                                                                                    /!*const newProduct = {
+                                                                                        product_id: 'new-id',
+                                                                                        sales_price: 'new-price',
+                                                                                        // ... other properties
+                                                                                    };
+                                                                                    const storedProducts = localStorage.getItem('user-products');
+                                                                                    const localProducts = storedProducts ? JSON.parse(storedProducts) : [];
+                                                                                    localProducts.push(newProduct);
+                                                                                    localStorage.setItem('user-products', JSON.stringify(localProducts));*/
+
+                                                                                    productAddedForm.reset()
+                                                                                    setCategoryData(null)
+                                                                                    setProductTypeData(null)
+                                                                                    setProductUnitData(null)
+                                                                                    setProductAddFormOpened(false)
+                                                                                }
+
+                                                                            }}
                                                                         >
                                                                             <Flex direction={`column`} gap={0}>
                                                                                 <Text fz={12} fw={400}>
@@ -681,7 +841,6 @@ function GeneralSalesForm(props) {
                                                                     </Grid.Col>
                                                                 </Grid>
                                                             </Box>
-                                                        </form>*/}
                                                     </Fieldset>
                                                 </Popover.Dropdown>
                                             </Popover>
@@ -727,37 +886,13 @@ function GeneralSalesForm(props) {
                                                     <IconSum size="1.25em" />
                                                     <Text mb={-2}>{tempCardProducts.length} Items</Text>
                                                 </Group>
-                                            ),
-                                            render: (item) => {
-                                                const [editedName, setEditedName] = useState(item.display_name);
-
-                                                const handleNameChange = (e) => {
-                                                    const newName = e.currentTarget.value;
-                                                    setEditedName(newName);
-
-                                                    console.log("Old Name:", item.display_name);
-                                                    console.log("New Name:", newName);
-                                                };
-
-                                                return (
-                                                    <>
-                                                        <TextInput
-                                                            label=""
-                                                            size="xs"
-                                                            value={editedName}
-                                                            onChange={handleNameChange}
-                                                        />
-                                                    </>
-                                                );
-                                            }
+                                            )
                                         },
                                         {
                                             accessor: 'mrp',
                                             title: "MRP",
                                             textAlign : "right",
                                             render: (item) => {
-
-
                                                 return (
                                                     item.mrp && Number(item.mrp).toFixed(2)
                                                 );
@@ -772,7 +907,48 @@ function GeneralSalesForm(props) {
                                         {
                                             accessor: 'quantity',
                                             title: t('Quantity'),
-                                            textAlign : "center"
+                                            textAlign : "center",
+                                            width : '100px',
+                                            render: (item) => {
+                                                const [editedQuantity, setEditedQuantity] = useState(item.quantity);
+
+                                                const handlQuantityChange = (e) => {
+                                                    const editedQuantity = e.currentTarget.value;
+                                                    setEditedQuantity(editedQuantity);
+
+                                                    // console.log("Old Quantity:", item.quantity);
+                                                    // console.log("New Quantity:", editedQuantity);
+
+                                                    const tempCardProducts = localStorage.getItem('temp-sales-products');
+                                                    const cardProducts = tempCardProducts ? JSON.parse(tempCardProducts) : [];
+
+                                                    const updatedProducts = cardProducts.map(product => {
+                                                        if (product.product_id === item.product_id) {
+                                                            return {
+                                                                ...product,
+                                                                quantity: e.currentTarget.value,
+                                                                sub_total: e.currentTarget.value * item.sales_price,
+                                                            };
+                                                        }
+                                                        return product
+                                                    });
+
+                                                    localStorage.setItem('temp-sales-products', JSON.stringify(updatedProducts));
+                                                    setLoadCardProducts(true)
+                                                };
+
+                                                return (
+                                                    <>
+                                                        <TextInput
+                                                            type="number"
+                                                            label=""
+                                                            size="xs"
+                                                            value={editedQuantity}
+                                                            onChange={handlQuantityChange}
+                                                        />
+                                                    </>
+                                                );
+                                            }
                                         },
                                         {
                                             accessor: 'unit_name',
@@ -783,9 +959,48 @@ function GeneralSalesForm(props) {
                                             accessor: 'sales_price',
                                             title: t('Price'),
                                             textAlign : "right",
+                                            width : '100px',
                                             render: (item) => {
+                                                const [editedSalesPrice, setEditedSalesPrice] = useState(item.sales_price);
+
+                                                const handleSalesPriceChange = (e) => {
+                                                    const newSalesPrice = e.currentTarget.value;
+                                                    setEditedSalesPrice(newSalesPrice);
+                                                };
+
+                                                useEffect(() => {
+                                                    const timeoutId = setTimeout(() => {
+                                                        const tempCardProducts = localStorage.getItem('temp-sales-products');
+                                                        const cardProducts = tempCardProducts ? JSON.parse(tempCardProducts) : [];
+
+                                                        const updatedProducts = cardProducts.map(product => {
+                                                            if (product.product_id === item.product_id) {
+                                                                return {
+                                                                    ...product,
+                                                                    sales_price: editedSalesPrice,
+                                                                    sub_total: editedSalesPrice * item.quantity,
+                                                                };
+                                                            }
+                                                            return product;
+                                                        });
+
+                                                        localStorage.setItem('temp-sales-products', JSON.stringify(updatedProducts));
+                                                        setLoadCardProducts(true);
+                                                    }, 1000);
+
+                                                    return () => clearTimeout(timeoutId);
+                                                }, [editedSalesPrice, item.product_id, item.quantity]);
+
                                                 return (
-                                                    item.sales_price && Number(item.sales_price).toFixed(2)
+                                                    <>
+                                                        <TextInput
+                                                            type="number"
+                                                            label=""
+                                                            size="xs"
+                                                            value={editedSalesPrice}
+                                                            onChange={handleSalesPriceChange}
+                                                        />
+                                                    </>
                                                 );
                                             }
                                         },
@@ -798,6 +1013,49 @@ function GeneralSalesForm(props) {
                                                     item.percent && item.percent+' %'
                                                 );
                                             },
+                                            /*width : '100px',
+                                            render: (item) => {
+                                                const [editedPercent, setEditedPercent] = useState(item.percent);
+
+                                                const handlePercentChange = (e) => {
+                                                    const editedPercent = e.currentTarget.value;
+                                                    setEditedPercent(editedPercent);
+
+                                                    const tempCardProducts = localStorage.getItem('temp-sales-products');
+                                                    const cardProducts = tempCardProducts ? JSON.parse(tempCardProducts) : [];
+
+                                                    const updatedProducts = cardProducts.map(product => {
+                                                        if (product.product_id === item.product_id) {
+                                                            const discountAmount = (item.mrp * editedPercent) / 100;
+                                                            const salesPrice = item.mrp - discountAmount;
+
+                                                            return {
+                                                                ...product,
+                                                                percent: editedPercent,
+                                                                sales_price: salesPrice,
+                                                                sub_total: salesPrice*item.quantity,
+                                                            };
+                                                        }
+                                                        return product
+                                                    });
+
+                                                    localStorage.setItem('temp-sales-products', JSON.stringify(updatedProducts));
+                                                    setLoadCardProducts(true)
+                                                };
+
+                                                return (
+                                                    <>
+                                                        <TextInput
+                                                            type="number"
+                                                            label=""
+                                                            size="xs"
+                                                            value={editedPercent}
+                                                            onChange={handlePercentChange}
+                                                            rightSection={<IconPercentage size={16} opacity={0.5}/>}
+                                                        />
+                                                    </>
+                                                );
+                                            },*/
                                             footer: (
                                                 <Group spacing="xs">
                                                     <Text mb={-2}>SubTotal</Text>
@@ -869,7 +1127,7 @@ function GeneralSalesForm(props) {
                                         },
                                     ]
                                     }
-                                    fetching={false}
+                                    fetching={fetching}
                                     totalRecords={ 100}
                                     recordsPerPage={10}
                                     loaderSize="xs"
@@ -886,102 +1144,6 @@ function GeneralSalesForm(props) {
 
                 </Grid>
                 </Box>
-            {
-                productAddFormOpened &&
-                <Popover
-                    width={'450'}
-                    trapFocus
-                    position="bottom"
-                    withArrow
-                    shadow="xl"
-                    opened={productAddFormOpened}
-                    onChange={setProductAddFormOpened}
-                >
-                    <Popover.Target>
-                        <Tooltip
-                            multiline
-                            w={420}
-                            withArrow
-                            transitionProps={{ duration: 200 }}
-                            label="Use this button to save this information in your profile, after that you will be able to access it any time and share it via email."
-                        >
-
-                            <ActionIcon
-                                fullWidth
-                                variant="outline"
-                                size={'lg'}
-                                color="red.5"
-                                mt={'1'}
-                                aria-label="Settings"
-                                onClick={() => setProductAddFormOpened((o) => !o)}
-                            >
-                                <IconPlus style={{ width: '100%', height: '70%' }} stroke={1.5} />
-                            </ActionIcon>
-                        </Tooltip>
-                    </Popover.Target>
-                    <Popover.Dropdown>
-                        <Fieldset legend="Add Product information" variant="filled">
-                            <form onSubmit={productAddedForm.onSubmit((values) => {
-                                console.log(productAddedForm.values)
-
-                            })}>
-
-                                <InputForm
-                                    tooltip={t('NameValidateMessage')}
-                                    label={t('Name')}
-                                    placeholder={t('Name')}
-                                    required={true}
-                                    nextField={'EntityFormSubmit'}
-                                    form={productAddedForm}
-                                    name={'name'}
-                                    id={'name'}
-                                    // disabled={form.values.percent}
-                                    leftSection={<IconUserCircle size={16} opacity={0.5}/>}
-                                    rightIcon={<IconUserCircle size={16} opacity={0.5}/>}
-                                />
-
-                                <Box mt={'xs'}>
-                                    <Grid columns={12} gutter={{base: 1}}>
-                                        <Grid.Col span={6}>&nbsp;</Grid.Col>
-                                        <Grid.Col span={2}>
-                                            <Button
-                                                variant="transparent"
-                                                size="sm"
-                                                color={`red.5`}
-                                                type="submit"
-                                                mt={0}
-                                                mr={'xs'}
-                                                fullWidth
-                                                id="EntityFormSubmit"
-                                            >
-                                                <IconRefreshDot style={{width: '100%', height: '70%'}} stroke={1.5}/>
-                                            </Button>
-                                        </Grid.Col>
-                                        <Grid.Col span={4}>
-                                            <Button
-                                                size="sm"
-                                                color={`red.5`}
-                                                type="submit"
-                                                mt={0}
-                                                mr={'xs'}
-                                                fullWidth
-                                                id="EntityFormSubmit"
-                                                leftSection={<IconDeviceFloppy size={16}/>}
-                                            >
-                                                <Flex direction={`column`} gap={0}>
-                                                    <Text fz={12} fw={400}>
-                                                        {t("Add")}
-                                                    </Text>
-                                                </Flex>
-                                            </Button>
-                                        </Grid.Col>
-                                    </Grid>
-                                </Box>
-                            </form>
-                        </Fieldset>
-                    </Popover.Dropdown>
-                </Popover>
-            }
         </Box>
 
     );

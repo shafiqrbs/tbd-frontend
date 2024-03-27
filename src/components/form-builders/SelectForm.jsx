@@ -61,6 +61,7 @@ function SelectForm(props) {
                             document.getElementById(nextField).focus();
                         }}
                         withAsterisk={required}
+                        comboboxProps={props.comboboxProps}
                     />
                 </Tooltip>
             }
