@@ -68,6 +68,7 @@ function GeneralSalesForm(props) {
 
     const [tempCardProducts,setTempCardProducts] = useState([])
     const [loadCardProducts,setLoadCardProducts] = useState(false)
+    const [focusIntoProductSearch,setFocusIntoProductSearch] = useState(false)
 
     let salesSubTotalAmount = tempCardProducts?.reduce((total, item) => total + item.sub_total, 0) || 0;
     let totalPurchaseAmount = tempCardProducts?.reduce((total, item) => total + (item.purchase_price*item.quantity), 0) || 0;
@@ -78,6 +79,10 @@ function GeneralSalesForm(props) {
         const tempProducts = localStorage.getItem('temp-sales-products');
         setTempCardProducts(tempProducts ? JSON.parse(tempProducts) : [])
         setLoadCardProducts(false)
+        if (focusIntoProductSearch){
+            document.getElementById('product_id').focus();
+            setFocusIntoProductSearch(false)
+        }
     },[loadCardProducts])
 
     useEffect(() => {
@@ -454,9 +459,11 @@ function GeneralSalesForm(props) {
                                             style: { backgroundColor: 'mistyrose' },
                                         });
                                     }else {
+                                        setFocusIntoProductSearch(true)
                                         handleAddProductByProductId(values, myCardProducts, localProducts);
                                     }
                                 } else if (!values.product_id && values.barcode) {
+                                    setFocusIntoProductSearch(true)
                                     handleAddProductByBarcode(values, myCardProducts, localProducts);
                                 }
                             }
@@ -945,6 +952,11 @@ function GeneralSalesForm(props) {
                                                             size="xs"
                                                             value={editedQuantity}
                                                             onChange={handlQuantityChange}
+                                                            onKeyDown={getHotkeyHandler([
+                                                                ['Enter', (e) => {
+                                                                    document.getElementById('inline-update-quantity-'+item.product_id).focus();
+                                                                }],
+                                                            ])}
                                                         />
                                                     </>
                                                 );
@@ -997,6 +1009,7 @@ function GeneralSalesForm(props) {
                                                             type="number"
                                                             label=""
                                                             size="xs"
+                                                            id={'inline-update-quantity-'+item.product_id}
                                                             value={editedSalesPrice}
                                                             onChange={handleSalesPriceChange}
                                                         />
