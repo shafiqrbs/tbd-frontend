@@ -35,7 +35,7 @@ function SampleFooterNavbar() {
         <>
             <footer className={classes.footer}>
                 <div className={classes.inner}>
-                    <Group>sdasd</Group>
+                    <Group>Left-Side</Group>
                     <Group>
                         <Group ml={50} gap={5} className={classes.links} visibleFrom="sm">
                             {items}

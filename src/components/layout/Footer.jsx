@@ -4,10 +4,9 @@ import SampleFooterNavbar from "./SampleFooterNavbar";
 
 function Footer() {
   return (
-      <Box  p={'0'}>
+      <Box p={'0'}>
         <SampleFooterNavbar/>
       </Box>
   )
 }
-
 export default Footer
