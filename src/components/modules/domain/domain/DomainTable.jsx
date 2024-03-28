@@ -42,11 +42,11 @@ function DomainTable(props) {
 
     useEffect(() => {
         const value = {
-            url: 'core/customer',
+            url: 'domain/global',
             param: {
                 term: searchKeyword,
-                name: customerFilterData.name,
-                mobile: customerFilterData.mobile,
+                // name: customerFilterData.name,
+                // mobile: customerFilterData.mobile,
                 page: page,
                 offset: perPage
             }

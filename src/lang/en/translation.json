@@ -191,6 +191,17 @@
 
 
 
+  "CreateNewDomain": "Create New Domain",
+  "CompanyStoreName": "Company store name",
+  "CompanyStoreNameValidateMessage": "Company store name must be 2-20 characters long",
+  "AlternativeMobileValidateMessage": "Alternative mobile must be digit",
+  "ClientName": "Client name",
+  "ClientNameValidateMessage": "Client name must be 2-20 characters long",
+  "DomainUser": "Domain user",
+  "DomainUserValidateMessage": "Domain user must be 2-20 characters long",
+
+
+
   "" : ""
 
 

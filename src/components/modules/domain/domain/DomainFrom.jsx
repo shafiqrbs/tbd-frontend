@@ -73,49 +73,41 @@ function DomainForm(props) {
 
     const form = useForm({
         initialValues: {
-            location_id: '',
-            marketing_id: '',
-            name: '',
-            mobile: '',
-            customer_group: '',
-            credit_limit: '',
-            reference_id: '',
-            alternative_mobile: '',
-            address: '',
-            email: ''
+            company_name: '',mobile : '',alternative_mobile:'',name:'',username:'',address:'',email:''
         },
         validate: {
+            company_name: hasLength({min: 2, max: 20}),
             name: hasLength({min: 2, max: 20}),
-            mobile: (value) => (!/^\d+$/.test(value)),
-            email: (value) => {
-                if (value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+            username: hasLength({min: 2, max: 20}),
+            mobile: (value) => {
+                const isNotEmpty = !    !value.trim().length;
+                const isDigitsOnly = /^\d+$/.test(value.trim());
+
+                if (isNotEmpty && isDigitsOnly) {
+                    return false;
+                } else {
                     return true;
                 }
-                return null;
-            },
-            credit_limit: (value) => {
-                if (value) {
-                    const isNumberOrFractional = /^-?\d+(\.\d+)?$/.test(value);
-                    if (!isNumberOrFractional) {
-                        return true;
-                    }
-                }
-                return null;
             },
             alternative_mobile: (value) => {
-                if (value && value.trim()) {
-                    const isDigitsOnly = /^\d+$/.test(value);
-                    if (!isDigitsOnly) {
+                if (value) {
+                    const isNotEmpty = !!value.trim().length;
+                    const isDigitsOnly = /^\d+$/.test(value.trim());
+
+                    if (isNotEmpty && isDigitsOnly) {
+                        return false;
+                    } else {
                         return true;
                     }
+                } else {
+                    return false;
                 }
-                return null;
-            },
+            }
         }
     });
 
 
-    useEffect(() => {
+    /*useEffect(() => {
         if (validation) {
             validationMessage.name && (form.setFieldError('name', true));
             validationMessage.mobile && (form.setFieldError('mobile', true));
@@ -144,10 +136,10 @@ function DomainForm(props) {
                 dispatch(setFetching(true))
             }, 700)
         }
-    }, [validation,validationMessage,form]);
+    }, [validation,validationMessage,form]);*/
 
     useHotkeys([['alt+n', () => {
-        document.getElementById('CustomerName').focus()
+        document.getElementById('company_name').focus()
     }]], []);
 
     useHotkeys([['alt+r', () => {
@@ -155,38 +147,52 @@ function DomainForm(props) {
     }]], []);
 
     useHotkeys([['alt+s', () => {
-        document.getElementById('DomainFormSubmit').click()
+        document.getElementById('EntityFormSubmit').click()
     }]], []);
 
 
     return (
         <Box>
             <Grid columns={24} gutter={{base: 8}}>
+
                 <Grid.Col span={15} >
                     <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
                         <DomainTable/>
                     </Box>
                 </Grid.Col>
+
                 <Grid.Col span={8} >
                     <form onSubmit={form.onSubmit((values) => {
                         dispatch(setValidationData(false))
                         modals.openConfirmModal({
-                            title: 'Please confirm your action',
+                            title: (
+                                <Text size="md"> {t("FormConfirmationTitle")}</Text>
+                            ),
                             children: (
-                                <Text size="sm">
-                                    This action is so important that you are required to confirm it with a
-                                    modal. Please click
-                                    one of these buttons to proceed.
-                                </Text>
+                                <Text size="sm"> {t("FormConfirmationMessage")}</Text>
                             ),
                             labels: {confirm: 'Confirm', cancel: 'Cancel'},
                             onCancel: () => console.log('Cancel'),
                             onConfirm: () => {
                                 const value = {
-                                    url: 'core/customer',
+                                    url: 'domain/global',
                                     data: values
                                 }
                                 dispatch(storeEntityData(value))
+
+                                notifications.show({
+                                    color: 'teal',
+                                    title: t('CreateSuccessfully'),
+                                    icon: <IconCheck style={{width: rem(18), height: rem(18)}}/>,
+                                    loading: false,
+                                    autoClose: 700,
+                                    style: {backgroundColor: 'lightgray'},
+                                });
+
+                                setTimeout(() => {
+                                    form.reset()
+                                    dispatch(setFetching(true))
+                                }, 700)
                             },
                         });
                     })}>
@@ -228,7 +234,7 @@ function DomainForm(props) {
                                         <Grid.Col span={'auto'} >
                                             <ScrollArea h={height} scrollbarSize={2} type="never">
                                                 <Box  pb={'md'}>
-                                                    {
+                                                    {/*{
                                                         Object.keys(form.errors).length > 0 && validationMessage !=0 &&
                                                         <Alert variant="light" color="red" radius="md" title={
                                                             <List withPadding size="sm">
@@ -237,15 +243,15 @@ function DomainForm(props) {
                                                                 {validationMessage.alternative_mobile && <List.Item>{t('AlternativeMobile')}</List.Item>}
                                                             </List>
                                                         }></Alert>
-                                                    }
+                                                    }*/}
 
                                                     <Box mt={'xs'}>
                                                         <InputForm
-                                                            tooltip={t('NameValidateMessage')}
+                                                            tooltip={t('CompanyStoreNameValidateMessage')}
                                                             label={t('CompanyStoreName')}
-                                                            placeholder={t('CustomerName')}
+                                                            placeholder={t('CompanyStoreName')}
                                                             required={true}
-                                                            nextField={'CustomerGroup'}
+                                                            nextField={'mobile'}
                                                             name={'company_name'}
                                                             form={form}
                                                             mt={0}
@@ -258,7 +264,7 @@ function DomainForm(props) {
                                                             label={t('Mobile')}
                                                             placeholder={t('Mobile')}
                                                             required={true}
-                                                            nextField={'AlternativeMobile'}
+                                                            nextField={'alternative_mobile'}
                                                             name={'mobile'}
                                                             form={form}
                                                             mt={16}
@@ -267,11 +273,11 @@ function DomainForm(props) {
                                                     </Box>
                                                     <Box mt={'xs'}>
                                                     <InputNumberForm
-                                                        tooltip={t('MobileValidateMessage')}
+                                                        tooltip={t('AlternativeMobileValidateMessage')}
                                                         label={t('AlternativeMobile')}
                                                         placeholder={t('AlternativeMobile')}
                                                         required={false}
-                                                        nextField={'Email'}
+                                                        nextField={'email'}
                                                         name={'alternative_mobile'}
                                                         form={form}
                                                         mt={'md'}
@@ -284,7 +290,7 @@ function DomainForm(props) {
                                                         label={t('Email')}
                                                         placeholder={t('Email')}
                                                         required={false}
-                                                        nextField={'Location'}
+                                                        nextField={'name'}
                                                         name={'email'}
                                                         form={form}
                                                         mt={'md'}
@@ -292,22 +298,22 @@ function DomainForm(props) {
                                                     />
                                                     </Box>
                                                     <Box mt={'xs'}>
-                                                    <InputForm
-                                                        tooltip={t('InvalidEmail')}
-                                                        label={t('ClientName')}
-                                                        placeholder={t('Email')}
-                                                        required={true}
-                                                        nextField={'Location'}
-                                                        name={'name'}
-                                                        form={form}
-                                                        mt={8}
-                                                        id={'name'}
-                                                    />
+                                                        <InputForm
+                                                            tooltip={t('ClientNameValidateMessage')}
+                                                            label={t('ClientName')}
+                                                            placeholder={t('ClientName')}
+                                                            required={true}
+                                                            nextField={'username'}
+                                                            name={'name'}
+                                                            form={form}
+                                                            mt={8}
+                                                            id={'name'}
+                                                        />
                                                     </Box>
                                                     <Box mt={'xs'}>
 
                                                     <InputForm
-                                                        tooltip={t('InvalidEmail')}
+                                                        tooltip={t('DomainUserValidateMessage')}
                                                         label={t('DomainUser')}
                                                         placeholder={t('DomainUser')}
                                                         required={true}
@@ -328,7 +334,7 @@ function DomainForm(props) {
                                                         name={'address'}
                                                         form={form}
                                                         mt={8}
-                                                        id={'Address'}
+                                                        id={'address'}
                                                     />
                                                     </Box>
 
@@ -347,7 +353,7 @@ function DomainForm(props) {
                         <Shortcut
                             form={form}
                             FormSubmit={'EntityFormSubmit'}
-                            Name={'CompanyName'}
+                            Name={'company_name'}
                         />
                     </Box>
                 </Grid.Col>
