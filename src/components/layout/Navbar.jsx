@@ -1,5 +1,5 @@
 import React  from 'react'
-import {  NavLink } from '@mantine/core';
+import {NavLink, Text} from '@mantine/core';
 import {
     IconGauge,
 } from '@tabler/icons-react';
@@ -50,6 +50,14 @@ function Navbar() {
                 <NavLink href="inventory/category" label={t('Category')} component="button" onClick={(e)=>{navigate('inventory/category')}}  />
                 <NavLink href="inventory/category-group" label={t('CategoryGroup')} component="button" onClick={(e)=>{navigate('inventory/category-group')}}  />
                 <NavLink href="config" label="Configuration" component="button" onClick={(e)=>{navigate('inventory/config')}}  />
+            </NavLink>
+            <NavLink
+                href="#required-for-focus"
+                label="Domain"
+                leftSection={<IconGauge size="1rem" stroke={1.5} />}
+                childrenOffset={28}
+            >
+                <NavLink href="domain" label={t("Domain")} component="button" onClick={(e)=>{navigate('domain')}}  />
             </NavLink>
             <NavLink
                 href="#required-for-focus"

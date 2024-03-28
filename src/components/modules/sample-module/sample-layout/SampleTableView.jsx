@@ -2,8 +2,8 @@ import React, {useEffect, useState} from "react";
 import {json, useNavigate, useOutletContext} from "react-router-dom";
 import {
     Button,
-    rem, Flex, Tabs, Center, Switch, ActionIcon,TextInput,NativeSelect,Fieldset,
-    Grid, Box, ScrollArea, Tooltip, Group, Text, LoadingOverlay, Title, Select, Table,Popover
+    rem, Flex, Tabs, Center, Switch, ActionIcon, TextInput, NativeSelect, Fieldset,
+    Grid, Box, ScrollArea, Tooltip, Group, Text, LoadingOverlay, Title, Select, Table, Popover, Stack
 } from "@mantine/core";
 import {useTranslation} from 'react-i18next';
 import {
@@ -28,6 +28,8 @@ import {deleteEntityData} from "../../../../store/core/crudSlice";
 import {DataTable} from "mantine-datatable";
 import Shortcut from "../../shortcut/Shortcut";
 import ShortcutInvoice from "../../shortcut/ShortcutInvoice";
+import KeywordSearch from "../../filter/KeywordSearch";
+import ShortcutTable from "../../shortcut/ShortcutTable";
 
 
 function SampleTableView(props) {
@@ -36,7 +38,7 @@ function SampleTableView(props) {
     const dispatch = useDispatch();
     const {isOnline, mainAreaHeight} = useOutletContext();
     const height = mainAreaHeight - 176; //TabList height 104
-    const tableHeight = mainAreaHeight - 178; //TabList height 104
+    const tableHeight = mainAreaHeight - 128; //TabList height 104
     const navigate = useNavigate();
     const [opened, {open, close}] = useDisclosure(false);
     const icon = <IconInfoCircle />;
@@ -371,281 +373,27 @@ function SampleTableView(props) {
     const [displayNameValue,setDisplayNameValue] = useState('');
 
     return (
-
+        <>
+        <Box>
+            <Grid columns={24} gutter={{base: 8}}>
+                <Grid.Col span={24} >
+                    <Box pl={`xs`} pb={'xs'} pr={8} pt={'xs'} mb={'4'} className={'boxBackground borderRadiusAll'} >
+                        <Grid>
+                            <Grid.Col>
+                                <Stack >
+                                    <KeywordSearch/>
+                                </Stack>
+                            </Grid.Col>
+                        </Grid>
+                    </Box>
+                </Grid.Col>
+            </Grid>
+        </Box>
         <Box>
             <Grid columns={24} gutter={{base: 8}}>
                 <Grid.Col span={9} >
                     <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
-                        <Box>
-                        <form onSubmit={form.onSubmit((values) => {
 
-                            if (!values.barcode && !values.product_id){
-                                form.setFieldError('barcode', true);
-                                form.setFieldError('product_id', true);
-                                setTimeout(() => {
-                                    notifications.show({
-                                        loading: true,
-                                        color: 'red',
-                                        title: 'Loading your data',
-                                        message: 'Data will be loaded in 3 seconds, you cannot close this yet',
-                                        autoClose: 1000,
-                                        withCloseButton: true,
-                                    });
-                                },1000)
-                            }else {
-                                const cardProducts = localStorage.getItem('temp-sales-products');
-                                const myCardProducts = cardProducts ? JSON.parse(cardProducts) : [];
-                                const storedProducts = localStorage.getItem('user-products');
-                                const localProducts = storedProducts ? JSON.parse(storedProducts) : [];
-
-                                if (values.product_id && !values.barcode) {
-                                    if (!allowZeroPercentage){
-                                        showNotification({
-                                            color: 'pink',
-                                            title: t('WeNotifyYouThat'),
-                                            message: t('ZeroQuantityNotAllow'),
-                                            autoClose: 1500,
-                                            loading : true,
-                                            withCloseButton: true,
-                                            position: 'top-center',
-                                            style: { backgroundColor: 'mistyrose' },
-                                        });
-                                    }else {
-                                        handleAddProductByProductId(values, myCardProducts, localProducts);
-                                    }
-                                } else if (!values.product_id && values.barcode) {
-                                    handleAddProductByBarcode(values, myCardProducts, localProducts);
-                                }
-
-                            }
-
-                        })}>
-                            <Box  pl={`xs`} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'} >
-                                <Grid columns={24} gutter={{base: 2}} >
-                                    <Grid.Col span={4}>
-                                        <InputNumberForm
-                                            tooltip={t('BarcodeValidateMessage')}
-                                            label=''
-                                            placeholder={t('barcode')}
-                                            required={true}
-                                            nextField={'EntityFormSubmit'}
-                                            form={form}
-                                            name={'barcode'}
-                                            id={'barcode'}
-                                            leftSection={<IconBarcode size={16} opacity={0.5}/>}
-                                        />
-                                    </Grid.Col>
-                                    <Grid.Col span={20}>
-                                        <SelectServerSideForm
-                                            tooltip={t('ChooseStockProduct')}
-                                            label=''
-                                            placeholder={t('ChooseStockProduct')}
-                                            required = {false}
-                                            nextField = {'quantity'}
-                                            name = {'product_id'}
-                                            form = {form}
-                                            mt={8}
-                                            id = {'product_id'}
-                                            searchable={true}
-                                            searchValue={searchValue}
-                                            setSearchValue={setSearchValue}
-                                            dropdownValue={productDropdown}
-                                        />
-                                    </Grid.Col>
-                                </Grid>
-                                <Box mt={'xs'} pb={'xs'}>
-                                    <Grid columns={24} gutter={{base: 2}}>
-                                        <Grid.Col span={4}>
-                                            <InputButtonForm
-                                                type="number"
-                                                tooltip={t('PercentValidateMessage')}
-                                                label=''
-                                                placeholder={t('MRP price')}
-                                                required={true}
-                                                nextField={'EntityFormSubmit'}
-                                                form={form}
-                                                name={'salesPrice'}
-                                                id={'salesPrice'}
-                                                rightSection={inputGroupCurrency}
-                                                leftSection={<IconCoinMonero size={16} opacity={0.5}/>}
-                                                rightSectionWidth={30}
-                                            />
-                                        </Grid.Col>
-                                        <Grid.Col span={4}>
-                                            <InputButtonForm
-                                                type="number"
-                                                tooltip={t('PercentValidateMessage')}
-                                                label=''
-                                                placeholder={t('Quantity')}
-                                                required={true}
-                                                nextField={'percent'}
-                                                form={form}
-                                                name={'quantity'}
-                                                id={'quantity'}
-                                                leftSection={<IconSortAscendingNumbers size={16} opacity={0.5}/>}
-                                                rightSection={inputGroupText}
-                                                rightSectionWidth={50}
-                                            />
-                                        </Grid.Col>
-                                        <Grid.Col span={4}>
-                                            <InputButtonForm
-                                                tooltip={t('PercentValidateMessage')}
-                                                label=''
-                                                placeholder={t('Percent')}
-                                                required={true}
-                                                nextField={'EntityFormSubmit'}
-                                                form={form}
-                                                name={'percent'}
-                                                id={'percent'}
-                                                leftSection={<IconPercentage size={16} opacity={0.5}/>}
-                                                rightSection={inputGroupCurrency}
-                                            />
-                                        </Grid.Col>
-                                        <Grid.Col span={4}>
-                                            <InputButtonForm
-                                                tooltip={t('SalesPriceValidateMessage')}
-                                                label=''
-                                                placeholder={t('SalesPrice')}
-                                                required={true}
-                                                nextField={'EntityFormSubmit'}
-                                                form={form}
-                                                name={'sales_price'}
-                                                id={'sales_price'}
-                                                disabled={form.values.percent}
-                                                leftSection={<IconPlusMinus size={16} opacity={0.5}/>}
-                                                rightSection={inputGroupCurrency}
-                                            />
-                                        </Grid.Col>
-                                        <Grid.Col span={4}>
-                                            <InputButtonForm
-                                                tooltip={t('SalesPriceValidateMessage')}
-                                                label=''
-                                                placeholder={t('SubTotal')}
-                                                required={true}
-                                                nextField={'EntityFormSubmit'}
-                                                form={form}
-                                                name={'sub_total'}
-                                                id={'sub_total'}
-                                                leftSection={<IconSum size={16} opacity={0.5}/>}
-                                                rightSection={inputGroupCurrency}
-                                                disabled={selectProductDetails && selectProductDetails.sub_total && (selectProductDetails.sub_total).toFixed(2)}
-                                            />
-                                        </Grid.Col>
-                                        <Grid.Col span={3}>
-                                            <>
-                                                {!saveCreateLoading &&
-                                                <Button
-                                                    size="sm"
-                                                    color={`red.5`}
-                                                    type="submit"
-                                                    mt={0}
-                                                    mr={'xs'}
-                                                    w={'100%'}
-                                                    id="EntityFormSubmit"
-                                                    leftSection={<IconDeviceFloppy size={16}/>}
-                                                >
-                                                    <Flex direction={`column`} gap={0}>
-                                                        <Text fz={12} fw={400}>
-                                                            {t("Add")}
-                                                        </Text>
-                                                    </Flex>
-                                                </Button>
-                                                }
-                                            </>
-                                        </Grid.Col>
-                                        <Grid.Col span={1} bg={'white'}>
-                                            <>
-                                                <Popover width={'450'} trapFocus position="bottom" withArrow shadow="xl">
-                                                    <Popover.Target>
-                                                        <Tooltip
-                                                            multiline
-                                                            w={420}
-                                                            withArrow
-                                                            transitionProps={{ duration: 200 }}
-                                                            label="Use this button to save this information in your profile, after that you will be able to access it any time and share it via email."
-                                                        >
-                                                            <ActionIcon fullWidth variant="outline" size={'lg'} color="red.5" mt={'1'} aria-label="Settings">
-                                                                <IconPlus style={{ width: '100%', height: '70%' }} stroke={1.5} />
-                                                            </ActionIcon>
-                                                        </Tooltip>
-                                                    </Popover.Target>
-                                                    <Popover.Dropdown>
-                                                        <Fieldset legend="Add Product information" variant="filled">
-                                                            <InputNumberForm
-                                                                tooltip={t('SalesPriceValidateMessage')}
-                                                                label={t('Name')}
-                                                                placeholder={t('SalesPrice')}
-                                                                required={true}
-                                                                nextField={'EntityFormSubmit'}
-                                                                form={form}
-                                                                name={'sales_price'}
-                                                                id={'sales_price'}
-                                                                disabled={form.values.percent}
-                                                                leftSection={<IconUserCircle size={16} opacity={0.5}/>}
-                                                                rightIcon={<IconUserCircle size={16} opacity={0.5}/>}
-                                                            />
-                                                            <InputNumberForm
-                                                                tooltip={t('SalesPriceValidateMessage')}
-                                                                label={t('Name')}
-                                                                placeholder={t('SalesPrice')}
-                                                                required={true}
-                                                                nextField={'EntityFormSubmit'}
-                                                                form={form}
-                                                                mt={'md'}
-                                                                name={'sales_price'}
-                                                                id={'sales_price'}
-                                                                disabled={form.values.percent}
-                                                                leftSection={<IconUserCircle size={16} opacity={0.5}/>}
-                                                                rightIcon={<IconUserCircle size={16} opacity={0.5}/>}
-                                                            />
-                                                            <Box mt={'xs'}>
-                                                                <Grid columns={12} gutter={{base: 1}} >
-                                                                    <Grid.Col span={6}>&nbsp;</Grid.Col>
-                                                                    <Grid.Col span={2}>
-                                                                        <Button
-                                                                            variant="transparent"
-                                                                            size="sm"
-                                                                            color={`red.5`}
-                                                                            type="submit"
-                                                                            mt={0}
-                                                                            mr={'xs'}
-                                                                            fullWidth
-                                                                            id="EntityFormSubmit"
-                                                                        >
-                                                                            <IconRefreshDot style={{ width: '100%', height: '70%' }} stroke={1.5} />
-                                                                        </Button>
-                                                                    </Grid.Col>
-                                                                    <Grid.Col span={4}>
-                                                                        <Button
-                                                                            size="sm"
-                                                                            color={`red.5`}
-                                                                            type="submit"
-                                                                            mt={0}
-                                                                            mr={'xs'}
-                                                                            fullWidth
-                                                                            id="EntityFormSubmit"
-                                                                            leftSection={<IconDeviceFloppy size={16}/>}
-                                                                        >
-                                                                            <Flex direction={`column`} gap={0}>
-                                                                                <Text fz={12} fw={400}>
-                                                                                    {t("Add")}
-                                                                                </Text>
-                                                                            </Flex>
-                                                                        </Button>
-                                                                    </Grid.Col>
-                                                                </Grid>
-                                                            </Box>
-                                                        </Fieldset>
-                                                    </Popover.Dropdown>
-                                                </Popover>
-
-                                            </>
-                                        </Grid.Col>
-                                    </Grid>
-                                </Box>
-                            </Box>
-                        </form>
-                        </Box>
                         <Box className={'borderRadiusAll'}>
                             {tempCardProducts && tempCardProducts.length > 0 && (
                                 tempCardProducts.map((item, index) => {
@@ -762,59 +510,12 @@ function SampleTableView(props) {
                                 scrollAreaProps={{type: 'never'}}
                             />
                         </Box>
-
                     </Box>
                 </Grid.Col>
                 <Grid.Col span={6} >
                     <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
-                        <Box>
-                            <form onSubmit={form.onSubmit((values) => {
-
-                                if (!values.barcode && !values.product_id){
-                                    form.setFieldError('barcode', true);
-                                    form.setFieldError('product_id', true);
-                                    setTimeout(() => {
-                                        notifications.show({
-                                            loading: true,
-                                            color: 'red',
-                                            title: 'Loading your data',
-                                            message: 'Data will be loaded in 3 seconds, you cannot close this yet',
-                                            autoClose: 1000,
-                                            withCloseButton: true,
-                                        });
-                                    },1000)
-                                }else {
-                                    const cardProducts = localStorage.getItem('temp-sales-products');
-                                    const myCardProducts = cardProducts ? JSON.parse(cardProducts) : [];
-                                    const storedProducts = localStorage.getItem('user-products');
-                                    const localProducts = storedProducts ? JSON.parse(storedProducts) : [];
-
-                                    if (values.product_id && !values.barcode) {
-                                        if (!allowZeroPercentage){
-                                            showNotification({
-                                                color: 'pink',
-                                                title: t('WeNotifyYouThat'),
-                                                message: t('ZeroQuantityNotAllow'),
-                                                autoClose: 1500,
-                                                loading : true,
-                                                withCloseButton: true,
-                                                position: 'top-center',
-                                                style: { backgroundColor: 'mistyrose' },
-                                            });
-                                        }else {
-                                            handleAddProductByProductId(values, myCardProducts, localProducts);
-                                        }
-                                    } else if (!values.product_id && values.barcode) {
-                                        handleAddProductByBarcode(values, myCardProducts, localProducts);
-                                    }
-
-                                }
-
-                            })}>
-                                <Box h={'106'} pl={`xs`} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'} >
-
-                                </Box>
-                            </form>
+                        <Box h={'40'} pl={`xs`} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'} >
+                            In voice Title
                         </Box>
                         <Box className={'borderRadiusAll'} h={height}>
 Body
@@ -823,54 +524,8 @@ Body
                 </Grid.Col>
                 <Grid.Col span={8} >
                     <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
-                        <Box>
-                            <form onSubmit={form.onSubmit((values) => {
-
-                                if (!values.barcode && !values.product_id){
-                                    form.setFieldError('barcode', true);
-                                    form.setFieldError('product_id', true);
-                                    setTimeout(() => {
-                                        notifications.show({
-                                            loading: true,
-                                            color: 'red',
-                                            title: 'Loading your data',
-                                            message: 'Data will be loaded in 3 seconds, you cannot close this yet',
-                                            autoClose: 1000,
-                                            withCloseButton: true,
-                                        });
-                                    },1000)
-                                }else {
-                                    const cardProducts = localStorage.getItem('temp-sales-products');
-                                    const myCardProducts = cardProducts ? JSON.parse(cardProducts) : [];
-                                    const storedProducts = localStorage.getItem('user-products');
-                                    const localProducts = storedProducts ? JSON.parse(storedProducts) : [];
-
-                                    if (values.product_id && !values.barcode) {
-                                        if (!allowZeroPercentage){
-                                            showNotification({
-                                                color: 'pink',
-                                                title: t('WeNotifyYouThat'),
-                                                message: t('ZeroQuantityNotAllow'),
-                                                autoClose: 1500,
-                                                loading : true,
-                                                withCloseButton: true,
-                                                position: 'top-center',
-                                                style: { backgroundColor: 'mistyrose' },
-                                            });
-                                        }else {
-                                            handleAddProductByProductId(values, myCardProducts, localProducts);
-                                        }
-                                    } else if (!values.product_id && values.barcode) {
-                                        handleAddProductByBarcode(values, myCardProducts, localProducts);
-                                    }
-
-                                }
-
-                            })}>
-                                <Box h={'106'} pl={`xs`} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'} >
-
-                                </Box>
-                            </form>
+                        <Box h={'40'} pl={`xs`} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'} >
+                            In voice Details
                         </Box>
                         <Box className={'borderRadiusAll'} h={height}>
                             Body
@@ -879,7 +534,7 @@ Body
                 </Grid.Col>
                 <Grid.Col span={1} >
                     <Box bg={'white'} className={'borderRadiusAll'} pt={'16'}>
-                        <ShortcutInvoice
+                        <ShortcutTable
                             form={form}
                             FormSubmit={'EntityFormSubmit'}
                             Name={'CompanyName'}
@@ -888,6 +543,7 @@ Body
                 </Grid.Col>
             </Grid>
         </Box>
+        </>
 
     );
 }

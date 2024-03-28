@@ -476,7 +476,7 @@ function SampleInvoiceForm(props) {
                                     </Grid>
                                 </Box>
                                 <Box>
-                                    <Grid gutter={{base: 6}} bg={'gray.2'}>
+                                    <Grid gutter={{base: 6}} bg={'red.1'}>
                                         <Grid.Col span={6}>
                                             <Box pl={'xl'} pb={'6'}>
                                                 <Text fz={'md'} order={1} fw={'800'}>1200000</Text>
@@ -509,39 +509,49 @@ function SampleInvoiceForm(props) {
                             </Box>
                             <ScrollArea h={formHeight} scrollbarSize={2} type="never" bg={'gray.1'}>
                                 <Box p={'xs'} pb={'0'}>
-                                    <Grid gutter={{base: 6}}>
-                                        <Grid.Col span={4}>
+                                    <Grid gutter={{base: 4}}>
+                                        <Grid.Col span={3}>
                                             <Center fz={'md'}
                                                     fw={'800'}>{currencySymbol} {salesSubTotalAmount.toFixed(2)}</Center>
                                         </Grid.Col>
-                                        <Grid.Col span={4}>
+                                        <Grid.Col span={3}>
                                             <Center fz={'md'}
                                                     fw={'800'}>{currencySymbol} {salesSubTotalAmount.toFixed(2)}</Center>
                                         </Grid.Col>
-                                        <Grid.Col span={4}>
+                                        <Grid.Col span={3}>
+                                            <Center fz={'md'}
+                                                    fw={'800'}>{currencySymbol} {salesSubTotalAmount.toFixed(2)}</Center>
+                                        </Grid.Col>
+                                        <Grid.Col span={3}>
                                             <Center fz={'md'}
                                                     fw={'800'}>{currencySymbol} {salesSubTotalAmount.toFixed(2)}</Center>
                                         </Grid.Col>
                                     </Grid>
-                                    <Grid gutter={{base: 6}}>
-                                        <Grid.Col span={4}>
+                                    <Grid gutter={{base: 4}}>
+                                        <Grid.Col span={3}>
                                             <Box h={1} ml={'xl'} mr={'xl'} bg={`red.3`}></Box>
                                         </Grid.Col>
-                                        <Grid.Col span={4}>
+                                        <Grid.Col span={3}>
                                             <Box h={1} ml={'xl'} mr={'xl'} bg={`red.3`}></Box>
                                         </Grid.Col>
-                                        <Grid.Col span={4}>
+                                        <Grid.Col span={3}>
+                                            <Box h={1} ml={'xl'} mr={'xl'} bg={`red.3`}></Box>
+                                        </Grid.Col>
+                                        <Grid.Col span={3}>
                                             <Box h={1} ml={'xl'} mr={'xl'} bg={`red.3`}></Box>
                                         </Grid.Col>
                                     </Grid>
-                                    <Grid gutter={{base: 6}}>
-                                        <Grid.Col span={4}>
+                                    <Grid gutter={{base: 4}}>
+                                        <Grid.Col span={3}>
                                             <Center fz={'xs'} c="dimmed" >{t('SubTotal')}</Center>
                                         </Grid.Col>
-                                        <Grid.Col span={4}>
+                                        <Grid.Col span={3}>
                                             <Center fz={'xs'} c="dimmed" >{t('Discount')}</Center>
                                         </Grid.Col>
-                                        <Grid.Col span={4}>
+                                        <Grid.Col span={3}>
+                                            <Center fz={'xs'} c="dimmed">{t('VAT')}</Center>
+                                        </Grid.Col>
+                                        <Grid.Col span={3}>
                                             <Center fz={'xs'} c="dimmed">{t('Total')}</Center>
                                         </Grid.Col>
                                     </Grid>
@@ -599,68 +609,6 @@ function SampleInvoiceForm(props) {
                                             </label>
                                         </Grid.Col>
                                     </Grid>
-                                </Box>
-                                <Box bg={`white`} >
-                                    <Grid gutter={{base: 6}} mt={'12'} pl={'xs'} pr={'xs'}>
-                                        <Grid.Col span={6}>
-                                            <InputForm
-                                                tooltip={t('ReorderQuantityValidateMessage')}
-                                                label=''
-                                                placeholder={t('PaymentMobile')}
-                                                required={false}
-                                                nextField={'transaction_id'}
-                                                form={form}
-                                                name={'payment_mobile'}
-                                                mt={16}
-                                                id={'payment_mobile'}
-                                            />
-                                        </Grid.Col>
-                                        <Grid.Col span={6}>
-                                            <InputForm
-                                                tooltip={t('TransactionIDValidateMessage')}
-                                                label=''
-                                                placeholder={t('TransactionID')}
-                                                required={false}
-                                                nextField={'status'}
-                                                form={form}
-                                                name={'transaction_id'}
-                                                mt={8}
-                                                id={'transaction_id'}
-                                            />
-                                        </Grid.Col>
-                                    </Grid>
-                                   {/* <Grid gutter={{base: 6}} mt={'6'}>
-                                        <Grid.Col span={6}>
-                                            <SelectForm
-                                                tooltip={t('ProductUnitValidateMessage')}
-                                                label=''
-                                                placeholder={t('ChooseBankAccount')}
-                                                required={true}
-                                                name={'BankAccountCard'}
-                                                form={form}
-                                                dropdownValue={productUnitDropdown}
-                                                mt={16}
-                                                id={'paymentCard_id'}
-                                                nextField={'transaction_id'}
-                                                searchable={false}
-                                                value={productUnitData}
-                                                changeValue={setProductUnitData}
-                                            />
-                                        </Grid.Col>
-                                        <Grid.Col span={6}>
-                                            <InputForm
-                                                tooltip={t('TransactionIDValidateMessage')}
-                                                label=''
-                                                placeholder={t('paymentCard_id')}
-                                                required={false}
-                                                nextField={'status'}
-                                                form={form}
-                                                name={'transaction_id'}
-                                                mt={8}
-                                                id={'transaction_id'}
-                                            />
-                                        </Grid.Col>
-                                    </Grid>*/}
                                 </Box>
                                 <Box  pb={'xs'}>
                                     <Box p={'xs'} className={'boxBackground'} mt={'xs'} pt={'xs'} mb={'xs'} pb={'xs'} >

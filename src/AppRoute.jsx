@@ -16,6 +16,7 @@ import PurchaseIndex from "./components/modules/inventory/purchase/PurchaseIndex
 import PurchaseInvoice from "./components/modules/inventory/purchase/PurchaseInvoice";
 import SampleInvoice from "./components/modules/sample-module/sample-layout/SampleInvoice";
 import SampleIndex from "./components/modules/sample-module/sample-layout/SampleIndex";
+import DomainIndex from "./components/modules/domain/domain/DomainIndex";
 function AppRoute() {
 
     return (
@@ -41,6 +42,9 @@ function AppRoute() {
                     <Route path="category" element={<CategoryIndex/>}/>
                     <Route path="category-group" element={<CategoryGroupIndex/>}/>
                     <Route path="config" element={<ConfigurationIndex/>}/>
+                </Route>
+                <Route path="/domain/">
+                    <Route path="" element={<DomainIndex/>}/>
                 </Route>
             </Route>
         </Routes>

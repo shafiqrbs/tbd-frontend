@@ -156,7 +156,7 @@ function CategoryForm() {
                                                 name={'parent'}
                                                 form={form}
                                                 dropdownValue={groupCategoryDropdown}
-                                                mt={8}
+                                                mt={50}
                                                 id={'category_group'}
                                                 searchable={false}
                                                 value={categoryGroupData}
@@ -185,7 +185,7 @@ function CategoryForm() {
                                         nextField={'status'}
                                         form={form}
                                         name={'name'}
-                                        mt={8}
+                                        mt={50}
                                         id={'name'}
                                     />
 

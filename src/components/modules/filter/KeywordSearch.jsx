@@ -92,8 +92,8 @@ function KeywordSearch(props) {
                                         label={t("FiledIsRequired")}
                                         withArrow
                                         position={"bottom"}
-                                        c={'indigo'}
-                                        bg={`indigo.1`}
+                                        c={'red'}
+                                        bg={`red.1`}
                                     >
                                         <IconInfoCircle size={16} opacity={0.5}/>
                                     </Tooltip>
@@ -103,7 +103,9 @@ function KeywordSearch(props) {
                 </Grid.Col>
                 <Grid.Col span={2}>
                     <ActionIcon.Group mt={'1'}>
-                        <ActionIcon variant="transparent" size="lg" mr={16} aria-label="Gallery"
+                        <ActionIcon variant="transparent"
+                                    c={'red.4'}
+                                    size="lg" mr={16} aria-label="Filter"
                                     onClick={() => {
                                         searchKeyword.length > 0 ?
                                             (dispatch(setFetching(true)),
@@ -121,8 +123,8 @@ function KeywordSearch(props) {
                                 py={2}
                                 withArrow
                                 position={"bottom"}
-                                c={'indigo'}
-                                bg={`gray.1`}
+                                c={'red'}
+                                bg={`red.1`}
                                 transitionProps={{transition: "pop-bottom-left", duration: 500}}
                             >
                                 <IconSearch style={{width: rem(20)}} stroke={2.0}/>
@@ -133,6 +135,7 @@ function KeywordSearch(props) {
                         <ActionIcon
                             variant="transparent"
                             size="lg"
+                            c={'gray.6'}
                             mr={16}
                             aria-label="Settings"
                             onClick={(e) => {
@@ -145,25 +148,23 @@ function KeywordSearch(props) {
                                 py={2}
                                 withArrow
                                 position={"bottom"}
-                                c={'indigo'}
-                                bg={`gray.1`}
+                                c={'red'}
+                                bg={`red.1`}
                                 transitionProps={{transition: "pop-bottom-left", duration: 500}}
                             >
                                 <IconFilter style={{width: rem(20)}} stroke={2.0}/>
                             </Tooltip>
                         </ActionIcon>
-
-
-
-                        <ActionIcon variant="transparent" size="lg" aria-label="Settings">
+                        <ActionIcon variant="transparent" c={'gray.6'}
+                                    size="lg" aria-label="Settings">
                             <Tooltip
                                 label={t("ResetButton")}
                                 px={16}
                                 py={2}
                                 withArrow
                                 position={"bottom"}
-                                c={'indigo'}
-                                bg={`gray.1`}
+                                c={'red'}
+                                bg={`red.1`}
                                 transitionProps={{transition: "pop-bottom-left", duration: 500}}
                             >
                                 <IconRestore style={{width: rem(20)}} stroke={2.0} onClick={() => {
