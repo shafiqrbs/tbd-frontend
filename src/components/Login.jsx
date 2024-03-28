@@ -195,7 +195,7 @@ export default function Login() {
                     <Anchor c="dimmed" size="sm" className={LoginPage.control}>
                         <Center inline>
                             <IconArrowLeft style={{ width: rem(12), height: rem(12) }} stroke={1.5} />
-                            <Box ml={5}>Back to the signup page</Box>
+                            <Box ml={5}>Back to the sign-up page</Box>
                         </Center>
                     </Anchor>
                     <Button fullWidth mt="xl" size="md" type='submit' id={"LoginSubmit"} className={LoginPage.control} rightSection={<IconLogin/>}>

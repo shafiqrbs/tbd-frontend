@@ -58,6 +58,8 @@ function Navbar() {
                 childrenOffset={28}
             >
                 <NavLink href="sample" label="sample" component="button" onClick={(e)=>{navigate('sample')}}  />
+                <NavLink href="sample/invoice" label="Invoice" component="button" onClick={(e)=>{navigate('sample/invoice')}}  />
+                <NavLink href="sample/index" label="Table" component="button" onClick={(e)=>{navigate('sample/index')}}  />
             </NavLink>
         </>
   )

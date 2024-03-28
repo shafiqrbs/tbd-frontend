@@ -19,6 +19,18 @@ function Layout() {
     if(!user){
         return <Navigate replace to="/login"/>;
     }else{
+        /*let userGroup = JSON.parse(user).user_group;
+
+        if (userGroup==='admin'){
+            return <Navigate replace to="/core/user"/>;
+        }else {
+            return <Navigate replace to="/"/>;
+        }*/
+
+
+        // const tempProducts = localStorage.getItem('temp-sales-products');
+        // setTempCardProducts(tempProducts ? JSON.parse(tempProducts) : [])
+
         /*if(location.pathname === '/'){
             return <Navigate replace to="/dashboard"/>;
         }*/
@@ -32,7 +44,7 @@ function Layout() {
     }, []);
 
     const headerHeight = 60;
-    const footerHeight = 30;
+    const footerHeight = 42;
     const mainAreaHeight = height - (headerHeight + footerHeight + 20); //default padding 20
 
     return (

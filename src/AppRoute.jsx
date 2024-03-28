@@ -14,6 +14,8 @@ import SalesIndex from "./components/modules/inventory/sales/SalesIndex";
 import SalesForm from "./components/modules/inventory/sales/SalesForm";
 import PurchaseIndex from "./components/modules/inventory/purchase/PurchaseIndex";
 import PurchaseInvoice from "./components/modules/inventory/purchase/PurchaseInvoice";
+import SampleInvoice from "./components/modules/sample-module/sample-layout/SampleInvoice";
+import SampleIndex from "./components/modules/sample-module/sample-layout/SampleIndex";
 function AppRoute() {
 
     return (
@@ -22,6 +24,8 @@ function AppRoute() {
             <Route path="/" element={<Layout/>}>
                 <Route path="/sample/">
                     <Route path="" element={<SampleDashboard/>}/>
+                    <Route path="invoice" element={<SampleInvoice/>}/>
+                    <Route path="index" element={<SampleIndex/>}/>
                 </Route>
                 <Route path="/core/">
                     <Route path="customer" element={<CustomerIndex/>}/>
