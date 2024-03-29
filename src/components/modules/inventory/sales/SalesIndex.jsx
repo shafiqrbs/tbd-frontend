@@ -36,6 +36,8 @@ function SalesIndex() {
 
     const configData = useSelector((state) => state.inventoryCrudSlice.showEntityData)
 
+    // console.log(configData)
+
     useEffect(() => {
         dispatch(getShowEntityData('inventory/config'))
     }, []);
@@ -56,7 +58,7 @@ function SalesIndex() {
                     </Box>
                     <Box pr={'12'} pl={'12'}>
                         {
-                            insertType === 'create' && configData.business_model.slug==='general' &&
+                            insertType === 'create' && configData && configData.business_model && configData.business_model.slug==='general' &&
                             <GeneralSalesForm
                                 allowZeroPercentage = {configData.zero_stock}
                                 currancySymbol = {configData.currency.symbol}

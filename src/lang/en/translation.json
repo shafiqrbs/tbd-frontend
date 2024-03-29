@@ -200,6 +200,11 @@
   "DomainUser": "Domain user",
   "DomainUserValidateMessage": "Domain user must be 2-20 characters long",
 
+  "ServiceCharge": "Service Charge",
+  "Authorised": "Authorised",
+  "AccountType": "Account Type",
+  "MethodName": "Method Name",
+
 
 
   "" : ""

@@ -6,7 +6,7 @@ import genericCss from '../../../../assets/css/Generic.module.css';
 import {
     Button,
     rem, Flex, Tabs, Center, Switch, ActionIcon,
-    Grid, Box, ScrollArea, Tooltip, Group, Text, LoadingOverlay, Title, Select, Table, Progress,
+    Grid, Box, ScrollArea, Tooltip, Group, Text, LoadingOverlay, Title, Select, Table, Progress, List, ThemeIcon,
 } from "@mantine/core";
 import {useTranslation} from 'react-i18next';
 import {
@@ -29,7 +29,7 @@ import {
     IconX,
     IconWallet,
     IconDeviceMobileDollar,
-    IconBuildingBank,
+    IconBuildingBank, IconCircleCheck,
 
 } from "@tabler/icons-react";
 import {getHotkeyHandler, useDisclosure, useHotkeys, useToggle} from "@mantine/hooks";
@@ -58,6 +58,7 @@ import {
 import SalesAddCustomerModel from "./model/SalesAddCustomerModel.jsx";
 import SalesViewCustomerModel from "./model/SalesViewCustomerModel.jsx";
 import {getCustomerDropdown} from "../../../../store/core/utilitySlice";
+import {getTransactionModeData} from "../../../../store/accounting/utilitySlice.js";
 
 function SalesForm(props) {
     // console.log(props.totalPurchaseAmount)
@@ -76,16 +77,18 @@ function SalesForm(props) {
     }, []);
 
     const configData = useSelector((state) => state.inventoryCrudSlice.showEntityData)
+    const transactionModeData = useSelector((state) => state.accountingUtilitySlice.transactionModeData)
+
 
     useEffect(() => {
         dispatch(getShowEntityData('inventory/config'))
+        dispatch(getTransactionModeData('accounting/transaction-mode-data'))
     }, []);
 
+    console.log(transactionModeData)
+
     const [currencySymbol, setcurrencySymbol] = useState(null);
-   /* useEffect(() => {
-        setcurrencySymbol(configData.currency.symbol)
-    }, [configData.currency.symbol]);
-*/
+
     const [salesSubTotalAmount, setSalesSubTotalAmount] = useState(0);
     const [salesProfitAmount, setSalesProfitAmount] = useState(0);
     const [salesVatAmount, setSalesVatAmount] = useState(0);
@@ -93,6 +96,7 @@ function SalesForm(props) {
     // const [salesDueAmount, setSalesDueAmount] = useState(props.salesSubTotalAmount);
     const [salesTotalAmount, setSalesTotalAmount] = useState(0);
     const [salesDueAmount, setSalesDueAmount] = useState(props.salesSubTotalAmount);
+    const [hoveredModeId, setHoveredModeId] = useState(false);
 
 
 
@@ -579,138 +583,72 @@ function SalesForm(props) {
                                         </Grid.Col>
                                     </Grid>
                                 </Box>
-                                <Box mt={'xs'} bg={`gray.2`}>
-                                    <Tabs variant="unstyled" defaultValue="mobile" classNames={classes}>
-                                        <Tabs.List grow>
-                                            <Tabs.Tab
-                                                value="cash"
-                                                fz={'xs'}
-                                                leftSection={<IconWallet style={{width: rem(16), height: rem(16)}}/>}
-                                            >
-                                                {t('HandCash')}
-                                            </Tabs.Tab>
-                                            <Tabs.Tab
-                                                value="mobile"
-                                                fz={'xs'}
-                                                leftSection={<IconDeviceMobileDollar style={{width: rem(16), height: rem(16)}}/>}
-                                            >
-                                                {t('MobileBanking')}
-                                            </Tabs.Tab>
-                                            <Tabs.Tab
-                                                value="bank"
-                                                fz={'xs'}
-                                                leftSection={<IconBuildingBank style={{width: rem(16), height: rem(16)}}/>}
-                                            >
-                                                {t('PaymentCard')}
-                                            </Tabs.Tab>
-                                        </Tabs.List>
-                                        <Tabs.Panel p={'xs'} pb={0} value="mobile" pt="xs">
-                                            <Grid gutter={{base: 6}}>
-                                                <Grid.Col span={'auto'}>
-                                                    <SelectForm
-                                                        tooltip={t('ProductUnitValidateMessage')}
-                                                        label=''
-                                                        placeholder={t('ChooseMobileAccount')}
-                                                        required={true}
-                                                        name={'mobile_account'}
-                                                        form={form}
-                                                        dropdownValue={productUnitDropdown}
-                                                        mt={8}
-                                                        id={'mobile_account'}
-                                                        nextField={'payment_mobile'}
-                                                        searchable={false}
-                                                        value={productUnitData}
-                                                        changeValue={setProductUnitData}
-                                                    />
-                                                </Grid.Col>
-                                            </Grid>
-                                            <Grid gutter={{base: 6}} mt={'6'}>
-                                                <Grid.Col span={6}>
-                                                    <InputForm
-                                                        tooltip={t('ReorderQuantityValidateMessage')}
-                                                        label=''
-                                                        placeholder={t('PaymentMobile')}
-                                                        required={false}
-                                                        nextField={'transaction_id'}
-                                                        form={form}
-                                                        name={'payment_mobile'}
-                                                        mt={16}
-                                                        id={'payment_mobile'}
-                                                    />
-                                                </Grid.Col>
-                                                <Grid.Col span={6}>
-                                                    <InputForm
-                                                        tooltip={t('TransactionIDValidateMessage')}
-                                                        label=''
-                                                        placeholder={t('TransactionID')}
-                                                        required={false}
-                                                        nextField={'status'}
-                                                        form={form}
-                                                        name={'transaction_id'}
-                                                        mt={8}
-                                                        id={'transaction_id'}
-                                                    />
-                                                </Grid.Col>
-                                            </Grid>
-                                        </Tabs.Panel>
-                                        <Tabs.Panel p={'xs'} pb={0} value="bank" pt="xs">
 
-                                            <Grid gutter={{base: 6}}>
-                                                <Grid.Col span={'auto'}>
-                                                    <SelectForm
-                                                        tooltip={t('ProductUnitValidateMessage')}
-                                                        label=''
-                                                        placeholder={t('ChooseBankAccount')}
-                                                        required={true}
-                                                        name={'bank_account'}
-                                                        form={form}
-                                                        dropdownValue={productUnitDropdown}
-                                                        mt={8}
-                                                        id={'bank_account'}
-                                                        nextField={'payment_mobile'}
-                                                        searchable={false}
-                                                        value={productUnitData}
-                                                        changeValue={setProductUnitData}
-                                                    />
-                                                </Grid.Col>
-                                            </Grid>
+                                <Box mt={'xs'} pl={'8'} pt={'xs'} pr={'xs'} bg={`white`}>
+                                    <Grid columns={'16'}  gutter="6">
 
-                                            <Grid gutter={{base: 6}} mt={'6'}>
-                                                <Grid.Col span={6}>
-                                                    <SelectForm
-                                                        tooltip={t('ProductUnitValidateMessage')}
-                                                        label=''
-                                                        placeholder={t('ChooseBankAccount')}
-                                                        required={true}
-                                                        name={'BankAccountCard'}
-                                                        form={form}
-                                                        dropdownValue={productUnitDropdown}
-                                                        mt={16}
-                                                        id={'paymentCard_id'}
-                                                        nextField={'transaction_id'}
-                                                        searchable={false}
-                                                        value={productUnitData}
-                                                        changeValue={setProductUnitData}
-                                                    />
-                                                </Grid.Col>
-                                                <Grid.Col span={6}>
-                                                    <InputForm
-                                                        tooltip={t('TransactionIDValidateMessage')}
-                                                        label=''
-                                                        placeholder={t('paymentCard_id')}
-                                                        required={false}
-                                                        nextField={'status'}
-                                                        form={form}
-                                                        name={'transaction_id'}
-                                                        mt={8}
-                                                        id={'transaction_id'}
-                                                    />
-                                                </Grid.Col>
-                                            </Grid>
+                                        {
 
-                                        </Tabs.Panel>
-                                    </Tabs>
+                                            (transactionModeData && transactionModeData.length > 0) && transactionModeData.map((mode, index) => {
+                                                return (
+                                                    <Grid.Col span={4}>
+                                                        <input
+                                                            type="radio"
+                                                            name="transaction_mode_id"
+                                                            id={'transaction_mode_id_'+mode.id}
+                                                            className="input-hidden"
+                                                            value={mode.id}
+                                                            onChange={(e)=>{
+                                                                console.log(e.currentTarget.value)
+                                                            }}
+                                                        />
+
+                                                        <Tooltip
+                                                            label={
+                                                                <List
+                                                                    spacing="xs"
+                                                                    size="sm"
+                                                                    center
+                                                                    icon={
+                                                                        <ThemeIcon color="teal" size={24} radius="xl">
+                                                                            <IconCircleCheck style={{ width: rem(16), height: rem(16) }} />
+                                                                        </ThemeIcon>
+                                                                    }
+                                                                >
+                                                                    <List.Item> {t('Name')} : {mode.name}</List.Item>
+                                                                    <List.Item> {t('MethodName')} : {mode.method_name}</List.Item>
+                                                                    <List.Item> {t('Authorised')} : {mode.authorised}</List.Item>
+                                                                    <List.Item> {t('ServiceCharge')} : {mode.service_charge}</List.Item>
+                                                                    <List.Item> {t('AccountType')} : {mode.account_type}</List.Item>
+                                                                </List>
+                                                            }
+                                                            opened={hoveredModeId === mode.id}
+                                                            position="top"
+                                                            offset={35}
+                                                            withArrow
+                                                            arrowSize={8}
+                                                        >
+                                                        <label
+                                                            htmlFor={'transaction_mode_id_'+mode.id}
+                                                            onMouseEnter={()=> {
+                                                                setHoveredModeId(mode.id)
+                                                            }}
+                                                            onMouseLeave={()=> {
+                                                                setHoveredModeId(null)
+                                                            }}
+                                                        >
+                                                            <img
+                                                                src={mode.path}
+                                                                alt={mode.method_name}
+                                                            />
+                                                        </label>
+                                                        </Tooltip>
+                                                    </Grid.Col>
+                                                );
+                                            })}
+                                    </Grid>
                                 </Box>
+
                                 <Box bg={`gray.2`} pb={'xs'}>
                                     <Box p={'xs'}>
                                         <SelectForm
