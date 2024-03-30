@@ -16,9 +16,6 @@ import {hasLength, useForm} from "@mantine/form";
 import {modals} from "@mantine/modals";
 import {notifications} from "@mantine/notifications";
 
-import {
-    getExecutiveDropdown, getLocationDropdown,
-} from "../../../../store/core/utilitySlice";
 import {setEntityNewData, setFetching, setValidationData, storeEntityData} from "../../../../store/core/crudSlice.js";
 
 import Shortcut from "../../shortcut/Shortcut";
@@ -26,6 +23,8 @@ import InputForm from "../../../form-builders/InputForm";
 import SelectForm from "../../../form-builders/SelectForm";
 import TextAreaForm from "../../../form-builders/TextAreaForm";
 import CustomerGroupModel from "./CustomerGroupModal.jsx";
+import getLocationDropdownData from "../../../global-hook/dropdown/getLocationDropdownData.js";
+import getExecutiveDropdownData from "../../../global-hook/dropdown/getExecutiveDropdownData.js";
 
 function CustomerForm() {
     const {t, i18n} = useTranslation();
@@ -39,37 +38,13 @@ function CustomerForm() {
     const [locationData, setLocationData] = useState(null);
     const [marketingExeData, setMarketingExeData] = useState(null);
 
-    const locationDropdownData = useSelector((state) => state.utilitySlice.locationDropdownData)
-    const executiveDropdownData = useSelector((state) => state.utilitySlice.executiveDropdownData)
     const validationMessage = useSelector((state) => state.crudSlice.validationMessage)
     const validation = useSelector((state) => state.crudSlice.validation)
     const entityNewData = useSelector((state) => state.crudSlice.entityNewData)
 
+    const locationDropdown = getLocationDropdownData();
+    const executiveDropdown = getExecutiveDropdownData();
 
-    let locationDropdown = locationDropdownData && locationDropdownData.length > 0 ? locationDropdownData.map((type, index) => {
-        return ({'label': type.name, 'value': String(type.id)})
-    }) : []
-    let executiveDropdown = executiveDropdownData && executiveDropdownData.length > 0 ? executiveDropdownData.map((type, index) => {
-        return ({'label': type.name, 'value': String(type.id)})
-    }) : []
-
-    useEffect(() => {
-        const valueForLocation = {
-            url: 'core/select/location',
-            param: {
-                term: ''
-            }
-        }
-        dispatch(getLocationDropdown(valueForLocation))
-
-        const valueForExecutive = {
-            url: 'core/select/executive',
-            param: {
-                term: ''
-            }
-        }
-        dispatch(getExecutiveDropdown(valueForExecutive))
-    }, []);
 
     const form = useForm({
         initialValues: {

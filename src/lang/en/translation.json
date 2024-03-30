@@ -204,6 +204,8 @@
   "Authorised": "Authorised",
   "AccountType": "Account Type",
   "MethodName": "Method Name",
+  "CustomerValidateMessage": "Choose customer",
+  "ChooseTransactionMode": "Choose transaction mode",
 
 
 

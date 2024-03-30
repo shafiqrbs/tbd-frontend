@@ -26,8 +26,10 @@ import {
 import Shortcut from "../../shortcut/Shortcut.jsx";
 import SelectForm from "../../../form-builders/SelectForm.jsx";
 import TextAreaForm from "../../../form-builders/TextAreaForm.jsx";
+import getLocationDropdownData from "../../../global-hook/dropdown/getLocationDropdownData.js";
+import getExecutiveDropdownData from "../../../global-hook/dropdown/getExecutiveDropdownData.js";
 
-function VendorUpdateForm() {
+function CustomerUpdateForm() {
     const {t, i18n} = useTranslation();
     const dispatch = useDispatch();
     const {isOnline, mainAreaHeight} = useOutletContext();
@@ -43,15 +45,9 @@ function VendorUpdateForm() {
 
     const entityEditData = useSelector((state) => state.crudSlice.entityEditData)
     const formLoading = useSelector((state) => state.crudSlice.formLoading)
-    const locationDropdownData = useSelector((state) => state.utilitySlice.locationDropdownData)
-    const executiveDropdownData = useSelector((state) => state.utilitySlice.executiveDropdownData)
 
-    let locationDropdown = locationDropdownData && locationDropdownData.length > 0 ? locationDropdownData.map((type, index) => {
-        return ({'label': type.name, 'value': String(type.id)})
-    }) : []
-    let executiveDropdown = executiveDropdownData && executiveDropdownData.length > 0 ? executiveDropdownData.map((type, index) => {
-        return ({'label': type.name, 'value': String(type.id)})
-    }) : []
+    const locationDropdown = getLocationDropdownData();
+    const executiveDropdown = getExecutiveDropdownData();
 
     const form = useForm({
         initialValues: {
@@ -358,4 +354,4 @@ function VendorUpdateForm() {
     )
 }
 
-export default VendorUpdateForm;
+export default CustomerUpdateForm;
