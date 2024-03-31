@@ -15,6 +15,7 @@ import {
     setInsertType,
     setSearchKeyword
 } from "../../../../store/core/crudSlice.js";
+import {getLoadingProgress} from "../../../global-hook/loading-progress/getLoadingProgress.js";
 
 function CustomerIndex() {
     const {t, i18n} = useTranslation();
@@ -23,18 +24,7 @@ function CustomerIndex() {
     const insertType = useSelector((state) => state.crudSlice.insertType)
     const customerFilterData = useSelector((state) => state.crudSlice.customerFilterData)
 
-    const [progress, setProgress] = useState(0);
-
-    useEffect(() => {
-        const updateProgress = () => setProgress((oldProgress) => {
-            if (oldProgress === 100) return 100;
-            const diff = Math.random() * 20;
-            return Math.min(oldProgress + diff, 100);
-        });
-
-        const timer = setInterval(updateProgress, 100);
-        return () => clearInterval(timer);
-    }, []);
+    const progress = getLoadingProgress()
 
     useEffect(() => {
         dispatch(setInsertType('create'))

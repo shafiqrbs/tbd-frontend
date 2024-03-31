@@ -18,29 +18,16 @@ import {
 } from "../../../../store/core/crudSlice.js";
 import {getShowEntityData} from "../../../../store/inventory/crudSlice.js";
 import GeneralSalesForm from "./GeneralSalesForm";
+import {getLoadingProgress} from "../../../global-hook/loading-progress/getLoadingProgress.js";
+import getConfigData from "../../../global-hook/config-data/getConfigData.js";
 
 function SalesIndex() {
     const {t, i18n} = useTranslation();
     const dispatch = useDispatch();
-    const [progress, setProgress] = useState(0);
     const insertType = useSelector((state) => state.crudSlice.insertType)
-    useEffect(() => {
-        const updateProgress = () => setProgress((oldProgress) => {
-            if (oldProgress === 100) return 100;
-            const diff = Math.random() * 20;
-            return Math.min(oldProgress + diff, 100);
-        });
-        const timer = setInterval(updateProgress, 100);
-        return () => clearInterval(timer);
-    }, []);
 
-    const configData = useSelector((state) => state.inventoryCrudSlice.showEntityData)
-
-    // console.log(configData)
-
-    useEffect(() => {
-        dispatch(getShowEntityData('inventory/config'))
-    }, []);
+    const progress = getLoadingProgress()
+    const configData = getConfigData()
 
 
     return (

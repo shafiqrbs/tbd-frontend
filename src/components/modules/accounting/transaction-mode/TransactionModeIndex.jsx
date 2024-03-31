@@ -11,24 +11,15 @@ import DomainFormView from "./TransactionModeFrom.jsx";
 import CategoryUpdateForm from "../../inventory/category/CategoryUpdateForm";
 import {setInsertType} from "../../../../store/inventory/crudSlice";
 import {setSearchKeyword} from "../../../../store/core/crudSlice";
+import getConfigData from "../../../global-hook/config-data/getConfigData.js";
+import {getLoadingProgress} from "../../../global-hook/loading-progress/getLoadingProgress.js";
 function TransactionModeIndex() {
     const {t, i18n} = useTranslation();
     const dispatch = useDispatch();
-    const [progress, setProgress] = useState(0);
     const insertType = useSelector((state) => state.crudSlice.insertType)
-    useEffect(() => {
-        const updateProgress = () => setProgress((oldProgress) => {
-            if (oldProgress === 100) return 100;
-            const diff = Math.random() * 20;
-            return Math.min(oldProgress + diff, 100);
-        });
-        const timer = setInterval(updateProgress, 100);
-        return () => clearInterval(timer);
-    }, []);
-    const configData = useSelector((state) => state.inventoryCrudSlice.showEntityData)
-    useEffect(() => {
-        dispatch(getShowEntityData('inventory/config'))
-    }, []);
+
+    const configData = getConfigData()
+    const progress = getLoadingProgress()
 
     useEffect(() => {
         dispatch(setInsertType('create'))
@@ -42,7 +33,7 @@ function TransactionModeIndex() {
             {progress === 100 &&
                 <Box>
                     <TransactionModeHeaderNavbar
-                        pageTitle = {t('Domain')}
+                        pageTitle = {t('TransactionMode')}
                         roles = {t('roles')}
                     />
                     <Box p={'8'}>

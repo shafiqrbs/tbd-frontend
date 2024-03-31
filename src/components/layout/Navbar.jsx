@@ -51,6 +51,7 @@ function Navbar() {
                 <NavLink href="inventory/category-group" label={t('CategoryGroup')} component="button" onClick={(e)=>{navigate('inventory/category-group')}}  />
                 <NavLink href="config" label="Configuration" component="button" onClick={(e)=>{navigate('inventory/config')}}  />
             </NavLink>
+
             <NavLink
                 href="#required-for-focus"
                 label="Domain"
@@ -59,6 +60,16 @@ function Navbar() {
             >
                 <NavLink href="domain" label={t("Domain")} component="button" onClick={(e)=>{navigate('domain')}}  />
             </NavLink>
+
+            <NavLink
+                href="#required-for-focus"
+                label={t('Accounting')}
+                leftSection={<IconGauge size="1rem" stroke={1.5} />}
+                childrenOffset={28}
+            >
+                <NavLink href="accounting" label={t("TransactionMode")} component="button" onClick={(e)=>{navigate('accounting/transaction-mode')}}  />
+            </NavLink>
+
             <NavLink
                 href="#required-for-focus"
                 label="Sample"

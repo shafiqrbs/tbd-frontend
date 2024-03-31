@@ -8,20 +8,15 @@ import {useDispatch, useSelector} from "react-redux";
 import ProductTable from "./ProductTable.jsx";
 import ProductForm from "./ProductForm.jsx";
 import ProductUpdateForm from "./ProductUpdateForm.jsx";
+import {getLoadingProgress} from "../../../global-hook/loading-progress/getLoadingProgress.js";
+import getConfigData from "../../../global-hook/config-data/getConfigData.js";
 
 function ProductIndex() {
     const {t, i18n} = useTranslation();
-    const [progress, setProgress] = useState(0);
     const insertType = useSelector((state) => state.crudSlice.insertType)
-    useEffect(() => {
-        const updateProgress = () => setProgress((oldProgress) => {
-            if (oldProgress === 100) return 100;
-            const diff = Math.random() * 20;
-            return Math.min(oldProgress + diff, 100);
-        });
-        const timer = setInterval(updateProgress, 100);
-        return () => clearInterval(timer);
-    }, []);
+
+    const progress = getLoadingProgress()
+    const configData = getConfigData()
 
 
     return (

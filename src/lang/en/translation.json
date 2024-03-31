@@ -207,6 +207,9 @@
   "CustomerValidateMessage": "Choose customer",
   "ChooseTransactionMode": "Choose transaction mode",
 
+  "Accounting": "Accounting",
+  "TransactionMode": "Transaction Mode",
+
 
 
   "" : ""
