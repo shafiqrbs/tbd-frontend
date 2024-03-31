@@ -13,6 +13,16 @@ export const getTransactionModeData = createAsyncThunk("transaction-mode/data", 
 });
 
 
+export const getTransactionMethodDropdown = createAsyncThunk("transaction-method/select", async (value) => {
+    try {
+        const response = getDataWithoutParam(value);
+        return response;
+    } catch (error) {
+        console.log('error', error.message);
+        throw error;
+    }
+});
+
 
 const utilitySlice = createSlice({
     name : "utility",
@@ -20,6 +30,7 @@ const utilitySlice = createSlice({
         isLoading : true,
         fetching : true,
         transactionModeData : [],
+        transactionMethodData : [],
     },
     reducers : {
         setFetching : (state,action) => {
@@ -31,6 +42,10 @@ const utilitySlice = createSlice({
 
         builder.addCase(getTransactionModeData.fulfilled, (state, action) => {
             state.transactionModeData = action.payload
+        })
+
+        builder.addCase(getTransactionMethodDropdown.fulfilled, (state, action) => {
+            state.transactionMethodData = action.payload
         })
 
     }

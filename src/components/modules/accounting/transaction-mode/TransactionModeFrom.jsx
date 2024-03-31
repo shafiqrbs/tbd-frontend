@@ -3,7 +3,7 @@ import {useOutletContext} from "react-router-dom";
 import {
     Button,
     rem, Flex,
-    Grid, Box, ScrollArea, Group, Text, Title, Alert, List, Stack,
+    Grid, Box, ScrollArea, Group, Text, Title, Alert, List, Stack, SimpleGrid, Image, Tooltip
 } from "@mantine/core";
 import {useTranslation} from 'react-i18next';
 import {
@@ -12,7 +12,7 @@ import {
 } from "@tabler/icons-react";
 import {useDisclosure, useHotkeys} from "@mantine/hooks";
 import {useDispatch, useSelector} from "react-redux";
-import {hasLength, useForm} from "@mantine/form";
+import {hasLength, isNotEmpty, useForm} from "@mantine/form";
 import {modals} from "@mantine/modals";
 import {notifications} from "@mantine/notifications";
 
@@ -26,6 +26,9 @@ import InputForm from "../../../form-builders/InputForm";
 import TextAreaForm from "../../../form-builders/TextAreaForm";
 import TransactionModeTable from "./TransactionModeTable.jsx";
 import InputNumberForm from "../../../form-builders/InputNumberForm";
+import SelectForm from "../../../form-builders/SelectForm.jsx";
+import getTransactionMethodDropdownData from "../../../global-hook/dropdown/getTransactionMethodDropdownData.js";
+import {Dropzone, IMAGE_MIME_TYPE} from "@mantine/dropzone";
 
 function TransactionModeForm(props) {
     const {t, i18n} = useTranslation();
@@ -35,7 +38,9 @@ function TransactionModeForm(props) {
     const [opened, {open, close}] = useDisclosure(false);
 
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
-    const [customerGroupData, setCustomerGroupData] = useState(null);
+    const [authorisedData, setAuthorisedData] = useState(null);
+    const [methodData, setMethodData] = useState(null);
+    const [accountTypeData, setAccountTypeData] = useState(null);
     const [locationData, setLocationData] = useState(null);
     const [marketingExeData, setMarketingExeData] = useState(null);
 
@@ -46,39 +51,23 @@ function TransactionModeForm(props) {
     const entityNewData = useSelector((state) => state.crudSlice.entityNewData)
 
 
-    let locationDropdown = locationDropdownData && locationDropdownData.length > 0 ? locationDropdownData.map((type, index) => {
-        return ({'label': type.name, 'value': String(type.id)})
-    }) : []
-    let executiveDropdown = executiveDropdownData && executiveDropdownData.length > 0 ? executiveDropdownData.map((type, index) => {
-        return ({'label': type.name, 'value': String(type.id)})
-    }) : []
+    const [files, setFiles] = useState([]);
 
-    useEffect(() => {
-        const valueForLocation = {
-            url: 'core/select/location',
-            param: {
-                term: ''
-            }
-        }
-        dispatch(getLocationDropdown(valueForLocation))
-
-        const valueForExecutive = {
-            url: 'core/select/executive',
-            param: {
-                term: ''
-            }
-        }
-        dispatch(getExecutiveDropdown(valueForExecutive))
-    }, []);
+    const previews = files.map((file, index) => {
+        const imageUrl = URL.createObjectURL(file);
+        return <Image key={index} src={imageUrl} onLoad={() => URL.revokeObjectURL(imageUrl)} />;
+    });
 
     const form = useForm({
         initialValues: {
-            company_name: '',mobile : '',alternative_mobile:'',name:'',username:'',address:'',email:''
+            name: '',authorised:'',mobile:'',account_type:'',service_charge:'',account_owner:'',service_name:'',method_id:'',path:''
         },
         validate: {
-            company_name: hasLength({min: 2, max: 20}),
             name: hasLength({min: 2, max: 20}),
-            username: hasLength({min: 2, max: 20}),
+            authorised: isNotEmpty(),
+            account_type: isNotEmpty(),
+            method_id: isNotEmpty(),
+            path: isNotEmpty(),
             mobile: (value) => {
                 const isNotEmpty = !    !value.trim().length;
                 const isDigitsOnly = /^\d+$/.test(value.trim());
@@ -89,20 +78,15 @@ function TransactionModeForm(props) {
                     return true;
                 }
             },
-            alternative_mobile: (value) => {
-                if (value) {
-                    const isNotEmpty = !!value.trim().length;
-                    const isDigitsOnly = /^\d+$/.test(value.trim());
-
-                    if (isNotEmpty && isDigitsOnly) {
-                        return false;
-                    } else {
+            service_charge: (value, values) => {
+                if (value ) {
+                    const isNumberOrFractional = /^-?\d+(\.\d+)?$/.test(value);
+                    if (!isNumberOrFractional) {
                         return true;
                     }
-                } else {
-                    return false;
                 }
-            }
+                return null;
+            },
         }
     });
 
@@ -130,7 +114,7 @@ function TransactionModeForm(props) {
             setTimeout(() => {
                 form.reset()
                 setMarketingExeData(null)
-                setCustomerGroupData(null)
+                setAuthorisedData(null)
                 setLocationData(null)
                 dispatch(setEntityNewData([]))
                 dispatch(setFetching(true))
@@ -174,7 +158,11 @@ function TransactionModeForm(props) {
                             labels: {confirm: 'Confirm', cancel: 'Cancel'},
                             onCancel: () => console.log('Cancel'),
                             onConfirm: () => {
-                                const value = {
+                                const formValue = {...form.values};
+                                formValue['path'] = files;
+
+                                console.log(formValue)
+                                /*const value = {
                                     url: 'domain/global',
                                     data: values
                                 }
@@ -192,7 +180,7 @@ function TransactionModeForm(props) {
                                 setTimeout(() => {
                                     form.reset()
                                     dispatch(setFetching(true))
-                                }, 700)
+                                }, 700)*/
                             },
                         });
                     })}>
@@ -202,7 +190,7 @@ function TransactionModeForm(props) {
                                 <Box pl={`xs`} pb={'xs'} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'} >
                                     <Grid>
                                         <Grid.Col span={6} h={54}>
-                                            <Title order={6} mt={'xs'} pl={'6'}>{t('CreateNewDomain')}</Title>
+                                            <Title order={6} mt={'xs'} pl={'6'}>{t('CreateNewTransactionMode')}</Title>
                                         </Grid.Col>
                                         <Grid.Col span={6}>
                                             <Stack right  align="flex-end">
@@ -247,24 +235,61 @@ function TransactionModeForm(props) {
 
                                                     <Box mt={'xs'}>
                                                         <InputForm
-                                                            tooltip={t('CompanyStoreNameValidateMessage')}
-                                                            label={t('CompanyStoreName')}
-                                                            placeholder={t('CompanyStoreName')}
+                                                            tooltip={t('TransactionModeNameValidateMessage')}
+                                                            label={t('TransactionModeName')}
+                                                            placeholder={t('TransactionModeName')}
                                                             required={true}
-                                                            nextField={'mobile'}
-                                                            name={'company_name'}
+                                                            nextField={'authorised'}
+                                                            name={'name'}
                                                             form={form}
                                                             mt={0}
-                                                            id={'company_name'}
+                                                            id={'name'}
                                                         />
                                                     </Box>
+
+                                                    <Box mt={'xs'}>
+                                                        <SelectForm
+                                                            tooltip={t('ChooseAuthorised')}
+                                                            label={t('Authorised')}
+                                                            placeholder={t('ChooseAuthorised')}
+                                                            required={true}
+                                                            nextField={'method_id'}
+                                                            name={'authorised'}
+                                                            form={form}
+                                                            dropdownValue={["BRAC", "DBBL","Brac bank","Dutch Bangla","BKASH"]}
+                                                            mt={8}
+                                                            id={'authorised'}
+                                                            searchable={false}
+                                                            value={authorisedData}
+                                                            changeValue={setAuthorisedData}
+                                                        />
+                                                    </Box>
+
+                                                    <Box mt={'xs'}>
+                                                        <SelectForm
+                                                            tooltip={t('ChooseMethod')}
+                                                            label={t('Method')}
+                                                            placeholder={t('ChooseMethod')}
+                                                            required={true}
+                                                            nextField={'mobile'}
+                                                            name={'method_id'}
+                                                            form={form}
+                                                            dropdownValue={getTransactionMethodDropdownData()}
+                                                            mt={8}
+                                                            id={'method_id'}
+                                                            searchable={false}
+                                                            value={methodData}
+                                                            changeValue={setMethodData}
+                                                        />
+                                                    </Box>
+
                                                     <Box mt={'xs'}>
                                                         <InputNumberForm
                                                             tooltip={t('MobileValidateMessage')}
                                                             label={t('Mobile')}
                                                             placeholder={t('Mobile')}
                                                             required={true}
-                                                            nextField={'alternative_mobile'}
+                                                            nextField={'account_type'}
                                                             name={'mobile'}
                                                             form={form}
                                                             mt={16}
@@ -272,70 +297,99 @@ function TransactionModeForm(props) {
                                                         />
                                                     </Box>
                                                     <Box mt={'xs'}>
-                                                    <InputNumberForm
-                                                        tooltip={t('AlternativeMobileValidateMessage')}
-                                                        label={t('AlternativeMobile')}
-                                                        placeholder={t('AlternativeMobile')}
-                                                        required={false}
-                                                        nextField={'email'}
-                                                        name={'alternative_mobile'}
-                                                        form={form}
-                                                        mt={'md'}
-                                                        id={'alternative_mobile'}
-                                                    />
-                                                    </Box>
-                                                    <Box mt={'xs'}>
-                                                    <InputForm
-                                                        tooltip={t('InvalidEmail')}
-                                                        label={t('Email')}
-                                                        placeholder={t('Email')}
-                                                        required={false}
-                                                        nextField={'name'}
-                                                        name={'email'}
-                                                        form={form}
-                                                        mt={'md'}
-                                                        id={'email'}
-                                                    />
-                                                    </Box>
-                                                    <Box mt={'xs'}>
-                                                        <InputForm
-                                                            tooltip={t('ClientNameValidateMessage')}
-                                                            label={t('ClientName')}
-                                                            placeholder={t('ClientName')}
+                                                        <SelectForm
+                                                            tooltip={t('ChooseAccountType')}
+                                                            label={t('AccountType')}
+                                                            placeholder={t('ChooseAccountType')}
                                                             required={true}
-                                                            nextField={'username'}
-                                                            name={'name'}
+                                                            nextField={'service_charge'}
+                                                            name={'account_type'}
                                                             form={form}
+                                                            dropdownValue={["Merchant", "General","Personal"]}
                                                             mt={8}
-                                                            id={'name'}
+                                                            id={'account_type'}
+                                                            searchable={false}
+                                                            value={accountTypeData}
+                                                            changeValue={setAccountTypeData}
                                                         />
                                                     </Box>
                                                     <Box mt={'xs'}>
-
-                                                    <InputForm
-                                                        tooltip={t('DomainUserValidateMessage')}
-                                                        label={t('DomainUser')}
-                                                        placeholder={t('DomainUser')}
-                                                        required={true}
-                                                        nextField={'address'}
-                                                        name={'username'}
-                                                        form={form}
-                                                        mt={8}
-                                                        id={'username'}
-                                                    />
+                                                        <InputNumberForm
+                                                            tooltip={t('ServiceChargeValidationMessage')}
+                                                            label={t('ServiceCharge')}
+                                                            placeholder={t('ServiceCharge')}
+                                                            required={false}
+                                                            nextField={'account_owner'}
+                                                            name={'service_charge'}
+                                                            form={form}
+                                                            mt={'md'}
+                                                            id={'service_charge'}
+                                                        />
                                                     </Box>
                                                     <Box mt={'xs'}>
-                                                    <TextAreaForm
-                                                        tooltip={t('Address')}
-                                                        label={t('Address')}
-                                                        placeholder={t('Address')}
-                                                        required={false}
-                                                        nextField={'Status'}
-                                                        name={'address'}
-                                                        form={form}
-                                                        mt={8}
-                                                        id={'address'}
-                                                    />
+                                                        <InputForm
+                                                            tooltip={t('AccountOwnerValidateMessage')}
+                                                            label={t('AccountOwner')}
+                                                            placeholder={t('AccountOwner')}
+                                                            required={false}
+                                                            nextField={'service_name'}
+                                                            name={'account_owner'}
+                                                            form={form}
+                                                            mt={8}
+                                                            id={'account_owner'}
+                                                        />
+                                                    </Box>
+
+                                                    <Box mt={'xs'}>
+                                                        <InputForm
+                                                            tooltip={t('ServiceNameValidateMessage')}
+                                                            label={t('ServiceName')}
+                                                            placeholder={t('ServiceName')}
+                                                            required={false}
+                                                            nextField={'address'}
+                                                            name={'service_name'}
+                                                            form={form}
+                                                            mt={8}
+                                                            id={'service_name'}
+                                                        />
+                                                    </Box>
+
+                                                    <Box mt={'xs'}>
+                                                        <Tooltip
+                                                            label={t('ChooseImage')}
+                                                            opened={('path' in form.errors) && !!form.errors['path']}
+                                                            px={16}
+                                                            py={2}
+                                                            position="top-end"
+                                                            color="red"
+                                                            withArrow
+                                                            offset={2}
+                                                            zIndex={999}
+                                                            transitionProps={{transition: "pop-bottom-left", duration: 500}}
+                                                        >
+                                                        <Dropzone
+                                                            label={t('ChooseImage')}
+                                                            accept={IMAGE_MIME_TYPE}
+                                                            onDrop={(e) => {
+                                                                setFiles(e)
+                                                                form.setFieldError('path', false);
+                                                                form.setFieldValue('path', true)
+                                                            }}
+                                                        >
+                                                            <Text ta="center">
+                                                                {
+                                                                    files && files.length >0 && files[0].path ?
+                                                                        files[0].path
+                                                                        :
+                                                                        <span>Drop images here <span style={{color: 'red'}}>*</span></span>
+                                                                }
+                                                            </Text>
+                                                        </Dropzone>
+                                                        </Tooltip>
+
+                                                        <SimpleGrid cols={{ base: 1, sm: 4 }} mt={previews.length > 0 ? 'xl' : 0}>
+                                                            {previews}
+                                                        </SimpleGrid>
                                                     </Box>
 
                                                 </Box>

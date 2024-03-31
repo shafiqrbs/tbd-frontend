@@ -209,6 +209,19 @@
 
   "Accounting": "Accounting",
   "TransactionMode": "Transaction Mode",
+  "CreateNewTransactionMode": "Create Transaction Mode",
+  "TransactionModeNameValidateMessage": "Transaction mode name must be 2-20 characters long",
+  "TransactionModeName": "Transaction Mode Name",
+  "ChooseAuthorised": "Choose Authorised",
+  "ChooseAccountType": "Choose Account Type",
+  "ServiceChargeValidationMessage": "Service charge must be digit or fraction",
+  "AccountOwner": "Account Owner",
+  "AccountOwnerValidateMessage": "Account Owner must be 2-20 characters long",
+  "ServiceName": "Service Name",
+  "ServiceNameValidateMessage": "Service Name must be 2-20 characters long",
+  "ChooseMethod": "Choose Method",
+  "Method": "Method",
+  "ChooseImage": "Choose Image",
 
 
 

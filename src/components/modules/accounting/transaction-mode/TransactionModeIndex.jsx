@@ -13,6 +13,7 @@ import {setInsertType} from "../../../../store/inventory/crudSlice";
 import {setSearchKeyword} from "../../../../store/core/crudSlice";
 import getConfigData from "../../../global-hook/config-data/getConfigData.js";
 import {getLoadingProgress} from "../../../global-hook/loading-progress/getLoadingProgress.js";
+import TransactionModeForm from "./TransactionModeFrom.jsx";
 function TransactionModeIndex() {
     const {t, i18n} = useTranslation();
     const dispatch = useDispatch();
@@ -38,7 +39,7 @@ function TransactionModeIndex() {
                     />
                     <Box p={'8'}>
                         {
-                            insertType === 'create' ?  <DomainFormView/> : <CategoryUpdateForm/>
+                            insertType === 'create' ?  <TransactionModeForm/> : <CategoryUpdateForm/>
                         }
                     </Box>
                 </Box>
