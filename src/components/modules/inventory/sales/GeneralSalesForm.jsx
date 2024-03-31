@@ -31,6 +31,10 @@ import {storeEntityData} from "../../../../store/inventory/crudSlice.js";
 import axios from "axios";
 import getLocationDropdownData from "../../../global-hook/dropdown/getLocationDropdownData.js";
 import getExecutiveDropdownData from "../../../global-hook/dropdown/getExecutiveDropdownData.js";
+import getVendorDropdownData from "../../../global-hook/dropdown/getVendorDropdownData.js";
+import getCustomerDropdownData from "../../../global-hook/dropdown/getCustomerDropdownData.js";
+import getTransactionModeDropdownData from "../../../global-hook/dropdown/getTransactionModeDropdownData.js";
+import getUserDropdownData from "../../../global-hook/dropdown/getUserDropdownData.js";
 
 function GeneralSalesForm(props) {
     const {currancySymbol, allowZeroPercentage} = props
@@ -54,8 +58,12 @@ function GeneralSalesForm(props) {
 
     const locationDropdown = getLocationDropdownData();
     const executiveDropdown = getExecutiveDropdownData();
+    const vendorDropdown = getVendorDropdownData();
+    const customerDropdown = getCustomerDropdownData();
+    const transactionModeDropdown = getTransactionModeDropdownData();
+    const userDropdown = getUserDropdownData();
 
-    console.log(locationDropdown,executiveDropdown)
+    // console.log(locationDropdown,executiveDropdown,vendorDropdown,customerDropdown,transactionModeDropdown,userDropdown)
 
     useEffect(() => {
         const tempProducts = localStorage.getItem('temp-sales-products');

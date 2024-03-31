@@ -34,8 +34,8 @@ import {
 } from "../../../../store/inventory/crudSlice.js";
 import SalesAddCustomerModel from "./model/SalesAddCustomerModel.jsx";
 import SalesViewCustomerModel from "./model/SalesViewCustomerModel.jsx";
-import {getCustomerDropdown} from "../../../../store/core/utilitySlice";
 import {getTransactionModeData} from "../../../../store/accounting/utilitySlice.js";
+import getCustomerDropdownData from "../../../global-hook/dropdown/getCustomerDropdownData.js";
 
 function SalesForm(props) {
     const {t, i18n} = useTranslation();
@@ -117,16 +117,6 @@ function SalesForm(props) {
     const [categoryData, setCategoryData] = useState(null);
     const [salesByUser, setSalesByUser] = useState(null);
     const [orderProcess, setOrderProcess] = useState(null);
-    const customerDropdownData = useSelector((state) => state.utilitySlice.customerDropdownData)
-
-    let customerDropdown = customerDropdownData && customerDropdownData.length > 0 ?
-        customerDropdownData.map((type, index) => {
-            return ({'label': type.name, 'value': String(type.id)})
-        }) : []
-
-    useEffect(() => {
-        dispatch(getCustomerDropdown('core/select/customer'))
-    }, []);
 
 
     const form = useForm({
@@ -232,7 +222,7 @@ function SalesForm(props) {
                                                     nextField={'transaction_mode_id_2'}
                                                     name={'category_id'}
                                                     form={form}
-                                                    dropdownValue={customerDropdown}
+                                                    dropdownValue={getCustomerDropdownData()}
                                                     id={'category_id'}
                                                     mt={1}
                                                     searchable={false}

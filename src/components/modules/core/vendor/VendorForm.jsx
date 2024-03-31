@@ -25,6 +25,7 @@ import Shortcut from "../../shortcut/Shortcut";
 import InputForm from "../../../form-builders/InputForm";
 import SelectForm from "../../../form-builders/SelectForm";
 import TextAreaForm from "../../../form-builders/TextAreaForm";
+import getCustomerDropdownData from "../../../global-hook/dropdown/getCustomerDropdownData.js";
 
 function VendorForm() {
     const {t, i18n} = useTranslation();
@@ -35,16 +36,6 @@ function VendorForm() {
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
     const [customerData, setCustomerData] = useState(null);
 
-    const customerDropdownData = useSelector((state) => state.utilitySlice.customerDropdownData)
-
-    let customerDropdown = customerDropdownData && customerDropdownData.length > 0 ?
-        customerDropdownData.map((type, index) => {
-            return ({'label': type.name, 'value': String(type.id)})
-        }) : []
-
-    useEffect(() => {
-        dispatch(getCustomerDropdown('core/select/customer'))
-    }, []);
 
     const form = useForm({
         initialValues: {
@@ -215,7 +206,7 @@ function VendorForm() {
                                     nextField={'Address'}
                                     name={'customer_id'}
                                     form={form}
-                                    dropdownValue={customerDropdown}
+                                    dropdownValue={getCustomerDropdownData()}
                                     mt={8}
                                     id={'ChooseCustomer'}
                                     searchable={true}
