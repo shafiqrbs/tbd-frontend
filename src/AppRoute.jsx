@@ -18,6 +18,7 @@ import SampleInvoice from "./components/modules/sample-module/sample-layout/Samp
 import SampleIndex from "./components/modules/sample-module/sample-layout/SampleIndex";
 import DomainIndex from "./components/modules/domain/domain/DomainIndex";
 import TransactionModeIndex from "./components/modules/accounting/transaction-mode/TransactionModeIndex.jsx";
+import SalesInvoice from "./components/modules/inventory/sales/SalesInvoice";
 function AppRoute() {
 
     return (
@@ -36,7 +37,7 @@ function AppRoute() {
                 </Route>
                 <Route path="/inventory/">
                     <Route path="sales" element={<SalesIndex/>}/>
-                    <Route path="pos-sales" element={<SalesForm/>}/>
+                    <Route path="sales-invoice" element={<SalesInvoice/>}/>
                     <Route path="purchase" element={<PurchaseIndex/>}/>
                     <Route path="purchase-invoice" element={<PurchaseInvoice/>}/>
                     <Route path="product" element={<ProductIndex/>}/>

@@ -33,7 +33,6 @@ function CategoryForm() {
     const [opened, {open, close}] = useDisclosure(false);
     const [categoryGroupData, setCategoryGroupData] = useState(null);
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
-
     const groupCategoryDropdownData = useSelector((state) => state.inventoryUtilitySlice.groupCategoryDropdown)
     const dropdownLoad = useSelector((state) => state.inventoryCrudSlice.dropdownLoad)
     let groupCategoryDropdown = groupCategoryDropdownData && groupCategoryDropdownData.length > 0 ?

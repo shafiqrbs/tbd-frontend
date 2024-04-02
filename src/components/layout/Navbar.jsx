@@ -43,7 +43,7 @@ function Navbar() {
                 childrenOffset={28}
             >
                 <NavLink href="inventory/sales" label={t('Sales')} component="button" onClick={(e)=>{navigate('inventory/sales')}}  />
-                <NavLink href="inventory/pos-sales" label={t('Manage POS')} component="button" onClick={(e)=>{navigate('inventory/pos-sales')}}  />
+                <NavLink href="inventory/sales-invoice" label={t('Manage Invoice')} component="button" onClick={(e)=>{navigate('inventory/sales-invoice')}}  />
                 <NavLink href="inventory/purchase" label={t('Manage Purchase')} component="button" onClick={(e)=>{navigate('inventory/purchase')}}  />
                 <NavLink href="inventory/purchase-invoice" label={t('Purchase Invoice')} component="button" onClick={(e)=>{navigate('inventory/purchase-invoice')}}  />
                 <NavLink href="inventory/product" label={t('Product')} component="button" onClick={(e)=>{navigate('inventory/product')}}  />

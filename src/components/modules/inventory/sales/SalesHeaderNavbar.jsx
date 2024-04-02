@@ -11,13 +11,13 @@ import {
     IconInfoCircle,IconTrash,IconSearch,IconSettings
 } from "@tabler/icons-react";
 const links = [
-    { link: '/sales', label: 'Sales' },
-    { link: '/pricing', label: 'Sales Return' },
-    { link: '/learn', label: 'Stock' },
-    { link: '/community', label: 'Add Sales' },
+    { link: '/about', label: 'Features' },
+    { link: '/pricing', label: 'Pricing' },
+    { link: '/learn', label: 'Learn' },
+    { link: '/community', label: 'Community' },
 ];
 
-function SalesHeaderNavbar(props) {
+function SampleHeaderNavbar(props) {
     const { pageTitle,roles,currancySymbol,allowZeroPercentage } = props
     const {t, i18n} = useTranslation();
     const dispatch = useDispatch();
@@ -84,4 +84,4 @@ function SalesHeaderNavbar(props) {
     );
 }
 
-export default SalesHeaderNavbar;
+export default SampleHeaderNavbar;
