@@ -37,11 +37,9 @@ function SalesHeaderNavbar(props) {
             <header className={classes.header}>
                 <div className={classes.inner}>
                     <Group>{pageTitle}</Group>
-
                     <Group>
                         <Group ml={50} gap={5} className={classes.links} visibleFrom="sm">
                             {items}
-
                         </Group>
                         <Menu withArrow arrowPosition="center" trigger="hover" openDelay={100} closeDelay={400}>
                             <Menu.Target>

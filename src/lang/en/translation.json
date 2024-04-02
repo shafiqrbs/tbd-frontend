@@ -176,11 +176,10 @@
   "MinimumQuantity": "Minimum quantity",
   "ReorderQuantity": "Reorder quantity",
 
-
   "ChooseStockProduct": "Choose stock product",
   "SalesPriceValidateMessage": "Sales price must be digit or fraction",
   "PurchasePriceValidateMessage": "Purchase price must be digit or fraction",
-  "ProductName": "Name",
+
   "AreYouSureYouWantToDeleteThisItem": "Are you sure you want to delete this item?",
   "DeleteDetails": "This action is so important that you are required to confirm it with a\nmodal. Please click\none of these buttons to proceed.",
   "QuantityValidateMessage": "Quantity must be number or fractional value",
@@ -189,6 +188,8 @@
   "ZeroQuantityNotAllow": "Zero quantity not allow",
   "SubTotal": "Sub Total",
 
+  "InstantProductCreate": "Create instant product",
+  "InstantCustomerCreate": "Create instant customer",
 
 
   "CreateNewDomain": "Create New Domain",

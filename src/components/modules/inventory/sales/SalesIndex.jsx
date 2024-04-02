@@ -5,21 +5,12 @@ import {
 } from "@mantine/core";
 import {useTranslation} from 'react-i18next';
 import {useDispatch, useSelector} from "react-redux";
-import genericCss from '../../../../assets/css/Generic.module.css';
-
-import SalesTable from "./SalesTable";
-import SalesForm from "./SalesForm";
-import SalesUpdateForm from "./SalesUpdateForm.jsx";
-import {
-    setCustomerFilterData,
-    setInsertType,
-    setSearchKeyword,
-    setVendorFilterData
-} from "../../../../store/core/crudSlice.js";
-import {getShowEntityData} from "../../../../store/inventory/crudSlice.js";
-import GeneralSalesForm from "./GeneralSalesForm";
 import {getLoadingProgress} from "../../../global-hook/loading-progress/getLoadingProgress.js";
 import getConfigData from "../../../global-hook/config-data/getConfigData.js";
+import SampleHeaderNavbar from "../../sample-module/sample-layout/SampleHeaderNavbar";
+import SampleTableView from "../../sample-module/sample-layout/SampleTableView";
+import SalesHeaderNavbar from "../../sample-module/sample-layout/SampleHeaderNavbar";
+import SalesTable from "./SalesTable";
 
 function SalesIndex() {
     const {t, i18n} = useTranslation();
@@ -35,24 +26,20 @@ function SalesIndex() {
             {progress !== 100 &&
                 <Progress color="red" size={"xs"} striped animated value={progress} transitionDuration={200}/>}
             {progress === 100 &&
-                <Box>
-                    <Box pl={`md`} pr={8} pb={'8'} pt={'6'}  className={genericCss.titleBackground} >
-                        <Grid>
-                            <Grid.Col span={12}>
-                                <Title order={6} pl={'md'} fz={'18'} c={'black'}>{t('SalesInformation')}</Title>
-                            </Grid.Col>
-                        </Grid>
-                    </Box>
-                    <Box pr={'12'} pl={'12'}>
-                        {
-                            insertType === 'create' && configData && configData.business_model && configData.business_model.slug==='general' &&
-                            <GeneralSalesForm
-                                allowZeroPercentage = {configData.zero_stock}
-                                currancySymbol = {configData.currency.symbol}
-                            />
-                        }
-                    </Box>
+            <Box>
+                <SalesHeaderNavbar
+                    pageTitle = {t('Sales')}
+                    roles = {t('roles')}
+                    allowZeroPercentage = {configData.zero_stock}
+                    currancySymbol = {configData.currency.symbol}
+                />
+                <Box p={'8'}>
+                    <SalesTable
+                        allowZeroPercentage = {configData.zero_stock}
+                        currancySymbol = {configData.currency.symbol}
+                    />
                 </Box>
+            </Box>
             }
         </>
     );

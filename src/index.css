@@ -24,7 +24,7 @@
 }
 
 .boxBackground {
-    background-color:rgba(226,194,194,0.39)!important;
+    background-color: rgba(208, 191, 191, 0.17) !important;
 }
 
 .boxBorderBackground {
@@ -34,6 +34,10 @@
 
 .borderTop,.borderBottom,.borderLeft,.borderRight{
     border: 1px solid rgba(226, 194, 194, 0.39);
+}
+
+.textColor{
+    color:#656565;
 }
 
 .border-radius{
@@ -47,6 +51,7 @@
 .input-center {
     text-align: center !important;
 }
+
 
 input:focus {
     border: 1px solid rgba(226,194,194,0.39);

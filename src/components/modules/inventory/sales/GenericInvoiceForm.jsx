@@ -14,7 +14,6 @@ import {useDispatch, useSelector} from "react-redux";
 import {isNotEmpty, useForm} from "@mantine/form";
 import {modals} from "@mantine/modals";
 import {notifications, showNotification} from "@mantine/notifications";
-
 import InputForm from "../../../form-builders/InputForm";
 import {getCategoryDropdown} from "../../../../store/inventory/utilitySlice";
 import {getSettingDropdown, getProductUnitDropdown} from "../../../../store/utility/utilitySlice.js";
@@ -34,6 +33,7 @@ import getCustomerDropdownData from "../../../global-hook/dropdown/getCustomerDr
 import getTransactionModeDropdownData from "../../../global-hook/dropdown/getTransactionModeDropdownData.js";
 import getUserDropdownData from "../../../global-hook/dropdown/getUserDropdownData.js";
 import ShortcutInvoice from "../../shortcut/ShortcutInvoice";
+import tableCss from "../../../../assets/css/Table.module.css";
 
 function GenericInvoiceForm(props) {
     const {currencySymbol, allowZeroPercentage} = props
@@ -573,7 +573,7 @@ function GenericInvoiceForm(props) {
                                                                 w={420}
                                                                 withArrow
                                                                 transitionProps={{duration: 200}}
-                                                                label="Use this button to save this information in your profile, after that you will be able to access it any time and share it via email."
+                                                                label={t('InstantProductCreate')}
                                                             >
 
                                                                 <ActionIcon
@@ -589,9 +589,9 @@ function GenericInvoiceForm(props) {
                                                                 </ActionIcon>
                                                             </Tooltip>
                                                         </Popover.Target>
-                                                        <Popover.Dropdown>
-                                                            <Fieldset legend="Add Product information" variant="filled">
-
+                                                        <Popover.Dropdown bg={'gray.1'}>
+                                                            <Fieldset legend={t('InstantProductCreate')}  className={'bodyBackground'}  fz={'xs'} variant="filled">
+                                                                <Box mt={'xs'}>
                                                                 <SelectForm
                                                                     tooltip={t('ChooseProductType')}
                                                                     label={t('ProductType')}
@@ -600,7 +600,7 @@ function GenericInvoiceForm(props) {
                                                                     name={'product_type_id'}
                                                                     form={productAddedForm}
                                                                     dropdownValue={productTypeDropdown}
-                                                                    mt={0}
+                                                                    mt={'xs'}
                                                                     id={'product_type_id'}
                                                                     nextField={'category_id'}
                                                                     searchable={true}
@@ -608,7 +608,8 @@ function GenericInvoiceForm(props) {
                                                                     changeValue={setProductTypeData}
                                                                     comboboxProps={{withinPortal: false}}
                                                                 />
-
+                                                                </Box>
+                                                                <Box mt={'xs'}>
                                                                 <SelectForm
                                                                     tooltip={t('ChooseCategory')}
                                                                     label={t('Category')}
@@ -618,14 +619,15 @@ function GenericInvoiceForm(props) {
                                                                     name={'category_id'}
                                                                     form={productAddedForm}
                                                                     dropdownValue={categoryDropdown}
-                                                                    mt={8}
+                                                                    mt={'md'}
                                                                     id={'category_id'}
                                                                     searchable={true}
                                                                     value={categoryData}
                                                                     changeValue={setCategoryData}
                                                                     comboboxProps={{withinPortal: false}}
                                                                 />
-
+                                                                </Box>
+                                                                <Box mt={'xs'}>
                                                                 <InputForm
                                                                     tooltip={t('ProductNameValidateMessage')}
                                                                     label={t('ProductName')}
@@ -637,7 +639,8 @@ function GenericInvoiceForm(props) {
                                                                     mt={8}
                                                                     id={'name'}
                                                                 />
-
+                                                                </Box>
+                                                                <Box mt={'xs'}>
                                                                 <SelectForm
                                                                     tooltip={t('ChooseProductUnit')}
                                                                     label={t('ProductUnit')}
@@ -654,30 +657,38 @@ function GenericInvoiceForm(props) {
                                                                     changeValue={setProductUnitData}
                                                                     comboboxProps={{withinPortal: false}}
                                                                 />
-
-                                                                <InputForm
-                                                                    tooltip={t('SalesPriceValidateMessage')}
-                                                                    label={t('SalesPrice')}
-                                                                    placeholder={t('SalesPrice')}
-                                                                    required={true}
-                                                                    nextField={'purchase_price'}
-                                                                    form={productAddedForm}
-                                                                    name={'sales_price'}
-                                                                    mt={8}
-                                                                    id={'sales_price'}
-                                                                />
-
-                                                                <InputForm
-                                                                    tooltip={t('PurchasePrice')}
-                                                                    label={t('PurchasePrice')}
-                                                                    placeholder={t('PurchasePrice')}
-                                                                    required={true}
-                                                                    nextField={'EntityFormSubmit'}
-                                                                    form={productAddedForm}
-                                                                    name={'purchase_price'}
-                                                                    mt={8}
-                                                                    id={'purchase_price'}
-                                                                />
+                                                                </Box>
+                                                                <Box mt={'xs'}>
+                                                                    <InputNumberForm
+                                                                        tooltip={t('PurchasePriceValidateMessage')}
+                                                                        label={t('PurchasePrice')}
+                                                                        placeholder={t('PurchasePrice')}
+                                                                        required={true}
+                                                                        nextField={'EntityProductFormSubmit'}
+                                                                        form={productAddedForm}
+                                                                        name={'purchase_price'}
+                                                                        id={'purchase_price'}
+                                                                        leftSection={<IconCoinMonero size={16} opacity={0.5}/>}
+                                                                        rightIcon={<IconCurrency size={16} opacity={0.5}/>}
+                                                                        closeIcon={true}
+                                                                    />
+                                                                </Box>
+                                                                <Box mt={'xs'}>
+                                                                    <InputNumberForm
+                                                                        tooltip={t('SalesPriceValidateMessage')}
+                                                                        label={t('SalesPrice')}
+                                                                        placeholder={t('SalesPrice')}
+                                                                        required={true}
+                                                                        nextField={'purchase_price'}
+                                                                        form={productAddedForm}
+                                                                        name={'sales_price'}
+                                                                        mt={8}
+                                                                        id={'sales_price'}
+                                                                        leftSection={<IconCoinMonero size={16} opacity={0.5}/>}
+                                                                        rightIcon={<IconCurrency size={16} opacity={0.5}/>}
+                                                                        closeIcon={true}
+                                                                    />
+                                                                </Box>
 
                                                                 <Box mt={'xs'}>
                                                                     <Grid columns={12} gutter={{base: 1}}>
@@ -686,16 +697,14 @@ function GenericInvoiceForm(props) {
                                                                             <Button
                                                                                 variant="transparent"
                                                                                 size="sm"
-                                                                                color={`red.5`}
+                                                                                color={`red.4`}
                                                                                 type="submit"
                                                                                 mt={0}
                                                                                 mr={'xs'}
-                                                                                id="EntityFormSubmit"
+                                                                                fullWidth
+                                                                                id=""
                                                                             >
-                                                                                <IconRefreshDot style={{
-                                                                                    width: '100%',
-                                                                                    height: '70%'
-                                                                                }} stroke={1.5}/>
+                                                                                <IconRefreshDot style={{ width: '100%', height: '70%' }} stroke={1.5} />
                                                                             </Button>
                                                                         </Grid.Col>
                                                                         <Grid.Col span={4}>
@@ -705,7 +714,8 @@ function GenericInvoiceForm(props) {
                                                                                 type="submit"
                                                                                 mt={0}
                                                                                 mr={'xs'}
-                                                                                id="EntityFormSubmit"
+                                                                                fullWidth
+                                                                                id="EntityProductFormSubmit"
                                                                                 leftSection={<IconDeviceFloppy
                                                                                     size={16}/>}
                                                                                 onClick={() => {
@@ -787,6 +797,13 @@ function GenericInvoiceForm(props) {
                         </Box>
                         <Box className={'borderRadiusAll'}>
                             <DataTable
+                                classNames={{
+                                    root: tableCss.root,
+                                    table: tableCss.table,
+                                    header: tableCss.header,
+                                    footer: tableCss.footer,
+                                    pagination: tableCss.pagination,
+                                }}
                                 records={tempCardProducts}
                                 columns={[
                                     {

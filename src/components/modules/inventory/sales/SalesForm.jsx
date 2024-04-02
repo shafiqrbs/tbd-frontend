@@ -236,7 +236,7 @@ function SalesForm(props) {
                                                             w={420}
                                                             withArrow
                                                             transitionProps={{ duration: 200 }}
-                                                            label="Use this button to save this information in your profile, after that you will be able to access it any time and share it via email."
+                                                            label={t('InstantCustomerCreate')}
                                                         >
                                                             <ActionIcon fullWidth variant="outline" bg={'white'} size={'lg'} color="red.5" mt={'1'} aria-label="Settings">
                                                                 <IconUserCog style={{ width: '100%', height: '70%' }} stroke={1.5} />
@@ -278,7 +278,7 @@ function SalesForm(props) {
                                                                     <Button
                                                                         variant="transparent"
                                                                         size="sm"
-                                                                        color={`red.5`}
+                                                                        color={`red.4`}
                                                                         type="submit"
                                                                         mt={0}
                                                                         mr={'xs'}
@@ -316,7 +316,7 @@ function SalesForm(props) {
                                     </Grid>
                                 </Box>
                                 <Box>
-                                    <Grid gutter={{base: 6}} bg={'red.1'}>
+                                    <Grid gutter={{base: 6}} className={'titleBackground'}>
                                         <Grid.Col span={6}>
                                             <Box pl={'xl'} pb={'6'}>
                                                 <Text fz={'md'} order={1} fw={'800'}>1200000</Text>
@@ -396,7 +396,7 @@ function SalesForm(props) {
                                     </Grid>
                                 </Box>
                             <ScrollArea h={formHeight} scrollbarSize={2} type="never" bg={'gray.1'}>
-                                <Box mt={'xs'} pl={'8'} pt={'xs'} pr={'xs'} bg={`white`}>
+                                <Box  pl={'xs'} pt={'xs'} pr={'xs'} bg={`white`}>
                                     <Tooltip
                                         label={t('ChooseTransactionMode')}
                                         opened={form.errors.transaction_mode_id === true}
@@ -449,7 +449,7 @@ function SalesForm(props) {
                                                                         src={mode.path}
                                                                         alt={mode.method_name}
                                                                     />
-                                                                    <Center fz={'xs'} c={'gray'}>{mode.authorised}</Center>
+                                                                    <Center fz={'xs'} className={'textColor'} >{mode.authorised}</Center>
                                                                 </label>
                                                             </Tooltip>
                                                             </Box>
@@ -462,7 +462,7 @@ function SalesForm(props) {
 
                                 </Box>
 
-                                <Box p={'xs'} className={'boxBackground'} mt={'xs'} pt={'xs'} mb={'xs'} pb={'xs'} >
+                                <Box p={'xs'} className={'boxBackground'} mt={'4'} pt={'xs'} mb={'xs'} pb={'xs'} >
                                     <Grid gutter={{base: 2}}>
                                         <Grid.Col span={2}>
                                             <Switch
@@ -483,7 +483,8 @@ function SalesForm(props) {
                                         <Grid.Col span={7}><Center fz={'md'} mt={'4'} c={'red'}
                                                                    fw={'800'}>{returnOrDueText} {currencySymbol} {salesDueAmount.toFixed(2)}</Center></Grid.Col>
                                     </Grid>
-                                    <Grid gutter={{base: 6}} mt={'md'}>
+                                    <Box mt={'xs'} h={1} bg={`red.3`}></Box>
+                                    <Grid gutter={{base: 6}} mt={'xs'}>
                                         <Grid.Col span={4}>
                                             <Button
                                                 fullWidth
