@@ -233,7 +233,7 @@ export default function Header({
                         style={{border: `1px solid var(--mantine-color-gray-2)`}}
                         color={`gray`}
                         onClick={spotlight.open}
-                    ></Button>
+                    />
                     <Group>
                         <Menu
                             onOpen={() => setLanguageOpened(true)}
@@ -327,11 +327,12 @@ export default function Header({
                     </Group>
                 </Group>
                 <Spotlight
+
                     actions={actions}
                     nothingFound={t("NothingFound")}
                     highlightQuery
                     searchProps={{
-                        leftSection: <IconSearch style={{width: rem(20), height: rem(20)}} stroke={1.5}/>,
+                        leftSection: <IconSearch style={{width: rem(20),height: rem(20)}} stroke={1.5}/>,
                         placeholder: "Search...",
                     }}
                 />

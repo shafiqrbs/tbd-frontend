@@ -30,7 +30,7 @@ th ,td{
 
 .pagination {
     background: transparent;
-    border-top: 1px solid #656565;
+    border-top: 1px solid rgba(226, 194, 194, 0.39);
 
 button {
     background: transparent;
@@ -38,7 +38,7 @@ button {
 &[data-active='true'] {
      color: white;
      border: transparent;
-     background: var(--mantine-color-red-6);
+     background-color: rgba(208, 191, 191, 0.17);
  }
 }
 }
