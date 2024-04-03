@@ -49,6 +49,7 @@ import flagBD from "../../assets/images/flags/bd.svg";
 import flagGB from "../../assets/images/flags/gb.svg";
 import {useTranslation} from "react-i18next";
 import {useNavigate} from "react-router-dom";
+import getSpotlightDropdownData from "../global-hook/spotlight-dropdown/getSpotlightDropdownData.js";
 
 const mockdata = [
     {
@@ -80,26 +81,6 @@ const mockdata = [
         icon: IconNotification,
         title: "Notifications",
         description: "Combusken battles with the intensely hot flames it spews",
-    },
-];
-
-const actions = [
-    {
-        group: 'Pages',
-        actions: [
-            {id: 'home', label: 'Home page', description: 'Where we present the product'},
-            {id: 'careers', label: 'Careers page', description: 'Where we list open positions'},
-            {id: 'about-us', label: 'About us page', description: 'Where we tell what we do'},
-        ],
-    },
-
-    {
-        group: 'Apps',
-        actions: [
-            {id: 'svg-compressor', label: 'SVG compressor', description: 'Compress SVG images'},
-            {id: 'base64', label: 'Base 64 converter', description: 'Convert data to base 64 format'},
-            {id: 'fake-data', label: 'Fake data generator', description: 'Lorem ipsum generator'},
-        ],
     },
 ];
 
@@ -328,7 +309,7 @@ export default function Header({
                 </Group>
                 <Spotlight
 
-                    actions={actions}
+                    actions={getSpotlightDropdownData()}
                     nothingFound={t("NothingFound")}
                     highlightQuery
                     searchProps={{

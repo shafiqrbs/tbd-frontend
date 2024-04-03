@@ -90,6 +90,28 @@ export const createData = async (value) => {
         })
     return data
 };
+export const createDataWithFile = async (value) => {
+    let data = []
+    await axios({
+        method: 'POST',
+        url: `${import.meta.env.VITE_API_GATEWAY_URL+value.url}`,
+        headers: {
+            "Accept": `application/json`,
+            "Content-Type": `multipart/form-data`,
+            "Access-Control-Allow-Origin": '*',
+            "X-Api-Key": import.meta.env.VITE_API_KEY,
+            "X-Api-User": JSON.parse(localStorage.getItem('user')).id
+        },
+        data : value.data
+    })
+        .then(res => {
+            data = res
+        })
+        .catch(function (error) {
+            console.log(error)
+        })
+    return data
+};
 
 export const editData = async (value) => {
     let data = []

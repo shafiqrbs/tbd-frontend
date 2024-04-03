@@ -19,7 +19,13 @@ import {notifications} from "@mantine/notifications";
 import {
     getExecutiveDropdown, getLocationDropdown,
 } from "../../../../store/core/utilitySlice";
-import {setEntityNewData, setFetching, setValidationData, storeEntityData} from "../../../../store/core/crudSlice.js";
+import {
+    setEntityNewData,
+    setFetching,
+    setValidationData,
+    storeEntityData,
+    storeEntityDataWithFile
+} from "../../../../store/accounting/crudSlice.js";
 
 import Shortcut from "../../shortcut/Shortcut";
 import InputForm from "../../../form-builders/InputForm";
@@ -29,6 +35,10 @@ import InputNumberForm from "../../../form-builders/InputNumberForm";
 import SelectForm from "../../../form-builders/SelectForm.jsx";
 import getTransactionMethodDropdownData from "../../../global-hook/dropdown/getTransactionMethodDropdownData.js";
 import {Dropzone, IMAGE_MIME_TYPE} from "@mantine/dropzone";
+import getSettingProductDropdownData from "../../../global-hook/dropdown/getSettingProductDropdownData.js";
+import {getSettingDropdown} from "../../../../store/utility/utilitySlice.js";
+import getSettingAccountTypeDropdownData from "../../../global-hook/dropdown/getSettingAccountTypeDropdownData.js";
+import getSettingAuthorizedTypeDropdownData from "../../../global-hook/dropdown/getSettingAuthorizedTypeDropdownData.js";
 
 function TransactionModeForm(props) {
     const {t, i18n} = useTranslation();
@@ -49,6 +59,13 @@ function TransactionModeForm(props) {
     const validationMessage = useSelector((state) => state.crudSlice.validationMessage)
     const validation = useSelector((state) => state.crudSlice.validation)
     const entityNewData = useSelector((state) => state.crudSlice.entityNewData)
+    const authorisedTypeDropdownData = useSelector((state) => state.utilityUtilitySlice.settingDropdown);
+    const accountTypeDropdownData = useSelector((state) => state.utilityUtilitySlice.settingDropdown);
+
+
+    const authorizedDropdown = getSettingAuthorizedTypeDropdownData()
+    const accountDropdown = getSettingAccountTypeDropdownData()
+
 
 
     const [files, setFiles] = useState([]);
@@ -60,24 +77,15 @@ function TransactionModeForm(props) {
 
     const form = useForm({
         initialValues: {
-            name: '',authorised:'',mobile:'',account_type:'',service_charge:'',account_owner:'',service_name:'',method_id:'',path:''
+            method_id: '',name:'',short_name:'',authorised_mode_id:'',account_mode_id:'',service_charge:'',account_owner:'',path:''
         },
         validate: {
-            name: hasLength({min: 2, max: 20}),
-            authorised: isNotEmpty(),
-            account_type: isNotEmpty(),
             method_id: isNotEmpty(),
+            name: hasLength({min: 2, max: 20}),
+            short_name: hasLength({min: 2, max: 20}),
+            authorised_mode_id: isNotEmpty(),
+            account_mode_id: isNotEmpty(),
             path: isNotEmpty(),
-            mobile: (value) => {
-                const isNotEmpty = !    !value.trim().length;
-                const isDigitsOnly = /^\d+$/.test(value.trim());
-
-                if (isNotEmpty && isDigitsOnly) {
-                    return false;
-                } else {
-                    return true;
-                }
-            },
             service_charge: (value, values) => {
                 if (value ) {
                     const isNumberOrFractional = /^-?\d+(\.\d+)?$/.test(value);
@@ -159,14 +167,14 @@ function TransactionModeForm(props) {
                             onCancel: () => console.log('Cancel'),
                             onConfirm: () => {
                                 const formValue = {...form.values};
-                                formValue['path'] = files;
+                                formValue['path'] = files[0];
 
-                                console.log(formValue)
-                                /*const value = {
-                                    url: 'domain/global',
-                                    data: values
+                                // console.log(formValue)
+                                const data = {
+                                    url: 'accounting/transaction-mode',
+                                    data: formValue
                                 }
-                                dispatch(storeEntityData(value))
+                                dispatch(storeEntityDataWithFile(data))
 
                                 notifications.show({
                                     color: 'teal',
@@ -179,8 +187,12 @@ function TransactionModeForm(props) {
 
                                 setTimeout(() => {
                                     form.reset()
+                                    setFiles([])
+                                    setMethodData(null)
+                                    setAccountTypeData(null)
+                                    setAuthorisedData(null)
                                     dispatch(setFetching(true))
-                                }, 700)*/
+                                }, 700)
                             },
                         });
                     })}>
@@ -239,7 +251,7 @@ function TransactionModeForm(props) {
                                                                 label={t('Method')}
                                                                 placeholder={t('ChooseMethod')}
                                                                 required={true}
-                                                                nextField={'mobile'}
+                                                                nextField={'name'}
                                                                 name={'method_id'}
                                                                 form={form}
                                                                 dropdownValue={getTransactionMethodDropdownData()}
@@ -255,9 +267,9 @@ function TransactionModeForm(props) {
                                                         <InputForm
                                                             tooltip={t('TransactionModeNameValidateMessage')}
                                                             label={t('Name')}
-                                                            placeholder={t('TransactionModeName')}
+                                                            placeholder={t('Name')}
                                                             required={true}
-                                                            nextField={'authorised'}
+                                                            nextField={'short_name'}
                                                             name={'name'}
                                                             form={form}
                                                             mt={0}
@@ -266,15 +278,15 @@ function TransactionModeForm(props) {
                                                     </Box>
                                                      <Box mt={'xs'}>
                                                         <InputForm
-                                                            tooltip={t('TransactionModeNameValidateMessage')}
+                                                            tooltip={t('ShortNameValidateMessage')}
                                                             label={t('ShortName')}
                                                             placeholder={t('ShortName')}
                                                             required={true}
-                                                            nextField={'authorised'}
-                                                            name={'name'}
+                                                            nextField={'authorised_mode_id'}
+                                                            name={'short_name'}
                                                             form={form}
                                                             mt={0}
-                                                            id={'name'}
+                                                            id={'short_name'}
                                                         />
                                                     </Box>
                                                     <Box mt={'xs'}>
@@ -283,12 +295,12 @@ function TransactionModeForm(props) {
                                                             label={t('Authorised')}
                                                             placeholder={t('ChooseAuthorised')}
                                                             required={true}
-                                                            nextField={'method_id'}
-                                                            name={'authorised'}
+                                                            nextField={'account_mode_id'}
+                                                            name={'authorised_mode_id'}
                                                             form={form}
-                                                            dropdownValue={["BRAC", "DBBL","Brac bank","Dutch Bangla","BKASH"]}
+                                                            dropdownValue={authorizedDropdown}
                                                             mt={8}
-                                                            id={'authorised'}
+                                                            id={'authorised_mode_id'}
                                                             searchable={false}
                                                             value={authorisedData}
                                                             changeValue={setAuthorisedData}
@@ -301,11 +313,11 @@ function TransactionModeForm(props) {
                                                             placeholder={t('ChooseAccountType')}
                                                             required={true}
                                                             nextField={'service_charge'}
-                                                            name={'account_type'}
+                                                            name={'account_mode_id'}
                                                             form={form}
-                                                            dropdownValue={["Merchant", "General","Personal"]}
+                                                            dropdownValue={accountDropdown}
                                                             mt={8}
-                                                            id={'account_type'}
+                                                            id={'account_mode_id'}
                                                             searchable={false}
                                                             value={accountTypeData}
                                                             changeValue={setAccountTypeData}

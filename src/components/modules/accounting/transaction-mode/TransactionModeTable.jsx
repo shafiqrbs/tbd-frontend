@@ -15,7 +15,7 @@ import {
     setFetching, setFormLoading,
     setInsertType,
     showEntityData
-} from "../../../../store/core/crudSlice.js";
+} from "../../../../store/accounting/crudSlice.js";
 import KeywordSearch from "../../filter/KeywordSearch";
 import {modals} from "@mantine/modals";
 import {deleteEntityData} from "../../../../store/core/crudSlice";
@@ -42,7 +42,7 @@ function TransactionModeTable(props) {
 
     useEffect(() => {
         const value = {
-            url: 'domain/global',
+            url: 'accounting/transaction-mode',
             param: {
                 term: searchKeyword,
                 // name: customerFilterData.name,
@@ -71,15 +71,20 @@ function TransactionModeTable(props) {
                             render: (item) => (indexData.data.indexOf(item) + 1)
                         },
                         {accessor: 'id', title: "ID"},
-                        {accessor: 'name', title: "Name"},
-                        {accessor: 'mobile', title: "Mobile"},
+                        {accessor: 'name', title: t('Name')},
+                        {accessor: 'service_charge', title: t('ServiceCharge')},
+                        {accessor: 'account_owner', title: t('AccountOwner')},
+                        {accessor: 'short_name', title: t('ShortName')},
+                        {accessor: 'method_name', title: t('MethodName')},
+                        {accessor: 'authorized_name', title: t('Authorised')},
+                        {accessor: 'account_type_name', title: t('AccountType')},
                         {
                             accessor: "action",
                             title: "Action",
                             textAlign: "right",
                             render: (data) => (
                                 <Group gap={4} justify="right" wrap="nowrap">
-                                    <ActionIcon
+                                    {/*<ActionIcon
                                         size="sm"
                                         variant="subtle"
                                         color="green"
@@ -124,7 +129,7 @@ function TransactionModeTable(props) {
                                         }}
                                     >
                                         <IconTrash size={16}/>
-                                    </ActionIcon>
+                                    </ActionIcon>*/}
                                 </Group>
                             ),
                         },

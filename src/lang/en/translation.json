@@ -211,7 +211,8 @@
   "Accounting": "Accounting",
   "TransactionMode": "Transaction Mode",
   "CreateNewTransactionMode": "Create Transaction Mode",
-  "TransactionModeNameValidateMessage": "Transaction mode name must be 2-20 characters long",
+  "TransactionModeNameValidateMessage": "Name must be 2-20 characters long",
+  "ShortNameValidateMessage": "Short name must be 2-20 characters long",
   "TransactionModeName": "Transaction Mode Name",
   "ChooseAuthorised": "Choose Authorised",
   "ChooseAccountType": "Choose Account Type",
@@ -223,6 +224,24 @@
   "ChooseMethod": "Choose Method",
   "Method": "Method",
   "ChooseImage": "Choose Image",
+  "ShortName": "Short Name",
+
+  "ManageInvoice": "Manage Invoice",
+  "ManagePurchase": "Manage Purchase",
+
+  "WhereWePresentTheCustomerInformation": "Where we present the customer information",
+  "WhereWePresentTheUserInformation": "Where we present the user information",
+  "WhereWePresentTheVendorInformation": "Where we present the vendor information",
+  "WhereWePresentTheCategoryInformation": "Where we present the category information",
+  "WhereWePresentTheCategoryGroupInformation": "Where we present the category group information",
+  "WhereWePresentTheProductInformation": "Where we present the product information",
+  "WhereWePresentTheConfigurationInformation": "Where we present the configuration information",
+  "WhereWePresentTheSalesInformation": "Where we present the sales information",
+  "WhereWePresentTheSalesInvoiceInformation": "Where we present the sales invoice information",
+  "WhereWePresentThePurchaseInformation": "Where we present the purchase information",
+  "WhereWePresentThePurchaseInvoiceInformation": "Where we present the purchase invoice information",
+  "WhereWePresentTheDomainInformation": "Where we present the domain information",
+  "WhereWePresentTheTransactionModeInformation": "Where we present the transaction mode information",
 
 
 

@@ -22,6 +22,7 @@ import {getBrandDropdown, getCategoryDropdown} from "../../../../store/inventory
 import {getSettingDropdown, getProductUnitDropdown} from "../../../../store/utility/utilitySlice.js";
 
 import {setFetching, storeEntityData} from "../../../../store/inventory/crudSlice.js";
+import getSettingProductDropdownData from "../../../global-hook/dropdown/getSettingProductDropdownData.js";
 
 function ProductForm() {
     const {t, i18n} = useTranslation();
@@ -65,20 +66,7 @@ function ProductForm() {
 
     const [productTypeData, setProductTypeData] = useState(null);
     const productTypeDropdownData = useSelector((state) => state.utilityUtilitySlice.settingDropdown)
-    let productTypeDropdown = productTypeDropdownData && productTypeDropdownData.length > 0 ?
-        productTypeDropdownData.map((type, index) => {
-            return ({'label': type.name, 'value': String(type.id)})
-        }) : []
-
-    useEffect(() => {
-        const value = {
-            url: 'utility/select/setting',
-            param: {
-                'dropdown-type': 'product-type'
-            }
-        }
-        dispatch(getSettingDropdown(value))
-    }, []);
+    let productTypeDropdown = getSettingProductDropdownData()
 
     const [productUnitData, setProductUnitData] = useState(null);
     const productUnitDropdownData = useSelector((state) => state.utilityUtilitySlice.productUnitDropdown)
