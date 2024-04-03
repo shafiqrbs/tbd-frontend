@@ -1,7 +1,5 @@
 import React, {useEffect, useState} from "react";
 import {useOutletContext} from "react-router-dom";
-import genericCss from '../../../../assets/css/Generic.module.css';
-
 import {
     Button, rem, Center, Switch, ActionIcon,
     Grid, Box, ScrollArea, Tooltip, Group, Text, List, ThemeIcon, Popover, Flex,
@@ -17,6 +15,8 @@ import {
     IconCurrencyTaka,
     IconMessage,
     IconEyeEdit,
+    IconDeviceMobile,
+    IconHelpCircle,
     IconCircleCheck, IconUserCircle, IconRefreshDot, IconDiscountOff, IconCurrency,IconPlusMinus,
 
 } from "@tabler/icons-react";
@@ -24,8 +24,6 @@ import {useHotkeys, useToggle} from "@mantine/hooks";
 import {useDispatch, useSelector} from "react-redux";
 import {hasLength, isNotEmpty, useForm} from "@mantine/form";
 
-import Shortcut from "../../shortcut/Shortcut";
-import InputForm from "../../../form-builders/InputForm";
 import SelectForm from "../../../form-builders/SelectForm";
 import TextAreaForm from "../../../form-builders/TextAreaForm";
 
@@ -37,6 +35,7 @@ import getCustomerDropdownData from "../../../global-hook/dropdown/getCustomerDr
 import InputNumberForm from "../../../form-builders/InputNumberForm";
 import InputButtonForm from "../../../form-builders/InputButtonForm";
 import getUserDropdownData from "../../../global-hook/dropdown/getUserDropdownData";
+import InputForm from "../../../form-builders/InputForm";
 
 function SalesForm(props) {
 
@@ -60,12 +59,9 @@ function SalesForm(props) {
     const [hoveredModeId, setHoveredModeId] = useState(false);
 
     const formHeight = mainAreaHeight - 268; //TabList height 104
-    const [addCustomerModel, setAddCustomerModel] = useState(false);
     const [viewCustomerModel, setCustomerViewModel] = useState(false);
 
 
-    const [searchValue, setSearchValue] = useState('');
-    const [productDropdown, setProductDropdown] = useState([]);
     const [tempCardProducts, setTempCardProducts] = useState([])
     const [loadCardProducts, setLoadCardProducts] = useState(false)
     const [discountType, setDiscountType] = useToggle(['Flat', 'Percent']);
@@ -77,40 +73,14 @@ function SalesForm(props) {
         setLoadCardProducts(false)
     }, [loadCardProducts])
 
-
-    useEffect(() => {
-        if (searchValue.length > 0) {
-            const storedProducts = localStorage.getItem('user-products');
-            const localProducts = storedProducts ? JSON.parse(storedProducts) : [];
-
-            const lowerCaseSearchTerm = searchValue.toLowerCase();
-            const fieldsToSearch = ['product_name'];
-
-            const productFilterData = localProducts.filter(product =>
-                fieldsToSearch.some(field =>
-                    product[field] && String(product[field]).toLowerCase().includes(lowerCaseSearchTerm)
-                )
-            );
-
-            const formattedProductData = productFilterData.map(type => ({
-                label: type.product_name, value: String(type.id)
-            }));
-
-            setProductDropdown(formattedProductData);
-        } else {
-            setProductDropdown([]);
-        }
-    }, [searchValue]);
-
-
-    const [categoryData, setCategoryData] = useState(null);
+    const [customerData, setCustomerData] = useState(null);
     const [salesByUser, setSalesByUser] = useState(null);
     const [orderProcess, setOrderProcess] = useState(null);
 
 
     const form = useForm({
         initialValues: {
-            category_id: '',
+            customer_id: '',
             transaction_mode_id: '',
             sales_by: '',
             order_process: '',
@@ -119,7 +89,7 @@ function SalesForm(props) {
             receive_amount: ''
         },
         validate: {
-            category_id: isNotEmpty(),
+            customer_id: isNotEmpty(),
             transaction_mode_id: isNotEmpty(),
             sales_by: isNotEmpty(),
             order_process: isNotEmpty()
@@ -165,7 +135,7 @@ function SalesForm(props) {
 
 
     useHotkeys([['alt+n', () => {
-        document.getElementById('CompanyName').focus()
+        document.getElementById('customer_id').focus()
     }]], []);
 
     useHotkeys([['alt+r', () => {
@@ -188,7 +158,6 @@ function SalesForm(props) {
         <>
             <form onSubmit={form.onSubmit((values) => {
                 const tempProducts = localStorage.getItem('temp-sales-products');
-
                 const formValue = {...form.values};
                 formValue['sub_total'] = salesSubTotalAmount;
                 formValue['vat'] = salesVatAmount;
@@ -198,7 +167,6 @@ function SalesForm(props) {
                 formValue['return_due_amount'] = salesDueAmount;
                 formValue['total_amount'] = salesTotalAmount;
                 formValue['items'] = tempProducts ? JSON.parse(tempProducts) : [];
-
                 console.log(formValue)
 
             })}>
@@ -216,14 +184,14 @@ function SalesForm(props) {
                                                     placeholder={t('Customer')}
                                                     required={false}
                                                     nextField={'transaction_mode_id_2'}
-                                                    name={'category_id'}
+                                                    name={'customer_id'}
                                                     form={form}
                                                     dropdownValue={getCustomerDropdownData()}
-                                                    id={'category_id'}
+                                                    id={'customer_id'}
                                                     mt={1}
                                                     searchable={false}
-                                                    value={categoryData}
-                                                    changeValue={setCategoryData}
+                                                    value={customerData}
+                                                    changeValue={setCustomerData}
                                                 />
                                             </Box>
                                         </Grid.Col>
@@ -244,33 +212,34 @@ function SalesForm(props) {
                                                         </Tooltip>
                                                     </Popover.Target>
                                                     <Popover.Dropdown>
-                                                        <InputNumberForm
-                                                            tooltip={t('SalesPriceValidateMessage')}
-                                                            label={t('Name')}
-                                                            placeholder={t('SalesPrice')}
-                                                            required={true}
-                                                            nextField={'EntityFormSubmit'}
-                                                            form={form}
-                                                            name={'sales_price'}
-                                                            id={'sales_price'}
-                                                            disabled={form.values.percent}
-                                                            leftSection={<IconUserCircle size={16} opacity={0.5}/>}
-                                                            rightIcon={<IconUserCircle size={16} opacity={0.5}/>}
-                                                        />
-                                                        <InputNumberForm
-                                                            tooltip={t('SalesPriceValidateMessage')}
-                                                            label={t('Name')}
-                                                            placeholder={t('SalesPrice')}
-                                                            required={true}
-                                                            nextField={'EntityFormSubmit'}
-                                                            form={form}
-                                                            mt={'md'}
-                                                            name={'sales_price'}
-                                                            id={'sales_price'}
-                                                            disabled={form.values.percent}
-                                                            leftSection={<IconUserCircle size={16} opacity={0.5}/>}
-                                                            rightIcon={<IconUserCircle size={16} opacity={0.5}/>}
-                                                        />
+                                                        <Box mt={'xs'}>
+                                                            <InputForm
+                                                                tooltip={t('SalesPriceValidateMessage')}
+                                                                label={t('Name')}
+                                                                placeholder={t('CustomerName')}
+                                                                required={true}
+                                                                nextField={'EntityFormSubmit'}
+                                                                form={form}
+                                                                name={'customer_name'}
+                                                                id={'customer_name'}
+                                                                leftSection={<IconUserCircle size={16} opacity={0.5}/>}
+                                                                rightIcon={''}
+                                                            />
+                                                        </Box>
+                                                        <Box mt={'xs'}>
+                                                            <InputNumberForm
+                                                                tooltip={t('MobileValidateMessage')}
+                                                                label={t('MobileNo')}
+                                                                placeholder={t('MobileNo')}
+                                                                required={true}
+                                                                nextField={'EntityFormSubmit'}
+                                                                form={form}
+                                                                name={'mobile_no'}
+                                                                id={'mobile_no'}
+                                                                leftSection={<IconDeviceMobile size={16} opacity={0.5}/>}
+                                                                rightIcon={''}
+                                                            />
+                                                        </Box>
                                                         <Box mt={'xs'}>
                                                             <Grid columns={12} gutter={{base: 1}} >
                                                                 <Grid.Col span={6}>&nbsp;</Grid.Col>
@@ -283,7 +252,7 @@ function SalesForm(props) {
                                                                         mt={0}
                                                                         mr={'xs'}
                                                                         fullWidth
-                                                                        id="EntityFormSubmit"
+                                                                        id="EntityCustomerFormSubmit"
                                                                     >
                                                                         <IconRefreshDot style={{ width: '100%', height: '70%' }} stroke={1.5} />
                                                                     </Button>
@@ -296,12 +265,12 @@ function SalesForm(props) {
                                                                         mt={0}
                                                                         mr={'xs'}
                                                                         fullWidth
-                                                                        id="EntityFormSubmit"
+                                                                        id="EntityCustomerFormSubmit"
                                                                         leftSection={<IconDeviceFloppy size={16}/>}
                                                                     >
                                                                         <Flex direction={`column`} gap={0}>
                                                                             <Text fz={12} fw={400}>
-                                                                                {t("Add")}
+                                                                                {t("Add Customer")}
                                                                             </Text>
                                                                         </Flex>
                                                                     </Button>

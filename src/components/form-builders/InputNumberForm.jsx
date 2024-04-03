@@ -23,7 +23,8 @@ function InputNumberForm(props) {
                     px={16}
                     py={2}
                     position="top-end"
-                    color="red"
+                    bg={`red.4`}
+                    c={'white'}
                     withArrow
                     offset={2}
                     zIndex={999}
@@ -52,9 +53,10 @@ function InputNumberForm(props) {
                                 <Tooltip
                                     label={t("Close")}
                                     withArrow
-                                    bg={`red.5`}
+                                    bg={`red.4`}
+                                    c={'white'}
                                 >
-                                    <IconX color={`red`} size={16} opacity={0.5} onClick={() => {
+                                    <IconX color={`red.5`} size={16} opacity={0.5} onClick={() => {
                                         form.setFieldValue(name, '');
                                     }}/>
                                 </Tooltip>
@@ -65,7 +67,7 @@ function InputNumberForm(props) {
                                     py={2}
                                     withArrow
                                     position={"left"}
-                                    c={'indigo'}
+                                    c={'black'}
                                     bg={`gray.1`}
                                     transitionProps={{transition: "pop-bottom-left", duration: 500}}
                                 >

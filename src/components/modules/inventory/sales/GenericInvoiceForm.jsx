@@ -364,10 +364,7 @@ function GenericInvoiceForm(props) {
             {currencySymbol}
         </Text>
     );
-
     const [productAddFormOpened, setProductAddFormOpened] = useState(false);
-
-
     return (
         <Box>
             <Grid columns={24} gutter={{base: 8}}>
@@ -427,7 +424,7 @@ function GenericInvoiceForm(props) {
                                                 label=''
                                                 placeholder={t('barcode')}
                                                 required={true}
-                                                nextField={'EntityFormSubmit'}
+                                                nextField={''}
                                                 form={form}
                                                 name={'barcode'}
                                                 id={'barcode'}

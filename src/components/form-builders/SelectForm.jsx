@@ -32,7 +32,8 @@ function SelectForm(props) {
                     px={16}
                     py={2}
                     position="top-end"
-                    color="red"
+                    bg={`red.4`}
+                    c={'white'}
                     withArrow
                     offset={2}
                     zIndex={0}

@@ -23,7 +23,8 @@ function InputForm(props) {
                     px={16}
                     py={2}
                     position="top-end"
-                    color="red"
+                    bg={`red.4`}
+                    c={'white'}
                     withArrow
                     offset={2}
                     zIndex={999}
@@ -45,12 +46,14 @@ function InputForm(props) {
                                     document.getElementById(nextField).focus()
                             }],
                         ])}
+                        leftSection={ props.leftSection ?  props.leftSection : '' }
                         rightSection={
                             form.values[name] ?
                                 <Tooltip
                                     label={t("Close")}
                                     withArrow
-                                    bg={`red.5`}
+                                    bg={`red.1`}
+                                    c={'red.3'}
                                 >
                                     <IconX color={`red`} size={16} opacity={0.5} onClick={() => {
                                         form.setFieldValue(name, '');
@@ -63,11 +66,11 @@ function InputForm(props) {
                                     py={2}
                                     withArrow
                                     position={"left"}
-                                    c={'white'}
-                                    bg={`red.5`}
+                                    c={'black'}
+                                    bg={`gray.1`}
                                     transitionProps={{transition: "pop-bottom-left", duration: 500}}
                                 >
-                                    <IconInfoCircle size={16} opacity={0.5}/>
+                                    { props.rightIcon ?  props.rightIcon : <IconInfoCircle size={16} opacity={0.5}/> }
                                 </Tooltip>
                         }
                         withAsterisk={required}

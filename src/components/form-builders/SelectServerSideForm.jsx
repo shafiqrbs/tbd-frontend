@@ -19,7 +19,8 @@ function SelectServerSideForm(props) {
                     px={20}
                     py={3}
                     position="top-end"
-                    color="red"
+                    bg={`red.4`}
+                    c={'white'}
                     withArrow
                     offset={2}
                     zIndex={0}
