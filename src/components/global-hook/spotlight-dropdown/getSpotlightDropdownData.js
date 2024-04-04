@@ -76,7 +76,7 @@ const getSpotlightDropdownData = () => {
                     onClick: () => navigate('/inventory/purchase'),
                 },
                 {
-                    id: 'purchase',
+                    id: 'manage-purchase',
                     label: t('ManagePurchase'),
                     description: t('WhereWePresentThePurchaseInvoiceInformation'),
                     onClick: () => navigate('/inventory/purchase-invoice'),

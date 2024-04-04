@@ -17,7 +17,7 @@ const links = [
     { link: '/community', label: 'Add Sales' },
 ];
 
-function SalesHeaderNavbar(props) {
+function SampleHeaderNavbar(props) {
     const { pageTitle,roles,currancySymbol,allowZeroPercentage } = props
     const {t, i18n} = useTranslation();
     const dispatch = useDispatch();
@@ -82,4 +82,4 @@ function SalesHeaderNavbar(props) {
     );
 }
 
-export default SalesHeaderNavbar;
+export default SampleHeaderNavbar;

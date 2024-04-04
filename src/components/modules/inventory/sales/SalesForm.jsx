@@ -17,7 +17,7 @@ import {
     IconEyeEdit,
     IconDeviceMobile,
     IconHelpCircle,
-    IconCircleCheck, IconUserCircle, IconRefreshDot, IconDiscountOff, IconCurrency,IconPlusMinus,
+    IconCircleCheck, IconUserCircle, IconRefreshDot, IconDiscountOff, IconCurrency, IconPlusMinus, IconCheck,
 
 } from "@tabler/icons-react";
 import {useHotkeys, useToggle} from "@mantine/hooks";
@@ -28,7 +28,7 @@ import SelectForm from "../../../form-builders/SelectForm";
 import TextAreaForm from "../../../form-builders/TextAreaForm";
 
 import {
-    getShowEntityData,
+    getShowEntityData, storeEntityData,
 } from "../../../../store/inventory/crudSlice.js";
 import {getTransactionModeData} from "../../../../store/accounting/utilitySlice.js";
 import getCustomerDropdownData from "../../../global-hook/dropdown/getCustomerDropdownData.js";
@@ -36,6 +36,8 @@ import InputNumberForm from "../../../form-builders/InputNumberForm";
 import InputButtonForm from "../../../form-builders/InputButtonForm";
 import getUserDropdownData from "../../../global-hook/dropdown/getUserDropdownData";
 import InputForm from "../../../form-builders/InputForm";
+import {setFetching, storeEntityDataWithFile} from "../../../../store/accounting/crudSlice.js";
+import {notifications} from "@mantine/notifications";
 
 function SalesForm(props) {
 
@@ -158,16 +160,64 @@ function SalesForm(props) {
         <>
             <form onSubmit={form.onSubmit((values) => {
                 const tempProducts = localStorage.getItem('temp-sales-products');
-                const formValue = {...form.values};
+                let items = tempProducts ? JSON.parse(tempProducts) : [];
+                let createdBy = JSON.parse(localStorage.getItem('user'));
+
+                let transformedArray = items.map(product => {
+                    return {
+                        "product_id": product.product_id,
+                        "item_name": product.display_name,
+                        "sales_price": product.sales_price,
+                        "price": product.price,
+                        "percent": product.percent,
+                        "quantity": product.quantity,
+                        "uom": product.unit_name,
+                        "unit_id": 2,
+                        "purchase_price": product.purchase_price,
+                        "sub_total": product.sub_total
+                    }
+                });
+
+                const formValue = {}
+                formValue['customer_id'] = form.values.customer_id;
                 formValue['sub_total'] = salesSubTotalAmount;
-                formValue['vat'] = salesVatAmount;
-                formValue['discount_amount'] = salesDiscountAmount;
+                formValue['transaction_mode_id'] = form.values.transaction_mode_id;
                 formValue['discount_type'] = discountType;
-                formValue['return_due_text'] = returnOrDueText;
-                formValue['return_due_amount'] = salesDueAmount;
-                formValue['total_amount'] = salesTotalAmount;
-                formValue['items'] = tempProducts ? JSON.parse(tempProducts) : [];
-                console.log(formValue)
+                formValue['discount'] = salesDiscountAmount;
+                formValue['discount_calculation'] = discountType === 'Percent'?form.values.discount:0;
+                formValue['vat'] = 0;
+                formValue['total'] = salesTotalAmount;
+                formValue['payment'] = form.values.receive_amount;
+                formValue['sales_by_id'] = form.values.sales_by;
+                formValue['created_by_id'] = Number(createdBy);
+                formValue['process'] = form.values.order_process;
+                formValue['narration'] = form.values.narration;
+                formValue['items'] = transformedArray ? transformedArray : [];
+
+
+                const data = {
+                    url: 'inventory/sales',
+                    data: formValue
+                }
+                dispatch(storeEntityData(data))
+
+                notifications.show({
+                    color: 'teal',
+                    title: t('CreateSuccessfully'),
+                    icon: <IconCheck style={{width: rem(18), height: rem(18)}}/>,
+                    loading: false,
+                    autoClose: 700,
+                    style: {backgroundColor: 'lightgray'},
+                });
+
+                setTimeout(() => {
+                    localStorage.removeItem('temp-sales-products');
+                    form.reset()
+                    setCustomerData(null)
+                    setSalesByUser(null)
+                    setOrderProcess(null)
+                    props.setLoadCardProducts(true)
+                }, 700)
 
             })}>
                 <Box>
@@ -183,7 +233,7 @@ function SalesForm(props) {
                                                     label=''
                                                     placeholder={t('Customer')}
                                                     required={false}
-                                                    nextField={'transaction_mode_id_2'}
+                                                    nextField={'receive_amount'}
                                                     name={'customer_id'}
                                                     form={form}
                                                     dropdownValue={getCustomerDropdownData()}
@@ -383,7 +433,6 @@ function SalesForm(props) {
 
                                             {
                                                 (transactionModeData && transactionModeData.length > 0) && transactionModeData.map((mode, index) => {
-                                                    console.log(mode.path)
                                                     return (
                                                         <Grid.Col span={4}>
                                                             <Box bg={'gray.1'} h={'82'}>
@@ -490,7 +539,7 @@ function SalesForm(props) {
                                                 label=''
                                                 placeholder={t('Amount')}
                                                 required={false}
-                                                nextField={'order_process'}
+                                                nextField={'sales_by'}
                                                 form={form}
                                                 name={'receive_amount'}
                                                 id={'receive_amount'}
@@ -512,7 +561,7 @@ function SalesForm(props) {
                                             form={form}
                                             dropdownValue={getUserDropdownData()}
                                             id={'sales_by'}
-                                            nextField={'receive_amount'}
+                                            nextField={'order_process'}
                                             searchable={false}
                                             value={salesByUser}
                                             changeValue={setSalesByUser}
@@ -556,8 +605,7 @@ function SalesForm(props) {
                                             color="green.5">Print</Button>
                                     <Button fullWidth variant="filled" leftSection={<IconReceipt size={14}/>}
                                             color="red.5">Pos</Button>
-                                    <Button type={'submit'} fullWidth variant="filled"
-                                            leftSection={<IconDeviceFloppy size={14}/>}
+                                    <Button type={'submit'} fullWidth variant="filled" leftSection={<IconDeviceFloppy size={14}/>}
                                             color="cyan.5">Save</Button>
                                     <Button fullWidth variant="filled" leftSection={<IconStackPush size={14}/>}
                                             color="orange.5">Hold</Button>

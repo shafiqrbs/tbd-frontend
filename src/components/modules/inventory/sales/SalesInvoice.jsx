@@ -7,8 +7,8 @@ import {useTranslation} from 'react-i18next';
 import {useDispatch, useSelector} from "react-redux";
 import {getLoadingProgress} from "../../../global-hook/loading-progress/getLoadingProgress.js";
 import getConfigData from "../../../global-hook/config-data/getConfigData.js";
-import SampleHeaderNavbar from "../../sample-module/sample-layout/SampleHeaderNavbar";
 import GenericInvoiceForm from "./GenericInvoiceForm";
+import SalesHeaderNavbar from "./SalesHeaderNavbar.jsx";
 
 function SalesInvoice() {
     const {t, i18n} = useTranslation();
@@ -22,21 +22,27 @@ function SalesInvoice() {
         <Progress color="red" size={"xs"} striped animated value={progress} transitionDuration={200}/>}
         {progress === 100 &&
         <Box>
-            <SampleHeaderNavbar
-                pageTitle = {t('SalesInvoice')}
-                roles = {t('roles')}
-                allowZeroPercentage = {configData.zero_stock}
-                currencySymbol = {configData.currency.symbol}
-            />
-            <Box p={'8'}>
-                {
-                    insertType === 'create' && configData.business_model.slug==='general' &&
-                    <GenericInvoiceForm
+            {
+                configData &&
+                <>
+                    <SalesHeaderNavbar
+                        pageTitle = {t('SalesInvoice')}
+                        roles = {t('roles')}
                         allowZeroPercentage = {configData.zero_stock}
                         currencySymbol = {configData.currency.symbol}
                     />
-                }
-            </Box>
+                    <Box p={'8'}>
+                        {
+                            insertType === 'create' && configData.business_model.slug==='general' &&
+                            <GenericInvoiceForm
+                                allowZeroPercentage = {configData.zero_stock}
+                                currencySymbol = {configData.currency.symbol}
+                            />
+                        }
+                    </Box>
+                </>
+            }
+
         </Box>
         }
     </>

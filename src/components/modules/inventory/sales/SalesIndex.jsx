@@ -27,18 +27,24 @@ function SalesIndex() {
                 <Progress color="red" size={"xs"} striped animated value={progress} transitionDuration={200}/>}
             {progress === 100 &&
             <Box>
-                <SalesHeaderNavbar
-                    pageTitle = {t('Sales')}
-                    roles = {t('roles')}
-                    allowZeroPercentage = {configData.zero_stock}
-                    currancySymbol = {configData.currency.symbol}
-                />
-                <Box p={'8'}>
+                {
+                    configData &&
+                    <>
+                    <SalesHeaderNavbar
+                        pageTitle = {t('Sales')}
+                        roles = {t('roles')}
+                        allowZeroPercentage = {configData.zero_stock}
+                        currancySymbol = {configData.currency.symbol}
+                    />
+                    <Box p={'8'}>
                     <SalesTable
                         allowZeroPercentage = {configData.zero_stock}
                         currancySymbol = {configData.currency.symbol}
                     />
-                </Box>
+                    </Box>
+
+                    </>
+                }
             </Box>
             }
         </>
