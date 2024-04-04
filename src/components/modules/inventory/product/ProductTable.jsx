@@ -14,11 +14,11 @@ import {
     getIndexEntityData,
     setFetching, setFormLoading,
     setInsertType,
-    showEntityData
+    showEntityData,deleteEntityData
 } from "../../../../store/core/crudSlice.js";
 import KeywordSearch from "../../filter/KeywordSearch";
 import {modals} from "@mantine/modals";
-import {deleteEntityData} from "../../../../store/core/crudSlice";
+
 import ProductViewModel from "./ProductViewModel.jsx";
 
 function ProductTable() {

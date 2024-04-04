@@ -37,24 +37,20 @@ function SalesTable() {
     const fetching = useSelector((state) => state.crudSlice.fetching)
     const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword)
     const indexData = useSelector((state) => state.crudSlice.indexEntityData)
-    const vendorFilterData = useSelector((state) => state.crudSlice.vendorFilterData)
-
 
 
     useEffect(() => {
         const value = {
-            url: 'vendor',
+            url: 'inventory/sales',
             param: {
                 term: searchKeyword,
-                name: vendorFilterData.name,
-                mobile: vendorFilterData.mobile,
-                company_name: vendorFilterData.company_name,
                 page: page,
-                offset : perPage
+                offset: perPage
             }
         }
         dispatch(getIndexEntityData(value))
     }, [fetching]);
+
 
     return (
         <>
@@ -75,7 +71,7 @@ function SalesTable() {
             </Box>
             <Box>
                 <Grid columns={24} gutter={{base:8}}>
-                    <Grid.Col span={9} >
+                    <Grid.Col span={15} >
                         <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
                             <Box className={'borderRadiusAll'}>
                                 <DataTable
@@ -94,9 +90,12 @@ function SalesTable() {
                                             textAlignment: 'right',
                                             render: (item) => (indexData.data.indexOf(item) + 1)
                                         },
-                                        { accessor: 'name',  title: "Name" },
-                                        { accessor: 'company_name',  title: "Company Name" },
-                                        { accessor: 'mobile',  title: "Mobile" },
+                                        { accessor: 'created',  title: "Created" },
+                                        { accessor: 'invoice',  title: "Invoice" },
+                                        { accessor: 'customerName',  title: "Customer" },
+                                        { accessor: 'sub_total',  title: "SubTotal" },
+                                        { accessor: 'discount',  title: "Dis." },
+                                        { accessor: 'total',  title: "Total" },
                                         {
                                             accessor: "action",
                                             title: "Action",
@@ -109,7 +108,7 @@ function SalesTable() {
                                                         color="green"
                                                         onClick={()=>{
                                                             setVendorViewModel(true)
-                                                            dispatch(showEntityData('vendor/' + data.id))
+                                                            dispatch(showEntityData('inventory/sales' + data.id))
                                                         }}
                                                     >
                                                         <IconEye size={16}/>
@@ -120,7 +119,7 @@ function SalesTable() {
                                                         color="blue"
                                                         onClick={() => {
                                                             dispatch(setInsertType('update'))
-                                                            dispatch(editEntityData('vendor/' + data.id))
+                                                            dispatch(editEntityData('inventory/sales/' + data.id))
                                                             dispatch(setFormLoading(true))
                                                         }}
                                                     >
@@ -173,7 +172,7 @@ function SalesTable() {
                             vendorViewModel && <SalesViewModel vendorViewModel={vendorViewModel} setVendorViewModel={setVendorViewModel}/>
                         }
                     </Grid.Col>
-                    <Grid.Col span={6} >
+                   {/* <Grid.Col span={6} >
                         <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
                             <Box h={'36'} pl={`xs`} fz={'sm'} fw={'600'} pr={8} pt={'6'} mb={'4'} className={'boxBackground textColor borderRadiusAll'} >
                                 In voice Title
@@ -182,7 +181,7 @@ function SalesTable() {
                                 Body
                             </Box>
                         </Box>
-                    </Grid.Col>
+                    </Grid.Col>*/}
                     <Grid.Col span={8} >
                         <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
                             <Box h={'36'} pl={`xs`} fz={'sm'} fw={'600'} pr={8} pt={'6'} mb={'4'} className={'boxBackground textColor borderRadiusAll'} >
