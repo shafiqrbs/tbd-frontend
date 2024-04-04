@@ -383,6 +383,7 @@ function SalesForm(props) {
 
                                             {
                                                 (transactionModeData && transactionModeData.length > 0) && transactionModeData.map((mode, index) => {
+                                                    console.log(mode.path)
                                                     return (
                                                         <Grid.Col span={4}>
                                                             <Box bg={'gray.1'} h={'82'}>

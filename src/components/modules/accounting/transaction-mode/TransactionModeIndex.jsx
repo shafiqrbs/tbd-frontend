@@ -14,6 +14,7 @@ import {setSearchKeyword} from "../../../../store/core/crudSlice";
 import getConfigData from "../../../global-hook/config-data/getConfigData.js";
 import {getLoadingProgress} from "../../../global-hook/loading-progress/getLoadingProgress.js";
 import TransactionModeForm from "./TransactionModeFrom.jsx";
+import TransactionModeUpdateFrom from "./TransactionModeUpdateFrom.jsx";
 function TransactionModeIndex() {
     const {t, i18n} = useTranslation();
     const dispatch = useDispatch();
@@ -39,7 +40,7 @@ function TransactionModeIndex() {
                     />
                     <Box p={'8'}>
                         {
-                            insertType === 'create' ?  <TransactionModeForm/> : <CategoryUpdateForm/>
+                            insertType === 'create' ?  <TransactionModeForm/> : <TransactionModeUpdateFrom/>
                         }
                     </Box>
                 </Box>

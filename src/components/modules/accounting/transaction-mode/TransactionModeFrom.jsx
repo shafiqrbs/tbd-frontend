@@ -131,7 +131,7 @@ function TransactionModeForm(props) {
     }, [validation,validationMessage,form]);*/
 
     useHotkeys([['alt+n', () => {
-        document.getElementById('company_name').focus()
+        document.getElementById('method_id').click()
     }]], []);
 
     useHotkeys([['alt+r', () => {
@@ -146,13 +146,11 @@ function TransactionModeForm(props) {
     return (
         <Box>
             <Grid columns={24} gutter={{base: 8}}>
-
                 <Grid.Col span={15} >
                     <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
                         <TransactionModeTable/>
                     </Box>
                 </Grid.Col>
-
                 <Grid.Col span={8} >
                     <form onSubmit={form.onSubmit((values) => {
                         dispatch(setValidationData(false))
@@ -169,7 +167,6 @@ function TransactionModeForm(props) {
                                 const formValue = {...form.values};
                                 formValue['path'] = files[0];
 
-                                // console.log(formValue)
                                 const data = {
                                     url: 'accounting/transaction-mode',
                                     data: formValue
@@ -234,16 +231,6 @@ function TransactionModeForm(props) {
                                         <Grid.Col span={'auto'} >
                                             <ScrollArea h={height} scrollbarSize={2} type="never">
                                                 <Box  pb={'md'}>
-                                                    {/*{
-                                                        Object.keys(form.errors).length > 0 && validationMessage !=0 &&
-                                                        <Alert variant="light" color="red" radius="md" title={
-                                                            <List withPadding size="sm">
-                                                                {validationMessage.name && <List.Item>{t('NameValidateMessage')}</List.Item>}
-                                                                {validationMessage.mobile && <List.Item>{t('MobileValidateMessage')}</List.Item>}
-                                                                {validationMessage.alternative_mobile && <List.Item>{t('AlternativeMobile')}</List.Item>}
-                                                            </List>
-                                                        }></Alert>
-                                                    }*/}
                                                     <Box mt={'xs'}>
                                                         <Box mt={'xs'}>
                                                             <SelectForm
@@ -402,7 +389,8 @@ function TransactionModeForm(props) {
                         <Shortcut
                             form={form}
                             FormSubmit={'EntityFormSubmit'}
-                            Name={'company_name'}
+                            Name={'method_id'}
+                            inputType="select"
                         />
                     </Box>
                 </Grid.Col>

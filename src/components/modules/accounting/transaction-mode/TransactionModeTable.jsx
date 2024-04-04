@@ -63,6 +63,7 @@ function TransactionModeTable(props) {
             <Box className={'borderRadiusAll'}>
                 <DataTable
                     records={indexData.data}
+                    pinLastColumn
                     columns={[
                         {
                             accessor: 'index',
@@ -70,27 +71,28 @@ function TransactionModeTable(props) {
                             textAlignment: 'right',
                             render: (item) => (indexData.data.indexOf(item) + 1)
                         },
-                        {accessor: 'id', title: "ID"},
                         {accessor: 'name', title: t('Name')},
-                        {accessor: 'service_charge', title: t('ServiceCharge')},
-                        {accessor: 'account_owner', title: t('AccountOwner')},
                         {accessor: 'short_name', title: t('ShortName')},
                         {accessor: 'method_name', title: t('MethodName')},
                         {accessor: 'authorized_name', title: t('Authorised')},
                         {accessor: 'account_type_name', title: t('AccountType')},
+                        {accessor: 'service_charge', title: t('ServiceCharge')},
+                        {accessor: 'account_owner', title: t('AccountOwner')},
+
                         {
                             accessor: "action",
                             title: "Action",
                             textAlign: "right",
                             render: (data) => (
                                 <Group gap={4} justify="right" wrap="nowrap">
-                                    {/*<ActionIcon
+                                    <ActionIcon
                                         size="sm"
                                         variant="subtle"
                                         color="green"
                                         onClick={() => {
-                                            setCustomerViewModel(true)
-                                            dispatch(showEntityData('core/customer/' + data.id))
+                                            console.log('ok')
+                                            // setCustomerViewModel(true)
+                                            // dispatch(showEntityData('core/customer/' + data.id))
                                         }}
                                     >
                                         <IconEye size={16}/>
@@ -101,7 +103,7 @@ function TransactionModeTable(props) {
                                         color="blue"
                                         onClick={() => {
                                             dispatch(setInsertType('update'))
-                                            dispatch(editEntityData('core/customer/' + data.id))
+                                            dispatch(editEntityData('accounting/transaction-mode/' + data.id))
                                             dispatch(setFormLoading(true))
                                         }}
                                     >
@@ -129,7 +131,7 @@ function TransactionModeTable(props) {
                                         }}
                                     >
                                         <IconTrash size={16}/>
-                                    </ActionIcon>*/}
+                                    </ActionIcon>
                                 </Group>
                             ),
                         },
