@@ -4,10 +4,19 @@ import tableCss from '../../../../assets/css/Table.module.css';
 import {
     Group,
     Box,
-    ActionIcon, Text, Grid, Stack, TextInput
+    ActionIcon, Text, Grid, Stack, TextInput, Button, ScrollArea,Table
 } from "@mantine/core";
 import {useTranslation} from "react-i18next";
-import {IconEye, IconEdit, IconTrash, IconSum, IconX} from "@tabler/icons-react";
+import {
+    IconEye,
+    IconEdit,
+    IconTrash,
+    IconSum,
+    IconX,
+    IconPrinter,
+    IconReceipt,
+    IconDeviceFloppy, IconStackPush
+} from "@tabler/icons-react";
 import {DataTable} from 'mantine-datatable';
 import {useDispatch, useSelector} from "react-redux";
 import {
@@ -16,19 +25,26 @@ import {
     setFetching, setFormLoading,
     setInsertType,
     showEntityData
-} from "../../../../store/core/crudSlice.js";
+} from "../../../../store/inventory/crudSlice.js";
 import KeywordSearch from "../../filter/KeywordSearch";
 import {modals} from "@mantine/modals";
 import {deleteEntityData} from "../../../../store/core/crudSlice";
 import SalesViewModel from "./SalesViewModel.jsx";
 import ShortcutTable from "../../shortcut/ShortcutTable";
+import KeywordDateRangeSearch from "../../filter/KeywordDateRangeSearch";
+
+const elements = [
+    { index: 1, name: 'Monthly Software Service Charge-December (2023)', quantity: 10, price: 120, sales_price: 100, sub_total: '1000.00'},
+    { index: 2, name: 'Mokhles Haski Rice - 25 Kg', quantity: 10, price: 120, sales_price: 100, sub_total: '1000.00'},
+];
+
 function SalesTable() {
 
     const dispatch = useDispatch();
     const {t, i18n} = useTranslation();
     const {isOnline, mainAreaHeight} = useOutletContext();
     const tableHeight = mainAreaHeight - 116; //TabList height 104
-    const height = mainAreaHeight - 154; //TabList height 104
+    const height = mainAreaHeight - 314; //TabList height 104
 
     const perPage = 50;
     const [page,setPage] = useState(1);
@@ -37,7 +53,20 @@ function SalesTable() {
     const fetching = useSelector((state) => state.crudSlice.fetching)
     const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword)
     const indexData = useSelector((state) => state.crudSlice.indexEntityData)
+    const showEntityData = useSelector((state) => state.inventoryCrudSlice.showEntityData)
 
+    const [salesViewData,setSalesViewData] =useState({})
+
+    const rows = elements.map((element) => (
+        <Table.Tr key={element.name}>
+            <Table.Td fz="xs" width={'20'}>{element.index}</Table.Td>
+            <Table.Td ta="left" fz="xs" width={'300'}>{element.name}</Table.Td>
+            <Table.Td ta="center" fz="xs" width={'60'}>{element.quantity}</Table.Td>
+            <Table.Td ta="right" fz="xs" width={'80'}>{element.price}</Table.Td>
+            <Table.Td ta="right" fz="xs" width={'100'}>{element.sales_price}</Table.Td>
+            <Table.Td ta="right" fz="xs" width={'100'}>{element.sub_total}</Table.Td>
+        </Table.Tr>
+    ));
 
     useEffect(() => {
         const value = {
@@ -61,7 +90,7 @@ function SalesTable() {
                             <Grid>
                                 <Grid.Col>
                                     <Stack >
-                                        <KeywordSearch/>
+                                        <KeywordDateRangeSearch/>
                                     </Stack>
                                 </Grid.Col>
                             </Grid>
@@ -107,8 +136,7 @@ function SalesTable() {
                                                         variant="subtle"
                                                         color="green"
                                                         onClick={()=>{
-                                                            setVendorViewModel(true)
-                                                            dispatch(showEntityData('inventory/sales' + data.id))
+                                                            setSalesViewData(data)
                                                         }}
                                                     >
                                                         <IconEye size={16}/>
@@ -168,28 +196,106 @@ function SalesTable() {
                                 />
                             </Box>
                         </Box>
-                        {
-                            vendorViewModel && <SalesViewModel vendorViewModel={vendorViewModel} setVendorViewModel={setVendorViewModel}/>
-                        }
+
                     </Grid.Col>
-                   {/* <Grid.Col span={6} >
-                        <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
-                            <Box h={'36'} pl={`xs`} fz={'sm'} fw={'600'} pr={8} pt={'6'} mb={'4'} className={'boxBackground textColor borderRadiusAll'} >
-                                In voice Title
-                            </Box>
-                            <Box className={'borderRadiusAll'} fz={'sm'} h={height} pl={'xs'} pt={'xs'}>
-                                Body
-                            </Box>
-                        </Box>
-                    </Grid.Col>*/}
+
                     <Grid.Col span={8} >
                         <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
                             <Box h={'36'} pl={`xs`} fz={'sm'} fw={'600'} pr={8} pt={'6'} mb={'4'} className={'boxBackground textColor borderRadiusAll'} >
-                                In voice Details
+                                Invoice: {salesViewData && salesViewData.invoice && salesViewData.invoice}
                             </Box>
-                            <Box className={'borderRadiusAll'} h={height} fz={'sm'} pl={'xs'} pt={'xs'}>
-                                Body
+                            <Box className={'borderRadiusAll'}  fz={'sm'}  >
+                                <Box pl={`xs`} fz={'sm'} fw={'600'} pr={'xs'}  pt={'6'} pb={'xs'} className={'boxBackground textColor'} >
+                                    <Grid gutter={{base:4}}>
+                                        <Grid.Col span={'6'}>
+                                            <Grid columns={15} gutter={{base:4}}>
+                                                <Grid.Col span={6} ><Text fz="sm" lh="xs">Customer</Text></Grid.Col>
+                                                <Grid.Col span={9} ><Text fz="sm" lh="xs">021412414 sadas asdasd asdasd</Text></Grid.Col>
+                                            </Grid>
+                                            <Grid columns={15} gutter={{base:4}}>
+                                                <Grid.Col span={6} ><Text fz="sm" lh="xs">Mobile</Text></Grid.Col>
+                                                <Grid.Col span={9} ><Text fz="sm" lh="xs">021412414</Text></Grid.Col>
+                                            </Grid>
+                                            <Grid columns={15} gutter={{base:4}}>
+                                                <Grid.Col span={6} ><Text fz="sm" lh="xs">Address</Text></Grid.Col>
+                                                <Grid.Col span={9} ><Text fz="sm" lh="xs">021412414</Text></Grid.Col>
+                                            </Grid>
+                                            <Grid columns={15} gutter={{base:4}}>
+                                                <Grid.Col span={6} ><Text fz="sm" lh="xs">Balance</Text></Grid.Col>
+                                                <Grid.Col span={9} ><Text fz="sm" lh="xs">021412414</Text></Grid.Col>
+                                            </Grid>
+                                        </Grid.Col>
+                                        <Grid.Col span={'6'}>
+                                            <Grid columns={15} gutter={{base:4}}>
+                                                <Grid.Col span={6} ><Text fz="sm" lh="xs">Created</Text></Grid.Col>
+                                                <Grid.Col span={9} ><Text fz="sm" lh="xs">12-04-24</Text></Grid.Col>
+                                            </Grid>
+                                            <Grid columns={15} gutter={{base:4}}>
+                                                <Grid.Col span={6} ><Text fz="sm" lh="xs">Created By</Text></Grid.Col>
+                                                <Grid.Col span={9} ><Text fz="sm" lh="xs">021412414</Text></Grid.Col>
+                                            </Grid>
+                                            <Grid columns={15} gutter={{base:4}}>
+                                                <Grid.Col span={6} ><Text fz="sm" lh="xs">Sales By</Text></Grid.Col>
+                                                <Grid.Col span={9} ><Text fz="sm" lh="xs">021412414</Text></Grid.Col>
+                                            </Grid>
+                                            <Grid columns={15} gutter={{base:4}}>
+                                                <Grid.Col span={6} ><Text fz="sm" lh="xs">Mode</Text></Grid.Col>
+                                                <Grid.Col span={9} ><Text fz="sm" lh="xs">021412414</Text></Grid.Col>
+                                            </Grid>
+                                            <Grid columns={15} gutter={{base:4}}>
+                                                <Grid.Col span={6} ><Text fz="sm" lh="xs">Process</Text></Grid.Col>
+                                                <Grid.Col span={9} ><Text fz="sm" lh="xs">021412414</Text></Grid.Col>
+                                            </Grid>
+                                        </Grid.Col>
+                                    </Grid>
+                                </Box>
+                                <ScrollArea h={height} scrollbarSize={2} type="never" >
+                                <Box>
+                                    <Table stickyHeader >
+                                        <Table.Thead>
+                                            <Table.Tr>
+                                                <Table.Th fz="xs" w={'20'}>S/N</Table.Th>
+                                                <Table.Th fz="xs" ta="left" w={'300'}>Name</Table.Th>
+                                                <Table.Th fz="xs" ta="center"  w={'60'}>QTY</Table.Th>
+                                                <Table.Th ta="right" fz="xs" w={'80'}>Price</Table.Th>
+                                                <Table.Th ta="right" fz="xs" w={'100'}>SalePrice</Table.Th>
+                                                <Table.Th ta="right" fz="xs" w={'100'}>SubTotal</Table.Th>
+                                            </Table.Tr>
+                                        </Table.Thead>
+                                        <Table.Tbody>{rows}</Table.Tbody>
+                                        <Table.Tfoot>
+                                             <Table.Tr>
+                                                <Table.Th colspan={'5'} ta="right" fz="xs" w={'100'}>SubTotal</Table.Th>
+                                                <Table.Th ta="right" fz="xs" w={'100'}>1231231</Table.Th>
+                                            </Table.Tr>
+                                            <Table.Tr>
+                                                <Table.Th colspan={'5'} ta="right" fz="xs" w={'100'}>Discount</Table.Th>
+                                                <Table.Th ta="right" fz="xs" w={'100'}>345</Table.Th>
+                                            </Table.Tr>
+                                            <Table.Tr>
+                                                <Table.Th colspan={'5'} ta="right" fz="xs" w={'100'}>Total</Table.Th>
+                                                <Table.Th ta="right" fz="xs" w={'100'}>324234</Table.Th>
+                                            </Table.Tr>
+                                            <Table.Tr>
+                                                <Table.Th colspan={'5'} ta="right" fz="xs" w={'100'}>Receive</Table.Th>
+                                                <Table.Th ta="right" fz="xs" w={'100'}>324234</Table.Th>
+                                            </Table.Tr>
+                                        </Table.Tfoot>
+                                    </Table>
+                                </Box>
+                                </ScrollArea>
+                                <Box>
+                                    <Button.Group fullWidth>
+                                        <Button fullWidth variant="filled" leftSection={<IconPrinter size={14}/>}
+                                                color="green.5">Print</Button>
+                                        <Button fullWidth variant="filled" leftSection={<IconReceipt size={14}/>}
+                                                color="red.5">Pos</Button>
+                                        <Button fullWidth variant="filled" leftSection={<IconEdit size={14}/>}
+                                                color="cyan.5">Edit</Button>
+                                    </Button.Group>
+                                </Box>
                             </Box>
+
                         </Box>
                     </Grid.Col>
                     <Grid.Col span={1} >

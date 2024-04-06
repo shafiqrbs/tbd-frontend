@@ -107,8 +107,6 @@ const getSpotlightDropdownData = () => {
             ],
         },
     ];
-
     return actions;
 };
-
 export default getSpotlightDropdownData;

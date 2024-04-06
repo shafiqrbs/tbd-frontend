@@ -50,6 +50,7 @@ import flagGB from "../../assets/images/flags/gb.svg";
 import {useTranslation} from "react-i18next";
 import {useNavigate} from "react-router-dom";
 import getSpotlightDropdownData from "../global-hook/spotlight-dropdown/getSpotlightDropdownData.js";
+import getConfigData from "../global-hook/config-data/getConfigData.js";
 
 const mockdata = [
     {
@@ -105,6 +106,8 @@ export default function Header({
     const [languageSelected, setLanguageSelected] = useState(
         languages.find((item) => item.value === i18n.language)
     );
+    const configData = getConfigData()
+    console.log(configData.domain);
 
     function logout() {
         localStorage.clear();
@@ -131,20 +134,25 @@ export default function Header({
             </Group>
         </UnstyledButton>
     ));
-
     return (
         <>
             <Box bg={'white'} h={`100%`} pos={`relative`}>
-                <Group justify="space-between" h="100%" px={`xs`} mr={'4'}>
+                <Group justify="space-between" h="100%" pl={'md'} px={`xs`} mr={'4'}>
                     <Group>
-                        <Tooltip
+                        <Text>
+                            {configData && configData.domain ? configData.domain.name :'Store Name'}
+                        </Text>
+                        {/*<Tooltip
                             label={navbarOpened ? t("collapse_navbar") : t("expand_navbar")}
-                            bg={`green`}
+                            bg={`red.4`}
+                            position="right-center"
+                            color="red"
+                            withArrow
                         >
                             <Burger onClick={toggleNavbar} size="sm"/>
-                        </Tooltip>
-                        <Image src={Logo} w={140}/>
-                        <HoverCard
+                        </Tooltip>*/}
+
+                      {/*  <HoverCard
                             width={600}
                             position="bottom"
                             radius="md"
@@ -167,7 +175,6 @@ export default function Header({
                                     />
                                 </Center>
                             </HoverCard.Target>
-
                             <HoverCard.Dropdown style={{overflow: "hidden"}} mt={"xs"}>
                                 <Group justify="space-between" px="md">
                                     <Text fw={500}>Features</Text>
@@ -194,24 +201,25 @@ export default function Header({
                                     </Group>
                                 </div>
                             </HoverCard.Dropdown>
-                        </HoverCard>
+                        </HoverCard>*/}
                     </Group>
                     <Button
                         leftSection={
                             <>
-                                <IconSearch size={16} color="rgba(158, 158, 158, 0.3)"/>
-                                <Text fz={`xs`} c={`gray.3`}>{t("search")}</Text>
+                                <IconSearch size={16} c={'red.5'}/>
+                                <Text fz={`xs`} pl={'xs'} c={'red.5'}>{t("SearchMenu")}</Text>
                             </>
                         }
                         variant="transparent"
                         rightSection={
                             <>
-                                <Kbd>Ctrl </Kbd> + <Kbd> K</Kbd>
+                                <Kbd h={'24'} c={'red.5'} fz={'12'}>Ctrl </Kbd> + <Kbd c={'red.5'} h={'24'} fz={'12'}> K</Kbd>
                             </>
                         }
-                        w={`50%`}
+                        w={`40%`}
+                        h={'32'}
                         justify="space-between"
-                        style={{border: `1px solid var(--mantine-color-gray-2)`}}
+                        style={{border: `2px solid var(--mantine-color-red-2)`}}
                         color={`gray`}
                         onClick={spotlight.open}
                     />
@@ -222,6 +230,7 @@ export default function Header({
                             radius="md"
                             width="target"
                             withinPortal
+                            withArrow arrowPosition="center"
                         >
                             <Menu.Target>
                                 <UnstyledButton
@@ -232,8 +241,8 @@ export default function Header({
                                     <Group gap="xs">
                                         <Image
                                             src={languageSelected?.flag}
-                                            width={22}
-                                            height={22}
+                                            width={18}
+                                            height={18}
                                         />
                                         <span className={LanguagePickerStyle.label}>
                       {languageSelected?.label}
@@ -251,7 +260,7 @@ export default function Header({
                                     <Menu.Item
                                         p={4}
                                         leftSection={
-                                            <Image src={item.flag} width={16} height={16}/>
+                                            <Image src={item.flag} width={18} height={18}/>
                                         }
                                         onClick={() => {
                                             setLanguageSelected(item);
@@ -266,45 +275,22 @@ export default function Header({
                         </Menu>
                         <Tooltip
                             label={fullscreen ? t("NormalScreen") : t("Fullscreen")}
-                            bg={`indigo.6`} withArrow
+                            bg={`red.5`} withArrow
                             position={"left"}
                         >
-                            <ActionIcon onClick={toggle} variant="subtle" color={`indigo.4`}>
+                            <ActionIcon onClick={toggle} variant="subtle" color={`red.4`}>
                                 {fullscreen ? (
-                                    <IconWindowMinimize size={28}/>
+                                    <IconWindowMinimize size={24}/>
                                 ) : (
-                                    <IconWindowMaximize size={28}/>
+                                    <IconWindowMaximize size={24}/>
                                 )}
                             </ActionIcon>
                         </Tooltip>
-                        <Tooltip label={t("Logout")} bg={`indigo.6`}  withArrow position={"left"}>
-                            <ActionIcon onClick={() => logout()} variant="subtle" color={`gray.8`}>
-                                <IconLogout size={28}/>
+                        <Tooltip label={t("Logout")} bg={`red.5`}  withArrow position={"left"}>
+                            <ActionIcon onClick={() => logout()} variant="subtle" color={`gray.6`}>
+                                <IconLogout size={24}/>
                             </ActionIcon>
                         </Tooltip>
-                        {/*<Tooltip
-                            label={
-                                rightSidebarOpened
-                                    ? t("CollapseRightSidebar")
-                                    : t("ExpandRightSidebar")
-                            }
-                            bg={`indigo.6`}
-                            withArrow
-                            position={"left"}
-                        >
-                            <ActionIcon
-                                onClick={toggleRightSideBar}
-                                variant="transparent"
-                                color={'indigo'}
-                                radius={`xs`}
-                            >
-                                {rightSidebarOpened ? (
-                                    <IconTableShortcut size={28} />
-                                ) : (
-                                    <IconTableShortcut size={28} />
-                                )}
-                            </ActionIcon>
-                        </Tooltip>*/}
                     </Group>
                 </Group>
                 <Spotlight
@@ -313,8 +299,8 @@ export default function Header({
                     nothingFound={t("NothingFound")}
                     highlightQuery
                     searchProps={{
-                        leftSection: <IconSearch style={{width: rem(20),height: rem(20)}} stroke={1.5}/>,
-                        placeholder: "Search...",
+                        leftSection: <IconSearch size={'xs'} style={{width: rem(20),height: rem(20)}} stroke={1.5}/>,
+                        placeholder:t("SearchMenu"),
                     }}
                 />
                 <Notification

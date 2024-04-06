@@ -36,6 +36,23 @@
     border: 1px solid rgba(226, 194, 194, 0.39);
 }
 
+.m-5a3e5f7b::before {
+    padding-left: 0 !important;
+    height: 32px;
+    border-bottom: 1px solid #bab4b4;
+    margin-bottom: 8px;
+    color: rgba(165, 153, 153, 0.42) !important;
+    font-size: 16px !important;
+    padding-bottom: 8px !important;
+}
+
+.m-60c222c7{
+    overflow: hidden!important;
+}
+.m-6e463822{
+    overflow: scroll!important;
+}
+
 .textColor{
     color:#656565;
 }
@@ -66,7 +83,7 @@ input:focus {
     border-radius:4px;
 }
 .mantine-AppShell-main{
-    padding-top: 60px !important;
+    padding-top: 42px !important;
     padding-bottom: 0 !important;
     background: #f0f1f9;
 }

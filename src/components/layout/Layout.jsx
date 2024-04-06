@@ -43,20 +43,20 @@ function Layout() {
         };
     }, []);
 
-    const headerHeight = 60;
-    const footerHeight = 42;
-    const mainAreaHeight = height - (headerHeight + footerHeight + 20); //default padding 20
+    const headerHeight = 42;
+    const footerHeight = 36;
+    const mainAreaHeight = height - (headerHeight + footerHeight + 16); //default padding 20
 
     return (
         <>
             <AppShell
                 header={{height: headerHeight}}
                 footer={{height: footerHeight}}
-                navbar={{
+                /*navbar={{
                     width: 200,
                     breakpoint: "sm",
                     collapsed: {mobile: !mobileOpened, desktop: !navbarOpened},
-                }}
+                }}*/
                 /*aside={{
                     width: 88,
                     breakpoint: "sm",
@@ -74,10 +74,11 @@ function Layout() {
                     />
                 </AppShell.Header>
 
+               {/*
                 <AppShell.Navbar p="xs">
                     <Navbar/>
                 </AppShell.Navbar>
-
+                */}
                 <AppShell.Main>
                     <Outlet context={{isOnline, mainAreaHeight}}/>
                 </AppShell.Main>
