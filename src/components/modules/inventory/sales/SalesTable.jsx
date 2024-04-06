@@ -1,21 +1,18 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {useOutletContext} from "react-router-dom";
 import tableCss from '../../../../assets/css/Table.module.css';
 import {
     Group,
     Box,
-    ActionIcon, Text, Grid, Stack, TextInput, Button, ScrollArea,Table
+    ActionIcon, Text, Grid, Stack, Button, ScrollArea, Table, Loader
 } from "@mantine/core";
 import {useTranslation} from "react-i18next";
 import {
     IconEye,
     IconEdit,
     IconTrash,
-    IconSum,
-    IconX,
     IconPrinter,
     IconReceipt,
-    IconDeviceFloppy, IconStackPush
 } from "@tabler/icons-react";
 import {DataTable} from 'mantine-datatable';
 import {useDispatch, useSelector} from "react-redux";
@@ -26,20 +23,14 @@ import {
     setInsertType,
     showEntityData
 } from "../../../../store/inventory/crudSlice.js";
-import KeywordSearch from "../../filter/KeywordSearch";
 import {modals} from "@mantine/modals";
 import {deleteEntityData} from "../../../../store/core/crudSlice";
-import SalesViewModel from "./SalesViewModel.jsx";
 import ShortcutTable from "../../shortcut/ShortcutTable";
 import KeywordDateRangeSearch from "../../filter/KeywordDateRangeSearch";
-
-const elements = [
-    { index: 1, name: 'Monthly Software Service Charge-December (2023)', quantity: 10, price: 120, sales_price: 100, sub_total: '1000.00'},
-    { index: 2, name: 'Mokhles Haski Rice - 25 Kg', quantity: 10, price: 120, sales_price: 100, sub_total: '1000.00'},
-];
+import {ReactToPrint} from "react-to-print";
 
 function SalesTable() {
-
+    const printRef = useRef()
     const dispatch = useDispatch();
     const {t, i18n} = useTranslation();
     const {isOnline, mainAreaHeight} = useOutletContext();
@@ -48,19 +39,21 @@ function SalesTable() {
 
     const perPage = 50;
     const [page,setPage] = useState(1);
-    const [vendorViewModel,setVendorViewModel] = useState(false)
 
     const fetching = useSelector((state) => state.crudSlice.fetching)
     const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword)
     const indexData = useSelector((state) => state.crudSlice.indexEntityData)
-    const showEntityData = useSelector((state) => state.inventoryCrudSlice.showEntityData)
-
     const [salesViewData,setSalesViewData] =useState({})
 
-    const rows = elements.map((element) => (
+    useEffect(()=>{
+        setSalesViewData(indexData.data && indexData.data[0] && indexData.data[0])
+    },[indexData.data])
+
+
+    const rows = salesViewData && salesViewData.sales_items && salesViewData.sales_items.map((element,index) => (
         <Table.Tr key={element.name}>
-            <Table.Td fz="xs" width={'20'}>{element.index}</Table.Td>
-            <Table.Td ta="left" fz="xs" width={'300'}>{element.name}</Table.Td>
+            <Table.Td fz="xs" width={'20'}>{index + 1}</Table.Td>
+            <Table.Td ta="left" fz="xs" width={'300'}>{element.item_name}</Table.Td>
             <Table.Td ta="center" fz="xs" width={'60'}>{element.quantity}</Table.Td>
             <Table.Td ta="right" fz="xs" width={'80'}>{element.price}</Table.Td>
             <Table.Td ta="right" fz="xs" width={'100'}>{element.sales_price}</Table.Td>
@@ -119,6 +112,7 @@ function SalesTable() {
                                             textAlignment: 'right',
                                             render: (item) => (indexData.data.indexOf(item) + 1)
                                         },
+                                        { accessor: 'id',  title: "ID" },
                                         { accessor: 'created',  title: "Created" },
                                         { accessor: 'invoice',  title: "Invoice" },
                                         { accessor: 'customerName',  title: "Customer" },
@@ -200,9 +194,9 @@ function SalesTable() {
                     </Grid.Col>
 
                     <Grid.Col span={8} >
-                        <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
+                        <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} ref={printRef}>
                             <Box h={'36'} pl={`xs`} fz={'sm'} fw={'600'} pr={8} pt={'6'} mb={'4'} className={'boxBackground textColor borderRadiusAll'} >
-                                Invoice: {salesViewData && salesViewData.invoice && salesViewData.invoice}
+                                {t('Invoice')}: {salesViewData && salesViewData.invoice && salesViewData.invoice}
                             </Box>
                             <Box className={'borderRadiusAll'}  fz={'sm'}  >
                                 <Box pl={`xs`} fz={'sm'} fw={'600'} pr={'xs'}  pt={'6'} pb={'xs'} className={'boxBackground textColor'} >
@@ -210,41 +204,77 @@ function SalesTable() {
                                         <Grid.Col span={'6'}>
                                             <Grid columns={15} gutter={{base:4}}>
                                                 <Grid.Col span={6} ><Text fz="sm" lh="xs">Customer</Text></Grid.Col>
-                                                <Grid.Col span={9} ><Text fz="sm" lh="xs">021412414 sadas asdasd asdasd</Text></Grid.Col>
+                                                <Grid.Col span={9} >
+                                                    <Text fz="sm" lh="xs">
+                                                        {salesViewData && salesViewData.customerName && salesViewData.customerName}
+                                                    </Text>
+                                                </Grid.Col>
                                             </Grid>
                                             <Grid columns={15} gutter={{base:4}}>
                                                 <Grid.Col span={6} ><Text fz="sm" lh="xs">Mobile</Text></Grid.Col>
-                                                <Grid.Col span={9} ><Text fz="sm" lh="xs">021412414</Text></Grid.Col>
+                                                <Grid.Col span={9} >
+                                                    <Text fz="sm" lh="xs">
+                                                        {salesViewData && salesViewData.customerMobile && salesViewData.customerMobile}
+                                                    </Text>
+                                                </Grid.Col>
                                             </Grid>
                                             <Grid columns={15} gutter={{base:4}}>
                                                 <Grid.Col span={6} ><Text fz="sm" lh="xs">Address</Text></Grid.Col>
-                                                <Grid.Col span={9} ><Text fz="sm" lh="xs">021412414</Text></Grid.Col>
+                                                <Grid.Col span={9} >
+                                                    <Text fz="sm" lh="xs">
+                                                        {salesViewData && salesViewData.customer_address && salesViewData.customer_address}
+                                                    </Text>
+                                                </Grid.Col>
                                             </Grid>
                                             <Grid columns={15} gutter={{base:4}}>
                                                 <Grid.Col span={6} ><Text fz="sm" lh="xs">Balance</Text></Grid.Col>
-                                                <Grid.Col span={9} ><Text fz="sm" lh="xs">021412414</Text></Grid.Col>
+                                                <Grid.Col span={9} >
+                                                    <Text fz="sm" lh="xs">
+                                                        {salesViewData && salesViewData.balance ? Number(salesViewData.balance).toFixed(2) : 0.00}
+                                                    </Text>
+                                                </Grid.Col>
                                             </Grid>
                                         </Grid.Col>
                                         <Grid.Col span={'6'}>
                                             <Grid columns={15} gutter={{base:4}}>
                                                 <Grid.Col span={6} ><Text fz="sm" lh="xs">Created</Text></Grid.Col>
-                                                <Grid.Col span={9} ><Text fz="sm" lh="xs">12-04-24</Text></Grid.Col>
+                                                <Grid.Col span={9} >
+                                                    <Text fz="sm" lh="xs">
+                                                        {salesViewData && salesViewData.created && salesViewData.created}
+                                                    </Text>
+                                                </Grid.Col>
                                             </Grid>
                                             <Grid columns={15} gutter={{base:4}}>
                                                 <Grid.Col span={6} ><Text fz="sm" lh="xs">Created By</Text></Grid.Col>
-                                                <Grid.Col span={9} ><Text fz="sm" lh="xs">021412414</Text></Grid.Col>
+                                                <Grid.Col span={9} >
+                                                    <Text fz="sm" lh="xs">
+                                                        {salesViewData && salesViewData.createdByName && salesViewData.createdByName}
+                                                    </Text>
+                                                </Grid.Col>
                                             </Grid>
                                             <Grid columns={15} gutter={{base:4}}>
                                                 <Grid.Col span={6} ><Text fz="sm" lh="xs">Sales By</Text></Grid.Col>
-                                                <Grid.Col span={9} ><Text fz="sm" lh="xs">021412414</Text></Grid.Col>
+                                                <Grid.Col span={9} >
+                                                    <Text fz="sm" lh="xs">
+                                                        {salesViewData && salesViewData.salesByUser && salesViewData.salesByUser}
+                                                    </Text>
+                                                </Grid.Col>
                                             </Grid>
                                             <Grid columns={15} gutter={{base:4}}>
                                                 <Grid.Col span={6} ><Text fz="sm" lh="xs">Mode</Text></Grid.Col>
-                                                <Grid.Col span={9} ><Text fz="sm" lh="xs">021412414</Text></Grid.Col>
+                                                <Grid.Col span={9} >
+                                                    <Text fz="sm" lh="xs">
+                                                        {salesViewData && salesViewData.mode_name && salesViewData.mode_name}
+                                                    </Text>
+                                                </Grid.Col>
                                             </Grid>
                                             <Grid columns={15} gutter={{base:4}}>
                                                 <Grid.Col span={6} ><Text fz="sm" lh="xs">Process</Text></Grid.Col>
-                                                <Grid.Col span={9} ><Text fz="sm" lh="xs">021412414</Text></Grid.Col>
+                                                <Grid.Col span={9} >
+                                                    <Text fz="sm" lh="xs">
+                                                        {salesViewData && salesViewData.process && salesViewData.process}
+                                                    </Text>
+                                                </Grid.Col>
                                             </Grid>
                                         </Grid.Col>
                                     </Grid>
@@ -254,48 +284,79 @@ function SalesTable() {
                                     <Table stickyHeader >
                                         <Table.Thead>
                                             <Table.Tr>
-                                                <Table.Th fz="xs" w={'20'}>S/N</Table.Th>
-                                                <Table.Th fz="xs" ta="left" w={'300'}>Name</Table.Th>
-                                                <Table.Th fz="xs" ta="center"  w={'60'}>QTY</Table.Th>
-                                                <Table.Th ta="right" fz="xs" w={'80'}>Price</Table.Th>
-                                                <Table.Th ta="right" fz="xs" w={'100'}>SalePrice</Table.Th>
-                                                <Table.Th ta="right" fz="xs" w={'100'}>SubTotal</Table.Th>
+                                                <Table.Th fz="xs" w={'20'}>{t('S/N')}</Table.Th>
+                                                <Table.Th fz="xs" ta="left" w={'300'}>{t('Name')}</Table.Th>
+                                                <Table.Th fz="xs" ta="center"  w={'60'}>{t('QTY')}</Table.Th>
+                                                <Table.Th ta="right" fz="xs" w={'80'}>{t('Price')}</Table.Th>
+                                                <Table.Th ta="right" fz="xs" w={'100'}>{t('SalesPrice')}</Table.Th>
+                                                <Table.Th ta="right" fz="xs" w={'100'}>{t('SubTotal')}</Table.Th>
                                             </Table.Tr>
                                         </Table.Thead>
                                         <Table.Tbody>{rows}</Table.Tbody>
                                         <Table.Tfoot>
                                              <Table.Tr>
-                                                <Table.Th colspan={'5'} ta="right" fz="xs" w={'100'}>SubTotal</Table.Th>
-                                                <Table.Th ta="right" fz="xs" w={'100'}>1231231</Table.Th>
+                                                <Table.Th colspan={'5'} ta="right" fz="xs" w={'100'}>{t('SubTotal')}</Table.Th>
+                                                <Table.Th ta="right" fz="xs" w={'100'}>
+                                                    {salesViewData && salesViewData.sub_total && Number(salesViewData.sub_total).toFixed(2)}
+                                                </Table.Th>
                                             </Table.Tr>
                                             <Table.Tr>
-                                                <Table.Th colspan={'5'} ta="right" fz="xs" w={'100'}>Discount</Table.Th>
-                                                <Table.Th ta="right" fz="xs" w={'100'}>345</Table.Th>
+                                                <Table.Th colspan={'5'} ta="right" fz="xs" w={'100'}>{t('Discount')}</Table.Th>
+                                                <Table.Th ta="right" fz="xs" w={'100'}>
+                                                    {salesViewData && salesViewData.discount && Number(salesViewData.discount).toFixed(2)}
+                                                </Table.Th>
                                             </Table.Tr>
                                             <Table.Tr>
-                                                <Table.Th colspan={'5'} ta="right" fz="xs" w={'100'}>Total</Table.Th>
-                                                <Table.Th ta="right" fz="xs" w={'100'}>324234</Table.Th>
+                                                <Table.Th colspan={'5'} ta="right" fz="xs" w={'100'}>{t('Total')}</Table.Th>
+                                                <Table.Th ta="right" fz="xs" w={'100'}>
+                                                    {salesViewData && salesViewData.total && Number(salesViewData.total).toFixed(2)}
+                                                </Table.Th>
                                             </Table.Tr>
                                             <Table.Tr>
-                                                <Table.Th colspan={'5'} ta="right" fz="xs" w={'100'}>Receive</Table.Th>
-                                                <Table.Th ta="right" fz="xs" w={'100'}>324234</Table.Th>
+                                                <Table.Th colspan={'5'} ta="right" fz="xs" w={'100'}>{t('Receive')}</Table.Th>
+                                                <Table.Th ta="right" fz="xs" w={'100'}>
+                                                    {salesViewData && salesViewData.payment && Number(salesViewData.payment).toFixed(2)}
+                                                </Table.Th>
                                             </Table.Tr>
                                         </Table.Tfoot>
                                     </Table>
                                 </Box>
                                 </ScrollArea>
-                                <Box>
-                                    <Button.Group fullWidth>
-                                        <Button fullWidth variant="filled" leftSection={<IconPrinter size={14}/>}
-                                                color="green.5">Print</Button>
-                                        <Button fullWidth variant="filled" leftSection={<IconReceipt size={14}/>}
-                                                color="red.5">Pos</Button>
-                                        <Button fullWidth variant="filled" leftSection={<IconEdit size={14}/>}
-                                                color="cyan.5">Edit</Button>
-                                    </Button.Group>
-                                </Box>
                             </Box>
+                        </Box>
+                        <Box>
+                            <Button.Group fullWidth>
 
+                                <Button
+                                    fullWidth
+                                    variant="filled"
+                                    leftSection={<IconPrinter size={14}/>}
+                                    color="green.5"
+                                >
+                                    <ReactToPrint
+                                        trigger={() => {
+                                            return <a href="#">Print</a>;
+                                        }}
+                                        content={() => printRef.current}
+                                    />
+                                </Button>
+                                <Button
+                                    fullWidth
+                                    variant="filled"
+                                    leftSection={<IconReceipt size={14}/>}
+                                    color="red.5"
+                                >
+                                    Pos
+                                </Button>
+                                <Button
+                                    fullWidth
+                                    variant="filled"
+                                    leftSection={<IconEdit size={14}/>}
+                                    color="cyan.5"
+                                >
+                                    Edit
+                                </Button>
+                            </Button.Group>
                         </Box>
                     </Grid.Col>
                     <Grid.Col span={1} >

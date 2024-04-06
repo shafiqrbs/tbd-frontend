@@ -31,6 +31,7 @@ const utilitySlice = createSlice({
         productDropdownData : [],
         accountDropdownData : [],
         authorizedDropdownData : [],
+        businessModelDropdownData : [],
         productUnitDropdown : [],
     },
     reducers : {
@@ -50,6 +51,9 @@ const utilitySlice = createSlice({
             }
             if (action.payload.type === 'authorised-type'){
                 state.authorizedDropdownData = action.payload.data.data
+            }
+            if (action.payload.type === 'business-model'){
+                state.businessModelDropdownData = action.payload.data.data
             }
         })
 

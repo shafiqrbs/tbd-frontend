@@ -107,7 +107,7 @@ export default function Header({
         languages.find((item) => item.value === i18n.language)
     );
     const configData = getConfigData()
-    console.log(configData.domain);
+    console.log(configData);
 
     function logout() {
         localStorage.clear();
@@ -140,7 +140,7 @@ export default function Header({
                 <Group justify="space-between" h="100%" pl={'md'} px={`xs`} mr={'4'}>
                     <Group>
                         <Text>
-                            {configData && configData.domain ? configData.domain.name :'Store Name'}
+                            {configData && configData.domain ? configData.domain.name : 'Store Name'}
                         </Text>
                         {/*<Tooltip
                             label={navbarOpened ? t("collapse_navbar") : t("expand_navbar")}
@@ -152,7 +152,7 @@ export default function Header({
                             <Burger onClick={toggleNavbar} size="sm"/>
                         </Tooltip>*/}
 
-                      {/*  <HoverCard
+                        {/*  <HoverCard
                             width={600}
                             position="bottom"
                             radius="md"
@@ -213,7 +213,8 @@ export default function Header({
                         variant="transparent"
                         rightSection={
                             <>
-                                <Kbd h={'24'} c={'red.5'} fz={'12'}>Ctrl </Kbd> + <Kbd c={'red.5'} h={'24'} fz={'12'}> K</Kbd>
+                                <Kbd h={'24'} c={'red.5'} fz={'12'}>Ctrl </Kbd> + <Kbd c={'red.5'} h={'24'}
+                                                                                       fz={'12'}> K</Kbd>
                             </>
                         }
                         w={`40%`}
@@ -255,7 +256,7 @@ export default function Header({
                                     />
                                 </UnstyledButton>
                             </Menu.Target>
-                            <Menu.Dropdown  p={4} className={LanguagePickerStyle.dropdown}>
+                            <Menu.Dropdown p={4} className={LanguagePickerStyle.dropdown}>
                                 {languages.map((item) => (
                                     <Menu.Item
                                         p={4}
@@ -286,7 +287,7 @@ export default function Header({
                                 )}
                             </ActionIcon>
                         </Tooltip>
-                        <Tooltip label={t("Logout")} bg={`red.5`}  withArrow position={"left"}>
+                        <Tooltip label={t("Logout")} bg={`red.5`} withArrow position={"left"}>
                             <ActionIcon onClick={() => logout()} variant="subtle" color={`gray.6`}>
                                 <IconLogout size={24}/>
                             </ActionIcon>
@@ -299,8 +300,8 @@ export default function Header({
                     nothingFound={t("NothingFound")}
                     highlightQuery
                     searchProps={{
-                        leftSection: <IconSearch size={'xs'} style={{width: rem(20),height: rem(20)}} stroke={1.5}/>,
-                        placeholder:t("SearchMenu"),
+                        leftSection: <IconSearch size={'xs'} style={{width: rem(20), height: rem(20)}} stroke={1.5}/>,
+                        placeholder: t("SearchMenu"),
                     }}
                 />
                 <Notification

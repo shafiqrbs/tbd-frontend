@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {useNavigate, useOutletContext} from "react-router-dom";
+import {useOutletContext} from "react-router-dom";
 import {
     Button,
     rem, Flex,Switch,
@@ -12,7 +12,7 @@ import {
 } from "@tabler/icons-react";
 import { useHotkeys} from "@mantine/hooks";
 import {useDispatch, useSelector} from "react-redux";
-import {hasLength, isNotEmpty, useForm} from "@mantine/form";
+import {isNotEmpty, useForm} from "@mantine/form";
 import {modals} from "@mantine/modals";
 import {notifications} from "@mantine/notifications";
 
@@ -20,19 +20,14 @@ import Shortcut from "../../shortcut/Shortcut";
 import InputForm from "../../../form-builders/InputForm";
 import SelectForm from "../../../form-builders/SelectForm";
 import TextAreaForm from "../../../form-builders/TextAreaForm";
-import SwitchForm from "../../../form-builders/SwitchForm.jsx";
-import ImageUploadDropzone from "../../../form-builders/ImageUploadDropzone.jsx";
-import {getSettingDropdown} from "../../../../store/utility/utilitySlice.js";
 import {
-    setEntityNewData,
-    setFetching,
     setFormLoading,
     setValidationData,
-    storeEntityData,
     getShowEntityData,
     updateEntityData,
 
 } from "../../../../store/inventory/crudSlice.js";
+import getSettingBusinessModelDropdownData from "../../../global-hook/dropdown/getSettingBusinessModelDropdownData.js";
 
 function ConfigurationForm() {
     const {t, i18n} = useTranslation();
@@ -43,7 +38,6 @@ function ConfigurationForm() {
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
     const [businessModelData, setBusinessModelData] = useState(null);
 
-    const businessModelDropdownData = useSelector((state) => state.utilityUtilitySlice.settingDropdown)
     const showEntityData = useSelector((state) => state.inventoryCrudSlice.showEntityData)
 
     const validationMessage = useSelector((state) => state.inventoryCrudSlice.validationMessage)
@@ -52,19 +46,10 @@ function ConfigurationForm() {
     const [setFormData, setFormDataForUpdate] = useState(false);
     const [formLoad, setFormLoad] = useState(true);
 
-    let businessModelDropdown = businessModelDropdownData && businessModelDropdownData.length > 0 ?
-        businessModelDropdownData.map((type, index) => {
-            return ({'label': type.name, 'value': String(type.id)})
-        }) : []
+    let businessModelDropdown = getSettingBusinessModelDropdownData();
+
 
     useEffect(() => {
-        const value = {
-            url : 'utility/select/setting',
-            param : {
-                'dropdown-type' : 'business-model'
-            }
-        }
-        dispatch(getSettingDropdown(value))
         dispatch(getShowEntityData('inventory/config'))
     }, []);
 
