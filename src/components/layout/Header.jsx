@@ -18,7 +18,7 @@ import {
     Tooltip,
     Kbd,
     Menu,
-    Notification,
+    Notification, NavLink,
 } from "@mantine/core";
 import Logo from "../../assets/images/tbd-logo.png";
 
@@ -139,9 +139,11 @@ export default function Header({
             <Box bg={'white'} h={`100%`} pos={`relative`}>
                 <Group justify="space-between" h="100%" pl={'md'} px={`xs`} mr={'4'}>
                     <Group>
-                        <Text>
-                            {configData && configData.domain ? configData.domain.name : 'Store Name'}
-                        </Text>
+                        <NavLink
+                            href="/"
+                            label={configData && configData.domain ? configData.domain.name : 'Store Name'}
+                            onClick={(e)=>{navigate('/')}}
+                        />
                         {/*<Tooltip
                             label={navbarOpened ? t("collapse_navbar") : t("expand_navbar")}
                             bg={`red.4`}

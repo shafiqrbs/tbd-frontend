@@ -1,10 +1,15 @@
 import React, {useEffect, useState} from "react";
-import {Navigate, Outlet, useLocation} from "react-router-dom";
+import {Navigate, Outlet, useLocation,useOutletContext} from "react-router-dom";
 import Header from "./Header";
-import {AppShell} from "@mantine/core";
+import {AppShell, Grid} from "@mantine/core";
 import {useDisclosure, useViewportSize} from "@mantine/hooks";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
+import MainDashboard from "../modules/dashboard/MainDashboard";
+import ProductForm from "../modules/inventory/product/ProductForm";
+import ProductUpdateForm from "../modules/inventory/product/ProductUpdateForm";
+
+console.log(window.location.href);
 
 function Layout() {
     const [mobileOpened, {toggle: toggleMobile}] = useDisclosure(false);
@@ -15,6 +20,9 @@ function Layout() {
 
     const user = localStorage.getItem("user");
     const location = useLocation();
+    const paramPath = window.location.pathname;
+
+    console.log(paramPath);
 
     if(!user){
         return <Navigate replace to="/login"/>;
@@ -34,6 +42,7 @@ function Layout() {
         /*if(location.pathname === '/'){
             return <Navigate replace to="/dashboard"/>;
         }*/
+
     }
 
     useEffect(() => {
@@ -73,21 +82,23 @@ function Layout() {
                         toggleRightSideBar={toggleRightSideBar}
                     />
                 </AppShell.Header>
-
                {/*
                 <AppShell.Navbar p="xs">
                     <Navbar/>
                 </AppShell.Navbar>
                 */}
                 <AppShell.Main>
-                    <Outlet context={{isOnline, mainAreaHeight}}/>
+                    {
+                        paramPath !== '/' ?
+                            <Outlet context={{isOnline, mainAreaHeight}}/>
+                            :
+                            <MainDashboard/>
+                    }
                 </AppShell.Main>
-
                 {/*<AppShell.Shortcut p="xs">
                     <Shortcut/>
                 </AppShell.Shortcut>*/}
-
-                <AppShell.Footer p="5">
+                <AppShell.Footer>
                     <Footer/>
                 </AppShell.Footer>
             </AppShell>

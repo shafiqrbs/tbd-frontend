@@ -19,6 +19,7 @@ import SampleIndex from "./components/modules/sample-module/sample-layout/Sample
 import DomainIndex from "./components/modules/domain/domain/DomainIndex";
 import TransactionModeIndex from "./components/modules/accounting/transaction-mode/TransactionModeIndex.jsx";
 import SalesInvoice from "./components/modules/inventory/sales/SalesInvoice";
+import Sitemap from "./components/modules/dashboard/SItemap";
 function AppRoute() {
 
     return (
@@ -51,6 +52,7 @@ function AppRoute() {
                 <Route path="/accounting/">
                     <Route path="transaction-mode" element={<TransactionModeIndex/>}/>
                 </Route>
+                <Route path="sitemap" element={<Sitemap/>}/>
             </Route>
         </Routes>
 

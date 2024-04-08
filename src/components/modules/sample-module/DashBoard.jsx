@@ -34,7 +34,7 @@ function DashBoard() {
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
     const [isFormSubmit, setFormSubmit] = useState(false);
     const [formSubmitData, setFormSubmitData] = useState([]);
-    const {isOnline, mainAreaHeight} = useOutletContext();
+
 
     const form = useForm({
         initialValues: {},

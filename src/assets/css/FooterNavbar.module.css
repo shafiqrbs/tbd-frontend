@@ -4,6 +4,7 @@
     background-color: var(--mantine-color-body);
     padding-left: var(--mantine-spacing-md);
     padding-right: var(--mantine-spacing-md);
+    padding-top: 0!important;
 }
 
 .inner {
@@ -16,7 +17,7 @@
 .link {
     display: block;
     line-height: 1;
-    padding: rem(8px) rem(12px);
+    padding: rem(0px) rem(12px);
     border-radius: var(--mantine-radius-sm);
     text-decoration: none;
     color: light-dark(var(--mantine-color-gray-7), var(--mantine-color-dark-0));
