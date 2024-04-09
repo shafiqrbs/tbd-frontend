@@ -1,11 +1,11 @@
 import React from 'react'
 import {Box, Center} from '@mantine/core'
-import SampleFooterNavbar from "./SampleFooterNavbar";
+import FooterNavbar from "./FooterNavbar";
 
 function Footer() {
   return (
       <Box p={'0'}>
-        <SampleFooterNavbar/>
+        <FooterNavbar/>
       </Box>
   )
 }

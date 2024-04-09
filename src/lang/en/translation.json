@@ -75,6 +75,7 @@
   "AltTextReset": "Reset the form (alt+r)",
 
 
+
   "VendorInformation": "Manage Vendors Information",
   "VendorFormDetails": "Manage Vendors Information Details",
   "CompanyName": "Company Name",
@@ -229,6 +230,15 @@
 
   "ManageInvoice": "Manage Invoice",
   "ManagePurchase": "Manage Purchase",
+  "Sitemap": "Sitemap",
+  "SitemapContent": "Sitemap Content",
+  "SystemMasterData": "System Master Data",
+  "Dashboard": "Dashboard",
+  "InventoryandProduct": "The Inventory and Product",
+  "SalesandPurchase": "Sales & Purchase Management",
+  "AccountingandFinancial": "Accounting & Financial Management",
+  "DashboardTitle": "Sales and Inventory Management",
+  "DashboardContent": "Point of Sale (POS) software is a specialized type of software designed to streamline and manage retail transactions, inventory, and customer interactions. It serves as the central hub for processing sales, tracking inventory levels, managing customer information, and generating reports to help businesses make informed decisions. Here's a detailed description of POS software.",
 
   "WhereWePresentTheCustomerInformation": "Where we present the customer information",
   "WhereWePresentTheUserInformation": "Where we present the user information",
@@ -243,7 +253,6 @@
   "WhereWePresentThePurchaseInvoiceInformation": "Where we present the purchase invoice information",
   "WhereWePresentTheDomainInformation": "Where we present the domain information",
   "WhereWePresentTheTransactionModeInformation": "Where we present the transaction mode information",
-
 
 
   "" : ""

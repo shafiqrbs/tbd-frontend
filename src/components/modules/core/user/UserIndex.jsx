@@ -16,12 +16,9 @@ import {getLoadingProgress} from "../../../global-hook/loading-progress/getLoadi
 function UserIndex() {
     const {t, i18n} = useTranslation();
     const dispatch = useDispatch();
-
     const insertType = useSelector((state) => state.crudSlice.insertType)
     const userFilterData = useSelector((state) => state.crudSlice.userFilterData)
-
     const progress = getLoadingProgress()
-
     useEffect(() => {
         dispatch(setInsertType('create'))
         dispatch(setSearchKeyword(''))

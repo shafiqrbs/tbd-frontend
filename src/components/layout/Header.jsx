@@ -141,6 +141,7 @@ export default function Header({
                     <Group>
                         <NavLink
                             href="/"
+                            component="button"
                             label={configData && configData.domain ? configData.domain.name : 'Store Name'}
                             onClick={(e)=>{navigate('/')}}
                         />
@@ -153,7 +154,6 @@ export default function Header({
                         >
                             <Burger onClick={toggleNavbar} size="sm"/>
                         </Tooltip>*/}
-
                         {/*  <HoverCard
                             width={600}
                             position="bottom"
@@ -209,20 +209,20 @@ export default function Header({
                         leftSection={
                             <>
                                 <IconSearch size={16} c={'red.5'}/>
-                                <Text fz={`xs`} pl={'xs'} c={'red.5'}>{t("SearchMenu")}</Text>
+                                <Text fz={`xs`} pl={'xs'} c={'gray.8'}>{t("SearchMenu")}</Text>
                             </>
                         }
                         variant="transparent"
                         rightSection={
                             <>
-                                <Kbd h={'24'} c={'red.5'} fz={'12'}>Ctrl </Kbd> + <Kbd c={'red.5'} h={'24'}
+                                <Kbd h={'24'} c={'gray.8'} fz={'12'}>Ctrl </Kbd> + <Kbd c={'gray.8'} h={'24'}
                                                                                        fz={'12'}> K</Kbd>
                             </>
                         }
                         w={`40%`}
                         h={'32'}
                         justify="space-between"
-                        style={{border: `2px solid var(--mantine-color-red-2)`}}
+                        style={{border: `2px solid var(--mantine-color-gray-5)`}}
                         color={`gray`}
                         onClick={spotlight.open}
                     />
@@ -297,7 +297,6 @@ export default function Header({
                     </Group>
                 </Group>
                 <Spotlight
-
                     actions={getSpotlightDropdownData()}
                     nothingFound={t("NothingFound")}
                     highlightQuery

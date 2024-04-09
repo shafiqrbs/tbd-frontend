@@ -17,7 +17,7 @@
 .link {
     display: block;
     line-height: 1;
-    padding: rem(0px) rem(12px);
+    padding: rem(10px) rem(12px);
     border-radius: var(--mantine-radius-sm);
     text-decoration: none;
     color: light-dark(var(--mantine-color-gray-7), var(--mantine-color-dark-0));
@@ -26,6 +26,7 @@
 
 @mixin hover {
     background-color:#ffffff;
+    color: var(--mantine-color-red-5);
     text-decoration: underline;
 }
 }

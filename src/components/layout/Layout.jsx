@@ -92,8 +92,9 @@ function Layout() {
                         paramPath !== '/' ?
                             <Outlet context={{isOnline, mainAreaHeight}}/>
                             :
-                            <MainDashboard/>
+                            <MainDashboard height={mainAreaHeight} />
                     }
+
                 </AppShell.Main>
                 {/*<AppShell.Shortcut p="xs">
                     <Shortcut/>
