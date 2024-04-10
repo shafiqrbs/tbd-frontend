@@ -12,6 +12,10 @@ import {
     setVendorFilterData
 } from "../../../../store/core/crudSlice.js";
 import {getLoadingProgress} from "../../../global-hook/loading-progress/getLoadingProgress.js";
+import CoreHeaderNavbar from "../CoreHeaderNavbar";
+import CustomerTable from "../customer/CustomerTable";
+import CustomerForm from "../customer/CustomerForm";
+import CustomerUpdateForm from "../customer/CustomerUpdateForm";
 
 function UserIndex() {
     const {t, i18n} = useTranslation();
@@ -36,19 +40,20 @@ function UserIndex() {
             {progress === 100 &&
 
                 <Box>
-                    <Box pl={`md`} pr={8} pb={'8'} pt={'6'} bg={'gray.1'}>
-                        <Grid>
-                            <Grid.Col span={12}>
-                                <Title order={6} pl={'md'} fz={'18'} c={'indigo.4'}>{t('UserInformation')}</Title>
+                    <CoreHeaderNavbar
+                        pageTitle = {t('ManageCustomer')}
+                        roles = {t('roles')}
+                        allowZeroPercentage = ''
+                        currencySymbol = ''
+                    />
+                    <Box p={'8'}>
+                        <Grid columns={24} gutter={{base: 8}}>
+                            <Grid.Col span={15} >
+                                <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
+                                    <UserTable/>
+                                </Box>
                             </Grid.Col>
-                        </Grid>
-                    </Box>
-                    <Box pr={'12'} pl={'12'}>
-                        <Grid>
-                            <Grid.Col span={8}>
-                                <UserTable/>
-                            </Grid.Col>
-                            <Grid.Col span={4}>
+                            <Grid.Col span={9}>
                                 {
                                     insertType === 'create' ? <UserForm/> : <UserUpdateForm/>
                                 }

@@ -11,6 +11,7 @@
   "NothingFound": "Nothing found ...",
 
   "CreateAndSave": "Create & Save",
+  "UpdateAndSave": "Update & Save",
   "EditAndSave": "Edit & Save",
 
   "SearchButton" : "Search your desire particular",
@@ -51,12 +52,22 @@
   "CustomerGroupModel": "Customer Group Model",
   "InvalidEmail": "If exists , must be valid Email",
   "CreateNewCustomer": "Create New Customer",
-  "UpdateCustomer": "Update Customer",
   "CustomerDetailsData": "Customer Details Information",
   "CustomerId": "Customer ID",
   "Created": "Created",
   "ReferenceId": "Reference ID",
   "FilterData": "Filter Data",
+
+  "CreateUser": "Create User",
+  "UpdateUser": "Update User",
+  "ManageUser": "Manage Users",
+
+  "CreateCustomer": "Create Customer",
+  "UpdateCustomer": "Update Customer",
+
+  "CreateVendor": "Create Vendor",
+  "UpdateVendor": "Update Vendor",
+  "ManageVendor": "Manage Vendors",
 
 
   "ManageUsers": "Manage Users",

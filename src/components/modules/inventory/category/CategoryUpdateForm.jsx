@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {useOutletContext} from "react-router-dom";
 import {
-    Button, rem, Grid, Box, ScrollArea, Group, Text, Title, Flex, Stack, Tooltip, ActionIcon,
+    Button, rem, Grid, Box, ScrollArea, Group, Text, Title, Flex, Stack, Tooltip, ActionIcon, LoadingOverlay,
 } from "@mantine/core";
 import {useTranslation} from 'react-i18next';
 import {
@@ -167,7 +167,7 @@ function CategoryUpdateForm() {
 
                                                             <Flex direction={`column`} gap={0}>
                                                                 <Text fz={12} fw={400}>
-                                                                    {t("CreateAndSave")}
+                                                                    {t("UpdateAndSave")}
                                                                 </Text>
                                                             </Flex>
                                                         </Button>
@@ -178,6 +178,8 @@ function CategoryUpdateForm() {
                                 </Box>
                                 <Box pl={`xs`} pr={'xs'} mt={'xs'}  className={'borderRadiusAll'}>
                                     <ScrollArea h={height} scrollbarSize={2} type="never">
+                                        <Box>
+                                        <LoadingOverlay visible={formLoad} zIndex={1000} overlayProps={{radius: "sm", blur: 2}}/>
                                         <Box mt={'xs'}>
                                             <Grid gutter={{base:2}}>
                                                 <Grid.Col span={11} >
@@ -250,6 +252,7 @@ function CategoryUpdateForm() {
                                                 </Grid.Col>
                                                 <Grid.Col span={6} fz={'sm'} pt={'6'}>Status</Grid.Col>
                                             </Grid>
+                                        </Box>
                                         </Box>
                                     </ScrollArea>
                                 </Box>

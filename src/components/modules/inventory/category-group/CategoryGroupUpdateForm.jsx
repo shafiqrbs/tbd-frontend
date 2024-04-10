@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {useOutletContext} from "react-router-dom";
 import {
-    Button, rem, Grid, Box, ScrollArea, Group, Text, Title, Flex, Stack,
+    Button, rem, Grid, Box, ScrollArea, Group, Text, Title, Flex, Stack, LoadingOverlay,
 } from "@mantine/core";
 import {useTranslation} from 'react-i18next';
 import {
@@ -153,37 +153,40 @@ function CategoryGroupUpdateForm() {
                             </Box>
                             <Box pl={`xs`} pr={'xs'} mt={'xs'}  className={'borderRadiusAll'}>
                                 <ScrollArea h={height} scrollbarSize={2} type="never">
-                                    <Box mt={'xs'}>
-                                        <InputForm
-                                            tooltip={t('CategoryGroupNameValidateMessage')}
-                                            label={t('CategoryGroupName')}
-                                            placeholder={t('CategoryGroupName')}
-                                            required={true}
-                                            nextField={'status'}
-                                            form={form}
-                                            name={'name'}
-                                            mt={8}
-                                            id={'name'}
-                                        />
-                                    </Box>
-                                    <Box mt={'xs'}>
-                                        <Grid gutter={{base:1}}>
-                                            <Grid.Col span={2}>
-                                                <SwitchForm
-                                                    tooltip={t('Status')}
-                                                    label=''
-                                                    nextField={'CategoryFormSubmit'}
-                                                    name={'status'}
-                                                    form={form}
-                                                    color="red"
-                                                    id={'status'}
-                                                    position={'left'}
-                                                    defaultChecked={1}
-                                                />
-                                            </Grid.Col>
-                                            <Grid.Col span={6} fz={'sm'} pt={'6'}>Status</Grid.Col>
-                                        </Grid>
+                                    <Box>
+                                        <LoadingOverlay visible={formLoad} zIndex={1000} overlayProps={{radius: "sm", blur: 2}}/>
+                                        <Box mt={'xs'}>
+                                            <InputForm
+                                                tooltip={t('CategoryGroupNameValidateMessage')}
+                                                label={t('CategoryGroupName')}
+                                                placeholder={t('CategoryGroupName')}
+                                                required={true}
+                                                nextField={'status'}
+                                                form={form}
+                                                name={'name'}
+                                                mt={8}
+                                                id={'name'}
+                                            />
+                                        </Box>
+                                        <Box mt={'xs'}>
+                                            <Grid gutter={{base:1}}>
+                                                <Grid.Col span={2}>
+                                                    <SwitchForm
+                                                        tooltip={t('Status')}
+                                                        label=''
+                                                        nextField={'CategoryFormSubmit'}
+                                                        name={'status'}
+                                                        form={form}
+                                                        color="red"
+                                                        id={'status'}
+                                                        position={'left'}
+                                                        defaultChecked={1}
+                                                    />
+                                                </Grid.Col>
+                                                <Grid.Col span={6} fz={'sm'} pt={'6'}>Status</Grid.Col>
+                                            </Grid>
 
+                                        </Box>
                                     </Box>
                                 </ScrollArea>
                             </Box>

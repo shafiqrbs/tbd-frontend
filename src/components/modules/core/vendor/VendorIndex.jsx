@@ -16,6 +16,11 @@ import {
     setVendorFilterData
 } from "../../../../store/core/crudSlice.js";
 import {getLoadingProgress} from "../../../global-hook/loading-progress/getLoadingProgress.js";
+import InventoryHeaderNavbar from "../../inventory/configuraton/InventoryHeaderNavbar";
+import CategoryTable from "../../inventory/category/CategoryTable";
+import CategoryForm from "../../inventory/category/CategoryForm";
+import CategoryUpdateForm from "../../inventory/category/CategoryUpdateForm";
+import CoreHeaderNavbar from "../CoreHeaderNavbar";
 
 function VendorIndex() {
     const {t, i18n} = useTranslation();
@@ -42,27 +47,28 @@ function VendorIndex() {
             {progress !== 100 &&
                 <Progress color="red" size={"xs"} striped animated value={progress} transitionDuration={200}/>}
             {progress === 100 &&
-                <Box>
-                    <Box pl={`md`} pr={8} pb={'8'} pt={'6'} bg={'gray.1'}>
-                        <Grid>
-                            <Grid.Col span={12}>
-                                <Title order={6} pl={'md'} fz={'18'} c={'indigo.4'}>{t('VendorInformation')}</Title>
-                            </Grid.Col>
-                        </Grid>
+                <>
+                <CoreHeaderNavbar
+                pageTitle = {t('ManageVendor')}
+                roles = {t('roles')}
+                allowZeroPercentage = ''
+                currencySymbol = ''
+                />
+                <Box p={'8'}>
+                    <Grid columns={24} gutter={{base: 8}}>
+                    <Grid.Col span={15} >
+                    <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
+                    <VendorTable/>
                     </Box>
-                    <Box pr={'12'} pl={'12'}>
-                        <Grid>
-                            <Grid.Col span={8}>
-                                <VendorTable/>
-                            </Grid.Col>
-                            <Grid.Col span={4}>
-                                {
-                                    insertType === 'create' ? <VendorForm/> : <VendorUpdateForm/>
-                                }
-                            </Grid.Col>
-                        </Grid>
-                    </Box>
+                    </Grid.Col>
+                    <Grid.Col span={9}>
+                        {
+                            insertType === 'create' ? <VendorForm/> : <VendorUpdateForm/>
+                        }
+                    </Grid.Col>
+                    </Grid>
                 </Box>
+                </>
             }
         </>
     );
