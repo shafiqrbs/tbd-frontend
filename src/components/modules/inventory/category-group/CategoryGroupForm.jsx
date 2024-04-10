@@ -1,12 +1,12 @@
 import React, {useState} from "react";
 import {useOutletContext} from "react-router-dom";
 import {
-    Button, rem, Flex, Grid, Box, ScrollArea, Group, Text, Title
+    Button, rem, Flex, Grid, Box, ScrollArea, Group, Text, Title, Stack, useMantineTheme,Switch
 } from "@mantine/core";
 import {useTranslation} from 'react-i18next';
 import {
     IconCheck,
-    IconDeviceFloppy,
+    IconDeviceFloppy,IconX
 } from "@tabler/icons-react";
 import {useHotkeys} from "@mantine/hooks";
 import {useDispatch} from "react-redux";
@@ -25,9 +25,10 @@ function CategoryGroupForm() {
     const {t, i18n} = useTranslation();
     const dispatch = useDispatch();
     const {isOnline, mainAreaHeight} = useOutletContext();
-    const height = mainAreaHeight - 116; //TabList height 104
+    const height = mainAreaHeight - 130; //TabList height 104
     const [saveCreateLoading, setSaveCreateLoading] = useState(false)
-
+    const theme = useMantineTheme();
+    const [checked, setChecked] = useState(false);
     const form = useForm({
         initialValues: {
             name: '', status: true
@@ -51,116 +52,130 @@ function CategoryGroupForm() {
 
 
     return (
-        <Box bg={"white"} mt={`xs`}>
-            <form onSubmit={form.onSubmit((values) => {
-                modals.openConfirmModal({
-                    title: (
-                        <Text size="md"> {t("FormConfirmationTitle")}</Text>
-                    ),
-                    children: (
-                        <Text size="sm"> {t("FormConfirmationMessage")}</Text>
-                    ),
-                    labels: {confirm: 'Confirm', cancel: 'Cancel'},
-                    onCancel: () => console.log('Cancel'),
-                    onConfirm: () => {
-                        setSaveCreateLoading(true)
-                        const value = {
-                            url: 'inventory/category-group',
-                            data: form.values
-                        }
-                        dispatch(storeEntityData(value))
+        <>
+            <Box>
+                <form onSubmit={form.onSubmit((values) => {
+                    modals.openConfirmModal({
+                        title: (
+                            <Text size="md"> {t("FormConfirmationTitle")}</Text>
+                        ),
+                        children: (
+                            <Text size="sm"> {t("FormConfirmationMessage")}</Text>
+                        ),
+                        labels: {confirm: 'Submit', cancel: 'Cancel'}, confirmProps: { color: 'red' },
+                        onCancel: () => console.log('Cancel'),
+                        onConfirm: () => {
+                            setSaveCreateLoading(true)
+                            const value = {
+                                url: 'inventory/category-group',
+                                data: form.values
+                            }
+                            dispatch(storeEntityData(value))
 
-                        notifications.show({
-                            color: 'teal',
-                            title: t('CreateSuccessfully'),
-                            icon: <IconCheck style={{width: rem(18), height: rem(18)}}/>,
-                            loading: false,
-                            autoClose: 700,
-                            style: {backgroundColor: 'lightgray'},
-                        });
+                            notifications.show({
+                                color: 'teal',
+                                title: t('CreateSuccessfully'),
+                                icon: <IconCheck style={{width: rem(18), height: rem(18)}}/>,
+                                loading: false,
+                                autoClose: 700,
+                                style: {backgroundColor: 'lightgray'},
+                            });
 
-                        setTimeout(() => {
-                            form.reset()
-                            setSaveCreateLoading(false)
-                            dispatch(setFetching(true))
-                        }, 700)
-                    },
-                });
-            })}>
-                <Box pb={`xs`} pl={`xs`} pr={8}>
-                    <Grid>
-                        <Grid.Col span={6} h={54}>
-                            <Title order={6} mt={'xs'} pl={'6'}>{t('CategoryGroupInformation')}</Title>
-                        </Grid.Col>
-                        <Grid.Col span={6}>
-                            <Group mr={'md'} pos={`absolute`} right={0} gap={0}>
-                                <>
-                                    {!saveCreateLoading && isOnline &&
-                                        <Button
-                                            size="xs"
-                                            color={`indigo.6`}
-                                            type="submit"
-                                            mt={4}
-                                            mr={'xs'}
-                                            id="CategoryFormSubmit"
-                                            leftSection={<IconDeviceFloppy size={16}/>}
-                                        >
-                                            <Flex direction={`column`} gap={0}>
-                                                <Text fz={12} fw={400}>
-                                                    {t("CreateAndSave")}
-                                                </Text>
-                                            </Flex>
-                                        </Button>
-                                    }
-                                </>
-                            </Group>
-                        </Grid.Col>
-                    </Grid>
-                </Box>
-                <Box h={1} bg={`gray.3`}></Box>
-                <Box m={'md'}>
-                    <Grid columns={24}>
-                        <Grid.Col span={'auto'}>
-                            <ScrollArea h={height} scrollbarSize={2} type="never">
-                                <Box pb={'md'}>
+                            setTimeout(() => {
+                                form.reset()
+                                setSaveCreateLoading(false)
+                                dispatch(setFetching(true))
+                            }, 700)
+                        },
+                    });
+                })}>
+                    <Grid columns={9} gutter={{base:8}}>
+                        <Grid.Col span={8} >
+                            <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
+                                <Box bg={"white"} >
+                                    <Box pl={`xs`} pb={'xs'} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'} >
+                                        <Grid>
+                                            <Grid.Col span={6} h={54}>
+                                                <Title order={6} mt={'xs'} pl={'6'}>{t('CreateCategoryGroup')}</Title>
+                                            </Grid.Col>
+                                            <Grid.Col span={6}>
+                                                <Stack right  align="flex-end">
+                                                    <>
+                                                        {
+                                                            !saveCreateLoading && isOnline &&
+                                                            <Button
+                                                                size="xs"
+                                                                color={`red.6`}
+                                                                type="submit"
+                                                                mt={4}
+                                                                id="EntityFormSubmit"
+                                                                leftSection={<IconDeviceFloppy size={16}/>}
+                                                            >
 
-                                    <InputForm
-                                        tooltip={t('CategoryGroupNameValidateMessage')}
-                                        label={t('CategoryGroupName')}
-                                        placeholder={t('CategoryGroupName')}
-                                        required={true}
-                                        nextField={'status'}
-                                        form={form}
-                                        name={'name'}
-                                        mt={8}
-                                        id={'name'}
-                                    />
+                                                                <Flex direction={`column`} gap={0}>
+                                                                    <Text fz={12} fw={400}>
+                                                                        {t("CreateAndSave")}
+                                                                    </Text>
+                                                                </Flex>
+                                                            </Button>
+                                                        }
+                                                    </></Stack>
+                                            </Grid.Col>
+                                        </Grid>
+                                    </Box>
+                                    <Box pl={`xs`} pr={'xs'} mt={'xs'}  className={'borderRadiusAll'}>
+                                        <ScrollArea h={height} scrollbarSize={2} type="never">
+                                            <Box mt={'xs'}>
+                                                <InputForm
+                                                    tooltip={t('CategoryGroupNameValidateMessage')}
+                                                    label={t('CategoryGroupName')}
+                                                    placeholder={t('CategoryGroupName')}
+                                                    required={true}
+                                                    nextField={'status'}
+                                                    form={form}
+                                                    name={'name'}
+                                                    mt={8}
+                                                    id={'name'}
+                                                />
+                                            </Box>
+                                            <Box mt={'xs'}>
+                                                <Grid gutter={{base:1}}>
+                                                    <Grid.Col span={2}>
+                                                        <SwitchForm
+                                                            tooltip={t('Status')}
+                                                            label=''
+                                                            nextField={'CategoryFormSubmit'}
+                                                            name={'status'}
+                                                            form={form}
+                                                            color="red"
+                                                            id={'status'}
+                                                            position={'left'}
+                                                            defaultChecked={1}
+                                                        />
+                                                    </Grid.Col>
+                                                    <Grid.Col span={6} fz={'sm'} pt={'6'}>Status</Grid.Col>
+                                                </Grid>
 
-                                    <SwitchForm
-                                        tooltip={t('Status')}
-                                        label={t('Status')}
-                                        nextField={'CategoryFormSubmit'}
-                                        name={'status'}
-                                        form={form}
-                                        mt={12}
-                                        id={'status'}
-                                        position={'left'}
-                                        defaultChecked={1}
-                                    />
+                                            </Box>
+                                        </ScrollArea>
+                                    </Box>
                                 </Box>
-                            </ScrollArea>
+                            </Box>
                         </Grid.Col>
-                        <Grid.Col span={3}>
-                            <Shortcut
-                                form={form}
-                                FormSubmit={'CategoryFormSubmit'}
-                                Name={'name'}
-                            />
+                        <Grid.Col span={1} >
+                            <Box bg={'white'} className={'borderRadiusAll'} pt={'16'}>
+                                <Shortcut
+                                    form={form}
+                                    FormSubmit={'EntityFormSubmit'}
+                                    Name={'name'}
+                                    inputType="select"
+                                />
+                            </Box>
                         </Grid.Col>
                     </Grid>
-                </Box>
-            </form>
-        </Box>
+                </form>
+            </Box>
+        </>
     );
 }
 

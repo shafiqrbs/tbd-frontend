@@ -63,7 +63,7 @@ function FooterNavbar() {
         <>
             <footer className={classes.footer} mt={'xs'}>
                 <div className={classes.inner} mt={'xs'}>
-                    <Group ml={50} gap={5} className={classes.links} visibleFrom="sm">
+                    <Group gap={5} className={classes.links} visibleFrom="sm">
                         {leftItems}
                     </Group>
                     <Group>

@@ -19,8 +19,6 @@ import {
 import KeywordSearch from "../../filter/KeywordSearch";
 import {modals} from "@mantine/modals";
 import {deleteEntityData} from "../../../../store/core/crudSlice";
-import ShortcutInvoice from "../../shortcut/ShortcutInvoice";
-import Shortcut from "../../shortcut/Shortcut";
 
 
 
@@ -70,9 +68,11 @@ function DomainTable(props) {
                             textAlignment: 'right',
                             render: (item) => (indexData.data.indexOf(item) + 1)
                         },
-                        {accessor: 'id', title: "ID"},
-                        {accessor: 'name', title: "Name"},
-                        {accessor: 'mobile', title: "Mobile"},
+                        {accessor: 'name', title: t('CompanyName')},
+                        {accessor: 'mobile', title: t('Mobile')},
+                        {accessor: 'email', title: "Email"},
+                        {accessor: 'email', title: "Email"},
+                        {accessor: 'unique_code', title: "License No"},
                         {
                             accessor: "action",
                             title: "Action",

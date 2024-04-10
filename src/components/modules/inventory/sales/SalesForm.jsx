@@ -227,7 +227,7 @@ function SalesForm(props) {
                                 <Box pl={'xs'} pr={'xs'} pb={'xs'} className={'boxBackground'}>
                                     <Grid gutter={{base:1}}>
                                         <Grid.Col span={11} pt={'4'} >
-                                            <Box  pt={'6'}>
+                                            <Box pt={'6'}>
                                                 <SelectForm
                                                     tooltip={t('CustomerValidateMessage')}
                                                     label=''
@@ -331,7 +331,6 @@ function SalesForm(props) {
                                                 </Popover>
                                             </Box>
                                         </Grid.Col>
-
                                     </Grid>
                                 </Box>
                                 <Box>

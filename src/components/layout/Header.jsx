@@ -18,7 +18,7 @@ import {
     Tooltip,
     Kbd,
     Menu,
-    Notification, NavLink,
+    Notification, NavLink, Container, Flex,
 } from "@mantine/core";
 import Logo from "../../assets/images/tbd-logo.png";
 
@@ -141,6 +141,8 @@ export default function Header({
                     <Group>
                         <NavLink
                             href="/"
+                            c={'red'}
+                            fw={'800'}
                             component="button"
                             label={configData && configData.domain ? configData.domain.name : 'Store Name'}
                             onClick={(e)=>{navigate('/')}}
@@ -205,27 +207,32 @@ export default function Header({
                             </HoverCard.Dropdown>
                         </HoverCard>*/}
                     </Group>
-                    <Button
-                        leftSection={
-                            <>
-                                <IconSearch size={16} c={'red.5'}/>
-                                <Text fz={`xs`} pl={'xs'} c={'gray.8'}>{t("SearchMenu")}</Text>
-                            </>
-                        }
-                        variant="transparent"
-                        rightSection={
-                            <>
-                                <Kbd h={'24'} c={'gray.8'} fz={'12'}>Ctrl </Kbd> + <Kbd c={'gray.8'} h={'24'}
-                                                                                       fz={'12'}> K</Kbd>
-                            </>
-                        }
-                        w={`40%`}
-                        h={'32'}
-                        justify="space-between"
-                        style={{border: `2px solid var(--mantine-color-gray-5)`}}
-                        color={`gray`}
-                        onClick={spotlight.open}
-                    />
+                    <Group>
+                        <Flex direction={`column`} align={'center'} w={'600'}>
+                        <Button
+                            leftSection={
+                                <>
+                                    <IconSearch size={16} c={'red.5'}/>
+                                    <Text fz={`xs`} pl={'xs'} c={'gray.8'}>{t("SearchMenu")}</Text>
+                                </>
+                            }
+                            fullWidth
+                            variant="transparent"
+                            rightSection={
+                                <>
+                                    <Kbd h={'24'} c={'gray.8'} fz={'12'}>Ctrl </Kbd> + <Kbd c={'gray.8'} h={'24'}
+                                                                                            fz={'12'}> K</Kbd>
+                                </>
+                            }
+                            w={`100%`}
+                            h={'32'}
+                            justify="space-between"
+                            style={{border: `2px solid var(--mantine-color-gray-5)`}}
+                            color={`gray`}
+                            onClick={spotlight.open}
+                        />
+                        </Flex>
+                    </Group>
                     <Group>
                         <Menu
                             onOpen={() => setLanguageOpened(true)}

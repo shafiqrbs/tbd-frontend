@@ -44,7 +44,7 @@ function TransactionModeForm(props) {
     const {t, i18n} = useTranslation();
     const dispatch = useDispatch();
     const {isOnline, mainAreaHeight} = useOutletContext();
-    const height = mainAreaHeight - 132; //TabList height 104
+    const height = mainAreaHeight - 150; //TabList height 104
     const [opened, {open, close}] = useDisclosure(false);
 
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
@@ -98,38 +98,6 @@ function TransactionModeForm(props) {
         }
     });
 
-
-    /*useEffect(() => {
-        if (validation) {
-            validationMessage.name && (form.setFieldError('name', true));
-            validationMessage.mobile && (form.setFieldError('mobile', true));
-            validationMessage.email && (form.setFieldError('email', true));
-            validationMessage.credit_limit && (form.setFieldError('credit_limit', true));
-            validationMessage.alternative_mobile && (form.setFieldError('alternative_mobile', true));
-            dispatch(setValidationData(false))
-        }
-
-        if (entityNewData.message ==='success'){
-            notifications.show({
-                color: 'teal',
-                title: t('CreateSuccessfully'),
-                icon: <IconCheck style={{width: rem(18), height: rem(18)}}/>,
-                loading: false,
-                autoClose: 700,
-                style: {backgroundColor: 'lightgray'},
-            });
-
-            setTimeout(() => {
-                form.reset()
-                setMarketingExeData(null)
-                setAuthorisedData(null)
-                setLocationData(null)
-                dispatch(setEntityNewData([]))
-                dispatch(setFetching(true))
-            }, 700)
-        }
-    }, [validation,validationMessage,form]);*/
-
     useHotkeys([['alt+n', () => {
         document.getElementById('method_id').click()
     }]], []);
@@ -161,7 +129,7 @@ function TransactionModeForm(props) {
                             children: (
                                 <Text size="sm"> {t("FormConfirmationMessage")}</Text>
                             ),
-                            labels: {confirm: 'Confirm', cancel: 'Cancel'},
+                            labels: {confirm: 'Confirm', cancel: 'Cancel'}, confirmProps: { color: 'red' },
                             onCancel: () => console.log('Cancel'),
                             onConfirm: () => {
                                 const formValue = {...form.values};
@@ -195,7 +163,6 @@ function TransactionModeForm(props) {
                     })}>
                         <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
                         <Box bg={"white"} >
-
                                 <Box pl={`xs`} pb={'xs'} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'} >
                                     <Grid>
                                         <Grid.Col span={6} h={54}>
@@ -381,7 +348,7 @@ function TransactionModeForm(props) {
                                 </Box>
 
                         </Box>
-                    </Box>
+                        </Box>
                     </form>
                 </Grid.Col>
                 <Grid.Col span={1} >

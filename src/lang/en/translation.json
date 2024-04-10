@@ -19,8 +19,9 @@
 
   "EnterSearchAnyKeyword": "Enter search any keyword",
   "FiledIsRequired": "This field is required value",
-  "FormConfirmationTitle": "Please confirm your action",
-  "FormConfirmationMessage": " This action is so important that you are required to confirm it with a\nmodal. Please click\none of these buttons to proceed.",
+  "FormConfirmationTitle": "Proceed Confirmation",
+  "FormConfirmationMessageOld": "This action is so important that you are required to confirm it with a\nmodal. Please click\none of these buttons to proceed.",
+  "FormConfirmationMessage": "Please confirm your submission by clicking the submit button below.",
 
 
   "MasterData": "Master Data",
@@ -141,6 +142,7 @@
   "PriceInformationDetails": "Price Information Details",
 
   "CategoryGroupModel": "Category Group Model",
+  "QuickCategoryGroup": "Would you like to add a new product category group?",
   "CategoryGroup": "Category Group",
   "CategoryGroupFormSubmitConfirm": "Please confirm your action",
   "CategoryGroupFormSubmitConfirmDetails": "This action is so important that you are required to confirm it with a\nmodal. Please click\none of these buttons to proceed.",

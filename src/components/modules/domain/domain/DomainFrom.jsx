@@ -106,38 +106,6 @@ function DomainForm(props) {
         }
     });
 
-
-    /*useEffect(() => {
-        if (validation) {
-            validationMessage.name && (form.setFieldError('name', true));
-            validationMessage.mobile && (form.setFieldError('mobile', true));
-            validationMessage.email && (form.setFieldError('email', true));
-            validationMessage.credit_limit && (form.setFieldError('credit_limit', true));
-            validationMessage.alternative_mobile && (form.setFieldError('alternative_mobile', true));
-            dispatch(setValidationData(false))
-        }
-
-        if (entityNewData.message ==='success'){
-            notifications.show({
-                color: 'teal',
-                title: t('CreateSuccessfully'),
-                icon: <IconCheck style={{width: rem(18), height: rem(18)}}/>,
-                loading: false,
-                autoClose: 700,
-                style: {backgroundColor: 'lightgray'},
-            });
-
-            setTimeout(() => {
-                form.reset()
-                setMarketingExeData(null)
-                setCustomerGroupData(null)
-                setLocationData(null)
-                dispatch(setEntityNewData([]))
-                dispatch(setFetching(true))
-            }, 700)
-        }
-    }, [validation,validationMessage,form]);*/
-
     useHotkeys([['alt+n', () => {
         document.getElementById('company_name').focus()
     }]], []);
@@ -165,13 +133,14 @@ function DomainForm(props) {
                     <form onSubmit={form.onSubmit((values) => {
                         dispatch(setValidationData(false))
                         modals.openConfirmModal({
+                            centered: true,
                             title: (
                                 <Text size="md"> {t("FormConfirmationTitle")}</Text>
                             ),
                             children: (
                                 <Text size="sm"> {t("FormConfirmationMessage")}</Text>
                             ),
-                            labels: {confirm: 'Confirm', cancel: 'Cancel'},
+                            labels: {confirm: 'Submit', cancel: 'Cancel'},confirmProps: { color: 'red.5' },
                             onCancel: () => console.log('Cancel'),
                             onConfirm: () => {
                                 const value = {
@@ -179,7 +148,6 @@ function DomainForm(props) {
                                     data: values
                                 }
                                 dispatch(storeEntityData(value))
-
                                 notifications.show({
                                     color: 'teal',
                                     title: t('CreateSuccessfully'),

@@ -1,12 +1,13 @@
 import React, {useEffect, useState} from "react";
 import {useNavigate, useOutletContext} from "react-router-dom";
 import {
-    Button, rem, Flex, Grid, Box, ScrollArea, Group, Text, Title,
+    Button, rem, Flex, Grid, Box, ScrollArea, Group, Text, Title, Stack, Tooltip, ActionIcon,
 } from "@mantine/core";
 import {useTranslation} from 'react-i18next';
 import {
+    IconCategoryPlus,
     IconCheck,
-    IconDeviceFloppy, IconInfoCircle, IconPlus,
+    IconDeviceFloppy, IconInfoCircle, IconPlus,IconClipboardPlus
 } from "@tabler/icons-react";
 import {useDisclosure, useHotkeys} from "@mantine/hooks";
 import {useDispatch, useSelector} from "react-redux";
@@ -28,7 +29,7 @@ function ProductForm() {
     const {t, i18n} = useTranslation();
     const dispatch = useDispatch();
     const {isOnline, mainAreaHeight} = useOutletContext();
-    const height = mainAreaHeight - 116; //TabList height 104
+    const height = mainAreaHeight - 130; //TabList height 104
     const [opened, {open, close}] = useDisclosure(false);
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
 
@@ -123,31 +124,24 @@ function ProductForm() {
     useHotkeys([['alt+s', () => {
         document.getElementById('EntityFormSubmit').click()
     }]], []);
-
-
     return (
-        <Box bg={"white"} mt={`xs`}>
+        <Box>
             <form onSubmit={form.onSubmit((values) => {
                 modals.openConfirmModal({
-                    title: 'Please confirm your action',
-                    children: (
-                        <Text size="sm">
-                            This action is so important that you are required to confirm it with a
-                            modal. Please click
-                            one of these buttons to proceed.
-                        </Text>
+                    title: (
+                        <Text size="md"> {t("FormConfirmationTitle")}</Text>
                     ),
-                    labels: {confirm: 'Confirm', cancel: 'Cancel'},
+                    children: (
+                        <Text size="sm"> {t("FormConfirmationMessage")}</Text>
+                    ),
+                    labels: {confirm: t('Submit'), cancel: t('Cancel')}, confirmProps: { color: 'red' },
                     onCancel: () => console.log('Cancel'),
                     onConfirm: () => {
-
                         const value = {
                             url: 'inventory/product',
                             data: values
                         }
-
                         dispatch(storeEntityData(value))
-
                         notifications.show({
                             color: 'teal',
                             title: t('CreateSuccessfully'),
@@ -156,7 +150,6 @@ function ProductForm() {
                             autoClose: 700,
                             style: {backgroundColor: 'lightgray'},
                         });
-
                         setTimeout(() => {
                             form.reset()
                             setCategoryData(null)
@@ -168,262 +161,318 @@ function ProductForm() {
                     },
                 });
             })}>
-                <Box pb={`xs`} pl={`xs`} pr={8}>
-                    <Grid>
-                        <Grid.Col span={6} h={54}>
-                            <Title order={6} mt={'xs'} pl={'6'}>{t('ProductInformation')}</Title>
-                        </Grid.Col>
-                        <Grid.Col span={6}>
-                            <Group mr={'md'} pos={`absolute`} right={0} gap={0}>
-                                <>
-                                    {!saveCreateLoading && isOnline &&
-                                        <Button
-                                            size="xs"
-                                            color={`indigo.6`}
-                                            type="submit"
-                                            mt={4}
-                                            mr={'xs'}
-                                            id="EntityFormSubmit"
-                                            leftSection={<IconDeviceFloppy size={16}/>}
-                                        >
-                                            <Flex direction={`column`} gap={0}>
-                                                <Text fz={12} fw={400}>
-                                                    {t("CreateAndSave")}
-                                                </Text>
-                                            </Flex>
-                                        </Button>
-                                    }
-                                </>
-                            </Group>
-                        </Grid.Col>
-                    </Grid>
-                </Box>
-                <Box h={1} bg={`gray.3`}></Box>
-                <Box m={'md'}>
-                    <Grid columns={24}>
-                        <Grid.Col span={'auto'}>
-                            <ScrollArea h={height} scrollbarSize={2} type="never">
-                                <Box pb={'md'}>
-                                    <SelectForm
-                                        tooltip={t('ChooseProductType')}
-                                        label={t('ProductType')}
-                                        placeholder={t('ChooseProductType')}
-                                        required={true}
-                                        name={'product_type_id'}
-                                        form={form}
-                                        dropdownValue={productTypeDropdown}
-                                        mt={0}
-                                        id={'product_type_id'}
-                                        nextField={'category_id'}
-                                        searchable={true}
-                                        value={productTypeData}
-                                        changeValue={setProductTypeData}
-                                    />
-                                    <Grid gutter={{base: 6}}>
-                                        <Grid.Col span={10}>
-                                            <SelectForm
-                                                tooltip={t('ChooseCategory')}
-                                                label={t('Category')}
-                                                placeholder={t('ChooseCategory')}
-                                                required={true}
-                                                nextField={'name'}
-                                                name={'category_id'}
-                                                form={form}
-                                                dropdownValue={categoryDropdown}
-                                                mt={8}
-                                                id={'category_id'}
-                                                searchable={true}
-                                                value={categoryData}
-                                                changeValue={setCategoryData}
-                                            />
-
-                                        </Grid.Col>
-                                        <Grid.Col span={2}><Button mt={32} color={'gray'} variant={'outline'}
-                                                                   onClick={open}><IconPlus size={12}
-                                                                                            opacity={0.5}/></Button></Grid.Col>
-                                        {opened &&
-                                            <CustomerGroupModel openedModel={opened} open={open} close={close}/>
-                                        }
-                                    </Grid>
-                                    <InputForm
-                                        tooltip={t('ProductNameValidateMessage')}
-                                        label={t('ProductName')}
-                                        placeholder={t('ProductName')}
-                                        required={true}
-                                        nextField={'alternative_name'}
-                                        form={form}
-                                        name={'name'}
-                                        mt={8}
-                                        id={'name'}
-                                    />
-                                    <InputForm
-                                        tooltip={t('AlternativeProductNameValidateMessage')}
-                                        label={t('AlternativeProductName')}
-                                        placeholder={t('AlternativeProductName')}
-                                        required={false}
-                                        nextField={'unit_id'}
-                                        form={form}
-                                        name={'alternative_name'}
-                                        mt={8}
-                                        id={'alternative_name'}
-                                    />
-                                    <SelectForm
-                                        tooltip={t('ChooseProductUnit')}
-                                        label={t('ProductUnit')}
-                                        placeholder={t('ChooseProductUnit')}
-                                        required={true}
-                                        name={'unit_id'}
-                                        form={form}
-                                        dropdownValue={productUnitDropdown}
-                                        mt={8}
-                                        id={'unit_id'}
-                                        nextField={'barcode'}
-                                        searchable={true}
-                                        value={productUnitData}
-                                        changeValue={setProductUnitData}
-                                    />
-                                    <InputForm
-                                        tooltip={t('BarcodeValidateMessage')}
-                                        label={t('Barcode')}
-                                        placeholder={t('Barcode')}
-                                        required={false}
-                                        nextField={'sku'}
-                                        form={form}
-                                        name={'barcode'}
-                                        mt={8}
-                                        id={'barcode'}
-                                    />
-                                    <InputForm
-                                        tooltip={t('ProductSkuValidateMessage')}
-                                        label={t('ProductSku')}
-                                        placeholder={t('ProductSku')}
-                                        required={false}
-                                        nextField={'brand_id'}
-                                        form={form}
-                                        name={'sku'}
-                                        mt={8}
-                                        id={'sku'}
-                                    />
-
-                                    <Grid gutter={{base: 6}}>
-                                        <Grid.Col span={10}>
-                                            <SelectForm
-                                                tooltip={t('ChooseBrand')}
-                                                label={t('Brand')}
-                                                placeholder={t('ChooseBrand')}
-                                                required={false}
-                                                nextField={'opening_quantity'}
-                                                name={'brand_id'}
-                                                form={form}
-                                                dropdownValue={brandDropdown}
-                                                mt={8}
-                                                id={'brand_id'}
-                                                searchable={true}
-                                                value={brandData}
-                                                changeValue={setBrandData}
-                                            />
-
-                                        </Grid.Col>
-                                        <Grid.Col span={2}><Button mt={32} color={'gray'} variant={'outline'}
-                                                                   onClick={open}><IconPlus size={12}
-                                                                                            opacity={0.5}/></Button></Grid.Col>
-                                        {opened &&
-                                            <CustomerGroupModel openedModel={opened} open={open} close={close}/>
-                                        }
-                                    </Grid>
-                                    <InputForm
-                                        tooltip={t('OpeningQuantity')}
-                                        label={t('OpeningQuantity')}
-                                        placeholder={t('OpeningQuantity')}
-                                        required={false}
-                                        nextField={'sales_price'}
-                                        form={form}
-                                        name={'opening_quantity'}
-                                        mt={8}
-                                        id={'opening_quantity'}
-                                    />
-                                    <Grid gutter={{base: 6}}>
-                                        <Grid.Col span={6}>
-                                            <InputForm
-                                                tooltip={t('SalesPriceValidateMessage')}
-                                                label={t('SalesPrice')}
-                                                placeholder={t('SalesPrice')}
-                                                required={true}
-                                                nextField={'purchase_price'}
-                                                form={form}
-                                                name={'sales_price'}
-                                                mt={8}
-                                                id={'sales_price'}
-                                            />
+                <Grid columns={9} gutter={{base:8}}>
+                    <Grid.Col span={8} >
+                        <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
+                            <Box bg={"white"} >
+                                <Box pl={`xs`} pb={'xs'} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'} >
+                                    <Grid>
+                                        <Grid.Col span={6} h={54}>
+                                            <Title order={6} mt={'xs'} pl={'6'}>{t('CreateProduct')}</Title>
                                         </Grid.Col>
                                         <Grid.Col span={6}>
-                                            <InputForm
-                                                tooltip={t('PurchasePrice')}
-                                                label={t('PurchasePrice')}
-                                                placeholder={t('PurchasePrice')}
-                                                required={false}
-                                                nextField={'min_quantity'}
-                                                form={form}
-                                                name={'purchase_price'}
-                                                mt={8}
-                                                id={'purchase_price'}
-                                            />
+                                            <Stack right  align="flex-end">
+                                                <>
+                                                    {
+                                                        !saveCreateLoading && isOnline &&
+                                                        <Button
+                                                            size="xs"
+                                                            color={`red.6`}
+                                                            type="submit"
+                                                            mt={4}
+                                                            id="EntityFormSubmit"
+                                                            leftSection={<IconDeviceFloppy size={16}/>}
+                                                        >
+
+                                                            <Flex direction={`column`} gap={0}>
+                                                                <Text fz={12} fw={400}>
+                                                                    {t("CreateAndSave")}
+                                                                </Text>
+                                                            </Flex>
+                                                        </Button>
+                                                    }
+                                                </></Stack>
                                         </Grid.Col>
                                     </Grid>
-                                    <Grid gutter={{base: 6}}>
-                                        <Grid.Col span={6}>
-                                            <InputForm
-                                                tooltip={t('MinimumQuantityValidateMessage')}
-                                                label={t('MinimumQuantity')}
-                                                placeholder={t('MinimumQuantity')}
-                                                required={false}
-                                                nextField={'reorder_quantity'}
-                                                form={form}
-                                                name={'min_quantity'}
-                                                mt={8}
-                                                id={'min_quantity'}
-                                            />
-                                        </Grid.Col>
-                                        <Grid.Col span={6}>
-                                            <InputForm
-                                                tooltip={t('ReorderQuantity')}
-                                                label={t('ReorderQuantity')}
-                                                placeholder={t('ReorderQuantity')}
-                                                required={false}
-                                                nextField={'status'}
-                                                form={form}
-                                                name={'reorder_quantity'}
-                                                mt={8}
-                                                id={'reorder_quantity'}
-                                            />
-                                        </Grid.Col>
-                                    </Grid>
-
-
-                                    <SwitchForm
-                                        tooltip={t('Status')}
-                                        label={t('Status')}
-                                        nextField={'EntityFormSubmit'}
-                                        name={'status'}
-                                        form={form}
-                                        mt={12}
-                                        id={'status'}
-                                        position={'left'}
-                                        defaultChecked={1}
-                                    />
-
                                 </Box>
-                            </ScrollArea>
-                        </Grid.Col>
-                        <Grid.Col span={3}>
+                                <Box pl={`xs`} pr={'xs'} mt={'xs'} className={'borderRadiusAll'}>
+                                    <ScrollArea h={height} scrollbarSize={2} type="never">
+                                        <Box mt={'xs'}>
+                                            <SelectForm
+                                                tooltip={t('ChooseProductType')}
+                                                label={t('ProductType')}
+                                                placeholder={t('ChooseProductType')}
+                                                required={true}
+                                                name={'product_type_id'}
+                                                form={form}
+                                                dropdownValue={productTypeDropdown}
+                                                mt={0}
+                                                id={'product_type_id'}
+                                                nextField={'category_id'}
+                                                searchable={true}
+                                                value={productTypeData}
+                                                changeValue={setProductTypeData}
+                                            />
+                                        </Box>
+                                        <Box mt={'xs'}>
+                                            <Grid gutter={{base: 6}}>
+                                                <Grid.Col span={11}>
+                                                    <SelectForm
+                                                        tooltip={t('ChooseCategory')}
+                                                        label={t('Category')}
+                                                        placeholder={t('ChooseCategory')}
+                                                        required={true}
+                                                        name={'category_id'}
+                                                        form={form}
+                                                        dropdownValue={categoryDropdown}
+                                                        mt={8}
+                                                        id={'category_id'}
+                                                        nextField={'name'}
+                                                        searchable={true}
+                                                        value={categoryData}
+                                                        changeValue={setCategoryData}
+                                                    />
+
+                                                </Grid.Col>
+                                                <Grid.Col span={1}>
+                                                    <Box pt={'24'}>
+                                                        <Tooltip
+                                                            multiline
+                                                            w={280}
+                                                            withArrow
+                                                            transitionProps={{ duration: 200 }}
+                                                            label={t('QuickCategory')}
+                                                        >
+                                                            <ActionIcon fullWidth variant="outline" bg={'white'} size={'lg'} color="red.5" mt={'1'} aria-label="Settings"  onClick={open}>
+                                                                <IconCategoryPlus style={{ width: '100%', height: '70%' }} stroke={1.5} />
+                                                            </ActionIcon>
+                                                        </Tooltip>
+                                                    </Box>
+                                                </Grid.Col>
+                                                {opened &&
+                                                <CustomerGroupModel openedModel={opened} open={open} close={close}/>
+                                                }
+                                            </Grid>
+                                        </Box>
+                                        <Box mt={'xs'}>
+                                            <InputForm
+                                                tooltip={t('ProductNameValidateMessage')}
+                                                label={t('ProductName')}
+                                                placeholder={t('ProductName')}
+                                                required={true}
+                                                form={form}
+                                                name={'name'}
+                                                mt={8}
+                                                id={'name'}
+                                                nextField={'alternative_name'}
+                                            />
+                                        </Box>
+                                        <Box mt={'xs'}>
+                                            <InputForm
+                                                tooltip={t('AlternativeProductNameValidateMessage')}
+                                                label={t('AlternativeProductName')}
+                                                placeholder={t('AlternativeProductName')}
+                                                required={false}
+                                                form={form}
+                                                name={'alternative_name'}
+                                                mt={8}
+                                                id={'alternative_name'}
+                                                nextField={'sku'}
+                                            />
+                                        </Box>
+                                        <Box mt={'xs'}>
+                                            <Grid gutter={{base: 6}}>
+                                                <Grid.Col span={6}>
+                                                    <InputForm
+                                                        tooltip={t('ProductSkuValidateMessage')}
+                                                        label={t('ProductSku')}
+                                                        placeholder={t('ProductSku')}
+                                                        required={false}
+                                                        nextField={'barcode'}
+                                                        form={form}
+                                                        name={'sku'}
+                                                        mt={8}
+                                                        id={'sku'}
+                                                    />
+                                                </Grid.Col>
+                                                <Grid.Col span={6}>
+                                                    <InputForm
+                                                        tooltip={t('BarcodeValidateMessage')}
+                                                        label={t('Barcode')}
+                                                        placeholder={t('Barcode')}
+                                                        required={false}
+                                                        nextField={'sales_price'}
+                                                        form={form}
+                                                        name={'barcode'}
+                                                        mt={8}
+                                                        id={'barcode'}
+                                                    />
+                                                </Grid.Col>
+                                            </Grid>
+                                        </Box>
+                                        <Box mt={'xs'}>
+                                            <Grid gutter={{base: 6}}>
+                                                <Grid.Col span={6}>
+                                                    <InputForm
+                                                        tooltip={t('SalesPriceValidateMessage')}
+                                                        label={t('SalesPrice')}
+                                                        placeholder={t('SalesPrice')}
+                                                        required={true}
+                                                        nextField={'purchase_price'}
+                                                        form={form}
+                                                        name={'sales_price'}
+                                                        mt={8}
+                                                        id={'sales_price'}
+                                                    />
+                                                </Grid.Col>
+                                                <Grid.Col span={6}>
+                                                    <InputForm
+                                                        tooltip={t('PurchasePrice')}
+                                                        label={t('PurchasePrice')}
+                                                        placeholder={t('PurchasePrice')}
+                                                        required={false}
+                                                        nextField={'unit_id'}
+                                                        form={form}
+                                                        name={'purchase_price'}
+                                                        mt={8}
+                                                        id={'purchase_price'}
+                                                    />
+                                                </Grid.Col>
+                                            </Grid>
+                                        </Box>
+                                        <Box mt={'xs'}>
+                                            <Grid gutter={{base: 6}}>
+                                                <Grid.Col span={6}>
+                                                    <SelectForm
+                                                        tooltip={t('ChooseProductUnit')}
+                                                        label={t('ProductUnit')}
+                                                        placeholder={t('ChooseProductUnit')}
+                                                        required={true}
+                                                        name={'unit_id'}
+                                                        form={form}
+                                                        dropdownValue={productUnitDropdown}
+                                                        mt={8}
+                                                        id={'unit_id'}
+                                                        nextField={'brand_id'}
+                                                        searchable={true}
+                                                        value={productUnitData}
+                                                        changeValue={setProductUnitData}
+                                                    />
+                                                </Grid.Col>
+                                                <Grid.Col span={5}>
+                                                    <SelectForm
+                                                        tooltip={t('ChooseBrand')}
+                                                        label={t('Brand')}
+                                                        placeholder={t('ChooseBrand')}
+                                                        required={false}
+                                                        nextField={'min_quantity'}
+                                                        name={'brand_id'}
+                                                        form={form}
+                                                        dropdownValue={brandDropdown}
+                                                        mt={8}
+                                                        id={'brand_id'}
+                                                        searchable={true}
+                                                        value={brandData}
+                                                        changeValue={setBrandData}
+                                                    />
+                                                </Grid.Col>
+                                                <Grid.Col span={1}>
+                                                    <Box pt={'24'}>
+                                                        <Tooltip
+                                                            multiline
+                                                            w={280}
+                                                            withArrow
+                                                            transitionProps={{ duration: 200 }}
+                                                            label={t('QuickCategory')}
+                                                        >
+                                                            <ActionIcon fullWidth variant="outline" bg={'white'} size={'lg'} color="red.5" mt={'1'} aria-label="Settings"  onClick={open}>
+                                                                <IconClipboardPlus style={{ width: '100%', height: '70%' }} stroke={1.5} />
+                                                            </ActionIcon>
+                                                        </Tooltip>
+                                                    </Box>
+                                                </Grid.Col>
+                                                {opened &&
+                                                <CustomerGroupModel openedModel={opened} open={open} close={close}/>
+                                                }
+                                            </Grid>
+                                        </Box>
+                                        <Box mt={'xs'}>
+                                            <Grid gutter={{base: 6}}>
+                                                <Grid.Col span={6}>
+                                                    <InputForm
+                                                        tooltip={t('MinimumQuantityValidateMessage')}
+                                                        label={t('MinimumQuantity')}
+                                                        placeholder={t('MinimumQuantity')}
+                                                        required={false}
+                                                        nextField={'reorder_quantity'}
+                                                        form={form}
+                                                        name={'min_quantity'}
+                                                        mt={8}
+                                                        id={'min_quantity'}
+                                                    />
+                                                </Grid.Col>
+                                                <Grid.Col span={6}>
+                                                    <InputForm
+                                                        tooltip={t('ReorderQuantity')}
+                                                        label={t('ReorderQuantity')}
+                                                        placeholder={t('ReorderQuantity')}
+                                                        required={false}
+                                                        nextField={'opening_quantity'}
+                                                        form={form}
+                                                        name={'reorder_quantity'}
+                                                        mt={8}
+                                                        id={'reorder_quantity'}
+                                                    />
+                                                </Grid.Col>
+                                            </Grid>
+                                        </Box>
+                                        <Box mt={'md'} mb={'md'}>
+                                            <Grid gutter={{base:6}}>
+                                                <Grid.Col span={6}>
+                                                    <InputForm
+                                                        tooltip={t('OpeningQuantity')}
+                                                        label={t('OpeningQuantity')}
+                                                        placeholder={t('OpeningQuantity')}
+                                                        required={false}
+                                                        nextField={'status'}
+                                                        form={form}
+                                                        name={'opening_quantity'}
+                                                        mt={8}
+                                                        id={'opening_quantity'}
+                                                    />
+                                                </Grid.Col>
+                                                <Grid.Col span={2} mt={'28'}>
+                                                    <SwitchForm
+                                                        tooltip={t('Status')}
+                                                        label=''
+                                                        nextField={'EntityFormSubmit'}
+                                                        name={'status'}
+                                                        form={form}
+                                                        color="red"
+                                                        id={'status'}
+                                                        position={'left'}
+                                                        defaultChecked={1}
+                                                    />
+                                                </Grid.Col>
+                                                <Grid.Col span={4} fz={'sm'} mt={'xl'}>Status</Grid.Col>
+                                            </Grid>
+                                        </Box>
+                                    </ScrollArea>
+                                </Box>
+                            </Box>
+                        </Box>
+                    </Grid.Col>
+                    <Grid.Col span={1} >
+                        <Box bg={'white'} className={'borderRadiusAll'} pt={'16'}>
                             <Shortcut
                                 form={form}
                                 FormSubmit={'EntityFormSubmit'}
-                                Name={'product_type_id'}
+                                Name={'name'}
+                                inputType="select"
                             />
-                        </Grid.Col>
-                    </Grid>
-                </Box>
+                        </Box>
+                    </Grid.Col>
+                </Grid>
             </form>
         </Box>
 

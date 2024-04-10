@@ -1,9 +1,10 @@
 import React from "react";
-import {Tooltip, Switch} from "@mantine/core";
+import {Tooltip, Switch,rem,useMantineTheme} from "@mantine/core";
 import {getHotkeyHandler} from "@mantine/hooks";
-
+import {IconX,IconCheck} from "@tabler/icons-react";
 function SwitchForm(props) {
     const {label, nextField, name, form, tooltip, mt, id, position, defaultChecked,checked} = props
+    const theme = useMantineTheme();
     return (
         <>
             {
@@ -26,9 +27,25 @@ function SwitchForm(props) {
                         defaultChecked={defaultChecked}
                         labelPosition={position}
                         mt={mt}
+                        color="red"
                         label={label}
-                        size="md"
-                        radius="sm"
+                        size="lg"
+                        thumbIcon={
+                            checked ? (
+                                <IconCheck
+                                    style={{ width: rem(12), height: rem(12) }}
+                                    color={theme.colors.teal[6]}
+                                    stroke={3}
+                                />
+                            ) : (
+                                <IconCheck
+                                    style={{ width: rem(12), height: rem(12) }}
+                                    color={theme.colors.red[6]}
+                                    stroke={3}
+                                />
+                            )
+                        }
+                        radius="xs"
                         id={id}
                         {...form.getInputProps(name)}
                         onKeyDown={getHotkeyHandler([

@@ -1,6 +1,6 @@
 import React from 'react'
 import {IconSearch, IconDeviceFloppy, IconRestore, IconPlus} from "@tabler/icons-react";
-import {Button, Flex, Text, Tooltip, Box, Stack, Center} from "@mantine/core";
+import {Button, Flex, Text, Tooltip, Box, Stack, Center,Container} from "@mantine/core";
 import {useTranslation} from "react-i18next";
 import {useWindowScroll} from '@mantine/hooks';
 import {useOutletContext} from "react-router-dom";
@@ -8,7 +8,7 @@ import {useOutletContext} from "react-router-dom";
 function Shortcut(props) {
     const {t, i18n} = useTranslation();
     const {isOnline, mainAreaHeight} = useOutletContext();
-    const formHeight = mainAreaHeight - 56; //TabList height 104
+    const formHeight = mainAreaHeight - 54; //TabList height 104
     return (
         <>
             <Stack
@@ -17,6 +17,7 @@ function Shortcut(props) {
                 align="center"
             >
                 <Center>
+                    <Container fluid mb={'8'}>
                     <Tooltip
                         label={t('AltTextNew')}
                         px={16}
@@ -30,7 +31,6 @@ function Shortcut(props) {
 
                         <Button
                             size="md"
-                            mb={28}
                             pl={'12'}
                             pr={'12'}
                             variant={'light'}
@@ -46,24 +46,24 @@ function Shortcut(props) {
                                 <IconPlus size={16}/>
                             </Flex>
                         </Button>
-
                     </Tooltip>
+                        <Flex direction={`column`} align={'center'} fz={'12'} c={'gray.5'}>alt+n</Flex>
+                    </Container>
                 </Center>
                 <Center>
-                    <Tooltip
-                        label={t('AltTextReset')}
-                        px={16}
-                        py={2}
-                        withArrow
-                        position={"left"}
-                        c={'white'}
-                        bg={`red.5`}
-                        transitionProps={{transition: "pop-bottom-left", duration: 500}}
-                    >
-
+                    <Container fluid mb={'8'}>
+                        <Tooltip
+                            label={t('AltTextReset')}
+                            px={16}
+                            py={2}
+                            withArrow
+                            position={"left"}
+                            c={'white'}
+                            bg={`red.5`}
+                            transitionProps={{transition: "pop-bottom-left", duration: 500}}
+                        >
                         <Button
                             size="md"
-                            mb={28}
                             pl={'12'}
                             pr={'12'}
                             variant={'light'}
@@ -77,10 +77,12 @@ function Shortcut(props) {
                                 <IconRestore size={16}/>
                             </Flex>
                         </Button>
-
-                    </Tooltip>
+                        </Tooltip>
+                    <Flex direction={`column`} align={'center'} fz={'12'} c={'gray.5'}>alt+r</Flex>
+                    </Container>
                 </Center>
                 <Center>
+                    <Container fluid mb={'8'}>
                     <Tooltip
                         label={t('AltTextSave')}
                         px={16}
@@ -93,7 +95,6 @@ function Shortcut(props) {
                     >
                         <Button
                             size="md"
-                            mb={16}
                             pl={'12'}
                             pr={'12'}
                             variant={'filled'}
@@ -107,8 +108,9 @@ function Shortcut(props) {
                                 <IconDeviceFloppy size={16}/>
                             </Flex>
                         </Button>
-
                     </Tooltip>
+                        <Flex direction={`column`} align={'center'} fz={'12'} c={'gray.5'}>alt+s</Flex>
+                    </Container>
                 </Center>
 
             </Stack>

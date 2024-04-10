@@ -12,6 +12,10 @@ import {setSearchKeyword} from "../../../../store/core/crudSlice.js";
 import {setInsertType} from "../../../../store/inventory/crudSlice.js";
 import {getLoadingProgress} from "../../../global-hook/loading-progress/getLoadingProgress.js";
 import getConfigData from "../../../global-hook/config-data/getConfigData.js";
+import InventoryHeaderNavbar from "../configuraton/InventoryHeaderNavbar";
+import CategoryGroupTable from "../category-group/CategoryGroupTable";
+import CategoryGroupForm from "../category-group/CategoryGroupForm";
+import CategoryGroupUpdateForm from "../category-group/CategoryGroupUpdateForm";
 
 function CategoryIndex() {
     const {t, i18n} = useTranslation();
@@ -33,27 +37,32 @@ function CategoryIndex() {
                 <Progress color="red" size={"xs"} striped animated value={progress} transitionDuration={200}/>}
             {progress === 100 &&
                 <Box>
-                    <Box pl={`md`} pr={8} pb={'8'} pt={'6'} bg={'gray.1'}>
-                        <Grid>
-                            <Grid.Col span={12}>
-                                <Title order={6} pl={'md'} fz={'18'}
-                                       c={'indigo.4'}>{t('CategoryInformation')}</Title>
+                { configData &&
+                <>
+                    <InventoryHeaderNavbar
+                        pageTitle = {t('ProductCategory')}
+                        roles = {t('roles')}
+                        allowZeroPercentage = {configData.zero_stock}
+                        currencySymbol = {configData.currency.symbol}
+                    />
+                    <Box p={'8'}>
+                        <Grid columns={24} gutter={{base: 8}}>
+                            <Grid.Col span={15} >
+                                <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
+                                    <CategoryTable/>
+                                </Box>
                             </Grid.Col>
-                        </Grid>
-                    </Box>
-                    <Box pr={'12'} pl={'12'}>
-                        <Grid>
-                            <Grid.Col span={8}>
-                                <CategoryTable/>
-                            </Grid.Col>
-                            <Grid.Col span={4}>
+                            <Grid.Col span={9}>
                                 {
                                     insertType === 'create' ? <CategoryForm/> : <CategoryUpdateForm/>
                                 }
                             </Grid.Col>
                         </Grid>
                     </Box>
+                </>
+                }
                 </Box>
+
             }
         </>
     );

@@ -115,13 +115,13 @@ function MainDashboard(props) {
                             <Text fz="sm" c="dimmed" mt="sm">
                                 <List spacing="ms" size="sm" center>
                                     <List.Item pl={'xs'} icon={<ThemeIcon color="yellow.6" size={20} radius="xl" variant="outline" ><IconListDetails/></ThemeIcon>}>
-                                        <NavLink pl={'md'} href="accounting/sales" label={t('ManageProduct')} component="button" onClick={(e)=>{navigate('inventory/sales')}}  />
+                                        <NavLink pl={'md'} href="/inventory/product" label={t('ManageProduct')} component="button" onClick={(e)=>{navigate('inventory/product')}}  />
                                     </List.Item>
                                     <List.Item pl={'xs'} icon={<ThemeIcon color="yellow.6" size={20} radius="xl" variant="outline" ><IconCategory/></ThemeIcon>}>
-                                        <NavLink pl={'md'} href="accounting/sales-invoice" label={t('Category')} component="button" onClick={(e)=>{navigate('inventory/sales')}}  />
+                                        <NavLink pl={'md'} href="/inventory/category" label={t('Category')} component="button" onClick={(e)=>{navigate('inventory/category')}}  />
                                     </List.Item>
                                     <List.Item pl={'xs'} icon={<ThemeIcon color="yellow.6" size={20} radius="xl" variant="outline" ><IconCategory2/></ThemeIcon>}>
-                                        <NavLink pl={'md'} href="accounting/purchase" label={t('CategoryGroup')} component="button" onClick={(e)=>{navigate('inventory/sales')}}  />
+                                        <NavLink pl={'md'} href="/inventory/category-group" label={t('CategoryGroup')} component="button" onClick={(e)=>{navigate('inventory/category-group')}}  />
                                     </List.Item>
                                 </List>
                             </Text>
