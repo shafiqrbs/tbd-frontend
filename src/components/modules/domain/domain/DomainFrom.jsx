@@ -31,7 +31,7 @@ function DomainForm(props) {
     const {t, i18n} = useTranslation();
     const dispatch = useDispatch();
     const {isOnline, mainAreaHeight} = useOutletContext();
-    const height = mainAreaHeight - 132; //TabList height 104
+    const height = mainAreaHeight - 130; //TabList height 104
     const [opened, {open, close}] = useDisclosure(false);
 
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
@@ -121,14 +121,7 @@ function DomainForm(props) {
 
     return (
         <Box>
-            <Grid columns={24} gutter={{base: 8}}>
-
-                <Grid.Col span={15} >
-                    <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
-                        <DomainTable/>
-                    </Box>
-                </Grid.Col>
-
+            <Grid columns={9} gutter={{base: 8}}>
                 <Grid.Col span={8} >
                     <form onSubmit={form.onSubmit((values) => {
                         dispatch(setValidationData(false))

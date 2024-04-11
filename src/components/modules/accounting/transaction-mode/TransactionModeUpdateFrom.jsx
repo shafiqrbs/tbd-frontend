@@ -44,7 +44,7 @@ function TransactionModeUpdateFrom(props) {
     const {t, i18n} = useTranslation();
     const dispatch = useDispatch();
     const {isOnline, mainAreaHeight} = useOutletContext();
-    const height = mainAreaHeight - 132; //TabList height 104
+    const height = mainAreaHeight - 130; //TabList height 104
     const [opened, {open, close}] = useDisclosure(false);
 
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
@@ -135,36 +135,6 @@ function TransactionModeUpdateFrom(props) {
     }, [dispatch, setFormData])
 
 
-    /*useEffect(() => {
-        if (validation) {
-            validationMessage.name && (form.setFieldError('name', true));
-            validationMessage.mobile && (form.setFieldError('mobile', true));
-            validationMessage.email && (form.setFieldError('email', true));
-            validationMessage.credit_limit && (form.setFieldError('credit_limit', true));
-            validationMessage.alternative_mobile && (form.setFieldError('alternative_mobile', true));
-            dispatch(setValidationData(false))
-        }
-
-        if (entityNewData.message ==='success'){
-            notifications.show({
-                color: 'teal',
-                title: t('CreateSuccessfully'),
-                icon: <IconCheck style={{width: rem(18), height: rem(18)}}/>,
-                loading: false,
-                autoClose: 700,
-                style: {backgroundColor: 'lightgray'},
-            });
-
-            setTimeout(() => {
-                form.reset()
-                setMarketingExeData(null)
-                setCustomerGroupData(null)
-                setLocationData(null)
-                dispatch(setEntityNewData([]))
-                dispatch(setFetching(true))
-            }, 700)
-        }
-    }, [validation,validationMessage,form]);*/
 
     useHotkeys([['alt+n', () => {
         document.getElementById('method_id').click()
@@ -181,12 +151,7 @@ function TransactionModeUpdateFrom(props) {
 
     return (
         <Box>
-            <Grid columns={24} gutter={{base: 8}}>
-                <Grid.Col span={15} >
-                    <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
-                        <TransactionModeTable/>
-                    </Box>
-                </Grid.Col>
+            <Grid columns={9} gutter={{base: 8}}>
                 <Grid.Col span={8} >
                     <form onSubmit={form.onSubmit((values) => {
                         dispatch(setValidationData(false))
@@ -197,7 +162,7 @@ function TransactionModeUpdateFrom(props) {
                             children: (
                                 <Text size="sm"> {t("FormConfirmationMessage")}</Text>
                             ),
-                            labels: {confirm: 'Confirm', cancel: 'Cancel'},
+                            labels: {confirm: 'Submit', cancel: 'Cancel'},confirmProps: { color: 'red.5' },
                             onCancel: () => console.log('Cancel'),
                             onConfirm: () => {
                                 const formValue = {...form.values};
@@ -255,7 +220,7 @@ function TransactionModeUpdateFrom(props) {
 
                                                             <Flex direction={`column`} gap={0}>
                                                                 <Text fz={12} fw={400}>
-                                                                    {t("CreateAndSave")}
+                                                                    {t("UpdateAndSave")}
                                                                 </Text>
                                                             </Flex>
                                                         </Button>

@@ -58,6 +58,7 @@
   "ReferenceId": "Reference ID",
   "FilterData": "Filter Data",
 
+  "ManageTransactionMode": "Manage Transaction Mode",
   "CreateUser": "Create User",
   "UpdateUser": "Update User",
   "ManageUser": "Manage Users",

@@ -32,7 +32,7 @@ function DomainUpdateFormView(props) {
     const {t, i18n} = useTranslation();
     const dispatch = useDispatch();
     const {isOnline, mainAreaHeight} = useOutletContext();
-    const height = mainAreaHeight - 132; //TabList height 104
+    const height = mainAreaHeight - 130; //TabList height 104
     const [opened, {open, close}] = useDisclosure(false);
 
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
@@ -162,25 +162,18 @@ function DomainUpdateFormView(props) {
 
     return (
         <Box>
-            <Grid columns={24} gutter={{base: 8}}>
-                <Grid.Col span={15} >
-                    <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
-                        <DomainTable/>
-                    </Box>
-                </Grid.Col>
+            <Grid columns={9} gutter={{base: 8}}>
                 <Grid.Col span={8} >
                     <form onSubmit={form.onSubmit((values) => {
                         dispatch(setValidationData(false))
                         modals.openConfirmModal({
-                            title: 'Please confirm your action',
-                            children: (
-                                <Text size="sm">
-                                    This action is so important that you are required to confirm it with a
-                                    modal. Please click
-                                    one of these buttons to proceed.
-                                </Text>
+                            title: (
+                                <Text size="md"> {t("FormConfirmationTitle")}</Text>
                             ),
-                            labels: {confirm: 'Confirm', cancel: 'Cancel'},
+                            children: (
+                                <Text size="sm"> {t("FormConfirmationMessage")}</Text>
+                            ),
+                            labels: {confirm: 'Submit', cancel: 'Cancel'},confirmProps: { color: 'red.5' },
                             onCancel: () => console.log('Cancel'),
                             onConfirm: () => {
                                 const value = {
@@ -215,7 +208,7 @@ function DomainUpdateFormView(props) {
 
                                                             <Flex direction={`column`} gap={0}>
                                                                 <Text fz={12} fw={400}>
-                                                                    {t("CreateAndSave")}
+                                                                    {t("UpdateAndSave")}
                                                                 </Text>
                                                             </Flex>
                                                         </Button>

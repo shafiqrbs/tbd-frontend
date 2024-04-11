@@ -19,6 +19,7 @@ import {
 import KeywordSearch from "../../filter/KeywordSearch";
 import {modals} from "@mantine/modals";
 import {deleteEntityData} from "../../../../store/core/crudSlice";
+import tableCss from "../../../../assets/css/Table.module.css";
 
 
 
@@ -27,7 +28,7 @@ function DomainTable(props) {
     const dispatch = useDispatch();
     const {t, i18n} = useTranslation();
     const {isOnline, mainAreaHeight} = useOutletContext();
-    const height = mainAreaHeight - 130; //TabList height 104
+    const height = mainAreaHeight - 128; //TabList height 104
 
     const perPage = 50;
     const [page, setPage] = useState(1);
@@ -59,7 +60,15 @@ function DomainTable(props) {
                 <KeywordSearch module={'customer'}/>
             </Box>
             <Box className={'borderRadiusAll'}>
+
                 <DataTable
+                    classNames={{
+                        root: tableCss.root,
+                        table: tableCss.table,
+                        header: tableCss.header,
+                        footer: tableCss.footer,
+                        pagination: tableCss.pagination,
+                    }}
                     records={indexData.data}
                     columns={[
                         {
