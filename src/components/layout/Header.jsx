@@ -18,11 +18,12 @@ import {
     Tooltip,
     Kbd,
     Menu,
+    Modal,
     Notification, NavLink, Container, Flex,
 } from "@mantine/core";
 import Logo from "../../assets/images/tbd-logo.png";
 
-import {useFullscreen} from "@mantine/hooks";
+import { useDisclosure, useFullscreen } from "@mantine/hooks";
 import {
     IconNotification,
     IconCode,
@@ -42,15 +43,16 @@ import {
 } from "@tabler/icons-react";
 import HeaderStyle from "./../../assets/css/Header.module.css";
 import LanguagePickerStyle from "./../../assets/css/LanguagePicker.module.css";
-import {Spotlight, spotlight} from "@mantine/spotlight";
+import { Spotlight, spotlight } from "@mantine/spotlight";
 import "@mantine/spotlight/styles.css";
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import flagBD from "../../assets/images/flags/bd.svg";
 import flagGB from "../../assets/images/flags/gb.svg";
-import {useTranslation} from "react-i18next";
-import {useNavigate} from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import getSpotlightDropdownData from "../global-hook/spotlight-dropdown/getSpotlightDropdownData.js";
 import getConfigData from "../global-hook/config-data/getConfigData.js";
+import SearchModal from "../modules/modals/SearchModal.jsx";
 
 const mockdata = [
     {
@@ -87,21 +89,22 @@ const mockdata = [
 
 
 const languages = [
-    {label: "EN", value: "en", flag: flagGB},
-    {label: "BN", value: "bn", flag: flagBD},
+    { label: "EN", value: "en", flag: flagGB },
+    { label: "BN", value: "bn", flag: flagBD },
 ];
 
 export default function Header({
-                                   isOnline,
-                                   navbarOpened,
-                                   toggleNavbar,
-                                   rightSidebarOpened,
-                                   toggleRightSideBar,
-                               }) {
-    const {t, i18n} = useTranslation();
+    isOnline,
+    navbarOpened,
+    toggleNavbar,
+    rightSidebarOpened,
+    toggleRightSideBar,
+}) {
+    const [opened, { open, close }] = useDisclosure(false);
+    const { t, i18n } = useTranslation();
     const navigate = useNavigate();
     const theme = useMantineTheme();
-    const {toggle, fullscreen} = useFullscreen();
+    const { toggle, fullscreen } = useFullscreen();
     const [languageOpened, setLanguageOpened] = useState(false);
     const [languageSelected, setLanguageSelected] = useState(
         languages.find((item) => item.value === i18n.language)
@@ -118,7 +121,7 @@ export default function Header({
             <Group wrap="nowrap" align="flex-start">
                 <ThemeIcon size={34} variant="default" radius="md">
                     <item.icon
-                        style={{width: rem(22), height: rem(22)}}
+                        style={{ width: rem(22), height: rem(22) }}
                         color={theme.colors.blue[6]}
                     />
                 </ThemeIcon>
@@ -135,6 +138,14 @@ export default function Header({
     ));
     return (
         <>
+            <Modal
+                opened={opened}
+                onClose={close}
+                size={`50%`}
+                transitionProps={{ transition: 'pop', duration: 100 }}
+            >
+                <SearchModal />
+            </Modal >
             <Box bg={'white'} h={`100%`} pos={`relative`}>
                 <Group justify="space-between" h="100%" pl={'md'} px={`xs`} mr={'4'}>
                     <Group>
@@ -144,7 +155,7 @@ export default function Header({
                             fw={'800'}
                             component="button"
                             label={configData && configData.domain ? configData.domain.name : 'Store Name'}
-                            onClick={(e)=>{navigate('/')}}
+                            onClick={(e) => { navigate('/') }}
                         />
                         {/*<Tooltip
                             label={navbarOpened ? t("collapse_navbar") : t("expand_navbar")}
@@ -208,29 +219,32 @@ export default function Header({
                     </Group>
                     <Group>
                         <Flex direction={`column`} align={'center'} w={'600'}>
-                        <Button
-                            leftSection={
-                                <>
-                                    <IconSearch size={16} c={'red.5'}/>
-                                    <Text fz={`xs`} pl={'xs'} c={'gray.8'}>{t("SearchMenu")}</Text>
-                                </>
-                            }
-                            fullWidth
-                            variant="transparent"
-                            rightSection={
-                                <>
-                                    <Kbd h={'24'} c={'gray.8'} fz={'12'}>Ctrl </Kbd> + <Kbd c={'gray.8'} h={'24'}
-                                                                                            fz={'12'}> K</Kbd>
-                                </>
-                            }
-                            w={`100%`}
-                            h={'32'}
-                            justify="space-between"
-                            style={{border: `2px solid var(--mantine-color-gray-5)`}}
-                            color={`gray`}
-                            onClick={spotlight.open}
-                        />
+                            <Button
+                                leftSection={
+                                    <>
+                                        <IconSearch size={16} c={'red.5'} />
+                                        <Text fz={`xs`} pl={'xs'} c={'gray.8'}>{t("SearchMenu")}</Text>
+                                    </>
+                                }
+                                fullWidth
+                                variant="transparent"
+                                rightSection={
+                                    <>
+                                        <Kbd h={'24'} c={'gray.8'} fz={'12'}>Ctrl </Kbd> + <Kbd c={'gray.8'} h={'24'}
+                                            fz={'12'}> K</Kbd>
+                                    </>
+                                }
+                                w={`100%`}
+                                h={'32'}
+                                justify="space-between"
+                                style={{ border: `2px solid var(--mantine-color-gray-5)` }}
+                                color={`gray`}
+                                onClick={spotlight.open}
+                            />
                         </Flex>
+                        <Button onClick={open} className={HeaderStyle.buttonHeader} pr={'xs'} size="xs" color={'#F25745'}>
+                            <Text pl={'xs'} pr={'0'} fz={`xs`} c={'gray.9'}>{t('Search')}</Text>
+                        </Button>
                     </Group>
                     <Group>
                         <Menu
@@ -254,8 +268,8 @@ export default function Header({
                                             height={18}
                                         />
                                         <span className={LanguagePickerStyle.label}>
-                      {languageSelected?.label}
-                    </span>
+                                            {languageSelected?.label}
+                                        </span>
                                     </Group>
                                     <IconChevronDown
                                         size="1rem"
@@ -269,7 +283,7 @@ export default function Header({
                                     <Menu.Item
                                         p={4}
                                         leftSection={
-                                            <Image src={item.flag} width={18} height={18}/>
+                                            <Image src={item.flag} width={18} height={18} />
                                         }
                                         onClick={() => {
                                             setLanguageSelected(item);
@@ -289,15 +303,15 @@ export default function Header({
                         >
                             <ActionIcon onClick={toggle} variant="subtle" color={`red.4`}>
                                 {fullscreen ? (
-                                    <IconWindowMinimize size={24}/>
+                                    <IconWindowMinimize size={24} />
                                 ) : (
-                                    <IconWindowMaximize size={24}/>
+                                    <IconWindowMaximize size={24} />
                                 )}
                             </ActionIcon>
                         </Tooltip>
                         <Tooltip label={t("Logout")} bg={`red.5`} withArrow position={"left"}>
                             <ActionIcon onClick={() => logout()} variant="subtle" color={`gray.6`}>
-                                <IconLogout size={24}/>
+                                <IconLogout size={24} />
                             </ActionIcon>
                         </Tooltip>
                     </Group>
@@ -307,7 +321,7 @@ export default function Header({
                     nothingFound={t("NothingFound")}
                     highlightQuery
                     searchProps={{
-                        leftSection: <IconSearch size={'xs'} style={{width: rem(20), height: rem(20)}} stroke={1.5}/>,
+                        leftSection: <IconSearch size={'xs'} style={{ width: rem(20), height: rem(20) }} stroke={1.5} />,
                         placeholder: t("SearchMenu"),
                     }}
                 />
@@ -317,7 +331,7 @@ export default function Header({
                     right={0}
                     top={5}
                     withCloseButton={false}
-                    icon={<IconWifiOff/>}
+                    icon={<IconWifiOff />}
                     color={`yellow`}
                     radius="xs"
                     title={t("Offline")}
