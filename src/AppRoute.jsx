@@ -12,14 +12,15 @@ import CategoryIndex from "./components/modules/inventory/category/CategoryIndex
 import ProductIndex from "./components/modules/inventory/product/ProductIndex.jsx";
 import SalesIndex from "./components/modules/inventory/sales/SalesIndex";
 import SalesForm from "./components/modules/inventory/sales/SalesForm";
-import PurchaseIndex from "./components/modules/inventory/purchase/PurchaseIndex";
-import PurchaseInvoice from "./components/modules/inventory/purchase/PurchaseInvoice";
+
 import SampleInvoice from "./components/modules/sample-module/sample-layout/SampleInvoice";
 import SampleIndex from "./components/modules/sample-module/sample-layout/SampleIndex";
 import DomainIndex from "./components/modules/domain/domain/DomainIndex";
 import TransactionModeIndex from "./components/modules/accounting/transaction-mode/TransactionModeIndex.jsx";
 import SalesInvoice from "./components/modules/inventory/sales/SalesInvoice";
 import Sitemap from "./components/modules/dashboard/SItemap";
+import PurchaseIndex from "./components/modules/inventory/purchase/PurchaseIndex";
+import PurchaseInvoice from "./components/modules/inventory/purchase/PurchaseInvoice";
 function AppRoute() {
 
     return (

@@ -167,32 +167,7 @@ function TransactionModeUpdateFrom(props) {
                             onConfirm: () => {
                                 const formValue = {...form.values};
                                 formValue['path'] = files[0];
-
-                                console.log(formValue)
-
-                                /*const data = {
-                                    url: 'accounting/transaction-mode',
-                                    data: formValue
-                                }
-                                dispatch(storeEntityDataWithFile(data))
-
-                                notifications.show({
-                                    color: 'teal',
-                                    title: t('CreateSuccessfully'),
-                                    icon: <IconCheck style={{width: rem(18), height: rem(18)}}/>,
-                                    loading: false,
-                                    autoClose: 700,
-                                    style: {backgroundColor: 'lightgray'},
-                                });
-
-                                setTimeout(() => {
-                                    form.reset()
-                                    setFiles([])
-                                    setMethodData(null)
-                                    setAccountTypeData(null)
-                                    setAuthorisedData(null)
-                                    dispatch(setFetching(true))
-                                }, 700)*/
+                                //console.log(formValue)
                             },
                         });
                     })}>
@@ -233,26 +208,24 @@ function TransactionModeUpdateFrom(props) {
                                     <Grid columns={24}>
                                         <Grid.Col span={'auto'} >
                                             <ScrollArea h={height} scrollbarSize={2} type="never">
-                                                <Box  pb={'md'}>
+                                                <Box>
                                                     <Box mt={'xs'}>
-                                                        <Box mt={'xs'}>
-                                                            <SelectForm
-                                                                tooltip={t('ChooseMethod')}
-                                                                label={t('Method')}
-                                                                placeholder={t('ChooseMethod')}
-                                                                required={true}
-                                                                nextField={'name'}
-                                                                name={'method_id'}
-                                                                form={form}
-                                                                dropdownValue={getTransactionMethodDropdownData()}
-                                                                mt={8}
-                                                                id={'method_id'}
-                                                                searchable={false}
-                                                                value={methodData ? String(methodData) : (entityEditData.method_id ? String(entityEditData.method_id) : null)}
-                                                                changeValue={setMethodData}
-                                                            />
-                                                        </Box>
-                                                    </Box>
+                                                    <SelectForm
+                                                        tooltip={t('ChooseMethod')}
+                                                        label={t('Method')}
+                                                        placeholder={t('ChooseMethod')}
+                                                        required={true}
+                                                        nextField={'name'}
+                                                        name={'method_id'}
+                                                        form={form}
+                                                        dropdownValue={getTransactionMethodDropdownData()}
+                                                        mt={8}
+                                                        id={'method_id'}
+                                                        searchable={false}
+                                                        value={methodData ? String(methodData) : (entityEditData.method_id ? String(entityEditData.method_id) : null)}
+                                                        changeValue={setMethodData}
+                                                    />
+                                                </Box>
                                                     <Box mt={'xs'}>
                                                         <InputForm
                                                             tooltip={t('TransactionModeNameValidateMessage')}
@@ -377,7 +350,6 @@ function TransactionModeUpdateFrom(props) {
                                                             <Image src={'http://www.tbd.local/image/accounting/transaction-mode/'+entityEditData.path}/>
                                                         </SimpleGrid>
                                                     </Box>
-
                                                 </Box>
                                             </ScrollArea>
                                         </Grid.Col>

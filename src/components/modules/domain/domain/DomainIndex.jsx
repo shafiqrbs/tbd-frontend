@@ -5,19 +5,15 @@ import {
 } from "@mantine/core";
 import {useTranslation} from 'react-i18next';
 import {useDispatch, useSelector} from "react-redux";
-import {getShowEntityData} from "../../../../store/inventory/crudSlice.js";
-import DomainHeaderNavbar from "./DomainHeaderNavbar";
 import DomainFormView from "./DomainFrom";
 import CategoryUpdateForm from "../../inventory/category/CategoryUpdateForm";
 import {setInsertType} from "../../../../store/inventory/crudSlice";
 import {setSearchKeyword} from "../../../../store/core/crudSlice";
 import {getLoadingProgress} from "../../../global-hook/loading-progress/getLoadingProgress.js";
 import getConfigData from "../../../global-hook/config-data/getConfigData.js";
-import CoreHeaderNavbar from "../../core/CoreHeaderNavbar";
-import UserTable from "../../core/user/UserTable";
-import UserForm from "../../core/user/UserForm";
-import UserUpdateForm from "../../core/user/UserUpdateForm";
 import DomainTable from "./DomainTable";
+import DomainHeaderNavbar from "../DomainHeaderNavbar";
+import DomainUpdateFormView from "./DomainUpdateFrom";
 function DomainIndex() {
     const {t, i18n} = useTranslation();
     const dispatch = useDispatch();
@@ -38,8 +34,8 @@ function DomainIndex() {
                 <Progress color="red" size={"xs"} striped animated value={progress} transitionDuration={200}/>}
             {progress === 100 &&
                 <Box>
-                    <CoreHeaderNavbar
-                    pageTitle = {t('ManageCustomer')}
+                    <DomainHeaderNavbar
+                    pageTitle = {t('ManageDomain')}
                     roles = {t('roles')}
                     allowZeroPercentage = ''
                     currencySymbol = ''
@@ -53,7 +49,7 @@ function DomainIndex() {
                             </Grid.Col>
                             <Grid.Col span={9}>
                             {
-                                insertType === 'create' ?  <DomainFormView/> : <CategoryUpdateForm/>
+                                insertType === 'create' ?  <DomainFormView/> : <DomainUpdateFormView/>
                             }
                             </Grid.Col>
                         </Grid>

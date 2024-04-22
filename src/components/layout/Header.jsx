@@ -107,7 +107,6 @@ export default function Header({
         languages.find((item) => item.value === i18n.language)
     );
     const configData = getConfigData()
-    console.log(configData);
 
     function logout() {
         localStorage.clear();

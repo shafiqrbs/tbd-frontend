@@ -66,13 +66,13 @@ function MainDashboard(props) {
                                     <NavLink pl={'md'} href="/inventory/sales" label={t('ManageSales')} component="button" onClick={(e)=>{navigate('inventory/sales')}}  />
                                 </List.Item>
                                 <List.Item pl={'xs'} icon={<ThemeIcon color="teal.6" size={20} radius="xl" variant="outline" ><IconShoppingBagSearch/></ThemeIcon>}>
-                                    <NavLink pl={'md'} href="/inventory/sales-invoice" label={t('NewSales')} component="button" onClick={(e)=>{navigate('inventory/sales')}}  />
+                                    <NavLink pl={'md'} href="/inventory/sales-invoice" label={t('NewSales')} component="button" onClick={(e)=>{navigate('inventory/sales-invoice')}}  />
                                 </List.Item>
                                 <List.Item pl={'xs'} icon={<ThemeIcon color="teal.6" size={20} radius="xl" variant="outline" ><IconShoppingBagPlus/></ThemeIcon>}>
-                                    <NavLink pl={'md'} href="/inventory/purchase" label={t('ManagePurchase')} component="button" onClick={(e)=>{navigate('inventory/sales')}}  />
+                                    <NavLink pl={'md'} href="/inventory/purchase" label={t('ManagePurchase')} component="button" onClick={(e)=>{navigate('inventory/purchase')}}  />
                                 </List.Item>
                                  <List.Item pl={'xs'} icon={<ThemeIcon color="teal.6" size={20} radius="xl" variant="outline" ><IconShoppingCartUp/></ThemeIcon>}>
-                                    <NavLink pl={'md'} href="/inventory/purchase-invoice" label={t('NewPurchase')} component="button" onClick={(e)=>{navigate('inventory/sales')}}  />
+                                    <NavLink pl={'md'} href="/inventory/purchase-invoice" label={t('NewPurchase')} component="button" onClick={(e)=>{navigate('inventory/purchase-invoice')}}  />
                                 </List.Item>
                             </List>
                         </Text>

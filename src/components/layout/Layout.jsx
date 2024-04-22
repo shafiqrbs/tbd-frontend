@@ -21,9 +21,6 @@ function Layout() {
     const user = localStorage.getItem("user");
     const location = useLocation();
     const paramPath = window.location.pathname;
-
-    console.log(paramPath);
-
     if(!user){
         return <Navigate replace to="/login"/>;
     }else{

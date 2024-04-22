@@ -12,7 +12,6 @@ import {setSearchKeyword} from "../../../../store/core/crudSlice.js";
 import {setInsertType} from "../../../../store/inventory/crudSlice.js";
 import {getLoadingProgress} from "../../../global-hook/loading-progress/getLoadingProgress.js";
 import getConfigData from "../../../global-hook/config-data/getConfigData.js";
-import SalesHeaderNavbar from "../sales/SalesHeaderNavbar";
 import InventoryHeaderNavbar from "../configuraton/InventoryHeaderNavbar";
 import TransactionModeTable from "../../accounting/transaction-mode/TransactionModeTable";
 import {setFetching, setValidationData, storeEntityDataWithFile} from "../../../../store/accounting/crudSlice";

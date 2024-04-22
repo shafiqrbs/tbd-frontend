@@ -8,7 +8,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {getLoadingProgress} from "../../../global-hook/loading-progress/getLoadingProgress.js";
 import getConfigData from "../../../global-hook/config-data/getConfigData.js";
 import SalesTable from "./SalesTable";
-import SalesHeaderNavbar from "./SalesHeaderNavbar";
+import SalesPurchaseHeaderNavbar from "../configuraton/SalesPurchaseHeaderNavbar";
 
 function SalesIndex() {
     const {t, i18n} = useTranslation();
@@ -28,7 +28,7 @@ function SalesIndex() {
                 {
                     configData &&
                     <>
-                    <SalesHeaderNavbar
+                    <SalesPurchaseHeaderNavbar
                         pageTitle = {t('Sales')}
                         roles = {t('roles')}
                         allowZeroPercentage = {configData.zero_stock}

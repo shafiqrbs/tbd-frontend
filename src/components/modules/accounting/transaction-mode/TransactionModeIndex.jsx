@@ -6,7 +6,6 @@ import {
 import {useTranslation} from 'react-i18next';
 import {useDispatch, useSelector} from "react-redux";
 import {getShowEntityData} from "../../../../store/inventory/crudSlice.js";
-import TransactionModeHeaderNavbar from "./TransactionModeHeaderNavbar.jsx";
 import DomainFormView from "./TransactionModeFrom.jsx";
 import CategoryUpdateForm from "../../inventory/category/CategoryUpdateForm";
 import {setInsertType} from "../../../../store/inventory/crudSlice";

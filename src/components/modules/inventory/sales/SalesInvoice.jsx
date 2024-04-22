@@ -8,7 +8,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {getLoadingProgress} from "../../../global-hook/loading-progress/getLoadingProgress.js";
 import getConfigData from "../../../global-hook/config-data/getConfigData.js";
 import GenericInvoiceForm from "./GenericInvoiceForm";
-import SalesHeaderNavbar from "./SalesHeaderNavbar.jsx";
+import SalesPurchaseHeaderNavbar from "../configuraton/SalesPurchaseHeaderNavbar";
 
 function SalesInvoice() {
     const {t, i18n} = useTranslation();
@@ -25,7 +25,7 @@ function SalesInvoice() {
             {
                 configData &&
                 <>
-                    <SalesHeaderNavbar
+                    <SalesPurchaseHeaderNavbar
                         pageTitle = {t('SalesInvoice')}
                         roles = {t('roles')}
                         allowZeroPercentage = {configData.zero_stock}

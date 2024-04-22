@@ -192,25 +192,23 @@ function TransactionModeForm(props) {
                                     <Grid columns={24}>
                                         <Grid.Col span={'auto'} >
                                             <ScrollArea h={height} scrollbarSize={2} type="never">
-                                                <Box  pb={'md'}>
+                                                <Box>
                                                     <Box mt={'xs'}>
-                                                        <Box mt={'xs'}>
-                                                            <SelectForm
-                                                                tooltip={t('ChooseMethod')}
-                                                                label={t('Method')}
-                                                                placeholder={t('ChooseMethod')}
-                                                                required={true}
-                                                                nextField={'name'}
-                                                                name={'method_id'}
-                                                                form={form}
-                                                                dropdownValue={getTransactionMethodDropdownData()}
-                                                                mt={8}
-                                                                id={'method_id'}
-                                                                searchable={false}
-                                                                value={methodData}
-                                                                changeValue={setMethodData}
-                                                            />
-                                                        </Box>
+                                                        <SelectForm
+                                                            tooltip={t('ChooseMethod')}
+                                                            label={t('Method')}
+                                                            placeholder={t('ChooseMethod')}
+                                                            required={true}
+                                                            nextField={'name'}
+                                                            name={'method_id'}
+                                                            form={form}
+                                                            dropdownValue={getTransactionMethodDropdownData()}
+                                                            mt={8}
+                                                            id={'method_id'}
+                                                            searchable={false}
+                                                            value={methodData}
+                                                            changeValue={setMethodData}
+                                                        />
                                                     </Box>
                                                     <Box mt={'xs'}>
                                                         <InputForm
@@ -225,7 +223,7 @@ function TransactionModeForm(props) {
                                                             id={'name'}
                                                         />
                                                     </Box>
-                                                     <Box mt={'xs'}>
+                                                    <Box mt={'xs'}>
                                                         <InputForm
                                                             tooltip={t('ShortNameValidateMessage')}
                                                             label={t('ShortName')}
@@ -335,7 +333,6 @@ function TransactionModeForm(props) {
                                                             {previews}
                                                         </SimpleGrid>
                                                     </Box>
-
                                                 </Box>
                                             </ScrollArea>
                                         </Grid.Col>

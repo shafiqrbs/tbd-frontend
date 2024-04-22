@@ -78,7 +78,7 @@ function SalesForm(props) {
     const [customerData, setCustomerData] = useState(null);
     const [salesByUser, setSalesByUser] = useState(null);
     const [orderProcess, setOrderProcess] = useState(null);
-
+  //  console.log(getCustomerDropdownData);
 
     const form = useForm({
         initialValues: {
@@ -189,7 +189,7 @@ function SalesForm(props) {
                 formValue['total'] = salesTotalAmount;
                 formValue['payment'] = form.values.receive_amount;
                 formValue['sales_by_id'] = form.values.sales_by;
-                formValue['created_by_id'] = Number(createdBy);
+                formValue['created_by_id'] = Number(createdBy['id']);
                 formValue['process'] = form.values.order_process;
                 formValue['narration'] = form.values.narration;
                 formValue['items'] = transformedArray ? transformedArray : [];

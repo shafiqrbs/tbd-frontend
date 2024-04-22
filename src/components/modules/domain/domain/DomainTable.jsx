@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {useOutletContext} from "react-router-dom";
+import {useOutletContext,Link,} from "react-router-dom";
 import {
     Group,
     Box,Grid,
@@ -88,6 +88,9 @@ function DomainTable(props) {
                             textAlign: "right",
                             render: (data) => (
                                 <Group gap={4} justify="right" wrap="nowrap">
+                                    <ActionIcon>
+                                        <Link to='/domain' query={{ id: data.id }} params={{ id: data.id }}><IconEye size={16}/></Link>
+                                    </ActionIcon>
                                     <ActionIcon
                                         size="sm"
                                         variant="subtle"
