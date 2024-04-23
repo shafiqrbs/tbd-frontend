@@ -19,7 +19,7 @@ import {
     Kbd,
     Menu,
     Modal,
-    Notification, NavLink, Container, Flex,
+    Notification, NavLink, Container, Flex, ScrollArea
 } from "@mantine/core";
 import Logo from "../../assets/images/tbd-logo.png";
 
@@ -141,10 +141,13 @@ export default function Header({
             <Modal
                 opened={opened}
                 onClose={close}
-                size={`50%`}
+                size={`60%`}
+                scrollAreaComponent={ScrollArea.Autosize}
                 transitionProps={{ transition: 'pop', duration: 100 }}
+                title={configData && configData.domain ? configData.domain.name : 'Store Name'}
+                withCloseButton={false}
             >
-                <SearchModal />
+                <SearchModal onClose={close} />
             </Modal >
             <Box bg={'white'} h={`100%`} pos={`relative`}>
                 <Group justify="space-between" h="100%" pl={'md'} px={`xs`} mr={'4'}>
@@ -243,7 +246,7 @@ export default function Header({
                             />
                         </Flex>
                         <Button onClick={open} className={HeaderStyle.buttonHeader} pr={'xs'} size="xs" color={'#F25745'}>
-                            <Text pl={'xs'} pr={'0'} fz={`xs`} c={'gray.9'}>{t('Search')}</Text>
+                            <Text pl={'xs'} pr={'0'} fz={`xs`} c={'white'}>{t('Search')}</Text>
                         </Button>
                     </Group>
                     <Group>

@@ -1,63 +1,291 @@
 import React, { useEffect, useState } from "react";
-import { Box, Progress, TextInput, List } from "@mantine/core";
+import { Box, TextInput, ScrollArea, Stack, Text, Title, GridCol, Grid, CloseButton, Input, Tooltip } from "@mantine/core";
+import { IconClearAll, IconSearch, IconTrash } from "@tabler/icons-react";
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
-const initialItems = [
-    '🍎 Apples', '🍌 Bananas', '🥦 Broccoli', '🥕 Carrots', '🍫 Chocolate',
-    '🤽‍♂️ WaterPolo', '🍅 Tomato', '🥒 Cucumber', '🍋 Lemon', '🇬🇹 Guatemala'
 
-];
+function SearchModal({ onClose }) {
+    const [filteredItems, setFilteredItems] = useState([]);
+    const { t, i18n } = useTranslation();
+    const navigate = useNavigate();
+    const [value, setValue] = useState('');
 
-function SearchModal() {
-    const [items, setItems] = useState(initialItems);
-    const [filteredItems, setFilteredItems] = useState(initialItems);
+    const getActions = () => {
+        return ([
+            {
+                group: t('Core'),
+                actions: [
+                    {
+                        id: 'customer',
+                        label: t('Customer'),
+                        description: t('WhereWePresentTheCustomerInformation'),
+                        onClick: () => {
+                            navigate('/core/customer');
+                            onClose();
+                        },
+
+                    },
+                    {
+                        id: 'user',
+                        label: t('User'),
+                        description: t('WhereWePresentTheUserInformation'),
+                        onClick: () => {
+                            navigate('/core/user');
+                            onClose();
+                        },
+
+                    },
+                    {
+                        id: 'vendor',
+                        label: t('Vendor'),
+                        description: t('WhereWePresentTheVendorInformation'),
+                        onClick: () => {
+                            navigate('/core/vendor');
+                            onClose();
+                        },
+                    },
+                ],
+            },
+
+            {
+                group: t('Inventory'),
+                actions: [
+                    {
+                        id: 'category',
+                        label: t('Category'),
+                        description: t('WhereWePresentTheCategoryInformation'),
+                        onClick: () => {
+                            navigate('/inventory/category');
+                            onClose();
+                        },
+                    },
+                    {
+                        id: 'category-group',
+                        label: t('CategoryGroup'),
+                        description: t('WhereWePresentTheCategoryGroupInformation'),
+                        onClick: () => {
+                            navigate('/inventory/category-group');
+                            onClose();
+                        },
+                    },
+                    {
+                        id: 'product',
+                        label: t('Product'),
+                        description: t('WhereWePresentTheProductInformation'),
+                        onClick: () => {
+                            navigate('/inventory/product');
+                            onClose();
+                        },
+                    },
+                    {
+                        id: 'configuration',
+                        label: t('Configuration'),
+                        description: t('WhereWePresentTheConfigurationInformation'),
+                        onClick: () => {
+                            navigate('/inventory/config');
+                            onClose();
+                        },
+                    },
+                    {
+                        id: 'sales',
+                        label: t('Sales'),
+                        description: t('WhereWePresentTheSalesInformation'),
+                        onClick: () => {
+                            navigate('/inventory/sales');
+                            onClose();
+                        },
+                    },
+                    {
+                        id: 'sales-invoice',
+                        label: t('ManageInvoice'),
+                        description: t('WhereWePresentTheSalesInvoiceInformation'),
+                        onClick: () => {
+                            navigate('/inventory/sales-invoice');
+                            onClose();
+                        },
+                    },
+                    {
+                        id: 'purchase',
+                        label: t('Purchase'),
+                        description: t('WhereWePresentThePurchaseInformation'),
+                        onClick: () => {
+                            navigate('/inventory/purchase');
+                            onClose();
+                        },
+                    },
+                    {
+                        id: 'manage-purchase',
+                        label: t('ManagePurchase'),
+                        description: t('WhereWePresentThePurchaseInvoiceInformation'),
+                        onClick: () => {
+                            navigate('/inventory/purchase-invoice');
+                            onClose();
+                        },
+                    },
+                ],
+            },
+
+            {
+                group: t('Domain'),
+                actions: [
+                    {
+                        id: 'domain',
+                        label: t('Domain'),
+                        description: t('WhereWePresentTheDomainInformation'),
+                        onClick: () => {
+                            navigate('/domain');
+                            onClose();
+                        },
+                    },
+                ],
+            },
+            {
+                group: t('Accounting'),
+                actions: [
+                    {
+                        id: 'transaction-mode',
+                        label: t('TransactionMode'),
+                        description: t('WhereWePresentTheTransactionModeInformation'),
+                        onClick: () => {
+                            navigate('/accounting/transaction-mode');
+                            onClose();
+                        },
+                    },
+                ],
+            },
+        ]);
+    };
 
     const filterList = (event) => {
-        const updatedList = initialItems.filter(item =>
-            item.toLowerCase().includes(event.target.value.toLowerCase())
-        );
+        const updatedList = getActions().reduce((acc, group) => {
+            const filteredActions = group.actions.filter(action =>
+                action.label.toLowerCase().includes(event.target.value.toLowerCase())
+            );
+            return [...acc, ...filteredActions.map(action => ({ ...action, group: group.group }))];
+        }, []);
         setFilteredItems(updatedList);
     };
 
     useEffect(() => {
-        setFilteredItems(initialItems);
+        setFilteredItems(getActions().reduce((acc, group) => [...acc, ...group.actions.map(action => ({ ...action, group: group.group }))], []));
     }, []);
 
-    const onItemClick = (item) => {
-        // Handle click event here, you can do anything with the clicked item
-        console.log("Item clicked:", item);
-    };
 
     return (
-        <Box>
-            <TextInput
-                placeholder="Search"
-                onChange={filterList}
-            />
-            <Box style={{
-                border: '1px solid #ddd',
-                overflowY: 'auto',
-                maxHeight: '300px', // Adjust the max height as needed
-            }} mt={8}>
-                <List>
-                    {filteredItems.map(item => (
+        <>
 
-                        <List.Item
-                            m={'md'}
-                            styles={{
-                                borderBottom: '1px solid #ddd',
-                                padding: '12px',
-                                cursor: 'pointer'
+            <Input
+                style={{
+                    border: `1px solid var(--mantine-color-gray-5)`, borderRadius: '5px'
+                }}
+                mb={2}
+                leftSection={< IconSearch size={16} c={'red'} />}
+                placeholder={t('SearchMenu')}
+                value={value}
+                rightSectionPointerEvents="all"
+                mt="md"
+                onChange={(event) => {
+                    setValue(event.target.value);
+                    filterList(event);
+                }}
+                rightSection={
+
+                    <Tooltip label={t("Clear")}
+                        withArrow
+                        bg={`red.1`}
+                        c={'red.3'}>
+                        <CloseButton
+                            aria-label="Clear input"
+                            onClick={() => {
+                                setValue('');
+                                filterList({ target: { value: '' } });
                             }}
-                            key={item}
-                            onClick={() => onItemClick(item)}
+                            style={{ display: value ? undefined : 'none' }}
+                        />
+                    </Tooltip>
+                }
+            />
+
+
+            {/* <ScrollArea mt={2} h={300} scrollbars="y" style={{ border: `1px solid var(--mantine-color-gray-5)`, borderRadius: '5px' }}>
+                <Box>
+                    {filteredItems.map((action, index) => (
+                        <Stack
+                            key={action.id}
+                            ml={'sm'}
                             style={{ cursor: 'pointer' }}
+                            gap={'0'}
                         >
-                            {item}
-                        </List.Item>
+                            {index === 0 || action.group !== filteredItems[index - 1].group ? (
+                                <Text size="md" fw={'bold'} c={'#828282'} mt={'sm'} mb={'-sm'}>
+                                    {action.group}
+                                </Text>
+                            ) : null}
+                            <Grid colums={12} grow gutter={'xs'}>
+                                <GridCol span={6}>
+                                    <Stack direction="column" mt={'xs'} gap={'0'} onClick={() => action.onClick()}>
+                                        <Title order={6} mt={'2px'} >
+                                            {action.label}
+                                        </Title>
+                                        <Text size="sm" c={'#828282'}>
+                                            {action.description}
+                                        </Text>
+                                    </Stack>
+                                </GridCol>
+                            </Grid>
+
+                        </Stack>
                     ))}
-                </List>
-            </Box>
-        </Box>
+                </Box>
+            </ScrollArea> */}
+
+            <ScrollArea h={500} scrollbars="y" className={'boxBackground borderRadiusAll'}>
+
+                <Box p={'md'}>
+                    {filteredItems.reduce((groups, item, index) => {
+                        if (!index || item.group !== filteredItems[index - 1].group) {
+                            groups.push({ group: item.group, items: [item] });
+                        } else {
+                            groups[groups.length - 1].items.push(item);
+                        }
+                        return groups;
+                    }, []).map((groupData, groupIndex) => (
+                        <React.Fragment key={groupIndex}>
+                            <Text size="md" fw="bold" c="#828282" mt={groupIndex ? 'md' : undefined}>
+                                {groupData.group}
+                            </Text>
+                            <Grid columns={12} grow gutter={'xs'}>
+                                {groupData.items.map((action, itemIndex) => (
+                                    <GridCol key={itemIndex} span={6} >
+                                        <Stack
+                                            bg={'grey.2'}
+                                            ml={'sm'}
+                                            style={{ cursor: 'pointer' }}
+                                            gap={'0'}
+                                            onClick={() => action.onClick()}
+                                        >
+                                            <Stack direction="column" mt={'xs'} gap={'0'}>
+                                                <Title order={6} mt={'2px'}>
+                                                    {action.label}
+                                                </Title>
+                                                <Text size="sm" c={'#828282'}>
+                                                    {action.description}
+                                                </Text>
+                                            </Stack>
+                                        </Stack>
+                                    </GridCol>
+                                ))}
+                            </Grid>
+                        </React.Fragment>
+                    ))}
+                </Box>
+
+
+
+            </ScrollArea >
+
+        </>
     );
 }
 

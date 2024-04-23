@@ -21,7 +21,7 @@ import VendorTable from "../vendor/VendorTable";
 import VendorForm from "../vendor/VendorForm";
 import VendorUpdateForm from "../vendor/VendorUpdateForm";
 
-function CustomerIndex() {
+function    CustomerIndex() {
     const {t, i18n} = useTranslation();
     const dispatch = useDispatch();
 
