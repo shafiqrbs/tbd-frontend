@@ -246,7 +246,7 @@ export default function Header({
                             />
                         </Flex>
                         <Button onClick={open} className={HeaderStyle.buttonHeader} pr={'xs'} size="xs" color={'#F25745'}>
-                            <Text pl={'xs'} pr={'0'} fz={`xs`} c={'white'}>{t('Search')}</Text>
+                            <Text pl={'xs'} pr={'0'} fz={`xs`} c={'white'}>{t('SearchMenu')}</Text>
                         </Button>
                     </Group>
                     <Group>

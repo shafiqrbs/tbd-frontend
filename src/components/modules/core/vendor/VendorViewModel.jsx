@@ -54,7 +54,6 @@ function VendorViewModel(props) {
                     <Grid.Col span={'1'}>:</Grid.Col>
                     <Grid.Col span={'auto'}>{showEntityData && showEntityData.address && showEntityData.address}</Grid.Col>
                 </Grid>
-
             </Box>
         </Modal>
 

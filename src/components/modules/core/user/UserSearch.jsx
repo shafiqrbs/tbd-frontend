@@ -93,7 +93,7 @@ function UserSearch() {
                                         </Tooltip>
                                         :
                                         <Tooltip
-                                            label={t("FiledIsRequired")}
+                                            label={t("FieldIsRequired")}
                                             withArrow
                                             position={"bottom"}
                                             c={'indigo'}

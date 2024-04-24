@@ -9,22 +9,17 @@
   "Fullscreen": "Full Screen",
   "NormalScreen": "Normal Screen",
   "NothingFound": "Nothing found ...",
-
   "CreateAndSave": "Create & Save",
   "UpdateAndSave": "Update & Save",
   "EditAndSave": "Edit & Save",
-
-  "SearchButton" : "Search your desire particular",
+  "SearchButton": "Search your desire particular",
   "FilterButton": "Press the filter button for more advance search",
   "ResetButton": "Press the reset button for clean data",
-
   "EnterSearchAnyKeyword": "Enter search any keyword",
-  "FiledIsRequired": "This field is required value",
+  "FieldIsRequired": "This field is required value",
   "FormConfirmationTitle": "Proceed Confirmation",
   "FormConfirmationMessageOld": "This action is so important that you are required to confirm it with a\nmodal. Please click\none of these buttons to proceed.",
   "FormConfirmationMessage": "Please confirm your submission by clicking the submit button below.",
-
-
   "MasterData": "Master Data",
   "Customer": "Customer",
   "ManageCustomer": "Manage Customers",
@@ -32,7 +27,7 @@
   "CustomerInformationFormDetails": "We'll always let you know about customer information",
   "Name": "Name",
   "CustomerName": "Customer Name",
-  "NameValidateMessage": "Name must be 2-20 characters long",
+  "NameValidateMessage": "Make sure to provide a valid name for the customer.",
   "CustomerGroup": "Customer Group",
   "ChooseCustomerGroup": "Choose Customer Group",
   "CreditLimit": "Credit Limit",
@@ -57,26 +52,18 @@
   "Created": "Created",
   "ReferenceId": "Reference ID",
   "FilterData": "Filter Data",
-
   "ManageTransactionMode": "Manage Transaction Mode",
   "CreateUser": "Create User",
   "UpdateUser": "Update User",
   "ManageUser": "Manage Users",
-
   "CreateCustomer": "Create Customer",
   "UpdateCustomer": "Update Customer",
-
   "CreateVendor": "Create Vendor",
   "UpdateVendor": "Update Vendor",
   "ManageVendor": "Manage Vendors",
-
-
   "ManageUsers": "Manage Users",
   "UserInformation": "Manage Users Information",
   "UserFormDetails": "Manage Users Information Details",
-
-
-
   "ShortCut": "SHORTCUT",
   "Alt+f": "Alt + F",
   "AltText": "Find the table value",
@@ -86,13 +73,10 @@
   "AltTextNew": "Enter the new form first field (alt+n)",
   "Alt+r": "Alt + R",
   "AltTextReset": "Reset the form (alt+r)",
-
-
-
   "VendorInformation": "Manage Vendors Information",
   "VendorFormDetails": "Manage Vendors Information Details",
   "CompanyName": "Company Name",
-  "CompanyNameValidateMessage": "Company Name must be 2-20 characters long",
+  "CompanyNameValidateMessage": "Please enter a Valid Company Name",
   "VendorNameValidateMessage": "Vendor Name must be 2-20 characters long",
   "VendorName": "Vendor Name",
   "VendorMobile": "Vendor Mobile",
@@ -100,9 +84,8 @@
   "TPPercentValidateMessage": "TP Percent must be digit or fraction",
   "ChooseCustomer": "Choose Customer",
   "ManageVendors": "Manage Vendors",
-
   "UserName": "User Name",
-  "UserNameValidateMessage": "User Name must be 2-20 characters long",
+  "UserNameValidateMessage": "Must be a valid User Name",
   "RequiredAndInvalidEmail": "Email must be valid",
   "Password": "Password",
   "UserNameRequired": "Username field must be required",
@@ -110,11 +93,8 @@
   "ConfirmPassword": "Confirm Password",
   "UpdateSuccessfully": "Updated Successfully",
   "CreateSuccessfully": "Created Successfully",
-
-
   "ConfigurationInformation": "Configuration Information",
   "ConfigurationInformationFormDetails": "Configuration Information Details",
-
   "ChooseBusinessModel": "Choose business model",
   "BusinessModel": "Business Model",
   "ChooseStockFormat": "Choose stock format",
@@ -126,7 +106,6 @@
   "AddressValidateMessage": "Address",
   "InvoiceCommentValidateMessage": "Invoice comment",
   "InvoiceComment": "Invoice comment",
-
   "SetupInformation": "Setup Information",
   "PrintSetup": "Print Setup",
   "CustomInvoice": "Custom Invoice",
@@ -143,7 +122,6 @@
   "TLOCommission": "TLO commission",
   "SalesReturn": "Sales return",
   "SRCommission": "SR commission",
-
   "BasicInformation": "Basic Information",
   "BasicInformationDetails": "Basic Information Details",
   "PrintInformation": "Print Information",
@@ -152,7 +130,6 @@
   "ProductSetupDetails": "Product Setup Details",
   "PriceInformation": "Price Information",
   "PriceInformationDetails": "Price Information Details",
-
   "CategoryGroupModel": "Category Group Model",
   "QuickCategoryGroup": "Would you like to add a new product category group?",
   "CategoryGroup": "Category Group",
@@ -163,13 +140,11 @@
   "CategoryNameValidateMessage": "Category name field must be required",
   "CategoryName": "Category name",
   "DeleteSuccessfully": "Delete Successfully",
-
   "ManageCategoryGroupInformation": "Manage Category Group Information",
   "CategoryGroupInformation": "Category Group Information",
   "CategoryGroupName": "Category group name",
   "CategoryGroupNameValidateMessage": "Category group name field must be required",
   "CategoryGroupAlreadyExists": "Category group already exists",
-
   "ManageProductInformation": "Manage Product Information",
   "ProductInformation": "Product Information",
   "ChooseProductType": "Choose product type",
@@ -190,11 +165,9 @@
   "PurchasePrice": "Purchase price",
   "MinimumQuantity": "Minimum quantity",
   "ReorderQuantity": "Reorder quantity",
-
   "ChooseStockProduct": "Choose stock product",
   "SalesPriceValidateMessage": "Sales price must be digit or fraction",
   "PurchasePriceValidateMessage": "Purchase price must be digit or fraction",
-
   "AreYouSureYouWantToDeleteThisItem": "Are you sure you want to delete this item?",
   "DeleteDetails": "This action is so important that you are required to confirm it with a\nmodal. Please click\none of these buttons to proceed.",
   "QuantityValidateMessage": "Quantity must be number or fractional value",
@@ -202,11 +175,8 @@
   "WeNotifyYouThat": "We notify you that !",
   "ZeroQuantityNotAllow": "Zero quantity not allow",
   "SubTotal": "Sub Total",
-
   "InstantProductCreate": "Create instant product",
   "InstantCustomerCreate": "Create instant customer",
-
-
   "CreateNewDomain": "Create New Domain",
   "CompanyStoreName": "Company store name",
   "CompanyStoreNameValidateMessage": "Company store name must be 2-20 characters long",
@@ -215,14 +185,12 @@
   "ClientNameValidateMessage": "Client name must be 2-20 characters long",
   "DomainUser": "Domain user",
   "DomainUserValidateMessage": "Domain user must be 2-20 characters long",
-
   "ServiceCharge": "Service Charge",
   "Authorised": "Authorised",
   "AccountType": "Account Type",
   "MethodName": "Method Name",
   "CustomerValidateMessage": "Choose customer",
   "ChooseTransactionMode": "Choose transaction mode",
-
   "Accounting": "Accounting",
   "TransactionMode": "Transaction Mode",
   "CreateNewTransactionMode": "Create Transaction Mode",
@@ -241,7 +209,6 @@
   "ChooseImage": "Choose Image",
   "ShortName": "Short Name",
   "UpdateTransactionMode": "Update Transaction Mode",
-
   "ManageInvoice": "Manage Invoice",
   "ManagePurchase": "Manage Purchase",
   "Sitemap": "Sitemap",
@@ -253,7 +220,6 @@
   "AccountingandFinancial": "Accounting & Financial Management",
   "DashboardTitle": "Sales and Inventory Management",
   "DashboardContent": "Point of Sale (POS) software is a specialized type of software designed to streamline and manage retail transactions, inventory, and customer interactions. It serves as the central hub for processing sales, tracking inventory levels, managing customer information, and generating reports to help businesses make informed decisions. Here's a detailed description of POS software.",
-
   "WhereWePresentTheCustomerInformation": "Where we present the customer information",
   "WhereWePresentTheUserInformation": "Where we present the user information",
   "WhereWePresentTheVendorInformation": "Where we present the vendor information",
@@ -267,19 +233,24 @@
   "WhereWePresentThePurchaseInvoiceInformation": "Where we present the purchase invoice information",
   "WhereWePresentTheDomainInformation": "Where we present the domain information",
   "WhereWePresentTheTransactionModeInformation": "Where we present the transaction mode information",
-
-
-  "" : ""
-
-
-
-
-
-
-
-
-
-
-
-
+  "": "",
+  "Customers": "Customers",
+  "Vendors": "Vendors",
+  "Users": "Users",
+  "SearchMenu": "Search Menu",
+  "Clear": "Clear",
+  "Submit": "Submit",
+  "Cancel": "Cancel",
+  "Roles": "Roles",
+  "Settings": "Settings",
+  "Category": "Category",
+  "Sales": "Sales",
+  "Product": "Product",
+  "Configuration": "Configuration",
+  "Purchase": "Purchase",
+  "Domain": "Domain",
+  "Core": "Core",
+  "Inventory": "Inventory",
+  "User": "User",
+  "Vendor": "Vendor"
 }

@@ -1,16 +1,16 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import {
     Box, Button,
-    Grid, Progress, Title,Group,Burger,Menu,rem,ActionIcon
+    Grid, Progress, Title, Group, Burger, Menu, rem, ActionIcon
 } from "@mantine/core";
-import {useTranslation} from 'react-i18next';
-import {useDispatch, useSelector} from "react-redux";
-import {getShowEntityData} from "../../../../store/inventory/crudSlice.js";
+import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from "react-redux";
+import { getShowEntityData } from "../../../../store/inventory/crudSlice.js";
 import SampleInvoiceItemForm from "./SampleInvoiceItemForm";
 import SampleHeaderNavbar from "./SampleHeaderNavbar";
 import SampleTableView from "./SampleTableView";
 function SampleInvoice() {
-    const {t, i18n} = useTranslation();
+    const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const [progress, setProgress] = useState(0);
     const insertType = useSelector((state) => state.crudSlice.insertType)
@@ -31,21 +31,21 @@ function SampleInvoice() {
     return (
         <>
             {progress !== 100 &&
-                <Progress color="red" size={"xs"} striped animated value={progress} transitionDuration={200}/>}
+                <Progress color="red" size={"xs"} striped animated value={progress} transitionDuration={200} />}
             {progress === 100 &&
                 <Box>
                     <SampleHeaderNavbar
-                        pageTitle = {t('Domain Table')}
-                        roles = {t('roles')}
-                        allowZeroPercentage = {configData.zero_stock}
-                        currancySymbol = {configData.currency.symbol}
+                        pageTitle={t('Domain Table')}
+                        roles={t('Roles')}
+                        allowZeroPercentage={configData.zero_stock}
+                        currancySymbol={configData.currency.symbol}
                     />
                     <Box p={'8'}>
                         {
-                            insertType === 'create' && configData.business_model.slug==='general' &&
+                            insertType === 'create' && configData.business_model.slug === 'general' &&
                             <SampleTableView
-                                allowZeroPercentage = {configData.zero_stock}
-                                currancySymbol = {configData.currency.symbol}
+                                allowZeroPercentage={configData.zero_stock}
+                                currancySymbol={configData.currency.symbol}
                             />
                         }
                     </Box>
