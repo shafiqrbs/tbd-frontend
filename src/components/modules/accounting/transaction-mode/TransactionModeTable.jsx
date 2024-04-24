@@ -1,14 +1,14 @@
-import React, {useEffect, useState} from "react";
-import {useOutletContext} from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useOutletContext } from "react-router-dom";
 import {
     Group,
-    Box,Grid,
-    ActionIcon, Text,Title,Stack
+    Box, Grid,
+    ActionIcon, Text, Title, Stack
 } from "@mantine/core";
-import {useTranslation} from "react-i18next";
-import {IconEye, IconEdit, IconTrash} from "@tabler/icons-react";
-import {DataTable} from 'mantine-datatable';
-import {useDispatch, useSelector} from "react-redux";
+import { useTranslation } from "react-i18next";
+import { IconEye, IconEdit, IconTrash } from "@tabler/icons-react";
+import { DataTable } from 'mantine-datatable';
+import { useDispatch, useSelector } from "react-redux";
 import {
     editEntityData,
     getIndexEntityData,
@@ -17,19 +17,20 @@ import {
     showEntityData
 } from "../../../../store/accounting/crudSlice.js";
 import KeywordSearch from "../../filter/KeywordSearch";
-import {modals} from "@mantine/modals";
-import {deleteEntityData} from "../../../../store/core/crudSlice";
+import { modals } from "@mantine/modals";
+import { deleteEntityData } from "../../../../store/core/crudSlice";
 import ShortcutInvoice from "../../shortcut/ShortcutInvoice";
 import Shortcut from "../../shortcut/Shortcut";
 import tableCss from "../../../../assets/css/Table.module.css";
+import CustomerViewModel from "../../core/customer/CustomerViewModel.jsx";
 
 
 
 function TransactionModeTable(props) {
 
     const dispatch = useDispatch();
-    const {t, i18n} = useTranslation();
-    const {isOnline, mainAreaHeight} = useOutletContext();
+    const { t, i18n } = useTranslation();
+    const { isOnline, mainAreaHeight } = useOutletContext();
     const height = mainAreaHeight - 128; //TabList height 104
     const perPage = 50;
     const [page, setPage] = useState(1);
@@ -57,8 +58,8 @@ function TransactionModeTable(props) {
     return (
 
         <>
-            <Box  pl={`xs`} pb={'xs'} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'} >
-                <KeywordSearch module={'customer'}/>
+            <Box pl={`xs`} pb={'xs'} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'} >
+                <KeywordSearch module={'customer'} />
             </Box>
             <Box className={'borderRadiusAll'}>
                 <DataTable
@@ -73,21 +74,21 @@ function TransactionModeTable(props) {
                     columns={[
                         {
                             accessor: 'index',
-                            title: 'S/N',
+                            title: t('S/N'),
                             textAlignment: 'right',
                             render: (item) => (indexData.data.indexOf(item) + 1)
                         },
-                        {accessor: 'name', title: t('Name')},
-                        {accessor: 'short_name', title: t('ShortName')},
-                        {accessor: 'method_name', title: t('MethodName')},
-                        {accessor: 'authorized_name', title: t('Authorised')},
-                        {accessor: 'account_type_name', title: t('AccountType')},
-                        {accessor: 'service_charge', title: t('ServiceCharge')},
-                        {accessor: 'account_owner', title: t('AccountOwner')},
+                        { accessor: 'name', title: t('Name') },
+                        { accessor: 'short_name', title: t('ShortName') },
+                        { accessor: 'method_name', title: t('MethodName') },
+                        { accessor: 'authorized_name', title: t('Authorised') },
+                        { accessor: 'account_type_name', title: t('AccountType') },
+                        { accessor: 'service_charge', title: t('ServiceCharge') },
+                        { accessor: 'account_owner', title: t('AccountOwner') },
 
                         {
                             accessor: "action",
-                            title: "Action",
+                            title: t("Action"),
                             textAlign: "right",
                             render: (data) => (
                                 <Group gap={4} justify="right" wrap="nowrap">
@@ -101,7 +102,7 @@ function TransactionModeTable(props) {
                                             // dispatch(showEntityData('core/customer/' + data.id))
                                         }}
                                     >
-                                        <IconEye size={16}/>
+                                        <IconEye size={16} />
                                     </ActionIcon>
                                     <ActionIcon
                                         size="sm"
@@ -113,7 +114,7 @@ function TransactionModeTable(props) {
                                             dispatch(setFormLoading(true))
                                         }}
                                     >
-                                        <IconEdit size={16}/>
+                                        <IconEdit size={16} />
                                     </ActionIcon>
                                     <ActionIcon
                                         size="sm"
@@ -127,7 +128,7 @@ function TransactionModeTable(props) {
                                                 children: (
                                                     <Text size="sm"> {t("FormConfirmationMessage")}</Text>
                                                 ),
-                                                labels: {confirm: 'Confirm', cancel: 'Cancel'},
+                                                labels: { confirm: 'Confirm', cancel: 'Cancel' },
                                                 onCancel: () => console.log('Cancel'),
                                                 onConfirm: () => {
                                                     dispatch(deleteEntityData('core/customer/' + data.id))
@@ -136,7 +137,7 @@ function TransactionModeTable(props) {
                                             });
                                         }}
                                     >
-                                        <IconTrash size={16}/>
+                                        <IconTrash size={16} />
                                     </ActionIcon>
                                 </Group>
                             ),
@@ -154,15 +155,15 @@ function TransactionModeTable(props) {
                     loaderSize="xs"
                     loaderColor="grape"
                     height={height}
-                    scrollAreaProps={{type: 'never'}}
+                    scrollAreaProps={{ type: 'never' }}
                 />
                 {
-                    customerViewModel &&
-                    <CustomerViewModel customerViewModel={customerViewModel} setCustomerViewModel={setCustomerViewModel}/>
+                        customerViewModel &&
+                    <CustomerViewModel customerViewModel={customerViewModel} setCustomerViewModel={setCustomerViewModel} />
                 }
 
             </Box>
-            </>
+        </>
 
     );
 }

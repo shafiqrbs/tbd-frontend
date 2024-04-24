@@ -41,7 +41,7 @@ function UserIndex() {
 
                 <Box>
                     <CoreHeaderNavbar
-                        pageTitle={t('ManageCustomer')}
+                        pageTitle={t('ManageUser')}
                         roles={t('Roles')}
                         allowZeroPercentage=''
                         currencySymbol=''

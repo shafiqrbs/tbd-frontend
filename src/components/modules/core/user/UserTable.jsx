@@ -1,18 +1,18 @@
-import React, {useEffect, useState} from "react";
-import {useOutletContext} from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useOutletContext } from "react-router-dom";
 import {
     Group,
     Box,
-     ActionIcon, Text
+    ActionIcon, Text
 } from "@mantine/core";
-import {useTranslation} from "react-i18next";
+import { useTranslation } from "react-i18next";
 import {
     IconEye,
     IconEdit,
     IconTrash,
 } from "@tabler/icons-react";
-import {DataTable} from 'mantine-datatable';
-import {useDispatch, useSelector} from "react-redux";
+import { DataTable } from 'mantine-datatable';
+import { useDispatch, useSelector } from "react-redux";
 import {
     deleteEntityData, editEntityData,
     getIndexEntityData,
@@ -20,17 +20,17 @@ import {
     setFormLoading,
     setInsertType
 } from "../../../../store/core/crudSlice.js";
-import {modals} from "@mantine/modals";
+import { modals } from "@mantine/modals";
 import KeywordSearch from "../../filter/KeywordSearch.jsx";
-import {useDisclosure} from "@mantine/hooks";
+import { useDisclosure } from "@mantine/hooks";
 import UserViewModel from "./UserViewModel.jsx";
 import tableCss from "../../../../assets/css/Table.module.css";
-import {showEntityData} from "../../../../store/core/crudSlice";
+import { showEntityData } from "../../../../store/core/crudSlice";
 
 function UserTable() {
     const dispatch = useDispatch();
-    const {t, i18n} = useTranslation();
-    const {isOnline, mainAreaHeight} = useOutletContext();
+    const { t, i18n } = useTranslation();
+    const { isOnline, mainAreaHeight } = useOutletContext();
     const height = mainAreaHeight - 128; //TabList height 104
     const [userViewModel, setUserViewModel] = useState(false)
 
@@ -40,7 +40,7 @@ function UserTable() {
     const userFilterData = useSelector((state) => state.crudSlice.userFilterData)
 
     const perPage = 50;
-    const [page,setPage] = useState(1);
+    const [page, setPage] = useState(1);
 
     useEffect(() => {
         const value = {
@@ -51,7 +51,7 @@ function UserTable() {
                 mobile: userFilterData.mobile,
                 email: userFilterData.email,
                 page: page,
-                offset : perPage
+                offset: perPage
             }
         }
         dispatch(getIndexEntityData(value))
@@ -59,8 +59,8 @@ function UserTable() {
 
     return (
         <>
-            <Box  pl={`xs`} pb={'xs'} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'} >
-                <KeywordSearch module={'user'}/>
+            <Box pl={`xs`} pb={'xs'} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'} >
+                <KeywordSearch module={'user'} />
             </Box>
             <Box className={'borderRadiusAll'}>
                 <DataTable
@@ -75,17 +75,17 @@ function UserTable() {
                     columns={[
                         {
                             accessor: 'index',
-                            title: 'S/N',
+                            title: t('S/N'),
                             textAlignment: 'right',
                             render: (item) => (indexData.data.indexOf(item) + 1)
                         },
-                        { accessor: 'name',  title: "Name" },
-                        { accessor: 'username',  title: "User Name" },
-                        { accessor: 'email',  title: "Email" },
-                        { accessor: 'mobile',  title: "Mobile" },
+                        { accessor: 'name', title: t("Name") },
+                        { accessor: 'username', title: t("UserName") },
+                        { accessor: 'email', title: t("Email") },
+                        { accessor: 'mobile', title: t("Mobile") },
                         {
                             accessor: "action",
-                            title: "Action",
+                            title: t("Action"),
                             textAlign: "right",
                             render: (data) => (
                                 <Group gap={4} justify="right" wrap="nowrap">
@@ -93,12 +93,12 @@ function UserTable() {
                                         size="sm"
                                         variant="subtle"
                                         color="green"
-                                        onClick={()=>{
+                                        onClick={() => {
                                             setUserViewModel(true)
                                             dispatch(editEntityData('core/user/' + data.id))
                                         }}
                                     >
-                                        <IconEye size={16}/>
+                                        <IconEye size={16} />
                                     </ActionIcon>
                                     <ActionIcon
                                         size="sm"
@@ -110,7 +110,7 @@ function UserTable() {
                                             dispatch(setFormLoading(true))
                                         }}
                                     >
-                                        <IconEdit size={16}/>
+                                        <IconEdit size={16} />
                                     </ActionIcon>
                                     <ActionIcon
                                         size="sm"
@@ -124,7 +124,7 @@ function UserTable() {
                                                 children: (
                                                     <Text size="sm"> {t("FormConfirmationMessage")}</Text>
                                                 ),
-                                                labels: {confirm: 'Confirm', cancel: 'Cancel'},
+                                                labels: { confirm: 'Confirm', cancel: 'Cancel' },
                                                 onCancel: () => console.log('Cancel'),
                                                 onConfirm: () => {
                                                     dispatch(deleteEntityData('core/user/' + data.id))
@@ -133,7 +133,7 @@ function UserTable() {
                                             });
                                         }}
                                     >
-                                        <IconTrash size={16}/>
+                                        <IconTrash size={16} />
                                     </ActionIcon>
                                 </Group>
                             ),
@@ -152,11 +152,11 @@ function UserTable() {
                     loaderSize="xs"
                     loaderColor="grape"
                     height={height}
-                    scrollAreaProps={{type: 'never'}}
+                    scrollAreaProps={{ type: 'never' }}
                 />
             </Box>
             {
-                userViewModel && <UserViewModel  userViewModel={userViewModel} setUserViewModel={setUserViewModel}/>
+                userViewModel && <UserViewModel userViewModel={userViewModel} setUserViewModel={setUserViewModel} />
             }
 
         </>
