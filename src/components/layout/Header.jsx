@@ -23,7 +23,7 @@ import {
 } from "@mantine/core";
 import Logo from "../../assets/images/tbd-logo.png";
 
-import { useDisclosure, useFullscreen } from "@mantine/hooks";
+import {useDisclosure, useFullscreen, useHotkeys} from "@mantine/hooks";
 import {
     IconNotification,
     IconCode,
@@ -116,6 +116,13 @@ export default function Header({
         navigate("/login");
     }
 
+    useHotkeys([['ctrl+k', () => {
+        open()
+    }]], []);
+    useHotkeys([['ctrl+l', () => {
+        close()
+    }]], []);
+
     const links = mockdata.map((item) => (
         <UnstyledButton className={HeaderStyle.subLink} key={item.title}>
             <Group wrap="nowrap" align="flex-start">
@@ -139,7 +146,11 @@ export default function Header({
     return (
         <>
 
-            <Modal.Root opened={opened} onClose={close} size="60%">
+            <Modal.Root
+                opened={opened}
+                onClose={close}
+                size="60%"
+            >
                 <Modal.Overlay />
                 <Modal.Content p={'xs'}>
                     <Modal.Header>
@@ -319,7 +330,7 @@ export default function Header({
                         </Tooltip>
                     </Group>
                 </Group>
-                <Spotlight
+                {/*<Spotlight
                     actions={getSpotlightDropdownData()}
                     nothingFound={t("NothingFound")}
                     highlightQuery
@@ -327,7 +338,7 @@ export default function Header({
                         leftSection: <IconSearch size={'xs'} style={{ width: rem(20), height: rem(20) }} stroke={1.5} />,
                         placeholder: t("SearchMenu"),
                     }}
-                />
+                />*/}
                 <Notification
                     pos={`absolute`}
                     display={isOnline ? "none" : ""}

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Box, TextInput, ScrollArea, Stack, Text, Title, GridCol, Grid, CloseButton, Input, Tooltip } from "@mantine/core";
-import {IconClearAll, IconInfoCircle, IconSearch, IconTrash, IconX} from "@tabler/icons-react";
+import { Box, TextInput, ScrollArea, Stack, Text, Title, GridCol, Grid, CloseButton, Input, Tooltip, rem } from "@mantine/core";
+import { IconClearAll, IconInfoCircle, IconRestore, IconSearch, IconTrash, IconX } from "@tabler/icons-react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import {setSearchKeyword} from "../../../store/core/crudSlice.js";
+import { setSearchKeyword } from "../../../store/core/crudSlice.js";
 
 
 function SearchModal({ onClose }) {
@@ -189,19 +189,17 @@ function SearchModal({ onClose }) {
                 }}
                 rightSection={
 
-                    <Tooltip label={t("Clear")}
-                        withArrow
-                        bg={`red.1`}
-                        c={'red.3'}>
-                        <CloseButton
-                            aria-label="Clear input"
-                            onClick={() => {
-                                setValue('');
-                                filterList({ target: { value: '' } });
-                            }}
-                            style={{ display: value ? undefined : 'none' }}
-                        />
-                    </Tooltip>
+
+                    <CloseButton
+                        icon={<IconRestore style={{ width: rem(20) }} stroke={2.0} />}
+                        aria-label="Clear input"
+                        onClick={() => {
+                            setValue('');
+                            filterList({ target: { value: '' } });
+                        }}
+                        style={{ display: value ? undefined : 'none' }}
+                    />
+
                 }
             />
 

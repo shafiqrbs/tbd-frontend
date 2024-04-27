@@ -73,7 +73,7 @@ function ProductTable() {
                     columns={[
                         {
                             accessor: 'index',
-                            title: 'S/N',
+                            title: t('S/N'),
                             textAlignment: 'right',
                             render: (item) => (indexData.data.indexOf(item) + 1)
                         },
@@ -86,72 +86,72 @@ function ProductTable() {
                         {
                             accessor: "action",
                             title: t("Action"),
-                                textAlign: "right",
+                            textAlign: "right",
                             render: (data) => (
-                <Group gap={4} justify="right" wrap="nowrap">
-                    <ActionIcon
-                        size="sm"
-                        variant="subtle"
-                        color="green"
-                        onClick={() => {
-                            setProductViewModel(true)
-                            dispatch(showEntityData('inventory/product/' + data.id))
-                        }}
-                    >
-                        <IconEye size={16} />
-                    </ActionIcon>
-                    <ActionIcon
-                        size="sm"
-                        variant="subtle"
-                        color="blue"
-                        onClick={() => {
-                            dispatch(setInsertType('update'))
-                            dispatch(editEntityData('inventory/product/' + data.id))
-                            dispatch(setFormLoading(true))
-                        }}
-                    >
-                        <IconEdit size={16} />
-                    </ActionIcon>
-                    <ActionIcon
-                        size="sm"
-                        variant="subtle"
-                        color="red"
-                        onClick={() => {
-                            modals.openConfirmModal({
-                                title: (
-                                    <Text size="md"> {t("FormConfirmationTitle")}</Text>
-                                ),
-                                children: (
-                                    <Text size="sm"> {t("FormConfirmationMessage")}</Text>
-                                ),
-                                labels: { confirm: 'Confirm', cancel: 'Cancel' },
-                                onCancel: () => console.log('Cancel'),
-                                onConfirm: () => {
-                                    dispatch(deleteEntityData('inventory/product/' + data.id))
-                                    dispatch(setFetching(true))
-                                },
-                            });
-                        }}
-                    >
-                        <IconTrash size={16} />
-                    </ActionIcon>
-                </Group>
-                ),
+                                <Group gap={4} justify="right" wrap="nowrap">
+                                    <ActionIcon
+                                        size="sm"
+                                        variant="subtle"
+                                        color="green"
+                                        onClick={() => {
+                                            setProductViewModel(true)
+                                            dispatch(showEntityData('inventory/product/' + data.id))
+                                        }}
+                                    >
+                                        <IconEye size={16} />
+                                    </ActionIcon>
+                                    <ActionIcon
+                                        size="sm"
+                                        variant="subtle"
+                                        color="blue"
+                                        onClick={() => {
+                                            dispatch(setInsertType('update'))
+                                            dispatch(editEntityData('inventory/product/' + data.id))
+                                            dispatch(setFormLoading(true))
+                                        }}
+                                    >
+                                        <IconEdit size={16} />
+                                    </ActionIcon>
+                                    <ActionIcon
+                                        size="sm"
+                                        variant="subtle"
+                                        color="red"
+                                        onClick={() => {
+                                            modals.openConfirmModal({
+                                                title: (
+                                                    <Text size="md"> {t("FormConfirmationTitle")}</Text>
+                                                ),
+                                                children: (
+                                                    <Text size="sm"> {t("FormConfirmationMessage")}</Text>
+                                                ),
+                                                labels: { confirm: 'Confirm', cancel: 'Cancel' },
+                                                onCancel: () => console.log('Cancel'),
+                                                onConfirm: () => {
+                                                    dispatch(deleteEntityData('inventory/product/' + data.id))
+                                                    dispatch(setFetching(true))
+                                                },
+                                            });
+                                        }}
+                                    >
+                                        <IconTrash size={16} />
+                                    </ActionIcon>
+                                </Group>
+                            ),
                         },
-                ]
+                    ]
                     }
-                fetching={fetching}
-                totalRecords={indexData.total}
-                recordsPerPage={perPage}
-                page={page}
-                onPageChange={(p) => {
-                    setPage(p)
-                    dispatch(setFetching(true))
-                }}
-                loaderSize="xs"
-                loaderColor="grape"
-                height={height}
-                scrollAreaProps={{ type: 'never' }}
+                    fetching={fetching}
+                    totalRecords={indexData.total}
+                    recordsPerPage={perPage}
+                    page={page}
+                    onPageChange={(p) => {
+                        setPage(p)
+                        dispatch(setFetching(true))
+                    }}
+                    loaderSize="xs"
+                    loaderColor="grape"
+                    height={height}
+                    scrollAreaProps={{ type: 'never' }}
                 />
             </Box>
             {
