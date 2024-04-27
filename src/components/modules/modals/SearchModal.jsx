@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Box, TextInput, ScrollArea, Stack, Text, Title, GridCol, Grid, CloseButton, Input, Tooltip } from "@mantine/core";
-import { IconClearAll, IconSearch, IconTrash } from "@tabler/icons-react";
+import {IconClearAll, IconInfoCircle, IconSearch, IconTrash, IconX} from "@tabler/icons-react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import {setSearchKeyword} from "../../../store/core/crudSlice.js";
 
 
 function SearchModal({ onClose }) {
@@ -176,15 +177,12 @@ function SearchModal({ onClose }) {
         <>
 
             <Input
-                style={{
-                    border: `1px solid var(--mantine-color-gray-5)`, borderRadius: '5px'
-                }}
-                mb={2}
+
+                mb={4}
                 leftSection={< IconSearch size={16} c={'red'} />}
                 placeholder={t('SearchMenu')}
                 value={value}
                 rightSectionPointerEvents="all"
-                mt="md"
                 onChange={(event) => {
                     setValue(event.target.value);
                     filterList(event);
@@ -208,41 +206,10 @@ function SearchModal({ onClose }) {
             />
 
 
-            {/* <ScrollArea mt={2} h={300} scrollbars="y" style={{ border: `1px solid var(--mantine-color-gray-5)`, borderRadius: '5px' }}>
-                <Box>
-                    {filteredItems.map((action, index) => (
-                        <Stack
-                            key={action.id}
-                            ml={'sm'}
-                            style={{ cursor: 'pointer' }}
-                            gap={'0'}
-                        >
-                            {index === 0 || action.group !== filteredItems[index - 1].group ? (
-                                <Text size="md" fw={'bold'} c={'#828282'} mt={'sm'} mb={'-sm'}>
-                                    {action.group}
-                                </Text>
-                            ) : null}
-                            <Grid colums={12} grow gutter={'xs'}>
-                                <GridCol span={6}>
-                                    <Stack direction="column" mt={'xs'} gap={'0'} onClick={() => action.onClick()}>
-                                        <Title order={6} mt={'2px'} >
-                                            {action.label}
-                                        </Title>
-                                        <Text size="sm" c={'#828282'}>
-                                            {action.description}
-                                        </Text>
-                                    </Stack>
-                                </GridCol>
-                            </Grid>
 
-                        </Stack>
-                    ))}
-                </Box>
-            </ScrollArea> */}
+            <ScrollArea h={'400'} className={'boxBackground borderRadiusAll'} type="never" >
 
-            <ScrollArea h={500} scrollbars="y" className={'boxBackground borderRadiusAll'}>
-
-                <Box p={'md'}>
+                <Box p={'xs'}>
                     {filteredItems.reduce((groups, item, index) => {
                         if (!index || item.group !== filteredItems[index - 1].group) {
                             groups.push({ group: item.group, items: [item] });

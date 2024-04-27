@@ -1,12 +1,12 @@
-import React, {useEffect, useRef, useState} from "react";
-import {useOutletContext} from "react-router-dom";
+import React, { useEffect, useRef, useState } from "react";
+import { useOutletContext } from "react-router-dom";
 import tableCss from '../../../../assets/css/Table.module.css';
 import {
     Group,
     Box,
     ActionIcon, Text, Grid, Stack, Button, ScrollArea, Table, Loader
 } from "@mantine/core";
-import {useTranslation} from "react-i18next";
+import { useTranslation } from "react-i18next";
 import {
     IconEye,
     IconEdit,
@@ -14,8 +14,8 @@ import {
     IconPrinter,
     IconReceipt,
 } from "@tabler/icons-react";
-import {DataTable} from 'mantine-datatable';
-import {useDispatch, useSelector} from "react-redux";
+import { DataTable } from 'mantine-datatable';
+import { useDispatch, useSelector } from "react-redux";
 import {
     editEntityData,
     getIndexEntityData, setEditEntityData,
@@ -23,34 +23,34 @@ import {
     setInsertType,
     showEntityData
 } from "../../../../store/inventory/crudSlice.js";
-import {modals} from "@mantine/modals";
-import {deleteEntityData} from "../../../../store/core/crudSlice";
+import { modals } from "@mantine/modals";
+import { deleteEntityData } from "../../../../store/core/crudSlice";
 import ShortcutTable from "../../shortcut/ShortcutTable";
 import KeywordDateRangeSearch from "../../filter/KeywordDateRangeSearch";
-import {ReactToPrint} from "react-to-print";
+import { ReactToPrint } from "react-to-print";
 
 function SalesTable() {
     const printRef = useRef()
     const dispatch = useDispatch();
-    const {t, i18n} = useTranslation();
-    const {isOnline, mainAreaHeight} = useOutletContext();
+    const { t, i18n } = useTranslation();
+    const { isOnline, mainAreaHeight } = useOutletContext();
     const tableHeight = mainAreaHeight - 116; //TabList height 104
     const height = mainAreaHeight - 314; //TabList height 104
 
     const perPage = 50;
-    const [page,setPage] = useState(1);
+    const [page, setPage] = useState(1);
 
     const fetching = useSelector((state) => state.crudSlice.fetching)
     const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword)
     const indexData = useSelector((state) => state.crudSlice.indexEntityData)
-    const [salesViewData,setSalesViewData] =useState({})
+    const [salesViewData, setSalesViewData] = useState({})
 
-    useEffect(()=>{
+    useEffect(() => {
         setSalesViewData(indexData.data && indexData.data[0] && indexData.data[0])
-    },[indexData.data])
+    }, [indexData.data])
 
 
-    const rows = salesViewData && salesViewData.sales_items && salesViewData.sales_items.map((element,index) => (
+    const rows = salesViewData && salesViewData.sales_items && salesViewData.sales_items.map((element, index) => (
         <Table.Tr key={element.name}>
             <Table.Td fz="xs" width={'20'}>{index + 1}</Table.Td>
             <Table.Td ta="left" fz="xs" width={'300'}>{element.item_name}</Table.Td>
@@ -77,13 +77,13 @@ function SalesTable() {
     return (
         <>
             <Box>
-                <Grid columns={24} gutter={{base: 8}}>
+                <Grid columns={24} gutter={{ base: 8 }}>
                     <Grid.Col span={24} >
                         <Box pl={`xs`} pb={'4'} pr={'xs'} pt={'4'} mb={'4'} className={'boxBackground borderRadiusAll'} >
                             <Grid>
                                 <Grid.Col>
                                     <Stack >
-                                        <KeywordDateRangeSearch/>
+                                        <KeywordDateRangeSearch />
                                     </Stack>
                                 </Grid.Col>
                             </Grid>
@@ -92,7 +92,7 @@ function SalesTable() {
                 </Grid>
             </Box>
             <Box>
-                <Grid columns={24} gutter={{base:8}}>
+                <Grid columns={24} gutter={{ base: 8 }}>
                     <Grid.Col span={15} >
                         <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
                             <Box className={'borderRadiusAll'}>
@@ -108,20 +108,20 @@ function SalesTable() {
                                     columns={[
                                         {
                                             accessor: 'index',
-                                            title: 'S/N',
+                                            title: t('S/N'),
                                             textAlignment: 'right',
                                             render: (item) => (indexData.data.indexOf(item) + 1)
                                         },
-                                        { accessor: 'id',  title: "ID" },
-                                        { accessor: 'created',  title: "Created" },
-                                        { accessor: 'invoice',  title: "Invoice" },
-                                        { accessor: 'customerName',  title: "Customer" },
-                                        { accessor: 'sub_total',  title: "SubTotal" },
-                                        { accessor: 'discount',  title: "Dis." },
-                                        { accessor: 'total',  title: "Total" },
+                                        { accessor: 'id', title: t("ID") },
+                                        { accessor: 'created', title: t("Created") },
+                                        { accessor: 'invoice', title: t("Invoice") },
+                                        { accessor: 'customerName', title: t("Customer") },
+                                        { accessor: 'sub_total', title: t("SubTotal") },
+                                        { accessor: 'discount', title: t("Discount") },
+                                        { accessor: 'total', title: t("Total") },
                                         {
                                             accessor: "action",
-                                            title: "Action",
+                                            title: t("Action"),
                                             textAlign: "right",
                                             render: (data) => (
                                                 <Group gap={4} justify="right" wrap="nowrap">
@@ -129,11 +129,11 @@ function SalesTable() {
                                                         size="sm"
                                                         variant="subtle"
                                                         color="green"
-                                                        onClick={()=>{
+                                                        onClick={() => {
                                                             setSalesViewData(data)
                                                         }}
                                                     >
-                                                        <IconEye size={16}/>
+                                                        <IconEye size={16} />
                                                     </ActionIcon>
                                                     <ActionIcon
                                                         size="sm"
@@ -145,7 +145,7 @@ function SalesTable() {
                                                             dispatch(setFormLoading(true))
                                                         }}
                                                     >
-                                                        <IconEdit size={16}/>
+                                                        <IconEdit size={16} />
                                                     </ActionIcon>
                                                     <ActionIcon
                                                         size="sm"
@@ -159,7 +159,7 @@ function SalesTable() {
                                                                 children: (
                                                                     <Text size="sm"> {t("FormConfirmationMessage")}</Text>
                                                                 ),
-                                                                labels: {confirm: 'Confirm', cancel: 'Cancel'},
+                                                                labels: { confirm: 'Confirm', cancel: 'Cancel' },
                                                                 onCancel: () => console.log('Cancel'),
                                                                 onConfirm: () => {
                                                                     dispatch(deleteEntityData('vendor/' + data.id))
@@ -168,7 +168,7 @@ function SalesTable() {
                                                             });
                                                         }}
                                                     >
-                                                        <IconTrash size={16}/>
+                                                        <IconTrash size={16} />
                                                     </ActionIcon>
                                                 </Group>
                                             ),
@@ -198,11 +198,11 @@ function SalesTable() {
                             <Box h={'36'} pl={`xs`} fz={'sm'} fw={'600'} pr={8} pt={'6'} mb={'4'} className={'boxBackground textColor borderRadiusAll'} >
                                 {t('Invoice')}: {salesViewData && salesViewData.invoice && salesViewData.invoice}
                             </Box>
-                            <Box className={'borderRadiusAll'}  fz={'sm'}  >
-                                <Box pl={`xs`} fz={'sm'} fw={'600'} pr={'xs'}  pt={'6'} pb={'xs'} className={'boxBackground textColor'} >
-                                    <Grid gutter={{base:4}}>
+                            <Box className={'borderRadiusAll'} fz={'sm'}  >
+                                <Box pl={`xs`} fz={'sm'} fw={'600'} pr={'xs'} pt={'6'} pb={'xs'} className={'boxBackground textColor'} >
+                                    <Grid gutter={{ base: 4 }}>
                                         <Grid.Col span={'6'}>
-                                            <Grid columns={15} gutter={{base:4}}>
+                                            <Grid columns={15} gutter={{ base: 4 }}>
                                                 <Grid.Col span={6} ><Text fz="sm" lh="xs">Customer</Text></Grid.Col>
                                                 <Grid.Col span={9} >
                                                     <Text fz="sm" lh="xs">
@@ -210,7 +210,7 @@ function SalesTable() {
                                                     </Text>
                                                 </Grid.Col>
                                             </Grid>
-                                            <Grid columns={15} gutter={{base:4}}>
+                                            <Grid columns={15} gutter={{ base: 4 }}>
                                                 <Grid.Col span={6} ><Text fz="sm" lh="xs">Mobile</Text></Grid.Col>
                                                 <Grid.Col span={9} >
                                                     <Text fz="sm" lh="xs">
@@ -218,7 +218,7 @@ function SalesTable() {
                                                     </Text>
                                                 </Grid.Col>
                                             </Grid>
-                                            <Grid columns={15} gutter={{base:4}}>
+                                            <Grid columns={15} gutter={{ base: 4 }}>
                                                 <Grid.Col span={6} ><Text fz="sm" lh="xs">Address</Text></Grid.Col>
                                                 <Grid.Col span={9} >
                                                     <Text fz="sm" lh="xs">
@@ -226,7 +226,7 @@ function SalesTable() {
                                                     </Text>
                                                 </Grid.Col>
                                             </Grid>
-                                            <Grid columns={15} gutter={{base:4}}>
+                                            <Grid columns={15} gutter={{ base: 4 }}>
                                                 <Grid.Col span={6} ><Text fz="sm" lh="xs">Balance</Text></Grid.Col>
                                                 <Grid.Col span={9} >
                                                     <Text fz="sm" lh="xs">
@@ -236,7 +236,7 @@ function SalesTable() {
                                             </Grid>
                                         </Grid.Col>
                                         <Grid.Col span={'6'}>
-                                            <Grid columns={15} gutter={{base:4}}>
+                                            <Grid columns={15} gutter={{ base: 4 }}>
                                                 <Grid.Col span={6} ><Text fz="sm" lh="xs">Created</Text></Grid.Col>
                                                 <Grid.Col span={9} >
                                                     <Text fz="sm" lh="xs">
@@ -244,7 +244,7 @@ function SalesTable() {
                                                     </Text>
                                                 </Grid.Col>
                                             </Grid>
-                                            <Grid columns={15} gutter={{base:4}}>
+                                            <Grid columns={15} gutter={{ base: 4 }}>
                                                 <Grid.Col span={6} ><Text fz="sm" lh="xs">Created By</Text></Grid.Col>
                                                 <Grid.Col span={9} >
                                                     <Text fz="sm" lh="xs">
@@ -252,7 +252,7 @@ function SalesTable() {
                                                     </Text>
                                                 </Grid.Col>
                                             </Grid>
-                                            <Grid columns={15} gutter={{base:4}}>
+                                            <Grid columns={15} gutter={{ base: 4 }}>
                                                 <Grid.Col span={6} ><Text fz="sm" lh="xs">Sales By</Text></Grid.Col>
                                                 <Grid.Col span={9} >
                                                     <Text fz="sm" lh="xs">
@@ -260,7 +260,7 @@ function SalesTable() {
                                                     </Text>
                                                 </Grid.Col>
                                             </Grid>
-                                            <Grid columns={15} gutter={{base:4}}>
+                                            <Grid columns={15} gutter={{ base: 4 }}>
                                                 <Grid.Col span={6} ><Text fz="sm" lh="xs">Mode</Text></Grid.Col>
                                                 <Grid.Col span={9} >
                                                     <Text fz="sm" lh="xs">
@@ -268,7 +268,7 @@ function SalesTable() {
                                                     </Text>
                                                 </Grid.Col>
                                             </Grid>
-                                            <Grid columns={15} gutter={{base:4}}>
+                                            <Grid columns={15} gutter={{ base: 4 }}>
                                                 <Grid.Col span={6} ><Text fz="sm" lh="xs">Process</Text></Grid.Col>
                                                 <Grid.Col span={9} >
                                                     <Text fz="sm" lh="xs">
@@ -280,47 +280,47 @@ function SalesTable() {
                                     </Grid>
                                 </Box>
                                 <ScrollArea h={height} scrollbarSize={2} type="never" >
-                                <Box>
-                                    <Table stickyHeader >
-                                        <Table.Thead>
-                                            <Table.Tr>
-                                                <Table.Th fz="xs" w={'20'}>{t('S/N')}</Table.Th>
-                                                <Table.Th fz="xs" ta="left" w={'300'}>{t('Name')}</Table.Th>
-                                                <Table.Th fz="xs" ta="center"  w={'60'}>{t('QTY')}</Table.Th>
-                                                <Table.Th ta="right" fz="xs" w={'80'}>{t('Price')}</Table.Th>
-                                                <Table.Th ta="right" fz="xs" w={'100'}>{t('SalesPrice')}</Table.Th>
-                                                <Table.Th ta="right" fz="xs" w={'100'}>{t('SubTotal')}</Table.Th>
-                                            </Table.Tr>
-                                        </Table.Thead>
-                                        <Table.Tbody>{rows}</Table.Tbody>
-                                        <Table.Tfoot>
-                                             <Table.Tr>
-                                                <Table.Th colspan={'5'} ta="right" fz="xs" w={'100'}>{t('SubTotal')}</Table.Th>
-                                                <Table.Th ta="right" fz="xs" w={'100'}>
-                                                    {salesViewData && salesViewData.sub_total && Number(salesViewData.sub_total).toFixed(2)}
-                                                </Table.Th>
-                                            </Table.Tr>
-                                            <Table.Tr>
-                                                <Table.Th colspan={'5'} ta="right" fz="xs" w={'100'}>{t('Discount')}</Table.Th>
-                                                <Table.Th ta="right" fz="xs" w={'100'}>
-                                                    {salesViewData && salesViewData.discount && Number(salesViewData.discount).toFixed(2)}
-                                                </Table.Th>
-                                            </Table.Tr>
-                                            <Table.Tr>
-                                                <Table.Th colspan={'5'} ta="right" fz="xs" w={'100'}>{t('Total')}</Table.Th>
-                                                <Table.Th ta="right" fz="xs" w={'100'}>
-                                                    {salesViewData && salesViewData.total && Number(salesViewData.total).toFixed(2)}
-                                                </Table.Th>
-                                            </Table.Tr>
-                                            <Table.Tr>
-                                                <Table.Th colspan={'5'} ta="right" fz="xs" w={'100'}>{t('Receive')}</Table.Th>
-                                                <Table.Th ta="right" fz="xs" w={'100'}>
-                                                    {salesViewData && salesViewData.payment && Number(salesViewData.payment).toFixed(2)}
-                                                </Table.Th>
-                                            </Table.Tr>
-                                        </Table.Tfoot>
-                                    </Table>
-                                </Box>
+                                    <Box>
+                                        <Table stickyHeader >
+                                            <Table.Thead>
+                                                <Table.Tr>
+                                                    <Table.Th fz="xs" w={'20'}>{t('S/N')}</Table.Th>
+                                                    <Table.Th fz="xs" ta="left" w={'300'}>{t('Name')}</Table.Th>
+                                                    <Table.Th fz="xs" ta="center" w={'60'}>{t('QTY')}</Table.Th>
+                                                    <Table.Th ta="right" fz="xs" w={'80'}>{t('Price')}</Table.Th>
+                                                    <Table.Th ta="right" fz="xs" w={'100'}>{t('SalesPrice')}</Table.Th>
+                                                    <Table.Th ta="right" fz="xs" w={'100'}>{t('SubTotal')}</Table.Th>
+                                                </Table.Tr>
+                                            </Table.Thead>
+                                            <Table.Tbody>{rows}</Table.Tbody>
+                                            <Table.Tfoot>
+                                                <Table.Tr>
+                                                    <Table.Th colspan={'5'} ta="right" fz="xs" w={'100'}>{t('SubTotal')}</Table.Th>
+                                                    <Table.Th ta="right" fz="xs" w={'100'}>
+                                                        {salesViewData && salesViewData.sub_total && Number(salesViewData.sub_total).toFixed(2)}
+                                                    </Table.Th>
+                                                </Table.Tr>
+                                                <Table.Tr>
+                                                    <Table.Th colspan={'5'} ta="right" fz="xs" w={'100'}>{t('Discount')}</Table.Th>
+                                                    <Table.Th ta="right" fz="xs" w={'100'}>
+                                                        {salesViewData && salesViewData.discount && Number(salesViewData.discount).toFixed(2)}
+                                                    </Table.Th>
+                                                </Table.Tr>
+                                                <Table.Tr>
+                                                    <Table.Th colspan={'5'} ta="right" fz="xs" w={'100'}>{t('Total')}</Table.Th>
+                                                    <Table.Th ta="right" fz="xs" w={'100'}>
+                                                        {salesViewData && salesViewData.total && Number(salesViewData.total).toFixed(2)}
+                                                    </Table.Th>
+                                                </Table.Tr>
+                                                <Table.Tr>
+                                                    <Table.Th colspan={'5'} ta="right" fz="xs" w={'100'}>{t('Receive')}</Table.Th>
+                                                    <Table.Th ta="right" fz="xs" w={'100'}>
+                                                        {salesViewData && salesViewData.payment && Number(salesViewData.payment).toFixed(2)}
+                                                    </Table.Th>
+                                                </Table.Tr>
+                                            </Table.Tfoot>
+                                        </Table>
+                                    </Box>
                                 </ScrollArea>
                             </Box>
                         </Box>
@@ -330,7 +330,7 @@ function SalesTable() {
                                 <Button
                                     fullWidth
                                     variant="filled"
-                                    leftSection={<IconPrinter size={14}/>}
+                                    leftSection={<IconPrinter size={14} />}
                                     color="green.5"
                                 >
                                     <ReactToPrint
@@ -343,7 +343,7 @@ function SalesTable() {
                                 <Button
                                     fullWidth
                                     variant="filled"
-                                    leftSection={<IconReceipt size={14}/>}
+                                    leftSection={<IconReceipt size={14} />}
                                     color="red.5"
                                 >
                                     Pos
@@ -351,7 +351,7 @@ function SalesTable() {
                                 <Button
                                     fullWidth
                                     variant="filled"
-                                    leftSection={<IconEdit size={14}/>}
+                                    leftSection={<IconEdit size={14} />}
                                     color="cyan.5"
                                 >
                                     Edit

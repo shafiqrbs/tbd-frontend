@@ -138,17 +138,19 @@ export default function Header({
     ));
     return (
         <>
-            <Modal
-                opened={opened}
-                onClose={close}
-                size={`60%`}
-                scrollAreaComponent={ScrollArea.Autosize}
-                transitionProps={{ transition: 'pop', duration: 100 }}
-                title={configData && configData.domain ? configData.domain.name : 'Store Name'}
-                withCloseButton={false}
-            >
-                <SearchModal onClose={close} />
-            </Modal >
+
+            <Modal.Root opened={opened} onClose={close} size="60%">
+                <Modal.Overlay />
+                <Modal.Content p={'xs'}>
+                    <Modal.Header>
+                        <Modal.Title>{configData && configData.domain ? configData.domain.name : 'Store Name'}</Modal.Title>
+                        <Modal.CloseButton />
+                    </Modal.Header>
+                    <Modal.Body>
+                        <SearchModal onClose={close} />
+                    </Modal.Body>
+                </Modal.Content>
+            </Modal.Root>
             <Box bg={'white'} h={`100%`} pos={`relative`}>
                 <Group justify="space-between" h="100%" pl={'md'} px={`xs`} mr={'4'}>
                     <Group>
@@ -242,12 +244,10 @@ export default function Header({
                                 justify="space-between"
                                 style={{ border: `2px solid var(--mantine-color-gray-5)` }}
                                 color={`gray`}
-                                onClick={spotlight.open}
+                                onClick={open}
                             />
                         </Flex>
-                        <Button onClick={open} className={HeaderStyle.buttonHeader} pr={'xs'} size="xs" color={'#F25745'}>
-                            <Text pl={'xs'} pr={'0'} fz={`xs`} c={'white'}>{t('SearchMenu')}</Text>
-                        </Button>
+
                     </Group>
                     <Group>
                         <Menu

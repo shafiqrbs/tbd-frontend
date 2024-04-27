@@ -1,23 +1,23 @@
-import React, {useEffect, useState} from "react";
-import {useOutletContext} from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useOutletContext } from "react-router-dom";
 import {
     Group,
     Box,
     ActionIcon, Text
 } from "@mantine/core";
-import {useTranslation} from "react-i18next";
-import {IconEye, IconEdit, IconTrash} from "@tabler/icons-react";
-import {DataTable} from 'mantine-datatable';
-import {useDispatch, useSelector} from "react-redux";
+import { useTranslation } from "react-i18next";
+import { IconEye, IconEdit, IconTrash } from "@tabler/icons-react";
+import { DataTable } from 'mantine-datatable';
+import { useDispatch, useSelector } from "react-redux";
 import {
     editEntityData,
     getIndexEntityData,
     setFetching, setFormLoading,
     setInsertType,
-    showEntityData,deleteEntityData
+    showEntityData, deleteEntityData
 } from "../../../../store/core/crudSlice.js";
 import KeywordSearch from "../../filter/KeywordSearch";
-import {modals} from "@mantine/modals";
+import { modals } from "@mantine/modals";
 
 import ProductViewModel from "./ProductViewModel.jsx";
 import tableCss from "../../../../assets/css/Table.module.css";
@@ -25,8 +25,8 @@ import tableCss from "../../../../assets/css/Table.module.css";
 function ProductTable() {
 
     const dispatch = useDispatch();
-    const {t, i18n} = useTranslation();
-    const {isOnline, mainAreaHeight} = useOutletContext();
+    const { t, i18n } = useTranslation();
+    const { isOnline, mainAreaHeight } = useOutletContext();
     const height = mainAreaHeight - 128; //TabList height 104
 
     const perPage = 50;
@@ -57,8 +57,8 @@ function ProductTable() {
     return (
         <>
 
-            <Box  pl={`xs`} pb={'xs'} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'} >
-                <KeywordSearch module={'product'}/>
+            <Box pl={`xs`} pb={'xs'} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'} >
+                <KeywordSearch module={'product'} />
             </Box>
             <Box className={'borderRadiusAll'}>
                 <DataTable
@@ -77,86 +77,86 @@ function ProductTable() {
                             textAlignment: 'right',
                             render: (item) => (indexData.data.indexOf(item) + 1)
                         },
-                        {accessor: 'product_name', title: "Name"},
-                        {accessor: 'category_name', title: "Category"},
-                        {accessor: 'unit_name', title: "Unit"},
-                        {accessor: 'brand_name', title: "Brand"},
-                        {accessor: 'purchase_price', title: "Purchase Price"},
-                        {accessor: 'sales_price', title: "Sales Price"},
+                        { accessor: 'product_name', title: t("Name") },
+                        { accessor: 'category_name', title: t("Category") },
+                        { accessor: 'unit_name', title: t("Unit") },
+                        { accessor: 'brand_name', title: t("Brand") },
+                        { accessor: 'purchase_price', title: t("PurchasePrice") },
+                        { accessor: 'sales_price', title: t("SalesPrice") },
                         {
                             accessor: "action",
-                            title: "Action",
-                            textAlign: "right",
+                            title: t("Action"),
+                                textAlign: "right",
                             render: (data) => (
-                                <Group gap={4} justify="right" wrap="nowrap">
-                                    <ActionIcon
-                                        size="sm"
-                                        variant="subtle"
-                                        color="green"
-                                        onClick={() => {
-                                            setProductViewModel(true)
-                                            dispatch(showEntityData('inventory/product/' + data.id))
-                                        }}
-                                    >
-                                        <IconEye size={16}/>
-                                    </ActionIcon>
-                                    <ActionIcon
-                                        size="sm"
-                                        variant="subtle"
-                                        color="blue"
-                                        onClick={() => {
-                                            dispatch(setInsertType('update'))
-                                            dispatch(editEntityData('inventory/product/' + data.id))
-                                            dispatch(setFormLoading(true))
-                                        }}
-                                    >
-                                        <IconEdit size={16}/>
-                                    </ActionIcon>
-                                    <ActionIcon
-                                        size="sm"
-                                        variant="subtle"
-                                        color="red"
-                                        onClick={() => {
-                                            modals.openConfirmModal({
-                                                title: (
-                                                    <Text size="md"> {t("FormConfirmationTitle")}</Text>
-                                                ),
-                                                children: (
-                                                    <Text size="sm"> {t("FormConfirmationMessage")}</Text>
-                                                ),
-                                                labels: {confirm: 'Confirm', cancel: 'Cancel'},
-                                                onCancel: () => console.log('Cancel'),
-                                                onConfirm: () => {
-                                                    dispatch(deleteEntityData('inventory/product/' + data.id))
-                                                    dispatch(setFetching(true))
-                                                },
-                                            });
-                                        }}
-                                    >
-                                        <IconTrash size={16}/>
-                                    </ActionIcon>
-                                </Group>
-                            ),
+                <Group gap={4} justify="right" wrap="nowrap">
+                    <ActionIcon
+                        size="sm"
+                        variant="subtle"
+                        color="green"
+                        onClick={() => {
+                            setProductViewModel(true)
+                            dispatch(showEntityData('inventory/product/' + data.id))
+                        }}
+                    >
+                        <IconEye size={16} />
+                    </ActionIcon>
+                    <ActionIcon
+                        size="sm"
+                        variant="subtle"
+                        color="blue"
+                        onClick={() => {
+                            dispatch(setInsertType('update'))
+                            dispatch(editEntityData('inventory/product/' + data.id))
+                            dispatch(setFormLoading(true))
+                        }}
+                    >
+                        <IconEdit size={16} />
+                    </ActionIcon>
+                    <ActionIcon
+                        size="sm"
+                        variant="subtle"
+                        color="red"
+                        onClick={() => {
+                            modals.openConfirmModal({
+                                title: (
+                                    <Text size="md"> {t("FormConfirmationTitle")}</Text>
+                                ),
+                                children: (
+                                    <Text size="sm"> {t("FormConfirmationMessage")}</Text>
+                                ),
+                                labels: { confirm: 'Confirm', cancel: 'Cancel' },
+                                onCancel: () => console.log('Cancel'),
+                                onConfirm: () => {
+                                    dispatch(deleteEntityData('inventory/product/' + data.id))
+                                    dispatch(setFetching(true))
+                                },
+                            });
+                        }}
+                    >
+                        <IconTrash size={16} />
+                    </ActionIcon>
+                </Group>
+                ),
                         },
-                    ]
+                ]
                     }
-                    fetching={fetching}
-                    totalRecords={indexData.total}
-                    recordsPerPage={perPage}
-                    page={page}
-                    onPageChange={(p) => {
-                        setPage(p)
-                        dispatch(setFetching(true))
-                    }}
-                    loaderSize="xs"
-                    loaderColor="grape"
-                    height={height}
-                    scrollAreaProps={{type: 'never'}}
+                fetching={fetching}
+                totalRecords={indexData.total}
+                recordsPerPage={perPage}
+                page={page}
+                onPageChange={(p) => {
+                    setPage(p)
+                    dispatch(setFetching(true))
+                }}
+                loaderSize="xs"
+                loaderColor="grape"
+                height={height}
+                scrollAreaProps={{ type: 'never' }}
                 />
             </Box>
             {
                 productViewModel &&
-                <ProductViewModel productViewModel={productViewModel} setProductViewModel={setProductViewModel}/>
+                <ProductViewModel productViewModel={productViewModel} setProductViewModel={setProductViewModel} />
             }
         </>
     );

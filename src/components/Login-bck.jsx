@@ -126,8 +126,8 @@ export default function LoginBack() {
                 >
                     <TextInput
                         withAsterisk
-                        label={t('Username')}
-                        placeholder={t('Username')}
+                        label={t('UserName')}
+                        placeholder={t('UserName')}
                         size='xs'
                         id={"Username"}
                         {...form.getInputProps('username')}

@@ -145,10 +145,10 @@ function CategoryForm() {
                                     </Box>
                                     <Box pl={`xs`} pr={'xs'} mt={'xs'}  className={'borderRadiusAll'}>
                                         <ScrollArea h={height} scrollbarSize={2} type="never">
-                                            <Box mt={'xs'}>
-                                                <Grid gutter={{base:2}}>
-                                                    <Grid.Col span={11} >
-                                                        <Box>
+                                            <Box>
+                                            <Grid gutter={{base:1}}>
+                                                <Grid.Col span={11} >
+                                                    <Box mt={'8'}>
                                                         <SelectForm
                                                             tooltip={t('ChooseCategoryGroup')}
                                                             label={t('CategoryGroup')}
@@ -158,35 +158,31 @@ function CategoryForm() {
                                                             name={'parent'}
                                                             form={form}
                                                             dropdownValue={groupCategoryDropdown}
-                                                            mt={50}
                                                             id={'category_group'}
                                                             searchable={false}
                                                             value={categoryGroupData}
                                                             changeValue={setCategoryGroupData}
                                                         />
-                                                        </Box>
-                                                    </Grid.Col>
-                                                    <Grid.Col span={1}>
-                                                        <Box pt={'24'}>
-                                                            <Tooltip
-                                                                multiline
-                                                                w={280}
-                                                                withArrow
-                                                                transitionProps={{ duration: 200 }}
-                                                                label={t('QuickCategoryGroup')}
-                                                            >
-                                                                <ActionIcon fullWidth variant="outline" bg={'white'} size={'lg'} color="red.5" mt={'1'} aria-label="Settings"  onClick={open}>
-                                                                    <IconCategoryPlus style={{ width: '100%', height: '70%' }} stroke={1.5} />
-                                                                </ActionIcon>
-                                                            </Tooltip>
-                                                        </Box>
-
-                                                    </Grid.Col>
-                                                    {opened &&
-                                                    <CategoryGroupModal openedModel={opened} open={open} close={close}/>
-                                                    }
-                                                </Grid>
+                                                    </Box>
+                                                </Grid.Col>
+                                                <Grid.Col span={1}>
+                                                    <Box  pt={'xl'}>
+                                                        <Tooltip
+                                                            multiline
+                                                            w={420}
+                                                            withArrow
+                                                            transitionProps={{ duration: 200 }}
+                                                            label={t('InstantCustomerCreate')}
+                                                        >
+                                                            <ActionIcon fullWidth variant="outline" bg={'white'} size={'lg'} color="red.5" mt={'1'} aria-label="Settings">
+                                                                <IconUserCog style={{ width: '100%', height: '70%' }} stroke={1.5} />
+                                                            </ActionIcon>
+                                                        </Tooltip>
+                                                    </Box>
+                                                </Grid.Col>
+                                            </Grid>
                                             </Box>
+
                                             <Box mt={'xs'}>
                                                 <InputForm
                                                     tooltip={t('CategoryNameValidateMessage')}
@@ -196,11 +192,10 @@ function CategoryForm() {
                                                     nextField={'status'}
                                                     form={form}
                                                     name={'name'}
-                                                    mt={50}
                                                     id={'name'}
                                                 />
                                             </Box>
-                                            <Box mt={'md'}>
+                                            <Box mt={'xs'}>
                                                 <Grid gutter={{base:1}}>
                                                     <Grid.Col span={2}>
                                                         <SwitchForm

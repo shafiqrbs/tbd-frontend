@@ -258,5 +258,22 @@
   "Action": "Action",
   "Contra": "Contra",
   "Journal": "Journal",
-  "Transaction": "Transaction"
+  "Transaction": "Transaction",
+  "ProductCategory": "Product Category",
+  "Products": "Products",
+  "WelcomeBackToPOSH": "Welcome back to POSH!",
+  "CreateCategoryGroup": "Create Category Group",
+  "ParentName": "ParentName",
+  "ProductCategoryGroup": "Product Category Group",
+  "UpdateCategoryGroup": "Update Category Group",
+  "Invoice": "Invoice",
+  "Discount": "Discount",
+  "Total": "Total",
+  "QTY": "QTY",
+  "Price": "Price",
+  "Receive": "Receive",
+  "ManageProduct": "ManageProduct",
+  "Unit": "Unit",
+  "Brand": "Brand",
+  "CreateProduct": "CreateProduct"
 }

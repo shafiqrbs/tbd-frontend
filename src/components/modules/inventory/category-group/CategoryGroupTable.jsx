@@ -1,28 +1,28 @@
-import React, {useEffect, useState} from "react";
-import {useOutletContext} from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useOutletContext } from "react-router-dom";
 import {
     Group,
     Box,
     ActionIcon, Text, rem
 } from "@mantine/core";
-import {useTranslation} from "react-i18next";
-import {IconEdit, IconTrash, IconCheck} from "@tabler/icons-react";
-import {DataTable} from 'mantine-datatable';
-import {useDispatch, useSelector} from "react-redux";
+import { useTranslation } from "react-i18next";
+import { IconEdit, IconTrash, IconCheck } from "@tabler/icons-react";
+import { DataTable } from 'mantine-datatable';
+import { useDispatch, useSelector } from "react-redux";
 import {
     editEntityData, getIndexEntityData, setDeleteMessage, setFetching, setFormLoading, setInsertType
 } from "../../../../store/inventory/crudSlice.js";
 import KeywordSearch from "../../filter/KeywordSearch";
-import {modals} from "@mantine/modals";
-import {deleteEntityData} from "../../../../store/core/crudSlice";
-import {notifications} from "@mantine/notifications";
+import { modals } from "@mantine/modals";
+import { deleteEntityData } from "../../../../store/core/crudSlice";
+import { notifications } from "@mantine/notifications";
 import tableCss from "../../../../assets/css/Table.module.css";
 
 function CategoryGroupTable() {
 
     const dispatch = useDispatch();
-    const {t, i18n} = useTranslation();
-    const {isOnline, mainAreaHeight} = useOutletContext();
+    const { t, i18n } = useTranslation();
+    const { isOnline, mainAreaHeight } = useOutletContext();
     const height = mainAreaHeight - 128; //TabList height 104
     const perPage = 50;
     const [page, setPage] = useState(1);
@@ -38,10 +38,10 @@ function CategoryGroupTable() {
             notifications.show({
                 color: 'red',
                 title: t('DeleteSuccessfully'),
-                icon: <IconCheck style={{width: rem(18), height: rem(18)}}/>,
+                icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
                 loading: false,
                 autoClose: 700,
-                style: {backgroundColor: 'lightgray'},
+                style: { backgroundColor: 'lightgray' },
             });
 
             setTimeout(() => {
@@ -53,10 +53,10 @@ function CategoryGroupTable() {
             notifications.show({
                 color: 'teal',
                 title: t('CategoryGroupAlreadyExists'),
-                icon: <IconCheck style={{width: rem(18), height: rem(18)}}/>,
+                icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
                 loading: false,
                 autoClose: 1000,
-                style: {backgroundColor: 'lightgray'},
+                style: { backgroundColor: 'lightgray' },
             });
         }
     }, [entityDataDelete]);
@@ -77,8 +77,8 @@ function CategoryGroupTable() {
 
     return (
         <>
-            <Box  pl={`xs`} pb={'xs'} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'} >
-                <KeywordSearch module={'customer'}/>
+            <Box pl={`xs`} pb={'xs'} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'} >
+                <KeywordSearch module={'customer'} />
             </Box>
             <Box className={'borderRadiusAll'}>
                 <DataTable
@@ -93,14 +93,14 @@ function CategoryGroupTable() {
                     columns={[
                         {
                             accessor: 'index',
-                            title: 'S/N',
+                            title: t('S/N'),
                             textAlignment: 'right',
                             render: (item) => (indexData.data.indexOf(item) + 1)
                         },
-                        {accessor: 'name', title: "Name"},
+                        { accessor: 'name', title: t("Name") },
                         {
                             accessor: "action",
-                            title: "Action",
+                            title: t("Action"),
                             textAlign: "right",
                             render: (data) => (
                                 <Group gap={4} justify="right" wrap="nowrap">
@@ -114,7 +114,7 @@ function CategoryGroupTable() {
                                             dispatch(setFormLoading(true))
                                         }}
                                     >
-                                        <IconEdit size={16}/>
+                                        <IconEdit size={16} />
                                     </ActionIcon>
                                     <ActionIcon
                                         size="sm"
@@ -128,7 +128,7 @@ function CategoryGroupTable() {
                                                 children: (
                                                     <Text size="sm"> {t("FormConfirmationMessage")}</Text>
                                                 ),
-                                                labels: {confirm: 'Confirm', cancel: 'Cancel'},
+                                                labels: { confirm: 'Confirm', cancel: 'Cancel' },
                                                 onCancel: () => console.log('Cancel'),
                                                 onConfirm: () => {
                                                     dispatch(deleteEntityData('inventory/category-group/' + data.id))
@@ -136,7 +136,7 @@ function CategoryGroupTable() {
                                             });
                                         }}
                                     >
-                                        <IconTrash size={16}/>
+                                        <IconTrash size={16} />
                                     </ActionIcon>
                                 </Group>
                             ),
@@ -154,7 +154,7 @@ function CategoryGroupTable() {
                     loaderSize="xs"
                     loaderColor="grape"
                     height={height}
-                    scrollAreaProps={{type: 'never'}}
+                    scrollAreaProps={{ type: 'never' }}
                 />
             </Box>
 
