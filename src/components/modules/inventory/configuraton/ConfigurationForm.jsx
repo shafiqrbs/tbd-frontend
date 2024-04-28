@@ -549,7 +549,7 @@ function ConfigurationForm() {
                                                         id={'marginLeft'}
                                                     />
                                                 </Box>
-                                                <Box mt={'xs'}>
+                                                <Box mt={'xs'} mb={'xs'}>
                                                     <InputForm
                                                         tooltip={t('MarginTop')}
                                                         label={t('marginTop')}
@@ -633,7 +633,7 @@ function ConfigurationForm() {
                                                         id={'CustomerName'}
                                                     />
                                                 </Box>
-                                                <Box mt={'xs'} mb={'xs'}>
+                                                <Box mt={'xs'} >
                                                     <TextAreaForm
                                                         tooltip={t('Address')}
                                                         label={t('Address')}
