@@ -1,23 +1,23 @@
-import React, {useEffect, useState} from "react";
-import {useOutletContext} from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useOutletContext } from "react-router-dom";
 import {
     Button,
     rem, Flex,
     Grid, Box, ScrollArea, Group, Text, Title, Alert, List, Stack, Tooltip, ActionIcon,
 } from "@mantine/core";
-import {useTranslation} from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import {
     IconCategoryPlus,
     IconCheck,
-    IconDeviceFloppy, IconInfoCircle, IconPlus,IconUsersGroup
+    IconDeviceFloppy, IconInfoCircle, IconPlus, IconUsersGroup
 } from "@tabler/icons-react";
-import {useDisclosure, useHotkeys} from "@mantine/hooks";
-import {useDispatch, useSelector} from "react-redux";
-import {hasLength, useForm} from "@mantine/form";
-import {modals} from "@mantine/modals";
-import {notifications} from "@mantine/notifications";
+import { useDisclosure, useHotkeys } from "@mantine/hooks";
+import { useDispatch, useSelector } from "react-redux";
+import { hasLength, useForm } from "@mantine/form";
+import { modals } from "@mantine/modals";
+import { notifications } from "@mantine/notifications";
 
-import {setEntityNewData, setFetching, setValidationData, storeEntityData} from "../../../../store/core/crudSlice.js";
+import { setEntityNewData, setFetching, setValidationData, storeEntityData } from "../../../../store/core/crudSlice.js";
 
 import Shortcut from "../../shortcut/Shortcut";
 import InputForm from "../../../form-builders/InputForm";
@@ -30,11 +30,11 @@ import CategoryGroupModal from "../../inventory/category/CategoryGroupModal";
 import SwitchForm from "../../../form-builders/SwitchForm";
 
 function CustomerForm() {
-    const {t, i18n} = useTranslation();
+    const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
-    const {isOnline, mainAreaHeight} = useOutletContext();
+    const { isOnline, mainAreaHeight } = useOutletContext();
     const height = mainAreaHeight - 130; //TabList height 104
-    const [opened, {open, close}] = useDisclosure(false);
+    const [opened, { open, close }] = useDisclosure(false);
 
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
     const [customerGroupData, setCustomerGroupData] = useState(null);
@@ -63,7 +63,7 @@ function CustomerForm() {
             email: ''
         },
         validate: {
-            name: hasLength({min: 2, max: 20}),
+            name: hasLength({ min: 2, max: 20 }),
             mobile: (value) => (!/^\d+$/.test(value)),
             email: (value) => {
                 if (value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
@@ -103,14 +103,14 @@ function CustomerForm() {
             dispatch(setValidationData(false))
         }
 
-        if (entityNewData.message ==='success'){
+        if (entityNewData.message === 'success') {
             notifications.show({
                 color: 'teal',
                 title: t('CreateSuccessfully'),
-                icon: <IconCheck style={{width: rem(18), height: rem(18)}}/>,
+                icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
                 loading: false,
                 autoClose: 700,
-                style: {backgroundColor: 'lightgray'},
+                style: { backgroundColor: 'lightgray' },
             });
 
             setTimeout(() => {
@@ -122,7 +122,7 @@ function CustomerForm() {
                 dispatch(setFetching(true))
             }, 700)
         }
-        }, [validation,validationMessage,form]);
+    }, [validation, validationMessage, form]);
 
     useHotkeys([['alt+n', () => {
         document.getElementById('CustomerName').focus()
@@ -148,7 +148,7 @@ function CustomerForm() {
                     children: (
                         <Text size="sm"> {t("FormConfirmationMessage")}</Text>
                     ),
-                    labels: {confirm: t('Submit'), cancel: t('Cancel')}, confirmProps: { color: 'red' },
+                    labels: { confirm: t('Submit'), cancel: t('Cancel') }, confirmProps: { color: 'red' },
                     onCancel: () => console.log('Cancel'),
                     onConfirm: () => {
                         const value = {
@@ -159,9 +159,7 @@ function CustomerForm() {
                     },
                 });
             })}>
-
-
-                <Grid columns={9} gutter={{base:8}}>
+                <Grid columns={9} gutter={{ base: 8 }}>
                     <Grid.Col span={8} >
                         <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
                             <Box bg={"white"} >
@@ -171,7 +169,7 @@ function CustomerForm() {
                                             <Title order={6} mt={'xs'} pl={'6'}>{t('CreateCustomer')}</Title>
                                         </Grid.Col>
                                         <Grid.Col span={6}>
-                                            <Stack right  align="flex-end">
+                                            <Stack right align="flex-end">
                                                 <>
                                                     {
                                                         !saveCreateLoading && isOnline &&
@@ -181,7 +179,7 @@ function CustomerForm() {
                                                             type="submit"
                                                             mt={4}
                                                             id="EntityFormSubmit"
-                                                            leftSection={<IconDeviceFloppy size={16}/>}
+                                                            leftSection={<IconDeviceFloppy size={16} />}
                                                         >
 
                                                             <Flex direction={`column`} gap={0}>
@@ -195,11 +193,11 @@ function CustomerForm() {
                                         </Grid.Col>
                                     </Grid>
                                 </Box>
-                                <Box pl={`xs`} pr={'xs'} mt={'xs'}  className={'borderRadiusAll'}>
+                                <Box pl={`xs`} pr={'xs'} mt={'xs'} className={'borderRadiusAll'}>
                                     <ScrollArea h={height} scrollbarSize={2} type="never">
                                         <Box>
                                             {
-                                                Object.keys(form.errors).length > 0 && validationMessage !=0 &&
+                                                Object.keys(form.errors).length > 0 && validationMessage != 0 &&
                                                 <Alert variant="light" color="red" radius="md" title={
                                                     <List withPadding size="sm">
                                                         {validationMessage.name && <List.Item>{t('NameValidateMessage')}</List.Item>}
@@ -209,20 +207,20 @@ function CustomerForm() {
                                                 }></Alert>
                                             }
                                             <Box mt={'xs'}>
-                                            <InputForm
-                                                tooltip={t('NameValidateMessage')}
-                                                label={t('Name')}
-                                                placeholder={t('CustomerName')}
-                                                required={true}
-                                                nextField={'CustomerGroup'}
-                                                name={'name'}
-                                                form={form}
-                                                mt={0}
-                                                id={'CustomerName'}
-                                            />
+                                                <InputForm
+                                                    tooltip={t('NameValidateMessage')}
+                                                    label={t('Name')}
+                                                    placeholder={t('CustomerName')}
+                                                    required={true}
+                                                    nextField={'CustomerGroup'}
+                                                    name={'name'}
+                                                    form={form}
+                                                    mt={0}
+                                                    id={'CustomerName'}
+                                                />
                                             </Box>
                                             <Box mt={'xs'}>
-                                                <Grid gutter={{base:2}}>
+                                                <Grid gutter={{ base: 2 }}>
                                                     <Grid.Col span={11} >
                                                         <Box>
                                                             <SelectForm
@@ -251,7 +249,7 @@ function CustomerForm() {
                                                                 transitionProps={{ duration: 200 }}
                                                                 label={t('QuickCategoryGroup')}
                                                             >
-                                                                <ActionIcon fullWidth variant="outline" bg={'white'} size={'lg'} color="red.5" mt={'1'} aria-label="Settings"  onClick={open}>
+                                                                <ActionIcon fullWidth variant="outline" bg={'white'} size={'lg'} color="red.5" mt={'1'} aria-label="Settings" onClick={open}>
                                                                     <IconUsersGroup style={{ width: '100%', height: '70%' }} stroke={1.5} />
                                                                 </ActionIcon>
                                                             </Tooltip>
@@ -259,122 +257,122 @@ function CustomerForm() {
 
                                                     </Grid.Col>
                                                     {opened &&
-                                                    <CustomerGroupModel openedModel={opened} open={open} close={close}/>
+                                                        <CustomerGroupModel openedModel={opened} open={open} close={close} />
                                                     }
                                                 </Grid>
                                             </Box>
                                             <Box mt={'xs'}>
-                                            <InputForm
-                                                tooltip={t('CreditLimitValidateMessage')}
-                                                label={t('CreditLimit')}
-                                                placeholder={t('CreditLimit')}
-                                                required={false}
-                                                nextField={'OLDReferenceNo'}
-                                                name={'credit_limit'}
-                                                form={form}
-                                                mt={8}
-                                                id={'CreditLimit'}
-                                            />
+                                                <InputForm
+                                                    tooltip={t('CreditLimitValidateMessage')}
+                                                    label={t('CreditLimit')}
+                                                    placeholder={t('CreditLimit')}
+                                                    required={false}
+                                                    nextField={'OLDReferenceNo'}
+                                                    name={'credit_limit'}
+                                                    form={form}
+                                                    mt={8}
+                                                    id={'CreditLimit'}
+                                                />
                                             </Box>
                                             <Box mt={'xs'}>
-                                            <InputForm
-                                                tooltip={t('OLDReferenceNo')}
-                                                label={t('OLDReferenceNo')}
-                                                placeholder={t('OLDReferenceNo')}
-                                                required={false}
-                                                nextField={'Mobile'}
-                                                name={'reference_id'}
-                                                form={form}
-                                                mt={8}
-                                                id={'OLDReferenceNo'}
-                                            />
+                                                <InputForm
+                                                    tooltip={t('OLDReferenceNo')}
+                                                    label={t('OLDReferenceNo')}
+                                                    placeholder={t('OLDReferenceNo')}
+                                                    required={false}
+                                                    nextField={'Mobile'}
+                                                    name={'reference_id'}
+                                                    form={form}
+                                                    mt={8}
+                                                    id={'OLDReferenceNo'}
+                                                />
                                             </Box>
                                             <Box mt={'xs'}>
-                                            <InputForm
-                                                tooltip={t('MobileValidateMessage')}
-                                                label={t('Mobile')}
-                                                placeholder={t('Mobile')}
-                                                required={true}
-                                                nextField={'AlternativeMobile'}
-                                                name={'mobile'}
-                                                form={form}
-                                                mt={8}
-                                                id={'Mobile'}
-                                            />
+                                                <InputForm
+                                                    tooltip={t('MobileValidateMessage')}
+                                                    label={t('Mobile')}
+                                                    placeholder={t('Mobile')}
+                                                    required={true}
+                                                    nextField={'AlternativeMobile'}
+                                                    name={'mobile'}
+                                                    form={form}
+                                                    mt={8}
+                                                    id={'Mobile'}
+                                                />
                                             </Box>
                                             <Box mt={'xs'}>
-                                            <InputForm
-                                                tooltip={t('MobileValidateMessage')}
-                                                label={t('AlternativeMobile')}
-                                                placeholder={t('AlternativeMobile')}
-                                                required={false}
-                                                nextField={'Email'}
-                                                name={'alternative_mobile'}
-                                                form={form}
-                                                mt={8}
-                                                id={'AlternativeMobile'}
-                                            />
+                                                <InputForm
+                                                    tooltip={t('MobileValidateMessage')}
+                                                    label={t('AlternativeMobile')}
+                                                    placeholder={t('AlternativeMobile')}
+                                                    required={false}
+                                                    nextField={'Email'}
+                                                    name={'alternative_mobile'}
+                                                    form={form}
+                                                    mt={8}
+                                                    id={'AlternativeMobile'}
+                                                />
                                             </Box>
                                             <Box mt={'xs'}>
-                                            <InputForm
-                                                tooltip={t('InvalidEmail')}
-                                                label={t('Email')}
-                                                placeholder={t('Email')}
-                                                required={false}
-                                                nextField={'Location'}
-                                                name={'email'}
-                                                form={form}
-                                                mt={8}
-                                                id={'Email'}
-                                            />
+                                                <InputForm
+                                                    tooltip={t('InvalidEmail')}
+                                                    label={t('Email')}
+                                                    placeholder={t('Email')}
+                                                    required={false}
+                                                    nextField={'Location'}
+                                                    name={'email'}
+                                                    form={form}
+                                                    mt={8}
+                                                    id={'Email'}
+                                                />
                                             </Box>
                                             <Box mt={'xs'}>
-                                            <SelectForm
-                                                tooltip={t('Location')}
-                                                label={t('Location')}
-                                                placeholder={t('ChooseLocation')}
-                                                required={false}
-                                                nextField={'MarketingExecutive'}
-                                                name={'location_id'}
-                                                form={form}
-                                                dropdownValue={locationDropdown}
-                                                mt={8}
-                                                id={'Location'}
-                                                searchable={true}
-                                                value={locationData}
-                                                changeValue={setLocationData}
-                                            />
+                                                <SelectForm
+                                                    tooltip={t('Location')}
+                                                    label={t('Location')}
+                                                    placeholder={t('ChooseLocation')}
+                                                    required={false}
+                                                    nextField={'MarketingExecutive'}
+                                                    name={'location_id'}
+                                                    form={form}
+                                                    dropdownValue={locationDropdown}
+                                                    mt={8}
+                                                    id={'Location'}
+                                                    searchable={true}
+                                                    value={locationData}
+                                                    changeValue={setLocationData}
+                                                />
                                             </Box>
                                             <Box mt={'xs'}>
-                                            <SelectForm
-                                                tooltip={t('MarketingExecutive')}
-                                                label={t('MarketingExecutive')}
-                                                placeholder={t('ChooseMarketingExecutive')}
-                                                required={false}
-                                                nextField={'Address'}
-                                                name={'marketing_id'}
-                                                form={form}
-                                                dropdownValue={executiveDropdown}
-                                                mt={8}
-                                                id={'MarketingExecutive'}
-                                                searchable={true}
-                                                value={marketingExeData}
-                                                changeValue={setMarketingExeData}
-                                            />
+                                                <SelectForm
+                                                    tooltip={t('MarketingExecutive')}
+                                                    label={t('MarketingExecutive')}
+                                                    placeholder={t('ChooseMarketingExecutive')}
+                                                    required={false}
+                                                    nextField={'Address'}
+                                                    name={'marketing_id'}
+                                                    form={form}
+                                                    dropdownValue={executiveDropdown}
+                                                    mt={8}
+                                                    id={'MarketingExecutive'}
+                                                    searchable={true}
+                                                    value={marketingExeData}
+                                                    changeValue={setMarketingExeData}
+                                                />
 
                                             </Box>
                                             <Box mt={'xs'} mb={'xs'}>
-                                            <TextAreaForm
-                                                tooltip={t('Address')}
-                                                label={t('Address')}
-                                                placeholder={t('Address')}
-                                                required={false}
-                                                nextField={'Status'}
-                                                name={'address'}
-                                                form={form}
-                                                mt={8}
-                                                id={'Address'}
-                                            />
+                                                <TextAreaForm
+                                                    tooltip={t('Address')}
+                                                    label={t('Address')}
+                                                    placeholder={t('Address')}
+                                                    required={false}
+                                                    nextField={'Status'}
+                                                    name={'address'}
+                                                    form={form}
+                                                    mt={8}
+                                                    id={'Address'}
+                                                />
                                             </Box>
 
                                         </Box>

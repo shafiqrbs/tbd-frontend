@@ -1,13 +1,13 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import {
     Tooltip,
-    Select, SimpleGrid,Text,Image
+    Select, SimpleGrid, Text, Image
 } from "@mantine/core";
-import {getHotkeyHandler} from "@mantine/hooks";
-import {Dropzone, IMAGE_MIME_TYPE} from "@mantine/dropzone";
+import { getHotkeyHandler } from "@mantine/hooks";
+import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
 
 function ImageUploadDropzone(props) {
-    /*const {
+    const {
         label,
         placeholder,
         required,
@@ -21,7 +21,7 @@ function ImageUploadDropzone(props) {
         searchable,
         value,
         changeValue
-    } = props*/
+    } = props
 
     const [files, setFiles] = useState([]);
 
@@ -34,10 +34,10 @@ function ImageUploadDropzone(props) {
         <>
             <div>
                 <Dropzone accept={IMAGE_MIME_TYPE} onDrop={setFiles}>
-                    <Text ta="center">Drop images here</Text>
+                    <Text ta="center">{placeholder}</Text>
                 </Dropzone>
 
-                <SimpleGrid cols={{base: 1, sm: 4}} mt={previews.length > 0 ? 'xl' : 0}>
+                <SimpleGrid cols={{ base: 1, sm: 4 }} mt={previews.length > 0 ? 'xl' : 0}>
                     {previews}
                 </SimpleGrid>
             </div>
