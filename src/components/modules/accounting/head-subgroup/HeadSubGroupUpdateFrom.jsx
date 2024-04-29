@@ -39,7 +39,7 @@ import getSettingAuthorizedTypeDropdownData
     from "../../../global-hook/dropdown/getSettingAuthorizedTypeDropdownData.js";
 import getSettingAccountTypeDropdownData from "../../../global-hook/dropdown/getSettingAccountTypeDropdownData.js";
 
-function HeadGroupUpdateFrom(props) {
+function HeadSubGroupUpdateFrom(props) {
     const {t, i18n} = useTranslation();
     const dispatch = useDispatch();
     const {isOnline, mainAreaHeight} = useOutletContext();
@@ -172,11 +172,10 @@ function HeadGroupUpdateFrom(props) {
                     })}>
                         <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
                             <Box bg={"white"} >
-
                                 <Box pl={`xs`} pb={'xs'} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'} >
                                     <Grid>
                                         <Grid.Col span={6} h={54}>
-                                            <Title order={6} mt={'xs'} pl={'6'}>{t('UpdateAccountHeadGroup')}</Title>
+                                            <Title order={6} mt={'xs'} pl={'6'}>{t('UpdateAccountSubGroup')}</Title>
                                         </Grid.Col>
                                         <Grid.Col span={6}>
                                             <Stack right  align="flex-end">
@@ -374,4 +373,4 @@ function HeadGroupUpdateFrom(props) {
 
     );
 }
-export default HeadGroupUpdateFrom;
+export default HeadSubGroupUpdateFrom;

@@ -9,11 +9,11 @@ import { setSearchKeyword } from "../../../../store/core/crudSlice";
 import { setInsertType } from "../../../../store/generic/crudSlice";
 import getConfigData from "../../../global-hook/config-data/getConfigData.js";
 import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress.js";
-import HeadGroupForm from "./HeadGroupForm.jsx";
-import HeadGroupUpdateFrom from "./HeadGroupUpdateFrom.jsx";
-import HeadGroupTable from "./HeadGroupTable";
+import HeadSubGroupUpdateFrom from "./HeadSubGroupUpdateFrom";
+import HeadSubGroupTable from "./HeadSubGroupTable";
 import AccountingHeaderNavbar from "../AccountingHeaderNavbar";
-function HeadGroupIndex() {
+import HeadSubGroupForm from "./HeadSubGroupForm";
+function HeadSubGroupIndex() {
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const insertType = useSelector((state) => state.crudSlice.insertType)
@@ -33,7 +33,7 @@ function HeadGroupIndex() {
                 <>
                     <Box>
                         <AccountingHeaderNavbar
-                            pageTitle={t('ManageAccountHeadGroup')}
+                            pageTitle={t('ManageAccountHeadSubGroup')}
                             roles={t('Roles')}
                             allowZeroPercentage=''
                             currencySymbol=''
@@ -42,12 +42,12 @@ function HeadGroupIndex() {
                             <Grid columns={24} gutter={{ base: 8 }}>
                                 <Grid.Col span={15} >
                                     <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
-                                        <HeadGroupTable />
+                                        <HeadSubGroupTable />
                                     </Box>
                                 </Grid.Col>
                                 <Grid.Col span={9}>
                                     {
-                                        insertType === 'create' ? <HeadGroupForm /> : <HeadGroupUpdateFrom />
+                                        insertType === 'create' ? <HeadSubGroupForm /> : <HeadSubGroupUpdateFrom />
                                     }
                                 </Grid.Col>
                             </Grid>
@@ -59,4 +59,4 @@ function HeadGroupIndex() {
     );
 }
 
-export default HeadGroupIndex;
+export default HeadSubGroupIndex;

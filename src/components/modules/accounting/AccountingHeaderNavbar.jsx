@@ -61,8 +61,8 @@ function AccountingHeaderNavbar(props) {
                                            component="button"  onClick={(e)=>{navigate('/accounting/head-group')}} leftSection={<IconSettings style={{ width: rem(14), height: rem(14) }} />}>
                                     { t('AccountHeadGroup')}
                                 </Menu.Item>
-                                <Menu.Item href="/accounting/sub-head-group"
-                                           component="button"  onClick={(e)=>{navigate('/accounting/head-group')}} leftSection={<IconSettings style={{ width: rem(14), height: rem(14) }} />}>
+                                <Menu.Item href="/accounting/head-subgroup"
+                                           component="button"  onClick={(e)=>{navigate('/accounting/head-subgroup')}} leftSection={<IconSettings style={{ width: rem(14), height: rem(14) }} />}>
                                     { t('AccountSubHeadGroup')}
                                 </Menu.Item>
                                 <Menu.Item href="/accounting/config"

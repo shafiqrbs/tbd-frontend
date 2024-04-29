@@ -33,7 +33,7 @@ import {Dropzone, IMAGE_MIME_TYPE} from "@mantine/dropzone";
 import getSettingAccountTypeDropdownData from "../../../global-hook/dropdown/getSettingAccountTypeDropdownData.js";
 import getSettingAuthorizedTypeDropdownData from "../../../global-hook/dropdown/getSettingAuthorizedTypeDropdownData.js";
 
-function HeadGroupForm(props) {
+function HeadSubGroupForm(props) {
     const {t, i18n} = useTranslation();
     const dispatch = useDispatch();
     const {isOnline, mainAreaHeight} = useOutletContext();
@@ -150,7 +150,7 @@ function HeadGroupForm(props) {
                                 <Box pl={`xs`} pb={'xs'} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'} >
                                     <Grid>
                                         <Grid.Col span={6} h={54}>
-                                            <Title order={6} mt={'xs'} pl={'6'}>{t('CreateNewAccountGroup')}</Title>
+                                            <Title order={6} mt={'xs'} pl={'6'}>{t('CreateNewAccountSubGroup')}</Title>
                                         </Grid.Col>
                                         <Grid.Col span={6}>
                                             <Stack right  align="flex-end">
@@ -263,4 +263,4 @@ function HeadGroupForm(props) {
 
     );
 }
-export default HeadGroupForm;
+export default HeadSubGroupForm;

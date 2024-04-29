@@ -42,8 +42,7 @@ function ConfigurationForm() {
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
-    const height = mainAreaHeight - 132; //TabList height 104
-
+    const height = mainAreaHeight - 130; //TabList height 104
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
     const [businessModelData, setBusinessModelData] = useState(null);
     const [testModelOpend, setTestModelOpend] = useState(false);
@@ -198,7 +197,6 @@ function ConfigurationForm() {
                                         <Grid.Col h={54}>
                                             <Title order={6} mt={'xs'} pl={'6'}>{t('Core')}</Title>
                                         </Grid.Col>
-
                                     </Grid>
                                 </Box>
                                 <Box pl={`xs`} pr={'xs'} mt={'xs'} className={'borderRadiusAll'}>

@@ -9,11 +9,10 @@ import { setSearchKeyword } from "../../../../store/core/crudSlice";
 import { setInsertType } from "../../../../store/generic/crudSlice";
 import getConfigData from "../../../global-hook/config-data/getConfigData.js";
 import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress.js";
-import HeadGroupForm from "./HeadGroupForm.jsx";
-import HeadGroupUpdateFrom from "./HeadGroupUpdateFrom.jsx";
-import HeadGroupTable from "./HeadGroupTable";
 import AccountingHeaderNavbar from "../AccountingHeaderNavbar";
-function HeadGroupIndex() {
+import LedgerDetails from "./LedgerDetails";
+import LedgerTable from "./LedgerTable";
+function LedgerIndex() {
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const insertType = useSelector((state) => state.crudSlice.insertType)
@@ -42,13 +41,11 @@ function HeadGroupIndex() {
                             <Grid columns={24} gutter={{ base: 8 }}>
                                 <Grid.Col span={15} >
                                     <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
-                                        <HeadGroupTable />
+                                        <LedgerTable />
                                     </Box>
                                 </Grid.Col>
                                 <Grid.Col span={9}>
-                                    {
-                                        insertType === 'create' ? <HeadGroupForm /> : <HeadGroupUpdateFrom />
-                                    }
+                                    <LedgerDetails />
                                 </Grid.Col>
                             </Grid>
                         </Box>
@@ -59,4 +56,4 @@ function HeadGroupIndex() {
     );
 }
 
-export default HeadGroupIndex;
+export default LedgerIndex;

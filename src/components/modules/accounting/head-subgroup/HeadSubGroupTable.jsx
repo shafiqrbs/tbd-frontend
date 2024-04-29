@@ -26,7 +26,7 @@ import CustomerViewModel from "../../core/customer/CustomerViewModel.jsx";
 
 
 
-function HeadGroupTable(props) {
+function HeadSubGroupTable(props) {
 
     const dispatch = useDispatch();
     const { t, i18n } = useTranslation();
@@ -163,4 +163,4 @@ function HeadGroupTable(props) {
 
     );
 }
-export default HeadGroupTable;
+export default HeadSubGroupTable;
