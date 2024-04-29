@@ -374,7 +374,6 @@ function CustomerForm() {
                                                     id={'Address'}
                                                 />
                                             </Box>
-
                                         </Box>
                                     </ScrollArea>
                                 </Box>

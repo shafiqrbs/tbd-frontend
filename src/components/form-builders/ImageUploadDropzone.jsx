@@ -20,7 +20,10 @@ function ImageUploadDropzone(props) {
         dropdownValue,
         searchable,
         value,
-        changeValue
+        changeValue,
+        base,
+        sm,
+        lg
     } = props
 
     const [files, setFiles] = useState([]);
@@ -37,7 +40,7 @@ function ImageUploadDropzone(props) {
                     <Text ta="center">{placeholder}</Text>
                 </Dropzone>
 
-                <SimpleGrid cols={{ base: 1, sm: 4 }} mt={previews.length > 0 ? 'xl' : 0}>
+                <SimpleGrid cols={{ base: 1, sm: 2, lg: 2 }} mt={previews.length > 0 ? 'xl' : 0}>
                     {previews}
                 </SimpleGrid>
             </div>

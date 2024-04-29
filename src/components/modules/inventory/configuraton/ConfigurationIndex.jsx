@@ -194,37 +194,17 @@ function ConfigurationIndex() {
                                 currencySymbol={configData.currency.symbol}
                             />
                             <Box p={'8'}>
-                                <Grid columns={13}>
-                                    <Grid.Col span={13}>
-                                        {
-                                            insertType === 'create' ? <ConfigurationForm /> : <ConfigurationForm />
-                                        }
+                                <Grid columns={24} gutter={{ base: 8 }}>
+
+                                    <Grid.Col span={24}>
+                                        <ConfigurationForm /> :
                                     </Grid.Col>
-                                    {/* <Grid.Col span={8}>
-                                        {
-                                            insertType === 'create' ? <ConfigurationForm /> : <ConfigurationForm />
-                                        }
-                                    </Grid.Col> */}
                                 </Grid>
                             </Box>
                         </>
                     }
-                </Box>
+                </Box >
 
-
-
-                // <Box>
-                //     <Box pl={`xs`} pr={8} pb={'8'} pt={'6'} bg={'gray.1'}>
-                //         <Grid>
-                //             <Grid.Col span={12}>
-                //                 <Title order={6} pl={'md'} fz={'18'} c={'indigo.4'}>{t('ConfigurationInformationFormDetails')}</Title>
-                //             </Grid.Col>
-                //         </Grid>
-                //     </Box>
-                //     <Box pr={'12'} pl={'12'}>
-                //         <ConfigurationForm />
-                //     </Box>
-                // </Box>
             }
         </>
     );

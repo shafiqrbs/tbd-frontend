@@ -190,8 +190,8 @@ function ConfigurationForm() {
                         },
                     });
                 })}>
-                    <Grid columns={13} gutter={{ base: 8 }}>
-                        <Grid.Col span={4.5} >
+                    <Grid columns={24} gutter={{ base: 8 }}>
+                        <Grid.Col span={7} >
                             <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
                                 <Box bg={"white"} >
                                     <Box pl={`xs`} pb={'xs'} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'} >
@@ -249,7 +249,7 @@ function ConfigurationForm() {
                                 </Box>
                             </Box>
                         </Grid.Col>
-                        <Grid.Col span={4} >
+                        <Grid.Col span={8} >
                             <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
                                 <Box bg={"white"} >
                                     <Box pl={`xs`} pb={'xs'} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'} >
@@ -273,32 +273,6 @@ function ConfigurationForm() {
                                                         </List>
                                                     }></Alert>
                                                 }
-                                                {/* <Box mt={'xs'}>
-                                                    <InputForm
-                                                        tooltip={t('NameValidateMessage')}
-                                                        label={t('Name')}
-                                                        placeholder={t('CustomerName')}
-                                                        required={true}
-                                                        nextField={'CustomerGroup'}
-                                                        name={'name'}
-                                                        form={form}
-                                                        mt={0}
-                                                        id={'CustomerName'}
-                                                    />
-                                                </Box>
-                                                <Box mt={'xs'} >
-                                                    <TextAreaForm
-                                                        tooltip={t('Address')}
-                                                        label={t('Address')}
-                                                        placeholder={t('Address')}
-                                                        required={false}
-                                                        nextField={'Status'}
-                                                        name={'address'}
-                                                        form={form}
-                                                        mt={8}
-                                                        id={'Address'}
-                                                    />
-                                                </Box> */}
                                                 <Box mt={'xs'}>
                                                     <Grid gutter={{ base: 1 }}>
                                                         <Grid.Col span={2}>
@@ -447,6 +421,7 @@ function ConfigurationForm() {
                                                         required={false}
                                                         placeholder={t('DropLogoHere')}
                                                         nextField={'RemoveImage'}
+
                                                     />
                                                 </Box>
                                                 <Box mt={'xs'}>
@@ -562,19 +537,13 @@ function ConfigurationForm() {
                                                         id={'marginTop'}
                                                     />
                                                 </Box>
-                                                {/* <Box mt={'xs'}>
-                                                    <Checkbox checked={checked}
-                                                        color="red.6"
-                                                        onChange={(event) => setChecked(event.currentTarget.checked)} label="Default checkbox" />
-                                                </Box> */}
-
                                             </Box>
                                         </ScrollArea>
                                     </Box>
                                 </Box>
                             </Box>
                         </Grid.Col>
-                        <Grid.Col span={4} >
+                        <Grid.Col span={8} >
                             <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
                                 <Box bg={"white"} >
                                     <Box pl={`xs`} pb={'xs'} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'} >
@@ -653,7 +622,7 @@ function ConfigurationForm() {
                                 </Box>
                             </Box>
                         </Grid.Col>
-                        <Grid.Col span={.5} >
+                        <Grid.Col span={1} >
                             <Box bg={'white'} className={'borderRadiusAll'} pt={'16'}>
                                 <Shortcut
                                     form={form}
@@ -664,7 +633,6 @@ function ConfigurationForm() {
                             </Box>
                         </Grid.Col>
                     </Grid>
-
                 </form>
             </Box>
         </>
