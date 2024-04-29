@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Box, TextInput, ScrollArea, Stack, Text, Title, GridCol, Grid, CloseButton, Input, Tooltip, rem } from "@mantine/core";
 import { IconClearAll, IconInfoCircle, IconRestore, IconSearch, IconTrash, IconX } from "@tabler/icons-react";
 import { useTranslation } from "react-i18next";
@@ -11,6 +11,7 @@ function SearchModal({ onClose }) {
     const { t, i18n } = useTranslation();
     const navigate = useNavigate();
     const [value, setValue] = useState('');
+    const ref = useRef(null)
 
     const getActions = () => {
         return ([
@@ -176,8 +177,9 @@ function SearchModal({ onClose }) {
     return (
         <>
 
-            <Input
-
+            <TextInput
+                ref={ref}
+                data-autofocus
                 mb={4}
                 leftSection={< IconSearch size={16} c={'red'} />}
                 placeholder={t('SearchMenu')}
@@ -188,14 +190,13 @@ function SearchModal({ onClose }) {
                     filterList(event);
                 }}
                 rightSection={
-
-
                     <CloseButton
                         icon={<IconRestore style={{ width: rem(20) }} stroke={2.0} />}
                         aria-label="Clear input"
                         onClick={() => {
                             setValue('');
                             filterList({ target: { value: '' } });
+                            ref.current.focus();
                         }}
                         style={{ display: value ? undefined : 'none' }}
                     />

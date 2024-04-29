@@ -178,33 +178,25 @@ function ConfigurationIndex() {
     );
 
     return (
+
         <>
-            {/* <Title order={6} pl={'md'} fz={'18'} c={'indigo.4'}>{t('ConfigurationInformationFormDetails')}</Title> */}
-
-            {progress !== 100 &&
-                <Progress color="red" size={"xs"} striped animated value={progress} transitionDuration={200} />}
+            {progress !== 100 && <Progress color="red" size={"xs"} striped animated value={progress} />}
             {progress === 100 &&
-                <Box>
-                    {configData &&
-                        <>
-                            <InventoryHeaderNavbar
-                                pageTitle={t('ConfigurationInformationFormDetails')}
-                                roles={t('Roles')}
-                                allowZeroPercentage={configData.zero_stock}
-                                currencySymbol={configData.currency.symbol}
-                            />
-                            <Box p={'8'}>
-                                <Grid columns={24} gutter={{ base: 8 }}>
-
-                                    <Grid.Col span={24}>
-                                        <ConfigurationForm /> :
-                                    </Grid.Col>
-                                </Grid>
-                            </Box>
-                        </>
-                    }
-                </Box >
-
+                <>
+                    <InventoryHeaderNavbar
+                        pageTitle={t('ConfigurationInformationFormDetails')}
+                        roles={t('Roles')}
+                        allowZeroPercentage=''
+                        currencySymbol=''
+                    />
+                    <Box p={'8'}>
+                        <Grid columns={24} gutter={{ base: 8 }}>
+                            <Grid.Col span={24}>
+                                <ConfigurationForm />
+                            </Grid.Col>
+                        </Grid>
+                    </Box>
+                </>
             }
         </>
     );

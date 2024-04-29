@@ -23,7 +23,7 @@ import {
 } from "@mantine/core";
 import Logo from "../../assets/images/tbd-logo.png";
 
-import {useDisclosure, useFullscreen, useHotkeys} from "@mantine/hooks";
+import { useDisclosure, useFullscreen, useHotkeys } from "@mantine/hooks";
 import {
     IconNotification,
     IconCode,
