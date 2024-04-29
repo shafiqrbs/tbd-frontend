@@ -428,7 +428,6 @@ function GenericInvoiceForm(props) {
                                         </Grid.Col>
                                         <Grid.Col span={3}>
                                             <InputButtonForm
-                                                type="number"
                                                 tooltip={t('QuantityValidateMessage')}
                                                 label=''
                                                 placeholder={t('Quantity')}

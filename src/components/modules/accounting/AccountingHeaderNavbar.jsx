@@ -20,11 +20,9 @@ function AccountingHeaderNavbar(props) {
     const [opened, { toggle }] = useDisclosure(false);
     const navigate = useNavigate();
     const links = [
-        { link: '/accounting/sales', label: t('Sales') },
-        { link: '/accounting/purchase', label: t('Purchase') },
-        { link: '/accounting/contra', label: t('Contra') },
-        { link: '/accounting/journal', label: t('Journal') },
-        { link: '/accounting/transaction-mode', label: t('Transaction') },
+        { link: '/accounting/voucher-entry', label: t('VoucherEntry') },
+        { link: '/accounting/Ledger', label: t('AccountLedger') },
+        { link: '/accounting/reports', label: t('AccountReports') },
     ];
     const items = links.map((link) => (
         <a
@@ -55,8 +53,20 @@ function AccountingHeaderNavbar(props) {
                                 </ActionIcon>
                             </Menu.Target>
                             <Menu.Dropdown>
+                                <Menu.Item href="/accounting/transaction-mode"
+                                            component="button"  onClick={(e)=>{navigate('/accounting/transaction-mode')}} leftSection={<IconSettings style={{ width: rem(14), height: rem(14) }} />}>
+                                    { t('Transaction')}
+                                </Menu.Item>
+                                <Menu.Item href="/accounting/head-group"
+                                           component="button"  onClick={(e)=>{navigate('/accounting/head-group')}} leftSection={<IconSettings style={{ width: rem(14), height: rem(14) }} />}>
+                                    { t('AccountHeadGroup')}
+                                </Menu.Item>
+                                <Menu.Item href="/accounting/sub-head-group"
+                                           component="button"  onClick={(e)=>{navigate('/accounting/head-group')}} leftSection={<IconSettings style={{ width: rem(14), height: rem(14) }} />}>
+                                    { t('AccountSubHeadGroup')}
+                                </Menu.Item>
                                 <Menu.Item href="/accounting/config"
-                                            component="button"  onClick={(e)=>{navigate('/accounting/config')}} leftSection={<IconSettings style={{ width: rem(14), height: rem(14) }} />}>
+                                           component="button"  onClick={(e)=>{navigate('/accounting/config')}} leftSection={<IconSettings style={{ width: rem(14), height: rem(14) }} />}>
                                     { t('Settings')}
                                 </Menu.Item>
                             </Menu.Dropdown>

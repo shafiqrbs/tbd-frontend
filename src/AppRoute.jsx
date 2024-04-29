@@ -21,6 +21,8 @@ import SalesInvoice from "./components/modules/inventory/sales/SalesInvoice";
 import Sitemap from "./components/modules/dashboard/SItemap";
 import PurchaseIndex from "./components/modules/inventory/purchase/PurchaseIndex";
 import PurchaseInvoice from "./components/modules/inventory/purchase/PurchaseInvoice";
+import VoucherIndex from "./components/modules/accounting/voucher-entry/VoucherIndex";
+import HeadGroupIndex from "./components/modules/accounting/head-group/HeadGroupIndex";
 function AppRoute() {
 
     return (
@@ -51,6 +53,8 @@ function AppRoute() {
                     <Route path="" element={<DomainIndex/>}/>
                 </Route>
                 <Route path="/accounting/">
+                    <Route path="voucher-entry" element={<VoucherIndex/>}/>
+                    <Route path="head-group" element={<HeadGroupIndex/>}/>
                     <Route path="transaction-mode" element={<TransactionModeIndex/>}/>
                 </Route>
                 <Route path="sitemap" element={<Sitemap/>}/>
