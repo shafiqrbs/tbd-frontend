@@ -154,6 +154,42 @@ function SearchModal({ onClose }) {
                             onClose();
                         },
                     },
+                    {
+                        id: 'voucher-entry',
+                        label: t('VoucherEntry'),
+                        description: t('WhereWePresentTheVoucherInformation'),
+                        onClick: () => {
+                            navigate('/accounting/voucher-entry');
+                            onClose();
+                        },
+                    },
+                    {
+                        id: 'ledger',
+                        label: t('Ledger'),
+                        description: t('WhereWePresentTheLedgerInformation'),
+                        onClick: () => {
+                            navigate('/accounting/ledger');
+                            onClose();
+                        },
+                    },
+                    {
+                        id: 'head-group',
+                        label: t('HeadGroup'),
+                        description: t('WhereWePresentTheHeadGroupInformation'),
+                        onClick: () => {
+                            navigate('/accounting/head-group');
+                            onClose();
+                        },
+                    },
+                    {
+                        id: 'head-subgroup',
+                        label: t('HeadSubGroup'),
+                        description: t('WhereWePresentTheHeadSubGroupInformation'),
+                        onClick: () => {
+                            navigate('/accounting/head-subgroup');
+                            onClose();
+                        },
+                    },
                 ],
             },
         ]);
