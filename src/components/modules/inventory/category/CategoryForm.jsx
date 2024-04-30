@@ -146,7 +146,7 @@ function CategoryForm() {
                                     <Box pl={`xs`} pr={'xs'} mt={'xs'} className={'borderRadiusAll'}>
                                         <ScrollArea h={height} scrollbarSize={2} type="never">
                                             <Box>
-                                                <Grid gutter={{ base: 6 }}>
+                                                <Grid gutter={{ base: 1 }}>
                                                     <Grid.Col span={11} >
                                                         <Box mt={'8'}>
                                                             <SelectForm

@@ -272,7 +272,7 @@ function ConfigurationForm() {
                                                         <SwitchForm
                                                             tooltip={t('Category')}
                                                             label=''
-                                                            nextField={'productionType'}
+                                                            nextField={'vatPercent'}
                                                             name={'category'}
                                                             form={form}
                                                             color="red"
@@ -284,13 +284,89 @@ function ConfigurationForm() {
                                                     <Grid.Col span={6} fz={'sm'} pt={'1'} >{t('Category')}</Grid.Col>
                                                 </Grid>
                                             </Box>
+                                            <Box mt={'md'} mb={'md'}>
+                                                <Grid gutter={{ base: 6 }}>
+                                                    <Grid.Col span={6}>
+                                                        <InputForm
+                                                            tooltip={t('VatPercent')}
+                                                            label={t('VatPercent')}
+                                                            placeholder={t('VatPercent')}
+                                                            required={false}
+                                                            nextField={'vatEnabled'}
+                                                            name={'vat_percent'}
+                                                            form={form}
+                                                            mt={0}
+                                                            id={'vatPercent'}
+                                                        />
+                                                    </Grid.Col>
+                                                    <Grid.Col span={6} mt={'lg'}>
+                                                        <Box mt={'xs'}>
+                                                            <Grid columns={6} gutter={{ base: 1 }}>
+                                                                <Grid.Col span={2}>
+                                                                    <SwitchForm
+                                                                        tooltip={t('VatEnabled')}
+                                                                        label=''
+                                                                        nextField={'aitPercent'}
+                                                                        name={'vat_rnabled'}
+                                                                        form={form}
+                                                                        color="red"
+                                                                        id={'vatEnabled'}
+                                                                        position={'left'}
+                                                                        defaultChecked={1}
+                                                                    />
+                                                                </Grid.Col>
+                                                                <Grid.Col span={4} fz={'sm'} pt={'1'}>{t('VatEnabled')}
+                                                                </Grid.Col>
+                                                            </Grid>
+                                                        </Box>
+                                                    </Grid.Col>
+                                                </Grid>
+                                            </Box>
+                                            <Box mt={'md'} mb={'md'}>
+                                                <Grid gutter={{ base: 6 }}>
+                                                    <Grid.Col span={6}>
+                                                        <InputForm
+                                                            tooltip={t('AITPercent')}
+                                                            label={t('AITPercent')}
+                                                            placeholder={t('AITPercent')}
+                                                            required={false}
+                                                            nextField={'atiEnabled'}
+                                                            name={'ait_percent'}
+                                                            form={form}
+                                                            mt={0}
+                                                            id={'aitPercent'}
+                                                        />
+                                                    </Grid.Col>
+                                                    <Grid.Col span={6} mt={'lg'}>
+                                                        <Box mt={'xs'}>
+                                                            <Grid columns={6} gutter={{ base: 1 }}>
+                                                                <Grid.Col span={2}>
+                                                                    <SwitchForm
+                                                                        tooltip={t('AtiEnabled')}
+                                                                        label=''
+                                                                        nextField={'productionType'}
+                                                                        name={'ati_enabled'}
+                                                                        form={form}
+                                                                        color="red"
+                                                                        id={'atiEnabled'}
+                                                                        position={'left'}
+                                                                        defaultChecked={1}
+                                                                    />
+                                                                </Grid.Col>
+                                                                <Grid.Col span={4} fz={'sm'} pt={'1'}>{t('AtiEnabled')}
+                                                                </Grid.Col>
+                                                            </Grid>
+                                                        </Box>
+                                                    </Grid.Col>
+                                                </Grid>
+                                            </Box>
                                             <Box mt={'xs'}>
                                                 <SelectForm
                                                     tooltip={t('ProductionType')}
                                                     label={t('ProductionType')}
                                                     placeholder={t('ChooseProductionType')}
                                                     required={false}
-                                                    nextField={'vatPercent'}
+                                                    nextField={'invoiceComment'}
                                                     name={'production_type'}
                                                     form={form}
                                                     dropdownValue={["Family", "Local"]}
@@ -301,39 +377,14 @@ function ConfigurationForm() {
                                                     changeValue={setCustomerGroupData}
                                                 />
                                             </Box>
-                                            <Box mt={'xs'}>
-                                                <InputForm
-                                                    tooltip={t('VatPercent')}
-                                                    label={t('VatPercent')}
-                                                    placeholder={t('VatPercent')}
-                                                    required={false}
-                                                    nextField={'aitPercent'}
-                                                    name={'vat_percent'}
-                                                    form={form}
-                                                    mt={0}
-                                                    id={'vatPercent'}
-                                                />
-                                            </Box>
-                                            <Box mt={'xs'}>
-                                                <InputForm
-                                                    tooltip={t('AITPercent')}
-                                                    label={t('AITPercent')}
-                                                    placeholder={t('AITPercent')}
-                                                    required={false}
-                                                    nextField={'invoiceComment'}
-                                                    name={'ait_percent'}
-                                                    form={form}
-                                                    mt={0}
-                                                    id={'aitPercent'}
-                                                />
-                                            </Box>
+
                                             <Box mt={'xs'} >
                                                 <TextAreaForm
                                                     tooltip={t('InvoiceComment')}
                                                     label={t('InvoiceComment')}
                                                     placeholder={t('InvoiceComment')}
                                                     required={false}
-                                                    nextField={'logo'}
+                                                    nextField={'removeImage'}
                                                     name={'invoice_comment'}
                                                     form={form}
                                                     mt={8}

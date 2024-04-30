@@ -204,7 +204,7 @@ function CustomerUpdateForm() {
                                                 />
                                             </Box>
                                             <Box mt={'xs'}>
-                                                <Grid gutter={{ base: 6 }}>
+                                                <Grid gutter={{ base: 1 }}>
                                                     <Grid.Col span={11} >
                                                         <Box>
                                                             <SelectForm

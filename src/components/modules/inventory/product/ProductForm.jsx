@@ -377,7 +377,7 @@ function ProductForm() {
                                                     />
                                                 </Grid.Col>
                                                 <Grid.Col span={1}>
-                                                    <Box pt={'xl'}>
+                                                    <Box pt={'xl'} >
                                                         <Tooltip
                                                             multiline
                                                             w={420}

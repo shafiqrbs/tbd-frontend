@@ -241,5 +241,7 @@
   "ClientNameValidateMessage": "অনুগ্রহ করে বৈধ ক্লায়েন্ট এর নাম প্রবেশ করুন",
   "DomainUser": "ডোমেইন ব্যবহারকারী",
   "DomainUserValidateMessage": "অনুগ্রহ করে বৈধ ডোমেইন ব্যবহারকারী প্রবেশ করুন",
-  "QuickCategory": "কুইক ক্যাটাগরি"
+  "QuickCategory": "কুইক ক্যাটাগরি",
+  "VatEnabled": "VAT এনাবল",
+  "AtiEnabled": "Ati এনাবল"
 }

@@ -315,5 +315,7 @@
   "ManageDomain": "Manage Domain",
   "Domains": "Domains",
   "LicenseNo": "License No",
-  "QuickCategory": "Quick Category"
+  "QuickCategory": "Quick Category",
+  "VatEnabled": "VAT Enable",
+  "AtiEnabled": "ATI Enable"
 }
