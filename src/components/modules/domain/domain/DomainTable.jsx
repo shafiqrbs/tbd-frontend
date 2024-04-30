@@ -1,14 +1,14 @@
-import React, {useEffect, useState} from "react";
-import {useOutletContext,Link,} from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useOutletContext, Link, } from "react-router-dom";
 import {
     Group,
-    Box,Grid,
-    ActionIcon, Text,Title,Stack
+    Box, Grid,
+    ActionIcon, Text, Title, Stack
 } from "@mantine/core";
-import {useTranslation} from "react-i18next";
-import {IconEye, IconEdit, IconTrash} from "@tabler/icons-react";
-import {DataTable} from 'mantine-datatable';
-import {useDispatch, useSelector} from "react-redux";
+import { useTranslation } from "react-i18next";
+import { IconEye, IconEdit, IconTrash } from "@tabler/icons-react";
+import { DataTable } from 'mantine-datatable';
+import { useDispatch, useSelector } from "react-redux";
 import {
     editEntityData,
     getIndexEntityData,
@@ -17,8 +17,8 @@ import {
     showEntityData
 } from "../../../../store/core/crudSlice.js";
 import KeywordSearch from "../../filter/KeywordSearch";
-import {modals} from "@mantine/modals";
-import {deleteEntityData} from "../../../../store/core/crudSlice";
+import { modals } from "@mantine/modals";
+import { deleteEntityData } from "../../../../store/core/crudSlice";
 import tableCss from "../../../../assets/css/Table.module.css";
 
 
@@ -26,8 +26,8 @@ import tableCss from "../../../../assets/css/Table.module.css";
 function DomainTable(props) {
 
     const dispatch = useDispatch();
-    const {t, i18n} = useTranslation();
-    const {isOnline, mainAreaHeight} = useOutletContext();
+    const { t, i18n } = useTranslation();
+    const { isOnline, mainAreaHeight } = useOutletContext();
     const height = mainAreaHeight - 128; //TabList height 104
 
     const perPage = 50;
@@ -56,8 +56,8 @@ function DomainTable(props) {
     return (
 
         <>
-            <Box  pl={`xs`} pb={'xs'} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'} >
-                <KeywordSearch module={'customer'}/>
+            <Box pl={`xs`} pb={'xs'} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'} >
+                <KeywordSearch module={'customer'} />
             </Box>
             <Box className={'borderRadiusAll'}>
 
@@ -73,23 +73,22 @@ function DomainTable(props) {
                     columns={[
                         {
                             accessor: 'index',
-                            title: 'S/N',
+                            title: t('S/N'),
                             textAlignment: 'right',
                             render: (item) => (indexData.data.indexOf(item) + 1)
                         },
-                        {accessor: 'name', title: t('CompanyName')},
-                        {accessor: 'mobile', title: t('Mobile')},
-                        {accessor: 'email', title: "Email"},
-                        {accessor: 'email', title: "Email"},
-                        {accessor: 'unique_code', title: "License No"},
+                        { accessor: 'name', title: t('CompanyName') },
+                        { accessor: 'mobile', title: t('Mobile') },
+                        { accessor: 'email', title: t("Email") },
+                        { accessor: 'unique_code', title: t("LicenseNo") },
                         {
                             accessor: "action",
-                            title: "Action",
+                            title: t("Action"),
                             textAlign: "right",
                             render: (data) => (
                                 <Group gap={4} justify="right" wrap="nowrap">
                                     <ActionIcon>
-                                        <Link to='/domain' query={{ id: data.id }} params={{ id: data.id }}><IconEye size={16}/></Link>
+                                        <Link to='/domain' query={{ id: data.id }} params={{ id: data.id }}><IconEye size={16} /></Link>
                                     </ActionIcon>
                                     <ActionIcon
                                         size="sm"
@@ -100,7 +99,7 @@ function DomainTable(props) {
                                             dispatch(showEntityData('core/customer/' + data.id))
                                         }}
                                     >
-                                        <IconEye size={16}/>
+                                        <IconEye size={16} />
                                     </ActionIcon>
                                     <ActionIcon
                                         size="sm"
@@ -112,7 +111,7 @@ function DomainTable(props) {
                                             dispatch(setFormLoading(true))
                                         }}
                                     >
-                                        <IconEdit size={16}/>
+                                        <IconEdit size={16} />
                                     </ActionIcon>
                                     <ActionIcon
                                         size="sm"
@@ -126,7 +125,7 @@ function DomainTable(props) {
                                                 children: (
                                                     <Text size="sm"> {t("FormConfirmationMessage")}</Text>
                                                 ),
-                                                labels: {confirm: 'Confirm', cancel: 'Cancel'},
+                                                labels: { confirm: 'Confirm', cancel: 'Cancel' },
                                                 onCancel: () => console.log('Cancel'),
                                                 onConfirm: () => {
                                                     dispatch(deleteEntityData('core/customer/' + data.id))
@@ -135,7 +134,7 @@ function DomainTable(props) {
                                             });
                                         }}
                                     >
-                                        <IconTrash size={16}/>
+                                        <IconTrash size={16} />
                                     </ActionIcon>
                                 </Group>
                             ),
@@ -153,14 +152,14 @@ function DomainTable(props) {
                     loaderSize="xs"
                     loaderColor="grape"
                     height={height}
-                    scrollAreaProps={{type: 'never'}}
+                    scrollAreaProps={{ type: 'never' }}
                 />
                 {
                     customerViewModel &&
-                    <CustomerViewModel customerViewModel={customerViewModel} setCustomerViewModel={setCustomerViewModel}/>
+                    <CustomerViewModel customerViewModel={customerViewModel} setCustomerViewModel={setCustomerViewModel} />
                 }
             </Box>
-            </>
+        </>
 
     );
 }
