@@ -237,7 +237,7 @@ function ConfigurationForm() {
                                                     label={t('Address')}
                                                     placeholder={t('Address')}
                                                     required={false}
-                                                    nextField={'wareHouse'}
+                                                    nextField={'warehouse'}
                                                     name={'address'}
                                                     form={form}
                                                     mt={8}
@@ -252,18 +252,18 @@ function ConfigurationForm() {
                                                 <Grid gutter={{ base: 1 }}>
                                                     <Grid.Col span={2}>
                                                         <SwitchForm
-                                                            tooltip={t('WareHouse')}
+                                                            tooltip={t('Warehouse')}
                                                             label=''
                                                             nextField={'category'}
-                                                            name={'print_footer'}
+                                                            name={'Warehouse'}
                                                             form={form}
                                                             color="red"
-                                                            id={'wareHouse'}
+                                                            id={'warehouse'}
                                                             position={'left'}
                                                             defaultChecked={0}
                                                         />
                                                     </Grid.Col>
-                                                    <Grid.Col span={6} fz={'sm'} pt={'1'} >{t('WareHouse')}</Grid.Col>
+                                                    <Grid.Col span={6} fz={'sm'} pt={'1'} >{t('Warehouse')}</Grid.Col>
                                                 </Grid>
                                             </Box>
                                             <Box mt={'xs'}>
@@ -273,7 +273,7 @@ function ConfigurationForm() {
                                                             tooltip={t('Category')}
                                                             label=''
                                                             nextField={'productionType'}
-                                                            name={'print_footer'}
+                                                            name={'category'}
                                                             form={form}
                                                             color="red"
                                                             id={'category'}
@@ -291,7 +291,7 @@ function ConfigurationForm() {
                                                     placeholder={t('ChooseProductionType')}
                                                     required={false}
                                                     nextField={'vatPercent'}
-                                                    name={'business_model'}
+                                                    name={'production_type'}
                                                     form={form}
                                                     dropdownValue={["Family", "Local"]}
                                                     mt={8}
@@ -303,9 +303,9 @@ function ConfigurationForm() {
                                             </Box>
                                             <Box mt={'xs'}>
                                                 <InputForm
-                                                    tooltip={t('VATPercent')}
-                                                    label={t('VATPercent')}
-                                                    placeholder={t('VATPercent')}
+                                                    tooltip={t('VatPercent')}
+                                                    label={t('VatPercent')}
+                                                    placeholder={t('VatPercent')}
                                                     required={false}
                                                     nextField={'aitPercent'}
                                                     name={'vat_percent'}
@@ -440,7 +440,7 @@ function ConfigurationForm() {
                                                 <Grid gutter={{ base: 1 }}>
                                                     <Grid.Col span={2}>
                                                         <SwitchForm
-                                                            tooltip={t('POSPrint')}
+                                                            tooltip={t('PosPrint')}
                                                             label=''
                                                             nextField={'printHeader'}
                                                             name={'pos_print'}
@@ -451,7 +451,7 @@ function ConfigurationForm() {
                                                             defaultChecked={1}
                                                         />
                                                     </Grid.Col>
-                                                    <Grid.Col span={6} fz={'sm'} pt={'1'} >{t('POSPrint')}</Grid.Col>
+                                                    <Grid.Col span={6} fz={'sm'} pt={'1'} >{t('PosPrint')}</Grid.Col>
                                                 </Grid>
                                             </Box>
                                             <Box mt={'xs'}>
@@ -530,7 +530,7 @@ function ConfigurationForm() {
                                                 <TextAreaForm
                                                     tooltip={t('PrintFooterText')}
                                                     label={t('PrintFooterText')}
-                                                    placeholder={t('PrintFooterText')}
+                                                    placeholder={t('EnterPrintFooterText')}
                                                     required={false}
                                                     nextField={'bodyFontSize'}
                                                     name={'address'}
@@ -786,7 +786,7 @@ function ConfigurationForm() {
                                                 <Grid gutter={{ base: 1 }}>
                                                     <Grid.Col span={2}>
                                                         <SwitchForm
-                                                            tooltip={t('zeroStockAllowed')}
+                                                            tooltip={t('ZeroStockAllowed')}
                                                             label=''
                                                             nextField={'stockItem'}
                                                             name={'zero_ztock_allowed'}
@@ -797,7 +797,7 @@ function ConfigurationForm() {
                                                             defaultChecked={0}
                                                         />
                                                     </Grid.Col>
-                                                    <Grid.Col span={6} fz={'sm'} pt={'1'} >{t('zeroStockAllowed')}</Grid.Col>
+                                                    <Grid.Col span={6} fz={'sm'} pt={'1'} >{t('ZeroStockAllowed')}</Grid.Col>
                                                 </Grid>
                                             </Box>
                                             <Box mt={'xs'}>
@@ -930,25 +930,7 @@ function ConfigurationForm() {
                                                 <Grid gutter={{ base: 1 }}>
                                                     <Grid.Col span={2}>
                                                         <SwitchForm
-                                                            tooltip={t('FuelStation')}
-                                                            label=''
-                                                            nextField={'tloCommision'}
-                                                            name={'fuel_station'}
-                                                            form={form}
-                                                            color="red"
-                                                            id={'fuelStation'}
-                                                            position={'left'}
-                                                            defaultChecked={0}
-                                                        />
-                                                    </Grid.Col>
-                                                    <Grid.Col span={6} fz={'sm'} pt={'1'} >{t('FuelStation')}</Grid.Col>
-                                                </Grid>
-                                            </Box>
-                                            <Box mt={'xs'}>
-                                                <Grid gutter={{ base: 1 }}>
-                                                    <Grid.Col span={2}>
-                                                        <SwitchForm
-                                                            tooltip={t('TLOCommision')}
+                                                            tooltip={t('TloCommision')}
                                                             label=''
                                                             nextField={'salesReturn'}
                                                             name={'tlo_commision'}
@@ -959,7 +941,7 @@ function ConfigurationForm() {
                                                             defaultChecked={0}
                                                         />
                                                     </Grid.Col>
-                                                    <Grid.Col span={6} fz={'sm'} pt={'1'} >{t('TLOCommision')}</Grid.Col>
+                                                    <Grid.Col span={6} fz={'sm'} pt={'1'} >{t('TloCommision')}</Grid.Col>
                                                 </Grid>
                                             </Box>
                                             <Box mt={'xs'}>
@@ -1002,7 +984,7 @@ function ConfigurationForm() {
                                                 <Grid gutter={{ base: 1 }}>
                                                     <Grid.Col span={2}>
                                                         <SwitchForm
-                                                            tooltip={t('DueSalesWithOutCustomer')}
+                                                            tooltip={t('DueSalesWithoutCustomer')}
                                                             label=''
                                                             nextField={''}
                                                             name={'due_sales_wc'}
@@ -1013,7 +995,7 @@ function ConfigurationForm() {
                                                             defaultChecked={0}
                                                         />
                                                     </Grid.Col>
-                                                    <Grid.Col span={6} fz={'sm'} pt={'1'} >{t('DueSalesWithOutCustomer')}</Grid.Col>
+                                                    <Grid.Col span={6} fz={'sm'} pt={'1'} >{t('DueSalesWithoutCustomer')}</Grid.Col>
                                                 </Grid>
                                             </Box>
 
