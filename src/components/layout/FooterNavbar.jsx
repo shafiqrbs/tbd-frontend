@@ -1,29 +1,29 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import {
     Box, Button,
     Grid, Progress, Title, Group, Burger, Menu, rem, ActionIcon, NavLink
 } from "@mantine/core";
-import {getHotkeyHandler, useDisclosure, useHotkeys, useToggle} from "@mantine/hooks";
-import {useTranslation} from 'react-i18next';
-import {useDispatch, useSelector} from "react-redux";
-import classes from  '../../assets/css/FooterNavbar.module.css';
+import { getHotkeyHandler, useDisclosure, useHotkeys, useToggle } from "@mantine/hooks";
+import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from "react-redux";
+import classes from '../../assets/css/FooterNavbar.module.css';
 import {
-    IconInfoCircle,IconTrash,IconSearch,IconSettings
+    IconInfoCircle, IconTrash, IconSearch, IconSettings
 } from "@tabler/icons-react";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 
 function FooterNavbar() {
-    const {t, i18n} = useTranslation();
+    const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [opened, { toggle }] = useDisclosure(false);
 
     const links = [
         { link: '/inventory/sales', label: t('Sales') },
-        { link: '/purchase', label: t('Purchase') },
-        { link: '/product', label: t('Product') },
-        { link: '/accounting', label: t('Accounting') },
+        { link: '/inventory/purchase', label: t('Purchase') },
+        { link: '/inventory/product', label: t('Product') },
+        { link: '/accounting/transaction-mode', label: t('Accounting') },
     ];
 
     const items = links.map((link) => (
