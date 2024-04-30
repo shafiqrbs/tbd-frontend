@@ -220,7 +220,7 @@ function CustomerForm() {
                                                 />
                                             </Box>
                                             <Box mt={'xs'}>
-                                                <Grid gutter={{ base: 2 }}>
+                                                <Grid gutter={{ base: 6 }}>
                                                     <Grid.Col span={11} >
                                                         <Box>
                                                             <SelectForm
@@ -241,10 +241,10 @@ function CustomerForm() {
                                                         </Box>
                                                     </Grid.Col>
                                                     <Grid.Col span={1}>
-                                                        <Box pt={'24'}>
+                                                        <Box pt={'xl'}>
                                                             <Tooltip
                                                                 multiline
-                                                                w={280}
+                                                                w={420}
                                                                 withArrow
                                                                 transitionProps={{ duration: 200 }}
                                                                 label={t('QuickCategoryGroup')}

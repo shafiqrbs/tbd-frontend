@@ -1,22 +1,22 @@
-import React, {useEffect, useState} from "react";
-import {useOutletContext} from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useOutletContext } from "react-router-dom";
 import {
     Button, rem, Flex, Grid, Box, ScrollArea, Group, Text, Title, Stack, Tooltip, ActionIcon, Popover
 } from "@mantine/core";
-import {useTranslation} from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import {
     IconCheck,
-    IconDeviceFloppy, IconInfoCircle, IconPlus, IconUserCog,IconCategoryPlus,
+    IconDeviceFloppy, IconInfoCircle, IconPlus, IconUserCog, IconCategoryPlus,
 } from "@tabler/icons-react";
-import {useDisclosure, useHotkeys} from "@mantine/hooks";
-import {useDispatch, useSelector} from "react-redux";
-import {hasLength, isNotEmpty, useForm} from "@mantine/form";
-import {modals} from "@mantine/modals";
-import {notifications} from "@mantine/notifications";
+import { useDisclosure, useHotkeys } from "@mantine/hooks";
+import { useDispatch, useSelector } from "react-redux";
+import { hasLength, isNotEmpty, useForm } from "@mantine/form";
+import { modals } from "@mantine/modals";
+import { notifications } from "@mantine/notifications";
 
-import {getCustomerDropdown} from "../../../../store/core/utilitySlice";
-import {setDropdownLoad, setFetching, storeEntityData} from "../../../../store/inventory/crudSlice.js";
-import {getGroupCategoryDropdown} from "../../../../store/inventory/utilitySlice.js";
+import { getCustomerDropdown } from "../../../../store/core/utilitySlice";
+import { setDropdownLoad, setFetching, storeEntityData } from "../../../../store/inventory/crudSlice.js";
+import { getGroupCategoryDropdown } from "../../../../store/inventory/utilitySlice.js";
 
 import Shortcut from "../../shortcut/Shortcut";
 import InputForm from "../../../form-builders/InputForm";
@@ -26,18 +26,18 @@ import CategoryGroupModal from "./CategoryGroupModal.jsx";
 
 
 function CategoryForm() {
-    const {t, i18n} = useTranslation();
+    const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
-    const {isOnline, mainAreaHeight} = useOutletContext();
+    const { isOnline, mainAreaHeight } = useOutletContext();
     const height = mainAreaHeight - 130; //TabList height 104
-    const [opened, {open, close}] = useDisclosure(false);
+    const [opened, { open, close }] = useDisclosure(false);
     const [categoryGroupData, setCategoryGroupData] = useState(null);
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
     const groupCategoryDropdownData = useSelector((state) => state.inventoryUtilitySlice.groupCategoryDropdown)
     const dropdownLoad = useSelector((state) => state.inventoryCrudSlice.dropdownLoad)
     let groupCategoryDropdown = groupCategoryDropdownData && groupCategoryDropdownData.length > 0 ?
         groupCategoryDropdownData.map((type, index) => {
-            return ({'label': type.name, 'value': String(type.id)})
+            return ({ 'label': type.name, 'value': String(type.id) })
         }) : []
     useEffect(() => {
         const value = {
@@ -53,7 +53,7 @@ function CategoryForm() {
         },
         validate: {
             parent: isNotEmpty(),
-            name: hasLength({min: 2, max: 20}),
+            name: hasLength({ min: 2, max: 20 }),
         }
     });
 
@@ -81,7 +81,7 @@ function CategoryForm() {
                         children: (
                             <Text size="sm"> {t("FormConfirmationMessage")}</Text>
                         ),
-                        labels: {confirm: t('Submit'), cancel: t('Cancel')}, confirmProps: { color: 'red' },
+                        labels: { confirm: t('Submit'), cancel: t('Cancel') }, confirmProps: { color: 'red' },
                         onCancel: () => console.log('Cancel'),
                         onConfirm: () => {
                             setSaveCreateLoading(true)
@@ -94,10 +94,10 @@ function CategoryForm() {
                             notifications.show({
                                 color: 'teal',
                                 title: t('CreateSuccessfully'),
-                                icon: <IconCheck style={{width: rem(18), height: rem(18)}}/>,
+                                icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
                                 loading: false,
                                 autoClose: 700,
-                                style: {backgroundColor: 'lightgray'},
+                                style: { backgroundColor: 'lightgray' },
                             });
 
                             setTimeout(() => {
@@ -109,7 +109,7 @@ function CategoryForm() {
                         },
                     });
                 })}>
-                    <Grid columns={9} gutter={{base:8}}>
+                    <Grid columns={9} gutter={{ base: 8 }}>
                         <Grid.Col span={8} >
                             <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
                                 <Box bg={"white"} >
@@ -119,7 +119,7 @@ function CategoryForm() {
                                                 <Title order={6} mt={'xs'} pl={'6'}>{t('CreateCategoryGroup')}</Title>
                                             </Grid.Col>
                                             <Grid.Col span={6}>
-                                                <Stack right  align="flex-end">
+                                                <Stack right align="flex-end">
                                                     <>
                                                         {
                                                             !saveCreateLoading && isOnline &&
@@ -129,7 +129,7 @@ function CategoryForm() {
                                                                 type="submit"
                                                                 mt={4}
                                                                 id="EntityFormSubmit"
-                                                                leftSection={<IconDeviceFloppy size={16}/>}
+                                                                leftSection={<IconDeviceFloppy size={16} />}
                                                             >
 
                                                                 <Flex direction={`column`} gap={0}>
@@ -143,44 +143,44 @@ function CategoryForm() {
                                             </Grid.Col>
                                         </Grid>
                                     </Box>
-                                    <Box pl={`xs`} pr={'xs'} mt={'xs'}  className={'borderRadiusAll'}>
+                                    <Box pl={`xs`} pr={'xs'} mt={'xs'} className={'borderRadiusAll'}>
                                         <ScrollArea h={height} scrollbarSize={2} type="never">
                                             <Box>
-                                            <Grid gutter={{base:1}}>
-                                                <Grid.Col span={11} >
-                                                    <Box mt={'8'}>
-                                                        <SelectForm
-                                                            tooltip={t('ChooseCategoryGroup')}
-                                                            label={t('CategoryGroup')}
-                                                            placeholder={t('ChooseCategoryGroup')}
-                                                            required={true}
-                                                            nextField={'name'}
-                                                            name={'parent'}
-                                                            form={form}
-                                                            dropdownValue={groupCategoryDropdown}
-                                                            id={'category_group'}
-                                                            searchable={false}
-                                                            value={categoryGroupData}
-                                                            changeValue={setCategoryGroupData}
-                                                        />
-                                                    </Box>
-                                                </Grid.Col>
-                                                <Grid.Col span={1}>
-                                                    <Box  pt={'xl'}>
-                                                        <Tooltip
-                                                            multiline
-                                                            w={420}
-                                                            withArrow
-                                                            transitionProps={{ duration: 200 }}
-                                                            label={t('InstantCustomerCreate')}
-                                                        >
-                                                            <ActionIcon fullWidth variant="outline" bg={'white'} size={'lg'} color="red.5" mt={'1'} aria-label="Settings">
-                                                                <IconUserCog style={{ width: '100%', height: '70%' }} stroke={1.5} />
-                                                            </ActionIcon>
-                                                        </Tooltip>
-                                                    </Box>
-                                                </Grid.Col>
-                                            </Grid>
+                                                <Grid gutter={{ base: 6 }}>
+                                                    <Grid.Col span={11} >
+                                                        <Box mt={'8'}>
+                                                            <SelectForm
+                                                                tooltip={t('ChooseCategoryGroup')}
+                                                                label={t('CategoryGroup')}
+                                                                placeholder={t('ChooseCategoryGroup')}
+                                                                required={true}
+                                                                nextField={'name'}
+                                                                name={'parent'}
+                                                                form={form}
+                                                                dropdownValue={groupCategoryDropdown}
+                                                                id={'category_group'}
+                                                                searchable={false}
+                                                                value={categoryGroupData}
+                                                                changeValue={setCategoryGroupData}
+                                                            />
+                                                        </Box>
+                                                    </Grid.Col>
+                                                    <Grid.Col span={1}>
+                                                        <Box pt={'xl'}>
+                                                            <Tooltip
+                                                                multiline
+                                                                w={420}
+                                                                withArrow
+                                                                transitionProps={{ duration: 200 }}
+                                                                label={t('InstantCustomerCreate')}
+                                                            >
+                                                                <ActionIcon fullWidth variant="outline" bg={'white'} size={'lg'} color="red.5" mt={'1'} aria-label="Settings">
+                                                                    <IconUserCog style={{ width: '100%', height: '70%' }} stroke={1.5} />
+                                                                </ActionIcon>
+                                                            </Tooltip>
+                                                        </Box>
+                                                    </Grid.Col>
+                                                </Grid>
                                             </Box>
 
                                             <Box mt={'xs'}>
@@ -196,7 +196,7 @@ function CategoryForm() {
                                                 />
                                             </Box>
                                             <Box mt={'xs'}>
-                                                <Grid gutter={{base:1}}>
+                                                <Grid gutter={{ base: 1 }}>
                                                     <Grid.Col span={2}>
                                                         <SwitchForm
                                                             tooltip={t('Status')}

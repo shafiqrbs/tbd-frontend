@@ -60,7 +60,6 @@ function DomainTable(props) {
                 <KeywordSearch module={'customer'} />
             </Box>
             <Box className={'borderRadiusAll'}>
-
                 <DataTable
                     classNames={{
                         root: tableCss.root,

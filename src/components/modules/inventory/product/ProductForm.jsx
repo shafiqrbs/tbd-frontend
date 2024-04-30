@@ -1,36 +1,36 @@
-import React, {useEffect, useState} from "react";
-import {useNavigate, useOutletContext} from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import {
     Button, rem, Flex, Grid, Box, ScrollArea, Group, Text, Title, Stack, Tooltip, ActionIcon,
 } from "@mantine/core";
-import {useTranslation} from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import {
     IconCategoryPlus,
     IconCheck,
-    IconDeviceFloppy, IconInfoCircle, IconPlus,IconClipboardPlus
+    IconDeviceFloppy, IconInfoCircle, IconPlus, IconClipboardPlus
 } from "@tabler/icons-react";
-import {useDisclosure, useHotkeys} from "@mantine/hooks";
-import {useDispatch, useSelector} from "react-redux";
-import {hasLength, isNotEmpty, useForm} from "@mantine/form";
-import {modals} from "@mantine/modals";
-import {notifications} from "@mantine/notifications";
+import { useDisclosure, useHotkeys } from "@mantine/hooks";
+import { useDispatch, useSelector } from "react-redux";
+import { hasLength, isNotEmpty, useForm } from "@mantine/form";
+import { modals } from "@mantine/modals";
+import { notifications } from "@mantine/notifications";
 
 import Shortcut from "../../shortcut/Shortcut";
 import InputForm from "../../../form-builders/InputForm";
 import SelectForm from "../../../form-builders/SelectForm";
 import SwitchForm from "../../../form-builders/SwitchForm";
-import {getBrandDropdown, getCategoryDropdown} from "../../../../store/inventory/utilitySlice";
-import {getSettingDropdown, getProductUnitDropdown} from "../../../../store/utility/utilitySlice.js";
+import { getBrandDropdown, getCategoryDropdown } from "../../../../store/inventory/utilitySlice";
+import { getSettingDropdown, getProductUnitDropdown } from "../../../../store/utility/utilitySlice.js";
 
-import {setFetching, storeEntityData} from "../../../../store/inventory/crudSlice.js";
+import { setFetching, storeEntityData } from "../../../../store/inventory/crudSlice.js";
 import getSettingProductDropdownData from "../../../global-hook/dropdown/getSettingProductDropdownData.js";
 
 function ProductForm() {
-    const {t, i18n} = useTranslation();
+    const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
-    const {isOnline, mainAreaHeight} = useOutletContext();
+    const { isOnline, mainAreaHeight } = useOutletContext();
     const height = mainAreaHeight - 130; //TabList height 104
-    const [opened, {open, close}] = useDisclosure(false);
+    const [opened, { open, close }] = useDisclosure(false);
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
 
     const [categoryData, setCategoryData] = useState(null);
@@ -39,7 +39,7 @@ function ProductForm() {
 
     let categoryDropdown = categoryDropdownData && categoryDropdownData.length > 0 ?
         categoryDropdownData.map((type, index) => {
-            return ({'label': type.name, 'value': String(type.id)})
+            return ({ 'label': type.name, 'value': String(type.id) })
         }) : []
     useEffect(() => {
         const value = {
@@ -56,7 +56,7 @@ function ProductForm() {
     const dropdownBrandLoad = useSelector((state) => state.inventoryCrudSlice.dropdownLoad)
     let brandDropdown = brandDropdownData && brandDropdownData.length > 0 ?
         brandDropdownData.map((type, index) => {
-            return ({'label': type.name, 'value': String(type.id)})
+            return ({ 'label': type.name, 'value': String(type.id) })
         }) : []
     useEffect(() => {
         const value = {
@@ -73,7 +73,7 @@ function ProductForm() {
     const productUnitDropdownData = useSelector((state) => state.utilityUtilitySlice.productUnitDropdown)
     let productUnitDropdown = productUnitDropdownData && productUnitDropdownData.length > 0 ?
         productUnitDropdownData.map((type, index) => {
-            return ({'label': type.name, 'value': String(type.id)})
+            return ({ 'label': type.name, 'value': String(type.id) })
         }) : []
     useEffect(() => {
         const value = {
@@ -103,7 +103,7 @@ function ProductForm() {
             product_type_id: isNotEmpty(),
             category_id: isNotEmpty(),
             unit_id: isNotEmpty(),
-            name: hasLength({min: 2, max: 20}),
+            name: hasLength({ min: 2, max: 20 }),
             sales_price: (value) => {
                 const isNumberOrFractional = /^-?\d+(\.\d+)?$/.test(value);
                 if (!isNumberOrFractional) {
@@ -134,7 +134,7 @@ function ProductForm() {
                     children: (
                         <Text size="sm"> {t("FormConfirmationMessage")}</Text>
                     ),
-                    labels: {confirm: t('Submit'), cancel: t('Cancel')}, confirmProps: { color: 'red' },
+                    labels: { confirm: t('Submit'), cancel: t('Cancel') }, confirmProps: { color: 'red' },
                     onCancel: () => console.log('Cancel'),
                     onConfirm: () => {
                         const value = {
@@ -145,10 +145,10 @@ function ProductForm() {
                         notifications.show({
                             color: 'teal',
                             title: t('CreateSuccessfully'),
-                            icon: <IconCheck style={{width: rem(18), height: rem(18)}}/>,
+                            icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
                             loading: false,
                             autoClose: 700,
-                            style: {backgroundColor: 'lightgray'},
+                            style: { backgroundColor: 'lightgray' },
                         });
                         setTimeout(() => {
                             form.reset()
@@ -161,7 +161,7 @@ function ProductForm() {
                     },
                 });
             })}>
-                <Grid columns={9} gutter={{base:8}}>
+                <Grid columns={9} gutter={{ base: 8 }}>
                     <Grid.Col span={8} >
                         <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
                             <Box bg={"white"} >
@@ -171,7 +171,7 @@ function ProductForm() {
                                             <Title order={6} mt={'xs'} pl={'6'}>{t('CreateProduct')}</Title>
                                         </Grid.Col>
                                         <Grid.Col span={6}>
-                                            <Stack right  align="flex-end">
+                                            <Stack right align="flex-end">
                                                 <>
                                                     {
                                                         !saveCreateLoading && isOnline &&
@@ -181,7 +181,7 @@ function ProductForm() {
                                                             type="submit"
                                                             mt={4}
                                                             id="EntityFormSubmit"
-                                                            leftSection={<IconDeviceFloppy size={16}/>}
+                                                            leftSection={<IconDeviceFloppy size={16} />}
                                                         >
 
                                                             <Flex direction={`column`} gap={0}>
@@ -215,7 +215,7 @@ function ProductForm() {
                                             />
                                         </Box>
                                         <Box mt={'xs'}>
-                                            <Grid gutter={{base: 6}}>
+                                            <Grid gutter={{ base: 6 }}>
                                                 <Grid.Col span={11}>
                                                     <SelectForm
                                                         tooltip={t('ChooseCategory')}
@@ -235,22 +235,22 @@ function ProductForm() {
 
                                                 </Grid.Col>
                                                 <Grid.Col span={1}>
-                                                    <Box pt={'24'}>
+                                                    <Box pt={'xl'}>
                                                         <Tooltip
                                                             multiline
-                                                            w={280}
+                                                            w={420}
                                                             withArrow
                                                             transitionProps={{ duration: 200 }}
                                                             label={t('QuickCategory')}
                                                         >
-                                                            <ActionIcon fullWidth variant="outline" bg={'white'} size={'lg'} color="red.5" mt={'1'} aria-label="Settings"  onClick={open}>
+                                                            <ActionIcon fullWidth variant="outline" bg={'white'} size={'lg'} color="red.5" mt={'1'} aria-label="Settings" onClick={open}>
                                                                 <IconCategoryPlus style={{ width: '100%', height: '70%' }} stroke={1.5} />
                                                             </ActionIcon>
                                                         </Tooltip>
                                                     </Box>
                                                 </Grid.Col>
                                                 {opened &&
-                                                <CustomerGroupModel openedModel={opened} open={open} close={close}/>
+                                                    <CustomerGroupModel openedModel={opened} open={open} close={close} />
                                                 }
                                             </Grid>
                                         </Box>
@@ -281,7 +281,7 @@ function ProductForm() {
                                             />
                                         </Box>
                                         <Box mt={'xs'}>
-                                            <Grid gutter={{base: 6}}>
+                                            <Grid gutter={{ base: 6 }}>
                                                 <Grid.Col span={6}>
                                                     <InputForm
                                                         tooltip={t('ProductSkuValidateMessage')}
@@ -311,7 +311,7 @@ function ProductForm() {
                                             </Grid>
                                         </Box>
                                         <Box mt={'xs'}>
-                                            <Grid gutter={{base: 6}}>
+                                            <Grid gutter={{ base: 6 }}>
                                                 <Grid.Col span={6}>
                                                     <InputForm
                                                         tooltip={t('SalesPriceValidateMessage')}
@@ -341,7 +341,7 @@ function ProductForm() {
                                             </Grid>
                                         </Box>
                                         <Box mt={'xs'}>
-                                            <Grid gutter={{base: 6}}>
+                                            <Grid gutter={{ base: 6 }}>
                                                 <Grid.Col span={6}>
                                                     <SelectForm
                                                         tooltip={t('ChooseProductUnit')}
@@ -377,27 +377,27 @@ function ProductForm() {
                                                     />
                                                 </Grid.Col>
                                                 <Grid.Col span={1}>
-                                                    <Box pt={'24'}>
+                                                    <Box pt={'xl'}>
                                                         <Tooltip
                                                             multiline
-                                                            w={280}
+                                                            w={420}
                                                             withArrow
                                                             transitionProps={{ duration: 200 }}
                                                             label={t('QuickCategory')}
                                                         >
-                                                            <ActionIcon fullWidth variant="outline" bg={'white'} size={'lg'} color="red.5" mt={'1'} aria-label="Settings"  onClick={open}>
+                                                            <ActionIcon fullWidth variant="outline" bg={'white'} size={'lg'} color="red.5" mt={'1'} aria-label="Settings" onClick={open}>
                                                                 <IconClipboardPlus style={{ width: '100%', height: '70%' }} stroke={1.5} />
                                                             </ActionIcon>
                                                         </Tooltip>
                                                     </Box>
                                                 </Grid.Col>
                                                 {opened &&
-                                                <CustomerGroupModel openedModel={opened} open={open} close={close}/>
+                                                    <CustomerGroupModel openedModel={opened} open={open} close={close} />
                                                 }
                                             </Grid>
                                         </Box>
                                         <Box mt={'xs'}>
-                                            <Grid gutter={{base: 6}}>
+                                            <Grid gutter={{ base: 6 }}>
                                                 <Grid.Col span={6}>
                                                     <InputForm
                                                         tooltip={t('MinimumQuantityValidateMessage')}
@@ -427,7 +427,7 @@ function ProductForm() {
                                             </Grid>
                                         </Box>
                                         <Box mt={'md'} mb={'md'}>
-                                            <Grid gutter={{base:6}}>
+                                            <Grid gutter={{ base: 6 }}>
                                                 <Grid.Col span={6}>
                                                     <InputForm
                                                         tooltip={t('OpeningQuantity')}
@@ -441,20 +441,28 @@ function ProductForm() {
                                                         id={'opening_quantity'}
                                                     />
                                                 </Grid.Col>
-                                                <Grid.Col span={2} mt={'28'}>
-                                                    <SwitchForm
-                                                        tooltip={t('Status')}
-                                                        label=''
-                                                        nextField={'EntityFormSubmit'}
-                                                        name={'status'}
-                                                        form={form}
-                                                        color="red"
-                                                        id={'status'}
-                                                        position={'left'}
-                                                        defaultChecked={1}
-                                                    />
+                                                <Grid.Col span={6} mt={'28'}>
+                                                    <Box mt={'xs'}>
+                                                        <Grid columns={6} gutter={{ base: 1 }}>
+                                                            <Grid.Col span={2}>
+                                                                <SwitchForm
+                                                                    tooltip={t('PrintLogo')}
+                                                                    label=''
+                                                                    nextField={'printWithOutstanding'}
+                                                                    name={'print_logo'}
+                                                                    form={form}
+                                                                    color="red"
+                                                                    id={'printLogo'}
+                                                                    position={'left'}
+                                                                    defaultChecked={1}
+                                                                />
+                                                            </Grid.Col>
+                                                            <Grid.Col span={4} fz={'sm'} pt={'1'}>{t('Status')}
+                                                            </Grid.Col>
+                                                        </Grid>
+                                                    </Box>
                                                 </Grid.Col>
-                                                <Grid.Col span={4} fz={'sm'} mt={'xl'}>Status</Grid.Col>
+
                                             </Grid>
                                         </Box>
                                     </ScrollArea>
