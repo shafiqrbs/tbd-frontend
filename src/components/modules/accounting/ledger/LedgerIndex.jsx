@@ -12,6 +12,10 @@ import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoa
 import AccountingHeaderNavbar from "../AccountingHeaderNavbar";
 import LedgerDetails from "./LedgerDetails";
 import LedgerTable from "./LedgerTable";
+import LedgerForm from "./LedgerForm";
+import HeadGroupForm from "../head-group/HeadGroupForm";
+import HeadGroupUpdateFrom from "../head-group/HeadGroupUpdateFrom";
+import LedgerUpdateFrom from "./LedgerUpdateFrom";
 function LedgerIndex() {
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
@@ -32,7 +36,7 @@ function LedgerIndex() {
                 <>
                     <Box>
                         <AccountingHeaderNavbar
-                            pageTitle={t('ManageAccountHeadGroup')}
+                            pageTitle={t('ManageAccountLedger')}
                             roles={t('Roles')}
                             allowZeroPercentage=''
                             currencySymbol=''
@@ -45,7 +49,9 @@ function LedgerIndex() {
                                     </Box>
                                 </Grid.Col>
                                 <Grid.Col span={9}>
-                                    <LedgerDetails />
+                                    {
+                                        insertType === 'create' ? <LedgerForm /> : <LedgerUpdateFrom />
+                                    }
                                 </Grid.Col>
                             </Grid>
                         </Box>

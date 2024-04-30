@@ -80,8 +80,9 @@ function LedgerTable(props) {
                         },
                         { accessor: 'name', title: t('Name') },
                         { accessor: 'short_name', title: t('Nature of Group') },
-                        { accessor: 'method_name', title: t('ShortName') },
-                        { accessor: 'authorized_name', title: t('AccountCode') },
+                        { accessor: 'authorized_name', title: t('Debit') },
+                        { accessor: 'authorized_name', title: t('Credit') },
+                        { accessor: 'authorized_name', title: t('Balance') },
                         {
                             accessor: "action",
                             title: t("Action"),

@@ -59,7 +59,7 @@ function VoucherTable(props) {
 
         <>
             <Box pl={`xs`} pb={'xs'} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'} >
-                <KeywordSearch module={'customer'} />
+               {/* <KeywordSearch module={'customer'} />*/}
             </Box>
             <Box className={'borderRadiusAll'}>
                 <DataTable

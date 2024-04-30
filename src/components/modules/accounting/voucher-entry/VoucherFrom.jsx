@@ -1,14 +1,29 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {useOutletContext} from "react-router-dom";
 import {
     Button,
-    rem, Flex,
-    Grid, Box, ScrollArea, Group, Text, Title, Alert, List, Stack, SimpleGrid, Image, Tooltip
+    rem,
+    Flex,
+    Grid,
+    Box,
+    ScrollArea,
+    Group,
+    Text,
+    Title,
+    Alert,
+    List,
+    Stack,
+    SimpleGrid,
+    Image,
+    Tooltip,
+    Center,
+    Container,
+    CloseButton, TextInput, GridCol
 } from "@mantine/core";
 import {useTranslation} from 'react-i18next';
 import {
     IconCheck,
-    IconDeviceFloppy, IconInfoCircle, IconPlus,
+    IconDeviceFloppy, IconInfoCircle, IconPlus, IconRestore, IconSearch,
 } from "@tabler/icons-react";
 import {useDisclosure, useHotkeys} from "@mantine/hooks";
 import {useDispatch, useSelector} from "react-redux";
@@ -109,55 +124,471 @@ function VoucherForm(props) {
     useHotkeys([['alt+s', () => {
         document.getElementById('EntityFormSubmit').click()
     }]], []);
+    const [filteredItems, setFilteredItems] = useState([]);
+    const [value, setValue] = useState('');
+    const ref = useRef(null)
 
+    const getActions = () => {
+        return ([
+            {
+                group: t('Core'),
+                actions: [
+                    {
+                        id: 'customer',
+                        label: t('Customer'),
+                        description: t('WhereWePresentTheCustomerInformation'),
+                        onClick: () => {
+                            navigate('/core/customer');
+                            onClose();
+                        },
+
+                    },
+                    {
+                        id: 'user',
+                        label: t('User'),
+                        description: t('WhereWePresentTheUserInformation'),
+                        onClick: () => {
+                            navigate('/core/user');
+                            onClose();
+                        },
+
+                    },
+                    {
+                        id: 'vendor',
+                        label: t('Vendor'),
+                        description: t('WhereWePresentTheVendorInformation'),
+                        onClick: () => {
+                            navigate('/core/vendor');
+                            onClose();
+                        },
+                    },
+                ],
+            },
+
+            {
+                group: t('Inventory'),
+                actions: [
+                    {
+                        id: 'category',
+                        label: t('Category'),
+                        description: t('WhereWePresentTheCategoryInformation'),
+                        onClick: () => {
+                            navigate('/inventory/category');
+                            onClose();
+                        },
+                    },
+                    {
+                        id: 'category-group',
+                        label: t('CategoryGroup'),
+                        description: t('WhereWePresentTheCategoryGroupInformation'),
+                        onClick: () => {
+                            navigate('/inventory/category-group');
+                            onClose();
+                        },
+                    },
+                    {
+                        id: 'product',
+                        label: t('Product'),
+                        description: t('WhereWePresentTheProductInformation'),
+                        onClick: () => {
+                            navigate('/inventory/product');
+                            onClose();
+                        },
+                    },
+                    {
+                        id: 'configuration',
+                        label: t('Configuration'),
+                        description: t('WhereWePresentTheConfigurationInformation'),
+                        onClick: () => {
+                            navigate('/inventory/config');
+                            onClose();
+                        },
+                    },
+                    {
+                        id: 'sales',
+                        label: t('Sales'),
+                        description: t('WhereWePresentTheSalesInformation'),
+                        onClick: () => {
+                            navigate('/inventory/sales');
+                            onClose();
+                        },
+                    },
+                    {
+                        id: 'sales-invoice',
+                        label: t('ManageInvoice'),
+                        description: t('WhereWePresentTheSalesInvoiceInformation'),
+                        onClick: () => {
+                            navigate('/inventory/sales-invoice');
+                            onClose();
+                        },
+                    },
+                    {
+                        id: 'purchase',
+                        label: t('Purchase'),
+                        description: t('WhereWePresentThePurchaseInformation'),
+                        onClick: () => {
+                            navigate('/inventory/purchase');
+                            onClose();
+                        },
+                    },
+                    {
+                        id: 'manage-purchase',
+                        label: t('ManagePurchase'),
+                        description: t('WhereWePresentThePurchaseInvoiceInformation'),
+                        onClick: () => {
+                            navigate('/inventory/purchase-invoice');
+                            onClose();
+                        },
+                    },
+                ],
+            },
+
+            {
+                group: t('Domain'),
+                actions: [
+                    {
+                        id: 'domain',
+                        label: t('Domain'),
+                        description: t('WhereWePresentTheDomainInformation'),
+                        onClick: () => {
+                            navigate('/domain');
+                            onClose();
+                        },
+                    },
+                ],
+            },
+            {
+                group: t('Accounting'),
+                actions: [
+                    {
+                        id: 'transaction-mode',
+                        label: t('TransactionMode'),
+                        description: t('WhereWePresentTheTransactionModeInformation'),
+                        onClick: () => {
+                            navigate('/accounting/transaction-mode');
+                            onClose();
+                        },
+                    },
+                ],
+            },
+        ]);
+    };
+
+    const filterList = (event) => {
+        const updatedList = getActions().reduce((acc, group) => {
+            const filteredActions = group.actions.filter(action =>
+                action.label.toLowerCase().includes(event.target.value.toLowerCase())
+            );
+            return [...acc, ...filteredActions.map(action => ({ ...action, group: group.group }))];
+        }, []);
+        setFilteredItems(updatedList);
+    };
+
+    useEffect(() => {
+        setFilteredItems(getActions().reduce((acc, group) => [...acc, ...group.actions.map(action => ({ ...action, group: group.group }))], []));
+    }, []);
 
     return (
         <Box>
-            <Grid columns={9} gutter={{base: 8}}>
-                <Grid.Col span={8} >
-                    <form onSubmit={form.onSubmit((values) => {
-                        dispatch(setValidationData(false))
-                        modals.openConfirmModal({
-                            title: (
-                                <Text size="md"> {t("FormConfirmationTitle")}</Text>
-                            ),
-                            children: (
-                                <Text size="sm"> {t("FormConfirmationMessage")}</Text>
-                            ),
-                            labels: {confirm: 'Confirm', cancel: 'Cancel'}, confirmProps: { color: 'red' },
-                            onCancel: () => console.log('Cancel'),
-                            onConfirm: () => {
-                                const formValue = {...form.values};
-                                formValue['path'] = files[0];
+        <form onSubmit={form.onSubmit((values) => {
+            dispatch(setValidationData(false))
+            modals.openConfirmModal({
+                title: (
+                    <Text size="md"> {t("FormConfirmationTitle")}</Text>
+                ),
+                children: (
+                    <Text size="sm"> {t("FormConfirmationMessage")}</Text>
+                ),
+                labels: {confirm: 'Confirm', cancel: 'Cancel'}, confirmProps: { color: 'red' },
+                onCancel: () => console.log('Cancel'),
+                onConfirm: () => {
+                    const formValue = {...form.values};
+                    formValue['path'] = files[0];
 
-                                const data = {
-                                    url: 'accounting/transaction-mode',
-                                    data: formValue
-                                }
-                                dispatch(storeEntityDataWithFile(data))
+                    const data = {
+                        url: 'accounting/transaction-mode',
+                        data: formValue
+                    }
+                    dispatch(storeEntityDataWithFile(data))
 
-                                notifications.show({
-                                    color: 'teal',
-                                    title: t('CreateSuccessfully'),
-                                    icon: <IconCheck style={{width: rem(18), height: rem(18)}}/>,
-                                    loading: false,
-                                    autoClose: 700,
-                                    style: {backgroundColor: 'lightgray'},
-                                });
+                    notifications.show({
+                        color: 'teal',
+                        title: t('CreateSuccessfully'),
+                        icon: <IconCheck style={{width: rem(18), height: rem(18)}}/>,
+                        loading: false,
+                        autoClose: 700,
+                        style: {backgroundColor: 'lightgray'},
+                    });
 
-                                setTimeout(() => {
-                                    form.reset()
-                                    setFiles([])
-                                    setMethodData(null)
-                                    setAccountTypeData(null)
-                                    setAuthorisedData(null)
-                                    dispatch(setFetching(true))
-                                }, 700)
-                            },
-                        });
-                    })}>
+                    setTimeout(() => {
+                        form.reset()
+                        setFiles([])
+                        setMethodData(null)
+                        setAccountTypeData(null)
+                        setAuthorisedData(null)
+                        dispatch(setFetching(true))
+                    }, 700)
+                },
+            });
+        })}>
+            <Grid columns={24} gutter={{ base: 8 }}>
+                <Grid.Col span={3} >
+                    <Box bg={'white'} className={'borderRadiusAll'} pt={'16'}>
+                        <Box pl={`xs`} pb={'xs'} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'} >
+                            <Grid>
+                                <Grid.Col span={12} h={54}>
+                                    <Title order={6} mt={'xs'} pl={'6'}>{t('NameOfVoucher')}</Title>
+                                </Grid.Col>
+                            </Grid>
+                        </Box>
+                        <Stack
+                            h={height}
+                            bg="var(--mantine-color-body)"
+                            align="center"
+                        >
+                            <Center>
+                                <Container fluid mb={'8'}>
+                                    <Tooltip
+                                        label={t('AltTextNew')}
+                                        px={16}
+                                        py={2}
+                                        withArrow
+                                        position={"left"}
+                                        c={'white'}
+                                        bg={`red.5`}
+                                        transitionProps={{transition: "pop-bottom-left", duration: 500}}
+                                    >
+
+                                        <Button
+                                            size="md"
+                                            pl={'12'}
+                                            pr={'12'}
+                                            variant={'light'}
+                                            color={`red.5`}
+                                            radius="xl"
+                                            onClick={(e) => {
+                                                props.inputType === 'select' ?
+                                                    document.getElementById(props.Name).click() :
+                                                    document.getElementById(props.Name).focus()
+                                            }}
+                                        >
+                                            <Flex direction={`column`} align={'center'}>
+                                                <IconPlus size={16}/>
+                                            </Flex>
+                                        </Button>
+                                    </Tooltip>
+                                    <Flex direction={`column`} align={'center'} fz={'12'} c={'gray.5'}>{t('CustomerVoucher')}</Flex>
+                                </Container>
+                            </Center>
+                            <Center>
+                                <Container fluid mb={'8'}>
+                                    <Tooltip
+                                        label={t('AltTextReset')}
+                                        px={16}
+                                        py={2}
+                                        withArrow
+                                        position={"left"}
+                                        c={'white'}
+                                        bg={`red.5`}
+                                        transitionProps={{transition: "pop-bottom-left", duration: 500}}
+                                    >
+                                        <Button
+                                            size="md"
+                                            pl={'12'}
+                                            pr={'12'}
+                                            variant={'light'}
+                                            color={`red`}
+                                            radius="xl"
+                                            onClick={(e) => {
+                                                props.form.reset()
+                                            }}
+                                        >
+                                            <Flex direction={`column`} align={'center'}>
+                                                <IconRestore size={16}/>
+                                            </Flex>
+                                        </Button>
+                                    </Tooltip>
+                                    <Flex direction={`column`} align={'center'} fz={'12'} c={'gray.5'}>{t('VendorVoucher')}</Flex>
+                                </Container>
+                            </Center>
+                            <Center>
+                                <Container fluid mb={'8'}>
+                                    <Tooltip
+                                        label={t('AltTextSave')}
+                                        px={16}
+                                        py={2}
+                                        withArrow
+                                        position={"left"}
+                                        c={'white'}
+                                        bg={`red.5`}
+                                        transitionProps={{transition: "pop-bottom-left", duration: 500}}
+                                    >
+                                        <Button
+                                            size="md"
+                                            pl={'12'}
+                                            pr={'12'}
+                                            variant={'filled'}
+                                            color={`red`}
+                                            radius="xl"
+                                            onClick={(e) => {
+                                                document.getElementById(props.FormSubmit).click()
+                                            }}
+                                        >
+                                            <Flex direction={`column`} align={'center'}>
+                                                <IconDeviceFloppy size={16}/>
+                                            </Flex>
+                                        </Button>
+                                    </Tooltip>
+                                    <Flex direction={`column`} align={'center'} fz={'12'} c={'gray.5'}>{t('ContraVoucher')}</Flex>
+                                </Container>
+                            </Center>
+                            <Center>
+                                <Container fluid mb={'8'}>
+                                    <Tooltip
+                                        label={t('AltTextSave')}
+                                        px={16}
+                                        py={2}
+                                        withArrow
+                                        position={"left"}
+                                        c={'white'}
+                                        bg={`red.5`}
+                                        transitionProps={{transition: "pop-bottom-left", duration: 500}}
+                                    >
+                                        <Button
+                                            size="md"
+                                            pl={'12'}
+                                            pr={'12'}
+                                            variant={'filled'}
+                                            color={`red`}
+                                            radius="xl"
+                                            onClick={(e) => {
+                                                document.getElementById(props.FormSubmit).click()
+                                            }}
+                                        >
+                                            <Flex direction={`column`} align={'center'}>
+                                                <IconDeviceFloppy size={16}/>
+                                            </Flex>
+                                        </Button>
+                                    </Tooltip>
+                                    <Flex direction={`column`} align={'center'} fz={'12'} c={'gray.5'}>{t('DebitNote')}</Flex>
+                                </Container>
+                            </Center>
+                            <Center>
+                                <Container fluid mb={'8'}>
+                                    <Tooltip
+                                        label={t('AltTextSave')}
+                                        px={16}
+                                        py={2}
+                                        withArrow
+                                        position={"left"}
+                                        c={'white'}
+                                        bg={`red.5`}
+                                        transitionProps={{transition: "pop-bottom-left", duration: 500}}
+                                    >
+                                        <Button
+                                            size="md"
+                                            pl={'12'}
+                                            pr={'12'}
+                                            variant={'filled'}
+                                            color={`red`}
+                                            radius="xl"
+                                            onClick={(e) => {
+                                                document.getElementById(props.FormSubmit).click()
+                                            }}
+                                        >
+                                            <Flex direction={`column`} align={'center'}>
+                                                <IconDeviceFloppy size={16}/>
+                                            </Flex>
+                                        </Button>
+                                    </Tooltip>
+                                    <Flex direction={`column`} align={'center'} fz={'12'} c={'gray.5'}>{t('CreditNote')}</Flex>
+                                </Container>
+                            </Center>
+
+                        </Stack>
+                    </Box>
+                </Grid.Col>
+                <Grid.Col span={6} >
+                    <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
+                        <Box pl={`xs`} pb={'xs'} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'} >
+                            <Grid>
+                                <Grid.Col span={12} h={54}>
+                                    <Box>
+                                        <TextInput
+                                            ref={ref}
+                                            data-autofocus
+                                            mb={4}
+                                            leftSection={< IconSearch size={16} c={'red'} />}
+                                            placeholder={t('SearchMenu')}
+                                            value={value}
+                                            rightSectionPointerEvents="all"
+                                            onChange={(event) => {
+                                                setValue(event.target.value);
+                                                filterList(event);
+                                            }}
+                                            rightSection={
+                                                <CloseButton
+                                                    icon={<IconRestore style={{ width: rem(20) }} stroke={2.0} />}
+                                                    aria-label="Clear input"
+                                                    onClick={() => {
+                                                        setValue('');
+                                                        filterList({ target: { value: '' } });
+                                                        ref.current.focus();
+                                                    }}
+                                                    style={{ display: value ? undefined : 'none' }}
+                                                />
+
+                                            }
+                                        />
+                                    </Box>
+                                </Grid.Col>
+                            </Grid>
+                        </Box>
+                        <ScrollArea h={height} className={'borderRadiusAll'} type="never" >
+                            <Box p={'xs'}>
+                                {filteredItems.reduce((groups, item, index) => {
+                                    if (!index || item.group !== filteredItems[index - 1].group) {
+                                        groups.push({ group: item.group, items: [item] });
+                                    } else {
+                                        groups[groups.length - 1].items.push(item);
+                                    }
+                                    return groups;
+                                }, []).map((groupData, groupIndex) => (
+                                    <React.Fragment key={groupIndex}>
+                                        <Text size="md" fw="bold" c="#828282" mt={groupIndex ? 'md' : undefined}>
+                                            {groupData.group}
+                                        </Text>
+                                        <Grid columns={12} grow gutter={'xs'}>
+                                            {groupData.items.map((action, itemIndex) => (
+                                                <GridCol key={itemIndex} span={12} >
+                                                    <Stack
+                                                        bg={'grey.2'}
+                                                        ml={'sm'}
+                                                        style={{ cursor: 'pointer' }}
+                                                        gap={'0'}
+                                                        onClick={() => action.onClick()}
+                                                    >
+                                                        <Stack direction="column" mt={'xs'} gap={'0'}>
+                                                            <Title order={6} mt={'2px'}>
+                                                                {action.label}
+                                                            </Title>
+                                                            <Text size="sm" c={'#828282'}>
+                                                                {action.description}
+                                                            </Text>
+                                                        </Stack>
+                                                    </Stack>
+                                                </GridCol>
+                                            ))}
+                                        </Grid>
+                                    </React.Fragment>
+                                ))}
+                            </Box>
+                        </ScrollArea >
+                    </Box>
+                </Grid.Col>
+                <Grid.Col span={14} >
                         <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
-                        <Box bg={"white"} >
+                            <Box bg={"white"} >
                                 <Box pl={`xs`} pb={'xs'} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'} >
                                     <Grid>
                                         <Grid.Col span={6} h={54}>
@@ -309,24 +740,24 @@ function VoucherForm(props) {
                                                             zIndex={999}
                                                             transitionProps={{transition: "pop-bottom-left", duration: 500}}
                                                         >
-                                                        <Dropzone
-                                                            label={t('ChooseImage')}
-                                                            accept={IMAGE_MIME_TYPE}
-                                                            onDrop={(e) => {
-                                                                setFiles(e)
-                                                                form.setFieldError('path', false);
-                                                                form.setFieldValue('path', true)
-                                                            }}
-                                                        >
-                                                            <Text ta="center">
-                                                                {
-                                                                    files && files.length >0 && files[0].path ?
-                                                                        files[0].path
-                                                                        :
-                                                                        <span>Drop images here <span style={{color: 'red'}}>*</span></span>
-                                                                }
-                                                            </Text>
-                                                        </Dropzone>
+                                                            <Dropzone
+                                                                label={t('ChooseImage')}
+                                                                accept={IMAGE_MIME_TYPE}
+                                                                onDrop={(e) => {
+                                                                    setFiles(e)
+                                                                    form.setFieldError('path', false);
+                                                                    form.setFieldValue('path', true)
+                                                                }}
+                                                            >
+                                                                <Text ta="center">
+                                                                    {
+                                                                        files && files.length >0 && files[0].path ?
+                                                                            files[0].path
+                                                                            :
+                                                                            <span>Drop images here <span style={{color: 'red'}}>*</span></span>
+                                                                    }
+                                                                </Text>
+                                                            </Dropzone>
                                                         </Tooltip>
 
                                                         <SimpleGrid cols={{ base: 1, sm: 4 }} mt={previews.length > 0 ? 'xl' : 0}>
@@ -339,9 +770,9 @@ function VoucherForm(props) {
                                     </Grid>
                                 </Box>
 
+                            </Box>
                         </Box>
-                        </Box>
-                    </form>
+
                 </Grid.Col>
                 <Grid.Col span={1} >
                     <Box bg={'white'} className={'borderRadiusAll'} pt={'16'}>
@@ -354,8 +785,8 @@ function VoucherForm(props) {
                     </Box>
                 </Grid.Col>
             </Grid>
+        </form>
         </Box>
-
     );
 }
 export default VoucherForm;

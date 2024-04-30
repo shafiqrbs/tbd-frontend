@@ -47,18 +47,7 @@ function VoucherIndex() {
                             currencySymbol=''
                         />
                         <Box p={'8'}>
-                            <Grid columns={24} gutter={{ base: 8 }}>
-                                <Grid.Col span={15} >
-                                    <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
-                                        <VoucherTable />
-                                    </Box>
-                                </Grid.Col>
-                                <Grid.Col span={9}>
-                                    {
-                                        insertType === 'create' ? <VoucherForm /> : <VoucherUpdateFrom />
-                                    }
-                                </Grid.Col>
-                            </Grid>
+                            <VoucherForm />
                         </Box>
                     </Box>
                 </>
