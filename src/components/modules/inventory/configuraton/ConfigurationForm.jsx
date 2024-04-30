@@ -668,7 +668,7 @@ function ConfigurationForm() {
 
                                                             <Flex direction={`column`} gap={0}>
                                                                 <Text fz={12} fw={400}>
-                                                                    {t("CreateAndSave")}
+                                                                    {t("UpdateAndSave")}
                                                                 </Text>
                                                             </Flex>
                                                         </Button>
