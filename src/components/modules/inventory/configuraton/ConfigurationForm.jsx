@@ -343,7 +343,7 @@ function ConfigurationForm() {
                                             <Box mt={'xs'}>
                                                 <ImageUploadDropzone
                                                     label={t('Logo')}
-                                                    id={'Logo'}
+                                                    id={'logo'}
                                                     name={'logo'}
                                                     form={form}
                                                     required={false}
@@ -509,12 +509,12 @@ function ConfigurationForm() {
                                                 </Grid>
                                             </Box>
                                             <Box mt={'xs'}>
-                                                <Grid gutter={{ base: 1 }}>
+                                                <Grid gutter={{ base: 4 }}>
                                                     <Grid.Col span={2}>
                                                         <SwitchForm
                                                             tooltip={t('PrintPowered')}
                                                             label=''
-                                                            nextField={'PrintFooterText'}
+                                                            nextField={'printFooterText'}
                                                             name={'print_powered'}
                                                             form={form}
                                                             color="red"
@@ -532,110 +532,132 @@ function ConfigurationForm() {
                                                     label={t('PrintFooterText')}
                                                     placeholder={t('PrintFooterText')}
                                                     required={false}
-                                                    nextField={'invoiceWidth'}
+                                                    nextField={'bodyFontSize'}
                                                     name={'address'}
                                                     form={form}
                                                     mt={8}
-                                                    id={'PrintFooterText'}
+                                                    id={'printFooterText'}
                                                 />
                                             </Box>
+                                            <Grid columns={12} gutter={{ base: 8 }}>
+                                                <Grid.Col span={6}>
 
+                                                    <Box mt={'xs'}>
+                                                        <SelectForm
+                                                            tooltip={t('BodyFontSize')}
+                                                            label={t('BodyFontSize')}
+                                                            placeholder={t('ChooseFontSize')}
+                                                            required={false}
+                                                            nextField={'invoiceHeight'}
+                                                            name={'body_font_size'}
+                                                            form={form}
+                                                            dropdownValue={["Family", "Local"]}
+                                                            mt={8}
+                                                            id={'bodyFontSize'}
+                                                            searchable={false}
+                                                            value={customerGroupData}
+                                                            changeValue={setCustomerGroupData}
+                                                        />
+                                                    </Box>
+                                                </Grid.Col>
+                                                <Grid.Col span={6}>
+                                                    <Box mt={'xs'}>
+                                                        <InputForm
+                                                            tooltip={t('InvoiceHeight')}
+                                                            label={t('InvoiceHeight')}
+                                                            placeholder={t('InvoiceHeight')}
+                                                            required={false}
+                                                            nextField={'invoiceWidth'}
+                                                            name={'invoice_height'}
+                                                            form={form}
+                                                            mt={0}
+                                                            id={'invoiceHeight'}
+                                                        />
+                                                    </Box>
+                                                </Grid.Col>
+                                            </Grid>
+                                            <Grid columns={12} gutter={{ base: 8 }}>
+                                                <Grid.Col span={6}>
+                                                    <Box mt={'xs'}>
+                                                        <InputForm
+                                                            tooltip={t('InvoiceWidth')}
+                                                            label={t('InvoiceWidth')}
+                                                            placeholder={t('InvoiceWidth')}
+                                                            required={false}
+                                                            nextField={'bodyBorderColor'}
+                                                            name={'invoice_width'}
+                                                            form={form}
+                                                            mt={0}
+                                                            id={'invoiceWidth'}
+                                                        />
+                                                    </Box>
+                                                </Grid.Col>
+                                                <Grid.Col span={6}>
+                                                    <Box mt={'xs'}>
+                                                        <InputForm
+                                                            tooltip={t('BodyBorderColor')}
+                                                            label={t('BodyBorderColor')}
+                                                            placeholder={t('BodyBorderColor')}
+                                                            required={false}
+                                                            nextField={'bodyBorderWidth'}
+                                                            name={'body_border_color'}
+                                                            form={form}
+                                                            mt={0}
+                                                            id={'bodyBorderColor'}
+                                                        />
+                                                    </Box>
+                                                </Grid.Col>
+                                            </Grid>
+                                            <Grid columns={12} gutter={{ base: 8 }}>
+                                                <Grid.Col span={6}>
+                                                    <Box mt={'xs'}>
+                                                        <InputForm
+                                                            tooltip={t('BodyBorderWidth')}
+                                                            label={t('BodyBorderWidth')}
+                                                            placeholder={t('BodyBorderWidth')}
+                                                            required={false}
+                                                            nextField={'marginLeft'}
+                                                            name={'body_border_width'}
+                                                            form={form}
+                                                            mt={0}
+                                                            id={'bodyBorderWidth'}
+                                                        />
+                                                    </Box>
+                                                </Grid.Col>
+                                                <Grid.Col span={6}>
+                                                    <Box mt={'xs'}>
+                                                        <InputForm
+                                                            tooltip={t('MarginLeft')}
+                                                            label={t('MarginLeft')}
+                                                            placeholder={t('MarginLeft')}
+                                                            required={false}
+                                                            nextField={'marginTop'}
+                                                            name={'margin_left'}
+                                                            form={form}
+                                                            mt={0}
+                                                            id={'marginLeft'}
+                                                        />
+                                                    </Box>
+                                                </Grid.Col>
+                                            </Grid>
+                                            <Grid columns={12} gutter={{ base: 8 }} mb={'xs'}>
+                                                <Grid.Col span={6}>
+                                                    <Box mt={'xs'} >
+                                                        <InputForm
+                                                            tooltip={t('MarginTop')}
+                                                            label={t('MarginTop')}
+                                                            placeholder={t('MarginTop')}
+                                                            required={false}
+                                                            nextField={''}
+                                                            name={'margin_top'}
+                                                            form={form}
+                                                            mt={0}
+                                                            id={'marginTop'}
+                                                        />
+                                                    </Box>
+                                                </Grid.Col>
+                                            </Grid>
 
-                                            <Box mt={'xs'}>
-                                                <InputForm
-                                                    tooltip={t('InvoiceWidth')}
-                                                    label={t('InvoiceWidth')}
-                                                    placeholder={t('InvoiceWidth')}
-                                                    required={false}
-                                                    nextField={'invoiceHeight'}
-                                                    name={'invoice_width'}
-                                                    form={form}
-                                                    mt={0}
-                                                    id={'invoiceWidth'}
-                                                />
-                                            </Box>
-                                            <Box mt={'xs'}>
-                                                <InputForm
-                                                    tooltip={t('InvoiceHeight')}
-                                                    label={t('InvoiceHeight')}
-                                                    placeholder={t('InvoiceHeight')}
-                                                    required={false}
-                                                    nextField={'bodyFontSize'}
-                                                    name={'invoice_height'}
-                                                    form={form}
-                                                    mt={0}
-                                                    id={'invoiceHeight'}
-                                                />
-                                            </Box>
-                                            <Box mt={'xs'}>
-                                                <SelectForm
-                                                    tooltip={t('BodyFontSize')}
-                                                    label={t('BodyFontSize')}
-                                                    placeholder={t('ChooseFontSize')}
-                                                    required={false}
-                                                    nextField={'bodyBorderColor'}
-                                                    name={'body_font_size'}
-                                                    form={form}
-                                                    dropdownValue={["Family", "Local"]}
-                                                    mt={8}
-                                                    id={'BodyFontSize'}
-                                                    searchable={false}
-                                                    value={customerGroupData}
-                                                    changeValue={setCustomerGroupData}
-                                                />
-                                            </Box>
-                                            <Box mt={'xs'}>
-                                                <InputForm
-                                                    tooltip={t('BodyBorderColor')}
-                                                    label={t('BodyBorderColor')}
-                                                    placeholder={t('BodyBorderColor')}
-                                                    required={false}
-                                                    nextField={'bodyBorderWidth'}
-                                                    name={'body_border_color'}
-                                                    form={form}
-                                                    mt={0}
-                                                    id={'bodyBorderColor'}
-                                                />
-                                            </Box>
-                                            <Box mt={'xs'}>
-                                                <InputForm
-                                                    tooltip={t('BodyBorderWidth')}
-                                                    label={t('BodyBorderWidth')}
-                                                    placeholder={t('BodyBorderWidth')}
-                                                    required={false}
-                                                    nextField={'marginLeft'}
-                                                    name={'body_border_width'}
-                                                    form={form}
-                                                    mt={0}
-                                                    id={'bodyBorderWidth'}
-                                                />
-                                            </Box>
-                                            <Box mt={'xs'}>
-                                                <InputForm
-                                                    tooltip={t('MarginLeft')}
-                                                    label={t('MarginLeft')}
-                                                    placeholder={t('MarginLeft')}
-                                                    required={false}
-                                                    nextField={'marginTop'}
-                                                    name={'margin_left'}
-                                                    form={form}
-                                                    mt={0}
-                                                    id={'marginLeft'}
-                                                />
-                                            </Box>
-                                            <Box mt={'xs'} mb={'xs'}>
-                                                <InputForm
-                                                    tooltip={t('MarginTop')}
-                                                    label={t('marginTop')}
-                                                    placeholder={t('marginTop')}
-                                                    required={false}
-                                                    nextField={''}
-                                                    name={'margin_top'}
-                                                    form={form}
-                                                    mt={0}
-                                                    id={'marginTop'}
-                                                />
-                                            </Box>
                                         </Box>
                                     </ScrollArea>
                                 </Box>
