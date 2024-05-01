@@ -64,16 +64,38 @@ function MainDashboard(props) {
                             <Text fz="sm" c="dimmed" mt="sm">
                                 <List spacing="ms" size="sm" center>
                                     <List.Item pl={'xs'} icon={<ThemeIcon color="teal.6" size={20} radius="xl" variant="outline" ><IconBasket /></ThemeIcon>}>
-                                        <NavLink pl={'md'} href="/inventory/sales" label={t('ManageSales')} component="button" onClick={(e) => { navigate('inventory/sales') }} />
+                                        <NavLink pl={'md'} href="/inventory/sales" label={t('ManageSales')} component="button" onClick={(e) => {
+                                            navigate('inventory/sales')
+                                        }} onAuxClick={(e) => {
+                                            // Handle middle mouse button click for browsers that support it
+                                            if (e.button === 1) {
+                                                window.open('/inventory/sales', '_blank');
+                                            }
+                                        }} />
                                     </List.Item>
                                     <List.Item pl={'xs'} icon={<ThemeIcon color="teal.6" size={20} radius="xl" variant="outline" ><IconShoppingBagSearch /></ThemeIcon>}>
-                                        <NavLink pl={'md'} href="/inventory/sales-invoice" label={t('NewSales')} component="button" onClick={(e) => { navigate('inventory/sales-invoice') }} />
+                                        <NavLink pl={'md'} href="/inventory/sales-invoice" label={t('NewSales')} component="button" onClick={(e) => { navigate('inventory/sales-invoice') }} onAuxClick={(e) => {
+                                            // Handle middle mouse button click for browsers that support it
+                                            if (e.button === 1) {
+                                                window.open('/inventory/sales-invoice', '_blank');
+                                            }
+                                        }} />
                                     </List.Item>
                                     <List.Item pl={'xs'} icon={<ThemeIcon color="teal.6" size={20} radius="xl" variant="outline" ><IconShoppingBagPlus /></ThemeIcon>}>
-                                        <NavLink pl={'md'} href="/inventory/purchase" label={t('ManagePurchase')} component="button" onClick={(e) => { navigate('inventory/purchase') }} />
+                                        <NavLink pl={'md'} href="/inventory/purchase" label={t('ManagePurchase')} component="button" onClick={(e) => { navigate('inventory/purchase') }} onAuxClick={(e) => {
+                                            // Handle middle mouse button click for browsers that support it
+                                            if (e.button === 1) {
+                                                window.open('/inventory/purchase', '_blank');
+                                            }
+                                        }} />
                                     </List.Item>
                                     <List.Item pl={'xs'} icon={<ThemeIcon color="teal.6" size={20} radius="xl" variant="outline" ><IconShoppingCartUp /></ThemeIcon>}>
-                                        <NavLink pl={'md'} href="/inventory/purchase-invoice" label={t('NewPurchase')} component="button" onClick={(e) => { navigate('inventory/purchase-invoice') }} />
+                                        <NavLink pl={'md'} href="/inventory/purchase-invoice" label={t('NewPurchase')} component="button" onClick={(e) => { navigate('inventory/purchase-invoice') }} onAuxClick={(e) => {
+                                            // Handle middle mouse button click for browsers that support it
+                                            if (e.button === 1) {
+                                                window.open('/inventory/purchase-invoice', '_blank');
+                                            }
+                                        }} />
                                     </List.Item>
                                 </List>
                             </Text>
@@ -90,7 +112,12 @@ function MainDashboard(props) {
                             <Text fz="sm" c="dimmed" mt="sm">
                                 <List spacing="ms" size="sm" center>
                                     <List.Item pl={'xs'} icon={<ThemeIcon color="blue.6" size={20} radius="xl" variant="outline" ><IconBasket /></ThemeIcon>}>
-                                        <NavLink pl={'md'} href="accounting/voucher-entry" label={t('VoucherEntry')} component="button" onClick={(e) => { navigate('/accounting/voucher-entry') }} />
+                                        <NavLink pl={'md'} href="accounting/voucher-entry" label={t('VoucherEntry')} component="button" onClick={(e) => { navigate('/accounting/voucher-entry') }} onAuxClick={(e) => {
+                                            // Handle middle mouse button click for browsers that support it
+                                            if (e.button === 1) {
+                                                window.open('/accounting/voucher-entry', '_blank');
+                                            }
+                                        }} />
                                     </List.Item>
                                     {/*
                                 <List.Item pl={'xs'} icon={<ThemeIcon color="blue.6" size={20} radius="xl" variant="outline" ><IconShoppingBagSearch/></ThemeIcon>}>
@@ -100,16 +127,36 @@ function MainDashboard(props) {
                                     <NavLink pl={'md'} href="accounting/purchase" label={t('ManagePurchase')} component="button" onClick={(e)=>{navigate('inventory/sales')}}  />
                                 </List.Item>*/}
                                     <List.Item pl={'xs'} icon={<ThemeIcon color="blue.6" size={20} radius="xl" variant="outline" ><IconCurrencyMonero /></ThemeIcon>}>
-                                        <NavLink pl={'md'} href="/accounting/transaction-mode" label={t('TransactionMode')} component="button" onClick={(e) => { navigate('accounting/transaction-mode') }} />
+                                        <NavLink pl={'md'} href="/accounting/transaction-mode" label={t('TransactionMode')} component="button" onClick={(e) => { navigate('accounting/transaction-mode') }} onAuxClick={(e) => {
+                                            // Handle middle mouse button click for browsers that support it
+                                            if (e.button === 1) {
+                                                window.open('/accounting/transaction-mode', '_blank');
+                                            }
+                                        }} />
                                     </List.Item>
                                     <List.Item pl={'xs'} icon={<ThemeIcon color="blue.6" size={20} radius="xl" variant="outline" ><IconBasket /></ThemeIcon>}>
-                                        <NavLink pl={'md'} href="accounting/ledger" label={t('Ledger')} component="button" onClick={(e) => { navigate('/accounting/ledger') }} />
+                                        <NavLink pl={'md'} href="accounting/ledger" label={t('Ledger')} component="button" onClick={(e) => { navigate('/accounting/ledger') }} onAuxClick={(e) => {
+                                            // Handle middle mouse button click for browsers that support it
+                                            if (e.button === 1) {
+                                                window.open('/accounting/ledger', '_blank');
+                                            }
+                                        }} />
                                     </List.Item>
                                     <List.Item pl={'xs'} icon={<ThemeIcon color="blue.6" size={20} radius="xl" variant="outline" ><IconBasket /></ThemeIcon>}>
-                                        <NavLink pl={'md'} href="accounting/head-group" label={t('HeadGroup')} component="button" onClick={(e) => { navigate('/accounting/head-group') }} />
+                                        <NavLink pl={'md'} href="accounting/head-group" label={t('HeadGroup')} component="button" onClick={(e) => { navigate('/accounting/head-group') }} onAuxClick={(e) => {
+                                            // Handle middle mouse button click for browsers that support it
+                                            if (e.button === 1) {
+                                                window.open('/accounting/head-group', '_blank');
+                                            }
+                                        }} />
                                     </List.Item>
                                     <List.Item pl={'xs'} icon={<ThemeIcon color="blue.6" size={20} radius="xl" variant="outline" ><IconBasket /></ThemeIcon>}>
-                                        <NavLink pl={'md'} href="accounting/head-subgroup" label={t('HeadSubGroup')} component="button" onClick={(e) => { navigate('/accounting/head-subgroup') }} />
+                                        <NavLink pl={'md'} href="accounting/head-subgroup" label={t('HeadSubGroup')} component="button" onClick={(e) => { navigate('/accounting/head-subgroup') }} onAuxClick={(e) => {
+                                            // Handle middle mouse button click for browsers that support it
+                                            if (e.button === 1) {
+                                                window.open('/accounting/head-subgroup', '_blank');
+                                            }
+                                        }} />
                                     </List.Item>
                                 </List>
                             </Text>
@@ -126,13 +173,28 @@ function MainDashboard(props) {
                             <Text fz="sm" c="dimmed" mt="sm">
                                 <List spacing="ms" size="sm" center>
                                     <List.Item pl={'xs'} icon={<ThemeIcon color="yellow.6" size={20} radius="xl" variant="outline" ><IconListDetails /></ThemeIcon>}>
-                                        <NavLink pl={'md'} href="/inventory/product" label={t('ManageProduct')} component="button" onClick={(e) => { navigate('inventory/product') }} />
+                                        <NavLink pl={'md'} href="/inventory/product" label={t('ManageProduct')} component="button" onClick={(e) => { navigate('inventory/product') }} onAuxClick={(e) => {
+                                            // Handle middle mouse button click for browsers that support it
+                                            if (e.button === 1) {
+                                                window.open('/inventory/product', '_blank');
+                                            }
+                                        }} />
                                     </List.Item>
                                     <List.Item pl={'xs'} icon={<ThemeIcon color="yellow.6" size={20} radius="xl" variant="outline" ><IconCategory /></ThemeIcon>}>
-                                        <NavLink pl={'md'} href="/inventory/category" label={t('Category')} component="button" onClick={(e) => { navigate('inventory/category') }} />
+                                        <NavLink pl={'md'} href="/inventory/category" label={t('Category')} component="button" onClick={(e) => { navigate('inventory/category') }} onAuxClick={(e) => {
+                                            // Handle middle mouse button click for browsers that support it
+                                            if (e.button === 1) {
+                                                window.open('/inventory/category', '_blank');
+                                            }
+                                        }} />
                                     </List.Item>
                                     <List.Item pl={'xs'} icon={<ThemeIcon color="yellow.6" size={20} radius="xl" variant="outline" ><IconCategory2 /></ThemeIcon>}>
-                                        <NavLink pl={'md'} href="/inventory/category-group" label={t('CategoryGroup')} component="button" onClick={(e) => { navigate('inventory/category-group') }} />
+                                        <NavLink pl={'md'} href="/inventory/category-group" label={t('CategoryGroup')} component="button" onClick={(e) => { navigate('inventory/category-group') }} onAuxClick={(e) => {
+                                            // Handle middle mouse button click for browsers that support it
+                                            if (e.button === 1) {
+                                                window.open('/inventory/category-group', '_blank');
+                                            }
+                                        }} />
                                     </List.Item>
                                 </List>
                             </Text>
@@ -149,13 +211,28 @@ function MainDashboard(props) {
                             <Text fz="sm" c="dimmed" mt="sm">
                                 <List spacing="ms" size="sm" center>
                                     <List.Item pl={'xs'} icon={<ThemeIcon color="cyan.6" size={20} radius="xl" variant="outline" ><IconUsersGroup /></ThemeIcon>}>
-                                        <NavLink pl={'md'} href="core/customer" label={t('ManageCustomers')} component="button" onClick={(e) => { navigate('core/customer') }} />
+                                        <NavLink pl={'md'} href="core/customer" label={t('ManageCustomers')} component="button" onClick={(e) => { navigate('core/customer') }} onAuxClick={(e) => {
+                                            // Handle middle mouse button click for browsers that support it
+                                            if (e.button === 1) {
+                                                window.open('/core/customer', '_blank');
+                                            }
+                                        }} />
                                     </List.Item>
                                     <List.Item pl={'xs'} icon={<ThemeIcon color="cyan.6" size={20} radius="xl" variant="outline" ><IconUsersGroup /></ThemeIcon>}>
-                                        <NavLink pl={'md'} href="core/vendor" label={t('ManageVendors')} component="button" onClick={(e) => { navigate('core/vendor') }} />
+                                        <NavLink pl={'md'} href="core/vendor" label={t('ManageVendors')} component="button" onClick={(e) => { navigate('core/vendor') }} onAuxClick={(e) => {
+                                            // Handle middle mouse button click for browsers that support it
+                                            if (e.button === 1) {
+                                                window.open('/core/vendor', '_blank');
+                                            }
+                                        }} />
                                     </List.Item>
                                     <List.Item pl={'xs'} icon={<ThemeIcon color="cyan.6" size={20} radius="xl" variant="outline" ><IconUsers /></ThemeIcon>}>
-                                        <NavLink pl={'md'} href="core/user" label={t('ManageUsers')} component="button" onClick={(e) => { navigate('core/user') }} />
+                                        <NavLink pl={'md'} href="core/user" label={t('ManageUsers')} component="button" onClick={(e) => { navigate('core/user') }} onAuxClick={(e) => {
+                                            // Handle middle mouse button click for browsers that support it
+                                            if (e.button === 1) {
+                                                window.open('/core/user', '_blank');
+                                            }
+                                        }} />
                                     </List.Item>
                                 </List>
                             </Text>
@@ -181,7 +258,12 @@ function MainDashboard(props) {
                                     <NavLink pl={'md'} href="accounting/purchase" label={t('ManagePurchase')} component="button" onClick={(e)=>{navigate('inventory/sales')}}  />
                                 </List.Item>*/}
                                     <List.Item pl={'xs'} icon={<ThemeIcon color="blue.6" size={20} radius="xl" variant="outline" ><IconCurrencyMonero /></ThemeIcon>}>
-                                        <NavLink pl={'md'} href="/domain" label={t('ManageDomain')} component="button" onClick={(e) => { navigate('domain') }} />
+                                        <NavLink pl={'md'} href="/domain" label={t('ManageDomain')} component="button" onClick={(e) => { navigate('domain') }} onAuxClick={(e) => {
+                                            // Handle middle mouse button click for browsers that support it
+                                            if (e.button === 1) {
+                                                window.open('/domain', '_blank');
+                                            }
+                                        }} />
                                     </List.Item>
                                 </List>
                             </Text>

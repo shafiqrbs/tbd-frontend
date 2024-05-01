@@ -1,10 +1,10 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Box, TextInput, ScrollArea, Stack, Text, Title, GridCol, Grid, CloseButton, Input, Tooltip, rem } from "@mantine/core";
+import { Box, TextInput, ScrollArea, Stack, Text, Title, GridCol, Grid, CloseButton, Input, Tooltip, rem, Kbd, Flex } from "@mantine/core";
 import { IconClearAll, IconInfoCircle, IconRestore, IconSearch, IconTrash, IconX } from "@tabler/icons-react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { setSearchKeyword } from "../../../store/core/crudSlice.js";
-
+import { useDisclosure, useFullscreen, useHotkeys } from "@mantine/hooks";
 
 function SearchModal({ onClose }) {
     const [filteredItems, setFilteredItems] = useState([]);
@@ -12,7 +12,12 @@ function SearchModal({ onClose }) {
     const navigate = useNavigate();
     const [value, setValue] = useState('');
     const ref = useRef(null)
+    useHotkeys([['alt+c', () => {
+        setValue('');
+        filterList({ target: { value: '' } });
+        ref.current.focus();
 
+    }]], []);
     const getActions = () => {
         return ([
             {
@@ -212,37 +217,53 @@ function SearchModal({ onClose }) {
 
     return (
         <>
-
             <TextInput
+                w={`100%`}
+                align={'center'}
+                justify="space-between"
                 ref={ref}
                 data-autofocus
                 mb={4}
-                leftSection={< IconSearch size={16} c={'red'} />}
+                leftSection={<IconSearch size={16} c={'red'} />}
                 placeholder={t('SearchMenu')}
                 value={value}
                 rightSectionPointerEvents="all"
+                rightSection={
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                        {value ? (
+                            <>
+                                <CloseButton
+                                    ml={'-50'}
+                                    mr={'xl'}
+                                    icon={<IconRestore style={{ width: rem(20) }} stroke={2.0} />}
+                                    aria-label="Clear input"
+                                    onClick={() => {
+                                        setValue('');
+                                        filterList({ target: { value: '' } });
+                                        ref.current.focus();
+                                    }}
+                                />
+                                <Kbd ml={"-xl"} h={'24'} c={'gray.8'} fz={'12'}>Alt</Kbd> + <Kbd c={'gray.8'} h={'24'} fz={'12'} mr={'lg'}>C</Kbd>
+                            </>
+                        ) : (
+                            <>
+                                <Kbd ml={"-lg"} h={'24'} c={'gray.8'} fz={'12'}>Alt </Kbd> + <Kbd c={'gray.8'} h={'24'} fz={'12'} mr={'xl'}> X</Kbd>
+                            </>
+                        )}
+                    </div>
+                }
                 onChange={(event) => {
                     setValue(event.target.value);
                     filterList(event);
                 }}
-                rightSection={
-                    <CloseButton
-                        icon={<IconRestore style={{ width: rem(20) }} stroke={2.0} />}
-                        aria-label="Clear input"
-                        onClick={() => {
-                            setValue('');
-                            filterList({ target: { value: '' } });
-                            ref.current.focus();
-                        }}
-                        style={{ display: value ? undefined : 'none' }}
-                    />
 
-                }
             />
 
 
 
-            <ScrollArea h={'400'} className={'boxBackground borderRadiusAll'} type="never" >
+
+
+            < ScrollArea h={'400'} className={'boxBackground borderRadiusAll'} type="never" >
 
                 <Box p={'xs'}>
                     {filteredItems.reduce((groups, item, index) => {

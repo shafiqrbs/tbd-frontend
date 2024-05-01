@@ -1,30 +1,30 @@
-import React, {useEffect, useState} from "react";
-import {useOutletContext} from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useOutletContext } from "react-router-dom";
 import {
     Button, Flex, ActionIcon, TextInput,
     Grid, Box, Tooltip, Group, Text, Popover, Fieldset,
 } from "@mantine/core";
-import {useTranslation} from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import {
     IconDeviceFloppy, IconPercentage,
-    IconPlus, IconRefreshDot, IconSum, IconUserCircle,IconCurrency, IconX,IconBarcode,IconCoinMonero,IconSortAscendingNumbers,IconPlusMinus
+    IconPlus, IconRefreshDot, IconSum, IconUserCircle, IconCurrency, IconX, IconBarcode, IconCoinMonero, IconSortAscendingNumbers, IconPlusMinus
 } from "@tabler/icons-react";
-import {getHotkeyHandler, useHotkeys} from "@mantine/hooks";
-import {useDispatch, useSelector} from "react-redux";
-import {isNotEmpty, useForm} from "@mantine/form";
-import {modals} from "@mantine/modals";
-import {notifications, showNotification} from "@mantine/notifications";
+import { getHotkeyHandler, useHotkeys } from "@mantine/hooks";
+import { useDispatch, useSelector } from "react-redux";
+import { isNotEmpty, useForm } from "@mantine/form";
+import { modals } from "@mantine/modals";
+import { notifications, showNotification } from "@mantine/notifications";
 import InputForm from "../../../form-builders/InputForm";
-import {getCategoryDropdown} from "../../../../store/inventory/utilitySlice";
-import {getSettingDropdown, getProductUnitDropdown} from "../../../../store/utility/utilitySlice.js";
+import { getCategoryDropdown } from "../../../../store/inventory/utilitySlice";
+import { getSettingDropdown, getProductUnitDropdown } from "../../../../store/utility/utilitySlice.js";
 
 import SelectServerSideForm from "../../../form-builders/SelectServerSideForm.jsx";
 import InputButtonForm from "../../../form-builders/InputButtonForm";
 import InputNumberForm from "../../../form-builders/InputNumberForm";
 
-import {DataTable} from "mantine-datatable";
+import { DataTable } from "mantine-datatable";
 import SelectForm from "../../../form-builders/SelectForm.jsx";
-import {storeEntityData} from "../../../../store/inventory/crudSlice.js";
+import { storeEntityData } from "../../../../store/inventory/crudSlice.js";
 import axios from "axios";
 import getLocationDropdownData from "../../../global-hook/dropdown/getLocationDropdownData.js";
 import getExecutiveDropdownData from "../../../global-hook/dropdown/getExecutiveDropdownData.js";
@@ -37,10 +37,10 @@ import tableCss from "../../../../assets/css/Table.module.css";
 import PurchaseForm from "./PurchaseForm";
 
 function GenericInvoiceForm(props) {
-    const {currencySymbol, allowZeroPercentage} = props
-    const {t, i18n} = useTranslation();
+    const { currencySymbol, allowZeroPercentage } = props
+    const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
-    const {isOnline, mainAreaHeight} = useOutletContext();
+    const { isOnline, mainAreaHeight } = useOutletContext();
     const height = mainAreaHeight - 130; //TabList height 104
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
     const [fetching, setFetching] = useState(false);
@@ -168,7 +168,7 @@ function GenericInvoiceForm(props) {
     const categoryDropdownData = useSelector((state) => state.inventoryUtilitySlice.categoryDropdownData)
     let categoryDropdown = categoryDropdownData && categoryDropdownData.length > 0 ?
         categoryDropdownData.map((type, index) => {
-            return ({'label': type.name, 'value': String(type.id)})
+            return ({ 'label': type.name, 'value': String(type.id) })
         }) : []
     useEffect(() => {
         const value = {
@@ -185,7 +185,7 @@ function GenericInvoiceForm(props) {
     const productTypeDropdownData = useSelector((state) => state.utilityUtilitySlice.settingDropdown)
     let productTypeDropdown = productTypeDropdownData && productTypeDropdownData.length > 0 ?
         productTypeDropdownData.map((type, index) => {
-            return ({'label': type.name, 'value': String(type.id)})
+            return ({ 'label': type.name, 'value': String(type.id) })
         }) : []
 
     useEffect(() => {
@@ -202,7 +202,7 @@ function GenericInvoiceForm(props) {
     const productUnitDropdownData = useSelector((state) => state.utilityUtilitySlice.productUnitDropdown)
     let productUnitDropdown = productUnitDropdownData && productUnitDropdownData.length > 0 ?
         productUnitDropdownData.map((type, index) => {
-            return ({'label': type.name, 'value': String(type.id)})
+            return ({ 'label': type.name, 'value': String(type.id) })
         }) : []
     useEffect(() => {
         const value = {
@@ -213,7 +213,7 @@ function GenericInvoiceForm(props) {
 
     const form = useForm({
         initialValues: {
-            product_id: '', price: '',purchase_price: '', barcode: '', sub_total: '', quantity: ''
+            product_id: '', price: '', purchase_price: '', barcode: '', sub_total: '', quantity: ''
         },
         validate: {
             product_id: (value, values) => {
@@ -286,7 +286,7 @@ function GenericInvoiceForm(props) {
         }
     }, [form.values.product_id]);
 
-  //  console.log(localProducts);
+    //  console.log(localProducts);
     useEffect(() => {
         const quantity = Number(form.values.quantity);
         const purchase_price = Number(form.values.purchase_price);
@@ -301,7 +301,7 @@ function GenericInvoiceForm(props) {
                     loading: true,
                     withCloseButton: true,
                     position: 'top-center',
-                    style: {backgroundColor: 'mistyrose'},
+                    style: { backgroundColor: 'mistyrose' },
                 });
             } else {
                 setSelectProductDetails(prevDetails => ({
@@ -313,14 +313,14 @@ function GenericInvoiceForm(props) {
             }
         }
     }, [form.values.quantity, form.values.sales_price]);
-   /* useEffect(() => {
-        if (form.values.quantity && form.values.purchase_price) {
-            const discountAmount = (form.values.price * form.values.percent) / 100;
-            const salesPrice = form.values.purchase_price - discountAmount;
-            form.setFieldValue('sales_price', salesPrice);
-            form.setFieldValue('sub_total', salesPrice);
-        }
-    }, [form.values.percent]);*/
+    /* useEffect(() => {
+         if (form.values.quantity && form.values.purchase_price) {
+             const discountAmount = (form.values.price * form.values.percent) / 100;
+             const salesPrice = form.values.purchase_price - discountAmount;
+             form.setFieldValue('sales_price', salesPrice);
+             form.setFieldValue('sub_total', salesPrice);
+         }
+     }, [form.values.percent]);*/
 
 
     useHotkeys([['alt+n', () => {
@@ -336,16 +336,16 @@ function GenericInvoiceForm(props) {
     }]], []);
 
     const inputGroupText = (
-        <Text style={{textAlign: 'right', width: '100%', paddingRight: 16}}
-              color={'gray'}
+        <Text style={{ textAlign: 'right', width: '100%', paddingRight: 16 }}
+            color={'gray'}
         >
             {selectProductDetails && selectProductDetails.unit_name}
         </Text>
     );
 
     const inputGroupCurrency = (
-        <Text style={{textAlign: 'right', width: '100%', paddingRight: 16}}
-              color={'gray'}
+        <Text style={{ textAlign: 'right', width: '100%', paddingRight: 16 }}
+            color={'gray'}
         >
             {currencySymbol}
         </Text>
@@ -353,7 +353,7 @@ function GenericInvoiceForm(props) {
     const [productAddFormOpened, setProductAddFormOpened] = useState(false);
     return (
         <Box>
-            <Grid columns={24} gutter={{base: 8}}>
+            <Grid columns={24} gutter={{ base: 8 }}>
                 <Grid.Col span={15} >
                     <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
                         <Box>
@@ -362,7 +362,7 @@ function GenericInvoiceForm(props) {
                                 if (!values.barcode && !values.product_id) {
                                     form.setFieldError('barcode', true);
                                     form.setFieldError('product_id', true);
-                                    setTimeout(() => {}, 1000)
+                                    setTimeout(() => { }, 1000)
                                 } else {
 
                                     const cardProducts = localStorage.getItem('temp-purchase-products');
@@ -380,7 +380,7 @@ function GenericInvoiceForm(props) {
                                                 loading: true,
                                                 withCloseButton: true,
                                                 position: 'top-center',
-                                                style: {backgroundColor: 'mistyrose'},
+                                                style: { backgroundColor: 'mistyrose' },
                                             });
                                         } else {
                                             // setFocusIntoProductSearch(true)
@@ -393,141 +393,141 @@ function GenericInvoiceForm(props) {
                                 }
 
                             })}>
-                                <Box  pl={`xs`} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'}>
-                                    <Box  pb={'xs'}>
-                                        <Grid columns={24} gutter={{base: 2}}>
-                                        <Grid.Col span={4}>
-                                            <InputNumberForm
-                                                tooltip={t('BarcodeValidateMessage')}
-                                                label=''
-                                                placeholder={t('barcode')}
-                                                required={true}
-                                                nextField={''}
-                                                form={form}
-                                                name={'barcode'}
-                                                id={'barcode'}
-                                                leftSection={<IconBarcode size={16} opacity={0.5}/>}
-                                            />
-                                        </Grid.Col>
-                                        <Grid.Col span={8}>
-                                            <SelectServerSideForm
-                                                tooltip={t('ChooseStockProduct')}
-                                                label=''
-                                                placeholder={t('ChooseStockProduct')}
-                                                required={false}
-                                                nextField={'quantity'}
-                                                name={'product_id'}
-                                                form={form}
-                                                mt={8}
-                                                id={'product_id'}
-                                                searchable={true}
-                                                searchValue={searchValue}
-                                                setSearchValue={setSearchValue}
-                                                dropdownValue={productDropdown}
-                                            />
-                                        </Grid.Col>
-                                        <Grid.Col span={3}>
-                                            <InputButtonForm
-                                                tooltip={t('QuantityValidateMessage')}
-                                                label=''
-                                                placeholder={t('Quantity')}
-                                                required={true}
-                                                nextField={'purchase_price'}
-                                                form={form}
-                                                name={'quantity'}
-                                                id={'quantity'}
-                                                type={'number'}
-                                                rightSection={inputGroupText}
-                                                rightSectionWidth={50}
-                                            />
-                                        </Grid.Col>
-                                        <Grid.Col span={3}>
-                                            <InputButtonForm
-                                                tooltip={t('PurchasePriceValidateMessage')}
-                                                label=''
-                                                placeholder={t('PurchasePrice')}
-                                                required={true}
-                                                nextField={form.values.purchase_price ? 'EntityFormSubmit' : 'sales_price'}
-                                                form={form}
-                                                name={'purchase_price'}
-                                                id={'purchase_price'}
-                                                type={'number'}
-                                                rightSection={inputGroupCurrency}
-                                                closeIcon={true}
-                                            />
-                                        </Grid.Col>
-                                        <Grid.Col span={3}>
-                                            <InputButtonForm
-                                                tooltip={t('SubTotalValidateMessage')}
-                                                label=''
-                                                placeholder={t('SubTotal')}
-                                                required={true}
-                                                nextField={'EntityFormSubmit'}
-                                                form={form}
-                                                name={'sub_total'}
-                                                id={'sub_total'}
-                                                type={'number'}
-                                                rightSection={inputGroupCurrency}
-                                                closeIcon={false}
-                                            />
-                                        </Grid.Col>
-                                        <Grid.Col span={2}>
-                                            <>
-                                                {/*{!saveCreateLoading &&*/}
-                                                <Button
-                                                    size="sm"
-                                                    color={`red.5`}
-                                                    type="submit"
-                                                    mt={0}
-                                                    mr={'xs'}
-                                                    w={'100%'}
-                                                    id="EntityFormSubmit"
-                                                    leftSection={<IconDeviceFloppy size={16}/>}
-                                                >
-                                                    <Flex direction={`column`} gap={0}>
-                                                        <Text fz={12} fw={400}>
-                                                            {t("Add")}
-                                                        </Text>
-                                                    </Flex>
-                                                </Button>
-                                                {/*}*/}
-                                            </>
-                                        </Grid.Col>
-                                        <Grid.Col span={1} bg={'white'}>
-                                            <>
-                                                <Popover
-                                                    width={'450'}
-                                                    trapFocus
-                                                    position="bottom"
-                                                    withArrow
-                                                    shadow="xl"
-                                                    opened={productAddFormOpened}
-                                                    onChange={setProductAddFormOpened}
-                                                >
-                                                    <Popover.Target>
-                                                        <Tooltip
-                                                            multiline
-                                                            w={420}
-                                                            withArrow
-                                                            transitionProps={{duration: 200}}
-                                                            label={t('InstantProductCreate')}
-                                                        >
+                                <Box pl={`xs`} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'}>
+                                    <Box pb={'xs'}>
+                                        <Grid columns={24} gutter={{ base: 6 }}>
+                                            <Grid.Col span={4}>
+                                                <InputNumberForm
+                                                    tooltip={t('BarcodeValidateMessage')}
+                                                    label=''
+                                                    placeholder={t('barcode')}
+                                                    required={true}
+                                                    nextField={''}
+                                                    form={form}
+                                                    name={'barcode'}
+                                                    id={'barcode'}
+                                                    leftSection={<IconBarcode size={16} opacity={0.5} />}
+                                                />
+                                            </Grid.Col>
+                                            <Grid.Col span={8}>
+                                                <SelectServerSideForm
+                                                    tooltip={t('ChooseStockProduct')}
+                                                    label=''
+                                                    placeholder={t('ChooseStockProduct')}
+                                                    required={false}
+                                                    nextField={'quantity'}
+                                                    name={'product_id'}
+                                                    form={form}
 
-                                                            <ActionIcon
-                                                                variant="outline"
-                                                                size={'lg'}
-                                                                color="red.5"
-                                                                mt={'1'}
-                                                                aria-label="Settings"
-                                                                onClick={() => setProductAddFormOpened(true)}
+                                                    id={'product_id'}
+                                                    searchable={true}
+                                                    searchValue={searchValue}
+                                                    setSearchValue={setSearchValue}
+                                                    dropdownValue={productDropdown}
+                                                />
+                                            </Grid.Col>
+                                            <Grid.Col span={3}>
+                                                <InputButtonForm
+                                                    tooltip={t('QuantityValidateMessage')}
+                                                    label=''
+                                                    placeholder={t('Quantity')}
+                                                    required={true}
+                                                    nextField={'purchase_price'}
+                                                    form={form}
+                                                    name={'quantity'}
+                                                    id={'quantity'}
+                                                    type={'number'}
+                                                    rightSection={inputGroupText}
+                                                    rightSectionWidth={50}
+                                                />
+                                            </Grid.Col>
+                                            <Grid.Col span={3}>
+                                                <InputButtonForm
+                                                    tooltip={t('PurchasePriceValidateMessage')}
+                                                    label=''
+                                                    placeholder={t('PurchasePrice')}
+                                                    required={true}
+                                                    nextField={form.values.purchase_price ? 'EntityFormSubmit' : 'sales_price'}
+                                                    form={form}
+                                                    name={'purchase_price'}
+                                                    id={'purchase_price'}
+                                                    type={'number'}
+                                                    rightSection={inputGroupCurrency}
+                                                    closeIcon={true}
+                                                />
+                                            </Grid.Col>
+                                            <Grid.Col span={3}>
+                                                <InputButtonForm
+                                                    tooltip={t('SubTotalValidateMessage')}
+                                                    label=''
+                                                    placeholder={t('SubTotal')}
+                                                    required={true}
+                                                    nextField={'EntityFormSubmit'}
+                                                    form={form}
+                                                    name={'sub_total'}
+                                                    id={'sub_total'}
+                                                    type={'number'}
+                                                    rightSection={inputGroupCurrency}
+                                                    closeIcon={false}
+                                                />
+                                            </Grid.Col>
+                                            <Grid.Col span={2}>
+                                                <>
+                                                    {/*{!saveCreateLoading &&*/}
+                                                    <Button
+                                                        size="sm"
+                                                        color={`red.5`}
+                                                        type="submit"
+                                                        mt={0}
+                                                        mr={'xs'}
+                                                        w={'100%'}
+                                                        id="EntityFormSubmit"
+                                                        leftSection={<IconDeviceFloppy size={16} />}
+                                                    >
+                                                        <Flex direction={`column`} gap={0}>
+                                                            <Text fz={12} fw={400}>
+                                                                {t("Add")}
+                                                            </Text>
+                                                        </Flex>
+                                                    </Button>
+                                                    {/*}*/}
+                                                </>
+                                            </Grid.Col>
+                                            <Grid.Col span={1} bg={'white'}>
+                                                <>
+                                                    <Popover
+                                                        width={'450'}
+                                                        trapFocus
+                                                        position="bottom"
+                                                        withArrow
+                                                        shadow="xl"
+                                                        opened={productAddFormOpened}
+                                                        onChange={setProductAddFormOpened}
+                                                    >
+                                                        <Popover.Target>
+                                                            <Tooltip
+                                                                multiline
+                                                                w={420}
+                                                                withArrow
+                                                                transitionProps={{ duration: 200 }}
+                                                                label={t('InstantProductCreate')}
                                                             >
-                                                                <IconPlus style={{width: '100%', height: '70%'}}
-                                                                          stroke={1.5}/>
-                                                            </ActionIcon>
-                                                        </Tooltip>
-                                                    </Popover.Target>
-                                                    <Popover.Dropdown bg={'gray.1'}>
-                                                        {/*<Fieldset legend={t('InstantProductCreate')}  className={'bodyBackground'}  fz={'xs'} variant="filled">
+
+                                                                <ActionIcon
+                                                                    variant="outline"
+                                                                    size={'lg'}
+                                                                    color="red.5"
+                                                                    mt={'1'}
+                                                                    aria-label="Settings"
+                                                                    onClick={() => setProductAddFormOpened(true)}
+                                                                >
+                                                                    <IconPlus style={{ width: '100%', height: '70%' }}
+                                                                        stroke={1.5} />
+                                                                </ActionIcon>
+                                                            </Tooltip>
+                                                        </Popover.Target>
+                                                        <Popover.Dropdown bg={'gray.1'}>
+                                                            {/*<Fieldset legend={t('InstantProductCreate')}  className={'bodyBackground'}  fz={'xs'} variant="filled">
                                                             <Box mt={'xs'}>
                                                                 <SelectForm
                                                                     tooltip={t('ChooseProductType')}
@@ -710,11 +710,11 @@ function GenericInvoiceForm(props) {
                                                                 </Grid>
                                                             </Box>
                                                         </Fieldset>*/}
-                                                    </Popover.Dropdown>
-                                                </Popover>
-                                            </>
-                                        </Grid.Col>
-                                    </Grid>
+                                                        </Popover.Dropdown>
+                                                    </Popover>
+                                                </>
+                                            </Grid.Col>
+                                        </Grid>
                                     </Box>
                                 </Box>
                             </form>
@@ -733,13 +733,13 @@ function GenericInvoiceForm(props) {
                                 columns={[
                                     {
                                         accessor: 'index',
-                                        title: 'SL#',
+                                        title: t('S/N'),
                                         textAlignment: 'right',
                                         render: (item) => (tempCardProducts.indexOf(item) + 1)
                                     },
                                     {
                                         accessor: 'display_name',
-                                        title: "Name",
+                                        title: t("Name"),
                                         width: '50%',
                                     },
                                     {
@@ -856,9 +856,9 @@ function GenericInvoiceForm(props) {
                                             );
                                         },
                                         footer: (
-                                            <Group spacing="xs"  textAlign={"right"}>
+                                            <Group spacing="xs" textAlign={"right"}>
                                                 <Group spacing="xs">
-                                                    <IconSum size="1.25em"/>
+                                                    <IconSum size="1.25em" />
                                                 </Group>
                                                 <Text fw={'600'} fz={'md'}>{
                                                     salesSubTotalAmount.toFixed(2)
@@ -868,7 +868,7 @@ function GenericInvoiceForm(props) {
                                     },
                                     {
                                         accessor: "action",
-                                        title:  t('Action'),
+                                        title: t('Action'),
                                         textAlign: "right",
                                         render: (item) => (
                                             <Group gap={4} justify="right" wrap="nowrap">
@@ -888,8 +888,8 @@ function GenericInvoiceForm(props) {
                                                         setLoadCardProducts(true)
                                                     }}
                                                 >
-                                                    <IconX size={16} style={{width: '70%', height: '70%'}}
-                                                           stroke={1.5}/>
+                                                    <IconX size={16} style={{ width: '70%', height: '70%' }}
+                                                        stroke={1.5} />
                                                 </ActionIcon>
                                             </Group>
                                         ),
@@ -902,7 +902,7 @@ function GenericInvoiceForm(props) {
                                 loaderSize="xs"
                                 loaderColor="grape"
                                 height={height}
-                                scrollAreaProps={{type: 'never'}}
+                                scrollAreaProps={{ type: 'never' }}
                             />
                         </Box>
 
@@ -914,7 +914,7 @@ function GenericInvoiceForm(props) {
                             salesSubTotalAmount={salesSubTotalAmount}
                             tempCardProducts={tempCardProducts}
                             totalPurchaseAmount={totalPurchaseAmount}
-                            currencySymbol = {currencySymbol}
+                            currencySymbol={currencySymbol}
                             setLoadCardProducts={setLoadCardProducts}
                         />
                     </Box>

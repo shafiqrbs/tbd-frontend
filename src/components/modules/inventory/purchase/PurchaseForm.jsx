@@ -1,10 +1,10 @@
-import React, {useEffect, useState} from "react";
-import {useOutletContext} from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useOutletContext } from "react-router-dom";
 import {
     Button, rem, Center, Switch, ActionIcon,
     Grid, Box, ScrollArea, Tooltip, Group, Text, List, ThemeIcon, Popover, Flex,
 } from "@mantine/core";
-import {useTranslation} from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import {
     IconDeviceFloppy,
     IconUserCog,
@@ -20,9 +20,9 @@ import {
     IconCircleCheck, IconUserCircle, IconRefreshDot, IconDiscountOff, IconCurrency, IconPlusMinus, IconCheck,
 
 } from "@tabler/icons-react";
-import {useHotkeys, useToggle} from "@mantine/hooks";
-import {useDispatch, useSelector} from "react-redux";
-import {hasLength, isNotEmpty, useForm} from "@mantine/form";
+import { useHotkeys, useToggle } from "@mantine/hooks";
+import { useDispatch, useSelector } from "react-redux";
+import { hasLength, isNotEmpty, useForm } from "@mantine/form";
 
 import SelectForm from "../../../form-builders/SelectForm";
 import TextAreaForm from "../../../form-builders/TextAreaForm";
@@ -30,22 +30,22 @@ import TextAreaForm from "../../../form-builders/TextAreaForm";
 import {
     getShowEntityData, storeEntityData,
 } from "../../../../store/inventory/crudSlice.js";
-import {getTransactionModeData} from "../../../../store/accounting/utilitySlice.js";
+import { getTransactionModeData } from "../../../../store/accounting/utilitySlice.js";
 import getCustomerDropdownData from "../../../global-hook/dropdown/getCustomerDropdownData.js";
 import getVendorDropdownData from "../../../global-hook/dropdown/getVendorDropdownData.js";
 import InputNumberForm from "../../../form-builders/InputNumberForm";
 import InputButtonForm from "../../../form-builders/InputButtonForm";
 import getUserDropdownData from "../../../global-hook/dropdown/getUserDropdownData";
 import InputForm from "../../../form-builders/InputForm";
-import {setFetching, storeEntityDataWithFile} from "../../../../store/accounting/crudSlice.js";
-import {notifications} from "@mantine/notifications";
+import { setFetching, storeEntityDataWithFile } from "../../../../store/accounting/crudSlice.js";
+import { notifications } from "@mantine/notifications";
 
 function PurchaseForm(props) {
 
-    const {currencySymbol} = props
-    const {t, i18n} = useTranslation();
+    const { currencySymbol } = props
+    const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
-    const {isOnline, mainAreaHeight} = useOutletContext();
+    const { isOnline, mainAreaHeight } = useOutletContext();
     const transactionModeData = useSelector((state) => state.accountingUtilitySlice.transactionModeData)
 
     useEffect(() => {
@@ -148,8 +148,8 @@ function PurchaseForm(props) {
     }]], []);
 
     const inputGroupCurrency = (
-        <Text  style={{ textAlign: 'right',width:'100%',paddingRight:16 }}
-               color={'gray'}
+        <Text style={{ textAlign: 'right', width: '100%', paddingRight: 16 }}
+            color={'gray'}
         >
             {currencySymbol}
         </Text>
@@ -176,7 +176,7 @@ function PurchaseForm(props) {
                 formValue['transaction_mode_id'] = form.values.transaction_mode_id;
                 formValue['discount_type'] = discountType;
                 formValue['discount'] = salesDiscountAmount;
-                formValue['discount_calculation'] = discountType === 'Percent'?form.values.discount:0;
+                formValue['discount_calculation'] = discountType === 'Percent' ? form.values.discount : 0;
                 formValue['vat'] = 0;
                 formValue['total'] = salesTotalAmount;
                 formValue['payment'] = form.values.receive_amount;
@@ -188,15 +188,15 @@ function PurchaseForm(props) {
                     url: 'inventory/purchase',
                     data: formValue
                 }
-            //    console.log(formValue);
+                //    console.log(formValue);
                 dispatch(storeEntityData(data))
                 notifications.show({
                     color: 'teal',
                     title: t('CreateSuccessfully'),
-                    icon: <IconCheck style={{width: rem(18), height: rem(18)}}/>,
+                    icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
                     loading: false,
                     autoClose: 700,
-                    style: {backgroundColor: 'lightgray'},
+                    style: { backgroundColor: 'lightgray' },
                 });
 
                 setTimeout(() => {
@@ -210,13 +210,13 @@ function PurchaseForm(props) {
 
             })}>
                 <Box>
-                    <Grid columns={48}>
-                        <Box className={'borderRadiusAll'} >
+                    <Grid columns={48} >
+                        <Box className={'borderRadiusAll'}  >
                             <Box>
                                 <Box pl={'xs'} pr={'xs'} pb={'xs'} className={'boxBackground'}>
-                                    <Grid gutter={{base:1}}>
-                                        <Grid.Col span={11} pt={'4'} >
-                                            <Box pt={'6'}>
+                                    <Grid gutter={{ base: 6 }}>
+                                        <Grid.Col span={11}  >
+                                            <Box pt={'xs'}>
                                                 <SelectForm
                                                     tooltip={t('CustomerValidateMessage')}
                                                     label=''
@@ -235,7 +235,7 @@ function PurchaseForm(props) {
                                             </Box>
                                         </Grid.Col>
                                         <Grid.Col span={1}>
-                                            <Box  pt={'xs'}>
+                                            <Box pt={'xs'}>
                                                 <Popover width={'450'} trapFocus position="bottom" withArrow shadow="xl">
                                                     <Popover.Target>
                                                         <Tooltip
@@ -261,7 +261,7 @@ function PurchaseForm(props) {
                                                                 form={form}
                                                                 name={'customer_name'}
                                                                 id={'customer_name'}
-                                                                leftSection={<IconUserCircle size={16} opacity={0.5}/>}
+                                                                leftSection={<IconUserCircle size={16} opacity={0.5} />}
                                                                 rightIcon={''}
                                                             />
                                                         </Box>
@@ -275,12 +275,12 @@ function PurchaseForm(props) {
                                                                 form={form}
                                                                 name={'mobile_no'}
                                                                 id={'mobile_no'}
-                                                                leftSection={<IconDeviceMobile size={16} opacity={0.5}/>}
+                                                                leftSection={<IconDeviceMobile size={16} opacity={0.5} />}
                                                                 rightIcon={''}
                                                             />
                                                         </Box>
                                                         <Box mt={'xs'}>
-                                                            <Grid columns={12} gutter={{base: 1}} >
+                                                            <Grid columns={12} gutter={{ base: 1 }} >
                                                                 <Grid.Col span={6}>&nbsp;</Grid.Col>
                                                                 <Grid.Col span={2}>
                                                                     <Button
@@ -305,7 +305,7 @@ function PurchaseForm(props) {
                                                                         mr={'xs'}
                                                                         fullWidth
                                                                         id="EntityCustomerFormSubmit"
-                                                                        leftSection={<IconDeviceFloppy size={16}/>}
+                                                                        leftSection={<IconDeviceFloppy size={16} />}
                                                                     >
                                                                         <Flex direction={`column`} gap={0}>
                                                                             <Text fz={12} fw={400}>
@@ -323,7 +323,7 @@ function PurchaseForm(props) {
                                     </Grid>
                                 </Box>
                                 <Box>
-                                    <Grid gutter={{base: 6}} className={'titleBackground'}>
+                                    <Grid gutter={{ base: 6 }} className={'titleBackground'}>
                                         <Grid.Col span={6}>
                                             <Box pl={'xl'} pb={'6'}>
                                                 <Text fz={'md'} order={1} fw={'800'}>1200000</Text>
@@ -331,11 +331,11 @@ function PurchaseForm(props) {
                                             </Box>
                                         </Grid.Col>
                                         <Grid.Col span={6} >
-                                            <Text mt={'8'} mr={'xl'} style={{textAlign: 'right', float: 'right'}}>
+                                            <Text mt={'8'} mr={'xl'} style={{ textAlign: 'right', float: 'right' }}>
                                                 <Group>
-                                                    <ActionIcon bg={'white'}  variant="outline"
-                                                                color={'red'} >
-                                                        <IconMessage size={18} stroke={1.5}/>
+                                                    <ActionIcon bg={'white'} variant="outline"
+                                                        color={'red'} >
+                                                        <IconMessage size={18} stroke={1.5} />
                                                     </ActionIcon>
                                                     <ActionIcon
                                                         variant="filled"
@@ -355,55 +355,55 @@ function PurchaseForm(props) {
                                 </Box>
                             </Box>
                             <Box p={'xs'}>
-                                    <Grid gutter={{base: 4}}>
-                                        <Grid.Col span={3}>
-                                            <Center fz={'md'}
-                                                    fw={'800'}>{currencySymbol} {salesSubTotalAmount.toFixed(2)}</Center>
-                                        </Grid.Col>
-                                        <Grid.Col span={3}>
-                                            <Center fz={'md'}
-                                                    fw={'800'}> {currencySymbol} {salesDiscountAmount && Number(salesDiscountAmount).toFixed(2)}</Center>
-                                        </Grid.Col>
-                                        <Grid.Col span={3}>
-                                            <Center fz={'md'}
-                                                    fw={'800'}>  {currencySymbol} {salesVatAmount.toFixed(2)}</Center>
-                                        </Grid.Col>
-                                        <Grid.Col span={3}>
-                                            <Center fz={'md'}
-                                                    fw={'800'}>{currencySymbol} {salesTotalAmount.toFixed(2)}</Center>
-                                        </Grid.Col>
-                                    </Grid>
-                                    <Grid gutter={{base: 4}}>
-                                        <Grid.Col span={3}>
-                                            <Box h={1} ml={'xl'} mr={'xl'} bg={`red.3`}></Box>
-                                        </Grid.Col>
-                                        <Grid.Col span={3}>
-                                            <Box h={1} ml={'xl'} mr={'xl'} bg={`red.3`}></Box>
-                                        </Grid.Col>
-                                        <Grid.Col span={3}>
-                                            <Box h={1} ml={'xl'} mr={'xl'} bg={`red.3`}></Box>
-                                        </Grid.Col>
-                                        <Grid.Col span={3}>
-                                            <Box h={1} ml={'xl'} mr={'xl'} bg={`red.3`}></Box>
-                                        </Grid.Col>
-                                    </Grid>
-                                    <Grid gutter={{base: 4}}>
-                                        <Grid.Col span={3}>
-                                            <Center fz={'xs'} c="dimmed" >{t('SubTotal')}</Center>
-                                        </Grid.Col>
-                                        <Grid.Col span={3}>
-                                            <Center fz={'xs'} c="dimmed" >{t('Discount')}</Center>
-                                        </Grid.Col>
-                                        <Grid.Col span={3}>
-                                            <Center fz={'xs'} c="dimmed">{t('VAT')}</Center>
-                                        </Grid.Col>
-                                        <Grid.Col span={3}>
-                                            <Center fz={'xs'} c="dimmed">{t('Total')}</Center>
-                                        </Grid.Col>
-                                    </Grid>
-                                </Box>
+                                <Grid gutter={{ base: 4 }}>
+                                    <Grid.Col span={3}>
+                                        <Center fz={'md'}
+                                            fw={'800'}>{currencySymbol} {salesSubTotalAmount.toFixed(2)}</Center>
+                                    </Grid.Col>
+                                    <Grid.Col span={3}>
+                                        <Center fz={'md'}
+                                            fw={'800'}> {currencySymbol} {salesDiscountAmount && Number(salesDiscountAmount).toFixed(2)}</Center>
+                                    </Grid.Col>
+                                    <Grid.Col span={3}>
+                                        <Center fz={'md'}
+                                            fw={'800'}>  {currencySymbol} {salesVatAmount.toFixed(2)}</Center>
+                                    </Grid.Col>
+                                    <Grid.Col span={3}>
+                                        <Center fz={'md'}
+                                            fw={'800'}>{currencySymbol} {salesTotalAmount.toFixed(2)}</Center>
+                                    </Grid.Col>
+                                </Grid>
+                                <Grid gutter={{ base: 4 }}>
+                                    <Grid.Col span={3}>
+                                        <Box h={1} ml={'xl'} mr={'xl'} bg={`red.3`}></Box>
+                                    </Grid.Col>
+                                    <Grid.Col span={3}>
+                                        <Box h={1} ml={'xl'} mr={'xl'} bg={`red.3`}></Box>
+                                    </Grid.Col>
+                                    <Grid.Col span={3}>
+                                        <Box h={1} ml={'xl'} mr={'xl'} bg={`red.3`}></Box>
+                                    </Grid.Col>
+                                    <Grid.Col span={3}>
+                                        <Box h={1} ml={'xl'} mr={'xl'} bg={`red.3`}></Box>
+                                    </Grid.Col>
+                                </Grid>
+                                <Grid gutter={{ base: 4 }}>
+                                    <Grid.Col span={3}>
+                                        <Center fz={'xs'} c="dimmed" >{t('SubTotal')}</Center>
+                                    </Grid.Col>
+                                    <Grid.Col span={3}>
+                                        <Center fz={'xs'} c="dimmed" >{t('Discount')}</Center>
+                                    </Grid.Col>
+                                    <Grid.Col span={3}>
+                                        <Center fz={'xs'} c="dimmed">{t('VAT')}</Center>
+                                    </Grid.Col>
+                                    <Grid.Col span={3}>
+                                        <Center fz={'xs'} c="dimmed">{t('Total')}</Center>
+                                    </Grid.Col>
+                                </Grid>
+                            </Box>
                             <ScrollArea h={formHeight} scrollbarSize={2} type="never" bg={'gray.1'}>
-                                <Box  pl={'xs'} pt={'xs'} pr={'xs'} bg={`white`}>
+                                <Box pl={'xs'} pt={'xs'} pr={'xs'} bg={`white`}>
                                     <Tooltip
                                         label={t('ChooseTransactionMode')}
                                         opened={form.errors.transaction_mode_id === true}
@@ -414,7 +414,7 @@ function PurchaseForm(props) {
                                         withArrow
                                         offset={2}
                                         zIndex={0}
-                                        transitionProps={{transition: "pop-bottom-left", duration: 500}}
+                                        transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
                                     >
 
                                         <Grid columns={'16'} gutter="6">
@@ -424,41 +424,41 @@ function PurchaseForm(props) {
                                                     return (
                                                         <Grid.Col span={4}>
                                                             <Box bg={'gray.1'} h={'82'}>
-                                                            <input
-                                                                type="radio"
-                                                                name="transaction_mode_id"
-                                                                id={'transaction_mode_id_' + mode.id}
-                                                                className="input-hidden"
-                                                                value={mode.id}
-                                                                onChange={(e) => {
-                                                                    form.setFieldValue('transaction_mode_id', e.currentTarget.value)
-                                                                    form.setFieldError('transaction_mode_id', null)
-                                                                }}
-                                                            />
-                                                            <Tooltip
-                                                                label={mode.name}
-                                                                opened={hoveredModeId === mode.id}
-                                                                position="top"
-                                                                offset={35}
-                                                                withArrow
-                                                                arrowSize={8}
-                                                            >
-                                                                <label
-                                                                    htmlFor={'transaction_mode_id_' + mode.id}
-                                                                    onMouseEnter={() => {
-                                                                        setHoveredModeId(mode.id)
+                                                                <input
+                                                                    type="radio"
+                                                                    name="transaction_mode_id"
+                                                                    id={'transaction_mode_id_' + mode.id}
+                                                                    className="input-hidden"
+                                                                    value={mode.id}
+                                                                    onChange={(e) => {
+                                                                        form.setFieldValue('transaction_mode_id', e.currentTarget.value)
+                                                                        form.setFieldError('transaction_mode_id', null)
                                                                     }}
-                                                                    onMouseLeave={() => {
-                                                                        setHoveredModeId(null)
-                                                                    }}
+                                                                />
+                                                                <Tooltip
+                                                                    label={mode.name}
+                                                                    opened={hoveredModeId === mode.id}
+                                                                    position="top"
+                                                                    offset={35}
+                                                                    withArrow
+                                                                    arrowSize={8}
                                                                 >
-                                                                    <img
-                                                                        src={mode.path}
-                                                                        alt={mode.method_name}
-                                                                    />
-                                                                    <Center fz={'xs'} className={'textColor'} >{mode.authorised}</Center>
-                                                                </label>
-                                                            </Tooltip>
+                                                                    <label
+                                                                        htmlFor={'transaction_mode_id_' + mode.id}
+                                                                        onMouseEnter={() => {
+                                                                            setHoveredModeId(mode.id)
+                                                                        }}
+                                                                        onMouseLeave={() => {
+                                                                            setHoveredModeId(null)
+                                                                        }}
+                                                                    >
+                                                                        <img
+                                                                            src={mode.path}
+                                                                            alt={mode.method_name}
+                                                                        />
+                                                                        <Center fz={'xs'} className={'textColor'} >{mode.authorised}</Center>
+                                                                    </label>
+                                                                </Tooltip>
                                                             </Box>
                                                         </Grid.Col>
                                                     );
@@ -470,7 +470,7 @@ function PurchaseForm(props) {
                                 </Box>
 
                                 <Box p={'xs'} className={'boxBackground'} mt={'4'} pt={'xs'} mb={'xs'} pb={'xs'} >
-                                    <Grid gutter={{base: 2}}>
+                                    <Grid gutter={{ base: 2 }}>
                                         <Grid.Col span={2}>
                                             <Switch
                                                 fullWidth
@@ -486,12 +486,12 @@ function PurchaseForm(props) {
                                             />
                                         </Grid.Col>
                                         <Grid.Col span={2}><Center fz={'xs'} mt={'8'}
-                                                                   c={'red'}>{currencySymbol} {profitShow && salesProfitAmount}</Center></Grid.Col>
+                                            c={'red'}>{currencySymbol} {profitShow && salesProfitAmount}</Center></Grid.Col>
                                         <Grid.Col span={7}><Center fz={'md'} mt={'4'} c={'red'}
-                                                                   fw={'800'}>{returnOrDueText} {currencySymbol} {salesDueAmount.toFixed(2)}</Center></Grid.Col>
+                                            fw={'800'}>{returnOrDueText} {currencySymbol} {salesDueAmount.toFixed(2)}</Center></Grid.Col>
                                     </Grid>
                                     <Box mt={'xs'} h={1} bg={`red.3`}></Box>
-                                    <Grid gutter={{base: 6}} mt={'xs'}>
+                                    <Grid gutter={{ base: 6 }} mt={'xs'}>
                                         <Grid.Col span={4}>
                                             <Button
                                                 fullWidth
@@ -499,8 +499,8 @@ function PurchaseForm(props) {
                                                 variant="filled"
                                                 fz={'xs'}
                                                 leftSection={
-                                                    discountType === 'Flat' ? <IconCurrencyTaka size={14}/> :
-                                                        <IconPercentage size={14}/>
+                                                    discountType === 'Flat' ? <IconCurrencyTaka size={14} /> :
+                                                        <IconPercentage size={14} />
                                                 } color="red.4">
                                                 {discountType}
                                             </Button>
@@ -515,7 +515,7 @@ function PurchaseForm(props) {
                                                 form={form}
                                                 name={'discount'}
                                                 id={'discount'}
-                                                leftSection={<IconDiscountOff size={16} opacity={0.5}/>}
+                                                leftSection={<IconDiscountOff size={16} opacity={0.5} />}
                                                 rightSection={inputGroupCurrency}
                                                 rightSectionWidth={30}
                                             />
@@ -531,8 +531,8 @@ function PurchaseForm(props) {
                                                 form={form}
                                                 name={'receive_amount'}
                                                 id={'receive_amount'}
-                                                rightIcon={<IconCurrency size={16} opacity={0.5}/>}
-                                                leftSection={<IconPlusMinus size={16} opacity={0.5}/>}
+                                                rightIcon={<IconCurrency size={16} opacity={0.5} />}
+                                                leftSection={<IconPlusMinus size={16} opacity={0.5} />}
                                                 closeIcon={true}
                                             />
                                         </Grid.Col>
@@ -573,14 +573,14 @@ function PurchaseForm(props) {
                             </ScrollArea>
                             <Box>
                                 <Button.Group fullWidth>
-                                    <Button fullWidth variant="filled" leftSection={<IconPrinter size={14}/>}
-                                            color="green.5">Print</Button>
-                                    <Button fullWidth variant="filled" leftSection={<IconReceipt size={14}/>}
-                                            color="red.5">Pos</Button>
-                                    <Button type={'submit'} fullWidth variant="filled" leftSection={<IconDeviceFloppy size={14}/>}
-                                            color="cyan.5">Save</Button>
-                                    <Button fullWidth variant="filled" leftSection={<IconStackPush size={14}/>}
-                                            color="orange.5">Hold</Button>
+                                    <Button fullWidth variant="filled" leftSection={<IconPrinter size={14} />}
+                                        color="green.5">Print</Button>
+                                    <Button fullWidth variant="filled" leftSection={<IconReceipt size={14} />}
+                                        color="red.5">Pos</Button>
+                                    <Button type={'submit'} fullWidth variant="filled" leftSection={<IconDeviceFloppy size={14} />}
+                                        color="cyan.5">Save</Button>
+                                    <Button fullWidth variant="filled" leftSection={<IconStackPush size={14} />}
+                                        color="orange.5">Hold</Button>
                                 </Button.Group>
                             </Box>
                         </Box>

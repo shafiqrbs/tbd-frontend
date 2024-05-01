@@ -116,10 +116,10 @@ export default function Header({
         navigate("/login");
     }
 
-    useHotkeys([['ctrl+k', () => {
+    useHotkeys([['alt+k', () => {
         open()
     }]], []);
-    useHotkeys([['ctrl+l', () => {
+    useHotkeys([['alt+x', () => {
         close()
     }]], []);
 
@@ -246,7 +246,7 @@ export default function Header({
                                 variant="transparent"
                                 rightSection={
                                     <>
-                                        <Kbd h={'24'} c={'gray.8'} fz={'12'}>Ctrl </Kbd> + <Kbd c={'gray.8'} h={'24'}
+                                        <Kbd h={'24'} c={'gray.8'} fz={'12'}>Alt </Kbd> + <Kbd c={'gray.8'} h={'24'}
                                             fz={'12'}> K</Kbd>
                                     </>
                                 }

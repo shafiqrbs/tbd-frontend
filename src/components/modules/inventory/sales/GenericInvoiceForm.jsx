@@ -1,30 +1,30 @@
-import React, {useEffect, useState} from "react";
-import {useOutletContext} from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useOutletContext } from "react-router-dom";
 import {
     Button, Flex, ActionIcon, TextInput,
     Grid, Box, Tooltip, Group, Text, Popover, Fieldset,
 } from "@mantine/core";
-import {useTranslation} from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import {
     IconDeviceFloppy, IconPercentage,
-    IconPlus, IconRefreshDot, IconSum, IconUserCircle,IconCurrency, IconX,IconBarcode,IconCoinMonero,IconSortAscendingNumbers,IconPlusMinus
+    IconPlus, IconRefreshDot, IconSum, IconUserCircle, IconCurrency, IconX, IconBarcode, IconCoinMonero, IconSortAscendingNumbers, IconPlusMinus
 } from "@tabler/icons-react";
-import {getHotkeyHandler, useHotkeys} from "@mantine/hooks";
-import {useDispatch, useSelector} from "react-redux";
-import {isNotEmpty, useForm} from "@mantine/form";
-import {modals} from "@mantine/modals";
-import {notifications, showNotification} from "@mantine/notifications";
+import { getHotkeyHandler, useHotkeys } from "@mantine/hooks";
+import { useDispatch, useSelector } from "react-redux";
+import { isNotEmpty, useForm } from "@mantine/form";
+import { modals } from "@mantine/modals";
+import { notifications, showNotification } from "@mantine/notifications";
 import InputForm from "../../../form-builders/InputForm";
-import {getCategoryDropdown} from "../../../../store/inventory/utilitySlice";
-import {getSettingDropdown, getProductUnitDropdown} from "../../../../store/utility/utilitySlice.js";
+import { getCategoryDropdown } from "../../../../store/inventory/utilitySlice";
+import { getSettingDropdown, getProductUnitDropdown } from "../../../../store/utility/utilitySlice.js";
 
 import SelectServerSideForm from "../../../form-builders/SelectServerSideForm.jsx";
 import InputButtonForm from "../../../form-builders/InputButtonForm";
 import InputNumberForm from "../../../form-builders/InputNumberForm";
 import SalesForm from "./SalesForm";
-import {DataTable} from "mantine-datatable";
+import { DataTable } from "mantine-datatable";
 import SelectForm from "../../../form-builders/SelectForm.jsx";
-import {storeEntityData} from "../../../../store/inventory/crudSlice.js";
+import { storeEntityData } from "../../../../store/inventory/crudSlice.js";
 import axios from "axios";
 import getLocationDropdownData from "../../../global-hook/dropdown/getLocationDropdownData.js";
 import getExecutiveDropdownData from "../../../global-hook/dropdown/getExecutiveDropdownData.js";
@@ -36,10 +36,10 @@ import ShortcutInvoice from "../../shortcut/ShortcutInvoice";
 import tableCss from "../../../../assets/css/Table.module.css";
 
 function GenericInvoiceForm(props) {
-    const {currencySymbol, allowZeroPercentage} = props
-    const {t, i18n} = useTranslation();
+    const { currencySymbol, allowZeroPercentage } = props
+    const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
-    const {isOnline, mainAreaHeight} = useOutletContext();
+    const { isOnline, mainAreaHeight } = useOutletContext();
     const height = mainAreaHeight - 176; //TabList height 104
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
     const [fetching, setFetching] = useState(false);
@@ -171,7 +171,7 @@ function GenericInvoiceForm(props) {
     const categoryDropdownData = useSelector((state) => state.inventoryUtilitySlice.categoryDropdownData)
     let categoryDropdown = categoryDropdownData && categoryDropdownData.length > 0 ?
         categoryDropdownData.map((type, index) => {
-            return ({'label': type.name, 'value': String(type.id)})
+            return ({ 'label': type.name, 'value': String(type.id) })
         }) : []
     useEffect(() => {
         const value = {
@@ -188,7 +188,7 @@ function GenericInvoiceForm(props) {
     const productTypeDropdownData = useSelector((state) => state.utilityUtilitySlice.settingDropdown)
     let productTypeDropdown = productTypeDropdownData && productTypeDropdownData.length > 0 ?
         productTypeDropdownData.map((type, index) => {
-            return ({'label': type.name, 'value': String(type.id)})
+            return ({ 'label': type.name, 'value': String(type.id) })
         }) : []
 
     useEffect(() => {
@@ -205,7 +205,7 @@ function GenericInvoiceForm(props) {
     const productUnitDropdownData = useSelector((state) => state.utilityUtilitySlice.productUnitDropdown)
     let productUnitDropdown = productUnitDropdownData && productUnitDropdownData.length > 0 ?
         productUnitDropdownData.map((type, index) => {
-            return ({'label': type.name, 'value': String(type.id)})
+            return ({ 'label': type.name, 'value': String(type.id) })
         }) : []
     useEffect(() => {
         const value = {
@@ -296,7 +296,7 @@ function GenericInvoiceForm(props) {
         }
     }, [form.values.product_id]);
 
-  //  console.log(localProducts);
+    //  console.log(localProducts);
     useEffect(() => {
         const quantity = Number(form.values.quantity);
         const salesPrice = Number(form.values.sales_price);
@@ -311,7 +311,7 @@ function GenericInvoiceForm(props) {
                     loading: true,
                     withCloseButton: true,
                     position: 'top-center',
-                    style: {backgroundColor: 'mistyrose'},
+                    style: { backgroundColor: 'mistyrose' },
                 });
             } else {
                 setSelectProductDetails(prevDetails => ({
@@ -349,16 +349,16 @@ function GenericInvoiceForm(props) {
     }]], []);
 
     const inputGroupText = (
-        <Text style={{textAlign: 'right', width: '100%', paddingRight: 16}}
-              color={'gray'}
+        <Text style={{ textAlign: 'right', width: '100%', paddingRight: 16 }}
+            color={'gray'}
         >
             {selectProductDetails && selectProductDetails.unit_name}
         </Text>
     );
 
     const inputGroupCurrency = (
-        <Text style={{textAlign: 'right', width: '100%', paddingRight: 16}}
-              color={'gray'}
+        <Text style={{ textAlign: 'right', width: '100%', paddingRight: 16 }}
+            color={'gray'}
         >
             {currencySymbol}
         </Text>
@@ -366,7 +366,7 @@ function GenericInvoiceForm(props) {
     const [productAddFormOpened, setProductAddFormOpened] = useState(false);
     return (
         <Box>
-            <Grid columns={24} gutter={{base: 8}}>
+            <Grid columns={24} gutter={{ base: 8 }}>
                 <Grid.Col span={15} >
                     <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
                         <Box>
@@ -375,7 +375,7 @@ function GenericInvoiceForm(props) {
                                 if (!values.barcode && !values.product_id) {
                                     form.setFieldError('barcode', true);
                                     form.setFieldError('product_id', true);
-                                    setTimeout(() => {}, 1000)
+                                    setTimeout(() => { }, 1000)
                                 } else {
 
                                     const cardProducts = localStorage.getItem('temp-sales-products');
@@ -393,7 +393,7 @@ function GenericInvoiceForm(props) {
                                                 loading: true,
                                                 withCloseButton: true,
                                                 position: 'top-center',
-                                                style: {backgroundColor: 'mistyrose'},
+                                                style: { backgroundColor: 'mistyrose' },
                                             });
                                         } else {
                                             // setFocusIntoProductSearch(true)
@@ -406,19 +406,19 @@ function GenericInvoiceForm(props) {
                                 }
 
                             })}>
-                                <Box  pl={`xs`} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'}>
-                                    <Grid columns={24} gutter={{base: 2}}>
+                                <Box pl={`xs`} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'}>
+                                    <Grid columns={24} gutter={{ base: 6 }}>
                                         <Grid.Col span={4}>
                                             <InputNumberForm
                                                 tooltip={t('BarcodeValidateMessage')}
                                                 label=''
-                                                placeholder={t('barcode')}
+                                                placeholder={t('Barcode')}
                                                 required={true}
                                                 nextField={''}
                                                 form={form}
                                                 name={'barcode'}
                                                 id={'barcode'}
-                                                leftSection={<IconBarcode size={16} opacity={0.5}/>}
+                                                leftSection={<IconBarcode size={16} opacity={0.5} />}
                                             />
                                         </Grid.Col>
                                         <Grid.Col span={20}>
@@ -430,7 +430,6 @@ function GenericInvoiceForm(props) {
                                                 nextField={'quantity'}
                                                 name={'product_id'}
                                                 form={form}
-                                                mt={8}
                                                 id={'product_id'}
                                                 searchable={true}
                                                 searchValue={searchValue}
@@ -440,7 +439,7 @@ function GenericInvoiceForm(props) {
                                         </Grid.Col>
                                     </Grid>
                                     <Box mt={'xs'} pb={'xs'}>
-                                        <Grid columns={24} gutter={{base: 2}}>
+                                        <Grid columns={24} gutter={{ base: 6 }}>
                                             <Grid.Col span={4}>
                                                 <InputButtonForm
                                                     type="number"
@@ -452,7 +451,7 @@ function GenericInvoiceForm(props) {
                                                     name={'price'}
                                                     id={'price'}
                                                     rightSection={inputGroupCurrency}
-                                                    leftSection={<IconCoinMonero size={16} opacity={0.5}/>}
+                                                    leftSection={<IconCoinMonero size={16} opacity={0.5} />}
                                                     rightSectionWidth={30}
                                                     disabled={true}
                                                 />
@@ -468,7 +467,7 @@ function GenericInvoiceForm(props) {
                                                     form={form}
                                                     name={'quantity'}
                                                     id={'quantity'}
-                                                    leftSection={<IconSortAscendingNumbers size={16} opacity={0.5}/>}
+                                                    leftSection={<IconSortAscendingNumbers size={16} opacity={0.5} />}
                                                     rightSection={inputGroupText}
                                                     rightSectionWidth={50}
                                                 />
@@ -483,8 +482,8 @@ function GenericInvoiceForm(props) {
                                                     form={form}
                                                     name={'percent'}
                                                     id={'percent'}
-                                                    leftSection={<IconPercentage size={16} opacity={0.5}/>}
-                                                    rightIcon={<IconCurrency size={16} opacity={0.5}/>}
+                                                    leftSection={<IconPercentage size={16} opacity={0.5} />}
+                                                    rightIcon={<IconCurrency size={16} opacity={0.5} />}
                                                     closeIcon={true}
                                                 />
 
@@ -500,8 +499,8 @@ function GenericInvoiceForm(props) {
                                                     name={'sales_price'}
                                                     id={'sales_price'}
                                                     disabled={form.values.percent}
-                                                    leftSection={<IconPlusMinus size={16} opacity={0.5}/>}
-                                                    rightIcon={<IconCurrency size={16} opacity={0.5}/>}
+                                                    leftSection={<IconPlusMinus size={16} opacity={0.5} />}
+                                                    rightIcon={<IconCurrency size={16} opacity={0.5} />}
                                                 />
                                             </Grid.Col>
                                             <Grid.Col span={4}>
@@ -514,7 +513,7 @@ function GenericInvoiceForm(props) {
                                                     form={form}
                                                     name={'sub_total'}
                                                     id={'sub_total'}
-                                                    leftSection={<IconSum size={16} opacity={0.5}/>}
+                                                    leftSection={<IconSum size={16} opacity={0.5} />}
                                                     rightSection={inputGroupCurrency}
                                                     disabled={selectProductDetails && selectProductDetails.sub_total}
                                                     closeIcon={false}
@@ -531,7 +530,7 @@ function GenericInvoiceForm(props) {
                                                         mr={'xs'}
                                                         w={'100%'}
                                                         id="EntityFormSubmit"
-                                                        leftSection={<IconDeviceFloppy size={16}/>}
+                                                        leftSection={<IconDeviceFloppy size={16} />}
                                                     >
                                                         <Flex direction={`column`} gap={0}>
                                                             <Text fz={12} fw={400}>
@@ -559,7 +558,7 @@ function GenericInvoiceForm(props) {
                                                                 multiline
                                                                 w={420}
                                                                 withArrow
-                                                                transitionProps={{duration: 200}}
+                                                                transitionProps={{ duration: 200 }}
                                                                 label={t('InstantProductCreate')}
                                                             >
 
@@ -571,79 +570,79 @@ function GenericInvoiceForm(props) {
                                                                     aria-label="Settings"
                                                                     onClick={() => setProductAddFormOpened(true)}
                                                                 >
-                                                                    <IconPlus style={{width: '100%', height: '70%'}}
-                                                                              stroke={1.5}/>
+                                                                    <IconPlus style={{ width: '100%', height: '70%' }}
+                                                                        stroke={1.5} />
                                                                 </ActionIcon>
                                                             </Tooltip>
                                                         </Popover.Target>
                                                         <Popover.Dropdown bg={'gray.1'}>
-                                                            <Fieldset legend={t('InstantProductCreate')}  className={'bodyBackground'}  fz={'xs'} variant="filled">
+                                                            <Fieldset legend={t('InstantProductCreate')} className={'bodyBackground'} fz={'xs'} variant="filled">
                                                                 <Box mt={'xs'}>
-                                                                <SelectForm
-                                                                    tooltip={t('ChooseProductType')}
-                                                                    label={t('ProductType')}
-                                                                    placeholder={t('ChooseProductType')}
-                                                                    required={true}
-                                                                    name={'product_type_id'}
-                                                                    form={productAddedForm}
-                                                                    dropdownValue={productTypeDropdown}
-                                                                    mt={'xs'}
-                                                                    id={'product_type_id'}
-                                                                    nextField={'category_id'}
-                                                                    searchable={true}
-                                                                    value={productTypeData}
-                                                                    changeValue={setProductTypeData}
-                                                                    comboboxProps={{withinPortal: false}}
-                                                                />
+                                                                    <SelectForm
+                                                                        tooltip={t('ChooseProductType')}
+                                                                        label={t('ProductType')}
+                                                                        placeholder={t('ChooseProductType')}
+                                                                        required={true}
+                                                                        name={'product_type_id'}
+                                                                        form={productAddedForm}
+                                                                        dropdownValue={productTypeDropdown}
+                                                                        mt={'xs'}
+                                                                        id={'product_type_id'}
+                                                                        nextField={'category_id'}
+                                                                        searchable={true}
+                                                                        value={productTypeData}
+                                                                        changeValue={setProductTypeData}
+                                                                        comboboxProps={{ withinPortal: false }}
+                                                                    />
                                                                 </Box>
                                                                 <Box mt={'xs'}>
-                                                                <SelectForm
-                                                                    tooltip={t('ChooseCategory')}
-                                                                    label={t('Category')}
-                                                                    placeholder={t('ChooseCategory')}
-                                                                    required={true}
-                                                                    nextField={'name'}
-                                                                    name={'category_id'}
-                                                                    form={productAddedForm}
-                                                                    dropdownValue={categoryDropdown}
-                                                                    mt={'md'}
-                                                                    id={'category_id'}
-                                                                    searchable={true}
-                                                                    value={categoryData}
-                                                                    changeValue={setCategoryData}
-                                                                    comboboxProps={{withinPortal: false}}
-                                                                />
+                                                                    <SelectForm
+                                                                        tooltip={t('ChooseCategory')}
+                                                                        label={t('Category')}
+                                                                        placeholder={t('ChooseCategory')}
+                                                                        required={true}
+                                                                        nextField={'name'}
+                                                                        name={'category_id'}
+                                                                        form={productAddedForm}
+                                                                        dropdownValue={categoryDropdown}
+                                                                        mt={'md'}
+                                                                        id={'category_id'}
+                                                                        searchable={true}
+                                                                        value={categoryData}
+                                                                        changeValue={setCategoryData}
+                                                                        comboboxProps={{ withinPortal: false }}
+                                                                    />
                                                                 </Box>
                                                                 <Box mt={'xs'}>
-                                                                <InputForm
-                                                                    tooltip={t('ProductNameValidateMessage')}
-                                                                    label={t('ProductName')}
-                                                                    placeholder={t('ProductName')}
-                                                                    required={true}
-                                                                    nextField={'unit_id'}
-                                                                    form={productAddedForm}
-                                                                    name={'name'}
-                                                                    mt={8}
-                                                                    id={'name'}
-                                                                />
+                                                                    <InputForm
+                                                                        tooltip={t('ProductNameValidateMessage')}
+                                                                        label={t('ProductName')}
+                                                                        placeholder={t('ProductName')}
+                                                                        required={true}
+                                                                        nextField={'unit_id'}
+                                                                        form={productAddedForm}
+                                                                        name={'name'}
+                                                                        mt={8}
+                                                                        id={'name'}
+                                                                    />
                                                                 </Box>
                                                                 <Box mt={'xs'}>
-                                                                <SelectForm
-                                                                    tooltip={t('ChooseProductUnit')}
-                                                                    label={t('ProductUnit')}
-                                                                    placeholder={t('ChooseProductUnit')}
-                                                                    required={true}
-                                                                    name={'unit_id'}
-                                                                    form={productAddedForm}
-                                                                    dropdownValue={productUnitDropdown}
-                                                                    mt={8}
-                                                                    id={'unit_id'}
-                                                                    nextField={'sales_price'}
-                                                                    searchable={true}
-                                                                    value={productUnitData}
-                                                                    changeValue={setProductUnitData}
-                                                                    comboboxProps={{withinPortal: false}}
-                                                                />
+                                                                    <SelectForm
+                                                                        tooltip={t('ChooseProductUnit')}
+                                                                        label={t('ProductUnit')}
+                                                                        placeholder={t('ChooseProductUnit')}
+                                                                        required={true}
+                                                                        name={'unit_id'}
+                                                                        form={productAddedForm}
+                                                                        dropdownValue={productUnitDropdown}
+                                                                        mt={8}
+                                                                        id={'unit_id'}
+                                                                        nextField={'sales_price'}
+                                                                        searchable={true}
+                                                                        value={productUnitData}
+                                                                        changeValue={setProductUnitData}
+                                                                        comboboxProps={{ withinPortal: false }}
+                                                                    />
                                                                 </Box>
                                                                 <Box mt={'xs'}>
                                                                     <InputNumberForm
@@ -655,8 +654,8 @@ function GenericInvoiceForm(props) {
                                                                         form={productAddedForm}
                                                                         name={'purchase_price'}
                                                                         id={'purchase_price'}
-                                                                        leftSection={<IconCoinMonero size={16} opacity={0.5}/>}
-                                                                        rightIcon={<IconCurrency size={16} opacity={0.5}/>}
+                                                                        leftSection={<IconCoinMonero size={16} opacity={0.5} />}
+                                                                        rightIcon={<IconCurrency size={16} opacity={0.5} />}
                                                                         closeIcon={true}
                                                                     />
                                                                 </Box>
@@ -671,13 +670,13 @@ function GenericInvoiceForm(props) {
                                                                         name={'sales_price'}
                                                                         mt={8}
                                                                         id={'sales_price'}
-                                                                        leftSection={<IconCoinMonero size={16} opacity={0.5}/>}
-                                                                        rightIcon={<IconCurrency size={16} opacity={0.5}/>}
+                                                                        leftSection={<IconCoinMonero size={16} opacity={0.5} />}
+                                                                        rightIcon={<IconCurrency size={16} opacity={0.5} />}
                                                                         closeIcon={true}
                                                                     />
                                                                 </Box>
                                                                 <Box mt={'xs'}>
-                                                                    <Grid columns={12} gutter={{base: 1}}>
+                                                                    <Grid columns={12} gutter={{ base: 1 }}>
                                                                         <Grid.Col span={6}>&nbsp;</Grid.Col>
                                                                         <Grid.Col span={2}>
                                                                             <Button
@@ -703,7 +702,7 @@ function GenericInvoiceForm(props) {
                                                                                 fullWidth
                                                                                 id="EntityProductFormSubmit"
                                                                                 leftSection={<IconDeviceFloppy
-                                                                                    size={16}/>}
+                                                                                    size={16} />}
                                                                                 onClick={() => {
                                                                                     let validation = true
                                                                                     if (!productAddedForm.values.name) {
@@ -783,261 +782,261 @@ function GenericInvoiceForm(props) {
                                 columns={[
                                     {
                                         accessor: 'index',
-                                        title: 'SL#',
+                                        title: t('S/N'),
                                         textAlignment: 'right',
                                         render: (item) => (tempCardProducts.indexOf(item) + 1)
                                     },
                                     {
                                         accessor: 'display_name',
-                                        title: "Name",
-                                        footer: (
-                                            <Group spacing="xs">
-                                                <IconSum size="1.25em"/>
-                                                <Text mb={-2}>{tempCardProducts.length} Items</Text>
-                                            </Group>
-                                        )
+                                        title: t("Name"),
+                                            footer: (
+                            <Group spacing="xs">
+                                <IconSum size="1.25em" />
+                                <Text mb={-2}>{tempCardProducts.length} Items</Text>
+                            </Group>
+                            )
                                     },
-                                    {
-                                        accessor: 'price',
-                                        title: t('Price'),
-                                        textAlign: "right",
+                            {
+                                accessor: 'price',
+                            title: t('Price'),
+                            textAlign: "right",
                                         render: (item) => {
                                             return (
-                                                item.price && Number(item.price).toFixed(2)
-                                            );
+                            item.price && Number(item.price).toFixed(2)
+                            );
                                         }
                                     },
 
-                                    {
-                                        accessor: 'stock',
-                                        title: t('Stock'),
-                                        textAlign: "center"
+                            {
+                                accessor: 'stock',
+                            title: t('Stock'),
+                            textAlign: "center"
                                     },
-                                    {
-                                        accessor: 'quantity',
-                                        title: t('Quantity'),
-                                        textAlign: "center",
-                                        width: '100px',
+                            {
+                                accessor: 'quantity',
+                            title: t('Quantity'),
+                            textAlign: "center",
+                            width: '100px',
                                         render: (item) => {
                                             const [editedQuantity, setEditedQuantity] = useState(item.quantity);
 
                                             const handlQuantityChange = (e) => {
                                                 const editedQuantity = e.currentTarget.value;
-                                                setEditedQuantity(editedQuantity);
+                            setEditedQuantity(editedQuantity);
 
-                                                const tempCardProducts = localStorage.getItem('temp-sales-products');
-                                                const cardProducts = tempCardProducts ? JSON.parse(tempCardProducts) : [];
+                            const tempCardProducts = localStorage.getItem('temp-sales-products');
+                            const cardProducts = tempCardProducts ? JSON.parse(tempCardProducts) : [];
 
                                                 const updatedProducts = cardProducts.map(product => {
                                                     if (product.product_id === item.product_id) {
                                                         return {
-                                                            ...product,
-                                                            quantity: e.currentTarget.value,
-                                                            sub_total: e.currentTarget.value * item.sales_price,
+                                ...product,
+                                quantity: e.currentTarget.value,
+                            sub_total: e.currentTarget.value * item.sales_price,
                                                         };
                                                     }
-                                                    return product
+                            return product
                                                 });
 
-                                                localStorage.setItem('temp-sales-products', JSON.stringify(updatedProducts));
-                                                setLoadCardProducts(true)
+                            localStorage.setItem('temp-sales-products', JSON.stringify(updatedProducts));
+                            setLoadCardProducts(true)
                                             };
 
-                                            return (
-                                                <>
-                                                    <TextInput
-                                                        type="number"
-                                                        label=""
-                                                        size="xs"
-                                                        value={editedQuantity}
-                                                        onChange={handlQuantityChange}
-                                                        onKeyDown={getHotkeyHandler([
-                                                            ['Enter', (e) => {
-                                                                document.getElementById('inline-update-quantity-' + item.product_id).focus();
-                                                            }],
-                                                        ])}
-                                                    />
-                                                </>
-                                            );
+                            return (
+                            <>
+                                <TextInput
+                                    type="number"
+                                    label=""
+                                    size="xs"
+                                    value={editedQuantity}
+                                    onChange={handlQuantityChange}
+                                    onKeyDown={getHotkeyHandler([
+                                        ['Enter', (e) => {
+                                            document.getElementById('inline-update-quantity-' + item.product_id).focus();
+                                        }],
+                                    ])}
+                                />
+                            </>
+                            );
                                         }
                                     },
-                                    {
-                                        accessor: 'unit_name',
-                                        title: t('UOM'),
-                                        textAlign: "center"
+                            {
+                                accessor: 'unit_name',
+                            title: t('UOM'),
+                            textAlign: "center"
                                     },
-                                    {
-                                        accessor: 'sales_price',
-                                        title: t('SalesPrice'),
-                                        textAlign: "center",
-                                        width: '100px',
+                            {
+                                accessor: 'sales_price',
+                            title: t('SalesPrice'),
+                            textAlign: "center",
+                            width: '100px',
                                         render: (item) => {
                                             const [editedSalesPrice, setEditedSalesPrice] = useState(item.sales_price);
 
                                             const handleSalesPriceChange = (e) => {
                                                 const newSalesPrice = e.currentTarget.value;
-                                                setEditedSalesPrice(newSalesPrice);
+                            setEditedSalesPrice(newSalesPrice);
                                             };
 
                                             useEffect(() => {
                                                 const timeoutId = setTimeout(() => {
                                                     const tempCardProducts = localStorage.getItem('temp-sales-products');
-                                                    const cardProducts = tempCardProducts ? JSON.parse(tempCardProducts) : [];
+                            const cardProducts = tempCardProducts ? JSON.parse(tempCardProducts) : [];
                                                     const updatedProducts = cardProducts.map(product => {
                                                         if (product.product_id === item.product_id) {
                                                             return {
-                                                                ...product,
-                                                                sales_price: editedSalesPrice,
-                                                                sub_total: editedSalesPrice * item.quantity,
+                                ...product,
+                                sales_price: editedSalesPrice,
+                            sub_total: editedSalesPrice * item.quantity,
                                                             };
                                                         }
-                                                        return product;
+                            return product;
                                                     });
 
-                                                    localStorage.setItem('temp-sales-products', JSON.stringify(updatedProducts));
-                                                    setLoadCardProducts(true);
+                            localStorage.setItem('temp-sales-products', JSON.stringify(updatedProducts));
+                            setLoadCardProducts(true);
                                                 }, 1000);
 
                                                 return () => clearTimeout(timeoutId);
                                             }, [editedSalesPrice, item.product_id, item.quantity]);
 
-                                            return (
-                                                item.percent ?
-                                                    Number(item.sales_price).toFixed(2)
-                                                    :
-                                                    <>
-                                                        <TextInput
-                                                            type="number"
-                                                            label=""
-                                                            size="xs"
-                                                            id={'inline-update-quantity-' + item.product_id}
-                                                            value={editedSalesPrice}
-                                                            onChange={handleSalesPriceChange}
-                                                        />
-                                                    </>
-                                            );
+                            return (
+                            item.percent ?
+                            Number(item.sales_price).toFixed(2)
+                            :
+                            <>
+                                <TextInput
+                                    type="number"
+                                    label=""
+                                    size="xs"
+                                    id={'inline-update-quantity-' + item.product_id}
+                                    value={editedSalesPrice}
+                                    onChange={handleSalesPriceChange}
+                                />
+                            </>
+                            );
                                         }
                                     },
-                                    {
-                                        accessor: 'percent',
-                                        title: t('Discount'),
-                                        textAlign: "center",
-                                        width: '100px',
+                            {
+                                accessor: 'percent',
+                            title: t('Discount'),
+                            textAlign: "center",
+                            width: '100px',
                                         render: (item) => {
                                             const [editedPercent, setEditedPercent] = useState(item.percent);
                                             const handlePercentChange = (e) => {
                                                 const editedPercent = e.currentTarget.value;
-                                                setEditedPercent(editedPercent);
+                            setEditedPercent(editedPercent);
 
-                                                const tempCardProducts = localStorage.getItem('temp-sales-products');
-                                                const cardProducts = tempCardProducts ? JSON.parse(tempCardProducts) : [];
+                            const tempCardProducts = localStorage.getItem('temp-sales-products');
+                            const cardProducts = tempCardProducts ? JSON.parse(tempCardProducts) : [];
 
                                                 if (e.currentTarget.value && e.currentTarget.value >= 0) {
                                                     const updatedProducts = cardProducts.map(product => {
                                                         if (product.product_id === item.product_id) {
                                                             const discountAmount = (item.price * editedPercent) / 100;
-                                                            const salesPrice = item.price - discountAmount;
+                            const salesPrice = item.price - discountAmount;
 
-                                                            return {
-                                                                ...product,
-                                                                percent: editedPercent,
-                                                                sales_price: salesPrice,
-                                                                sub_total: salesPrice * item.quantity,
+                            return {
+                                ...product,
+                                percent: editedPercent,
+                            sales_price: salesPrice,
+                            sub_total: salesPrice * item.quantity,
                                                             };
                                                         }
-                                                        return product
+                            return product
                                                     });
 
-                                                    localStorage.setItem('temp-sales-products', JSON.stringify(updatedProducts));
-                                                    setLoadCardProducts(true)
+                            localStorage.setItem('temp-sales-products', JSON.stringify(updatedProducts));
+                            setLoadCardProducts(true)
                                                 }
                                             };
 
-                                            return (
-                                                item.percent ?
-                                                <>
-                                                    <TextInput
-                                                        type="number"
-                                                        label=""
-                                                        size="xs"
-                                                        value={editedPercent}
-                                                        onChange={handlePercentChange}
-                                                        rightSection={
-                                                            editedPercent === '' ?
-                                                                <>{item.percent}<IconPercentage size={16} opacity={0.5}/></>
-                                                                :
-                                                                <IconPercentage size={16} opacity={0.5}/>
-                                                        }
-                                                    />
-                                                </>
-                                                    :
-                                                    <Text size={'xs'} ta="right">
-                                                        {(Number(item.price) - Number(item.sales_price)).toFixed(2)}
-                                                    </Text>
-                                            );
+                            return (
+                            item.percent ?
+                            <>
+                                <TextInput
+                                    type="number"
+                                    label=""
+                                    size="xs"
+                                    value={editedPercent}
+                                    onChange={handlePercentChange}
+                                    rightSection={
+                                        editedPercent === '' ?
+                                            <>{item.percent}<IconPercentage size={16} opacity={0.5} /></>
+                                            :
+                                            <IconPercentage size={16} opacity={0.5} />
+                                    }
+                                />
+                            </>
+                            :
+                            <Text size={'xs'} ta="right">
+                                {(Number(item.price) - Number(item.sales_price)).toFixed(2)}
+                            </Text>
+                            );
                                         },
-                                        footer: (
-                                            <Group spacing="xs" >
-                                                <Text fz={'md'} fw={'600'}>{t('SubTotal')}</Text>
-                                            </Group>
-                                        ),
+                            footer: (
+                            <Group spacing="xs" >
+                                <Text fz={'md'} fw={'600'}>{t('SubTotal')}</Text>
+                            </Group>
+                            ),
                                     },
 
-                                    {
-                                        accessor: 'sub_total',
-                                        title: t('SubTotal'),
-                                        textAlign: "right",
+                            {
+                                accessor: 'sub_total',
+                            title: t('SubTotal'),
+                            textAlign: "right",
                                         render: (item) => {
                                             return (
-                                                item.sub_total && Number(item.sub_total).toFixed(2)
-                                            );
+                            item.sub_total && Number(item.sub_total).toFixed(2)
+                            );
                                         },
-                                        footer: (
-                                            <Group spacing="xs">
-                                                <Text fw={'600'} fz={'md'}>{
-                                                    salesSubTotalAmount.toFixed(2)
-                                                }</Text>
-                                            </Group>
-                                        ),
+                            footer: (
+                            <Group spacing="xs">
+                                <Text fw={'600'} fz={'md'}>{
+                                    salesSubTotalAmount.toFixed(2)
+                                }</Text>
+                            </Group>
+                            ),
                                     },
-                                    {
-                                        accessor: "action",
-                                        title:  t('Action'),
-                                        textAlign: "right",
+                            {
+                                accessor: "action",
+                            title: t('Action'),
+                            textAlign: "right",
                                         render: (item) => (
-                                            <Group gap={4} justify="right" wrap="nowrap">
+                            <Group gap={4} justify="right" wrap="nowrap">
 
-                                                <ActionIcon
-                                                    size="sm"
-                                                    variant="subtle"
-                                                    color="red"
-                                                    onClick={() => {
-                                                        const dataString = localStorage.getItem('temp-sales-products');
-                                                        let data = dataString ? JSON.parse(dataString) : [];
+                                <ActionIcon
+                                    size="sm"
+                                    variant="subtle"
+                                    color="red"
+                                    onClick={() => {
+                                        const dataString = localStorage.getItem('temp-sales-products');
+                                        let data = dataString ? JSON.parse(dataString) : [];
 
-                                                        data = data.filter(d => d.product_id !== item.product_id);
+                                        data = data.filter(d => d.product_id !== item.product_id);
 
-                                                        const updatedDataString = JSON.stringify(data);
+                                        const updatedDataString = JSON.stringify(data);
 
-                                                        localStorage.setItem('temp-sales-products', updatedDataString);
-                                                        setLoadCardProducts(true)
-                                                    }}
-                                                >
-                                                    <IconX size={16} style={{width: '70%', height: '70%'}}
-                                                           stroke={1.5}/>
-                                                </ActionIcon>
-                                            </Group>
-                                        ),
+                                        localStorage.setItem('temp-sales-products', updatedDataString);
+                                        setLoadCardProducts(true)
+                                    }}
+                                >
+                                    <IconX size={16} style={{ width: '70%', height: '70%' }}
+                                        stroke={1.5} />
+                                </ActionIcon>
+                            </Group>
+                            ),
                                     },
-                                ]
+                            ]
                                 }
-                                fetching={fetching}
-                                totalRecords={100}
-                                recordsPerPage={10}
-                                loaderSize="xs"
-                                loaderColor="grape"
-                                height={height}
-                                scrollAreaProps={{type: 'never'}}
+                            fetching={fetching}
+                            totalRecords={100}
+                            recordsPerPage={10}
+                            loaderSize="xs"
+                            loaderColor="grape"
+                            height={height}
+                            scrollAreaProps={{ type: 'never' }}
                             />
                         </Box>
 
@@ -1049,7 +1048,7 @@ function GenericInvoiceForm(props) {
                             salesSubTotalAmount={salesSubTotalAmount}
                             tempCardProducts={tempCardProducts}
                             totalPurchaseAmount={totalPurchaseAmount}
-                            currencySymbol = {currencySymbol}
+                            currencySymbol={currencySymbol}
                             setLoadCardProducts={setLoadCardProducts}
                         />
                     </Box>

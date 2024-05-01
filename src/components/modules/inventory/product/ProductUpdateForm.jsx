@@ -277,7 +277,7 @@ function ProductUpdateForm() {
                                                 />
                                             </Box>
                                             <Box mt={'xs'}>
-                                                <Grid gutter={{ base: 1 }}>
+                                                <Grid gutter={{ base: 6 }}>
                                                     <Grid.Col span={11}>
                                                         <SelectForm
                                                             tooltip={t('ChooseCategory')}

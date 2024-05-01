@@ -1,21 +1,21 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import {
     Box, Button,
     Grid, Progress, Title, Group, Burger, Menu, rem, ActionIcon, Text, NavLink
 } from "@mantine/core";
-import {getHotkeyHandler, useDisclosure, useHotkeys, useToggle} from "@mantine/hooks";
-import {useTranslation} from 'react-i18next';
-import {useDispatch, useSelector} from "react-redux";
-import classes from  '../../../assets/css/HeaderSearch.module.css';
+import { getHotkeyHandler, useDisclosure, useHotkeys, useToggle } from "@mantine/hooks";
+import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from "react-redux";
+import classes from '../../../assets/css/HeaderSearch.module.css';
 import {
-    IconInfoCircle,IconTrash,IconSearch,IconSettings
+    IconInfoCircle, IconTrash, IconSearch, IconSettings
 } from "@tabler/icons-react";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 
 function CoreHeaderNavbar(props) {
-    const { pageTitle,roles,currancySymbol,allowZeroPercentage } = props
-    const {t, i18n} = useTranslation();
+    const { pageTitle, roles, currancySymbol, allowZeroPercentage } = props
+    const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const [opened, { toggle }] = useDisclosure(false);
     const navigate = useNavigate();
@@ -53,9 +53,9 @@ function CoreHeaderNavbar(props) {
                                 </ActionIcon>
                             </Menu.Target>
                             <Menu.Dropdown>
-                                <Menu.Item  href="/inventory/config"
-                                            component="button"  onClick={(e)=>{navigate('/inventory/config')}} leftSection={<IconSettings style={{ width: rem(14), height: rem(14) }} />}>
-                                    { t('Settings')}
+                                <Menu.Item href="/inventory/config"
+                                    component="button" onClick={(e) => { navigate('/inventory/config') }} leftSection={<IconSettings style={{ width: rem(14), height: rem(14) }} />}>
+                                    {t('Settings')}
                                 </Menu.Item>
                             </Menu.Dropdown>
                         </Menu>

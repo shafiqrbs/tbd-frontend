@@ -1,33 +1,33 @@
-import React, {useEffect, useState} from "react";
-import {useOutletContext} from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useOutletContext } from "react-router-dom";
 import genericCss from '../../../../assets/css/Generic.module.css';
 
 import {
     Button, Flex, ActionIcon, TextInput,
     Grid, Box, Tooltip, Group, Text, Popover, Fieldset,
 } from "@mantine/core";
-import {useTranslation} from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import {
     IconDeviceFloppy, IconPercentage,
     IconPlus, IconRefreshDot, IconSum, IconUserCircle, IconX,
 } from "@tabler/icons-react";
-import {getHotkeyHandler, useHotkeys} from "@mantine/hooks";
-import {useDispatch, useSelector} from "react-redux";
-import {isNotEmpty, useForm} from "@mantine/form";
-import {modals} from "@mantine/modals";
-import {notifications, showNotification} from "@mantine/notifications";
+import { getHotkeyHandler, useHotkeys } from "@mantine/hooks";
+import { useDispatch, useSelector } from "react-redux";
+import { isNotEmpty, useForm } from "@mantine/form";
+import { modals } from "@mantine/modals";
+import { notifications, showNotification } from "@mantine/notifications";
 
 import InputForm from "../../../form-builders/InputForm";
-import {getCategoryDropdown} from "../../../../store/inventory/utilitySlice";
-import {getSettingDropdown, getProductUnitDropdown} from "../../../../store/utility/utilitySlice.js";
+import { getCategoryDropdown } from "../../../../store/inventory/utilitySlice";
+import { getSettingDropdown, getProductUnitDropdown } from "../../../../store/utility/utilitySlice.js";
 
 import SelectServerSideForm from "../../../form-builders/SelectServerSideForm.jsx";
 import InputButtonForm from "../../../form-builders/InputButtonForm";
 import InputNumberForm from "../../../form-builders/InputNumberForm";
 import SalesForm from "./SalesForm";
-import {DataTable} from "mantine-datatable";
+import { DataTable } from "mantine-datatable";
 import SelectForm from "../../../form-builders/SelectForm.jsx";
-import {storeEntityData} from "../../../../store/inventory/crudSlice.js";
+import { storeEntityData } from "../../../../store/inventory/crudSlice.js";
 import axios from "axios";
 import getLocationDropdownData from "../../../global-hook/dropdown/getLocationDropdownData.js";
 import getExecutiveDropdownData from "../../../global-hook/dropdown/getExecutiveDropdownData.js";
@@ -37,10 +37,10 @@ import getTransactionModeDropdownData from "../../../global-hook/dropdown/getTra
 import getUserDropdownData from "../../../global-hook/dropdown/getUserDropdownData.js";
 
 function GeneralSalesForm(props) {
-    const {currancySymbol, allowZeroPercentage} = props
-    const {t, i18n} = useTranslation();
+    const { currancySymbol, allowZeroPercentage } = props
+    const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
-    const {isOnline, mainAreaHeight} = useOutletContext();
+    const { isOnline, mainAreaHeight } = useOutletContext();
     const height = mainAreaHeight - 200; //TabList height 104
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
     const [fetching, setFetching] = useState(false);
@@ -173,7 +173,7 @@ function GeneralSalesForm(props) {
     const categoryDropdownData = useSelector((state) => state.inventoryUtilitySlice.categoryDropdownData)
     let categoryDropdown = categoryDropdownData && categoryDropdownData.length > 0 ?
         categoryDropdownData.map((type, index) => {
-            return ({'label': type.name, 'value': String(type.id)})
+            return ({ 'label': type.name, 'value': String(type.id) })
         }) : []
     useEffect(() => {
         const value = {
@@ -190,7 +190,7 @@ function GeneralSalesForm(props) {
     const productTypeDropdownData = useSelector((state) => state.utilityUtilitySlice.settingDropdown)
     let productTypeDropdown = productTypeDropdownData && productTypeDropdownData.length > 0 ?
         productTypeDropdownData.map((type, index) => {
-            return ({'label': type.name, 'value': String(type.id)})
+            return ({ 'label': type.name, 'value': String(type.id) })
         }) : []
 
     useEffect(() => {
@@ -207,7 +207,7 @@ function GeneralSalesForm(props) {
     const productUnitDropdownData = useSelector((state) => state.utilityUtilitySlice.productUnitDropdown)
     let productUnitDropdown = productUnitDropdownData && productUnitDropdownData.length > 0 ?
         productUnitDropdownData.map((type, index) => {
-            return ({'label': type.name, 'value': String(type.id)})
+            return ({ 'label': type.name, 'value': String(type.id) })
         }) : []
     useEffect(() => {
         const value = {
@@ -313,7 +313,7 @@ function GeneralSalesForm(props) {
                     loading: true,
                     withCloseButton: true,
                     position: 'top-center',
-                    style: {backgroundColor: 'mistyrose'},
+                    style: { backgroundColor: 'mistyrose' },
                 });
             } else {
                 setSelectProductDetails(prevDetails => ({
@@ -351,16 +351,16 @@ function GeneralSalesForm(props) {
     }]], []);
 
     const inputGroupText = (
-        <Text style={{textAlign: 'right', width: '100%', paddingRight: 16}}
-              color={'gray'}
+        <Text style={{ textAlign: 'right', width: '100%', paddingRight: 16 }}
+            color={'gray'}
         >
             {selectProductDetails && selectProductDetails.unit_name}
         </Text>
     );
 
     const inputGroupCurrency = (
-        <Text style={{textAlign: 'right', width: '100%', paddingRight: 16}}
-              color={'gray'}
+        <Text style={{ textAlign: 'right', width: '100%', paddingRight: 16 }}
+            color={'gray'}
         >
             {currancySymbol}
         </Text>
@@ -406,7 +406,7 @@ function GeneralSalesForm(props) {
                                             loading: true,
                                             withCloseButton: true,
                                             position: 'top-center',
-                                            style: {backgroundColor: 'mistyrose'},
+                                            style: { backgroundColor: 'mistyrose' },
                                         });
                                     } else {
                                         setFocusIntoProductSearch(true)
@@ -421,7 +421,7 @@ function GeneralSalesForm(props) {
                         })}>
                             <Box>
                                 <Box pl={`xs`} pr={8} pt={'xs'} className={genericCss.boxBackground}>
-                                    <Grid columns={24} gutter={{base: 2}}>
+                                    <Grid columns={24} gutter={{ base: 2 }}>
                                         <Grid.Col span={4}>
                                             <InputForm
                                                 tooltip={t('BarcodeValidateMessage')}
@@ -453,7 +453,7 @@ function GeneralSalesForm(props) {
                                         </Grid.Col>
                                     </Grid>
                                     <Box mt={'xs'} pb={'xs'}>
-                                        <Grid columns={24} gutter={{base: 2}}>
+                                        <Grid columns={24} gutter={{ base: 6 }}>
                                             <Grid.Col span={4}>
                                                 <InputButtonForm
                                                     type="number"
@@ -465,7 +465,7 @@ function GeneralSalesForm(props) {
                                                     name={'mrp'}
                                                     id={'mrp'}
                                                     rightSection={inputGroupCurrency}
-                                                    leftSection={<IconUserCircle size={16} opacity={0.5}/>}
+                                                    leftSection={<IconUserCircle size={16} opacity={0.5} />}
                                                     rightSectionWidth={80}
                                                     disabled={true}
                                                 />
@@ -482,7 +482,7 @@ function GeneralSalesForm(props) {
                                                     name={'quantity'}
                                                     id={'quantity'}
                                                     rightSection={inputGroupText}
-                                                    leftSection={<IconUserCircle size={16} opacity={0.5}/>}
+                                                    leftSection={<IconUserCircle size={16} opacity={0.5} />}
                                                     rightSectionWidth={80}
                                                 />
                                             </Grid.Col>
@@ -496,8 +496,8 @@ function GeneralSalesForm(props) {
                                                     form={form}
                                                     name={'percent'}
                                                     id={'percent'}
-                                                    leftSection={<IconUserCircle size={16} opacity={0.5}/>}
-                                                    rightIcon={<IconUserCircle size={16} opacity={0.5}/>}
+                                                    leftSection={<IconUserCircle size={16} opacity={0.5} />}
+                                                    rightIcon={<IconUserCircle size={16} opacity={0.5} />}
                                                     closeIcon={true}
                                                 />
                                             </Grid.Col>
@@ -512,8 +512,8 @@ function GeneralSalesForm(props) {
                                                     name={'sales_price'}
                                                     id={'sales_price'}
                                                     disabled={form.values.percent}
-                                                    leftSection={<IconUserCircle size={16} opacity={0.5}/>}
-                                                    rightIcon={<IconUserCircle size={16} opacity={0.5}/>}
+                                                    leftSection={<IconUserCircle size={16} opacity={0.5} />}
+                                                    rightIcon={<IconUserCircle size={16} opacity={0.5} />}
                                                 />
                                             </Grid.Col>
                                             <Grid.Col span={4}>
@@ -526,8 +526,8 @@ function GeneralSalesForm(props) {
                                                     form={form}
                                                     name={'sub_total'}
                                                     id={'sub_total'}
-                                                    leftSection={<IconDeviceFloppy size={16} opacity={0.5}/>}
-                                                    rightIcon={<IconUserCircle size={16} opacity={0.5}/>}
+                                                    leftSection={<IconDeviceFloppy size={16} opacity={0.5} />}
+                                                    rightIcon={<IconUserCircle size={16} opacity={0.5} />}
                                                     disabled={selectProductDetails && selectProductDetails.sub_total}
                                                     closeIcon={false}
                                                 />
@@ -543,7 +543,7 @@ function GeneralSalesForm(props) {
                                                             mr={'xs'}
                                                             w={'100%'}
                                                             id="EntityFormSubmit"
-                                                            leftSection={<IconDeviceFloppy size={16}/>}
+                                                            leftSection={<IconDeviceFloppy size={16} />}
                                                         >
                                                             <Flex direction={`column`} gap={0}>
                                                                 <Text fz={12} fw={400}>
@@ -571,7 +571,7 @@ function GeneralSalesForm(props) {
                                                                 multiline
                                                                 w={420}
                                                                 withArrow
-                                                                transitionProps={{duration: 200}}
+                                                                transitionProps={{ duration: 200 }}
                                                                 label="Use this button to save this information in your profile, after that you will be able to access it any time and share it via email."
                                                             >
 
@@ -583,8 +583,8 @@ function GeneralSalesForm(props) {
                                                                     aria-label="Settings"
                                                                     onClick={() => setProductAddFormOpened(true)}
                                                                 >
-                                                                    <IconPlus style={{width: '100%', height: '70%'}}
-                                                                              stroke={1.5}/>
+                                                                    <IconPlus style={{ width: '100%', height: '70%' }}
+                                                                        stroke={1.5} />
                                                                 </ActionIcon>
                                                             </Tooltip>
                                                         </Popover.Target>
@@ -605,7 +605,7 @@ function GeneralSalesForm(props) {
                                                                     searchable={true}
                                                                     value={productTypeData}
                                                                     changeValue={setProductTypeData}
-                                                                    comboboxProps={{withinPortal: false}}
+                                                                    comboboxProps={{ withinPortal: false }}
                                                                 />
 
                                                                 <SelectForm
@@ -622,7 +622,7 @@ function GeneralSalesForm(props) {
                                                                     searchable={true}
                                                                     value={categoryData}
                                                                     changeValue={setCategoryData}
-                                                                    comboboxProps={{withinPortal: false}}
+                                                                    comboboxProps={{ withinPortal: false }}
                                                                 />
 
                                                                 <InputForm
@@ -651,7 +651,7 @@ function GeneralSalesForm(props) {
                                                                     searchable={true}
                                                                     value={productUnitData}
                                                                     changeValue={setProductUnitData}
-                                                                    comboboxProps={{withinPortal: false}}
+                                                                    comboboxProps={{ withinPortal: false }}
                                                                 />
 
                                                                 <InputForm
@@ -679,7 +679,7 @@ function GeneralSalesForm(props) {
                                                                 />
 
                                                                 <Box mt={'xs'}>
-                                                                    <Grid columns={12} gutter={{base: 1}}>
+                                                                    <Grid columns={12} gutter={{ base: 1 }}>
                                                                         <Grid.Col span={6}>&nbsp;</Grid.Col>
                                                                         <Grid.Col span={2}>
                                                                             <Button
@@ -694,7 +694,7 @@ function GeneralSalesForm(props) {
                                                                                 <IconRefreshDot style={{
                                                                                     width: '100%',
                                                                                     height: '70%'
-                                                                                }} stroke={1.5}/>
+                                                                                }} stroke={1.5} />
                                                                             </Button>
                                                                         </Grid.Col>
                                                                         <Grid.Col span={4}>
@@ -706,7 +706,7 @@ function GeneralSalesForm(props) {
                                                                                 mr={'xs'}
                                                                                 id="EntityFormSubmit"
                                                                                 leftSection={<IconDeviceFloppy
-                                                                                    size={16}/>}
+                                                                                    size={16} />}
                                                                                 onClick={() => {
                                                                                     let validation = true
                                                                                     if (!productAddedForm.values.name) {
@@ -800,7 +800,7 @@ function GeneralSalesForm(props) {
                                             title: "Name",
                                             footer: (
                                                 <Group spacing="xs">
-                                                    <IconSum size="1.25em"/>
+                                                    <IconSum size="1.25em" />
                                                     <Text mb={-2}>{tempCardProducts.length} Items</Text>
                                                 </Group>
                                             )
@@ -975,9 +975,9 @@ function GeneralSalesForm(props) {
                                                             rightSection={
                                                                 editedPercent === '' ?
                                                                     <>{item.percent}<IconPercentage size={16}
-                                                                                                    opacity={0.5}/></>
+                                                                        opacity={0.5} /></>
                                                                     :
-                                                                    <IconPercentage size={16} opacity={0.5}/>
+                                                                    <IconPercentage size={16} opacity={0.5} />
                                                             }
                                                         />
                                                     </>
@@ -986,7 +986,7 @@ function GeneralSalesForm(props) {
                                             footer: (
                                                 <Group spacing="xs">
                                                     <Text mb={-2}>SubTotal</Text>
-                                                    <IconSum size="1.25em"/>
+                                                    <IconSum size="1.25em" />
                                                 </Group>
                                             ),
                                         },
@@ -1029,9 +1029,9 @@ function GeneralSalesForm(props) {
                                                                         {t('DeleteDetails')}
                                                                     </Text>
                                                                 ),
-                                                                labels: {confirm: 'Confirm', cancel: 'Cancel'},
+                                                                labels: { confirm: 'Confirm', cancel: 'Cancel' },
                                                                 onCancel: () => console.log('Cancel'),
-                                                                confirmProps: {color: 'red'},
+                                                                confirmProps: { color: 'red' },
                                                                 onConfirm: () => {
                                                                     const dataString = localStorage.getItem('temp-sales-products');
                                                                     let data = dataString ? JSON.parse(dataString) : [];
@@ -1046,8 +1046,8 @@ function GeneralSalesForm(props) {
                                                             });
                                                         }}
                                                     >
-                                                        <IconX size={16} style={{width: '70%', height: '70%'}}
-                                                               stroke={1.5}/>
+                                                        <IconX size={16} style={{ width: '70%', height: '70%' }}
+                                                            stroke={1.5} />
                                                     </ActionIcon>
                                                 </Group>
                                             ),
@@ -1060,7 +1060,7 @@ function GeneralSalesForm(props) {
                                     loaderSize="xs"
                                     loaderColor="grape"
                                     height={height}
-                                    scrollAreaProps={{type: 'never'}}
+                                    scrollAreaProps={{ type: 'never' }}
                                 />
                             </Box>
                         </Box>

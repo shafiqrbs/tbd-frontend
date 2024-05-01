@@ -20,10 +20,10 @@ function FooterNavbar() {
     const [opened, { toggle }] = useDisclosure(false);
 
     const links = [
-        { link: '/inventory/sales', label: t('Sales') },
-        { link: '/inventory/purchase', label: t('Purchase') },
+        { link: '/inventory/sales-invoice', label: t('Sales') },
+        { link: '/inventory/purchase-invoice', label: t('Purchase') },
         { link: '/inventory/product', label: t('Product') },
-        { link: '/accounting/transaction-mode', label: t('Accounting') },
+        { link: '/accounting/voucher-entry', label: t('Accounting') },
     ];
 
     const items = links.map((link) => (
