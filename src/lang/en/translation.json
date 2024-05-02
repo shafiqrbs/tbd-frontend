@@ -317,5 +317,23 @@
   "LicenseNo": "License No",
   "QuickCategory": "Quick Category",
   "VatEnabled": "VAT Enable",
-  "AtiEnabled": "ATI Enable"
+  "AtiEnabled": "ATI Enable",
+  "ManageAccountLedger": "Manage Account Ledger",
+  "NatureOfGroup": "Nature Of Group",
+  "Debit": "Debit",
+  "Credit": "Credit",
+  "Balance": "Balance",
+  "AccountLedger": "Account Ledger",
+  "AccountReports": "Account Reports",
+  "AccountHeadGroup": "Account Head Group",
+  "AccountSubHeadGroup": "Account Sub-Head Group",
+  "CreateLedger": "Create Ledger",
+  "AccountSubHead": "Account Sub-Head",
+  "AccountSubHeadValidateMessage": "Please choose Account Sub-Head",
+  "AccountCodeValidateMessage": "Please provide a valid Account code",
+  "AccountCode": "Account Code",
+  "OpeningBalanceValidateMessage": "Please provide Opening balance",
+  "OpeningBalance": "Opening Balance",
+  "UpdateAccountHeadGroup": "Update Account Head-Group"
+
 }

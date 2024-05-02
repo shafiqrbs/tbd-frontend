@@ -243,5 +243,22 @@
   "DomainUserValidateMessage": "অনুগ্রহ করে বৈধ ডোমেইন ব্যবহারকারী প্রবেশ করুন",
   "QuickCategory": "কুইক ক্যাটাগরি",
   "VatEnabled": "VAT এনাবল",
-  "AtiEnabled": "Ati এনাবল"
+  "AtiEnabled": "Ati এনাবল",
+  "ManageAccountLedger": "একাউন্ট লেজার পরিচালনা",
+  "NatureOfGroup": "গ্রুপের প্রকৃতি",
+  "Debit": "ডেবিট",
+  "Credit": "ক্রেডিট",
+  "Balance": "ব্যালেন্স",
+  "AccountLedger": "একাউন্ট লেজার",
+  "AccountReports": "একাউন্ট রিপোর্ট",
+  "AccountHeadGroup": "একাউন্ট হেড গ্রুপ",
+  "AccountSubHeadGroup": "একাউন্ট সাব-হেড গ্রুপ",
+  "CreateLedger": "লেজার তৈরী",
+  "AccountSubHead": "একাউন্ট সাব-হেড",
+  "AccountSubHeadValidateMessage": "অনুগ্রহ করে একাউন্ট সাব-হেড সিলেক্ট করুন",
+  "AccountCodeValidateMessage": "অনুগ্রহ করে বৈধ একাউন্ট কোড প্রবেশ করুন",
+  "AccountCode": "একাউন্ট কোড",
+  "OpeningBalanceValidateMessage": "অনুগ্রহ করে ওপেনিং ব্যালেন্স প্রবেশ করুন",
+  "OpeningBalance": "ওপেনিং ব্যালেন্স",
+  "UpdateAccountHeadGroup": "একাউন্ট হেড-গ্রুপ আপডেট"
 }

@@ -79,7 +79,7 @@ function LedgerTable(props) {
                             render: (item) => (indexData.data.indexOf(item) + 1)
                         },
                         { accessor: 'name', title: t('Name') },
-                        { accessor: 'short_name', title: t('Nature of Group') },
+                        { accessor: 'short_name', title: t('NatureOfGroup') },
                         { accessor: 'authorized_name', title: t('Debit') },
                         { accessor: 'authorized_name', title: t('Credit') },
                         { accessor: 'authorized_name', title: t('Balance') },
@@ -155,7 +155,7 @@ function LedgerTable(props) {
                     scrollAreaProps={{ type: 'never' }}
                 />
                 {
-                        customerViewModel &&
+                    customerViewModel &&
                     <CustomerViewModel customerViewModel={customerViewModel} setCustomerViewModel={setCustomerViewModel} />
                 }
 
