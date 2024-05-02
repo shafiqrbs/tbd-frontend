@@ -254,9 +254,7 @@ function SearchModal({ onClose }) {
                                     icon={<IconXboxX style={{ width: rem(20) }} stroke={2.0} />}
                                     aria-label="Clear input"
                                     onClick={() => {
-                                        setValue('');
-                                        filterList({ target: { value: '' } });
-                                        ref.current.focus();
+                                        onClose();
                                     }}
                                 />
                                 <Kbd ml={"-lg"} h={'24'} c={'gray.8'} fz={'12'}>Alt </Kbd> + <Kbd c={'gray.8'} h={'24'} fz={'12'} mr={'xl'}> X</Kbd>

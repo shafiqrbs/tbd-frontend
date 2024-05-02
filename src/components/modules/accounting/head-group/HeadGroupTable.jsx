@@ -79,7 +79,7 @@ function HeadGroupTable(props) {
                             render: (item) => (indexData.data.indexOf(item) + 1)
                         },
                         { accessor: 'name', title: t('Name') },
-                        { accessor: 'short_name', title: t('Nature of Group') },
+                        { accessor: 'short_name', title: t('NatureOfGroup') },
                         { accessor: 'method_name', title: t('ShortName') },
                         { accessor: 'authorized_name', title: t('AccountCode') },
                         {
@@ -154,7 +154,7 @@ function HeadGroupTable(props) {
                     scrollAreaProps={{ type: 'never' }}
                 />
                 {
-                        customerViewModel &&
+                    customerViewModel &&
                     <CustomerViewModel customerViewModel={customerViewModel} setCustomerViewModel={setCustomerViewModel} />
                 }
 

@@ -334,6 +334,12 @@
   "AccountCode": "Account Code",
   "OpeningBalanceValidateMessage": "Please provide Opening balance",
   "OpeningBalance": "Opening Balance",
-  "UpdateAccountHeadGroup": "Update Account Head-Group"
-
+  "UpdateAccountHeadGroup": "Update Account Head-Group",
+  "ManageAccountHeadGroup": "Manage Account Head-Group",
+  "CreateNewAccountGroup": "Create New Account Group",
+  "HeadGroup": "Head Group",
+  "HeadSubGroup": "Head Sub Group",
+  "ManageAccountHeadSubGroup": "Manage Account Head Sub-Group",
+  "CreateNewAccountSubGroup": "Create New Account Sub-Group",
+  "Ledger": "Ledger"
 }
