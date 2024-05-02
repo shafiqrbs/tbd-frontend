@@ -162,7 +162,7 @@ function ProductUpdateForm() {
     }]], []);
 
     useHotkeys([['alt+s', () => {
-        document.getElementById('UserFormSubmit').click()
+        document.getElementById('EntityFormSubmit').click()
     }]], []);
 
 
@@ -408,7 +408,7 @@ function ProductUpdateForm() {
                                                         />
                                                     </Grid.Col>
                                                     <Grid.Col span={1}>
-                                                        <Box pt={'xs'}>
+                                                        <Box pt={'xl'}>
                                                             <Tooltip
                                                                 multiline
                                                                 w={420}
@@ -502,21 +502,28 @@ function ProductUpdateForm() {
                                                             id={'opening_quantity'}
                                                         />
                                                     </Grid.Col>
-                                                    <Grid.Col span={2} mt={'28'}>
-                                                        <SwitchForm
-                                                            tooltip={t('Status')}
-                                                            label=''
-                                                            nextField={'EntityFormSubmit'}
-                                                            name={'status'}
-                                                            form={form}
-                                                            color="red"
-                                                            id={'status'}
-                                                            position={'left'}
-                                                            defaultChecked={1}
-                                                            checked={form.values.status}
-                                                        />
+                                                    <Grid.Col span={6} mt={'28'}>
+                                                        <Box mt={'xs'}>
+                                                            <Grid columns={6} gutter={{ base: 1 }}>
+                                                                <Grid.Col span={2}>
+                                                                    <SwitchForm
+                                                                        tooltip={t('Status')}
+                                                                        label=''
+                                                                        nextField={'EntityFormSubmit'}
+                                                                        name={'status'}
+                                                                        form={form}
+                                                                        color="red"
+                                                                        id={'status'}
+                                                                        position={'left'}
+                                                                        defaultChecked={1}
+                                                                        checked={form.values.status}
+                                                                    />
+                                                                </Grid.Col>
+                                                                <Grid.Col span={4} fz={'sm'} pt={'1'}>{t('Status')}
+                                                                </Grid.Col>
+                                                            </Grid>
+                                                        </Box>
                                                     </Grid.Col>
-                                                    <Grid.Col span={4} fz={'sm'} mt={'xl'}>{t('Status')}</Grid.Col>
                                                 </Grid>
                                             </Box>
                                         </Box>

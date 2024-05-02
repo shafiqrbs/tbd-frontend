@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Box, TextInput, ScrollArea, Stack, Text, Title, GridCol, Grid, CloseButton, Input, Tooltip, rem, Kbd, Flex } from "@mantine/core";
-import { IconClearAll, IconInfoCircle, IconRestore, IconSearch, IconTrash, IconX } from "@tabler/icons-react";
+import { IconClearAll, IconInfoCircle, IconRestore, IconSearch, IconTrash, IconX, IconXboxX } from "@tabler/icons-react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { setSearchKeyword } from "../../../store/core/crudSlice.js";
@@ -247,6 +247,18 @@ function SearchModal({ onClose }) {
                             </>
                         ) : (
                             <>
+
+                                <CloseButton
+                                    ml={'-50'}
+                                    mr={'lg'}
+                                    icon={<IconXboxX style={{ width: rem(20) }} stroke={2.0} />}
+                                    aria-label="Clear input"
+                                    onClick={() => {
+                                        setValue('');
+                                        filterList({ target: { value: '' } });
+                                        ref.current.focus();
+                                    }}
+                                />
                                 <Kbd ml={"-lg"} h={'24'} c={'gray.8'} fz={'12'}>Alt </Kbd> + <Kbd c={'gray.8'} h={'24'} fz={'12'} mr={'xl'}> X</Kbd>
                             </>
                         )}

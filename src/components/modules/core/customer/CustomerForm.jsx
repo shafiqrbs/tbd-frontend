@@ -51,16 +51,16 @@ function CustomerForm() {
 
     const form = useForm({
         initialValues: {
-            location_id: '',
-            marketing_id: '',
             name: '',
-            mobile: '',
             customer_group: '',
             credit_limit: '',
             reference_id: '',
+            mobile: '',
             alternative_mobile: '',
+            email: '',
+            location_id: '',
+            marketing_id: '',
             address: '',
-            email: ''
         },
         validate: {
             name: hasLength({ min: 2, max: 20 }),
@@ -133,7 +133,7 @@ function CustomerForm() {
     }]], []);
 
     useHotkeys([['alt+s', () => {
-        document.getElementById('CustomerFormSubmit').click()
+        document.getElementById('EntityFormSubmit').click()
     }]], []);
 
 

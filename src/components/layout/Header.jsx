@@ -39,7 +39,8 @@ import {
     IconChevronLeft,
     IconChevronRight,
     IconWifiOff,
-    IconTableShortcut
+    IconTableShortcut,
+    IconCategory
 } from "@tabler/icons-react";
 import HeaderStyle from "./../../assets/css/Header.module.css";
 import LanguagePickerStyle from "./../../assets/css/LanguagePicker.module.css";
@@ -145,7 +146,6 @@ export default function Header({
     ));
     return (
         <>
-
             <Modal.Root
                 opened={opened}
                 onClose={close}

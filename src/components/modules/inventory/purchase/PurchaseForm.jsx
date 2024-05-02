@@ -246,7 +246,8 @@ function PurchaseForm(props) {
                                                             label={t('InstantCustomerCreate')}
                                                         >
                                                             <ActionIcon fullWidth variant="outline" bg={'white'} size={'lg'} color="red.5" mt={'1'} aria-label="Settings">
-                                                                <IconUserCog style={{ width: '100%', height: '70%' }} stroke={1.5} />
+
+                                                                <IconUserCircle style={{ width: '100%', height: '70%' }} stroke={1.5} />
                                                             </ActionIcon>
                                                         </Tooltip>
                                                     </Popover.Target>

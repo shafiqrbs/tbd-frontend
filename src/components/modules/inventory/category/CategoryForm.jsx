@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import {
     IconCheck,
     IconDeviceFloppy, IconInfoCircle, IconPlus, IconUserCog, IconCategoryPlus,
+    IconCategory,
 } from "@tabler/icons-react";
 import { useDisclosure, useHotkeys } from "@mantine/hooks";
 import { useDispatch, useSelector } from "react-redux";
@@ -175,7 +176,8 @@ function CategoryForm() {
                                                                 label={t('InstantCustomerCreate')}
                                                             >
                                                                 <ActionIcon fullWidth variant="outline" bg={'white'} size={'lg'} color="red.5" mt={'1'} aria-label="Settings">
-                                                                    <IconUserCog style={{ width: '100%', height: '70%' }} stroke={1.5} />
+
+                                                                    <IconCategory style={{ width: '100%', height: '70%' }} stroke={1.5} />
                                                                 </ActionIcon>
                                                             </Tooltip>
                                                         </Box>

@@ -18,6 +18,7 @@ import {
     IconDeviceMobile,
     IconHelpCircle,
     IconCircleCheck, IconUserCircle, IconRefreshDot, IconDiscountOff, IconCurrency, IconPlusMinus, IconCheck,
+    IconUser,
 
 } from "@tabler/icons-react";
 import { useHotkeys, useToggle } from "@mantine/hooks";
@@ -256,8 +257,9 @@ function SalesForm(props) {
                                                             transitionProps={{ duration: 200 }}
                                                             label={t('InstantCustomerCreate')}
                                                         >
+
                                                             <ActionIcon fullWidth variant="outline" bg={'white'} size={'lg'} color="red.5" mt={'1'} aria-label="Settings">
-                                                                <IconUserCog style={{ width: '100%', height: '70%' }} stroke={1.5} />
+                                                                <IconUser style={{ width: '100%', height: '70%' }} stroke={1.5} />
                                                             </ActionIcon>
                                                         </Tooltip>
                                                     </Popover.Target>
