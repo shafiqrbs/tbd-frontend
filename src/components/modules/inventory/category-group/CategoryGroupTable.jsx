@@ -31,6 +31,7 @@ function CategoryGroupTable() {
     const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword)
     const indexData = useSelector((state) => state.inventoryCrudSlice.indexEntityData)
     const entityDataDelete = useSelector((state) => state.inventoryCrudSlice.entityDataDelete)
+    const categoryGroupFilterData = useSelector((state) => state.crudSlice.categoryGroupFilterData)
 
     useEffect(() => {
         dispatch(setDeleteMessage(''))
@@ -67,6 +68,7 @@ function CategoryGroupTable() {
             url: 'inventory/category-group',
             param: {
                 term: searchKeyword,
+                name: categoryGroupFilterData.name,
                 type: 'parent',
                 page: page,
                 offset: perPage
@@ -78,7 +80,7 @@ function CategoryGroupTable() {
     return (
         <>
             <Box pl={`xs`} pb={'xs'} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'} >
-                <KeywordSearch module={'customer'} />
+                <KeywordSearch module={'category-group'} />
             </Box>
             <Box className={'borderRadiusAll'}>
                 <DataTable

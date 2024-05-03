@@ -6,7 +6,12 @@ import {
 import {useTranslation} from "react-i18next";
 import {IconInfoCircle, IconSearch, IconX} from "@tabler/icons-react";
 import {getHotkeyHandler} from "@mantine/hooks";
-import {setCustomerFilterData, setUserFilterData, setVendorFilterData} from "../../store/core/crudSlice.js";
+import {
+    setCategoryGroupFilterData,
+    setCustomerFilterData,
+    setUserFilterData,
+    setVendorFilterData
+} from "../../store/core/crudSlice.js";
 import {useDispatch, useSelector} from "react-redux";
 import {setProductFilterData} from "../../store/inventory/crudSlice.js";
 
@@ -20,6 +25,7 @@ function InputForm(props) {
     const customerFilterData = useSelector((state) => state.crudSlice.customerFilterData)
     const vendorFilterData = useSelector((state) => state.crudSlice.vendorFilterData)
     const userFilterData = useSelector((state) => state.crudSlice.userFilterData)
+    const categoryGroupFilterData = useSelector((state) => state.crudSlice.categoryGroupFilterData)
     const productFilterData = useSelector((state) => state.inventoryCrudSlice.productFilterData)
 
     return (
@@ -43,12 +49,14 @@ function InputForm(props) {
                         ,
                     ])}
                     onChange={(e) => {
+                        if(module==='category-group'){dispatch(setCategoryGroupFilterData({...categoryGroupFilterData, [name]: e.currentTarget.value}))}
                         if(module==='customer'){dispatch(setCustomerFilterData({...customerFilterData, [name]: e.currentTarget.value}))}
                         if(module==='vendor'){dispatch(setVendorFilterData({...vendorFilterData, [name]: e.currentTarget.value}))}
                         if(module==='user'){dispatch(setUserFilterData({...userFilterData, [name]: e.currentTarget.value}))}
                         if(module==='product'){dispatch(setProductFilterData({...productFilterData, [name]: e.currentTarget.value}))}
                     }}
                     value={
+                        module === 'category-group' ? categoryGroupFilterData[name] :
                         module === 'customer' ? customerFilterData[name] :
                         module === 'vendor' ? vendorFilterData[name] :
                         module === 'user' ? userFilterData[name] :
@@ -57,6 +65,7 @@ function InputForm(props) {
                     }
                     id={id}
                     rightSection={
+                        (module === 'category-group' && categoryGroupFilterData[name]) ||
                         (module === 'customer' && customerFilterData[name]) ||
                         (module === 'user' && userFilterData[name]) ||
                         (module === 'product' && productFilterData[name]) ||
@@ -81,6 +90,11 @@ function InputForm(props) {
                                     }else if (module === 'product') {
                                         dispatch(setProductFilterData({
                                             ...productFilterData,
+                                            [name]: ''
+                                        }));
+                                    }else if (module === 'category-group') {
+                                        dispatch(setCategoryGroupFilterData({
+                                            ...categoryGroupFilterData,
                                             [name]: ''
                                         }));
                                     }

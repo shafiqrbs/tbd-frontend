@@ -15,6 +15,7 @@ import {
 import { useHotkeys } from "@mantine/hooks";
 import { useDispatch, useSelector } from "react-redux";
 import {
+    setCategoryGroupFilterData,
     setCustomerFilterData,
     setFetching,
     setSearchKeyword, setUserFilterData,
@@ -35,6 +36,7 @@ function KeywordSearch(props) {
     const customerFilterData = useSelector((state) => state.crudSlice.customerFilterData)
     const vendorFilterData = useSelector((state) => state.crudSlice.vendorFilterData)
     const userFilterData = useSelector((state) => state.crudSlice.userFilterData)
+    const categoryGroupFilterData = useSelector((state) => state.crudSlice.categoryGroupFilterData)
     const productFilterData = useSelector((state) => state.inventoryCrudSlice.productFilterData)
 
     useHotkeys(
@@ -198,6 +200,11 @@ function KeywordSearch(props) {
                                             alternative_name: '',
                                             sales_price: '',
                                             sku: ''
+                                        }));
+                                    } else if (props.module === 'category-group') {
+                                        dispatch(setCategoryGroupFilterData({
+                                            ...categoryGroupFilterData,
+                                            name: ''
                                         }));
                                     }
                                 }} />

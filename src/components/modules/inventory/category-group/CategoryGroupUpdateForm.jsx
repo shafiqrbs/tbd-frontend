@@ -154,7 +154,7 @@ function CategoryGroupUpdateForm() {
                             <Box pl={`xs`} pr={'xs'} mt={'xs'}  className={'borderRadiusAll'}>
                                 <ScrollArea h={height} scrollbarSize={2} type="never">
                                     <Box>
-                                        <LoadingOverlay visible={formLoad} zIndex={1000} overlayProps={{radius: "sm", blur: 2}}/>
+                                        <LoadingOverlay visible={formLoading} zIndex={1000} overlayProps={{radius: "sm", blur: 2}}/>
                                         <Box mt={'xs'}>
                                             <InputForm
                                                 tooltip={t('CategoryGroupNameValidateMessage')}

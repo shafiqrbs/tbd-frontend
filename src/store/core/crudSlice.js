@@ -101,6 +101,7 @@ const crudSlice = createSlice({
         customerFilterData : {name:'',mobile:''},
         vendorFilterData : {name:'',mobile:'',company_name:''},
         userFilterData : {name:'',mobile:'',email:''},
+        categoryGroupFilterData : {name:''},
     },
     reducers : {
         setFetching : (state,action) => {
@@ -127,6 +128,9 @@ const crudSlice = createSlice({
         setCustomerFilterData : (state,action) => {
             state.customerFilterData.name = action.payload.name
             state.customerFilterData.mobile = action.payload.mobile
+        },
+        setCategoryGroupFilterData : (state,action) => {
+            state.categoryGroupFilterData.name = action.payload.name
         },
         setVendorFilterData : (state,action) => {
             state.vendorFilterData.name = action.payload.name
@@ -182,6 +186,6 @@ const crudSlice = createSlice({
     }
 })
 
-export const { setFetching,setFormLoading ,setInsertType,setSearchKeyword,setEntityUpdateId,setEntityIsUpdate,setEditEntityData,setCustomerFilterData,setVendorFilterData,setUserFilterData,setValidationData,setEntityNewData} = crudSlice.actions
+export const { setFetching,setFormLoading ,setInsertType,setSearchKeyword,setEntityUpdateId,setEntityIsUpdate,setEditEntityData,setCustomerFilterData,setVendorFilterData,setUserFilterData,setValidationData,setEntityNewData,setCategoryGroupFilterData} = crudSlice.actions
 
 export default crudSlice.reducer;
