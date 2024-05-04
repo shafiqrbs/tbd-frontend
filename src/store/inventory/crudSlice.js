@@ -1,4 +1,4 @@
-import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import {
     createData,
     deleteData,
@@ -78,63 +78,68 @@ export const deleteEntityData = createAsyncThunk("delete", async (value) => {
 });
 
 const crudSlice = createSlice({
-    name : "crud",
-    initialState : {
-        isLoading : true,
-        fetching : true,
-        showEntityData : [],
-        validation : false,
-        validationMessage : [],
-        entityNewData : [],
-        dropdownLoad : false,
-        searchKeyword : '',
-        indexEntityData : [],
-        entityEditData : [],
-        insertType : 'create',
-        entityDataDelete : null,
-        productFilterData : {name:'',alternative_name:'',sku:'',sales_price:''},
+    name: "crud",
+    initialState: {
+        isLoading: true,
+        fetching: true,
+        showEntityData: [],
+        validation: false,
+        validationMessage: [],
+        entityNewData: [],
+        dropdownLoad: false,
+        searchKeyword: '',
+        indexEntityData: [],
+        entityEditData: [],
+        insertType: 'create',
+        entityDataDelete: null,
+        productFilterData: { name: '', alternative_name: '', sku: '', sales_price: '' },
+        categoryFilterData: { name: '', parentName: '' }
 
     },
-    reducers : {
-        setFetching : (state,action) => {
+    reducers: {
+        setFetching: (state, action) => {
             state.fetching = action.payload
         },
-        setDropdownLoad : (state,action) => {
+        setDropdownLoad: (state, action) => {
             state.dropdownLoad = action.payload
         },
-        setFormLoading : (state,action) => {
+        setFormLoading: (state, action) => {
             state.formLoading = action.payload
         },
-        setEntityNewData : (state,action) => {
+        setEntityNewData: (state, action) => {
             state.entityNewData = action.payload
         },
-        setEditEntityData : (state,action)=>{
+        setEditEntityData: (state, action) => {
             state.entityEditData = action.payload
         },
-        setInsertType : (state,action)=>{
+        setInsertType: (state, action) => {
             state.insertType = action.payload
         },
-        setSearchKeyword : (state,action)=>{
+        setSearchKeyword: (state, action) => {
             state.searchKeyword = action.payload
         },
-        setDeleteMessage : (state,action)=>{
+        setDeleteMessage: (state, action) => {
             state.entityDataDelete = action.payload
         },
-        setValidationData : (state,action) => {
+        setValidationData: (state, action) => {
             state.validation = action.payload
         },
-        setValidationMessage : (state,action)=>{
+        setValidationMessage: (state, action) => {
             state.validationMessage = action.payload
         },
-        setProductFilterData : (state,action) => {
+        setProductFilterData: (state, action) => {
             state.productFilterData.name = action.payload.name
             state.productFilterData.alternative_name = action.payload.alternative_name
             state.productFilterData.sku = action.payload.sku
             state.productFilterData.sales_price = action.payload.sales_price
         },
+        setCategoryFilterData: (state, action) => {
+            state.categoryFilterData.name = action.payload.name
+            state.categoryFilterData.parentName = action.payload.parentName
+        }
     },
 
-    extraReducers : (builder) => {
+    extraReducers: (builder) => {
 
         builder.addCase(getIndexEntityData.fulfilled, (state, action) => {
             state.indexEntityData = action.payload
@@ -142,9 +147,9 @@ const crudSlice = createSlice({
         })
 
         builder.addCase(storeEntityData.fulfilled, (state, action) => {
-            if ('success' === action.payload.data.message){
+            if ('success' === action.payload.data.message) {
                 state.entityNewData = action.payload.data
-            }else{
+            } else {
                 state.validationMessage = action.payload.data.data
                 state.validation = true
             }
@@ -163,9 +168,9 @@ const crudSlice = createSlice({
         })
 
         builder.addCase(updateEntityData.fulfilled, (state, action) => {
-            if ('success' === action.payload.data.message){
+            if ('success' === action.payload.data.message) {
                 state.validationMessage = action.payload.data
-            }else{
+            } else {
                 state.validationMessage = action.payload.data.data
                 state.validation = true
             }
@@ -178,6 +183,6 @@ const crudSlice = createSlice({
     }
 })
 
-export const { setFetching,setEntityNewData,setDropdownLoad,setEditEntityData,setFormLoading,setInsertType,setSearchKeyword,setDeleteMessage,setValidationData,setValidationMessage,setProductFilterData} = crudSlice.actions
+export const { setFetching, setEntityNewData, setDropdownLoad, setEditEntityData, setFormLoading, setInsertType, setSearchKeyword, setDeleteMessage, setValidationData, setValidationMessage, setCategoryFilterData } = crudSlice.actions
 
 export default crudSlice.reducer;

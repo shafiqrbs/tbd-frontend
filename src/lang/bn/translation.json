@@ -137,7 +137,7 @@
   "CategoryNameValidateMessage": "ক্যাটাগরির নাম টি আবশ্যিক",
   "CategoryName": "ক্যাটাগরির নাম",
   "DeleteSuccessfully": "ডিলিট সফলভাবে সম্পন্ন হয়েছে",
-  "ParentName": "প্যারেন্টের নাম",
+  "ParentName": "প্যারেন্ট নাম",
   "ProductCategoryGroup": "পণ্যের ক্যাটাগরি গ্রুপ",
   "CategoryGroupAlreadyExists": "ক্যাটাগরি গ্রুপ টি ইতিমধ্যে যোগ করা হয়েছে",
   "CategoryGroupNameValidateMessage": "ক্যাটাগরি গ্রুপ নাম টি আবশ্যিক",

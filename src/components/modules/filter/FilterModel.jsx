@@ -1,18 +1,19 @@
 import React from "react";
 import {
-     Drawer, Button,
+    Drawer, Button,
 } from "@mantine/core";
-import {useTranslation} from 'react-i18next';
-import {setFetching} from "../../../store/core/crudSlice.js";
-import {useDispatch} from "react-redux";
+import { useTranslation } from 'react-i18next';
+import { setFetching } from "../../../store/core/crudSlice.js";
+import { useDispatch } from "react-redux";
 import CustomerFilterForm from "../core/customer/CustomerFilterForm.jsx";
 import VendorFilterForm from "../core/vendor/VendorFilterForm.jsx";
 import UserFilterForm from "../core/user/UserFilterForm.jsx";
 import ProductFilterForm from "../inventory/product/ProductFilterForm.jsx";
 import CategoryGroupFilterForm from "../inventory/category-group/CategoryGroupFilterForm.jsx";
+import CategoryFilterForm from "../inventory/category/CategoryFilterForm.jsx";
 
 function FilterModel(props) {
-    const {t, i18n} = useTranslation();
+    const { t, i18n } = useTranslation();
 
     const dispatch = useDispatch();
 
@@ -23,11 +24,12 @@ function FilterModel(props) {
     return (
 
         <Drawer opened={props.filterModel} position="right" onClose={closeModel} title={t('FilterData')}>
-            {props.module === 'customer' && <CustomerFilterForm module={props.module}/> }
-            {props.module === 'category-group' && <CategoryGroupFilterForm module={props.module}/> }
-            {props.module === 'vendor' && <VendorFilterForm module={props.module}/> }
-            {props.module === 'user' && <UserFilterForm module={props.module}/> }
-            {props.module === 'product' && <ProductFilterForm module={props.module}/> }
+            {props.module === 'customer' && <CustomerFilterForm module={props.module} />}
+            {props.module === 'category-group' && <CategoryGroupFilterForm module={props.module} />}
+            {props.module === 'vendor' && <VendorFilterForm module={props.module} />}
+            {props.module === 'user' && <UserFilterForm module={props.module} />}
+            {props.module === 'product' && <ProductFilterForm module={props.module} />}
+            {props.module === 'category' && <CategoryFilterForm module={props.module} />}
             <Button
                 id={'submit'}
                 mt={8}
