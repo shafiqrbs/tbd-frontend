@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useRef, useState} from "react";
 import { useOutletContext } from "react-router-dom";
 import {
     Button, rem, Center, Switch, ActionIcon,
-    Grid, Box, ScrollArea, Tooltip, Group, Text, List, ThemeIcon, Popover, Flex,
+    Grid, Box, ScrollArea, Tooltip, Group, Text, List, ThemeIcon, Popover, Flex, Modal, Table,
 } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
 import {
@@ -18,10 +18,10 @@ import {
     IconDeviceMobile,
     IconHelpCircle,
     IconCircleCheck, IconUserCircle, IconRefreshDot, IconDiscountOff, IconCurrency, IconPlusMinus, IconCheck,
-    IconUser,
+    IconUser, IconEdit,
 
 } from "@tabler/icons-react";
-import { useHotkeys, useToggle } from "@mantine/hooks";
+import {useDisclosure, useHotkeys, useToggle} from "@mantine/hooks";
 import { useDispatch, useSelector } from "react-redux";
 import { hasLength, isNotEmpty, useForm } from "@mantine/form";
 
@@ -39,6 +39,7 @@ import getUserDropdownData from "../../../global-hook/dropdown/getUserDropdownDa
 import InputForm from "../../../form-builders/InputForm";
 import { setFetching, storeEntityDataWithFile } from "../../../../store/accounting/crudSlice.js";
 import { notifications } from "@mantine/notifications";
+import {ReactToPrint} from "react-to-print";
 
 function SalesForm(props) {
 
@@ -156,10 +157,204 @@ function SalesForm(props) {
             {currencySymbol}
         </Text>
     );
+    const [opened, { open, close }] = useDisclosure(false);
+    const [salesViewData, setSalesViewData] = useState({})
+    /*const indexData = useSelector((state) => state.crudSlice.indexEntityData)
+
+    useEffect(() => {
+        setSalesViewData(indexData.data && indexData.data[0] && indexData.data[0])
+    }, [indexData.data])*/
+    const printRef = useRef()
+    const height = mainAreaHeight - 314; //TabList height 104
+    const rows = salesViewData && salesViewData.sales_items && salesViewData.sales_items.map((element, index) => (
+        <Table.Tr key={element.name}>
+            <Table.Td fz="xs" width={'20'}>{index + 1}</Table.Td>
+            <Table.Td ta="left" fz="xs" width={'300'}>{element.item_name}</Table.Td>
+            <Table.Td ta="center" fz="xs" width={'60'}>{element.quantity}</Table.Td>
+            <Table.Td ta="right" fz="xs" width={'80'}>{element.price}</Table.Td>
+            <Table.Td ta="right" fz="xs" width={'100'}>{element.sales_price}</Table.Td>
+            <Table.Td ta="right" fz="xs" width={'100'}>{element.sub_total}</Table.Td>
+        </Table.Tr>
+    ));
 
     return (
         <>
+            <Modal opened={opened} onClose={close} title="Authentication">
+                <Box>
+                    <Grid columns={8} gutter={{ base: 8 }}>
+                        <Grid.Col span={8} >
+                            <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} ref={printRef}>
+                                <Box h={'36'} pl={`xs`} fz={'sm'} fw={'600'} pr={8} pt={'6'} mb={'4'} className={'boxBackground textColor borderRadiusAll'} >
+                                    {t('Invoice')}: {salesViewData && salesViewData.invoice && salesViewData.invoice}
+                                </Box>
+                                <Box className={'borderRadiusAll'} fz={'sm'}  >
+                                    <Box pl={`xs`} fz={'sm'} fw={'600'} pr={'xs'} pt={'6'} pb={'xs'} className={'boxBackground textColor'} >
+                                        <Grid gutter={{ base: 4 }}>
+                                            <Grid.Col span={'6'}>
+                                                <Grid columns={15} gutter={{ base: 4 }}>
+                                                    <Grid.Col span={6} ><Text fz="sm" lh="xs">Customer</Text></Grid.Col>
+                                                    <Grid.Col span={9} >
+                                                        <Text fz="sm" lh="xs">
+                                                            {salesViewData && salesViewData.customer_id && salesViewData.customer_id}
+                                                        </Text>
+                                                    </Grid.Col>
+                                                </Grid>
+                                                <Grid columns={15} gutter={{ base: 4 }}>
+                                                    <Grid.Col span={6} ><Text fz="sm" lh="xs">Mobile</Text></Grid.Col>
+                                                    <Grid.Col span={9} >
+                                                        <Text fz="sm" lh="xs">
+                                                            {salesViewData && salesViewData.customerMobile && salesViewData.customerMobile}
+                                                        </Text>
+                                                    </Grid.Col>
+                                                </Grid>
+                                                <Grid columns={15} gutter={{ base: 4 }}>
+                                                    <Grid.Col span={6} ><Text fz="sm" lh="xs">Address</Text></Grid.Col>
+                                                    <Grid.Col span={9} >
+                                                        <Text fz="sm" lh="xs">
+                                                            {salesViewData && salesViewData.customer_address && salesViewData.customer_address}
+                                                        </Text>
+                                                    </Grid.Col>
+                                                </Grid>
+                                                <Grid columns={15} gutter={{ base: 4 }}>
+                                                    <Grid.Col span={6} ><Text fz="sm" lh="xs">Balance</Text></Grid.Col>
+                                                    <Grid.Col span={9} >
+                                                        <Text fz="sm" lh="xs">
+                                                            {salesViewData && salesViewData.balance ? Number(salesViewData.balance).toFixed(2) : 0.00}
+                                                        </Text>
+                                                    </Grid.Col>
+                                                </Grid>
+                                            </Grid.Col>
+                                            <Grid.Col span={'6'}>
+                                                <Grid columns={15} gutter={{ base: 4 }}>
+                                                    <Grid.Col span={6} ><Text fz="sm" lh="xs">Created</Text></Grid.Col>
+                                                    <Grid.Col span={9} >
+                                                        <Text fz="sm" lh="xs">
+                                                            {salesViewData && salesViewData.created && salesViewData.created}
+                                                        </Text>
+                                                    </Grid.Col>
+                                                </Grid>
+                                                <Grid columns={15} gutter={{ base: 4 }}>
+                                                    <Grid.Col span={6} ><Text fz="sm" lh="xs">Created By</Text></Grid.Col>
+                                                    <Grid.Col span={9} >
+                                                        <Text fz="sm" lh="xs">
+                                                            {salesViewData && salesViewData.createdByName && salesViewData.createdByName}
+                                                        </Text>
+                                                    </Grid.Col>
+                                                </Grid>
+                                                <Grid columns={15} gutter={{ base: 4 }}>
+                                                    <Grid.Col span={6} ><Text fz="sm" lh="xs">Sales By</Text></Grid.Col>
+                                                    <Grid.Col span={9} >
+                                                        <Text fz="sm" lh="xs">
+                                                            {salesViewData && salesViewData.salesByUser && salesViewData.salesByUser}
+                                                        </Text>
+                                                    </Grid.Col>
+                                                </Grid>
+                                                <Grid columns={15} gutter={{ base: 4 }}>
+                                                    <Grid.Col span={6} ><Text fz="sm" lh="xs">Mode</Text></Grid.Col>
+                                                    <Grid.Col span={9} >
+                                                        <Text fz="sm" lh="xs">
+                                                            {salesViewData && salesViewData.mode_name && salesViewData.mode_name}
+                                                        </Text>
+                                                    </Grid.Col>
+                                                </Grid>
+                                                <Grid columns={15} gutter={{ base: 4 }}>
+                                                    <Grid.Col span={6} ><Text fz="sm" lh="xs">Process</Text></Grid.Col>
+                                                    <Grid.Col span={9} >
+                                                        <Text fz="sm" lh="xs">
+                                                            {salesViewData && salesViewData.process && salesViewData.process}
+                                                        </Text>
+                                                    </Grid.Col>
+                                                </Grid>
+                                            </Grid.Col>
+                                        </Grid>
+                                    </Box>
+                                    <ScrollArea h={height} scrollbarSize={2} type="never" >
+                                        <Box>
+                                            <Table stickyHeader >
+                                                <Table.Thead>
+                                                    <Table.Tr>
+                                                        <Table.Th fz="xs" w={'20'}>{t('S/N')}</Table.Th>
+                                                        <Table.Th fz="xs" ta="left" w={'300'}>{t('Name')}</Table.Th>
+                                                        <Table.Th fz="xs" ta="center" w={'60'}>{t('QTY')}</Table.Th>
+                                                        <Table.Th ta="right" fz="xs" w={'80'}>{t('Price')}</Table.Th>
+                                                        <Table.Th ta="right" fz="xs" w={'100'}>{t('SalesPrice')}</Table.Th>
+                                                        <Table.Th ta="right" fz="xs" w={'100'}>{t('SubTotal')}</Table.Th>
+                                                    </Table.Tr>
+                                                </Table.Thead>
+                                                <Table.Tbody>{rows}</Table.Tbody>
+                                                <Table.Tfoot>
+                                                    <Table.Tr>
+                                                        <Table.Th colspan={'5'} ta="right" fz="xs" w={'100'}>{t('SubTotal')}</Table.Th>
+                                                        <Table.Th ta="right" fz="xs" w={'100'}>
+                                                            {salesViewData && salesViewData.sub_total && Number(salesViewData.sub_total).toFixed(2)}
+                                                        </Table.Th>
+                                                    </Table.Tr>
+                                                    <Table.Tr>
+                                                        <Table.Th colspan={'5'} ta="right" fz="xs" w={'100'}>{t('Discount')}</Table.Th>
+                                                        <Table.Th ta="right" fz="xs" w={'100'}>
+                                                            {salesViewData && salesViewData.discount && Number(salesViewData.discount).toFixed(2)}
+                                                        </Table.Th>
+                                                    </Table.Tr>
+                                                    <Table.Tr>
+                                                        <Table.Th colspan={'5'} ta="right" fz="xs" w={'100'}>{t('Total')}</Table.Th>
+                                                        <Table.Th ta="right" fz="xs" w={'100'}>
+                                                            {salesViewData && salesViewData.total && Number(salesViewData.total).toFixed(2)}
+                                                        </Table.Th>
+                                                    </Table.Tr>
+                                                    <Table.Tr>
+                                                        <Table.Th colspan={'5'} ta="right" fz="xs" w={'100'}>{t('Receive')}</Table.Th>
+                                                        <Table.Th ta="right" fz="xs" w={'100'}>
+                                                            {salesViewData && salesViewData.payment && Number(salesViewData.payment).toFixed(2)}
+                                                        </Table.Th>
+                                                    </Table.Tr>
+                                                </Table.Tfoot>
+                                            </Table>
+                                        </Box>
+                                    </ScrollArea>
+                                </Box>
+                            </Box>
+                            <Box>
+                                <Button.Group fullWidth>
+
+                                    <Button
+                                        fullWidth
+                                        variant="filled"
+                                        leftSection={<IconPrinter size={14} />}
+                                        color="green.5"
+                                    >
+                                        <ReactToPrint
+                                            trigger={() => {
+                                                return <a href="#">Print</a>;
+                                            }}
+                                            content={() => printRef.current}
+                                        />
+                                    </Button>
+                                    <Button
+                                        fullWidth
+                                        variant="filled"
+                                        leftSection={<IconReceipt size={14} />}
+                                        color="red.5"
+                                    >
+                                        Pos
+                                    </Button>
+                                    <Button
+                                        fullWidth
+                                        variant="filled"
+                                        leftSection={<IconEdit size={14} />}
+                                        color="cyan.5"
+                                    >
+                                        Edit
+                                    </Button>
+                                </Button.Group>
+                            </Box>
+                        </Grid.Col>
+                    </Grid>
+                </Box>
+            </Modal>
             <form onSubmit={form.onSubmit((values) => {
+                /*setSalesViewData(formValue);
+                open()
+                console.log(form.values)*/
                 const tempProducts = localStorage.getItem('temp-sales-products');
                 let items = tempProducts ? JSON.parse(tempProducts) : [];
                 let createdBy = JSON.parse(localStorage.getItem('user'));
@@ -195,8 +390,12 @@ function SalesForm(props) {
                 formValue['narration'] = form.values.narration;
                 formValue['items'] = transformedArray ? transformedArray : [];
 
+                console.log(formValue)
+                setSalesViewData(formValue);
+                open()
 
-                const data = {
+
+                /*const data = {
                     url: 'inventory/sales',
                     data: formValue
                 }
@@ -218,7 +417,7 @@ function SalesForm(props) {
                     setSalesByUser(null)
                     setOrderProcess(null)
                     props.setLoadCardProducts(true)
-                }, 700)
+                }, 700)*/
 
             })}>
                 <Box>
