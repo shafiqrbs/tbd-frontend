@@ -21,6 +21,7 @@ import { useTranslation } from "react-i18next";
 import axios from "axios";
 import { getIndexEntityData } from "../store/core/crudSlice.js";
 import { useDispatch, useSelector } from "react-redux";
+import storeDataIntoLocalStorage from "./global-hook/local-storage/storeDataIntoLocalStorage.js";
 
 export default function Login() {
 
@@ -72,26 +73,7 @@ export default function Login() {
                     if (res.data.status === 200) {
 
                         localStorage.setItem("user", JSON.stringify(res.data.data));
-
-                        axios({
-                            method: 'get',
-                            url: `${import.meta.env.VITE_API_GATEWAY_URL + 'inventory/stock-item'}`,
-                            headers: {
-                                "Accept": `application/json`,
-                                "Content-Type": `application/json`,
-                                "Access-Control-Allow-Origin": '*',
-                                "X-Api-Key": import.meta.env.VITE_API_KEY,
-                                "X-Api-User": res.data.data.id
-                            }
-                        })
-                            .then(res => {
-                                if (res.data.data) {
-                                    localStorage.setItem("user-products", JSON.stringify(res.data.data));
-                                }
-                            })
-                            .catch(function (error) {
-                                console.log(error)
-                            })
+                        const local = storeDataIntoLocalStorage(res.data.data.id)
 
                         setErrorMessage('')
                         setSpinner(false)
@@ -109,19 +91,9 @@ export default function Login() {
             })
     }
 
-    /*useEffect(() => {
-        console.log('ok')
-        /!*if (spinner) {
-            console.log(indexData)
-            setSpinner(false);
-        }*!/
-    }, [spinner]);*/
-
     useHotkeys([['alt+n', () => {
         document.getElementById('Username').focus()
     }]], []);
-    //  console.log(height)
-
 
     return (
         <div className={classes.wrapper}>
