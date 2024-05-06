@@ -80,7 +80,7 @@ function SalesForm(props) {
     const [customerData, setCustomerData] = useState(null);
     const [salesByUser, setSalesByUser] = useState(null);
     const [orderProcess, setOrderProcess] = useState(null);
-    //  console.log(getCustomerDropdownData);
+    //  console.log(storeDataIntoLocalStorage);
 
     const form = useForm({
         initialValues: {
