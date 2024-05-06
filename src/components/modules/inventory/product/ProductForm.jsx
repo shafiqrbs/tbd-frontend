@@ -214,24 +214,26 @@ function ProductForm() {
                                                 changeValue={setProductTypeData}
                                             />
                                         </Box>
-                                        <Box mt={'xs'}>
+                                        <Box >
                                             <Grid gutter={{ base: 6 }}>
                                                 <Grid.Col span={11}>
-                                                    <SelectForm
-                                                        tooltip={t('ChooseCategory')}
-                                                        label={t('Category')}
-                                                        placeholder={t('ChooseCategory')}
-                                                        required={true}
-                                                        name={'category_id'}
-                                                        form={form}
-                                                        dropdownValue={categoryDropdown}
-                                                        mt={8}
-                                                        id={'category_id'}
-                                                        nextField={'name'}
-                                                        searchable={true}
-                                                        value={categoryData}
-                                                        changeValue={setCategoryData}
-                                                    />
+                                                    <Box mt={'8'}>
+                                                        <SelectForm
+                                                            tooltip={t('ChooseCategory')}
+                                                            label={t('Category')}
+                                                            placeholder={t('ChooseCategory')}
+                                                            required={true}
+                                                            name={'category_id'}
+                                                            form={form}
+                                                            dropdownValue={categoryDropdown}
+                                                            mt={8}
+                                                            id={'category_id'}
+                                                            nextField={'name'}
+                                                            searchable={true}
+                                                            value={categoryData}
+                                                            changeValue={setCategoryData}
+                                                        />
+                                                    </Box>
 
                                                 </Grid.Col>
                                                 <Grid.Col span={1}>
