@@ -3,15 +3,15 @@ import {
     Tooltip,
     TextInput
 } from "@mantine/core";
-import {useTranslation} from "react-i18next";
-import {IconInfoCircle, IconX} from "@tabler/icons-react";
-import {getHotkeyHandler} from "@mantine/hooks";
+import { useTranslation } from "react-i18next";
+import { IconInfoCircle, IconX } from "@tabler/icons-react";
+import { getHotkeyHandler } from "@mantine/hooks";
 
 function InputForm(props) {
 
-    const {label, placeholder, required, nextField, name, form, tooltip, mt, id, disabled} = props
+    const { label, placeholder, required, nextField, name, form, tooltip, mt, id, disabled } = props
 
-    const {t, i18n} = useTranslation();
+    const { t, i18n } = useTranslation();
 
     return (
         <>
@@ -28,7 +28,7 @@ function InputForm(props) {
                     withArrow
                     offset={2}
                     zIndex={999}
-                    transitionProps={{transition: "pop-bottom-left", duration: 500}}
+                    transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
                 >
                     <TextInput
                         id={id}
@@ -41,12 +41,12 @@ function InputForm(props) {
                         {...form.getInputProps(name)}
                         onKeyDown={getHotkeyHandler([
                             ['Enter', (e) => {
-                                nextField === 'EntityFormSubmit'?
-                                document.getElementById(nextField).click() :
+                                nextField === 'EntityFormSubmit' ?
+                                    document.getElementById(nextField).click() :
                                     document.getElementById(nextField).focus()
                             }],
                         ])}
-                        leftSection={ props.leftSection ?  props.leftSection : '' }
+                        leftSection={props.leftSection ? props.leftSection : ''}
                         rightSection={
                             form.values[name] ?
                                 <Tooltip
@@ -57,7 +57,7 @@ function InputForm(props) {
                                 >
                                     <IconX color={`red`} size={16} opacity={0.5} onClick={() => {
                                         form.setFieldValue(name, '');
-                                    }}/>
+                                    }} />
                                 </Tooltip>
                                 :
                                 <Tooltip
@@ -68,9 +68,9 @@ function InputForm(props) {
                                     position={"left"}
                                     c={'black'}
                                     bg={`gray.1`}
-                                    transitionProps={{transition: "pop-bottom-left", duration: 500}}
+                                    transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
                                 >
-                                    { props.rightIcon ?  props.rightIcon : <IconInfoCircle size={16} opacity={0.5}/> }
+                                    {props.rightIcon ? props.rightIcon : <IconInfoCircle size={16} opacity={0.5} />}
                                 </Tooltip>
                         }
                         withAsterisk={required}
