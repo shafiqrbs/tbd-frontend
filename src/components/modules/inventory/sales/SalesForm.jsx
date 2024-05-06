@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import {
     Button, rem, Center, Switch, ActionIcon,
@@ -21,7 +21,7 @@ import {
     IconUser, IconEdit,
 
 } from "@tabler/icons-react";
-import {useDisclosure, useHotkeys, useToggle} from "@mantine/hooks";
+import { useDisclosure, useHotkeys, useToggle } from "@mantine/hooks";
 import { useDispatch, useSelector } from "react-redux";
 import { hasLength, isNotEmpty, useForm } from "@mantine/form";
 
@@ -39,7 +39,7 @@ import getUserDropdownData from "../../../global-hook/dropdown/getUserDropdownDa
 import InputForm from "../../../form-builders/InputForm";
 import { setFetching, storeEntityDataWithFile } from "../../../../store/accounting/crudSlice.js";
 import { notifications } from "@mantine/notifications";
-import {ReactToPrint} from "react-to-print";
+import { ReactToPrint } from "react-to-print";
 
 function SalesForm(props) {
 
@@ -165,10 +165,29 @@ function SalesForm(props) {
         setSalesViewData(indexData.data && indexData.data[0] && indexData.data[0])
     }, [indexData.data])*/
     const printRef = useRef()
+    const data = [
+        {
+            index: 0,
+            item_name: 'Ball Pen',
+            quantity: 10,
+            price: 10,
+            sales_price: 10,
+            sub_total: 100
+        },
+        {
+            index: 1,
+            item_name: 'Pencil',
+            quantity: 20,
+            price: 5,
+            sales_price: 5,
+            sub_total: 100
+        },
+
+    ]
     const height = mainAreaHeight - 314; //TabList height 104
     const rows = salesViewData && salesViewData.sales_items && salesViewData.sales_items.map((element, index) => (
         <Table.Tr key={element.name}>
-            <Table.Td fz="xs" width={'20'}>{index + 1}</Table.Td>
+            <Table.Td fz="xs" width={'20'}>{index + 1} 1</Table.Td>
             <Table.Td ta="left" fz="xs" width={'300'}>{element.item_name}</Table.Td>
             <Table.Td ta="center" fz="xs" width={'60'}>{element.quantity}</Table.Td>
             <Table.Td ta="right" fz="xs" width={'80'}>{element.price}</Table.Td>
@@ -176,7 +195,15 @@ function SalesForm(props) {
             <Table.Td ta="right" fz="xs" width={'100'}>{element.sub_total}</Table.Td>
         </Table.Tr>
     ));
-
+    const row2 = data.map((elements) => (
+        <Table.Tr key={elements.index}>
+            <Table.Td>{elements.item_name}</Table.Td>
+            <Table.Td>{elements.quantity}</Table.Td>
+            <Table.Td>{elements.price}</Table.Td>
+            <Table.Td>{elements.sales_price}</Table.Td>
+            <Table.Td>{elements.sub_total}</Table.Td>
+        </Table.Tr>
+    ));
     return (
         <>
             <Modal opened={opened} onClose={close} title="Authentication">
@@ -185,7 +212,7 @@ function SalesForm(props) {
                         <Grid.Col span={8} >
                             <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} ref={printRef}>
                                 <Box h={'36'} pl={`xs`} fz={'sm'} fw={'600'} pr={8} pt={'6'} mb={'4'} className={'boxBackground textColor borderRadiusAll'} >
-                                    {t('Invoice')}: {salesViewData && salesViewData.invoice && salesViewData.invoice}
+                                    {t('Invoice')}: {salesViewData && salesViewData.invoice && salesViewData.invoice} Test
                                 </Box>
                                 <Box className={'borderRadiusAll'} fz={'sm'}  >
                                     <Box pl={`xs`} fz={'sm'} fw={'600'} pr={'xs'} pt={'6'} pb={'xs'} className={'boxBackground textColor'} >
@@ -195,7 +222,7 @@ function SalesForm(props) {
                                                     <Grid.Col span={6} ><Text fz="sm" lh="xs">Customer</Text></Grid.Col>
                                                     <Grid.Col span={9} >
                                                         <Text fz="sm" lh="xs">
-                                                            {salesViewData && salesViewData.customer_id && salesViewData.customer_id}
+                                                            {salesViewData && salesViewData.customer_id && salesViewData.customer_id} Foysal Mahmud Hasan
                                                         </Text>
                                                     </Grid.Col>
                                                 </Grid>
@@ -203,7 +230,7 @@ function SalesForm(props) {
                                                     <Grid.Col span={6} ><Text fz="sm" lh="xs">Mobile</Text></Grid.Col>
                                                     <Grid.Col span={9} >
                                                         <Text fz="sm" lh="xs">
-                                                            {salesViewData && salesViewData.customerMobile && salesViewData.customerMobile}
+                                                            {salesViewData && salesViewData.customerMobile && salesViewData.customerMobile} 01521334751
                                                         </Text>
                                                     </Grid.Col>
                                                 </Grid>
@@ -211,7 +238,7 @@ function SalesForm(props) {
                                                     <Grid.Col span={6} ><Text fz="sm" lh="xs">Address</Text></Grid.Col>
                                                     <Grid.Col span={9} >
                                                         <Text fz="sm" lh="xs">
-                                                            {salesViewData && salesViewData.customer_address && salesViewData.customer_address}
+                                                            {salesViewData && salesViewData.customer_address && salesViewData.customer_address}Ibrahimpur, Kafrul, Dhaka
                                                         </Text>
                                                     </Grid.Col>
                                                 </Grid>
@@ -229,7 +256,7 @@ function SalesForm(props) {
                                                     <Grid.Col span={6} ><Text fz="sm" lh="xs">Created</Text></Grid.Col>
                                                     <Grid.Col span={9} >
                                                         <Text fz="sm" lh="xs">
-                                                            {salesViewData && salesViewData.created && salesViewData.created}
+                                                            {salesViewData && salesViewData.created && salesViewData.created} 05/05/2024
                                                         </Text>
                                                     </Grid.Col>
                                                 </Grid>
@@ -237,7 +264,7 @@ function SalesForm(props) {
                                                     <Grid.Col span={6} ><Text fz="sm" lh="xs">Created By</Text></Grid.Col>
                                                     <Grid.Col span={9} >
                                                         <Text fz="sm" lh="xs">
-                                                            {salesViewData && salesViewData.createdByName && salesViewData.createdByName}
+                                                            {salesViewData && salesViewData.createdByName && salesViewData.createdByName} Foysal Mahmud
                                                         </Text>
                                                     </Grid.Col>
                                                 </Grid>
@@ -245,7 +272,7 @@ function SalesForm(props) {
                                                     <Grid.Col span={6} ><Text fz="sm" lh="xs">Sales By</Text></Grid.Col>
                                                     <Grid.Col span={9} >
                                                         <Text fz="sm" lh="xs">
-                                                            {salesViewData && salesViewData.salesByUser && salesViewData.salesByUser}
+                                                            {salesViewData && salesViewData.salesByUser && salesViewData.salesByUser} Foysal Mahmud
                                                         </Text>
                                                     </Grid.Col>
                                                 </Grid>
@@ -253,7 +280,7 @@ function SalesForm(props) {
                                                     <Grid.Col span={6} ><Text fz="sm" lh="xs">Mode</Text></Grid.Col>
                                                     <Grid.Col span={9} >
                                                         <Text fz="sm" lh="xs">
-                                                            {salesViewData && salesViewData.mode_name && salesViewData.mode_name}
+                                                            {salesViewData && salesViewData.mode_name && salesViewData.mode_name} Bkash
                                                         </Text>
                                                     </Grid.Col>
                                                 </Grid>
@@ -261,7 +288,7 @@ function SalesForm(props) {
                                                     <Grid.Col span={6} ><Text fz="sm" lh="xs">Process</Text></Grid.Col>
                                                     <Grid.Col span={9} >
                                                         <Text fz="sm" lh="xs">
-                                                            {salesViewData && salesViewData.process && salesViewData.process}
+                                                            {salesViewData && salesViewData.process && salesViewData.process} Paid
                                                         </Text>
                                                     </Grid.Col>
                                                 </Grid>
@@ -817,6 +844,12 @@ function SalesForm(props) {
                     </Grid>
                 </Box>
             </form>
+            <Button
+                onClick={open}
+                fullWidth
+                variant="filled"
+                leftSection={<IconStackPush size={14} />}
+                color="orange.5">Test</Button>
         </>
 
     );

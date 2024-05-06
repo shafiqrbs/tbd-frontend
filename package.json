@@ -45,6 +45,7 @@
     "react-redux": "^8.0.5",
     "react-router-dom": "^6.22.0",
     "react-shortcut": "^2.0.9",
+    "react-thermal-printer": "^0.18.1",
     "react-to-print": "^2.15.1",
     "recharts": "^2.10.4",
     "redux-persist": "^6.0.0",
