@@ -1,20 +1,20 @@
-import React, {useEffect, useState} from "react";
-import {useOutletContext} from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useOutletContext } from "react-router-dom";
 import {
     Button,
     rem, Flex,
     Grid, Box, ScrollArea, Group, Text, Title, Alert, List, Stack, Tooltip, SimpleGrid, Image,
 } from "@mantine/core";
-import {useTranslation} from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import {
     IconCheck,
     IconDeviceFloppy, IconInfoCircle, IconPlus,
 } from "@tabler/icons-react";
-import {useDisclosure, useHotkeys} from "@mantine/hooks";
-import {useDispatch, useSelector} from "react-redux";
-import {hasLength, isNotEmpty, useForm} from "@mantine/form";
-import {modals} from "@mantine/modals";
-import {notifications} from "@mantine/notifications";
+import { useDisclosure, useHotkeys } from "@mantine/hooks";
+import { useDispatch, useSelector } from "react-redux";
+import { hasLength, isNotEmpty, useForm } from "@mantine/form";
+import { modals } from "@mantine/modals";
+import { notifications } from "@mantine/notifications";
 
 import {
     getExecutiveDropdown, getLocationDropdown,
@@ -33,19 +33,19 @@ import SelectForm from "../../../form-builders/SelectForm";
 import TextAreaForm from "../../../form-builders/TextAreaForm";
 import TransactionModeTable from "./TransactionModeTable.jsx";
 import InputNumberForm from "../../../form-builders/InputNumberForm";
-import {storeEntityDataWithFile} from "../../../../store/accounting/crudSlice.js";
+import { storeEntityDataWithFile } from "../../../../store/accounting/crudSlice.js";
 import getTransactionMethodDropdownData from "../../../global-hook/dropdown/getTransactionMethodDropdownData.js";
-import {Dropzone, IMAGE_MIME_TYPE} from "@mantine/dropzone";
+import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
 import getSettingAuthorizedTypeDropdownData
     from "../../../global-hook/dropdown/getSettingAuthorizedTypeDropdownData.js";
 import getSettingAccountTypeDropdownData from "../../../global-hook/dropdown/getSettingAccountTypeDropdownData.js";
 
 function TransactionModeUpdateFrom(props) {
-    const {t, i18n} = useTranslation();
+    const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
-    const {isOnline, mainAreaHeight} = useOutletContext();
+    const { isOnline, mainAreaHeight } = useOutletContext();
     const height = mainAreaHeight - 130; //TabList height 104
-    const [opened, {open, close}] = useDisclosure(false);
+    const [opened, { open, close }] = useDisclosure(false);
 
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
     const [customerGroupData, setCustomerGroupData] = useState(null);
@@ -91,13 +91,13 @@ function TransactionModeUpdateFrom(props) {
         },
         validate: {
             method_id: isNotEmpty(),
-            name: hasLength({min: 2, max: 20}),
-            short_name: hasLength({min: 2, max: 20}),
+            name: hasLength({ min: 2, max: 20 }),
+            short_name: hasLength({ min: 2, max: 20 }),
             authorised_mode_id: isNotEmpty(),
             account_mode_id: isNotEmpty(),
             path: isNotEmpty(),
             service_charge: (value, values) => {
-                if (value ) {
+                if (value) {
                     const isNumberOrFractional = /^-?\d+(\.\d+)?$/.test(value);
                     if (!isNumberOrFractional) {
                         return true;
@@ -116,14 +116,14 @@ function TransactionModeUpdateFrom(props) {
     useEffect(() => {
 
         form.setValues({
-            method_id: entityEditData.method_id?entityEditData.method_id:'',
-            name: entityEditData.name?entityEditData.name:'',
-            short_name: entityEditData.short_name?entityEditData.short_name:'',
-            authorised_mode_id: entityEditData.authorised_mode_id?entityEditData.authorised_mode_id:'',
-            account_mode_id: entityEditData.account_mode_id?entityEditData.account_mode_id:'',
-            service_charge: entityEditData.service_charge?entityEditData.service_charge:'',
-            account_owner: entityEditData.account_owner?entityEditData.account_owner:'',
-            path: entityEditData.path?entityEditData.path:'',
+            method_id: entityEditData.method_id ? entityEditData.method_id : '',
+            name: entityEditData.name ? entityEditData.name : '',
+            short_name: entityEditData.short_name ? entityEditData.short_name : '',
+            authorised_mode_id: entityEditData.authorised_mode_id ? entityEditData.authorised_mode_id : '',
+            account_mode_id: entityEditData.account_mode_id ? entityEditData.account_mode_id : '',
+            service_charge: entityEditData.service_charge ? entityEditData.service_charge : '',
+            account_owner: entityEditData.account_owner ? entityEditData.account_owner : '',
+            path: entityEditData.path ? entityEditData.path : '',
         })
 
         dispatch(setFormLoading(false))
@@ -151,7 +151,7 @@ function TransactionModeUpdateFrom(props) {
 
     return (
         <Box>
-            <Grid columns={9} gutter={{base: 8}}>
+            <Grid columns={9} gutter={{ base: 8 }}>
                 <Grid.Col span={8} >
                     <form onSubmit={form.onSubmit((values) => {
                         dispatch(setValidationData(false))
@@ -162,10 +162,10 @@ function TransactionModeUpdateFrom(props) {
                             children: (
                                 <Text size="sm"> {t("FormConfirmationMessage")}</Text>
                             ),
-                            labels: {confirm: 'Submit', cancel: 'Cancel'},confirmProps: { color: 'red.5' },
+                            labels: { confirm: 'Submit', cancel: 'Cancel' }, confirmProps: { color: 'red.5' },
                             onCancel: () => console.log('Cancel'),
                             onConfirm: () => {
-                                const formValue = {...form.values};
+                                const formValue = { ...form.values };
                                 formValue['path'] = files[0];
                                 //console.log(formValue)
                             },
@@ -180,7 +180,7 @@ function TransactionModeUpdateFrom(props) {
                                             <Title order={6} mt={'xs'} pl={'6'}>{t('UpdateTransactionMode')}</Title>
                                         </Grid.Col>
                                         <Grid.Col span={6}>
-                                            <Stack right  align="flex-end">
+                                            <Stack right align="flex-end">
                                                 <>
                                                     {
                                                         !saveCreateLoading && isOnline &&
@@ -190,7 +190,7 @@ function TransactionModeUpdateFrom(props) {
                                                             type="submit"
                                                             mt={4}
                                                             id="EntityFormSubmit"
-                                                            leftSection={<IconDeviceFloppy size={16}/>}
+                                                            leftSection={<IconDeviceFloppy size={16} />}
                                                         >
 
                                                             <Flex direction={`column`} gap={0}>
@@ -204,28 +204,28 @@ function TransactionModeUpdateFrom(props) {
                                         </Grid.Col>
                                     </Grid>
                                 </Box>
-                                <Box pl={`xs`} pr={'xs'} mt={'xs'}  className={'borderRadiusAll'}>
+                                <Box pl={`xs`} pr={'xs'} mt={'xs'} className={'borderRadiusAll'}>
                                     <Grid columns={24}>
                                         <Grid.Col span={'auto'} >
-                                            <ScrollArea h={height} scrollbarSize={2} type="never">
+                                            <ScrollArea h={height} scrollbarSize={2} scrollbars="y" type="never">
                                                 <Box>
                                                     <Box mt={'xs'}>
-                                                    <SelectForm
-                                                        tooltip={t('ChooseMethod')}
-                                                        label={t('Method')}
-                                                        placeholder={t('ChooseMethod')}
-                                                        required={true}
-                                                        nextField={'name'}
-                                                        name={'method_id'}
-                                                        form={form}
-                                                        dropdownValue={getTransactionMethodDropdownData()}
-                                                        mt={8}
-                                                        id={'method_id'}
-                                                        searchable={false}
-                                                        value={methodData ? String(methodData) : (entityEditData.method_id ? String(entityEditData.method_id) : null)}
-                                                        changeValue={setMethodData}
-                                                    />
-                                                </Box>
+                                                        <SelectForm
+                                                            tooltip={t('ChooseMethod')}
+                                                            label={t('Method')}
+                                                            placeholder={t('ChooseMethod')}
+                                                            required={true}
+                                                            nextField={'name'}
+                                                            name={'method_id'}
+                                                            form={form}
+                                                            dropdownValue={getTransactionMethodDropdownData()}
+                                                            mt={8}
+                                                            id={'method_id'}
+                                                            searchable={false}
+                                                            value={methodData ? String(methodData) : (entityEditData.method_id ? String(entityEditData.method_id) : null)}
+                                                            changeValue={setMethodData}
+                                                        />
+                                                    </Box>
                                                     <Box mt={'xs'}>
                                                         <InputForm
                                                             tooltip={t('TransactionModeNameValidateMessage')}
@@ -323,7 +323,7 @@ function TransactionModeUpdateFrom(props) {
                                                             withArrow
                                                             offset={2}
                                                             zIndex={999}
-                                                            transitionProps={{transition: "pop-bottom-left", duration: 500}}
+                                                            transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
                                                         >
                                                             <Dropzone
                                                                 label={t('ChooseImage')}
@@ -336,10 +336,10 @@ function TransactionModeUpdateFrom(props) {
                                                             >
                                                                 <Text ta="center">
                                                                     {
-                                                                        files && files.length >0 && files[0].path ?
+                                                                        files && files.length > 0 && files[0].path ?
                                                                             files[0].path
                                                                             :
-                                                                            <span>Drop images here <span style={{color: 'red'}}>*</span></span>
+                                                                            <span>Drop images here <span style={{ color: 'red' }}>*</span></span>
                                                                     }
                                                                 </Text>
                                                             </Dropzone>
@@ -347,7 +347,7 @@ function TransactionModeUpdateFrom(props) {
 
                                                         <SimpleGrid cols={{ base: 1, sm: 4 }} mt={previews.length > 0 ? 'xl' : 0}>
                                                             {previews}
-                                                            <Image src={'http://www.tbd.local/image/accounting/transaction-mode/'+entityEditData.path}/>
+                                                            <Image src={'http://www.tbd.local/image/accounting/transaction-mode/' + entityEditData.path} />
                                                         </SimpleGrid>
                                                     </Box>
                                                 </Box>

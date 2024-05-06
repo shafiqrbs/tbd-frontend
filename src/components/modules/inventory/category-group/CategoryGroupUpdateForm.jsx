@@ -152,7 +152,7 @@ function CategoryGroupUpdateForm() {
                                 </Grid>
                             </Box>
                             <Box pl={`xs`} pr={'xs'} mt={'xs'}  className={'borderRadiusAll'}>
-                                <ScrollArea h={height} scrollbarSize={2} type="never">
+                                <ScrollArea h={height} scrollbarSize={2} scrollbars="y" type="never">
                                     <Box>
                                         <LoadingOverlay visible={formLoading} zIndex={1000} overlayProps={{radius: "sm", blur: 2}}/>
                                         <Box mt={'xs'}>

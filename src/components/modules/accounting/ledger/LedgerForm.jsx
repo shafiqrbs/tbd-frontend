@@ -180,7 +180,7 @@ function LedgerForm(props) {
                                 <Box pl={`xs`} pr={'xs'} mt={'xs'}  className={'borderRadiusAll'}>
                                     <Grid columns={24}>
                                         <Grid.Col span={'auto'} >
-                                            <ScrollArea h={height} scrollbarSize={2} type="never">
+                                            <ScrollArea h={height} scrollbarSize={2} scrollbars="y" type="never">
                                                 <Box>
                                                     <Box mt={'xs'}>
                                                         <SelectForm

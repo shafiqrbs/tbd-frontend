@@ -124,7 +124,7 @@ function CategoryGroupForm() {
                                         </Grid>
                                     </Box>
                                     <Box pl={`xs`} pr={'xs'} mt={'xs'}  className={'borderRadiusAll'}>
-                                        <ScrollArea h={height} scrollbarSize={2} type="never">
+                                        <ScrollArea h={height} scrollbarSize={2} scrollbars="y" type="never">
                                             <Box mt={'xs'}>
                                                 <InputForm
                                                     tooltip={t('CategoryGroupNameValidateMessage')}

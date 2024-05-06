@@ -1,20 +1,20 @@
-import React, {useEffect, useState} from "react";
-import {useOutletContext} from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useOutletContext } from "react-router-dom";
 import {
     Button,
     rem, Flex,
     Grid, Box, ScrollArea, Group, Text, Title, Alert, List, Stack, SimpleGrid, Image, Tooltip
 } from "@mantine/core";
-import {useTranslation} from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import {
     IconCheck,
     IconDeviceFloppy, IconInfoCircle, IconPlus,
 } from "@tabler/icons-react";
-import {useDisclosure, useHotkeys} from "@mantine/hooks";
-import {useDispatch, useSelector} from "react-redux";
-import {hasLength, isNotEmpty, useForm} from "@mantine/form";
-import {modals} from "@mantine/modals";
-import {notifications} from "@mantine/notifications";
+import { useDisclosure, useHotkeys } from "@mantine/hooks";
+import { useDispatch, useSelector } from "react-redux";
+import { hasLength, isNotEmpty, useForm } from "@mantine/form";
+import { modals } from "@mantine/modals";
+import { notifications } from "@mantine/notifications";
 
 import {
     getExecutiveDropdown, getLocationDropdown,
@@ -34,18 +34,18 @@ import TransactionModeTable from "./TransactionModeTable.jsx";
 import InputNumberForm from "../../../form-builders/InputNumberForm";
 import SelectForm from "../../../form-builders/SelectForm.jsx";
 import getTransactionMethodDropdownData from "../../../global-hook/dropdown/getTransactionMethodDropdownData.js";
-import {Dropzone, IMAGE_MIME_TYPE} from "@mantine/dropzone";
+import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
 import getSettingProductDropdownData from "../../../global-hook/dropdown/getSettingProductDropdownData.js";
-import {getSettingDropdown} from "../../../../store/utility/utilitySlice.js";
+import { getSettingDropdown } from "../../../../store/utility/utilitySlice.js";
 import getSettingAccountTypeDropdownData from "../../../global-hook/dropdown/getSettingAccountTypeDropdownData.js";
 import getSettingAuthorizedTypeDropdownData from "../../../global-hook/dropdown/getSettingAuthorizedTypeDropdownData.js";
 
 function TransactionModeForm(props) {
-    const {t, i18n} = useTranslation();
+    const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
-    const {isOnline, mainAreaHeight} = useOutletContext();
+    const { isOnline, mainAreaHeight } = useOutletContext();
     const height = mainAreaHeight - 130; //TabList height 104
-    const [opened, {open, close}] = useDisclosure(false);
+    const [opened, { open, close }] = useDisclosure(false);
 
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
     const [authorisedData, setAuthorisedData] = useState(null);
@@ -77,17 +77,17 @@ function TransactionModeForm(props) {
 
     const form = useForm({
         initialValues: {
-            method_id: '',name:'',short_name:'',authorised_mode_id:'',account_mode_id:'',service_charge:'',account_owner:'',path:''
+            method_id: '', name: '', short_name: '', authorised_mode_id: '', account_mode_id: '', service_charge: '', account_owner: '', path: ''
         },
         validate: {
             method_id: isNotEmpty(),
-            name: hasLength({min: 2, max: 20}),
-            short_name: hasLength({min: 2, max: 20}),
+            name: hasLength({ min: 2, max: 20 }),
+            short_name: hasLength({ min: 2, max: 20 }),
             authorised_mode_id: isNotEmpty(),
             account_mode_id: isNotEmpty(),
             path: isNotEmpty(),
             service_charge: (value, values) => {
-                if (value ) {
+                if (value) {
                     const isNumberOrFractional = /^-?\d+(\.\d+)?$/.test(value);
                     if (!isNumberOrFractional) {
                         return true;
@@ -113,7 +113,7 @@ function TransactionModeForm(props) {
 
     return (
         <Box>
-            <Grid columns={9} gutter={{base: 8}}>
+            <Grid columns={9} gutter={{ base: 8 }}>
                 <Grid.Col span={8} >
                     <form onSubmit={form.onSubmit((values) => {
                         dispatch(setValidationData(false))
@@ -124,10 +124,10 @@ function TransactionModeForm(props) {
                             children: (
                                 <Text size="sm"> {t("FormConfirmationMessage")}</Text>
                             ),
-                            labels: {confirm: 'Confirm', cancel: 'Cancel'}, confirmProps: { color: 'red' },
+                            labels: { confirm: 'Confirm', cancel: 'Cancel' }, confirmProps: { color: 'red' },
                             onCancel: () => console.log('Cancel'),
                             onConfirm: () => {
-                                const formValue = {...form.values};
+                                const formValue = { ...form.values };
                                 formValue['path'] = files[0];
 
                                 const data = {
@@ -139,10 +139,10 @@ function TransactionModeForm(props) {
                                 notifications.show({
                                     color: 'teal',
                                     title: t('CreateSuccessfully'),
-                                    icon: <IconCheck style={{width: rem(18), height: rem(18)}}/>,
+                                    icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
                                     loading: false,
                                     autoClose: 700,
-                                    style: {backgroundColor: 'lightgray'},
+                                    style: { backgroundColor: 'lightgray' },
                                 });
 
                                 setTimeout(() => {
@@ -157,14 +157,14 @@ function TransactionModeForm(props) {
                         });
                     })}>
                         <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
-                        <Box bg={"white"} >
+                            <Box bg={"white"} >
                                 <Box pl={`xs`} pb={'xs'} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'} >
                                     <Grid>
                                         <Grid.Col span={6} h={54}>
                                             <Title order={6} mt={'xs'} pl={'6'}>{t('CreateNewTransactionMode')}</Title>
                                         </Grid.Col>
                                         <Grid.Col span={6}>
-                                            <Stack right  align="flex-end">
+                                            <Stack right align="flex-end">
                                                 <>
                                                     {
                                                         !saveCreateLoading && isOnline &&
@@ -174,7 +174,7 @@ function TransactionModeForm(props) {
                                                             type="submit"
                                                             mt={4}
                                                             id="EntityFormSubmit"
-                                                            leftSection={<IconDeviceFloppy size={16}/>}
+                                                            leftSection={<IconDeviceFloppy size={16} />}
                                                         >
 
                                                             <Flex direction={`column`} gap={0}>
@@ -188,10 +188,10 @@ function TransactionModeForm(props) {
                                         </Grid.Col>
                                     </Grid>
                                 </Box>
-                                <Box pl={`xs`} pr={'xs'} mt={'xs'}  className={'borderRadiusAll'}>
+                                <Box pl={`xs`} pr={'xs'} mt={'xs'} className={'borderRadiusAll'}>
                                     <Grid columns={24}>
                                         <Grid.Col span={'auto'} >
-                                            <ScrollArea h={height} scrollbarSize={2} type="never">
+                                            <ScrollArea h={height} scrollbarSize={2} scrollbars="y" type="never">
                                                 <Box>
                                                     <Box mt={'xs'}>
                                                         <SelectForm
@@ -307,26 +307,26 @@ function TransactionModeForm(props) {
                                                             withArrow
                                                             offset={2}
                                                             zIndex={999}
-                                                            transitionProps={{transition: "pop-bottom-left", duration: 500}}
+                                                            transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
                                                         >
-                                                        <Dropzone
-                                                            label={t('ChooseImage')}
-                                                            accept={IMAGE_MIME_TYPE}
-                                                            onDrop={(e) => {
-                                                                setFiles(e)
-                                                                form.setFieldError('path', false);
-                                                                form.setFieldValue('path', true)
-                                                            }}
-                                                        >
-                                                            <Text ta="center">
-                                                                {
-                                                                    files && files.length >0 && files[0].path ?
-                                                                        files[0].path
-                                                                        :
-                                                                        <span>Drop images here <span style={{color: 'red'}}>*</span></span>
-                                                                }
-                                                            </Text>
-                                                        </Dropzone>
+                                                            <Dropzone
+                                                                label={t('ChooseImage')}
+                                                                accept={IMAGE_MIME_TYPE}
+                                                                onDrop={(e) => {
+                                                                    setFiles(e)
+                                                                    form.setFieldError('path', false);
+                                                                    form.setFieldValue('path', true)
+                                                                }}
+                                                            >
+                                                                <Text ta="center">
+                                                                    {
+                                                                        files && files.length > 0 && files[0].path ?
+                                                                            files[0].path
+                                                                            :
+                                                                            <span>Drop images here <span style={{ color: 'red' }}>*</span></span>
+                                                                    }
+                                                                </Text>
+                                                            </Dropzone>
                                                         </Tooltip>
 
                                                         <SimpleGrid cols={{ base: 1, sm: 4 }} mt={previews.length > 0 ? 'xl' : 0}>
@@ -339,7 +339,7 @@ function TransactionModeForm(props) {
                                     </Grid>
                                 </Box>
 
-                        </Box>
+                            </Box>
                         </Box>
                     </form>
                 </Grid.Col>
