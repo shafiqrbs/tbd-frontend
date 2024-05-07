@@ -4,12 +4,16 @@ const storeDataIntoLocalStorage = async (user_id) => {
     const apiBackendRoutes = [
         'inventory/stock-item',
         'core/customer/local-storage',
-        'core/vendor/local-storage'
+        'core/vendor/local-storage',
+        'core/user/local-storage',
+        'accounting/transaction-mode/local-storage',
     ];
     const localStorageKeys = [
         'user-products',
         'core-customers',
-        'core-vendors'
+        'core-vendors',
+        'core-users',
+        'accounting-transaction-mode',
     ];
 
     for (let i = 0; i < apiBackendRoutes.length; i++) {

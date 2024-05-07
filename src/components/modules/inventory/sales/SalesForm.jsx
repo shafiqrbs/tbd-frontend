@@ -206,11 +206,11 @@ function SalesForm(props) {
     ));
     return (
         <>
-            <Modal opened={opened} onClose={close} title="Authentication">
-                <Box>
+            {/*<Modal opened={opened} onClose={close} title="Authentication">*/}
+                <Box style={{ display: "none" }}>
                     <Grid columns={8} gutter={{ base: 8 }}>
                         <Grid.Col span={8} >
-                            <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} ref={printRef}>
+                            <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} id={"printElement"} ref={printRef}>
                                 <Box h={'36'} pl={`xs`} fz={'sm'} fw={'600'} pr={8} pt={'6'} mb={'4'} className={'boxBackground textColor borderRadiusAll'} >
                                     {t('Invoice')}: {salesViewData && salesViewData.invoice && salesViewData.invoice} Test
                                 </Box>
@@ -361,6 +361,109 @@ function SalesForm(props) {
                                         variant="filled"
                                         leftSection={<IconReceipt size={14} />}
                                         color="red.5"
+                                        onClick={()=>{
+
+                                            /*const printWindow = window.open('', '_blank');
+                                            printWindow.document.write('<html><head><title>Print</title></head><body>');
+                                            printWindow.document.write(printRef.current.innerHTML);
+                                            printWindow.document.write('</body></html>');
+                                            printWindow.document.close(); // necessary for some browsers
+                                            printWindow.onload = function() {
+                                                printWindow.print();
+                                                printWindow.onafterprint = function() {
+                                                    printWindow.close();
+                                                }
+                                            }*/
+
+                                            /*let printContents = document.getElementById("printElement").innerHTML;
+
+                                            let newTab = window.open("", "_blank");
+
+                                            newTab.document.write('<html><head><title>Print</title></head><body>');
+                                            newTab.document.write(printContents);
+                                            newTab.document.write('</body></html>');
+                                            newTab.document.close();
+
+                                            newTab.onload=function(){
+                                                newTab.focus();
+                                                newTab.print();
+                                                newTab.onafterprint = function () {
+                                                    newTab.close();
+                                                }
+                                            }*/
+                                            /*let printContents = document.getElementById("printElement").innerHTML;
+                                            let newTab = window.open("", "_blank");
+
+                                            newTab.document.write(printContents);
+                                            newTab.document.close(); // for some browsers to render the content
+                                            newTab.window.onload = function() {
+                                                newTab.print();
+                                            };*/
+
+                                            /*let printContents = document.getElementById("printElement").innerHTML;
+                                            let originalContents = document.body.innerHTML;
+                                            document.body.innerHTML = printContents;
+                                            window.print();
+                                            document.body.innerHTML = originalContents;*/
+
+                                            /*let printContents = document.getElementById("printElement").innerHTML;
+                                            // let printContents = document.getElementById('printElement").innerHTML;
+                                            let newWin = window.open("", "_blank");
+                                            newWin.document.write('<html><head><title>Print</title></head><body>' + printContents + '</body></html>');
+                                            newWin.document.close();
+                                            newWin.onload=function(){
+                                                newWin.focus();
+                                                newWin.print();
+                                                newWin.onafterprint = function () {
+                                                    newWin.close();
+                                                }
+                                            }*/
+
+                                            /*// Open the content in a new tab
+                                            var printWindow = window.open('', '_blank');
+
+// Get the content from an element by its ID
+                                            var contentToPrint = document.getElementById("printElement").innerHTML;
+
+// Populate the new tab with content
+                                            printWindow.document.write("<html><head><title>Print Content</title></head><body>");
+                                            printWindow.document.write(contentToPrint);
+                                            printWindow.document.write("</body></html>");
+
+// Close the document writing
+                                            printWindow.document.close();
+
+// Wait for a moment before printing (optional)
+                                            setTimeout(function() {
+                                                // Print the content
+                                                printWindow.print();
+
+                                                // Close the new tab after printing is initiated
+                                                setTimeout(function() {
+                                                    printWindow.close();
+                                                }, 10); // Adjust the timeout value as needed
+                                            }, 100); // Adjust the timeout value as needed*/
+
+
+                                            /*var printWindow = window.open('', '_blank');
+                                            printWindow.document.write("<html><head><title>Print Content</title></head><body>");
+                                            printWindow.document.write("<h1>Your content goes here</h1>");
+                                            printWindow.document.write("</body></html>");
+                                            printWindow.document.close();
+
+                                            setTimeout(function() {
+                                                printWindow.print();
+                                                setTimeout(function() {
+                                                    printWindow.close();
+                                                }, 10);
+                                            }, 100);*/
+
+                                            /*window.print();
+                                            setTimeout(function () {
+                                                window.open('', '_blank', '');
+                                                window.close();
+                                            }, 2000);*/
+                                        }}
                                     >
                                         Pos
                                     </Button>
@@ -377,11 +480,8 @@ function SalesForm(props) {
                         </Grid.Col>
                     </Grid>
                 </Box>
-            </Modal>
+            {/*</Modal>*/}
             <form onSubmit={form.onSubmit((values) => {
-                /*setSalesViewData(formValue);
-                open()
-                console.log(form.values)*/
                 const tempProducts = localStorage.getItem('temp-sales-products');
                 let items = tempProducts ? JSON.parse(tempProducts) : [];
                 let createdBy = JSON.parse(localStorage.getItem('user'));
@@ -417,12 +517,8 @@ function SalesForm(props) {
                 formValue['narration'] = form.values.narration;
                 formValue['items'] = transformedArray ? transformedArray : [];
 
-                console.log(formValue)
-                setSalesViewData(formValue);
-                open()
 
-
-                /*const data = {
+                const data = {
                     url: 'inventory/sales',
                     data: formValue
                 }
@@ -438,13 +534,20 @@ function SalesForm(props) {
                 });
 
                 setTimeout(() => {
+
+                    /*let printContents = document.getElementById('printElement').innerHTML;
+                    let originalContents = document.body.innerHTML;
+                    document.body.innerHTML = printContents;
+                    window.print();
+                    document.body.innerHTML = originalContents;*/
+
                     localStorage.removeItem('temp-sales-products');
                     form.reset()
                     setCustomerData(null)
                     setSalesByUser(null)
                     setOrderProcess(null)
                     props.setLoadCardProducts(true)
-                }, 700)*/
+                }, 700)
 
             })}>
                 <Box>
@@ -844,12 +947,12 @@ function SalesForm(props) {
                     </Grid>
                 </Box>
             </form>
-            <Button
+            {/*<Button
                 onClick={open}
                 fullWidth
                 variant="filled"
                 leftSection={<IconStackPush size={14} />}
-                color="orange.5">Test</Button>
+                color="orange.5">Test</Button>*/}
         </>
 
     );
