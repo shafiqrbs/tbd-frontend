@@ -1,5 +1,5 @@
-import React, {useEffect, useRef, useState} from "react";
-import {useOutletContext} from "react-router-dom";
+import React, { useEffect, useRef, useState } from "react";
+import { useOutletContext } from "react-router-dom";
 import {
     Button,
     rem,
@@ -20,16 +20,16 @@ import {
     Container,
     CloseButton, TextInput, GridCol
 } from "@mantine/core";
-import {useTranslation} from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import {
     IconCheck,
     IconDeviceFloppy, IconInfoCircle, IconPlus, IconRestore, IconSearch,
 } from "@tabler/icons-react";
-import {useDisclosure, useHotkeys} from "@mantine/hooks";
-import {useDispatch, useSelector} from "react-redux";
-import {hasLength, isNotEmpty, useForm} from "@mantine/form";
-import {modals} from "@mantine/modals";
-import {notifications} from "@mantine/notifications";
+import { useDisclosure, useHotkeys } from "@mantine/hooks";
+import { useDispatch, useSelector } from "react-redux";
+import { hasLength, isNotEmpty, useForm } from "@mantine/form";
+import { modals } from "@mantine/modals";
+import { notifications } from "@mantine/notifications";
 
 import {
     getExecutiveDropdown, getLocationDropdown,
@@ -49,18 +49,18 @@ import VoucherTable from "./VoucherTable.jsx";
 import InputNumberForm from "../../../form-builders/InputNumberForm";
 import SelectForm from "../../../form-builders/SelectForm.jsx";
 import getTransactionMethodDropdownData from "../../../global-hook/dropdown/getTransactionMethodDropdownData.js";
-import {Dropzone, IMAGE_MIME_TYPE} from "@mantine/dropzone";
+import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
 import getSettingProductDropdownData from "../../../global-hook/dropdown/getSettingProductDropdownData.js";
-import {getSettingDropdown} from "../../../../store/utility/utilitySlice.js";
+import { getSettingDropdown } from "../../../../store/utility/utilitySlice.js";
 import getSettingAccountTypeDropdownData from "../../../global-hook/dropdown/getSettingAccountTypeDropdownData.js";
 import getSettingAuthorizedTypeDropdownData from "../../../global-hook/dropdown/getSettingAuthorizedTypeDropdownData.js";
 
 function VoucherForm(props) {
-    const {t, i18n} = useTranslation();
+    const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
-    const {isOnline, mainAreaHeight} = useOutletContext();
+    const { isOnline, mainAreaHeight } = useOutletContext();
     const height = mainAreaHeight - 130; //TabList height 104
-    const [opened, {open, close}] = useDisclosure(false);
+    const [opened, { open, close }] = useDisclosure(false);
 
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
     const [authorisedData, setAuthorisedData] = useState(null);
@@ -92,17 +92,17 @@ function VoucherForm(props) {
 
     const form = useForm({
         initialValues: {
-            method_id: '',name:'',short_name:'',authorised_mode_id:'',account_mode_id:'',service_charge:'',account_owner:'',path:''
+            method_id: '', name: '', short_name: '', authorised_mode_id: '', account_mode_id: '', service_charge: '', account_owner: '', path: ''
         },
         validate: {
             method_id: isNotEmpty(),
-            name: hasLength({min: 2, max: 20}),
-            short_name: hasLength({min: 2, max: 20}),
+            name: hasLength({ min: 2, max: 20 }),
+            short_name: hasLength({ min: 2, max: 20 }),
             authorised_mode_id: isNotEmpty(),
             account_mode_id: isNotEmpty(),
             path: isNotEmpty(),
             service_charge: (value, values) => {
-                if (value ) {
+                if (value) {
                     const isNumberOrFractional = /^-?\d+(\.\d+)?$/.test(value);
                     if (!isNumberOrFractional) {
                         return true;
@@ -290,303 +290,303 @@ function VoucherForm(props) {
 
     return (
         <Box>
-        <form onSubmit={form.onSubmit((values) => {
-            dispatch(setValidationData(false))
-            modals.openConfirmModal({
-                title: (
-                    <Text size="md"> {t("FormConfirmationTitle")}</Text>
-                ),
-                children: (
-                    <Text size="sm"> {t("FormConfirmationMessage")}</Text>
-                ),
-                labels: {confirm: 'Confirm', cancel: 'Cancel'}, confirmProps: { color: 'red' },
-                onCancel: () => console.log('Cancel'),
-                onConfirm: () => {
-                    const formValue = {...form.values};
-                    formValue['path'] = files[0];
+            <form onSubmit={form.onSubmit((values) => {
+                dispatch(setValidationData(false))
+                modals.openConfirmModal({
+                    title: (
+                        <Text size="md"> {t("FormConfirmationTitle")}</Text>
+                    ),
+                    children: (
+                        <Text size="sm"> {t("FormConfirmationMessage")}</Text>
+                    ),
+                    labels: { confirm: 'Confirm', cancel: 'Cancel' }, confirmProps: { color: 'red' },
+                    onCancel: () => console.log('Cancel'),
+                    onConfirm: () => {
+                        const formValue = { ...form.values };
+                        formValue['path'] = files[0];
 
-                    const data = {
-                        url: 'accounting/transaction-mode',
-                        data: formValue
-                    }
-                    dispatch(storeEntityDataWithFile(data))
+                        const data = {
+                            url: 'accounting/transaction-mode',
+                            data: formValue
+                        }
+                        dispatch(storeEntityDataWithFile(data))
 
-                    notifications.show({
-                        color: 'teal',
-                        title: t('CreateSuccessfully'),
-                        icon: <IconCheck style={{width: rem(18), height: rem(18)}}/>,
-                        loading: false,
-                        autoClose: 700,
-                        style: {backgroundColor: 'lightgray'},
-                    });
+                        notifications.show({
+                            color: 'teal',
+                            title: t('CreateSuccessfully'),
+                            icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
+                            loading: false,
+                            autoClose: 700,
+                            style: { backgroundColor: 'lightgray' },
+                        });
 
-                    setTimeout(() => {
-                        form.reset()
-                        setFiles([])
-                        setMethodData(null)
-                        setAccountTypeData(null)
-                        setAuthorisedData(null)
-                        dispatch(setFetching(true))
-                    }, 700)
-                },
-            });
-        })}>
-            <Grid columns={24} gutter={{ base: 8 }}>
-                <Grid.Col span={3} >
-                    <Box bg={'white'} className={'borderRadiusAll'} pt={'16'}>
-                        <Box pl={`xs`} pb={'xs'} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'} >
-                            <Grid>
-                                <Grid.Col span={12} h={54}>
-                                    <Title order={6} mt={'xs'} pl={'6'}>{t('NameOfVoucher')}</Title>
-                                </Grid.Col>
-                            </Grid>
-                        </Box>
-                        <Stack
-                            h={height}
-                            bg="var(--mantine-color-body)"
-                            align="center"
-                        >
-                            <Center>
-                                <Container fluid mb={'8'}>
-                                    <Tooltip
-                                        label={t('AltTextNew')}
-                                        px={16}
-                                        py={2}
-                                        withArrow
-                                        position={"left"}
-                                        c={'white'}
-                                        bg={`red.5`}
-                                        transitionProps={{transition: "pop-bottom-left", duration: 500}}
-                                    >
-
-                                        <Button
-                                            size="md"
-                                            pl={'12'}
-                                            pr={'12'}
-                                            variant={'light'}
-                                            color={`red.5`}
-                                            radius="xl"
-                                            onClick={(e) => {
-                                                props.inputType === 'select' ?
-                                                    document.getElementById(props.Name).click() :
-                                                    document.getElementById(props.Name).focus()
-                                            }}
-                                        >
-                                            <Flex direction={`column`} align={'center'}>
-                                                <IconPlus size={16}/>
-                                            </Flex>
-                                        </Button>
-                                    </Tooltip>
-                                    <Flex direction={`column`} align={'center'} fz={'12'} c={'gray.5'}>{t('CustomerVoucher')}</Flex>
-                                </Container>
-                            </Center>
-                            <Center>
-                                <Container fluid mb={'8'}>
-                                    <Tooltip
-                                        label={t('AltTextReset')}
-                                        px={16}
-                                        py={2}
-                                        withArrow
-                                        position={"left"}
-                                        c={'white'}
-                                        bg={`red.5`}
-                                        transitionProps={{transition: "pop-bottom-left", duration: 500}}
-                                    >
-                                        <Button
-                                            size="md"
-                                            pl={'12'}
-                                            pr={'12'}
-                                            variant={'light'}
-                                            color={`red`}
-                                            radius="xl"
-                                            onClick={(e) => {
-                                                props.form.reset()
-                                            }}
-                                        >
-                                            <Flex direction={`column`} align={'center'}>
-                                                <IconRestore size={16}/>
-                                            </Flex>
-                                        </Button>
-                                    </Tooltip>
-                                    <Flex direction={`column`} align={'center'} fz={'12'} c={'gray.5'}>{t('VendorVoucher')}</Flex>
-                                </Container>
-                            </Center>
-                            <Center>
-                                <Container fluid mb={'8'}>
-                                    <Tooltip
-                                        label={t('AltTextSave')}
-                                        px={16}
-                                        py={2}
-                                        withArrow
-                                        position={"left"}
-                                        c={'white'}
-                                        bg={`red.5`}
-                                        transitionProps={{transition: "pop-bottom-left", duration: 500}}
-                                    >
-                                        <Button
-                                            size="md"
-                                            pl={'12'}
-                                            pr={'12'}
-                                            variant={'filled'}
-                                            color={`red`}
-                                            radius="xl"
-                                            onClick={(e) => {
-                                                document.getElementById(props.FormSubmit).click()
-                                            }}
-                                        >
-                                            <Flex direction={`column`} align={'center'}>
-                                                <IconDeviceFloppy size={16}/>
-                                            </Flex>
-                                        </Button>
-                                    </Tooltip>
-                                    <Flex direction={`column`} align={'center'} fz={'12'} c={'gray.5'}>{t('ContraVoucher')}</Flex>
-                                </Container>
-                            </Center>
-                            <Center>
-                                <Container fluid mb={'8'}>
-                                    <Tooltip
-                                        label={t('AltTextSave')}
-                                        px={16}
-                                        py={2}
-                                        withArrow
-                                        position={"left"}
-                                        c={'white'}
-                                        bg={`red.5`}
-                                        transitionProps={{transition: "pop-bottom-left", duration: 500}}
-                                    >
-                                        <Button
-                                            size="md"
-                                            pl={'12'}
-                                            pr={'12'}
-                                            variant={'filled'}
-                                            color={`red`}
-                                            radius="xl"
-                                            onClick={(e) => {
-                                                document.getElementById(props.FormSubmit).click()
-                                            }}
-                                        >
-                                            <Flex direction={`column`} align={'center'}>
-                                                <IconDeviceFloppy size={16}/>
-                                            </Flex>
-                                        </Button>
-                                    </Tooltip>
-                                    <Flex direction={`column`} align={'center'} fz={'12'} c={'gray.5'}>{t('DebitNote')}</Flex>
-                                </Container>
-                            </Center>
-                            <Center>
-                                <Container fluid mb={'8'}>
-                                    <Tooltip
-                                        label={t('AltTextSave')}
-                                        px={16}
-                                        py={2}
-                                        withArrow
-                                        position={"left"}
-                                        c={'white'}
-                                        bg={`red.5`}
-                                        transitionProps={{transition: "pop-bottom-left", duration: 500}}
-                                    >
-                                        <Button
-                                            size="md"
-                                            pl={'12'}
-                                            pr={'12'}
-                                            variant={'filled'}
-                                            color={`red`}
-                                            radius="xl"
-                                            onClick={(e) => {
-                                                document.getElementById(props.FormSubmit).click()
-                                            }}
-                                        >
-                                            <Flex direction={`column`} align={'center'}>
-                                                <IconDeviceFloppy size={16}/>
-                                            </Flex>
-                                        </Button>
-                                    </Tooltip>
-                                    <Flex direction={`column`} align={'center'} fz={'12'} c={'gray.5'}>{t('CreditNote')}</Flex>
-                                </Container>
-                            </Center>
-
-                        </Stack>
-                    </Box>
-                </Grid.Col>
-                <Grid.Col span={6} >
-                    <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
-                        <Box pl={`xs`} pb={'xs'} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'} >
-                            <Grid>
-                                <Grid.Col span={12} h={54}>
-                                    <Box>
-                                        <TextInput
-                                            ref={ref}
-                                            data-autofocus
-                                            mb={4}
-                                            leftSection={< IconSearch size={16} c={'red'} />}
-                                            placeholder={t('SearchMenu')}
-                                            value={value}
-                                            rightSectionPointerEvents="all"
-                                            onChange={(event) => {
-                                                setValue(event.target.value);
-                                                filterList(event);
-                                            }}
-                                            rightSection={
-                                                <CloseButton
-                                                    icon={<IconRestore style={{ width: rem(20) }} stroke={2.0} />}
-                                                    aria-label="Clear input"
-                                                    onClick={() => {
-                                                        setValue('');
-                                                        filterList({ target: { value: '' } });
-                                                        ref.current.focus();
-                                                    }}
-                                                    style={{ display: value ? undefined : 'none' }}
-                                                />
-
-                                            }
-                                        />
-                                    </Box>
-                                </Grid.Col>
-                            </Grid>
-                        </Box>
-                        <ScrollArea h={height} className={'borderRadiusAll'} type="never" >
-                            <Box p={'xs'}>
-                                {filteredItems.reduce((groups, item, index) => {
-                                    if (!index || item.group !== filteredItems[index - 1].group) {
-                                        groups.push({ group: item.group, items: [item] });
-                                    } else {
-                                        groups[groups.length - 1].items.push(item);
-                                    }
-                                    return groups;
-                                }, []).map((groupData, groupIndex) => (
-                                    <React.Fragment key={groupIndex}>
-                                        <Text size="md" fw="bold" c="#828282" mt={groupIndex ? 'md' : undefined}>
-                                            {groupData.group}
-                                        </Text>
-                                        <Grid columns={12} grow gutter={'xs'}>
-                                            {groupData.items.map((action, itemIndex) => (
-                                                <GridCol key={itemIndex} span={12} >
-                                                    <Stack
-                                                        bg={'grey.2'}
-                                                        ml={'sm'}
-                                                        style={{ cursor: 'pointer' }}
-                                                        gap={'0'}
-                                                        onClick={() => action.onClick()}
-                                                    >
-                                                        <Stack direction="column" mt={'xs'} gap={'0'}>
-                                                            <Title order={6} mt={'2px'}>
-                                                                {action.label}
-                                                            </Title>
-                                                            <Text size="sm" c={'#828282'}>
-                                                                {action.description}
-                                                            </Text>
-                                                        </Stack>
-                                                    </Stack>
-                                                </GridCol>
-                                            ))}
-                                        </Grid>
-                                    </React.Fragment>
-                                ))}
+                        setTimeout(() => {
+                            form.reset()
+                            setFiles([])
+                            setMethodData(null)
+                            setAccountTypeData(null)
+                            setAuthorisedData(null)
+                            dispatch(setFetching(true))
+                        }, 700)
+                    },
+                });
+            })}>
+                <Grid columns={24} gutter={{ base: 8 }}>
+                    <Grid.Col span={3} >
+                        <Box bg={'white'} className={'borderRadiusAll'} pt={'16'}>
+                            <Box pl={`xs`} pb={'xs'} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'} >
+                                <Grid>
+                                    <Grid.Col span={12} h={54}>
+                                        <Title order={6} mt={'xs'} pl={'6'}>{t('NameOfVoucher')}</Title>
+                                    </Grid.Col>
+                                </Grid>
                             </Box>
-                        </ScrollArea >
-                    </Box>
-                </Grid.Col>
-                <Grid.Col span={14} >
+                            <Stack
+                                h={height}
+                                bg="var(--mantine-color-body)"
+                                align="center"
+                            >
+                                <Center>
+                                    <Container fluid mb={'8'}>
+                                        <Tooltip
+                                            label={t('AltTextNew')}
+                                            px={16}
+                                            py={2}
+                                            withArrow
+                                            position={"left"}
+                                            c={'white'}
+                                            bg={`red.5`}
+                                            transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
+                                        >
+
+                                            <Button
+                                                size="md"
+                                                pl={'12'}
+                                                pr={'12'}
+                                                variant={'light'}
+                                                color={`red.5`}
+                                                radius="xl"
+                                                onClick={(e) => {
+                                                    props.inputType === 'select' ?
+                                                        document.getElementById(props.Name).click() :
+                                                        document.getElementById(props.Name).focus()
+                                                }}
+                                            >
+                                                <Flex direction={`column`} align={'center'}>
+                                                    <IconPlus size={16} />
+                                                </Flex>
+                                            </Button>
+                                        </Tooltip>
+                                        <Flex direction={`column`} align={'center'} fz={'12'} c={'gray.5'}>{t('CustomerVoucher')}</Flex>
+                                    </Container>
+                                </Center>
+                                <Center>
+                                    <Container fluid mb={'8'}>
+                                        <Tooltip
+                                            label={t('AltTextReset')}
+                                            px={16}
+                                            py={2}
+                                            withArrow
+                                            position={"left"}
+                                            c={'white'}
+                                            bg={`red.5`}
+                                            transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
+                                        >
+                                            <Button
+                                                size="md"
+                                                pl={'12'}
+                                                pr={'12'}
+                                                variant={'light'}
+                                                color={`red`}
+                                                radius="xl"
+                                                onClick={(e) => {
+                                                    props.form.reset()
+                                                }}
+                                            >
+                                                <Flex direction={`column`} align={'center'}>
+                                                    <IconRestore size={16} />
+                                                </Flex>
+                                            </Button>
+                                        </Tooltip>
+                                        <Flex direction={`column`} align={'center'} fz={'12'} c={'gray.5'}>{t('VendorVoucher')}</Flex>
+                                    </Container>
+                                </Center>
+                                <Center>
+                                    <Container fluid mb={'8'}>
+                                        <Tooltip
+                                            label={t('AltTextSave')}
+                                            px={16}
+                                            py={2}
+                                            withArrow
+                                            position={"left"}
+                                            c={'white'}
+                                            bg={`red.5`}
+                                            transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
+                                        >
+                                            <Button
+                                                size="md"
+                                                pl={'12'}
+                                                pr={'12'}
+                                                variant={'filled'}
+                                                color={`red`}
+                                                radius="xl"
+                                                onClick={(e) => {
+                                                    document.getElementById(props.FormSubmit).click()
+                                                }}
+                                            >
+                                                <Flex direction={`column`} align={'center'}>
+                                                    <IconDeviceFloppy size={16} />
+                                                </Flex>
+                                            </Button>
+                                        </Tooltip>
+                                        <Flex direction={`column`} align={'center'} fz={'12'} c={'gray.5'}>{t('ContraVoucher')}</Flex>
+                                    </Container>
+                                </Center>
+                                <Center>
+                                    <Container fluid mb={'8'}>
+                                        <Tooltip
+                                            label={t('AltTextSave')}
+                                            px={16}
+                                            py={2}
+                                            withArrow
+                                            position={"left"}
+                                            c={'white'}
+                                            bg={`red.5`}
+                                            transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
+                                        >
+                                            <Button
+                                                size="md"
+                                                pl={'12'}
+                                                pr={'12'}
+                                                variant={'filled'}
+                                                color={`red`}
+                                                radius="xl"
+                                                onClick={(e) => {
+                                                    document.getElementById(props.FormSubmit).click()
+                                                }}
+                                            >
+                                                <Flex direction={`column`} align={'center'}>
+                                                    <IconDeviceFloppy size={16} />
+                                                </Flex>
+                                            </Button>
+                                        </Tooltip>
+                                        <Flex direction={`column`} align={'center'} fz={'12'} c={'gray.5'}>{t('DebitNote')}</Flex>
+                                    </Container>
+                                </Center>
+                                <Center>
+                                    <Container fluid mb={'8'}>
+                                        <Tooltip
+                                            label={t('AltTextSave')}
+                                            px={16}
+                                            py={2}
+                                            withArrow
+                                            position={"left"}
+                                            c={'white'}
+                                            bg={`red.5`}
+                                            transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
+                                        >
+                                            <Button
+                                                size="md"
+                                                pl={'12'}
+                                                pr={'12'}
+                                                variant={'filled'}
+                                                color={`red`}
+                                                radius="xl"
+                                                onClick={(e) => {
+                                                    document.getElementById(props.FormSubmit).click()
+                                                }}
+                                            >
+                                                <Flex direction={`column`} align={'center'}>
+                                                    <IconDeviceFloppy size={16} />
+                                                </Flex>
+                                            </Button>
+                                        </Tooltip>
+                                        <Flex direction={`column`} align={'center'} fz={'12'} c={'gray.5'}>{t('CreditNote')}</Flex>
+                                    </Container>
+                                </Center>
+
+                            </Stack>
+                        </Box>
+                    </Grid.Col>
+                    <Grid.Col span={6} >
+                        <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
+                            <Box pl={`xs`} pb={'xs'} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'} >
+                                <Grid>
+                                    <Grid.Col span={12} h={54}>
+                                        <Box>
+                                            <TextInput
+                                                ref={ref}
+                                                data-autofocus
+                                                mb={4}
+                                                leftSection={< IconSearch size={16} c={'red'} />}
+                                                placeholder={t('SearchMenu')}
+                                                value={value}
+                                                rightSectionPointerEvents="all"
+                                                onChange={(event) => {
+                                                    setValue(event.target.value);
+                                                    filterList(event);
+                                                }}
+                                                rightSection={
+                                                    <CloseButton
+                                                        icon={<IconRestore style={{ width: rem(20) }} stroke={2.0} />}
+                                                        aria-label="Clear input"
+                                                        onClick={() => {
+                                                            setValue('');
+                                                            filterList({ target: { value: '' } });
+                                                            ref.current.focus();
+                                                        }}
+                                                        style={{ display: value ? undefined : 'none' }}
+                                                    />
+
+                                                }
+                                            />
+                                        </Box>
+                                    </Grid.Col>
+                                </Grid>
+                            </Box>
+                            <ScrollArea h={height} className={'borderRadiusAll'} type="never" >
+                                <Box p={'xs'}>
+                                    {filteredItems.reduce((groups, item, index) => {
+                                        if (!index || item.group !== filteredItems[index - 1].group) {
+                                            groups.push({ group: item.group, items: [item] });
+                                        } else {
+                                            groups[groups.length - 1].items.push(item);
+                                        }
+                                        return groups;
+                                    }, []).map((groupData, groupIndex) => (
+                                        <React.Fragment key={groupIndex}>
+                                            <Text size="md" fw="bold" c="#828282" mt={groupIndex ? 'md' : undefined}>
+                                                {groupData.group}
+                                            </Text>
+                                            <Grid columns={12} grow gutter={'xs'}>
+                                                {groupData.items.map((action, itemIndex) => (
+                                                    <GridCol key={itemIndex} span={12} >
+                                                        <Stack
+                                                            bg={'grey.2'}
+                                                            ml={'sm'}
+                                                            style={{ cursor: 'pointer' }}
+                                                            gap={'0'}
+                                                            onClick={() => action.onClick()}
+                                                        >
+                                                            <Stack direction="column" mt={'xs'} gap={'0'}>
+                                                                <Title order={6} mt={'2px'}>
+                                                                    {action.label}
+                                                                </Title>
+                                                                <Text size="sm" c={'#828282'}>
+                                                                    {action.description}
+                                                                </Text>
+                                                            </Stack>
+                                                        </Stack>
+                                                    </GridCol>
+                                                ))}
+                                            </Grid>
+                                        </React.Fragment>
+                                    ))}
+                                </Box>
+                            </ScrollArea >
+                        </Box>
+                    </Grid.Col>
+                    <Grid.Col span={14} >
                         <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
                             <Box bg={"white"} >
                                 <Box pl={`xs`} pb={'xs'} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'} >
@@ -595,7 +595,7 @@ function VoucherForm(props) {
                                             <Title order={6} mt={'xs'} pl={'6'}>{t('CreateNewVoucher')}</Title>
                                         </Grid.Col>
                                         <Grid.Col span={6}>
-                                            <Stack right  align="flex-end">
+                                            <Stack right align="flex-end">
                                                 <>
                                                     {
                                                         !saveCreateLoading && isOnline &&
@@ -605,7 +605,7 @@ function VoucherForm(props) {
                                                             type="submit"
                                                             mt={4}
                                                             id="EntityFormSubmit"
-                                                            leftSection={<IconDeviceFloppy size={16}/>}
+                                                            leftSection={<IconDeviceFloppy size={16} />}
                                                         >
 
                                                             <Flex direction={`column`} gap={0}>
@@ -619,7 +619,7 @@ function VoucherForm(props) {
                                         </Grid.Col>
                                     </Grid>
                                 </Box>
-                                <Box pl={`xs`} pr={'xs'} mt={'xs'}  className={'borderRadiusAll'}>
+                                <Box pl={`xs`} pr={'xs'} mt={'xs'} className={'borderRadiusAll'}>
                                     <Grid columns={24}>
                                         <Grid.Col span={'auto'} >
                                             <ScrollArea h={height} scrollbarSize={2} scrollbars="y" type="never">
@@ -738,7 +738,7 @@ function VoucherForm(props) {
                                                             withArrow
                                                             offset={2}
                                                             zIndex={999}
-                                                            transitionProps={{transition: "pop-bottom-left", duration: 500}}
+                                                            transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
                                                         >
                                                             <Dropzone
                                                                 label={t('ChooseImage')}
@@ -751,10 +751,10 @@ function VoucherForm(props) {
                                                             >
                                                                 <Text ta="center">
                                                                     {
-                                                                        files && files.length >0 && files[0].path ?
+                                                                        files && files.length > 0 && files[0].path ?
                                                                             files[0].path
                                                                             :
-                                                                            <span>Drop images here <span style={{color: 'red'}}>*</span></span>
+                                                                            <span>Drop images here <span style={{ color: 'red' }}>*</span></span>
                                                                     }
                                                                 </Text>
                                                             </Dropzone>
@@ -773,19 +773,19 @@ function VoucherForm(props) {
                             </Box>
                         </Box>
 
-                </Grid.Col>
-                <Grid.Col span={1} >
-                    <Box bg={'white'} className={'borderRadiusAll'} pt={'16'}>
-                        <Shortcut
-                            form={form}
-                            FormSubmit={'EntityFormSubmit'}
-                            Name={'method_id'}
-                            inputType="select"
-                        />
-                    </Box>
-                </Grid.Col>
-            </Grid>
-        </form>
+                    </Grid.Col>
+                    <Grid.Col span={1} >
+                        <Box bg={'white'} className={'borderRadiusAll'} pt={'16'}>
+                            <Shortcut
+                                form={form}
+                                FormSubmit={'EntityFormSubmit'}
+                                Name={'method_id'}
+                                inputType="select"
+                            />
+                        </Box>
+                    </Grid.Col>
+                </Grid>
+            </form>
         </Box>
     );
 }

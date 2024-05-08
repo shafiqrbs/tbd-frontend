@@ -105,7 +105,7 @@ function SearchModal({ onClose }) {
                     },
                     {
                         id: 'sales-invoice',
-                        label: t('ManageInvoice'),
+                        label: t('NewSales'),
                         description: t('WhereWePresentTheSalesInvoiceInformation'),
                         onClick: () => {
                             navigate('/inventory/sales-invoice');
@@ -123,7 +123,7 @@ function SearchModal({ onClose }) {
                     },
                     {
                         id: 'manage-purchase',
-                        label: t('ManagePurchase'),
+                        label: t('NewPurchase'),
                         description: t('WhereWePresentThePurchaseInvoiceInformation'),
                         onClick: () => {
                             navigate('/inventory/purchase-invoice');

@@ -222,7 +222,7 @@ function CustomerForm() {
                                             <Box mt={'xs'}>
                                                 <Grid gutter={{ base: 6 }}>
                                                     <Grid.Col span={11} >
-                                                        <Box>
+                                                        <Box mt={'8'}>
                                                             <SelectForm
                                                                 tooltip={t('CustomerGroup')}
                                                                 label={t('CustomerGroup')}
@@ -243,11 +243,13 @@ function CustomerForm() {
                                                     <Grid.Col span={1}>
                                                         <Box pt={'xl'}>
                                                             <Tooltip
+                                                                ta="center"
                                                                 multiline
-                                                                w={420}
+                                                                w={280}
+                                                                offset={{ crossAxis: '-100', mainAxis: '5' }}
                                                                 withArrow
                                                                 transitionProps={{ duration: 200 }}
-                                                                label={t('QuickCategoryGroup')}
+                                                                label={t('QuickCustomerGroup')}
                                                             >
                                                                 <ActionIcon fullWidth variant="outline" bg={'white'} size={'lg'} color="red.5" mt={'1'} aria-label="Settings" onClick={open}>
                                                                     <IconUsersGroup style={{ width: '100%', height: '70%' }} stroke={1.5} />

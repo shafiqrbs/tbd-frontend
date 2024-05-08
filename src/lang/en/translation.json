@@ -262,7 +262,7 @@
   "ProductCategory": "Product Category",
   "Products": "Products",
   "WelcomeBackToPOSH": "Welcome back to POSH!",
-  "CreateCategoryGroup": "Create Category Group",
+  "CreateCategoryGroup": "Would you like to Create Category Group",
   "ParentName": "Parent Name",
   "ProductCategoryGroup": "Product Category Group",
   "UpdateCategoryGroup": "Update Category Group",
@@ -315,7 +315,7 @@
   "ManageDomain": "Manage Domain",
   "Domains": "Domains",
   "LicenseNo": "License No",
-  "QuickCategory": "Quick Category",
+  "QuickCategory": "Would you like to add a new Category?",
   "VatEnabled": "VAT Enable",
   "AtiEnabled": "ATI Enable",
   "ManageAccountLedger": "Manage Account Ledger",
@@ -341,5 +341,10 @@
   "HeadSubGroup": "Head Sub Group",
   "ManageAccountHeadSubGroup": "Manage Account Head Sub-Group",
   "CreateNewAccountSubGroup": "Create New Account Sub-Group",
-  "Ledger": "Ledger"
+  "Ledger": "Ledger",
+  "QuickCustomerGroup": "Would you like to add a new customer group?",
+  "QuickBrand": "Would you like to add a new Brand?",
+  "NameOfVoucher": "Name Of Voucher",
+  "CreateNewVoucher": "Create New Voucher",
+  "ManageVoucher": "Manage Voucher"
 }

@@ -345,38 +345,43 @@ function ProductForm() {
                                         <Box mt={'xs'}>
                                             <Grid gutter={{ base: 6 }}>
                                                 <Grid.Col span={6}>
-                                                    <SelectForm
-                                                        tooltip={t('ChooseProductUnit')}
-                                                        label={t('ProductUnit')}
-                                                        placeholder={t('ChooseProductUnit')}
-                                                        required={true}
-                                                        name={'unit_id'}
-                                                        form={form}
-                                                        dropdownValue={productUnitDropdown}
-                                                        mt={8}
-                                                        id={'unit_id'}
-                                                        nextField={'brand_id'}
-                                                        searchable={true}
-                                                        value={productUnitData}
-                                                        changeValue={setProductUnitData}
-                                                    />
+                                                    <Box mt={'8'}>
+
+                                                        <SelectForm
+                                                            tooltip={t('ChooseProductUnit')}
+                                                            label={t('ProductUnit')}
+                                                            placeholder={t('ChooseProductUnit')}
+                                                            required={true}
+                                                            name={'unit_id'}
+                                                            form={form}
+                                                            dropdownValue={productUnitDropdown}
+                                                            mt={8}
+                                                            id={'unit_id'}
+                                                            nextField={'brand_id'}
+                                                            searchable={true}
+                                                            value={productUnitData}
+                                                            changeValue={setProductUnitData}
+                                                        />
+                                                    </Box>
                                                 </Grid.Col>
                                                 <Grid.Col span={5}>
-                                                    <SelectForm
-                                                        tooltip={t('ChooseBrand')}
-                                                        label={t('Brand')}
-                                                        placeholder={t('ChooseBrand')}
-                                                        required={false}
-                                                        nextField={'min_quantity'}
-                                                        name={'brand_id'}
-                                                        form={form}
-                                                        dropdownValue={brandDropdown}
-                                                        mt={8}
-                                                        id={'brand_id'}
-                                                        searchable={true}
-                                                        value={brandData}
-                                                        changeValue={setBrandData}
-                                                    />
+                                                    <Box mt={'8'}>
+                                                        <SelectForm
+                                                            tooltip={t('ChooseBrand')}
+                                                            label={t('Brand')}
+                                                            placeholder={t('ChooseBrand')}
+                                                            required={false}
+                                                            nextField={'min_quantity'}
+                                                            name={'brand_id'}
+                                                            form={form}
+                                                            dropdownValue={brandDropdown}
+                                                            mt={8}
+                                                            id={'brand_id'}
+                                                            searchable={true}
+                                                            value={brandData}
+                                                            changeValue={setBrandData}
+                                                        />
+                                                    </Box>
                                                 </Grid.Col>
                                                 <Grid.Col span={1}>
                                                     <Box pt={'xl'} >
@@ -385,7 +390,7 @@ function ProductForm() {
                                                             w={420}
                                                             withArrow
                                                             transitionProps={{ duration: 200 }}
-                                                            label={t('QuickCategory')}
+                                                            label={t('QuickBrand')}
                                                         >
                                                             <ActionIcon fullWidth variant="outline" bg={'white'} size={'lg'} color="red.5" mt={'1'} aria-label="Settings" onClick={open}>
                                                                 <IconClipboardPlus style={{ width: '100%', height: '70%' }} stroke={1.5} />

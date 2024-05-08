@@ -64,7 +64,7 @@ function MainDashboard(props) {
                             <Text fz="sm" c="dimmed" mt="sm">
                                 <List spacing="ms" size="sm" center>
                                     <List.Item pl={'xs'} icon={<ThemeIcon color="teal.6" size={20} radius="xl" variant="outline" ><IconBasket /></ThemeIcon>}>
-                                        <NavLink pl={'md'} href="/inventory/sales" label={t('ManageSales')} component="button" onClick={(e) => {
+                                        <NavLink pl={'md'} href="/inventory/sales" label={t('Sales')} component="button" onClick={(e) => {
                                             navigate('inventory/sales')
                                         }} onAuxClick={(e) => {
                                             // Handle middle mouse button click for browsers that support it
@@ -82,7 +82,7 @@ function MainDashboard(props) {
                                         }} />
                                     </List.Item>
                                     <List.Item pl={'xs'} icon={<ThemeIcon color="teal.6" size={20} radius="xl" variant="outline" ><IconShoppingBagPlus /></ThemeIcon>}>
-                                        <NavLink pl={'md'} href="/inventory/purchase" label={t('ManagePurchase')} component="button" onClick={(e) => { navigate('inventory/purchase') }} onAuxClick={(e) => {
+                                        <NavLink pl={'md'} href="/inventory/purchase" label={t('Purchase')} component="button" onClick={(e) => { navigate('inventory/purchase') }} onAuxClick={(e) => {
                                             // Handle middle mouse button click for browsers that support it
                                             if (e.button === 1) {
                                                 window.open('/inventory/purchase', '_blank');

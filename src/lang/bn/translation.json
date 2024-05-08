@@ -241,7 +241,6 @@
   "ClientNameValidateMessage": "অনুগ্রহ করে বৈধ ক্লায়েন্ট এর নাম প্রবেশ করুন",
   "DomainUser": "ডোমেইন ব্যবহারকারী",
   "DomainUserValidateMessage": "অনুগ্রহ করে বৈধ ডোমেইন ব্যবহারকারী প্রবেশ করুন",
-  "QuickCategory": "কুইক ক্যাটাগরি",
   "VatEnabled": "VAT এনাবল",
   "AtiEnabled": "Ati এনাবল",
   "ManageAccountLedger": "একাউন্ট লেজার পরিচালনা",
@@ -267,5 +266,11 @@
   "HeadSubGroup": "হেড সাব গ্রুপ",
   "ManageAccountHeadSubGroup": "একাউন্ট হেড সাব-গ্রুপ পরিচালনা",
   "CreateNewAccountSubGroup": "নতুন একাউন্ট সাব-গ্রুপ তৈরী",
-  "Ledger": "লেজার"
+  "Ledger": "লেজার",
+  "QuickCustomerGroup": "আপনি কি নতুন কাস্টমার গ্রুপ অ্যাড করতে চান?",
+  "QuickCategory": "আপনি কি নতুন ক্যাটাগরি অ্যাড করতে চান?",
+  "QuickBrand": "আপনি কি নতুন ব্র্যান্ড অ্যাড করতে চান?",
+  "NameOfVoucher": "ভাউচার এর নাম",
+  "CreateNewVoucher": "নতুন ভাউচার তৈরী",
+  "ManageVoucher": "ভাউচার পরিচালনা"
 }

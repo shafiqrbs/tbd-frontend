@@ -173,7 +173,7 @@ function CategoryForm() {
                                                                 w={420}
                                                                 withArrow
                                                                 transitionProps={{ duration: 200 }}
-                                                                label={t('InstantCustomerCreate')}
+                                                                label={t('CreateCategoryGroup')}
                                                             >
                                                                 <ActionIcon fullWidth variant="outline" bg={'white'} size={'lg'} color="red.5" mt={'1'} aria-label="Settings">
 
@@ -212,7 +212,7 @@ function CategoryForm() {
                                                             defaultChecked={1}
                                                         />
                                                     </Grid.Col>
-                                                    <Grid.Col span={6} fz={'sm'} pt={'6'}>Status</Grid.Col>
+                                                    <Grid.Col span={6} fz={'sm'} pt={'1'}>{t('Status')}</Grid.Col>
                                                 </Grid>
                                             </Box>
                                         </ScrollArea>

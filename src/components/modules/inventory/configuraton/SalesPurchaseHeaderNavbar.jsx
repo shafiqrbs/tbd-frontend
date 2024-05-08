@@ -1,26 +1,26 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import {
     Box, Button,
-    Grid, Progress, Title,Group,Burger,Menu,rem,ActionIcon,Text
+    Grid, Progress, Title, Group, Burger, Menu, rem, ActionIcon, Text
 } from "@mantine/core";
-import {getHotkeyHandler, useDisclosure, useHotkeys, useToggle} from "@mantine/hooks";
-import {useTranslation} from 'react-i18next';
-import {useDispatch, useSelector} from "react-redux";
-import classes from  '../../../../assets/css/HeaderSearch.module.css';
+import { getHotkeyHandler, useDisclosure, useHotkeys, useToggle } from "@mantine/hooks";
+import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from "react-redux";
+import classes from '../../../../assets/css/HeaderSearch.module.css';
 import {
-    IconInfoCircle,IconTrash,IconSearch,IconSettings
+    IconInfoCircle, IconTrash, IconSearch, IconSettings
 } from "@tabler/icons-react";
-import {useNavigate} from "react-router-dom";
-const links = [
-    { link: '/inventory/sales', label: 'Sales' },
-    { link: '/inventory/sales-invoice', label: 'New Invoice' },
-    { link: '/inventory/purchase', label: 'Purchase' },
-    { link: '/inventory/purchase-invoice', label: 'New Purchase' },
-];
+import { useNavigate } from "react-router-dom";
 
 function SalesPurchaseHeaderNavbar(props) {
-    const { pageTitle,roles,currancySymbol,allowZeroPercentage } = props
-    const {t, i18n} = useTranslation();
+    const { t, i18n } = useTranslation();
+    const links = [
+        { link: '/inventory/sales', label: t('Sales') },
+        { link: '/inventory/sales-invoice', label: t('NewSales') },
+        { link: '/inventory/purchase', label: t('Purchase') },
+        { link: '/inventory/purchase-invoice', label: t('NewPurchase') },
+    ];
+    const { pageTitle, roles, currancySymbol, allowZeroPercentage } = props
     const dispatch = useDispatch();
     const [opened, { toggle }] = useDisclosure(false);
     const navigate = useNavigate();
