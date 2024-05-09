@@ -1,4 +1,4 @@
-import {Routes, Route} from 'react-router-dom'
+import { Routes, Route } from 'react-router-dom'
 import Login from './components/Login'
 import Layout from './components/layout/Layout'
 import SampleDashboard from "./components/modules/sample-module/DashBoard";
@@ -25,43 +25,47 @@ import VoucherIndex from "./components/modules/accounting/voucher-entry/VoucherI
 import HeadGroupIndex from "./components/modules/accounting/head-group/HeadGroupIndex";
 import HeadSubGroupIndex from "./components/modules/accounting/head-subgroup/HeadSubGroupIndex";
 import LedgerIndex from "./components/modules/accounting/ledger/LedgerIndex";
+import ProductionIndex from './components/modules/inventory/production/ProductionIndex.jsx';
+import InhouseIndex from './components/modules/inventory/production-inhouse/InhouseIndex.jsx';
 function AppRoute() {
 
     return (
         <Routes>
-            <Route path='/login' element={<Login/>}/>
-            <Route path="/" element={<Layout/>}>
+            <Route path='/login' element={<Login />} />
+            <Route path="/" element={<Layout />}>
                 <Route path="/sample/">
-                    <Route path="" element={<SampleDashboard/>}/>
-                    <Route path="invoice" element={<SampleInvoice/>}/>
-                    <Route path="index" element={<SampleIndex/>}/>
+                    <Route path="" element={<SampleDashboard />} />
+                    <Route path="invoice" element={<SampleInvoice />} />
+                    <Route path="index" element={<SampleIndex />} />
                 </Route>
                 <Route path="/core/">
-                    <Route path="customer" element={<CustomerIndex/>}/>
-                    <Route path="user" element={<UserIndex/>}/>
-                    <Route path="vendor" element={<VendorIndex/>}/>
+                    <Route path="customer" element={<CustomerIndex />} />
+                    <Route path="user" element={<UserIndex />} />
+                    <Route path="vendor" element={<VendorIndex />} />
                 </Route>
                 <Route path="/inventory/">
-                    <Route path="sales" element={<SalesIndex/>}/>
-                    <Route path="sales-invoice" element={<SalesInvoice/>}/>
-                    <Route path="purchase" element={<PurchaseIndex/>}/>
-                    <Route path="purchase-invoice" element={<PurchaseInvoice/>}/>
-                    <Route path="product" element={<ProductIndex/>}/>
-                    <Route path="category" element={<CategoryIndex/>}/>
-                    <Route path="category-group" element={<CategoryGroupIndex/>}/>
-                    <Route path="config" element={<ConfigurationIndex/>}/>
+                    <Route path="sales" element={<SalesIndex />} />
+                    <Route path="sales-invoice" element={<SalesInvoice />} />
+                    <Route path="purchase" element={<PurchaseIndex />} />
+                    <Route path="purchase-invoice" element={<PurchaseInvoice />} />
+                    <Route path="product" element={<ProductIndex />} />
+                    <Route path="category" element={<CategoryIndex />} />
+                    <Route path="category-group" element={<CategoryGroupIndex />} />
+                    <Route path="config" element={<ConfigurationIndex />} />
+                    <Route path="production" element={<ProductionIndex />} />
+                    <Route path="production-inhouse" element={<InhouseIndex />} />
                 </Route>
                 <Route path="/domain/">
-                    <Route path="" element={<DomainIndex/>}/>
+                    <Route path="" element={<DomainIndex />} />
                 </Route>
                 <Route path="/accounting/">
-                    <Route path="voucher-entry" element={<VoucherIndex/>}/>
-                    <Route path="ledger" element={<LedgerIndex/>}/>
-                    <Route path="head-group" element={<HeadGroupIndex/>}/>
-                    <Route path="head-subgroup" element={<HeadSubGroupIndex/>}/>
-                    <Route path="transaction-mode" element={<TransactionModeIndex/>}/>
+                    <Route path="voucher-entry" element={<VoucherIndex />} />
+                    <Route path="ledger" element={<LedgerIndex />} />
+                    <Route path="head-group" element={<HeadGroupIndex />} />
+                    <Route path="head-subgroup" element={<HeadSubGroupIndex />} />
+                    <Route path="transaction-mode" element={<TransactionModeIndex />} />
                 </Route>
-                <Route path="sitemap" element={<Sitemap/>}/>
+                <Route path="sitemap" element={<Sitemap />} />
             </Route>
         </Routes>
 
