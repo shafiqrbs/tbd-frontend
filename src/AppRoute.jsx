@@ -27,6 +27,7 @@ import HeadSubGroupIndex from "./components/modules/accounting/head-subgroup/Hea
 import LedgerIndex from "./components/modules/accounting/ledger/LedgerIndex";
 import ProductionIndex from './components/modules/inventory/production/ProductionIndex.jsx';
 import InhouseIndex from './components/modules/inventory/production-inhouse/InhouseIndex.jsx';
+import ReceipeIndex from './components/modules/inventory/receipe/ReceipeIndex.jsx';
 function AppRoute() {
 
     return (
@@ -54,6 +55,7 @@ function AppRoute() {
                     <Route path="config" element={<ConfigurationIndex />} />
                     <Route path="production" element={<ProductionIndex />} />
                     <Route path="production-inhouse" element={<InhouseIndex />} />
+                    <Route path="production-receipe" element={<ReceipeIndex />} />
                 </Route>
                 <Route path="/domain/">
                     <Route path="" element={<DomainIndex />} />

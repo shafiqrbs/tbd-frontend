@@ -41,8 +41,8 @@ function ProductionIndex() {
                             />
                             <Box p={'8'}>
 
-                                <Grid columns={48} gutter={{ base: 8 }}>
-                                    <Grid.Col span={39}>
+                                <Grid columns={24} gutter={{ base: 8 }}>
+                                    <Grid.Col span={24}>
                                         <Box bg={'white'} p={'xs'} className={'borderRadiusAll'}>
                                             {/* <ScrollArea scrollbars='x'>
                                             </ScrollArea> */}
@@ -50,13 +50,13 @@ function ProductionIndex() {
 
                                         </Box>
                                     </Grid.Col>
-                                    <Grid.Col span={9}>
-                                        {/* {
+                                    {/* <Grid.Col span={9}>
+                                        {
                                             insertType === 'create' ?
                                                 <ProdcutionForm /> :
                                                 <ProductionUpdateForm />
-                                        } */}
-                                    </Grid.Col>
+                                        }
+                                    </Grid.Col> */}
                                 </Grid>
                             </Box>
                         </>}

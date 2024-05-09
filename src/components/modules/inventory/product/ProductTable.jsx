@@ -74,7 +74,7 @@ function ProductTable() {
                         {
                             accessor: 'index',
                             title: t('S/N'),
-                            textAlignment: 'right',
+                            textAlignment: 'right   ',
                             render: (item) => (indexData.data.indexOf(item) + 1)
                         },
                         { accessor: 'product_name', title: t("Name") },

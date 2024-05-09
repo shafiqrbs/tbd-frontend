@@ -26,11 +26,13 @@ function DatePickerForm(props) {
         lg
     } = props
     return (
-        <DateInput
-            valueFormat="DD/MM/YYYY"
-            label={label}
-            placeholder={placeholder}
-        />
+        <>
+            <DateInput
+                valueFormat="DD/MM/YYYY"
+                label={label}
+                placeholder={placeholder}
+            />
+        </>
     );
 }
 
