@@ -424,7 +424,7 @@ function ReceipeForm() {
                                         <Box mt={'xs'}>
                                             <Grid gutter={{ base: 6 }}>
                                                 <Grid.Col span={6}>
-                                                    <Box mt={'xs'}>
+                                                    <Box mt={6}>
                                                         <Flex
                                                             justify="center"
                                                             align="center"
@@ -455,7 +455,7 @@ function ReceipeForm() {
                                         <Box mt={'xs'}>
                                             <Grid gutter={{ base: 6 }}>
                                                 <Grid.Col span={6}>
-                                                    <Box mt={'xs'}>
+                                                    <Box mt={6}>
                                                         <Flex
                                                             justify="center"
                                                             align="center"
@@ -486,7 +486,7 @@ function ReceipeForm() {
                                         <Box mt={'xs'}>
                                             <Grid gutter={{ base: 6 }}>
                                                 <Grid.Col span={6}>
-                                                    <Box mt={'xs'}>
+                                                    <Box mt={6}>
                                                         <Flex
                                                             justify="center"
                                                             align="center"
@@ -517,7 +517,7 @@ function ReceipeForm() {
                                         <Box mt={'xs'}>
                                             <Grid gutter={{ base: 6 }}>
                                                 <Grid.Col span={6}>
-                                                    <Box mt={'xs'}>
+                                                    <Box mt={6}>
                                                         <Flex
                                                             justify="center"
                                                             align="center"
@@ -548,17 +548,20 @@ function ReceipeForm() {
                                         <Box mt={'xs'}>
                                             <Grid gutter={{ base: 6 }}>
                                                 <Grid.Col span={6}>
-                                                    <Box mt={'xs'}>
+                                                    <Box mt={6}>
                                                         <Flex
                                                             justify="center"
                                                             align="center"
                                                             direction="row"
                                                         >
+
                                                             <Text
+
                                                                 ta="center" fz="sm"
                                                                 fw={300}>
                                                                 {t('Insurance')}
                                                             </Text>
+
                                                         </Flex>
                                                     </Box>
                                                 </Grid.Col>
@@ -579,7 +582,7 @@ function ReceipeForm() {
                                         <Box mt={'xs'}>
                                             <Grid gutter={{ base: 6 }}>
                                                 <Grid.Col span={6}>
-                                                    <Box mt={'xs'}>
+                                                    <Box mt={6}>
                                                         <Flex
                                                             justify="center"
                                                             align="center"
@@ -610,7 +613,7 @@ function ReceipeForm() {
                                         <Box mt={'xs'}>
                                             <Grid gutter={{ base: 6 }}>
                                                 <Grid.Col span={6}>
-                                                    <Box mt={'xs'}>
+                                                    <Box mt={6}>
                                                         <Flex
                                                             justify="center"
                                                             align="center"
@@ -641,7 +644,7 @@ function ReceipeForm() {
                                         <Box mt={'xs'}>
                                             <Grid gutter={{ base: 6 }}>
                                                 <Grid.Col span={6}>
-                                                    <Box mt={'xs'}>
+                                                    <Box mt={6}>
                                                         <Flex
                                                             justify="center"
                                                             align="center"
@@ -672,7 +675,7 @@ function ReceipeForm() {
                                         <Box mt={'xs'}>
                                             <Grid gutter={{ base: 6 }}>
                                                 <Grid.Col span={6}>
-                                                    <Box mt={'xs'}>
+                                                    <Box mt={6}>
                                                         <Flex
                                                             justify="center"
                                                             align="center"
@@ -703,7 +706,7 @@ function ReceipeForm() {
                                         <Box mt={'xs'}>
                                             <Grid gutter={{ base: 6 }}>
                                                 <Grid.Col span={6}>
-                                                    <Box mt={'xs'}>
+                                                    <Box mt={6}>
                                                         <Flex
                                                             justify="center"
                                                             align="center"
@@ -734,7 +737,7 @@ function ReceipeForm() {
                                         <Box mt={'xs'}>
                                             <Grid gutter={{ base: 6 }}>
                                                 <Grid.Col span={6}>
-                                                    <Box mt={'xs'}>
+                                                    <Box mt={6}>
                                                         <Flex
                                                             justify="center"
                                                             align="center"
@@ -765,7 +768,7 @@ function ReceipeForm() {
                                         <Box mt={'xs'}>
                                             <Grid gutter={{ base: 6 }}>
                                                 <Grid.Col span={6}>
-                                                    <Box mt={'xs'}>
+                                                    <Box mt={6}>
                                                         <Flex
                                                             justify="center"
                                                             align="center"
@@ -796,7 +799,7 @@ function ReceipeForm() {
                                         <Box mt={'xs'} >
                                             <Grid gutter={{ base: 6 }}>
                                                 <Grid.Col span={6}>
-                                                    <Box mt={'xs'}>
+                                                    <Box mt={6}>
                                                         <Flex
                                                             justify="center"
                                                             align="center"
@@ -827,7 +830,7 @@ function ReceipeForm() {
                                         <Box mt={'xs'} mb={'sm'}>
                                             <Grid gutter={{ base: 6 }}>
                                                 <Grid.Col span={6}>
-                                                    <Box mt={'xs'}>
+                                                    <Box mt={6}>
                                                         <Flex
                                                             justify="center"
                                                             align="center"
@@ -842,17 +845,23 @@ function ReceipeForm() {
                                                     </Box>
                                                 </Grid.Col>
                                                 <Grid.Col span={6}>
-                                                    <Box mt={'xs'}>
+                                                    <Box >
                                                         <Flex
+                                                            mih={35}
+                                                            className="borderRadiusAll"
                                                             justify="center"
                                                             align="center"
                                                             direction="row"
+
                                                         >
-                                                            <Text
-                                                                ta="center" fz="sm"
-                                                                fw={300}>
-                                                                {t('1000')}
-                                                            </Text>
+                                                            <Box
+                                                            >
+                                                                <Text
+                                                                    ta="center" fz="sm"
+                                                                    fw={300}>
+                                                                    {t('1000')}
+                                                                </Text>
+                                                            </Box>
                                                         </Flex>
                                                     </Box>
                                                 </Grid.Col>
@@ -863,7 +872,7 @@ function ReceipeForm() {
                                 </Box>
                             </Box>
                         </Box>
-                    </Grid.Col>
+                    </Grid.Col >
                     <Grid.Col span={1} >
                         <Box bg={'white'} className={'borderRadiusAll'} pt={'16'}>
                             <Shortcut
@@ -874,7 +883,7 @@ function ReceipeForm() {
                             />
                         </Box>
                     </Grid.Col>
-                </Grid>
+                </Grid >
             </form >
         </Box >
 
