@@ -6,7 +6,13 @@ import {
     Tooltip,
     TextInput,
     ActionIcon,
-    Box
+    Box,
+    NumberInput,
+    Button,
+    Flex,
+    Text,
+    Popover,
+    Fieldset
 } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
 import {
@@ -15,12 +21,28 @@ import {
     IconRestore,
     IconSearch,
     IconX,
+    IconDeviceFloppy,
+    IconBarcode,
+    IconCoinMonero,
+    IconSortAscendingNumbers,
+    IconPercentage,
+    IconCurrency,
+    IconPlusMinus,
+    IconSum,
+    IconPlus,
+    IconRefreshDot
 } from "@tabler/icons-react";
 import { useHotkeys } from "@mantine/hooks";
 import { useDispatch, useSelector } from "react-redux";
 import SelectForm from "../../../form-builders/SelectForm";
 import { hasLength, isNotEmpty, useForm } from "@mantine/form";
 import getSettingProductDropdownData from "../../../global-hook/dropdown/getSettingProductDropdownData.js";
+import InputNumberForm from "../../../form-builders/InputNumberForm.jsx";
+import SelectServerSideForm from "../../../form-builders/SelectServerSideForm.jsx";
+import InputButtonForm from "../../../form-builders/InputButtonForm.jsx";
+import InputForm from "../../../form-builders/InputForm.jsx";
+import { DataTable } from "mantine-datatable";
+import tableCss from "../../../../assets/css/Table.module.css";
 // import {
 //     setCustomerFilterData,
 //     setFetching,
@@ -46,6 +68,7 @@ function ReceipeAddItem(props) {
     const productTypeDropdownData = useSelector((state) => state.utilityUtilitySlice.settingDropdown)
     let productTypeDropdown = getSettingProductDropdownData()
     const [productTypeData, setProductTypeData] = useState(null);
+
 
     const form = useForm({
         initialValues: {
@@ -85,292 +108,126 @@ function ReceipeAddItem(props) {
         ], []
     );
 
-
     return (
         <>
-            <Grid justify="flex-end" align="flex-end">
-                <Grid.Col span={3}>
-                    <Box >
-                        <SelectForm
-                            tooltip={t('ChooseProductType')}
-                            placeholder={t('ChooseProductType')}
-                            required={true}
-                            name={'product_type_id'}
-                            form={form}
-                            dropdownValue={productTypeDropdown}
-                            mt={0}
-                            id={'product_type_id'}
-                            nextField={'category_id'}
-                            searchable={true}
-                            value={productTypeData}
-                            changeValue={setProductTypeData}
-                        />
-                    </Box>
-                </Grid.Col>
-                <Grid.Col span={3}>
-                    <Tooltip
-                        label={t('EnterSearchAnyKeyword')}
-                        opened={searchKeywordTooltip}
-                        px={16}
-                        py={2}
-                        position="top-end"
-                        color="red"
-                        withArrow
-                        offset={2}
-                        zIndex={100}
-                        transitionProps={{ transition: "pop-bottom-left", duration: 5000 }}
-                    >
-                        <TextInput
-                            leftSection={<IconSearch size={16} opacity={0.5} />}
-                            size="sm"
-                            placeholder={t('EnterSearchAnyKeyword')}
-                            onChange={(e) => {
-                                dispatch(setSearchKeyword(e.currentTarget.value))
-                                e.target.value !== '' ?
-                                    setSearchKeywordTooltip(false) :
-                                    (setSearchKeywordTooltip(true),
-                                        setTimeout(() => {
-                                            setSearchKeywordTooltip(false)
-                                        }, 1000))
-                            }}
-                            value={searchKeyword}
-                            id={'SearchKeyword'}
-                            rightSection={
-                                searchKeyword ?
-                                    <Tooltip
-                                        label={t("Close")}
-                                        withArrow
-                                        bg={`red.5`}
-                                    >
-                                        <IconX color={`red`} size={16} opacity={0.5} onClick={() => {
-                                            dispatch(setSearchKeyword(''))
-                                        }} />
-                                    </Tooltip>
-                                    :
-                                    <Tooltip
-                                        label={t("FieldIsRequired")}
-                                        withArrow
-                                        position={"bottom"}
-                                        c={'red'}
-                                        bg={`red.1`}
-                                    >
-                                        <IconInfoCircle size={16} opacity={0.5} />
-                                    </Tooltip>
-                            }
-                        />
-                    </Tooltip>
-                </Grid.Col>
-                <Grid.Col span={2}>
-                    <Tooltip
-                        label={t('EnterSearchAnyKeyword')}
-                        opened={searchKeywordTooltip}
-                        px={16}
-                        py={2}
-                        position="top-end"
-                        color="red"
-                        withArrow
-                        offset={2}
-                        zIndex={100}
-                        transitionProps={{ transition: "pop-bottom-left", duration: 5000 }}
-                    >
-                        <TextInput
-                            leftSection={<IconSearch size={16} opacity={0.5} />}
-                            size="sm"
-                            placeholder={t('EnterSearchAnyKeyword')}
-                            onChange={(e) => {
-                                dispatch(setSearchKeyword(e.currentTarget.value))
-                                e.target.value !== '' ?
-                                    setSearchKeywordTooltip(false) :
-                                    (setSearchKeywordTooltip(true),
-                                        setTimeout(() => {
-                                            setSearchKeywordTooltip(false)
-                                        }, 1000))
-                            }}
-                            value={searchKeyword}
-                            id={'SearchKeyword'}
-                            rightSection={
-                                searchKeyword ?
-                                    <Tooltip
-                                        label={t("Close")}
-                                        withArrow
-                                        bg={`red.5`}
-                                    >
-                                        <IconX color={`red`} size={16} opacity={0.5} onClick={() => {
-                                            dispatch(setSearchKeyword(''))
-                                        }} />
-                                    </Tooltip>
-                                    :
-                                    <Tooltip
-                                        label={t("FieldIsRequired")}
-                                        withArrow
-                                        position={"bottom"}
-                                        c={'red'}
-                                        bg={`red.1`}
-                                    >
-                                        <IconInfoCircle size={16} opacity={0.5} />
-                                    </Tooltip>
-                            }
-                        />
-                    </Tooltip>
-                </Grid.Col>
-                <Grid.Col span={2}>
-                    <Tooltip
-                        label={t('EnterSearchAnyKeyword')}
-                        opened={searchKeywordTooltip}
-                        px={16}
-                        py={2}
-                        position="top-end"
-                        color="red"
-                        withArrow
-                        offset={2}
-                        zIndex={100}
-                        transitionProps={{ transition: "pop-bottom-left", duration: 5000 }}
-                    >
-                        <TextInput
-                            leftSection={<IconSearch size={16} opacity={0.5} />}
-                            size="sm"
-                            placeholder={t('EnterSearchAnyKeyword')}
-                            onChange={(e) => {
-                                dispatch(setSearchKeyword(e.currentTarget.value))
-                                e.target.value !== '' ?
-                                    setSearchKeywordTooltip(false) :
-                                    (setSearchKeywordTooltip(true),
-                                        setTimeout(() => {
-                                            setSearchKeywordTooltip(false)
-                                        }, 1000))
-                            }}
-                            value={searchKeyword}
-                            id={'SearchKeyword'}
-                            rightSection={
-                                searchKeyword ?
-                                    <Tooltip
-                                        label={t("Close")}
-                                        withArrow
-                                        bg={`red.5`}
-                                    >
-                                        <IconX color={`red`} size={16} opacity={0.5} onClick={() => {
-                                            dispatch(setSearchKeyword(''))
-                                        }} />
-                                    </Tooltip>
-                                    :
-                                    <Tooltip
-                                        label={t("FieldIsRequired")}
-                                        withArrow
-                                        position={"bottom"}
-                                        c={'red'}
-                                        bg={`red.1`}
-                                    >
-                                        <IconInfoCircle size={16} opacity={0.5} />
-                                    </Tooltip>
-                            }
-                        />
-                    </Tooltip>
-                </Grid.Col>
-                <Grid.Col span={2}>
-                    <ActionIcon.Group mt={'1'}>
-                        <ActionIcon variant="transparent"
-                            c={'red.4'}
-                            size="lg" mr={16} aria-label="Filter"
-                            onClick={() => {
-                                searchKeyword.length > 0 ?
-                                    (dispatch(setFetching(true)),
-                                        setSearchKeywordTooltip(false))
-                                    :
-                                    (setSearchKeywordTooltip(true),
-                                        setTimeout(() => {
-                                            setSearchKeywordTooltip(false)
-                                        }, 1500))
-                            }}
-                        >
-                            <Tooltip
-                                label={t('SearchButton')}
-                                px={16}
-                                py={2}
-                                withArrow
-                                position={"bottom"}
-                                c={'red'}
-                                bg={`red.1`}
-                                transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
-                            >
-                                <IconSearch style={{ width: rem(20) }} stroke={2.0} />
-                            </Tooltip>
-                        </ActionIcon>
 
+            <Box >
+                <Grid columns={24} gutter={{ base: 8 }}>
+                    <Grid.Col span={24} >
+                        <Box bg={'white'}  >
+                            <form onSubmit={form.onSubmit((values) => {
 
-                        <ActionIcon
-                            variant="transparent"
-                            size="lg"
-                            c={'gray.6'}
-                            mr={16}
-                            aria-label="Settings"
-                            onClick={(e) => {
-                                setFilterModel(true)
-                            }}
-                        >
-                            <Tooltip
-                                label={t("FilterButton")}
-                                px={16}
-                                py={2}
-                                withArrow
-                                position={"bottom"}
-                                c={'red'}
-                                bg={`red.1`}
-                                transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
-                            >
-                                <IconFilter style={{ width: rem(20) }} stroke={2.0} />
-                            </Tooltip>
-                        </ActionIcon>
-                        <ActionIcon variant="transparent" c={'gray.6'}
-                            size="lg" aria-label="Settings">
-                            <Tooltip
-                                label={t("ResetButton")}
-                                px={16}
-                                py={2}
-                                withArrow
-                                position={"bottom"}
-                                c={'red'}
-                                bg={`red.1`}
-                                transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
-                            >
-                                <IconRestore style={{ width: rem(20) }} stroke={2.0} onClick={() => {
-                                    dispatch(setSearchKeyword(''))
-                                    dispatch(setFetching(true))
+                                if (!values.barcode && !values.product_id) {
+                                    form.setFieldError('barcode', true);
+                                    form.setFieldError('product_id', true);
+                                    setTimeout(() => { }, 1000)
+                                } else {
 
-                                    if (props.module === 'customer') {
-                                        dispatch(setCustomerFilterData({
-                                            ...customerFilterData,
-                                            name: '',
-                                            mobile: ''
-                                        }));
-                                    } else if (props.module === 'vendor') {
-                                        dispatch(setVendorFilterData({
-                                            ...vendorFilterData,
-                                            name: '',
-                                            mobile: '',
-                                            company_name: ''
-                                        }));
-                                    } else if (props.module === 'user') {
-                                        dispatch(setUserFilterData({
-                                            ...userFilterData,
-                                            name: '',
-                                            mobile: '',
-                                            email: ''
-                                        }));
-                                    } else if (props.module === 'product') {
-                                        dispatch(setProductFilterData({
-                                            ...productFilterData,
-                                            name: '',
-                                            alternative_name: '',
-                                            sales_price: '',
-                                            sku: ''
-                                        }));
+                                    const cardProducts = localStorage.getItem('temp-sales-products');
+                                    const myCardProducts = cardProducts ? JSON.parse(cardProducts) : [];
+                                    const storedProducts = localStorage.getItem('user-products');
+                                    const localProducts = storedProducts ? JSON.parse(storedProducts) : [];
+
+                                    if (values.product_id && !values.barcode) {
+                                        if (!allowZeroPercentage) {
+                                            showNotification({
+                                                color: 'pink',
+                                                title: t('WeNotifyYouThat'),
+                                                message: t('ZeroQuantityNotAllow'),
+                                                autoClose: 1500,
+                                                loading: true,
+                                                withCloseButton: true,
+                                                position: 'top-center',
+                                                style: { backgroundColor: 'mistyrose' },
+                                            });
+                                        } else {
+                                            // setFocusIntoProductSearch(true)
+                                            handleAddProductByProductId(values, myCardProducts, localProducts);
+                                        }
+                                    } else if (!values.product_id && values.barcode) {
+                                        // setFocusIntoProductSearch(true)
+                                        handleAddProductByBarcode(values, myCardProducts, localProducts);
                                     }
-                                }} />
-                            </Tooltip>
-                        </ActionIcon>
-                    </ActionIcon.Group>
-                </Grid.Col>
-            </Grid>
+                                }
+
+                            })}>
+                                <Box pl={`xs`} pr={8} pt={'xs'} pb={'xs'} className={'boxBackground borderRadiusAll'}>
+                                    <Grid columns={24} gutter={{ base: 6 }}>
+                                        <Grid.Col span={12}>
+                                            <SelectForm
+                                                tooltip={t('ChooseProductType')}
+                                                placeholder={t('SelectMaterialName')}
+                                                required={true}
+                                                name={'product_type_id'}
+                                                form={form}
+                                                dropdownValue={productTypeDropdown}
+                                                mt={0}
+                                                id={'product_type_id'}
+                                                nextField={'category_id'}
+                                                searchable={true}
+                                                value={productTypeData}
+                                                changeValue={setProductTypeData}
+                                            />
+                                        </Grid.Col>
+                                        <Grid.Col span={3}>
+                                            <Box>
+                                                <NumberInput
+                                                    p={'0'}
+                                                    placeholder={t('Price')}
+                                                    id={'price'}
+                                                    form={form}
+                                                    nextField={''}
+                                                    name={'price'}
+                                                />
+                                            </Box>
+                                        </Grid.Col>
+                                        <Grid.Col span={3}>
+                                            <Box>
+                                                <NumberInput
+                                                    placeholder={t('Quantity')}
+                                                    id={'quantity'}
+                                                    name={'quantity'}
+                                                    form={form}
+                                                    nextField={''}
+                                                />
+                                            </Box>
+                                        </Grid.Col>
+                                        <Grid.Col span={3}>
+                                            <Box>
+                                                <NumberInput
+                                                    placeholder={t('Percent')}
+                                                    id={'percent'}
+                                                    form={form}
+                                                    nextField={''}
+                                                    name={'percent'}
+                                                />
+                                            </Box>
+                                        </Grid.Col>
+                                        <Grid.Col span={3}>
+                                            <Box>
+                                                <Button
+                                                    size="sm"
+                                                    color={`red.6`}
+                                                    type="submit"
+                                                    mt={0}
+                                                    mr={'xs'}
+                                                    w={'100%'}
+                                                    id="EntityFormSubmit"
+                                                // leftSection={<IconDeviceFloppy size={16} />}
+                                                >
+                                                    <Text fz={12} fw={400}>
+                                                        {t("AddItem")}
+                                                    </Text>
+                                                </Button>
+                                            </Box>
+                                        </Grid.Col>
+                                    </Grid>
+                                </Box>
+                            </form>
+                        </Box>
+                    </Grid.Col>
+                </Grid>
+            </Box >
 
             {
                 filterModel && <FilterModel filterModel={filterModel} setFilterModel={setFilterModel} module={props.module} />

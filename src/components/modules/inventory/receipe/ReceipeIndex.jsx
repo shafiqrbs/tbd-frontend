@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import {
-    Box, Grid, Progress, Title
+    Box,
+    Grid,
+    Progress,
+    Title
 } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from "react-redux";
@@ -21,24 +24,30 @@ function ReceipeIndex() {
 
     return (
         <>
+
             {progress !== 100 &&
                 <Progress color="red" size={"xs"} striped animated value={progress} transitionDuration={200} />}
             {progress === 100 &&
-                <Box>
-                    {configData &&
-                        <>
-                            <InventoryHeaderNavbar
-                                pageTitle={t('ManageProduct')}
-                                roles={t('Roles')}
-                                allowZeroPercentage={configData.zero_stock}
-                                currencySymbol={configData.currency.symbol}
-                            />
-                            <Box p={'8'}>
-                                <ReceipeTable />
-                            </Box>
-                        </>
-                    }
-                </Box>
+                <>
+                    <InventoryHeaderNavbar
+                        pageTitle={t('ManageProduct')}
+                        roles={t('Roles')}
+                        allowZeroPercentage={''}
+                        currencySymbol={''}
+                    />
+                    <Box p={'8'} >
+                        <Grid columns={24} gutter={{ base: 8 }}>
+                            <Grid.Col span={16} >
+                                <Box bg={'white'} p={'xs'} className={'borderRadiusAll'}>
+                                    <ReceipeTable />
+                                </Box>
+                            </Grid.Col>
+                            <Grid.Col span={8} >
+                                <ReceipeForm />
+                            </Grid.Col>
+                        </Grid>
+                    </Box>
+                </>
             }
         </>
     );

@@ -2,12 +2,15 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import {
     Button, rem, Flex, Grid, Box, ScrollArea, Group, Text, Title, Stack, Tooltip, ActionIcon,
+    NumberInput,
+    TextInput
 } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
 import {
     IconCategoryPlus,
     IconCheck,
-    IconDeviceFloppy, IconInfoCircle, IconPlus, IconClipboardPlus
+    IconDeviceFloppy, IconInfoCircle, IconPlus, IconClipboardPlus,
+    IconCalendar
 } from "@tabler/icons-react";
 import { useDisclosure, useHotkeys } from "@mantine/hooks";
 import { useDispatch, useSelector } from "react-redux";
@@ -24,6 +27,7 @@ import { getSettingDropdown, getProductUnitDropdown } from "../../../../store/ut
 
 import { setFetching, storeEntityData } from "../../../../store/inventory/crudSlice.js";
 import getSettingProductDropdownData from "../../../global-hook/dropdown/getSettingProductDropdownData.js";
+import { DateInput, DatePicker } from "@mantine/dates";
 
 function ReceipeForm() {
     const { t, i18n } = useTranslation();
@@ -70,6 +74,7 @@ function ReceipeForm() {
     let productTypeDropdown = getSettingProductDropdownData()
 
     const [productUnitData, setProductUnitData] = useState(null);
+    const [value, setValue] = useState(null);
     const productUnitDropdownData = useSelector((state) => state.utilityUtilitySlice.productUnitDropdown)
     let productUnitDropdown = productUnitDropdownData && productUnitDropdownData.length > 0 ?
         productUnitDropdownData.map((type, index) => {
@@ -161,14 +166,14 @@ function ReceipeForm() {
                     },
                 });
             })}>
-                <Grid columns={9} gutter={{ base: 8 }}>
-                    <Grid.Col span={8} >
+                <Grid columns={8} gutter={{ base: 8 }}>
+                    <Grid.Col span={7} >
                         <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
                             <Box bg={"white"} >
                                 <Box pl={`xs`} pb={'xs'} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'} >
                                     <Grid>
                                         <Grid.Col span={6} h={54}>
-                                            <Title order={6} mt={'xs'} pl={'6'}>{t('CreateProduct')}</Title>
+                                            <Title order={6} mt={'xs'} pl={'6'}>{t('ManageProductionMeasurment')}</Title>
                                         </Grid.Col>
                                         <Grid.Col span={6}>
                                             <Stack right align="flex-end">
@@ -198,280 +203,662 @@ function ReceipeForm() {
                                 <Box pl={`xs`} pr={'xs'} mt={'xs'} className={'borderRadiusAll'}>
                                     <ScrollArea h={height} scrollbarSize={2} scrollbars="y" type="never">
                                         <Box mt={'xs'}>
-                                            <SelectForm
-                                                tooltip={t('ChooseProductType')}
-                                                label={t('ProductType')}
-                                                placeholder={t('ChooseProductType')}
-                                                required={true}
-                                                name={'product_type_id'}
-                                                form={form}
-                                                dropdownValue={productTypeDropdown}
-                                                mt={0}
-                                                id={'product_type_id'}
-                                                nextField={'category_id'}
-                                                searchable={true}
-                                                value={productTypeData}
-                                                changeValue={setProductTypeData}
-                                            />
+                                            <Grid gutter={{ base: 6 }}>
+                                                <Grid.Col span={6}>
+                                                    <Box mt={'xs'}>
+                                                        <Flex
+                                                            justify="center"
+                                                            align="center"
+                                                            direction="row"
+                                                        >
+                                                            <Text
+                                                                ta="center" fz="sm"
+                                                                fw={300}>
+                                                                {t('WastagePercent')}
+                                                            </Text>
+                                                        </Flex>
+                                                    </Box>
+                                                </Grid.Col>
+                                                <Grid.Col span={6}>
+                                                    <Box >
+                                                        <NumberInput
+                                                            p={'0'}
+                                                            placeholder={t('WastagePercent')}
+                                                            id={'price'}
+                                                            form={form}
+                                                            nextField={''}
+                                                            name={'price'}
+                                                        />
+                                                    </Box>
+                                                </Grid.Col>
+                                            </Grid>
                                         </Box>
                                         <Box >
                                             <Grid gutter={{ base: 6 }}>
-                                                <Grid.Col span={11}>
-                                                    <Box mt={'8'}>
-                                                        <SelectForm
-                                                            tooltip={t('ChooseCategory')}
-                                                            label={t('Category')}
-                                                            placeholder={t('ChooseCategory')}
-                                                            required={true}
-                                                            name={'category_id'}
-                                                            form={form}
-                                                            dropdownValue={categoryDropdown}
-                                                            mt={8}
-                                                            id={'category_id'}
-                                                            nextField={'name'}
-                                                            searchable={true}
-                                                            value={categoryData}
-                                                            changeValue={setCategoryData}
-                                                        />
-                                                    </Box>
-
-                                                </Grid.Col>
-                                                <Grid.Col span={1}>
-                                                    <Box pt={'xl'}>
-                                                        <Tooltip
-                                                            multiline
-                                                            w={420}
-                                                            withArrow
-                                                            transitionProps={{ duration: 200 }}
-                                                            label={t('QuickCategory')}
+                                                <Grid.Col span={6}>
+                                                    <Box mt={'md'}>
+                                                        <Flex
+                                                            justify="center"
+                                                            align="center"
+                                                            direction="row"
                                                         >
-                                                            <ActionIcon fullWidth variant="outline" bg={'white'} size={'lg'} color="red.5" mt={'1'} aria-label="Settings" onClick={open}>
-                                                                <IconCategoryPlus style={{ width: '100%', height: '70%' }} stroke={1.5} />
-                                                            </ActionIcon>
-                                                        </Tooltip>
-                                                    </Box>
-                                                </Grid.Col>
-                                                {opened &&
-                                                    <CustomerGroupModel openedModel={opened} open={open} close={close} />
-                                                }
-                                            </Grid>
-                                        </Box>
-                                        <Box mt={'xs'}>
-                                            <InputForm
-                                                tooltip={t('ProductNameValidateMessage')}
-                                                label={t('ProductName')}
-                                                placeholder={t('ProductName')}
-                                                required={true}
-                                                form={form}
-                                                name={'name'}
-                                                mt={8}
-                                                id={'name'}
-                                                nextField={'alternative_name'}
-                                            />
-                                        </Box>
-                                        <Box mt={'xs'}>
-                                            <InputForm
-                                                tooltip={t('AlternativeProductNameValidateMessage')}
-                                                label={t('AlternativeProductName')}
-                                                placeholder={t('AlternativeProductName')}
-                                                required={false}
-                                                form={form}
-                                                name={'alternative_name'}
-                                                mt={8}
-                                                id={'alternative_name'}
-                                                nextField={'sku'}
-                                            />
-                                        </Box>
-                                        <Box mt={'xs'}>
-                                            <Grid gutter={{ base: 6 }}>
-                                                <Grid.Col span={6}>
-                                                    <InputForm
-                                                        tooltip={t('ProductSkuValidateMessage')}
-                                                        label={t('ProductSku')}
-                                                        placeholder={t('ProductSku')}
-                                                        required={false}
-                                                        nextField={'barcode'}
-                                                        form={form}
-                                                        name={'sku'}
-                                                        mt={8}
-                                                        id={'sku'}
-                                                    />
-                                                </Grid.Col>
-                                                <Grid.Col span={6}>
-                                                    <InputForm
-                                                        tooltip={t('BarcodeValidateMessage')}
-                                                        label={t('Barcode')}
-                                                        placeholder={t('Barcode')}
-                                                        required={false}
-                                                        nextField={'sales_price'}
-                                                        form={form}
-                                                        name={'barcode'}
-                                                        mt={8}
-                                                        id={'barcode'}
-                                                    />
-                                                </Grid.Col>
-                                            </Grid>
-                                        </Box>
-                                        <Box mt={'xs'}>
-                                            <Grid gutter={{ base: 6 }}>
-                                                <Grid.Col span={6}>
-                                                    <InputForm
-                                                        tooltip={t('SalesPriceValidateMessage')}
-                                                        label={t('SalesPrice')}
-                                                        placeholder={t('SalesPrice')}
-                                                        required={true}
-                                                        nextField={'purchase_price'}
-                                                        form={form}
-                                                        name={'sales_price'}
-                                                        mt={8}
-                                                        id={'sales_price'}
-                                                    />
-                                                </Grid.Col>
-                                                <Grid.Col span={6}>
-                                                    <InputForm
-                                                        tooltip={t('PurchasePrice')}
-                                                        label={t('PurchasePrice')}
-                                                        placeholder={t('PurchasePrice')}
-                                                        required={false}
-                                                        nextField={'unit_id'}
-                                                        form={form}
-                                                        name={'purchase_price'}
-                                                        mt={8}
-                                                        id={'purchase_price'}
-                                                    />
-                                                </Grid.Col>
-                                            </Grid>
-                                        </Box>
-                                        <Box mt={'xs'}>
-                                            <Grid gutter={{ base: 6 }}>
-                                                <Grid.Col span={6}>
-                                                    <Box mt={'8'}>
+                                                            <Text
 
-                                                        <SelectForm
-                                                            tooltip={t('ChooseProductUnit')}
-                                                            label={t('ProductUnit')}
-                                                            placeholder={t('ChooseProductUnit')}
-                                                            required={true}
-                                                            name={'unit_id'}
-                                                            form={form}
-                                                            dropdownValue={productUnitDropdown}
-                                                            mt={8}
-                                                            id={'unit_id'}
-                                                            nextField={'brand_id'}
-                                                            searchable={true}
-                                                            value={productUnitData}
-                                                            changeValue={setProductUnitData}
-                                                        />
+                                                                ta="center" fz="sm" fw={300}>
+                                                                {t('LicenseDate')}
+                                                            </Text>
+                                                        </Flex>
                                                     </Box>
                                                 </Grid.Col>
-                                                <Grid.Col span={5}>
-                                                    <Box mt={'8'}>
-                                                        <SelectForm
-                                                            tooltip={t('ChooseBrand')}
-                                                            label={t('Brand')}
-                                                            placeholder={t('ChooseBrand')}
-                                                            required={false}
-                                                            nextField={'min_quantity'}
-                                                            name={'brand_id'}
-                                                            form={form}
-                                                            dropdownValue={brandDropdown}
-                                                            mt={8}
-                                                            id={'brand_id'}
-                                                            searchable={true}
-                                                            value={brandData}
-                                                            changeValue={setBrandData}
-                                                        />
-                                                    </Box>
-                                                </Grid.Col>
-                                                <Grid.Col span={1}>
-                                                    <Box pt={'xl'} >
-                                                        <Tooltip
-                                                            multiline
-                                                            w={420}
-                                                            withArrow
-                                                            transitionProps={{ duration: 200 }}
-                                                            label={t('QuickBrand')}
-                                                        >
-                                                            <ActionIcon fullWidth variant="outline" bg={'white'} size={'lg'} color="red.5" mt={'1'} aria-label="Settings" onClick={open}>
-                                                                <IconClipboardPlus style={{ width: '100%', height: '70%' }} stroke={1.5} />
-                                                            </ActionIcon>
-                                                        </Tooltip>
-                                                    </Box>
-                                                </Grid.Col>
-                                                {opened &&
-                                                    <CustomerGroupModel openedModel={opened} open={open} close={close} />
-                                                }
-                                            </Grid>
-                                        </Box>
-                                        <Box mt={'xs'}>
-                                            <Grid gutter={{ base: 6 }}>
                                                 <Grid.Col span={6}>
-                                                    <InputForm
-                                                        tooltip={t('MinimumQuantityValidateMessage')}
-                                                        label={t('MinimumQuantity')}
-                                                        placeholder={t('MinimumQuantity')}
-                                                        required={false}
-                                                        nextField={'reorder_quantity'}
-                                                        form={form}
-                                                        name={'min_quantity'}
-                                                        mt={8}
-                                                        id={'min_quantity'}
-                                                    />
-                                                </Grid.Col>
-                                                <Grid.Col span={6}>
-                                                    <InputForm
-                                                        tooltip={t('ReorderQuantity')}
-                                                        label={t('ReorderQuantity')}
-                                                        placeholder={t('ReorderQuantity')}
-                                                        required={false}
-                                                        nextField={'opening_quantity'}
-                                                        form={form}
-                                                        name={'reorder_quantity'}
-                                                        mt={8}
-                                                        id={'reorder_quantity'}
-                                                    />
-                                                </Grid.Col>
-                                            </Grid>
-                                        </Box>
-                                        <Box mt={'md'} mb={'md'}>
-                                            <Grid gutter={{ base: 6 }}>
-                                                <Grid.Col span={6}>
-                                                    <InputForm
-                                                        tooltip={t('OpeningQuantity')}
-                                                        label={t('OpeningQuantity')}
-                                                        placeholder={t('OpeningQuantity')}
-                                                        required={false}
-                                                        nextField={'status'}
-                                                        form={form}
-                                                        name={'opening_quantity'}
-                                                        mt={8}
-                                                        id={'opening_quantity'}
-                                                    />
-                                                </Grid.Col>
-                                                <Grid.Col span={6} mt={'28'}>
                                                     <Box mt={'xs'}>
-                                                        <Grid columns={6} gutter={{ base: 1 }}>
-                                                            <Grid.Col span={2}>
-                                                                <SwitchForm
-                                                                    tooltip={t('PrintLogo')}
-                                                                    label=''
-                                                                    nextField={'printWithOutstanding'}
-                                                                    name={'print_logo'}
-                                                                    form={form}
-                                                                    color="red"
-                                                                    id={'printLogo'}
-                                                                    position={'left'}
-                                                                    defaultChecked={1}
-                                                                />
-                                                            </Grid.Col>
-                                                            <Grid.Col span={4} fz={'sm'} pt={'1'}>{t('Status')}
-                                                            </Grid.Col>
-                                                        </Grid>
+                                                        <DateInput
+                                                            value={value}
+                                                            valueFormat="DD-MM-YYYY "
+                                                            onChange={setValue}
+                                                            placeholder={t('LicenseDate')}
+                                                            rightSection={
+                                                                <Tooltip
+                                                                    withArrow
+                                                                    ta="center"
+                                                                    color="rgba(233, 236, 239, 0.98)"
+                                                                    multiline
+                                                                    w={200}
+                                                                    offset={{ crossAxis: '-75', mainAxis: '10' }}
+                                                                    transitionProps={{
+                                                                        transition: 'POP-BOTTOM-LEFT', duration: 200
+                                                                    }}
+                                                                    label={t('LicenseDate')}
+                                                                    style={{ color: 'black' }}
+                                                                >
+                                                                    <IconCalendar
+                                                                        style={{ width: '100%', height: '70%' }} stroke={1.5} />
+                                                                </Tooltip>
+                                                            }
+                                                        />
                                                     </Box>
                                                 </Grid.Col>
-
                                             </Grid>
                                         </Box>
+                                        <Box >
+                                            <Grid gutter={{ base: 6 }}>
+                                                <Grid.Col span={6}>
+                                                    <Box mt={'md'}>
+                                                        <Flex
+                                                            justify="center"
+                                                            align="center"
+                                                            direction="row"
+                                                        >
+                                                            <Text
+                                                                ta="center" fz="sm" fw={300}>
+                                                                {t('InitiateDate')}
+                                                            </Text>
+                                                        </Flex>
+                                                    </Box>
+                                                </Grid.Col>
+                                                <Grid.Col span={6}>
+                                                    <Box mt={'xs'}>
+                                                        <DateInput
+                                                            value={value}
+                                                            valueFormat="DD-MM-YYYY "
+                                                            onChange={setValue}
+                                                            placeholder={t('InitiateDate')} rightSection={
+                                                                <Tooltip
+                                                                    withArrow
+                                                                    ta="center"
+                                                                    color="rgba(233, 236, 239, 0.98)"
+                                                                    multiline
+                                                                    w={200}
+                                                                    offset={{ crossAxis: '-75', mainAxis: '10' }}
+                                                                    transitionProps={{
+                                                                        transition: 'POP-BOTTOM-LEFT', duration: 200
+                                                                    }}
+                                                                    label={t('InititateDate')}
+                                                                    style={{ color: 'black' }}
+                                                                >
+                                                                    <IconCalendar
+                                                                        style={{ width: '100%', height: '70%' }} stroke={1.5} />
+                                                                </Tooltip>
+                                                            }
+                                                        />
+                                                    </Box>
+                                                </Grid.Col>
+                                            </Grid>
+                                        </Box>
+                                        <Box >
+                                            <Grid gutter={{ base: 6 }}>
+                                                <Grid.Col span={6}>
+                                                    <Box mt={'md'}>
+                                                        <Flex
+                                                            justify="center"
+                                                            align="center"
+                                                            direction="row"
+                                                        >
+                                                            <Text
+                                                                ta="center" fz="sm" fw={300}>
+                                                                {t('IssuedBy')}
+                                                            </Text>
+                                                        </Flex>
+                                                    </Box>
+                                                </Grid.Col>
+                                                <Grid.Col span={6}>
+                                                    <Box mt={'xs'}>
+                                                        <InputForm
+                                                            tooltip={t('IssuedBy')}
+                                                            placeholder={t('IssuedBy')}
+                                                            required={true}
+                                                            nextField={'CustomerGroup'}
+                                                            name={'name'}
+                                                            form={form}
+                                                            mt={0}
+                                                            id={'CustomerName'}
+                                                        />
+                                                    </Box>
+                                                </Grid.Col>
+                                            </Grid>
+                                        </Box>
+                                        <Box >
+                                            <Grid gutter={{ base: 6 }}>
+                                                <Grid.Col span={6}>
+                                                    <Box mt={'md'}>
+                                                        <Flex
+                                                            justify="center"
+                                                            align="center"
+                                                            direction="row"
+                                                        >
+                                                            <Text
+                                                                ta="center" fz="sm" fw={300}>
+                                                                {t('Designation')}
+                                                            </Text>
+                                                        </Flex>
+                                                    </Box>
+                                                </Grid.Col>
+                                                <Grid.Col span={6}>
+                                                    <Box mt={'xs'}>
+                                                        <InputForm
+                                                            tooltip={t('Designation')}
+                                                            placeholder={t('Designation')}
+                                                            required={true}
+                                                            nextField={'CustomerGroup'}
+                                                            name={'name'}
+                                                            form={form}
+                                                            mt={0}
+                                                            id={'CustomerName'}
+                                                        />
+                                                    </Box>
+                                                </Grid.Col>
+                                            </Grid>
+                                        </Box>
+                                        <Box >
+                                            <Grid gutter={{ base: 6 }}>
+                                                <Grid.Col span={6}>
+                                                    <Box mt={'md'}>
+                                                        <Flex
+                                                            justify="center"
+                                                            align="center"
+                                                            direction="row"
+                                                        >
+                                                            <Text
+                                                                ta="center" fz="sm" fw={300}>
+                                                                {t('Remarks')}
+                                                            </Text>
+                                                        </Flex>
+                                                    </Box>
+                                                </Grid.Col>
+                                                <Grid.Col span={6}>
+                                                    <Box mt={'xs'}>
+                                                        <InputForm
+                                                            tooltip={t('Remarks')}
+                                                            placeholder={t('Remarks')}
+                                                            required={true}
+                                                            nextField={'CustomerGroup'}
+                                                            name={'name'}
+                                                            form={form}
+                                                            mt={0}
+                                                            id={'CustomerName'}
+                                                        />
+                                                    </Box>
+                                                </Grid.Col>
+                                            </Grid>
+                                        </Box>
+                                        <Box mt={'xs'}>
+                                            <Grid gutter={{ base: 6 }}>
+                                                <Grid.Col span={6}>
+                                                    <Box mt={'xs'}>
+                                                        <Flex
+                                                            justify="center"
+                                                            align="center"
+                                                            direction="row"
+                                                        >
+                                                            <Text
+                                                                ta="center" fz="sm"
+                                                                fw={300}>
+                                                                {t('Bank Interest & Commission')}
+                                                            </Text>
+                                                        </Flex>
+                                                    </Box>
+                                                </Grid.Col>
+                                                <Grid.Col span={6}>
+                                                    <Box >
+                                                        <NumberInput
+                                                            p={'0'}
+                                                            placeholder={t('Bank Interest & Commission')}
+                                                            id={'price'}
+                                                            form={form}
+                                                            nextField={''}
+                                                            name={'price'}
+                                                        />
+                                                    </Box>
+                                                </Grid.Col>
+                                            </Grid>
+                                        </Box>
+                                        <Box mt={'xs'}>
+                                            <Grid gutter={{ base: 6 }}>
+                                                <Grid.Col span={6}>
+                                                    <Box mt={'xs'}>
+                                                        <Flex
+                                                            justify="center"
+                                                            align="center"
+                                                            direction="row"
+                                                        >
+                                                            <Text
+                                                                ta="center" fz="sm"
+                                                                fw={300}>
+                                                                {t('ElectricityCost')}
+                                                            </Text>
+                                                        </Flex>
+                                                    </Box>
+                                                </Grid.Col>
+                                                <Grid.Col span={6}>
+                                                    <Box >
+                                                        <NumberInput
+                                                            p={'0'}
+                                                            placeholder={t('ElectricityCost')}
+                                                            id={'price'}
+                                                            form={form}
+                                                            nextField={''}
+                                                            name={'price'}
+                                                        />
+                                                    </Box>
+                                                </Grid.Col>
+                                            </Grid>
+                                        </Box>
+                                        <Box mt={'xs'}>
+                                            <Grid gutter={{ base: 6 }}>
+                                                <Grid.Col span={6}>
+                                                    <Box mt={'xs'}>
+                                                        <Flex
+                                                            justify="center"
+                                                            align="center"
+                                                            direction="row"
+                                                        >
+                                                            <Text
+                                                                ta="center" fz="sm"
+                                                                fw={300}>
+                                                                {t('Entertainment')}
+                                                            </Text>
+                                                        </Flex>
+                                                    </Box>
+                                                </Grid.Col>
+                                                <Grid.Col span={6}>
+                                                    <Box >
+                                                        <NumberInput
+                                                            p={'0'}
+                                                            placeholder={t('Entertainment')}
+                                                            id={'price'}
+                                                            form={form}
+                                                            nextField={''}
+                                                            name={'price'}
+                                                        />
+                                                    </Box>
+                                                </Grid.Col>
+                                            </Grid>
+                                        </Box>
+                                        <Box mt={'xs'}>
+                                            <Grid gutter={{ base: 6 }}>
+                                                <Grid.Col span={6}>
+                                                    <Box mt={'xs'}>
+                                                        <Flex
+                                                            justify="center"
+                                                            align="center"
+                                                            direction="row"
+                                                        >
+                                                            <Text
+                                                                ta="center" fz="sm"
+                                                                fw={300}>
+                                                                {t('FactoryRent')}
+                                                            </Text>
+                                                        </Flex>
+                                                    </Box>
+                                                </Grid.Col>
+                                                <Grid.Col span={6}>
+                                                    <Box >
+                                                        <NumberInput
+                                                            p={'0'}
+                                                            placeholder={t('FactoryRent')}
+                                                            id={'price'}
+                                                            form={form}
+                                                            nextField={''}
+                                                            name={'price'}
+                                                        />
+                                                    </Box>
+                                                </Grid.Col>
+                                            </Grid>
+                                        </Box>
+                                        <Box mt={'xs'}>
+                                            <Grid gutter={{ base: 6 }}>
+                                                <Grid.Col span={6}>
+                                                    <Box mt={'xs'}>
+                                                        <Flex
+                                                            justify="center"
+                                                            align="center"
+                                                            direction="row"
+                                                        >
+                                                            <Text
+                                                                ta="center" fz="sm"
+                                                                fw={300}>
+                                                                {t('Insurance')}
+                                                            </Text>
+                                                        </Flex>
+                                                    </Box>
+                                                </Grid.Col>
+                                                <Grid.Col span={6}>
+                                                    <Box >
+                                                        <NumberInput
+                                                            p={'0'}
+                                                            placeholder={t('Insurance')}
+                                                            id={'price'}
+                                                            form={form}
+                                                            nextField={''}
+                                                            name={'price'}
+                                                        />
+                                                    </Box>
+                                                </Grid.Col>
+                                            </Grid>
+                                        </Box>
+                                        <Box mt={'xs'}>
+                                            <Grid gutter={{ base: 6 }}>
+                                                <Grid.Col span={6}>
+                                                    <Box mt={'xs'}>
+                                                        <Flex
+                                                            justify="center"
+                                                            align="center"
+                                                            direction="row"
+                                                        >
+                                                            <Text
+                                                                ta="center" fz="sm"
+                                                                fw={300}>
+                                                                {t('ItemProfit')}
+                                                            </Text>
+                                                        </Flex>
+                                                    </Box>
+                                                </Grid.Col>
+                                                <Grid.Col span={6}>
+                                                    <Box >
+                                                        <NumberInput
+                                                            p={'0'}
+                                                            placeholder={t('ItemProfit')}
+                                                            id={'price'}
+                                                            form={form}
+                                                            nextField={''}
+                                                            name={'price'}
+                                                        />
+                                                    </Box>
+                                                </Grid.Col>
+                                            </Grid>
+                                        </Box>
+                                        <Box mt={'xs'}>
+                                            <Grid gutter={{ base: 6 }}>
+                                                <Grid.Col span={6}>
+                                                    <Box mt={'xs'}>
+                                                        <Flex
+                                                            justify="center"
+                                                            align="center"
+                                                            direction="row"
+                                                        >
+                                                            <Text
+                                                                ta="center" fz="sm"
+                                                                fw={300}>
+                                                                {t('MachineryAndPartsWaste')}
+                                                            </Text>
+                                                        </Flex>
+                                                    </Box>
+                                                </Grid.Col>
+                                                <Grid.Col span={6}>
+                                                    <Box >
+                                                        <NumberInput
+                                                            p={'0'}
+                                                            placeholder={t('MachineryAndPartsWaste')}
+                                                            id={'price'}
+                                                            form={form}
+                                                            nextField={''}
+                                                            name={'price'}
+                                                        />
+                                                    </Box>
+                                                </Grid.Col>
+                                            </Grid>
+                                        </Box>
+                                        <Box mt={'xs'}>
+                                            <Grid gutter={{ base: 6 }}>
+                                                <Grid.Col span={6}>
+                                                    <Box mt={'xs'}>
+                                                        <Flex
+                                                            justify="center"
+                                                            align="center"
+                                                            direction="row"
+                                                        >
+                                                            <Text
+                                                                ta="center" fz="sm"
+                                                                fw={300}>
+                                                                {t('OtherCost')}
+                                                            </Text>
+                                                        </Flex>
+                                                    </Box>
+                                                </Grid.Col>
+                                                <Grid.Col span={6}>
+                                                    <Box >
+                                                        <NumberInput
+                                                            p={'0'}
+                                                            placeholder={t('OthersCost')}
+                                                            id={'price'}
+                                                            form={form}
+                                                            nextField={''}
+                                                            name={'price'}
+                                                        />
+                                                    </Box>
+                                                </Grid.Col>
+                                            </Grid>
+                                        </Box>
+                                        <Box mt={'xs'}>
+                                            <Grid gutter={{ base: 6 }}>
+                                                <Grid.Col span={6}>
+                                                    <Box mt={'xs'}>
+                                                        <Flex
+                                                            justify="center"
+                                                            align="center"
+                                                            direction="row"
+                                                        >
+                                                            <Text
+                                                                ta="center" fz="sm"
+                                                                fw={300}>
+                                                                {t('PackagingAccesories')}
+                                                            </Text>
+                                                        </Flex>
+                                                    </Box>
+                                                </Grid.Col>
+                                                <Grid.Col span={6}>
+                                                    <Box >
+                                                        <NumberInput
+                                                            p={'0'}
+                                                            placeholder={t('PackagingAccesories')}
+                                                            id={'price'}
+                                                            form={form}
+                                                            nextField={''}
+                                                            name={'price'}
+                                                        />
+                                                    </Box>
+                                                </Grid.Col>
+                                            </Grid>
+                                        </Box>
+                                        <Box mt={'xs'}>
+                                            <Grid gutter={{ base: 6 }}>
+                                                <Grid.Col span={6}>
+                                                    <Box mt={'xs'}>
+                                                        <Flex
+                                                            justify="center"
+                                                            align="center"
+                                                            direction="row"
+                                                        >
+                                                            <Text
+                                                                ta="center" fz="sm"
+                                                                fw={300}>
+                                                                {t('SalaryAndWages')}
+                                                            </Text>
+                                                        </Flex>
+                                                    </Box>
+                                                </Grid.Col>
+                                                <Grid.Col span={6}>
+                                                    <Box >
+                                                        <NumberInput
+                                                            p={'0'}
+                                                            placeholder={t('SalaryAndWages')}
+                                                            id={'price'}
+                                                            form={form}
+                                                            nextField={''}
+                                                            name={'price'}
+                                                        />
+                                                    </Box>
+                                                </Grid.Col>
+                                            </Grid>
+                                        </Box>
+                                        <Box mt={'xs'}>
+                                            <Grid gutter={{ base: 6 }}>
+                                                <Grid.Col span={6}>
+                                                    <Box mt={'xs'}>
+                                                        <Flex
+                                                            justify="center"
+                                                            align="center"
+                                                            direction="row"
+                                                        >
+                                                            <Text
+                                                                ta="center" fz="sm"
+                                                                fw={300}>
+                                                                {t('SalesCost')}
+                                                            </Text>
+                                                        </Flex>
+                                                    </Box>
+                                                </Grid.Col>
+                                                <Grid.Col span={6}>
+                                                    <Box >
+                                                        <NumberInput
+                                                            p={'0'}
+                                                            placeholder={t('SalesCost')}
+                                                            id={'price'}
+                                                            form={form}
+                                                            nextField={''}
+                                                            name={'price'}
+                                                        />
+                                                    </Box>
+                                                </Grid.Col>
+                                            </Grid>
+                                        </Box>
+                                        <Box mt={'xs'}>
+                                            <Grid gutter={{ base: 6 }}>
+                                                <Grid.Col span={6}>
+                                                    <Box mt={'xs'}>
+                                                        <Flex
+                                                            justify="center"
+                                                            align="center"
+                                                            direction="row"
+                                                        >
+                                                            <Text
+                                                                ta="center" fz="sm"
+                                                                fw={300}>
+                                                                {t('Telephone')}
+                                                            </Text>
+                                                        </Flex>
+                                                    </Box>
+                                                </Grid.Col>
+                                                <Grid.Col span={6}>
+                                                    <Box >
+                                                        <NumberInput
+                                                            p={'0'}
+                                                            placeholder={t('Telephone')}
+                                                            id={'price'}
+                                                            form={form}
+                                                            nextField={''}
+                                                            name={'price'}
+                                                        />
+                                                    </Box>
+                                                </Grid.Col>
+                                            </Grid>
+                                        </Box>
+                                        <Box mt={'xs'} >
+                                            <Grid gutter={{ base: 6 }}>
+                                                <Grid.Col span={6}>
+                                                    <Box mt={'xs'}>
+                                                        <Flex
+                                                            justify="center"
+                                                            align="center"
+                                                            direction="row"
+                                                        >
+                                                            <Text
+                                                                ta="center" fz="sm"
+                                                                fw={300}>
+                                                                {t('TransportCost')}
+                                                            </Text>
+                                                        </Flex>
+                                                    </Box>
+                                                </Grid.Col>
+                                                <Grid.Col span={6}>
+                                                    <Box >
+                                                        <NumberInput
+                                                            p={'0'}
+                                                            placeholder={t('TransportCost')}
+                                                            id={'price'}
+                                                            form={form}
+                                                            nextField={''}
+                                                            name={'price'}
+                                                        />
+                                                    </Box>
+                                                </Grid.Col>
+                                            </Grid>
+                                        </Box>
+                                        <Box mt={'xs'} mb={'sm'}>
+                                            <Grid gutter={{ base: 6 }}>
+                                                <Grid.Col span={6}>
+                                                    <Box mt={'xs'}>
+                                                        <Flex
+                                                            justify="center"
+                                                            align="center"
+                                                            direction="row"
+                                                        >
+                                                            <Text
+                                                                ta="center" fz="sm"
+                                                                fw={300}>
+                                                                {t('Total')}
+                                                            </Text>
+                                                        </Flex>
+                                                    </Box>
+                                                </Grid.Col>
+                                                <Grid.Col span={6}>
+                                                    <Box mt={'xs'}>
+                                                        <Flex
+                                                            justify="center"
+                                                            align="center"
+                                                            direction="row"
+                                                        >
+                                                            <Text
+                                                                ta="center" fz="sm"
+                                                                fw={300}>
+                                                                {t('1000')}
+                                                            </Text>
+                                                        </Flex>
+                                                    </Box>
+                                                </Grid.Col>
+                                            </Grid>
+                                        </Box>
+
                                     </ScrollArea>
                                 </Box>
                             </Box>
@@ -488,8 +875,8 @@ function ReceipeForm() {
                         </Box>
                     </Grid.Col>
                 </Grid>
-            </form>
-        </Box>
+            </form >
+        </Box >
 
     );
 }

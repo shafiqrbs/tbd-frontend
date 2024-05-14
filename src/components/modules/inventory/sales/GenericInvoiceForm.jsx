@@ -789,254 +789,254 @@ function GenericInvoiceForm(props) {
                                     {
                                         accessor: 'display_name',
                                         title: t("Name"),
-                                            footer: (
-                            <Group spacing="xs">
-                                <IconSum size="1.25em" />
-                                <Text mb={-2}>{tempCardProducts.length} Items</Text>
-                            </Group>
-                            )
+                                        footer: (
+                                            <Group spacing="xs">
+                                                <IconSum size="1.25em" />
+                                                <Text mb={-2}>{tempCardProducts.length} Items</Text>
+                                            </Group>
+                                        )
                                     },
-                            {
-                                accessor: 'price',
-                            title: t('Price'),
-                            textAlign: "right",
+                                    {
+                                        accessor: 'price',
+                                        title: t('Price'),
+                                        textAlign: "right",
                                         render: (item) => {
                                             return (
-                            item.price && Number(item.price).toFixed(2)
-                            );
+                                                item.price && Number(item.price).toFixed(2)
+                                            );
                                         }
                                     },
 
-                            {
-                                accessor: 'stock',
-                            title: t('Stock'),
-                            textAlign: "center"
+                                    {
+                                        accessor: 'stock',
+                                        title: t('Stock'),
+                                        textAlign: "center"
                                     },
-                            {
-                                accessor: 'quantity',
-                            title: t('Quantity'),
-                            textAlign: "center",
-                            width: '100px',
+                                    {
+                                        accessor: 'quantity',
+                                        title: t('Quantity'),
+                                        textAlign: "center",
+                                        width: '100px',
                                         render: (item) => {
                                             const [editedQuantity, setEditedQuantity] = useState(item.quantity);
 
                                             const handlQuantityChange = (e) => {
                                                 const editedQuantity = e.currentTarget.value;
-                            setEditedQuantity(editedQuantity);
+                                                setEditedQuantity(editedQuantity);
 
-                            const tempCardProducts = localStorage.getItem('temp-sales-products');
-                            const cardProducts = tempCardProducts ? JSON.parse(tempCardProducts) : [];
+                                                const tempCardProducts = localStorage.getItem('temp-sales-products');
+                                                const cardProducts = tempCardProducts ? JSON.parse(tempCardProducts) : [];
 
                                                 const updatedProducts = cardProducts.map(product => {
                                                     if (product.product_id === item.product_id) {
                                                         return {
-                                ...product,
-                                quantity: e.currentTarget.value,
-                            sub_total: e.currentTarget.value * item.sales_price,
+                                                            ...product,
+                                                            quantity: e.currentTarget.value,
+                                                            sub_total: e.currentTarget.value * item.sales_price,
                                                         };
                                                     }
-                            return product
+                                                    return product
                                                 });
 
-                            localStorage.setItem('temp-sales-products', JSON.stringify(updatedProducts));
-                            setLoadCardProducts(true)
+                                                localStorage.setItem('temp-sales-products', JSON.stringify(updatedProducts));
+                                                setLoadCardProducts(true)
                                             };
 
-                            return (
-                            <>
-                                <TextInput
-                                    type="number"
-                                    label=""
-                                    size="xs"
-                                    value={editedQuantity}
-                                    onChange={handlQuantityChange}
-                                    onKeyDown={getHotkeyHandler([
-                                        ['Enter', (e) => {
-                                            document.getElementById('inline-update-quantity-' + item.product_id).focus();
-                                        }],
-                                    ])}
-                                />
-                            </>
-                            );
+                                            return (
+                                                <>
+                                                    <TextInput
+                                                        type="number"
+                                                        label=""
+                                                        size="xs"
+                                                        value={editedQuantity}
+                                                        onChange={handlQuantityChange}
+                                                        onKeyDown={getHotkeyHandler([
+                                                            ['Enter', (e) => {
+                                                                document.getElementById('inline-update-quantity-' + item.product_id).focus();
+                                                            }],
+                                                        ])}
+                                                    />
+                                                </>
+                                            );
                                         }
                                     },
-                            {
-                                accessor: 'unit_name',
-                            title: t('UOM'),
-                            textAlign: "center"
+                                    {
+                                        accessor: 'unit_name',
+                                        title: t('UOM'),
+                                        textAlign: "center"
                                     },
-                            {
-                                accessor: 'sales_price',
-                            title: t('SalesPrice'),
-                            textAlign: "center",
-                            width: '100px',
+                                    {
+                                        accessor: 'sales_price',
+                                        title: t('SalesPrice'),
+                                        textAlign: "center",
+                                        width: '100px',
                                         render: (item) => {
                                             const [editedSalesPrice, setEditedSalesPrice] = useState(item.sales_price);
 
                                             const handleSalesPriceChange = (e) => {
                                                 const newSalesPrice = e.currentTarget.value;
-                            setEditedSalesPrice(newSalesPrice);
+                                                setEditedSalesPrice(newSalesPrice);
                                             };
 
                                             useEffect(() => {
                                                 const timeoutId = setTimeout(() => {
                                                     const tempCardProducts = localStorage.getItem('temp-sales-products');
-                            const cardProducts = tempCardProducts ? JSON.parse(tempCardProducts) : [];
+                                                    const cardProducts = tempCardProducts ? JSON.parse(tempCardProducts) : [];
                                                     const updatedProducts = cardProducts.map(product => {
                                                         if (product.product_id === item.product_id) {
                                                             return {
-                                ...product,
-                                sales_price: editedSalesPrice,
-                            sub_total: editedSalesPrice * item.quantity,
+                                                                ...product,
+                                                                sales_price: editedSalesPrice,
+                                                                sub_total: editedSalesPrice * item.quantity,
                                                             };
                                                         }
-                            return product;
+                                                        return product;
                                                     });
 
-                            localStorage.setItem('temp-sales-products', JSON.stringify(updatedProducts));
-                            setLoadCardProducts(true);
+                                                    localStorage.setItem('temp-sales-products', JSON.stringify(updatedProducts));
+                                                    setLoadCardProducts(true);
                                                 }, 1000);
 
                                                 return () => clearTimeout(timeoutId);
                                             }, [editedSalesPrice, item.product_id, item.quantity]);
 
-                            return (
-                            item.percent ?
-                            Number(item.sales_price).toFixed(2)
-                            :
-                            <>
-                                <TextInput
-                                    type="number"
-                                    label=""
-                                    size="xs"
-                                    id={'inline-update-quantity-' + item.product_id}
-                                    value={editedSalesPrice}
-                                    onChange={handleSalesPriceChange}
-                                />
-                            </>
-                            );
+                                            return (
+                                                item.percent ?
+                                                    Number(item.sales_price).toFixed(2)
+                                                    :
+                                                    <>
+                                                        <TextInput
+                                                            type="number"
+                                                            label=""
+                                                            size="xs"
+                                                            id={'inline-update-quantity-' + item.product_id}
+                                                            value={editedSalesPrice}
+                                                            onChange={handleSalesPriceChange}
+                                                        />
+                                                    </>
+                                            );
                                         }
                                     },
-                            {
-                                accessor: 'percent',
-                            title: t('Discount'),
-                            textAlign: "center",
-                            width: '100px',
+                                    {
+                                        accessor: 'percent',
+                                        title: t('Discount'),
+                                        textAlign: "center",
+                                        width: '100px',
                                         render: (item) => {
                                             const [editedPercent, setEditedPercent] = useState(item.percent);
                                             const handlePercentChange = (e) => {
                                                 const editedPercent = e.currentTarget.value;
-                            setEditedPercent(editedPercent);
+                                                setEditedPercent(editedPercent);
 
-                            const tempCardProducts = localStorage.getItem('temp-sales-products');
-                            const cardProducts = tempCardProducts ? JSON.parse(tempCardProducts) : [];
+                                                const tempCardProducts = localStorage.getItem('temp-sales-products');
+                                                const cardProducts = tempCardProducts ? JSON.parse(tempCardProducts) : [];
 
                                                 if (e.currentTarget.value && e.currentTarget.value >= 0) {
                                                     const updatedProducts = cardProducts.map(product => {
                                                         if (product.product_id === item.product_id) {
                                                             const discountAmount = (item.price * editedPercent) / 100;
-                            const salesPrice = item.price - discountAmount;
+                                                            const salesPrice = item.price - discountAmount;
 
-                            return {
-                                ...product,
-                                percent: editedPercent,
-                            sales_price: salesPrice,
-                            sub_total: salesPrice * item.quantity,
+                                                            return {
+                                                                ...product,
+                                                                percent: editedPercent,
+                                                                sales_price: salesPrice,
+                                                                sub_total: salesPrice * item.quantity,
                                                             };
                                                         }
-                            return product
+                                                        return product
                                                     });
 
-                            localStorage.setItem('temp-sales-products', JSON.stringify(updatedProducts));
-                            setLoadCardProducts(true)
+                                                    localStorage.setItem('temp-sales-products', JSON.stringify(updatedProducts));
+                                                    setLoadCardProducts(true)
                                                 }
                                             };
 
-                            return (
-                            item.percent ?
-                            <>
-                                <TextInput
-                                    type="number"
-                                    label=""
-                                    size="xs"
-                                    value={editedPercent}
-                                    onChange={handlePercentChange}
-                                    rightSection={
-                                        editedPercent === '' ?
-                                            <>{item.percent}<IconPercentage size={16} opacity={0.5} /></>
-                                            :
-                                            <IconPercentage size={16} opacity={0.5} />
-                                    }
-                                />
-                            </>
-                            :
-                            <Text size={'xs'} ta="right">
-                                {(Number(item.price) - Number(item.sales_price)).toFixed(2)}
-                            </Text>
-                            );
+                                            return (
+                                                item.percent ?
+                                                    <>
+                                                        <TextInput
+                                                            type="number"
+                                                            label=""
+                                                            size="xs"
+                                                            value={editedPercent}
+                                                            onChange={handlePercentChange}
+                                                            rightSection={
+                                                                editedPercent === '' ?
+                                                                    <>{item.percent}<IconPercentage size={16} opacity={0.5} /></>
+                                                                    :
+                                                                    <IconPercentage size={16} opacity={0.5} />
+                                                            }
+                                                        />
+                                                    </>
+                                                    :
+                                                    <Text size={'xs'} ta="right">
+                                                        {(Number(item.price) - Number(item.sales_price)).toFixed(2)}
+                                                    </Text>
+                                            );
                                         },
-                            footer: (
-                            <Group spacing="xs" >
-                                <Text fz={'md'} fw={'600'}>{t('SubTotal')}</Text>
-                            </Group>
-                            ),
+                                        footer: (
+                                            <Group spacing="xs" >
+                                                <Text fz={'md'} fw={'600'}>{t('SubTotal')}</Text>
+                                            </Group>
+                                        ),
                                     },
 
-                            {
-                                accessor: 'sub_total',
-                            title: t('SubTotal'),
-                            textAlign: "right",
+                                    {
+                                        accessor: 'sub_total',
+                                        title: t('SubTotal'),
+                                        textAlign: "right",
                                         render: (item) => {
                                             return (
-                            item.sub_total && Number(item.sub_total).toFixed(2)
-                            );
+                                                item.sub_total && Number(item.sub_total).toFixed(2)
+                                            );
                                         },
-                            footer: (
-                            <Group spacing="xs">
-                                <Text fw={'600'} fz={'md'}>{
-                                    salesSubTotalAmount.toFixed(2)
-                                }</Text>
-                            </Group>
-                            ),
+                                        footer: (
+                                            <Group spacing="xs">
+                                                <Text fw={'600'} fz={'md'}>{
+                                                    salesSubTotalAmount.toFixed(2)
+                                                }</Text>
+                                            </Group>
+                                        ),
                                     },
-                            {
-                                accessor: "action",
-                            title: t('Action'),
-                            textAlign: "right",
+                                    {
+                                        accessor: "action",
+                                        title: t('Action'),
+                                        textAlign: "right",
                                         render: (item) => (
-                            <Group gap={4} justify="right" wrap="nowrap">
+                                            <Group gap={4} justify="right" wrap="nowrap">
 
-                                <ActionIcon
-                                    size="sm"
-                                    variant="subtle"
-                                    color="red"
-                                    onClick={() => {
-                                        const dataString = localStorage.getItem('temp-sales-products');
-                                        let data = dataString ? JSON.parse(dataString) : [];
+                                                <ActionIcon
+                                                    size="sm"
+                                                    variant="subtle"
+                                                    color="red"
+                                                    onClick={() => {
+                                                        const dataString = localStorage.getItem('temp-sales-products');
+                                                        let data = dataString ? JSON.parse(dataString) : [];
 
-                                        data = data.filter(d => d.product_id !== item.product_id);
+                                                        data = data.filter(d => d.product_id !== item.product_id);
 
-                                        const updatedDataString = JSON.stringify(data);
+                                                        const updatedDataString = JSON.stringify(data);
 
-                                        localStorage.setItem('temp-sales-products', updatedDataString);
-                                        setLoadCardProducts(true)
-                                    }}
-                                >
-                                    <IconX size={16} style={{ width: '70%', height: '70%' }}
-                                        stroke={1.5} />
-                                </ActionIcon>
-                            </Group>
-                            ),
+                                                        localStorage.setItem('temp-sales-products', updatedDataString);
+                                                        setLoadCardProducts(true)
+                                                    }}
+                                                >
+                                                    <IconX size={16} style={{ width: '70%', height: '70%' }}
+                                                        stroke={1.5} />
+                                                </ActionIcon>
+                                            </Group>
+                                        ),
                                     },
-                            ]
+                                ]
                                 }
-                            fetching={fetching}
-                            totalRecords={100}
-                            recordsPerPage={10}
-                            loaderSize="xs"
-                            loaderColor="grape"
-                            height={height}
-                            scrollAreaProps={{ type: 'never' }}
+                                fetching={fetching}
+                                totalRecords={100}
+                                recordsPerPage={10}
+                                loaderSize="xs"
+                                loaderColor="grape"
+                                height={height}
+                                scrollAreaProps={{ type: 'never' }}
                             />
                         </Box>
 

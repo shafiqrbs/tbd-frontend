@@ -5,8 +5,6 @@ import {
     Box,
     ActionIcon,
     Text,
-    Grid,
-    Stack
 } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import { IconEye, IconEdit, IconTrash } from "@tabler/icons-react";
@@ -26,12 +24,12 @@ import KeywordDateRangeSearch from "../../filter/KeywordDateRangeSearch.jsx";
 import ReceipeForm from "./ReceipeForm.jsx";
 import ReceipeAddItem from "./ReceipeAddItem.jsx";
 
-function ProductTable() {
+function ReceipeTable() {
 
     const dispatch = useDispatch();
     const { t, i18n } = useTranslation();
     const { isOnline, mainAreaHeight } = useOutletContext();
-    const tableHeight = mainAreaHeight - 116; //TabList height 104
+    const tableHeight = mainAreaHeight - 128; //TabList height 104
     const height = mainAreaHeight - 314; //TabList height 104
 
     const perPage = 50;
@@ -41,12 +39,26 @@ function ProductTable() {
     const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword)
     const indexData = useSelector((state) => state.crudSlice.indexEntityData)
     const [salesViewData, setSalesViewData] = useState({})
+    const productFilterData = useSelector((state) => state.inventoryCrudSlice.productFilterData)
 
     useEffect(() => {
         setSalesViewData(indexData.data && indexData.data[0] && indexData.data[0])
     }, [indexData.data])
 
-
+    const data = [
+        {
+            'item_index': 0,
+            'item_name': 'Printed Aluminium Blister Foil (20 Micron)',
+            'item_uom': 'kg',
+            'item_quantity': '10',
+            'item_price': '560.00',
+            'item_sub_total': '5600',
+            'item_wastage': '0',
+            'item_wastage_quantity': '0',
+            'item_wastage_amount': '0.00',
+            'item_status': 'Disabled'
+        },
+    ]
     const rows = salesViewData && salesViewData.sales_items && salesViewData.sales_items.map((element, index) => (
         <Table.Tr key={element.name}>
             <Table.Td fz="xs" width={'20'}>{index + 1}</Table.Td>
@@ -60,9 +72,13 @@ function ProductTable() {
 
     useEffect(() => {
         const value = {
-            url: 'inventory/sales',
+            url: 'inventory/product',
             param: {
                 term: searchKeyword,
+                name: productFilterData.name,
+                alternative_name: productFilterData.alternative_name,
+                sku: productFilterData.sku,
+                sales_price: productFilterData.sales_price,
                 page: page,
                 offset: perPage
             }
@@ -73,138 +89,107 @@ function ProductTable() {
 
     return (
         <>
-
-            <Box>
-
-                <Grid columns={24} gutter={{ base: 8 }}>
-
-                    <Grid.Col span={15} >
-                        <Box>
-                            <Grid columns={24} gutter={{ base: 8 }}>
-                                <Grid.Col span={24} >
-                                    <Box pl={`xs`} pb={'4'} pr={'xs'} pt={'4'} mb={'4'} className={'boxBackground borderRadiusAll'} >
-                                        <Grid>
-                                            <Grid.Col>
-                                                <Stack >
-                                                    <ReceipeAddItem />
-                                                </Stack>
-                                            </Grid.Col>
-                                        </Grid>
-                                    </Box>
-                                </Grid.Col>
-                            </Grid>
-                        </Box>
-                        <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
-                            <Box className={'borderRadiusAll'}>
-                                <DataTable
-                                    classNames={{
-                                        root: tableCss.root,
-                                        table: tableCss.table,
-                                        header: tableCss.header,
-                                        footer: tableCss.footer,
-                                        pagination: tableCss.pagination,
-                                    }}
-                                    records={indexData.data}
-                                    columns={[
-                                        {
-                                            accessor: 'index',
-                                            title: t('S/N'),
-                                            textAlignment: 'right',
-                                            render: (item) => (indexData.data.indexOf(item) + 1)
-                                        },
-                                        { accessor: 'id', title: t("ID") },
-                                        { accessor: 'created', title: t("Created") },
-                                        { accessor: 'invoice', title: t("Invoice") },
-                                        { accessor: 'customerName', title: t("Customer") },
-                                        { accessor: 'sub_total', title: t("SubTotal") },
-                                        { accessor: 'discount', title: t("Discount") },
-                                        { accessor: 'total', title: t("Total") },
-                                        {
-                                            accessor: "action",
-                                            title: t("Action"),
-                                            textAlign: "right",
-                                            render: (data) => (
-                                                <Group gap={4} justify="right" wrap="nowrap">
-                                                    <ActionIcon
-                                                        size="sm"
-                                                        variant="subtle"
-                                                        color="green"
-                                                        onClick={() => {
-                                                            setSalesViewData(data)
-                                                        }}
-                                                    >
-                                                        <IconEye size={16} />
-                                                    </ActionIcon>
-                                                    <ActionIcon
-                                                        size="sm"
-                                                        variant="subtle"
-                                                        color="blue"
-                                                        onClick={() => {
-                                                            dispatch(setInsertType('update'))
-                                                            dispatch(editEntityData('inventory/sales/' + data.id))
-                                                            dispatch(setFormLoading(true))
-                                                        }}
-                                                    >
-                                                        <IconEdit size={16} />
-                                                    </ActionIcon>
-                                                    <ActionIcon
-                                                        size="sm"
-                                                        variant="subtle"
-                                                        color="red"
-                                                        onClick={() => {
-                                                            modals.openConfirmModal({
-                                                                title: (
-                                                                    <Text size="md"> {t("FormConfirmationTitle")}</Text>
-                                                                ),
-                                                                children: (
-                                                                    <Text size="sm"> {t("FormConfirmationMessage")}</Text>
-                                                                ),
-                                                                labels: { confirm: 'Confirm', cancel: 'Cancel' },
-                                                                onCancel: () => console.log('Cancel'),
-                                                                onConfirm: () => {
-                                                                    dispatch(deleteEntityData('vendor/' + data.id))
-                                                                    dispatch(setFetching(true))
-                                                                },
-                                                            });
-                                                        }}
-                                                    >
-                                                        <IconTrash size={16} />
-                                                    </ActionIcon>
-                                                </Group>
-                                            ),
-                                        },
-                                    ]
-                                    }
-                                    fetching={fetching}
-                                    totalRecords={indexData.total}
-                                    recordsPerPage={perPage}
-                                    page={page}
-                                    onPageChange={(p) => {
-                                        setPage(p)
-                                        dispatch(setFetching(true))
-                                    }}
-                                    loaderSize="xs"
-                                    loaderColor="grape"
-                                    height={tableHeight}
-                                    scrollAreaProps={{ type: 'never' }}
-                                />
-                            </Box>
-                        </Box>
-
-                    </Grid.Col>
-
-                    <Grid.Col span={9} >
-                        <Box >
-                            <ReceipeForm
-                            // allowZeroPercentage={configData.zero_stock}
-                            // currancySymbol={configData.currency.symbol}
-                            />
-                        </Box>
-                    </Grid.Col>
-                </Grid>
+            <Box pb={'xs'} >
+                <ReceipeAddItem />
+            </Box>
+            <Box className={'borderRadiusAll'} >
+                <DataTable
+                    classNames={{
+                        root: tableCss.root,
+                        table: tableCss.table,
+                        header: tableCss.header,
+                        footer: tableCss.footer,
+                        pagination: tableCss.pagination,
+                    }}
+                    records={data}
+                    columns={[
+                        {
+                            accessor: 'index',
+                            title: t('S/N'),
+                            textAlignment: 'right',
+                            render: index => (index.item_index + 1)
+                        },
+                        { accessor: 'item_name', title: t("item") },
+                        { accessor: 'item_uom', title: t("Uom") },
+                        { accessor: 'item_quantity', title: t("Quantity") },
+                        { accessor: 'item_price', title: t("Price") },
+                        { accessor: 'item_sub_total', title: t("SubTotal") },
+                        { accessor: 'item_wastage', title: t("Wastage") },
+                        { accessor: 'item_wastage_quantity', title: t("WastageQuantity") },
+                        { accessor: 'item_wastage_amount', title: t("WastageAmount") },
+                        { accessor: 'item_status', title: t("Status") },
+                        {
+                            accessor: "action",
+                            title: t("Action"),
+                            textAlign: "right",
+                            render: (data) => (
+                                <Group gap={4} justify="right" wrap="nowrap">
+                                    <ActionIcon
+                                        size="sm"
+                                        variant="subtle"
+                                        color="green"
+                                        onClick={() => {
+                                            setSalesViewData(data)
+                                        }}
+                                    >
+                                        <IconEye size={16} />
+                                    </ActionIcon>
+                                    <ActionIcon
+                                        size="sm"
+                                        variant="subtle"
+                                        color="blue"
+                                        onClick={() => {
+                                            dispatch(setInsertType('update'))
+                                            dispatch(editEntityData('inventory/sales/' + data.id))
+                                            dispatch(setFormLoading(true))
+                                        }}
+                                    >
+                                        <IconEdit size={16} />
+                                    </ActionIcon>
+                                    <ActionIcon
+                                        size="sm"
+                                        variant="subtle"
+                                        color="red"
+                                        onClick={() => {
+                                            modals.openConfirmModal({
+                                                title: (
+                                                    <Text size="md"> {t("FormConfirmationTitle")}</Text>
+                                                ),
+                                                children: (
+                                                    <Text size="sm"> {t("FormConfirmationMessage")}</Text>
+                                                ),
+                                                labels: { confirm: 'Confirm', cancel: 'Cancel' },
+                                                onCancel: () => console.log('Cancel'),
+                                                onConfirm: () => {
+                                                    dispatch(deleteEntityData('vendor/' + data.id))
+                                                    dispatch(setFetching(true))
+                                                },
+                                            });
+                                        }}
+                                    >
+                                        <IconTrash size={16} />
+                                    </ActionIcon>
+                                </Group>
+                            ),
+                        },
+                    ]
+                    }
+                    fetching={fetching}
+                    totalRecords={indexData.total}
+                    recordsPerPage={perPage}
+                    page={page}
+                    onPageChange={(p) => {
+                        setPage(p)
+                        dispatch(setFetching(true))
+                    }}
+                    loaderSize="xs"
+                    loaderColor="grape"
+                    height={tableHeight}
+                    scrollAreaProps={{ type: 'never' }}
+                />
             </Box>
         </>
     );
 }
 
-export default ProductTable;
+export default ReceipeTable;
