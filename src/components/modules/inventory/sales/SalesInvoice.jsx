@@ -37,6 +37,7 @@ function SalesInvoice() {
                                     <GenericInvoiceForm
                                         allowZeroPercentage={configData.zero_stock}
                                         currencySymbol={configData.currency.symbol}
+                                        domainId={configData.domain_id}
                                     />
                                 }
                             </Box>

@@ -36,7 +36,7 @@ import ShortcutInvoice from "../../shortcut/ShortcutInvoice";
 import tableCss from "../../../../assets/css/Table.module.css";
 
 function GenericInvoiceForm(props) {
-    const { currencySymbol, allowZeroPercentage } = props
+    const { currencySymbol, allowZeroPercentage,domainId } = props
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
@@ -185,7 +185,7 @@ function GenericInvoiceForm(props) {
 
 
     const [productTypeData, setProductTypeData] = useState(null);
-    const productTypeDropdownData = useSelector((state) => state.utilityUtilitySlice.settingDropdown)
+    const productTypeDropdownData = useSelector((state) => state.utilityUtilitySlice.productDropdownData)
     let productTypeDropdown = productTypeDropdownData && productTypeDropdownData.length > 0 ?
         productTypeDropdownData.map((type, index) => {
             return ({ 'label': type.name, 'value': String(type.id) })
@@ -1050,6 +1050,7 @@ function GenericInvoiceForm(props) {
                             totalPurchaseAmount={totalPurchaseAmount}
                             currencySymbol={currencySymbol}
                             setLoadCardProducts={setLoadCardProducts}
+                            domainId={domainId}
                         />
                     </Box>
                 </Grid.Col>
