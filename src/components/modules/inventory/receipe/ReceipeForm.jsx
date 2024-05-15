@@ -75,6 +75,7 @@ function ReceipeForm() {
 
     const [productUnitData, setProductUnitData] = useState(null);
     const [value, setValue] = useState(null);
+    const [value1, setValue1] = useState(null);
     const productUnitDropdownData = useSelector((state) => state.utilityUtilitySlice.productUnitDropdown)
     let productUnitDropdown = productUnitDropdownData && productUnitDropdownData.length > 0 ?
         productUnitDropdownData.map((type, index) => {
@@ -221,14 +222,16 @@ function ReceipeForm() {
                                                 </Grid.Col>
                                                 <Grid.Col span={6}>
                                                     <Box >
-                                                        <NumberInput
-                                                            p={'0'}
+                                                        <InputForm
+                                                            tooltip={t('WastagePercent')}
                                                             placeholder={t('WastagePercent')}
-                                                            id={'price'}
+                                                            required={false}
+                                                            nextField={'licenseDate'}
+                                                            name={'wastage_Percent'}
                                                             form={form}
-                                                            nextField={''}
-                                                            name={'price'}
+                                                            id={'wastagePercent'}
                                                         />
+
                                                     </Box>
                                                 </Grid.Col>
                                             </Grid>
@@ -256,7 +259,10 @@ function ReceipeForm() {
                                                             value={value}
                                                             valueFormat="DD-MM-YYYY "
                                                             onChange={setValue}
+                                                            id={'licenseDate'}
+                                                            name={'license_date'}
                                                             placeholder={t('LicenseDate')}
+                                                            nextField={'issuedBy'}
                                                             rightSection={
                                                                 <Tooltip
                                                                     withArrow
@@ -299,10 +305,13 @@ function ReceipeForm() {
                                                 <Grid.Col span={6}>
                                                     <Box mt={'xs'}>
                                                         <DateInput
-                                                            value={value}
+                                                            value={value1}
                                                             valueFormat="DD-MM-YYYY "
-                                                            onChange={setValue}
-                                                            placeholder={t('InitiateDate')} rightSection={
+                                                            onChange={setValue1}
+                                                            nextField={'customerName'}
+                                                            placeholder={t('InitiateDate')}
+                                                            id={'initiateDate'}
+                                                            name={'initiate_date'} rightSection={
                                                                 <Tooltip
                                                                     withArrow
                                                                     ta="center"
@@ -347,11 +356,11 @@ function ReceipeForm() {
                                                             tooltip={t('IssuedBy')}
                                                             placeholder={t('IssuedBy')}
                                                             required={true}
-                                                            nextField={'CustomerGroup'}
-                                                            name={'name'}
+                                                            nextField={'designation'}
                                                             form={form}
                                                             mt={0}
-                                                            id={'CustomerName'}
+                                                            id={'issuedBy'}
+                                                            name={'issued_by'}
                                                         />
                                                     </Box>
                                                 </Grid.Col>
@@ -379,11 +388,11 @@ function ReceipeForm() {
                                                             tooltip={t('Designation')}
                                                             placeholder={t('Designation')}
                                                             required={true}
-                                                            nextField={'CustomerGroup'}
-                                                            name={'name'}
+                                                            nextField={'remarks'}
+                                                            name={'designation'}
                                                             form={form}
                                                             mt={0}
-                                                            id={'CustomerName'}
+                                                            id={'designation'}
                                                         />
                                                     </Box>
                                                 </Grid.Col>
@@ -411,11 +420,11 @@ function ReceipeForm() {
                                                             tooltip={t('Remarks')}
                                                             placeholder={t('Remarks')}
                                                             required={true}
-                                                            nextField={'CustomerGroup'}
-                                                            name={'name'}
+                                                            nextField={'bankInterestCommission'}
+                                                            name={'remarks'}
                                                             form={form}
                                                             mt={0}
-                                                            id={'CustomerName'}
+                                                            id={'remarks'}
                                                         />
                                                     </Box>
                                                 </Grid.Col>
@@ -440,13 +449,14 @@ function ReceipeForm() {
                                                 </Grid.Col>
                                                 <Grid.Col span={6}>
                                                     <Box >
-                                                        <NumberInput
-                                                            p={'0'}
+                                                        <InputForm
+                                                            tooltip={t('Bank Interest & Commission')}
                                                             placeholder={t('Bank Interest & Commission')}
-                                                            id={'price'}
+                                                            required={false}
+                                                            nextField={'electricityCost'}
+                                                            name={'bank_Interest_commission'}
                                                             form={form}
-                                                            nextField={''}
-                                                            name={'price'}
+                                                            id={'bankInterestCommission'}
                                                         />
                                                     </Box>
                                                 </Grid.Col>
@@ -471,14 +481,16 @@ function ReceipeForm() {
                                                 </Grid.Col>
                                                 <Grid.Col span={6}>
                                                     <Box >
-                                                        <NumberInput
-                                                            p={'0'}
+                                                        <InputForm
+                                                            tooltip={t('ElectricityCost')}
                                                             placeholder={t('ElectricityCost')}
-                                                            id={'price'}
+                                                            required={false}
+                                                            nextField={'entertainment'}
+                                                            name={'electricity_cost'}
                                                             form={form}
-                                                            nextField={''}
-                                                            name={'price'}
+                                                            id={'electricityCost'}
                                                         />
+
                                                     </Box>
                                                 </Grid.Col>
                                             </Grid>
@@ -502,14 +514,17 @@ function ReceipeForm() {
                                                 </Grid.Col>
                                                 <Grid.Col span={6}>
                                                     <Box >
-                                                        <NumberInput
-                                                            p={'0'}
+                                                        <InputForm
+                                                            tooltip={t('Entertainment')}
                                                             placeholder={t('Entertainment')}
-                                                            id={'price'}
+                                                            required={false}
+                                                            nextField={'factoryRent'}
+                                                            name={'entertainment'}
                                                             form={form}
-                                                            nextField={''}
-                                                            name={'price'}
+                                                            id={'entertainment'}
                                                         />
+
+
                                                     </Box>
                                                 </Grid.Col>
                                             </Grid>
@@ -533,14 +548,16 @@ function ReceipeForm() {
                                                 </Grid.Col>
                                                 <Grid.Col span={6}>
                                                     <Box >
-                                                        <NumberInput
-                                                            p={'0'}
+                                                        <InputForm
+                                                            tooltip={t('FactoryRent')}
                                                             placeholder={t('FactoryRent')}
-                                                            id={'price'}
+                                                            required={false}
+                                                            nextField={'insurance'}
+                                                            name={'factory_rent'}
                                                             form={form}
-                                                            nextField={''}
-                                                            name={'price'}
+                                                            id={'factoryRent'}
                                                         />
+
                                                     </Box>
                                                 </Grid.Col>
                                             </Grid>
@@ -567,14 +584,16 @@ function ReceipeForm() {
                                                 </Grid.Col>
                                                 <Grid.Col span={6}>
                                                     <Box >
-                                                        <NumberInput
-                                                            p={'0'}
+                                                        <InputForm
+                                                            tooltip={t('Insurance')}
                                                             placeholder={t('Insurance')}
-                                                            id={'price'}
+                                                            required={false}
+                                                            nextField={'itemProfit'}
+                                                            name={'insurance'}
                                                             form={form}
-                                                            nextField={''}
-                                                            name={'price'}
+                                                            id={'insurance'}
                                                         />
+
                                                     </Box>
                                                 </Grid.Col>
                                             </Grid>
@@ -598,14 +617,16 @@ function ReceipeForm() {
                                                 </Grid.Col>
                                                 <Grid.Col span={6}>
                                                     <Box >
-                                                        <NumberInput
-                                                            p={'0'}
+                                                        <InputForm
+                                                            tooltip={t('ItemProfit')}
                                                             placeholder={t('ItemProfit')}
-                                                            id={'price'}
+                                                            required={false}
+                                                            nextField={'machineryPartsWaste'}
+                                                            name={'item_profit'}
                                                             form={form}
-                                                            nextField={''}
-                                                            name={'price'}
+                                                            id={'itemProfit'}
                                                         />
+
                                                     </Box>
                                                 </Grid.Col>
                                             </Grid>
@@ -629,14 +650,16 @@ function ReceipeForm() {
                                                 </Grid.Col>
                                                 <Grid.Col span={6}>
                                                     <Box >
-                                                        <NumberInput
-                                                            p={'0'}
+                                                        <InputForm
+                                                            tooltip={t('MachineryAndPartsWaste')}
                                                             placeholder={t('MachineryAndPartsWaste')}
-                                                            id={'price'}
+                                                            required={false}
+                                                            nextField={'othersCost'}
+                                                            name={'machinery_parts_waste'}
                                                             form={form}
-                                                            nextField={''}
-                                                            name={'price'}
+                                                            id={'machineryPartsWaste'}
                                                         />
+
                                                     </Box>
                                                 </Grid.Col>
                                             </Grid>
@@ -660,14 +683,16 @@ function ReceipeForm() {
                                                 </Grid.Col>
                                                 <Grid.Col span={6}>
                                                     <Box >
-                                                        <NumberInput
-                                                            p={'0'}
+                                                        <InputForm
+                                                            tooltip={t('OthersCost')}
                                                             placeholder={t('OthersCost')}
-                                                            id={'price'}
+                                                            required={false}
+                                                            nextField={'packagingAccesories'}
+                                                            name={'others_cost'}
                                                             form={form}
-                                                            nextField={''}
-                                                            name={'price'}
+                                                            id={'othersCost'}
                                                         />
+
                                                     </Box>
                                                 </Grid.Col>
                                             </Grid>
@@ -691,14 +716,16 @@ function ReceipeForm() {
                                                 </Grid.Col>
                                                 <Grid.Col span={6}>
                                                     <Box >
-                                                        <NumberInput
-                                                            p={'0'}
+                                                        <InputForm
+                                                            tooltip={t('PackagingAccesories')}
                                                             placeholder={t('PackagingAccesories')}
-                                                            id={'price'}
+                                                            required={false}
+                                                            nextField={'salaryWages'}
+                                                            name={'packaging_accesories'}
                                                             form={form}
-                                                            nextField={''}
-                                                            name={'price'}
+                                                            id={'packagingAccesories'}
                                                         />
+
                                                     </Box>
                                                 </Grid.Col>
                                             </Grid>
@@ -722,14 +749,16 @@ function ReceipeForm() {
                                                 </Grid.Col>
                                                 <Grid.Col span={6}>
                                                     <Box >
-                                                        <NumberInput
-                                                            p={'0'}
+                                                        <InputForm
+                                                            tooltip={t('SalaryAndWages')}
                                                             placeholder={t('SalaryAndWages')}
-                                                            id={'price'}
+                                                            required={false}
+                                                            nextField={'salesCost'}
+                                                            name={'salary_wages'}
                                                             form={form}
-                                                            nextField={''}
-                                                            name={'price'}
+                                                            id={'salaryWages'}
                                                         />
+
                                                     </Box>
                                                 </Grid.Col>
                                             </Grid>
@@ -753,14 +782,16 @@ function ReceipeForm() {
                                                 </Grid.Col>
                                                 <Grid.Col span={6}>
                                                     <Box >
-                                                        <NumberInput
-                                                            p={'0'}
+                                                        <InputForm
+                                                            tooltip={t('SalesCost')}
                                                             placeholder={t('SalesCost')}
-                                                            id={'price'}
+                                                            required={false}
+                                                            nextField={'telephone'}
+                                                            name={'sales_cost'}
                                                             form={form}
-                                                            nextField={''}
-                                                            name={'price'}
+                                                            id={'salesCost'}
                                                         />
+
                                                     </Box>
                                                 </Grid.Col>
                                             </Grid>
@@ -784,14 +815,16 @@ function ReceipeForm() {
                                                 </Grid.Col>
                                                 <Grid.Col span={6}>
                                                     <Box >
-                                                        <NumberInput
-                                                            p={'0'}
+                                                        <InputForm
+                                                            tooltip={t('Telephone')}
                                                             placeholder={t('Telephone')}
-                                                            id={'price'}
+                                                            required={false}
+                                                            nextField={'transportCost'}
+                                                            name={'telephone'}
                                                             form={form}
-                                                            nextField={''}
-                                                            name={'price'}
+                                                            id={'telephone'}
                                                         />
+
                                                     </Box>
                                                 </Grid.Col>
                                             </Grid>
@@ -815,14 +848,16 @@ function ReceipeForm() {
                                                 </Grid.Col>
                                                 <Grid.Col span={6}>
                                                     <Box >
-                                                        <NumberInput
-                                                            p={'0'}
+                                                        <InputForm
+                                                            tooltip={t('TransportCost')}
                                                             placeholder={t('TransportCost')}
-                                                            id={'price'}
-                                                            form={form}
+                                                            required={false}
                                                             nextField={''}
-                                                            name={'price'}
+                                                            name={'transport_cost'}
+                                                            form={form}
+                                                            id={'transportCost'}
                                                         />
+
                                                     </Box>
                                                 </Grid.Col>
                                             </Grid>

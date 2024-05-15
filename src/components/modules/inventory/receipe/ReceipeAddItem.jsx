@@ -163,7 +163,7 @@ function ReceipeAddItem(props) {
                                                 dropdownValue={productTypeDropdown}
                                                 mt={0}
                                                 id={'product_type_id'}
-                                                nextField={'category_id'}
+                                                nextField={'price'}
                                                 searchable={true}
                                                 value={productTypeData}
                                                 changeValue={setProductTypeData}
@@ -171,35 +171,41 @@ function ReceipeAddItem(props) {
                                         </Grid.Col>
                                         <Grid.Col span={3}>
                                             <Box>
-                                                <NumberInput
-                                                    p={'0'}
+                                                <InputForm
+                                                    tooltip={t('Price')}
                                                     placeholder={t('Price')}
-                                                    id={'price'}
-                                                    form={form}
-                                                    nextField={''}
+                                                    required={false}
+                                                    nextField={'quantity'}
                                                     name={'price'}
+                                                    form={form}
+                                                    id={'price'}
                                                 />
                                             </Box>
                                         </Grid.Col>
                                         <Grid.Col span={3}>
                                             <Box>
-                                                <NumberInput
+                                                <InputForm
+                                                    tooltip={t('Quantity')}
                                                     placeholder={t('Quantity')}
-                                                    id={'quantity'}
+                                                    required={false}
+                                                    nextField={'percent'}
                                                     name={'quantity'}
                                                     form={form}
-                                                    nextField={''}
+                                                    id={'quantity'}
                                                 />
+
                                             </Box>
                                         </Grid.Col>
                                         <Grid.Col span={3}>
                                             <Box>
-                                                <NumberInput
+                                                <InputForm
+                                                    tooltip={t('WastagePercent')}
                                                     placeholder={t('Percent')}
-                                                    id={'percent'}
-                                                    form={form}
-                                                    nextField={''}
+                                                    required={false}
+                                                    nextField={'EntityFormSubmit'}
                                                     name={'percent'}
+                                                    form={form}
+                                                    id={'percent'}
                                                 />
                                             </Box>
                                         </Grid.Col>
