@@ -4,10 +4,9 @@ import {
     Select
 } from "@mantine/core";
 import {useTranslation} from "react-i18next";
-import {getHotkeyHandler} from "@mantine/hooks";
 
 function SelectServerSideForm(props) {
-    const {label,placeholder,required,nextField,name,form,tooltip,mt,id,dropdownValue,searchable,value,searchValue,setSearchValue} = props
+    const {label,placeholder,required,name,form,tooltip,mt,id,dropdownValue,searchable,searchValue,setSearchValue} = props
     const {t, i18n} = useTranslation();
     return (
         <>
@@ -40,12 +39,6 @@ function SelectServerSideForm(props) {
                         clearable
                         searchable={searchable}
                         {...form.getInputProps(name)}
-                        /*onKeyDown={getHotkeyHandler([
-                            ['Enter', (e) => {
-                                document.getElementById(nextField).focus();
-                            }],
-                        ])}*/
-                        value={value}
                         withAsterisk={required}
                     />
                 </Tooltip>

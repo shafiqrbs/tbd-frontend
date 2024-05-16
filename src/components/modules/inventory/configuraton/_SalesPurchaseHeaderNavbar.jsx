@@ -12,7 +12,7 @@ import {
 } from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
 
-function SalesPurchaseHeaderNavbar(props) {
+function _SalesPurchaseHeaderNavbar(props) {
     const { t, i18n } = useTranslation();
     const links = [
         { link: '/inventory/sales', label: t('Sales') },
@@ -74,4 +74,4 @@ function SalesPurchaseHeaderNavbar(props) {
     );
 }
 
-export default SalesPurchaseHeaderNavbar;
+export default _SalesPurchaseHeaderNavbar;

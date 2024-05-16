@@ -29,7 +29,7 @@ import ShortcutTable from "../../shortcut/ShortcutTable";
 import KeywordDateRangeSearch from "../../filter/KeywordDateRangeSearch";
 import { ReactToPrint } from "react-to-print";
 
-function SalesTable() {
+function _SalesTable() {
     const printRef = useRef()
     const dispatch = useDispatch();
     const { t, i18n } = useTranslation();
@@ -374,4 +374,4 @@ function SalesTable() {
     );
 }
 
-export default SalesTable;
+export default _SalesTable;

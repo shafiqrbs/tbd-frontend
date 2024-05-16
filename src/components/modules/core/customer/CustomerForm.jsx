@@ -3,13 +3,12 @@ import { useOutletContext } from "react-router-dom";
 import {
     Button,
     rem, Flex,
-    Grid, Box, ScrollArea, Group, Text, Title, Alert, List, Stack, Tooltip, ActionIcon,
+    Grid, Box, ScrollArea, Text, Title, Alert, List, Stack, Tooltip, ActionIcon,
 } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
 import {
-    IconCategoryPlus,
     IconCheck,
-    IconDeviceFloppy, IconInfoCircle, IconPlus, IconUsersGroup
+    IconDeviceFloppy, IconUsersGroup
 } from "@tabler/icons-react";
 import { useDisclosure, useHotkeys } from "@mantine/hooks";
 import { useDispatch, useSelector } from "react-redux";
@@ -26,8 +25,6 @@ import TextAreaForm from "../../../form-builders/TextAreaForm";
 import CustomerGroupModel from "./CustomerGroupModal.jsx";
 import getLocationDropdownData from "../../../global-hook/dropdown/getLocationDropdownData.js";
 import getExecutiveDropdownData from "../../../global-hook/dropdown/getExecutiveDropdownData.js";
-import CategoryGroupModal from "../../inventory/category/CategoryGroupModal";
-import SwitchForm from "../../../form-builders/SwitchForm";
 
 function CustomerForm() {
     const { t, i18n } = useTranslation();
@@ -47,7 +44,6 @@ function CustomerForm() {
 
     const locationDropdown = getLocationDropdownData();
     const executiveDropdown = getExecutiveDropdownData();
-
 
     const form = useForm({
         initialValues: {
@@ -369,7 +365,7 @@ function CustomerForm() {
                                                     label={t('Address')}
                                                     placeholder={t('Address')}
                                                     required={false}
-                                                    nextField={'Status'}
+                                                    nextField={'EntityFormSubmit'}
                                                     name={'address'}
                                                     form={form}
                                                     mt={8}

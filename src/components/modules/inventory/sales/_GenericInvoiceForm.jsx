@@ -7,12 +7,11 @@ import {
 import { useTranslation } from 'react-i18next';
 import {
     IconDeviceFloppy, IconPercentage,
-    IconPlus, IconRefreshDot, IconSum, IconUserCircle, IconCurrency, IconX, IconBarcode, IconCoinMonero, IconSortAscendingNumbers, IconPlusMinus
+    IconPlus, IconRefreshDot, IconSum, IconCurrency, IconX, IconBarcode, IconCoinMonero, IconSortAscendingNumbers, IconPlusMinus
 } from "@tabler/icons-react";
 import { getHotkeyHandler, useHotkeys } from "@mantine/hooks";
 import { useDispatch, useSelector } from "react-redux";
 import { isNotEmpty, useForm } from "@mantine/form";
-import { modals } from "@mantine/modals";
 import { notifications, showNotification } from "@mantine/notifications";
 import InputForm from "../../../form-builders/InputForm";
 import { getCategoryDropdown } from "../../../../store/inventory/utilitySlice";
@@ -21,27 +20,20 @@ import { getSettingDropdown, getProductUnitDropdown } from "../../../../store/ut
 import SelectServerSideForm from "../../../form-builders/SelectServerSideForm.jsx";
 import InputButtonForm from "../../../form-builders/InputButtonForm";
 import InputNumberForm from "../../../form-builders/InputNumberForm";
-import SalesForm from "./SalesForm";
+import __SalesForm from "./__SalesForm.jsx";
 import { DataTable } from "mantine-datatable";
 import SelectForm from "../../../form-builders/SelectForm.jsx";
 import { storeEntityData } from "../../../../store/inventory/crudSlice.js";
-import axios from "axios";
-import getLocationDropdownData from "../../../global-hook/dropdown/getLocationDropdownData.js";
-import getExecutiveDropdownData from "../../../global-hook/dropdown/getExecutiveDropdownData.js";
-import getVendorDropdownData from "../../../global-hook/dropdown/getVendorDropdownData.js";
-import getCustomerDropdownData from "../../../global-hook/dropdown/getCustomerDropdownData.js";
-import getTransactionModeDropdownData from "../../../global-hook/dropdown/getTransactionModeDropdownData.js";
-import getUserDropdownData from "../../../global-hook/dropdown/getUserDropdownData.js";
 import ShortcutInvoice from "../../shortcut/ShortcutInvoice";
 import tableCss from "../../../../assets/css/Table.module.css";
+import storeDataIntoLocalStorage from "../../../global-hook/local-storage/storeDataIntoLocalStorage.js";
 
-function GenericInvoiceForm(props) {
+function _GenericInvoiceForm(props) {
     const { currencySymbol, allowZeroPercentage,domainId } = props
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
     const height = mainAreaHeight - 176; //TabList height 104
-    const [saveCreateLoading, setSaveCreateLoading] = useState(false);
     const [fetching, setFetching] = useState(false);
 
     const [searchValue, setSearchValue] = useState('');
@@ -49,29 +41,23 @@ function GenericInvoiceForm(props) {
 
     const [tempCardProducts, setTempCardProducts] = useState([])
     const [loadCardProducts, setLoadCardProducts] = useState(false)
-    const [focusIntoProductSearch, setFocusIntoProductSearch] = useState(false)
 
     let salesSubTotalAmount = tempCardProducts?.reduce((total, item) => total + item.sub_total, 0) || 0;
     let totalPurchaseAmount = tempCardProducts?.reduce((total, item) => total + (item.purchase_price * item.quantity), 0) || 0;
 
+    const [stockProductRestore, setStockProductRestore] = useState(false)
+    useEffect(() => {
+        if (stockProductRestore){
+            const local = storeDataIntoLocalStorage(JSON.parse(localStorage.getItem('user')).id)
+        }
+    }, [stockProductRestore])
 
-    const locationDropdown = getLocationDropdownData();
-    const executiveDropdown = getExecutiveDropdownData();
-    const vendorDropdown = getVendorDropdownData();
-    const customerDropdown = getCustomerDropdownData();
-    const transactionModeDropdown = getTransactionModeDropdownData();
-    const userDropdown = getUserDropdownData();
 
-    // console.log(locationDropdown,executiveDropdown,vendorDropdown,customerDropdown,transactionModeDropdown,userDropdown)
 
     useEffect(() => {
         const tempProducts = localStorage.getItem('temp-sales-products');
         setTempCardProducts(tempProducts ? JSON.parse(tempProducts) : [])
         setLoadCardProducts(false)
-        /*if (focusIntoProductSearch) {
-            document.getElementById('product_id').focus();
-            setFocusIntoProductSearch(false)
-        }*/
     }, [loadCardProducts])
 
     useEffect(() => {
@@ -146,7 +132,6 @@ function GenericInvoiceForm(props) {
         setSearchValue('');
         form.reset();
         setLoadCardProducts(true);
-        setFocusIntoProductSearch(true)
         document.getElementById('product_id').focus();
     }
 
@@ -396,11 +381,9 @@ function GenericInvoiceForm(props) {
                                                 style: { backgroundColor: 'mistyrose' },
                                             });
                                         } else {
-                                            // setFocusIntoProductSearch(true)
                                             handleAddProductByProductId(values, myCardProducts, localProducts);
                                         }
                                     } else if (!values.product_id && values.barcode) {
-                                        // setFocusIntoProductSearch(true)
                                         handleAddProductByBarcode(values, myCardProducts, localProducts);
                                     }
                                 }
@@ -435,6 +418,7 @@ function GenericInvoiceForm(props) {
                                                 searchValue={searchValue}
                                                 setSearchValue={setSearchValue}
                                                 dropdownValue={productDropdown}
+                                                closeIcon={true}
                                             />
                                         </Grid.Col>
                                     </Grid>
@@ -521,7 +505,6 @@ function GenericInvoiceForm(props) {
                                             </Grid.Col>
                                             <Grid.Col span={3}>
                                                 <>
-                                                    {/*{!saveCreateLoading &&*/}
                                                     <Button
                                                         size="sm"
                                                         color={`red.5`}
@@ -538,7 +521,6 @@ function GenericInvoiceForm(props) {
                                                             </Text>
                                                         </Flex>
                                                     </Button>
-                                                    {/*}*/}
                                                 </>
                                             </Grid.Col>
 
@@ -637,7 +619,7 @@ function GenericInvoiceForm(props) {
                                                                         dropdownValue={productUnitDropdown}
                                                                         mt={8}
                                                                         id={'unit_id'}
-                                                                        nextField={'sales_price'}
+                                                                        nextField={'purchase_price'}
                                                                         searchable={true}
                                                                         value={productUnitData}
                                                                         changeValue={setProductUnitData}
@@ -650,7 +632,7 @@ function GenericInvoiceForm(props) {
                                                                         label={t('PurchasePrice')}
                                                                         placeholder={t('PurchasePrice')}
                                                                         required={true}
-                                                                        nextField={'EntityProductFormSubmit'}
+                                                                        nextField={'sales_price_product'}
                                                                         form={productAddedForm}
                                                                         name={'purchase_price'}
                                                                         id={'purchase_price'}
@@ -665,11 +647,11 @@ function GenericInvoiceForm(props) {
                                                                         label={t('SalesPrice')}
                                                                         placeholder={t('SalesPrice')}
                                                                         required={true}
-                                                                        nextField={'purchase_price'}
+                                                                        nextField={'EntityProductFormSubmit'}
                                                                         form={productAddedForm}
                                                                         name={'sales_price'}
                                                                         mt={8}
-                                                                        id={'sales_price'}
+                                                                        id={'sales_price_product'}
                                                                         leftSection={<IconCoinMonero size={16} opacity={0.5} />}
                                                                         rightIcon={<IconCurrency size={16} opacity={0.5} />}
                                                                         closeIcon={true}
@@ -683,11 +665,19 @@ function GenericInvoiceForm(props) {
                                                                                 variant="transparent"
                                                                                 size="sm"
                                                                                 color={`red.4`}
-                                                                                type="submit"
+                                                                                type="reset"
                                                                                 mt={0}
                                                                                 mr={'xs'}
                                                                                 fullWidth
                                                                                 id=""
+                                                                                comboboxProps={{ withinPortal: false }}
+                                                                                onClick={()=>{
+                                                                                    productAddedForm.reset()
+                                                                                    setCategoryData(null)
+                                                                                    setProductTypeData(null)
+                                                                                    setProductUnitData(null)
+                                                                                    setProductAddFormOpened(false)
+                                                                                }}
                                                                             >
                                                                                 <IconRefreshDot style={{ width: '100%', height: '70%' }} stroke={1.5} />
                                                                             </Button>
@@ -700,14 +690,18 @@ function GenericInvoiceForm(props) {
                                                                                 mt={0}
                                                                                 mr={'xs'}
                                                                                 fullWidth
+                                                                                comboboxProps={{ withinPortal: false }}
                                                                                 id="EntityProductFormSubmit"
-                                                                                leftSection={<IconDeviceFloppy
-                                                                                    size={16} />}
+                                                                                leftSection={<IconDeviceFloppy size={16} />}
                                                                                 onClick={() => {
                                                                                     let validation = true
                                                                                     if (!productAddedForm.values.name) {
                                                                                         validation = false
                                                                                         productAddedForm.setFieldError('name', true);
+                                                                                    }
+                                                                                    if (!productAddedForm.values.product_type_id) {
+                                                                                        validation = false
+                                                                                        productAddedForm.setFieldError('product_type_id', true);
                                                                                     }
                                                                                     if (!productAddedForm.values.purchase_price) {
                                                                                         validation = false
@@ -725,13 +719,6 @@ function GenericInvoiceForm(props) {
                                                                                         validation = false
                                                                                         productAddedForm.setFieldError('category_id', true);
                                                                                     }
-                                                                                    if (!productAddedForm.values.product_type_id) {
-                                                                                        validation = false
-                                                                                        productAddedForm.setFieldError('product_type_id', true);
-                                                                                    }
-
-                                                                                    productAddedForm.values['product_name'] = 'test';
-                                                                                    productAddedForm.values['quantity'] = '100';
 
                                                                                     if (validation) {
                                                                                         const value = {
@@ -745,6 +732,8 @@ function GenericInvoiceForm(props) {
                                                                                         setProductTypeData(null)
                                                                                         setProductUnitData(null)
                                                                                         setProductAddFormOpened(false)
+                                                                                        setStockProductRestore(true)
+                                                                                        document.getElementById('product_id').focus()
                                                                                     }
 
                                                                                 }}
@@ -1044,7 +1033,7 @@ function GenericInvoiceForm(props) {
                 </Grid.Col>
                 <Grid.Col span={8} >
                     <Box bg={'white'} p={'md'} className={'borderRadiusAll'}>
-                        <SalesForm
+                        <__SalesForm
                             salesSubTotalAmount={salesSubTotalAmount}
                             tempCardProducts={tempCardProducts}
                             totalPurchaseAmount={totalPurchaseAmount}
@@ -1069,4 +1058,4 @@ function GenericInvoiceForm(props) {
     );
 }
 
-export default GenericInvoiceForm;
+export default _GenericInvoiceForm;

@@ -2,12 +2,11 @@ import React, { useEffect, useRef, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import {
     Button, rem, Center, Switch, ActionIcon,
-    Grid, Box, ScrollArea, Tooltip, Group, Text, List, ThemeIcon, Popover, Flex, Modal, Table,
+    Grid, Box, ScrollArea, Tooltip, Group, Text, Popover, Flex,
 } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
 import {
     IconDeviceFloppy,
-    IconUserCog,
     IconStackPush,
     IconPrinter,
     IconReceipt,
@@ -16,34 +15,28 @@ import {
     IconMessage,
     IconEyeEdit,
     IconDeviceMobile,
-    IconHelpCircle,
-    IconCircleCheck, IconUserCircle, IconRefreshDot, IconDiscountOff, IconCurrency, IconPlusMinus, IconCheck,
-    IconUser, IconEdit,
+    IconUserCircle, IconRefreshDot, IconDiscountOff, IconCurrency, IconPlusMinus, IconCheck,
+    IconUser,
 
 } from "@tabler/icons-react";
-import { useDisclosure, useHotkeys, useToggle } from "@mantine/hooks";
+import { useHotkeys, useToggle } from "@mantine/hooks";
 import { useDispatch, useSelector } from "react-redux";
-import { hasLength, isNotEmpty, useForm } from "@mantine/form";
+import { isNotEmpty, useForm } from "@mantine/form";
 
 import SelectForm from "../../../form-builders/SelectForm";
 import TextAreaForm from "../../../form-builders/TextAreaForm";
 
-import {
-    getShowEntityData, storeEntityData,
-} from "../../../../store/inventory/crudSlice.js";
+import {storeEntityData,} from "../../../../store/inventory/crudSlice.js";
 import { getTransactionModeData } from "../../../../store/accounting/utilitySlice.js";
-import getCustomerDropdownData from "../../../global-hook/dropdown/getCustomerDropdownData.js";
 import InputNumberForm from "../../../form-builders/InputNumberForm";
 import InputButtonForm from "../../../form-builders/InputButtonForm";
 import getUserDropdownData from "../../../global-hook/dropdown/getUserDropdownData";
 import InputForm from "../../../form-builders/InputForm";
-import { setFetching, storeEntityDataWithFile } from "../../../../store/accounting/crudSlice.js";
 import { notifications } from "@mantine/notifications";
-import { ReactToPrint } from "react-to-print";
-import getConfigData from "../../../global-hook/config-data/getConfigData.js";
 import _InvoiceForDomain359 from "./print-component/_InvoiceForDomain359.jsx";
+import storeDataIntoLocalStorage from "../../../global-hook/local-storage/storeDataIntoLocalStorage.js";
 
-function SalesForm(props) {
+function __SalesForm(props) {
 
     const { currencySymbol,domainId } = props
     const { t, i18n } = useTranslation();
@@ -82,7 +75,6 @@ function SalesForm(props) {
     const [customerData, setCustomerData] = useState(null);
     const [salesByUser, setSalesByUser] = useState(null);
     const [orderProcess, setOrderProcess] = useState(null);
-    //  console.log(storeDataIntoLocalStorage);
 
     const form = useForm({
         initialValues: {
@@ -138,6 +130,43 @@ function SalesForm(props) {
 
 
     const [profitShow, setProfitShow] = useState(false);
+
+
+    const [customerAddFormOpened, setCustomerAddFormOpened] = useState(false);
+    const customerAddedForm = useForm({
+        initialValues: {
+            name: '',
+            mobile: ''
+        },
+        validate: {
+            name: isNotEmpty(),
+            mobile: isNotEmpty()
+        }
+    });
+
+    const [stockProductRestore, setStockProductRestore] = useState(false)
+
+    useEffect(() => {
+        if (stockProductRestore){
+            const local = storeDataIntoLocalStorage(JSON.parse(localStorage.getItem('user')).id)
+        }
+    }, [stockProductRestore])
+
+    /*START GET CUSTOMER DROPDOWN FROM LOCAL STORAGE*/
+    const [customersDropdownData,setCustomersDropdownData] = useState([])
+    const [refreshCustomerDropdown,setRefreshCustomerDropdown] = useState(false)
+    useEffect(() => {
+        let coreCustomers = localStorage.getItem('core-customers');
+        coreCustomers = coreCustomers?JSON.parse(coreCustomers):[]
+        if (coreCustomers && coreCustomers.length > 0) {
+            const transformedData = coreCustomers.map(type => {
+                return ({'label': type.mobile+' -- '+type.name, 'value': String(type.id)})
+            });
+            setCustomersDropdownData(transformedData);
+        }
+    }, [customersDropdownData,refreshCustomerDropdown])
+    /*END GET CUSTOMER DROPDOWN FROM LOCAL STORAGE*/
+
 
 
     useHotkeys([['alt+n', () => {
@@ -218,7 +247,6 @@ function SalesForm(props) {
                 });
 
                 setTimeout(() => {
-
                     let printContents = document.getElementById('printElement').innerHTML;
                     let originalContents = document.body.innerHTML;
                     document.body.innerHTML = printContents;
@@ -250,10 +278,10 @@ function SalesForm(props) {
                                                     nextField={'receive_amount'}
                                                     name={'customer_id'}
                                                     form={form}
-                                                    dropdownValue={getCustomerDropdownData()}
+                                                    dropdownValue={customersDropdownData}
                                                     id={'customer_id'}
                                                     mt={1}
-                                                    searchable={false}
+                                                    searchable={true}
                                                     value={customerData}
                                                     changeValue={setCustomerData}
                                                 />
@@ -261,7 +289,15 @@ function SalesForm(props) {
                                         </Grid.Col>
                                         <Grid.Col span={1}>
                                             <Box pt={7}>
-                                                <Popover width={'450'} trapFocus position="bottom" withArrow shadow="xl">
+                                                <Popover
+                                                    width={'450'}
+                                                    trapFocus
+                                                    position="bottom"
+                                                    withArrow
+                                                    shadow="xl"
+                                                    opened={customerAddFormOpened}
+                                                    onChange={setCustomerAddFormOpened}
+                                                >
                                                     <Popover.Target>
                                                         <Tooltip
                                                             multiline
@@ -270,8 +306,16 @@ function SalesForm(props) {
                                                             transitionProps={{ duration: 200 }}
                                                             label={t('InstantCustomerCreate')}
                                                         >
-
-                                                            <ActionIcon fullWidth variant="outline" bg={'white'} size={'lg'} color="red.5" mt={'1'} aria-label="Settings">
+                                                            <ActionIcon
+                                                                fullWidth
+                                                                variant="outline"
+                                                                bg={'white'}
+                                                                size={'lg'}
+                                                                color="red.5"
+                                                                mt={'1'}
+                                                                aria-label="Settings"
+                                                                onClick={() => setCustomerAddFormOpened(true)}
+                                                            >
                                                                 <IconUser style={{ width: '100%', height: '70%' }} stroke={1.5} />
                                                             </ActionIcon>
                                                         </Tooltip>
@@ -279,14 +323,14 @@ function SalesForm(props) {
                                                     <Popover.Dropdown>
                                                         <Box mt={'xs'}>
                                                             <InputForm
-                                                                tooltip={t('SalesPriceValidateMessage')}
+                                                                tooltip={t('NameValidateMessage')}
                                                                 label={t('Name')}
                                                                 placeholder={t('CustomerName')}
                                                                 required={true}
-                                                                nextField={'EntityFormSubmit'}
-                                                                form={form}
-                                                                name={'customer_name'}
-                                                                id={'customer_name'}
+                                                                nextField={'mobile'}
+                                                                form={customerAddedForm}
+                                                                name={'name'}
+                                                                id={'name'}
                                                                 leftSection={<IconUserCircle size={16} opacity={0.5} />}
                                                                 rightIcon={''}
                                                             />
@@ -294,13 +338,13 @@ function SalesForm(props) {
                                                         <Box mt={'xs'}>
                                                             <InputNumberForm
                                                                 tooltip={t('MobileValidateMessage')}
-                                                                label={t('MobileNo')}
-                                                                placeholder={t('MobileNo')}
+                                                                label={t('Mobile')}
+                                                                placeholder={t('Mobile')}
                                                                 required={true}
-                                                                nextField={'EntityFormSubmit'}
-                                                                form={form}
-                                                                name={'mobile_no'}
-                                                                id={'mobile_no'}
+                                                                nextField={'EntityCustomerFormSubmit'}
+                                                                form={customerAddedForm}
+                                                                name={'mobile'}
+                                                                id={'mobile'}
                                                                 leftSection={<IconDeviceMobile size={16} opacity={0.5} />}
                                                                 rightIcon={''}
                                                             />
@@ -317,7 +361,6 @@ function SalesForm(props) {
                                                                         mt={0}
                                                                         mr={'xs'}
                                                                         fullWidth
-                                                                        id="EntityCustomerFormSubmit"
                                                                     >
                                                                         <IconRefreshDot style={{ width: '100%', height: '70%' }} stroke={1.5} />
                                                                     </Button>
@@ -332,6 +375,32 @@ function SalesForm(props) {
                                                                         fullWidth
                                                                         id="EntityCustomerFormSubmit"
                                                                         leftSection={<IconDeviceFloppy size={16} />}
+                                                                        onClick={() => {
+                                                                            let validation = true
+                                                                            if (!customerAddedForm.values.name) {
+                                                                                validation = false
+                                                                                customerAddedForm.setFieldError('name', true);
+                                                                            }
+                                                                            if (!customerAddedForm.values.mobile) {
+                                                                                validation = false
+                                                                                customerAddedForm.setFieldError('mobile', true);
+                                                                            }
+
+                                                                            if (validation) {
+                                                                                const value = {
+                                                                                    url: 'core/customer',
+                                                                                    data: customerAddedForm.values
+                                                                                }
+                                                                                dispatch(storeEntityData(value))
+
+                                                                                customerAddedForm.reset()
+                                                                                setStockProductRestore(true)
+                                                                                setCustomerAddFormOpened(false)
+                                                                                setRefreshCustomerDropdown(true)
+                                                                                document.getElementById('customer_id').focus()
+                                                                            }
+
+                                                                        }}
                                                                     >
                                                                         <Flex direction={`column`} gap={0}>
                                                                             <Text fz={12} fw={400}>
@@ -626,20 +695,12 @@ function SalesForm(props) {
                                 </Button.Group>
                             </Box>
                         </Box>
-
-
                     </Grid>
                 </Box>
             </form>
-            {/*<Button
-                onClick={open}
-                fullWidth
-                variant="filled"
-                leftSection={<IconStackPush size={14} />}
-                color="orange.5">Test</Button>*/}
         </>
 
     );
 }
 
-export default SalesForm;
+export default __SalesForm;

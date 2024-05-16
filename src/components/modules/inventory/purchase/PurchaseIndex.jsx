@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from "react-redux";
 import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress.js";
 import getConfigData from "../../../global-hook/config-data/getConfigData.js";
-import SalesPurchaseHeaderNavbar from "../configuraton/SalesPurchaseHeaderNavbar";
+import _SalesPurchaseHeaderNavbar from "../configuraton/_SalesPurchaseHeaderNavbar.jsx";
 import PurchaseTable from "./PurchaseTable";
 
 function PurchaseIndex() {
@@ -28,7 +28,7 @@ function PurchaseIndex() {
                     {
                         configData &&
                         <>
-                            <SalesPurchaseHeaderNavbar
+                            <_SalesPurchaseHeaderNavbar
                                 pageTitle={t('Sales')}
                                 roles={t('Roles')}
                                 allowZeroPercentage={configData.zero_stock}

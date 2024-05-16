@@ -11,7 +11,7 @@ import CategoryGroupIndex from "./components/modules/inventory/category-group/Ca
 import CategoryIndex from "./components/modules/inventory/category/CategoryIndex";
 import ProductIndex from "./components/modules/inventory/product/ProductIndex.jsx";
 import SalesIndex from "./components/modules/inventory/sales/SalesIndex";
-import SalesForm from "./components/modules/inventory/sales/SalesForm";
+import __SalesForm from "./components/modules/inventory/sales/__SalesForm.jsx";
 
 import SampleInvoice from "./components/modules/sample-module/sample-layout/SampleInvoice";
 import SampleIndex from "./components/modules/sample-module/sample-layout/SampleIndex";
