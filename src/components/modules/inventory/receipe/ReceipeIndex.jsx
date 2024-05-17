@@ -37,12 +37,12 @@ function ReceipeIndex() {
                     />
                     <Box p={'8'} >
                         <Grid columns={24} gutter={{ base: 8 }}>
-                            <Grid.Col span={16} >
+                            <Grid.Col span={15} >
                                 <Box bg={'white'} p={'xs'} className={'borderRadiusAll'}>
                                     <ReceipeTable />
                                 </Box>
                             </Grid.Col>
-                            <Grid.Col span={8} >
+                            <Grid.Col span={9} >
                                 <ReceipeForm />
                             </Grid.Col>
                         </Grid>

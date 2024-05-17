@@ -167,8 +167,8 @@ function ReceipeForm() {
                     },
                 });
             })}>
-                <Grid columns={8} gutter={{ base: 8 }}>
-                    <Grid.Col span={7} >
+                <Grid columns={9} gutter={{ base: 8 }}>
+                    <Grid.Col span={8} >
                         <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
                             <Box bg={"white"} >
                                 <Box pl={`xs`} pb={'xs'} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'} >
