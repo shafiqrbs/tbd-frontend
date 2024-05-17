@@ -28,6 +28,7 @@ import KeywordSearch from "../../filter/KeywordSearch";
 import { modals } from "@mantine/modals";
 
 import tableCss from "../../../../assets/css/Table.module.css";
+import InhouseAddItem from "./InhouseAddItem.jsx";
 
 function InhouseTable() {
     const dispatch = useDispatch();
@@ -101,8 +102,8 @@ function InhouseTable() {
     return (
         <>
 
-            <Box pl={`xs`} pb={'xs'} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'} >
-                <KeywordSearch module={'product'} />
+            <Box pb={'xs'} >
+                <InhouseAddItem />
             </Box>
             <Box className={'borderRadiusAll'}>
                 <DataTable
@@ -121,9 +122,9 @@ function InhouseTable() {
                             textAlignment: 'right',
                             render: index => (index.item_index + 1)
                         },
-                        { accessor: 'item_name', title: t("ItemName") },
+                        { accessor: 'item_name', title: t("Item") },
                         { accessor: 'item_uom', title: t("Uom") },
-                        { accessor: 'item_workorder_invoice', title: t("WorkorderInvoice") },
+                        { accessor: 'item_workorder_invoice', title: t("WorkOrderInvoice") },
                         { accessor: 'item_issue_quantity', title: t("IssueQuantity") },
                         { accessor: 'item_receive_quantity', title: t("ReceiveQuantity") },
                         { accessor: 'item_damage_quantity', title: t("DamageQuantity") },

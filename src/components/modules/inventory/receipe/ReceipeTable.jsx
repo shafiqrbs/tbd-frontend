@@ -109,7 +109,7 @@ function ReceipeTable() {
                             textAlignment: 'right',
                             render: index => (index.item_index + 1)
                         },
-                        { accessor: 'item_name', title: t("item") },
+                        { accessor: 'item_name', title: t("Item") },
                         { accessor: 'item_uom', title: t("Uom") },
                         { accessor: 'item_quantity', title: t("Quantity") },
                         { accessor: 'item_price', title: t("Price") },

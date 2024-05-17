@@ -174,7 +174,8 @@ function ReceipeForm() {
                                 <Box pl={`xs`} pb={'xs'} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'} >
                                     <Grid>
                                         <Grid.Col span={6} h={54}>
-                                            <Title order={6} mt={'xs'} pl={'6'}>{t('ManageProductionMeasurment')}</Title>
+                                            <Title order={6} mt={'xs'} pl={'6'}>{t('ManageProductionMeasurement')}</Title>
+                                            {/*  SHOULD BE LOAD THE PRODUCT NAME FOR MEASUREMENT .KINDY CHECK THE CSS FOR HEIGHT */}
                                         </Grid.Col>
                                         <Grid.Col span={6}>
                                             <Stack right align="flex-end">
@@ -262,7 +263,7 @@ function ReceipeForm() {
                                                             id={'licenseDate'}
                                                             name={'license_date'}
                                                             placeholder={t('LicenseDate')}
-                                                            nextField={'issuedBy'}
+                                                            nextField={'initiateDate'}
                                                             rightSection={
                                                                 <Tooltip
                                                                     withArrow
@@ -308,7 +309,7 @@ function ReceipeForm() {
                                                             value={value1}
                                                             valueFormat="DD-MM-YYYY "
                                                             onChange={setValue1}
-                                                            nextField={'customerName'}
+                                                            nextField={'issuedBy'}
                                                             placeholder={t('InitiateDate')}
                                                             id={'initiateDate'}
                                                             name={'initiate_date'} rightSection={
@@ -442,7 +443,7 @@ function ReceipeForm() {
                                                             <Text
                                                                 ta="center" fz="sm"
                                                                 fw={300}>
-                                                                {t('Bank Interest & Commission')}
+                                                                {t('BankInterestCommission')}
                                                             </Text>
                                                         </Flex>
                                                     </Box>
@@ -450,8 +451,8 @@ function ReceipeForm() {
                                                 <Grid.Col span={6}>
                                                     <Box >
                                                         <InputForm
-                                                            tooltip={t('Bank Interest & Commission')}
-                                                            placeholder={t('Bank Interest & Commission')}
+                                                            tooltip={t('BankInterestCommission')}
+                                                            placeholder={t('BankInterestCommission')}
                                                             required={false}
                                                             nextField={'electricityCost'}
                                                             name={'bank_Interest_commission'}
@@ -684,8 +685,8 @@ function ReceipeForm() {
                                                 <Grid.Col span={6}>
                                                     <Box >
                                                         <InputForm
-                                                            tooltip={t('OthersCost')}
-                                                            placeholder={t('OthersCost')}
+                                                            tooltip={t('OtherCost')}
+                                                            placeholder={t('OtherCost')}
                                                             required={false}
                                                             nextField={'packagingAccesories'}
                                                             name={'others_cost'}
@@ -895,6 +896,7 @@ function ReceipeForm() {
                                                                     ta="center" fz="sm"
                                                                     fw={300}>
                                                                     {t('1000')}
+                                                                    {/*DYNAMIC DATA*/}
                                                                 </Text>
                                                             </Box>
                                                         </Flex>

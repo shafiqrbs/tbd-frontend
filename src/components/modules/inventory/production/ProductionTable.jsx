@@ -133,7 +133,7 @@ function ProductionTable() {
                             textAlignment: 'right',
                             render: index => (index.item_index + 1)
                         },
-                        { accessor: 'item_name', title: t("ItemName") },
+                        { accessor: 'item_name', title: t("Item") },
                         { accessor: 'item_uom', title: t("Uom") },
                         { accessor: 'item_license_date', title: t("LicenseDate") },
                         { accessor: 'item_initiate_date', title: t("InitiateDate") },

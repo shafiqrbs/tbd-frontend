@@ -30,7 +30,7 @@ function ReceipeIndex() {
             {progress === 100 &&
                 <>
                     <InventoryHeaderNavbar
-                        pageTitle={t('ManageProduct')}
+                        pageTitle={t('Production')}
                         roles={t('Roles')}
                         allowZeroPercentage={''}
                         currencySymbol={''}

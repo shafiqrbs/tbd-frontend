@@ -30,7 +30,7 @@ function InhouseIndex() {
                     {configData &&
                         <>
                             <InventoryHeaderNavbar
-                                pageTitle={t('ManageProduct')}
+                                pageTitle={t('ProductionBatch')}
                                 roles={t('Roles')}
                                 allowZeroPercentage={configData.zero_stock}
                                 currencySymbol={configData.currency.symbol}

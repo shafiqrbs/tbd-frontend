@@ -52,7 +52,7 @@ import tableCss from "../../../../assets/css/Table.module.css";
 // import FilterModel from "./FilterModel.jsx";
 // import { setProductFilterData } from "../../../store/inventory/crudSlice.js";
 
-function ReceipeAddItem(props) {
+function InhouseAddItem(props) {
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const { isOnline } = useOutletContext();
@@ -155,43 +155,43 @@ function ReceipeAddItem(props) {
                                     <Grid columns={24} gutter={{ base: 6 }}>
                                         <Grid.Col span={12}>
                                             <SelectForm
-                                                tooltip={t('SelectMaterialName')}
-                                                placeholder={t('SelectMaterialName')}
+                                                tooltip={t('SelectProductionItem')}
+                                                placeholder={t('SelectProductionItem')}
                                                 required={true}
-                                                name={'product_type_id'}
+                                                name={'select_production_item'}
                                                 form={form}
                                                 dropdownValue={''}
-                                                mt={0}
-                                                id={'product_type_id'}
-                                                nextField={'price'}
                                                 searchable={true}
-                                                value={productTypeData}
                                                 changeValue={setProductTypeData}
+                                                value={productTypeData}
+                                                mt={0}
+                                                id={'selectProductionItem'}
+                                                nextField={'issue'}
                                             />
                                         </Grid.Col>
                                         <Grid.Col span={3}>
                                             <Box>
                                                 <InputForm
-                                                    tooltip={t('Price')}
-                                                    placeholder={t('Price')}
+                                                    tooltip={t('Issue')}
+                                                    placeholder={t('Issue')}
                                                     required={false}
-                                                    nextField={'quantity'}
-                                                    name={'price'}
+                                                    nextField={'receive'}
+                                                    name={'issue'}
                                                     form={form}
-                                                    id={'price'}
+                                                    id={'issue'}
                                                 />
                                             </Box>
                                         </Grid.Col>
                                         <Grid.Col span={3}>
                                             <Box>
                                                 <InputForm
-                                                    tooltip={t('Quantity')}
-                                                    placeholder={t('Quantity')}
+                                                    tooltip={t('Receive')}
+                                                    placeholder={t('Receive')}
                                                     required={false}
-                                                    nextField={'percent'}
-                                                    name={'quantity'}
+                                                    nextField={'damage'}
+                                                    name={'receive'}
                                                     form={form}
-                                                    id={'quantity'}
+                                                    id={'receive'}
                                                 />
 
                                             </Box>
@@ -199,13 +199,13 @@ function ReceipeAddItem(props) {
                                         <Grid.Col span={3}>
                                             <Box>
                                                 <InputForm
-                                                    tooltip={t('Percent')}
-                                                    placeholder={t('Percent')}
+                                                    tooltip={t('Damage')}
+                                                    placeholder={t('Damage')}
                                                     required={false}
                                                     nextField={'EntityFormSubmit'}
-                                                    name={'percent'}
+                                                    name={'damage'}
                                                     form={form}
-                                                    id={'percent'}
+                                                    id={'damage'}
                                                 />
                                             </Box>
                                         </Grid.Col>
@@ -242,4 +242,4 @@ function ReceipeAddItem(props) {
     );
 }
 
-export default ReceipeAddItem;
+export default InhouseAddItem;

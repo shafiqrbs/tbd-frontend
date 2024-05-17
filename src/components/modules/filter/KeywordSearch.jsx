@@ -49,8 +49,8 @@ function KeywordSearch(props) {
 
     return (
         <>
-            <Grid justify="flex-end" align="flex-end">
-                <Grid.Col span={10}>
+            <Grid justify="flex-end" align="flex-end" gutter={{ base: 8 }}>
+                <Grid.Col span={11}>
                     <Tooltip
                         label={t('EnterSearchAnyKeyword')}
                         opened={searchKeywordTooltip}
@@ -103,8 +103,8 @@ function KeywordSearch(props) {
                         />
                     </Tooltip>
                 </Grid.Col>
-                <Grid.Col span={2}>
-                    <ActionIcon.Group mt={'1'}>
+                <Grid.Col span={1}>
+                    <ActionIcon.Group mt={'1'} >
                         <ActionIcon variant="transparent"
                             c={'red.4'}
                             size="lg" mr={16} aria-label="Filter"

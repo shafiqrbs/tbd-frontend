@@ -34,7 +34,7 @@ function ProductionIndex() {
                     {configData &&
                         <>
                             <InventoryHeaderNavbar
-                                pageTitle={t('ManageProduction')}
+                                pageTitle={t('ManageProductionItem')}
                                 roles={t('Roles')}
                                 allowedZeroPercentage={configData.zero_stock}
                                 currentSymbol={configData.currency.symbol}
@@ -50,13 +50,6 @@ function ProductionIndex() {
 
                                         </Box>
                                     </Grid.Col>
-                                    {/* <Grid.Col span={9}>
-                                        {
-                                            insertType === 'create' ?
-                                                <ProdcutionForm /> :
-                                                <ProductionUpdateForm />
-                                        }
-                                    </Grid.Col> */}
                                 </Grid>
                             </Box>
                         </>}
