@@ -42,11 +42,8 @@ function __SalesForm(props) {
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
-    const transactionModeData = useSelector((state) => state.accountingUtilitySlice.transactionModeData)
 
-    useEffect(() => {
-        dispatch(getTransactionModeData('accounting/transaction-mode-data'))
-    }, []);
+    const transactionModeData = JSON.parse(localStorage.getItem('accounting-transaction-mode'))?JSON.parse(localStorage.getItem('accounting-transaction-mode')):[];
 
     const [salesSubTotalAmount, setSalesSubTotalAmount] = useState(0);
     const [salesProfitAmount, setSalesProfitAmount] = useState(0);
@@ -87,7 +84,6 @@ function __SalesForm(props) {
             receive_amount: ''
         },
         validate: {
-            customer_id: isNotEmpty(),
             transaction_mode_id: isNotEmpty(),
             sales_by: isNotEmpty(),
             order_process: isNotEmpty()
@@ -168,6 +164,20 @@ function __SalesForm(props) {
     /*END GET CUSTOMER DROPDOWN FROM LOCAL STORAGE*/
 
 
+    /*START FOR TRANSACTION MODE DEFAULT SELECT*/
+    useEffect(() => {
+        if (transactionModeData && transactionModeData.length > 0) {
+            for (let mode of transactionModeData) {
+                if (mode.is_selected) {
+                    form.setFieldValue('transaction_mode_id', form.values.transaction_mode_id?form.values.transaction_mode_id:mode.id);
+                    break;
+                }
+            }
+        }
+    }, [transactionModeData, form]);
+    /*END FOR TRANSACTION MODE DEFAULT SELECT*/
+
+
 
     useHotkeys([['alt+n', () => {
         document.getElementById('customer_id').focus()
@@ -229,7 +239,9 @@ function __SalesForm(props) {
                 formValue['narration'] = form.values.narration;
                 formValue['items'] = transformedArray ? transformedArray : [];
 
-                setInvoicePrintData(formValue)
+                console.log(formValue)
+
+                /*setInvoicePrintData(formValue)
 
                 const data = {
                     url: 'inventory/sales',
@@ -259,7 +271,7 @@ function __SalesForm(props) {
                     setSalesByUser(null)
                     setOrderProcess(null)
                     props.setLoadCardProducts(true)
-                }, 700)
+                }, 700)*/
 
             })}>
                 <Box>
@@ -548,6 +560,7 @@ function __SalesForm(props) {
                                                                         form.setFieldValue('transaction_mode_id', e.currentTarget.value)
                                                                         form.setFieldError('transaction_mode_id', null)
                                                                     }}
+                                                                    defaultChecked={mode.is_selected?true:false}
                                                                 />
                                                                 <Tooltip
                                                                     label={mode.name}
@@ -567,10 +580,10 @@ function __SalesForm(props) {
                                                                         }}
                                                                     >
                                                                         <img
-                                                                            src={mode.path}
+                                                                            src={isOnline?mode.path:'/images/transaction-mode-offline.jpg'}
                                                                             alt={mode.method_name}
                                                                         />
-                                                                        <Center fz={'xs'} className={'textColor'} >{mode.authorised}</Center>
+                                                                        <Center fz={'xs'} className={'textColor'} >{mode.authorized_name}</Center>
                                                                     </label>
                                                                 </Tooltip>
                                                             </Box>
