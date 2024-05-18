@@ -53,8 +53,8 @@ function InputNumberForm(props) {
                                 <Tooltip
                                     label={t("Close")}
                                     withArrow
-                                    bg={`red.4`}
-                                    c={'white'}
+                                    bg={`red.1`}
+                                    c={'red.3'}
                                 >
                                     <IconX color={`red.5`} size={16} opacity={0.5} onClick={() => {
                                         form.setFieldValue(name, '');

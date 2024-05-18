@@ -8,7 +8,7 @@ import {useOutletContext} from "react-router-dom";
 function ShortcutInvoice(props) {
     const {t, i18n} = useTranslation();
     const {isOnline, mainAreaHeight} = useOutletContext();
-    const formHeight = mainAreaHeight - 56; //TabList height 104
+    const formHeight = mainAreaHeight - 54; //TabList height 104
     return (
         <>
             <Stack

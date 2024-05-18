@@ -538,12 +538,12 @@ function _GenericInvoiceForm(props) {
                                                         <Popover.Target>
                                                             <Tooltip
                                                                 multiline
-                                                                w={420}
+                                                                bg={'orange.8'}
+                                                                position="top"
                                                                 withArrow
                                                                 transitionProps={{ duration: 200 }}
                                                                 label={t('InstantProductCreate')}
                                                             >
-
                                                                 <ActionIcon
                                                                     variant="outline"
                                                                     size={'lg'}

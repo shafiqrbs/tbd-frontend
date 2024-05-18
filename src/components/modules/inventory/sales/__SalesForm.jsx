@@ -16,7 +16,7 @@ import {
     IconEyeEdit,
     IconDeviceMobile,
     IconUserCircle, IconRefreshDot, IconDiscountOff, IconCurrency, IconPlusMinus, IconCheck,
-    IconUser,
+    IconUserPlus,
 
 } from "@tabler/icons-react";
 import { useHotkeys, useToggle } from "@mantine/hooks";
@@ -267,8 +267,8 @@ function __SalesForm(props) {
                         <Box className={'borderRadiusAll'} >
                             <Box>
                                 <Box pl={'xs'} pr={'xs'} pb={'xs'} className={'boxBackground'}>
-                                    <Grid gutter={{ base: 6 }}>
-                                        <Grid.Col span={11} pt={'4'} >
+                                    <Grid gutter={{ base: 6 }} pt={'3'} pb={'2'} >
+                                        <Grid.Col span={11}>
                                             <Box pt={'6'}>
                                                 <SelectForm
                                                     tooltip={t('CustomerValidateMessage')}
@@ -301,7 +301,8 @@ function __SalesForm(props) {
                                                     <Popover.Target>
                                                         <Tooltip
                                                             multiline
-                                                            w={420}
+                                                            bg={'orange.8'}
+                                                            position="top"
                                                             withArrow
                                                             transitionProps={{ duration: 200 }}
                                                             label={t('InstantCustomerCreate')}
@@ -316,7 +317,7 @@ function __SalesForm(props) {
                                                                 aria-label="Settings"
                                                                 onClick={() => setCustomerAddFormOpened(true)}
                                                             >
-                                                                <IconUser style={{ width: '100%', height: '70%' }} stroke={1.5} />
+                                                                <IconUserPlus style={{ width: '100%', height: '70%' }} stroke={1.5} />
                                                             </ActionIcon>
                                                         </Tooltip>
                                                     </Popover.Target>
@@ -418,20 +419,37 @@ function __SalesForm(props) {
                                     </Grid>
                                 </Box>
                                 <Box>
-                                    <Grid gutter={{ base: 6 }} className={'titleBackground'}>
+                                    <Grid gutter={{ base: 6 }} bg={'red.2'}  pb={'3'}  pt={'3'} >
                                         <Grid.Col span={6}>
-                                            <Box pl={'xl'} pb={'6'}>
-                                                <Text fz={'md'} order={1} fw={'800'}>1200000</Text>
+                                            <Box pl={'md'}>
+                                                <Text fz={'md'} order={1} fw={'800'}>{currencySymbol} 1200000</Text>
                                                 <Text fz={'xs'} c="dimmed" >{t('Outstanding')}</Text>
                                             </Box>
                                         </Grid.Col>
-                                        <Grid.Col span={6} >
-                                            <Text mt={'8'} mr={'xl'} style={{ textAlign: 'right', float: 'right' }}>
+                                        <Grid.Col span={6}>
+                                            <Box mt={'8'} mr={'12'} style={{ textAlign: 'right', float: 'right' }}>
                                                 <Group>
+                                                    <Tooltip
+                                                        multiline
+                                                        bg={'orange.8'}
+                                                        position="top"
+                                                        withArrow
+                                                        transitionProps={{ duration: 200 }}
+                                                        label={t('SendSms')}
+                                                    >
                                                     <ActionIcon bg={'white'} variant="outline"
                                                         color={'red'} >
                                                         <IconMessage size={18} stroke={1.5} />
                                                     </ActionIcon>
+                                                    </Tooltip>
+                                                    <Tooltip
+                                                        multiline
+                                                        bg={'orange.8'}
+                                                        position="top"
+                                                        withArrow
+                                                        transitionProps={{ duration: 200 }}
+                                                        label={t('CustomerDetails')}
+                                                    >
                                                     <ActionIcon
                                                         variant="filled"
                                                         color={'red'}
@@ -442,9 +460,10 @@ function __SalesForm(props) {
                                                             stroke={1.5}
                                                         />
                                                     </ActionIcon>
+                                                    </Tooltip>
 
                                                 </Group>
-                                            </Text>
+                                            </Box>
                                         </Grid.Col>
                                     </Grid>
                                 </Box>
@@ -563,7 +582,6 @@ function __SalesForm(props) {
                                     </Tooltip>
 
                                 </Box>
-
                                 <Box p={'xs'} className={'boxBackground'} mt={'4'} pt={'xs'} mb={'xs'} pb={'xs'} >
                                     <Grid gutter={{ base: 2 }}>
                                         <Grid.Col span={2}>
@@ -580,13 +598,18 @@ function __SalesForm(props) {
                                                 onChange={(event) => setProfitShow(event.currentTarget.checked)}
                                             />
                                         </Grid.Col>
-                                        <Grid.Col span={2}><Center fz={'xs'} mt={'8'}
-                                            c={'red'}>{currencySymbol} {profitShow && salesProfitAmount}</Center></Grid.Col>
-                                        <Grid.Col span={7}><Center fz={'md'} mt={'4'} c={'red'}
-                                            fw={'800'}>{returnOrDueText} {currencySymbol} {salesDueAmount.toFixed(2)}</Center></Grid.Col>
+                                        <Grid.Col span={2}>
+                                            <Center fz={'md'} mt={'4'}
+                                            c={'black.5'}>{currencySymbol} {profitShow && salesProfitAmount}</Center>
+                                        </Grid.Col>
+                                        <Grid.Col span={8}>
+                                            <Box fz={'xl'} pr={'8'} mt={'4'} c={'red'} style={{ textAlign: 'right', float: 'right' }} fw={'800'}>
+                                                {returnOrDueText} {currencySymbol} {salesDueAmount.toFixed(2)}
+                                            </Box>
+                                        </Grid.Col>
                                     </Grid>
                                     <Box mt={'xs'} h={1} bg={`red.3`}></Box>
-                                    <Grid gutter={{ base: 6 }} mt={'xs'}>
+                                    <Grid gutter={{ base: 2 }} mt={'xs'}>
                                         <Grid.Col span={4}>
                                             <Button
                                                 fullWidth
