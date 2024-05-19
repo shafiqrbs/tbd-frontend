@@ -49,8 +49,8 @@ function KeywordSearch(props) {
 
     return (
         <>
-            <Grid justify="flex-end" align="flex-end" gutter={{ base: 8 }}>
-                <Grid.Col span={11}>
+            <Grid  gutter={{ base: 2 }}>
+                <Grid.Col span={10}>
                     <Tooltip
                         label={t('EnterSearchAnyKeyword')}
                         opened={searchKeywordTooltip}
@@ -103,11 +103,11 @@ function KeywordSearch(props) {
                         />
                     </Tooltip>
                 </Grid.Col>
-                <Grid.Col span={1}>
-                    <ActionIcon.Group mt={'1'} >
-                        <ActionIcon variant="transparent"
+                <Grid.Col span={2}>
+                    <ActionIcon.Group mt={'1'} justify="center">
+                        <ActionIcon variant="default"
                             c={'red.4'}
-                            size="lg" mr={16} aria-label="Filter"
+                            size="lg"  aria-label="Filter"
                             onClick={() => {
                                 searchKeyword.length > 0 ?
                                     (dispatch(setFetching(true)),
@@ -129,16 +129,13 @@ function KeywordSearch(props) {
                                 bg={`red.1`}
                                 transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
                             >
-                                <IconSearch style={{ width: rem(20) }} stroke={2.0} />
+                                <IconSearch style={{ width: rem(18) }} stroke={1.5} />
                             </Tooltip>
                         </ActionIcon>
-
-
                         <ActionIcon
-                            variant="transparent"
+                            variant="default"
                             size="lg"
                             c={'gray.6'}
-                            mr={16}
                             aria-label="Settings"
                             onClick={(e) => {
                                 setFilterModel(true)
@@ -154,10 +151,10 @@ function KeywordSearch(props) {
                                 bg={`red.1`}
                                 transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
                             >
-                                <IconFilter style={{ width: rem(20) }} stroke={2.0} />
+                                <IconFilter style={{ width: rem(18) }} stroke={1.0} />
                             </Tooltip>
                         </ActionIcon>
-                        <ActionIcon variant="transparent" c={'gray.6'}
+                        <ActionIcon variant="default" c={'gray.6'}
                             size="lg" aria-label="Settings">
                             <Tooltip
                                 label={t("ResetButton")}
@@ -169,7 +166,7 @@ function KeywordSearch(props) {
                                 bg={`red.1`}
                                 transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
                             >
-                                <IconRestore style={{ width: rem(20) }} stroke={2.0} onClick={() => {
+                                <IconRestore style={{ width: rem(18) }} stroke={1.5} onClick={() => {
                                     dispatch(setSearchKeyword(''))
                                     dispatch(setFetching(true))
 

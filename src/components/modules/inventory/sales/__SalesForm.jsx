@@ -431,7 +431,7 @@ function __SalesForm(props) {
                                     </Grid>
                                 </Box>
                                 <Box>
-                                    <Grid gutter={{ base: 6 }} bg={'red.2'}  pb={'3'}  pt={'3'} >
+                                    <Grid gutter={{ base: 6 }} bg={'red.1'}  pb={'3'}  pt={'3'} >
                                         <Grid.Col span={6}>
                                             <Box pl={'md'}>
                                                 <Text fz={'md'} order={1} fw={'800'}>{currencySymbol} 1200000</Text>
@@ -530,18 +530,6 @@ function __SalesForm(props) {
                             </Box>
                             <ScrollArea h={formHeight} scrollbarSize={2} type="never" bg={'gray.1'}>
                                 <Box pl={'xs'} pt={'xs'} pr={'xs'} bg={`white`}>
-                                    <Tooltip
-                                        label={t('ChooseTransactionMode')}
-                                        opened={form.errors.transaction_mode_id === true}
-                                        px={16}
-                                        py={2}
-                                        position="top-end"
-                                        color="red"
-                                        withArrow
-                                        offset={2}
-                                        zIndex={0}
-                                        transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
-                                    >
 
                                         <Grid columns={'16'} gutter="6">
 
@@ -566,7 +554,8 @@ function __SalesForm(props) {
                                                                     label={mode.name}
                                                                     opened={hoveredModeId === mode.id}
                                                                     position="top"
-                                                                    offset={35}
+                                                                    bg={'orange.8'}
+                                                                    offset={12}
                                                                     withArrow
                                                                     arrowSize={8}
                                                                 >
@@ -592,7 +581,7 @@ function __SalesForm(props) {
                                                 })}
 
                                         </Grid>
-                                    </Tooltip>
+
 
                                 </Box>
                                 <Box p={'xs'} className={'boxBackground'} mt={'4'} pt={'xs'} mb={'xs'} pb={'xs'} >
