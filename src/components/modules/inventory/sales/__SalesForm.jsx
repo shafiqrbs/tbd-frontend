@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import {
     Button, rem, Center, Switch, ActionIcon,
-    Grid, Box, ScrollArea, Tooltip, Group, Text, Popover, Flex,
+    Grid, Box, ScrollArea, Tooltip, Group, Text, Popover, Flex,Notification
 } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
 import {
@@ -16,7 +16,7 @@ import {
     IconEyeEdit,
     IconDeviceMobile,
     IconUserCircle, IconRefreshDot, IconDiscountOff, IconCurrency, IconPlusMinus, IconCheck,
-    IconUserPlus,
+    IconUserPlus, IconX, IconTallymark1,
 
 } from "@tabler/icons-react";
 import { useHotkeys, useToggle } from "@mantine/hooks";
@@ -35,10 +35,13 @@ import InputForm from "../../../form-builders/InputForm";
 import { notifications } from "@mantine/notifications";
 import _InvoiceForDomain359 from "./print-component/_InvoiceForDomain359.jsx";
 import storeDataIntoLocalStorage from "../../../global-hook/local-storage/storeDataIntoLocalStorage.js";
+import _SmsPurchaseModel from "./modal/_SmsPurchaseModel.jsx";
+import _CustomerViewModel from "./modal/_CustomerViewModel.jsx";
+import getSettingOrderProcessDropdownData from "../../../global-hook/dropdown/getSettingOrderProcessDropdownData.js";
 
 function __SalesForm(props) {
 
-    const { currencySymbol,domainId } = props
+    const { currencySymbol,domainId,isSMSActive } = props
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
@@ -52,9 +55,10 @@ function __SalesForm(props) {
     const [salesTotalAmount, setSalesTotalAmount] = useState(0);
     const [salesDueAmount, setSalesDueAmount] = useState(props.salesSubTotalAmount);
     const [hoveredModeId, setHoveredModeId] = useState(false);
+    const [isShowSMSPackageModel,setIsShowSMSPackageModel] = useState(false)
 
     const formHeight = mainAreaHeight - 268; //TabList height 104
-    const [viewCustomerModel, setCustomerViewModel] = useState(false);
+    const [customerViewModel, setCustomerViewModel] = useState(false);
 
 
     const [tempCardProducts, setTempCardProducts] = useState([])
@@ -116,10 +120,11 @@ function __SalesForm(props) {
         setSalesDiscountAmount(discountAmount);
 
         let returnOrDueAmount = 0;
-        if (form.values.receive_amount) {
-            const text = salesTotalAmount < form.values.receive_amount ? 'Return' : 'Due';
+        let receiveAmount = form.values.receive_amount==''?0:form.values.receive_amount
+        if (receiveAmount>=0) {
+            const text = salesTotalAmount < receiveAmount ? 'Return' : 'Due';
             setReturnOrDueText(text);
-            returnOrDueAmount = salesTotalAmount - form.values.receive_amount;
+            returnOrDueAmount = salesTotalAmount - receiveAmount;
             setSalesDueAmount(returnOrDueAmount);
         }
     }, [form.values.discount, discountType, form.values.receive_amount, salesSubTotalAmount, salesTotalAmount]);
@@ -151,16 +156,25 @@ function __SalesForm(props) {
     /*START GET CUSTOMER DROPDOWN FROM LOCAL STORAGE*/
     const [customersDropdownData,setCustomersDropdownData] = useState([])
     const [refreshCustomerDropdown,setRefreshCustomerDropdown] = useState(false)
+    const [defaultCustomerId,setDefaultCustomerId] = useState(null)
+
     useEffect(() => {
         let coreCustomers = localStorage.getItem('core-customers');
         coreCustomers = coreCustomers?JSON.parse(coreCustomers):[]
+        let defaultId = defaultCustomerId;
         if (coreCustomers && coreCustomers.length > 0) {
             const transformedData = coreCustomers.map(type => {
+                if (type.name === 'Default') {
+                    defaultId = type.id;
+                }
                 return ({'label': type.mobile+' -- '+type.name, 'value': String(type.id)})
             });
+
             setCustomersDropdownData(transformedData);
+            setDefaultCustomerId(defaultId);
         }
-    }, [customersDropdownData,refreshCustomerDropdown])
+        setRefreshCustomerDropdown(false);
+    }, [refreshCustomerDropdown])
     /*END GET CUSTOMER DROPDOWN FROM LOCAL STORAGE*/
 
 
@@ -176,6 +190,7 @@ function __SalesForm(props) {
         }
     }, [transactionModeData, form]);
     /*END FOR TRANSACTION MODE DEFAULT SELECT*/
+
 
 
 
@@ -447,10 +462,30 @@ function __SalesForm(props) {
                                                         position="top"
                                                         withArrow
                                                         transitionProps={{ duration: 200 }}
-                                                        label={t('SendSms')}
+                                                        label={customerData && customerData != defaultCustomerId?(isSMSActive?t('SendSms'):t('PleasePurchaseAsmsPackage')):t('ChooseCustomer')}
                                                     >
-                                                    <ActionIcon bg={'white'} variant="outline"
-                                                        color={'red'} >
+                                                    <ActionIcon
+                                                        bg={'white'}
+                                                        variant="outline"
+                                                        color={'red'}
+                                                        disabled={!customerData || customerData == defaultCustomerId}
+                                                        onClick={(e)=>{
+                                                            if (isSMSActive) {
+                                                                notifications.show({
+                                                                    withCloseButton: true,
+                                                                    autoClose: 1000,
+                                                                    title: t('smsSendSuccessfully'),
+                                                                    message: t('smsSendSuccessfully'),
+                                                                    icon: <IconTallymark1 />,
+                                                                    className: 'my-notification-class',
+                                                                    style: {  },
+                                                                    loading: true,
+                                                                })
+                                                            }else {
+                                                                setIsShowSMSPackageModel(true)
+                                                            }
+                                                        }}
+                                                    >
                                                         <IconMessage size={18} stroke={1.5} />
                                                     </ActionIcon>
                                                     </Tooltip>
@@ -460,11 +495,12 @@ function __SalesForm(props) {
                                                         position="top"
                                                         withArrow
                                                         transitionProps={{ duration: 200 }}
-                                                        label={t('CustomerDetails')}
+                                                        label={customerData && customerData != defaultCustomerId?t('CustomerDetails'):t('ChooseCustomer')}
                                                     >
                                                     <ActionIcon
                                                         variant="filled"
                                                         color={'red'}
+                                                        disabled={!customerData || customerData == defaultCustomerId}
                                                         onClick={setCustomerViewModel}
                                                     >
                                                         <IconEyeEdit
@@ -683,7 +719,7 @@ function __SalesForm(props) {
                                             required={true}
                                             name={'order_process'}
                                             form={form}
-                                            dropdownValue={['Order', 'Process']}
+                                            dropdownValue={getSettingOrderProcessDropdownData()}
                                             id={'order_process'}
                                             nextField={'narration'}
                                             searchable={false}
@@ -709,20 +745,63 @@ function __SalesForm(props) {
                             </ScrollArea>
                             <Box>
                                 <Button.Group fullWidth>
-                                    <Button fullWidth variant="filled" leftSection={<IconPrinter size={14} />}
-                                        color="green.5">Print</Button>
-                                    <Button fullWidth variant="filled" leftSection={<IconReceipt size={14} />}
-                                        color="red.5">Pos</Button>
-                                    <Button type={'submit'} fullWidth variant="filled" leftSection={<IconDeviceFloppy size={14} />}
-                                        color="cyan.5">Save</Button>
-                                    <Button fullWidth variant="filled" leftSection={<IconStackPush size={14} />}
-                                        color="orange.5">Hold</Button>
+                                    <Button
+                                        fullWidth
+                                        variant="filled"
+                                        leftSection={<IconPrinter size={14} />}
+                                        color="green.5"
+                                        disabled={(!customerData || customerData == defaultCustomerId) && salesDueAmount>0}
+                                    >
+                                        Print
+                                    </Button>
+                                    <Button
+                                        fullWidth
+                                        variant="filled"
+                                        leftSection={<IconReceipt size={14} />}
+                                        color="red.5"
+                                        disabled={(!customerData || customerData == defaultCustomerId) && salesDueAmount>0}
+                                    >
+                                        Pos
+                                    </Button>
+                                    <Button
+                                        fullWidth
+                                        type={'submit'}
+                                        variant="filled"
+                                        leftSection={<IconDeviceFloppy size={14}/>}
+                                        color="cyan.5"
+                                        disabled={(!customerData || customerData == defaultCustomerId) && salesDueAmount>0}
+                                    >
+                                        Save
+                                    </Button>
+                                    <Button
+                                        fullWidth
+                                        variant="filled"
+                                        leftSection={<IconStackPush size={14} />}
+                                        color="orange.5"
+                                        // disabled={(!customerData || customerData == defaultCustomerId) && salesDueAmount>0}
+                                    >
+                                        Hold
+                                    </Button>
                                 </Button.Group>
                             </Box>
                         </Box>
                     </Grid>
                 </Box>
             </form>
+
+            {isShowSMSPackageModel &&
+                <_SmsPurchaseModel
+                    isShowSMSPackageModel={isShowSMSPackageModel}
+                    setIsShowSMSPackageModel={setIsShowSMSPackageModel}
+                />
+            }
+            {customerViewModel && customerData &&
+                <_CustomerViewModel
+                    customerViewModel={customerViewModel}
+                    setCustomerViewModel={setCustomerViewModel}
+                    customerData={customerData}
+                />
+            }
         </>
 
     );

@@ -29,7 +29,7 @@ import tableCss from "../../../../assets/css/Table.module.css";
 import storeDataIntoLocalStorage from "../../../global-hook/local-storage/storeDataIntoLocalStorage.js";
 
 function _GenericInvoiceForm(props) {
-    const { currencySymbol, allowZeroPercentage,domainId } = props
+    const { currencySymbol, allowZeroPercentage,domainId,isSMSActive } = props
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
@@ -1040,6 +1040,7 @@ function _GenericInvoiceForm(props) {
                             currencySymbol={currencySymbol}
                             setLoadCardProducts={setLoadCardProducts}
                             domainId={domainId}
+                            isSMSActive={isSMSActive}
                         />
                     </Box>
                 </Grid.Col>

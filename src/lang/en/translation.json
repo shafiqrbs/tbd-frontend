@@ -393,5 +393,15 @@
   "Process": "Process",
   "SelectProductionItem": "Select a Production Item",
   "Issue": "Issue",
-  "Damage": "Damage"
+  "Damage": "Damage",
+  "CustomerDetails": "Customer Details",
+  "SendSms": "Send Sms",
+  "PleasePurchaseAsmsPackage": "Please purchase a SMS package",
+  "smsSendSuccessfully": "SMS send successfully",
+  "PurchaseSMS": "Purchase SMS",
+  "SalesBy": "Sales By",
+  "OrderProcess": "Order Process",
+
+
+  "" : ""
 }
