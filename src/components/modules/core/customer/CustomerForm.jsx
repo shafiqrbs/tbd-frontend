@@ -179,7 +179,7 @@ function CustomerForm() {
                                                         >
 
                                                             <Flex direction={`column`} gap={0}>
-                                                                <Text fz={12} fw={400}>
+                                                                <Text fz={14}  fw={400}>
                                                                     {t("CreateAndSave")}
                                                                 </Text>
                                                             </Flex>
@@ -202,20 +202,7 @@ function CustomerForm() {
                                                     </List>
                                                 }></Alert>
                                             }
-                                            <Box mt={'xs'}>
-                                                <InputForm
-                                                    tooltip={t('NameValidateMessage')}
-                                                    label={t('Name')}
-                                                    placeholder={t('CustomerName')}
-                                                    required={true}
-                                                    nextField={'CustomerGroup'}
-                                                    name={'name'}
-                                                    form={form}
-                                                    mt={0}
-                                                    id={'CustomerName'}
-                                                />
-                                            </Box>
-                                            <Box mt={'xs'}>
+                                            <Box>
                                                 <Grid gutter={{ base: 6 }}>
                                                     <Grid.Col span={11} >
                                                         <Box mt={'8'}>
@@ -224,12 +211,12 @@ function CustomerForm() {
                                                                 label={t('CustomerGroup')}
                                                                 placeholder={t('ChooseCustomerGroup')}
                                                                 required={false}
-                                                                nextField={'CreditLimit'}
+                                                                nextField={'name'}
                                                                 name={'customer_group'}
                                                                 form={form}
                                                                 dropdownValue={["Family", "Local"]}
                                                                 mt={8}
-                                                                id={'CustomerGroup'}
+                                                                id={'customer_group'}
                                                                 searchable={false}
                                                                 value={customerGroupData}
                                                                 changeValue={setCustomerGroupData}
@@ -255,61 +242,57 @@ function CustomerForm() {
 
                                                     </Grid.Col>
                                                     {opened &&
-                                                        <CustomerGroupModel openedModel={opened} open={open} close={close} />
+                                                    <CustomerGroupModel openedModel={opened} open={open} close={close} />
                                                     }
                                                 </Grid>
                                             </Box>
                                             <Box mt={'xs'}>
                                                 <InputForm
-                                                    tooltip={t('CreditLimitValidateMessage')}
-                                                    label={t('CreditLimit')}
-                                                    placeholder={t('CreditLimit')}
-                                                    required={false}
-                                                    nextField={'OLDReferenceNo'}
-                                                    name={'credit_limit'}
-                                                    form={form}
-                                                    mt={8}
-                                                    id={'CreditLimit'}
-                                                />
-                                            </Box>
-                                            <Box mt={'xs'}>
-                                                <InputForm
-                                                    tooltip={t('OLDReferenceNo')}
-                                                    label={t('OLDReferenceNo')}
-                                                    placeholder={t('OLDReferenceNo')}
-                                                    required={false}
-                                                    nextField={'Mobile'}
-                                                    name={'reference_id'}
-                                                    form={form}
-                                                    mt={8}
-                                                    id={'OLDReferenceNo'}
-                                                />
-                                            </Box>
-                                            <Box mt={'xs'}>
-                                                <InputForm
-                                                    tooltip={t('MobileValidateMessage')}
-                                                    label={t('Mobile')}
-                                                    placeholder={t('Mobile')}
+                                                    tooltip={t('NameValidateMessage')}
+                                                    label={t('Name')}
+                                                    placeholder={t('CustomerName')}
                                                     required={true}
-                                                    nextField={'AlternativeMobile'}
-                                                    name={'mobile'}
+                                                    nextField={'mobile'}
+                                                    name={'name'}
                                                     form={form}
-                                                    mt={8}
-                                                    id={'Mobile'}
+                                                    mt={0}
+                                                    id={'name'}
                                                 />
                                             </Box>
                                             <Box mt={'xs'}>
-                                                <InputForm
-                                                    tooltip={t('MobileValidateMessage')}
-                                                    label={t('AlternativeMobile')}
-                                                    placeholder={t('AlternativeMobile')}
-                                                    required={false}
-                                                    nextField={'Email'}
-                                                    name={'alternative_mobile'}
-                                                    form={form}
-                                                    mt={8}
-                                                    id={'AlternativeMobile'}
-                                                />
+                                                <Grid gutter={{ base: 6 }}>
+                                                    <Grid.Col span={6} >
+                                                        <Box>
+                                                            <InputForm
+                                                                tooltip={t('MobileValidateMessage')}
+                                                                label={t('Mobile')}
+                                                                placeholder={t('Mobile')}
+                                                                required={true}
+                                                                nextField={'alternative_mobile'}
+                                                                name={'mobile'}
+                                                                form={form}
+                                                                mt={8}
+                                                                id={'mobile'}
+                                                            />
+                                                        </Box>
+                                                    </Grid.Col>
+                                                    <Grid.Col span={6}>
+                                                        <Box>
+                                                            <InputForm
+                                                                tooltip={t('MobileValidateMessage')}
+                                                                label={t('AlternativeMobile')}
+                                                                placeholder={t('AlternativeMobile')}
+                                                                required={false}
+                                                                nextField={'email'}
+                                                                name={'alternative_mobile'}
+                                                                form={form}
+                                                                mt={8}
+                                                                id={'alternative_mobile'}
+                                                            />
+                                                        </Box>
+
+                                                    </Grid.Col>
+                                                </Grid>
                                             </Box>
                                             <Box mt={'xs'}>
                                                 <InputForm
@@ -317,25 +300,71 @@ function CustomerForm() {
                                                     label={t('Email')}
                                                     placeholder={t('Email')}
                                                     required={false}
-                                                    nextField={'Location'}
+                                                    nextField={'opening'}
                                                     name={'email'}
                                                     form={form}
                                                     mt={8}
-                                                    id={'Email'}
+                                                    id={'email'}
                                                 />
                                             </Box>
+                                            <Box mt={'xs'}>
+                                                <Grid gutter={{ base: 6 }}>
+                                                    <Grid.Col span={6} >
+                                                        <Box>
+                                                            <InputForm
+                                                                tooltip={t('OpeningValidateMessage')}
+                                                                label={t('Opening')}
+                                                                placeholder={t('Opening')}
+                                                                required={false}
+                                                                nextField={'credit_limit'}
+                                                                name={'opening'}
+                                                                form={form}
+                                                                id={'opening'}
+                                                            />
+                                                        </Box>
+                                                    </Grid.Col>
+                                                    <Grid.Col span={6}>
+                                                        <Box>
+                                                            <InputForm
+                                                                tooltip={t('CreditLimitValidateMessage')}
+                                                                label={t('CreditLimit')}
+                                                                placeholder={t('CreditLimit')}
+                                                                required={false}
+                                                                nextField={'reference_id'}
+                                                                name={'credit_limit'}
+                                                                form={form}
+                                                                id={'credit_limit'}
+                                                            />
+                                                        </Box>
+                                                    </Grid.Col>
+                                                </Grid>
+                                            </Box>
+                                            <Box mt={'xs'}>
+                                                <InputForm
+                                                    tooltip={t('OLDReferenceNo')}
+                                                    label={t('OLDReferenceNo')}
+                                                    placeholder={t('OLDReferenceNo')}
+                                                    required={false}
+                                                    nextField={'location_id'}
+                                                    name={'reference_id'}
+                                                    form={form}
+                                                    mt={8}
+                                                    id={'reference_id'}
+                                                />
+                                            </Box>
+
                                             <Box mt={'xs'}>
                                                 <SelectForm
                                                     tooltip={t('Location')}
                                                     label={t('Location')}
                                                     placeholder={t('ChooseLocation')}
                                                     required={false}
-                                                    nextField={'MarketingExecutive'}
+                                                    nextField={'marketing_id'}
                                                     name={'location_id'}
+                                                    id={'location_id'}
                                                     form={form}
                                                     dropdownValue={locationDropdown}
                                                     mt={8}
-                                                    id={'Location'}
                                                     searchable={true}
                                                     value={locationData}
                                                     changeValue={setLocationData}
@@ -347,12 +376,12 @@ function CustomerForm() {
                                                     label={t('MarketingExecutive')}
                                                     placeholder={t('ChooseMarketingExecutive')}
                                                     required={false}
-                                                    nextField={'Address'}
+                                                    nextField={'address'}
                                                     name={'marketing_id'}
                                                     form={form}
                                                     dropdownValue={executiveDropdown}
                                                     mt={8}
-                                                    id={'MarketingExecutive'}
+                                                    id={'marketing_id'}
                                                     searchable={true}
                                                     value={marketingExeData}
                                                     changeValue={setMarketingExeData}
@@ -369,7 +398,7 @@ function CustomerForm() {
                                                     name={'address'}
                                                     form={form}
                                                     mt={8}
-                                                    id={'Address'}
+                                                    id={'address'}
                                                 />
                                             </Box>
                                         </Box>

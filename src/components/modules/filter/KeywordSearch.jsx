@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import {
     rem,
-    Grid, Tooltip, TextInput, ActionIcon,
+    Grid, Tooltip, TextInput, ActionIcon
 } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
 import {
@@ -10,7 +10,7 @@ import {
     IconInfoCircle,
     IconRestore,
     IconSearch,
-    IconX,
+    IconX,IconPdf,IconFileTypeXls
 } from "@tabler/icons-react";
 import { useHotkeys } from "@mantine/hooks";
 import { useDispatch, useSelector } from "react-redux";
@@ -49,8 +49,8 @@ function KeywordSearch(props) {
 
     return (
         <>
-            <Grid  gutter={{ base: 2 }}>
-                <Grid.Col span={10}>
+            <Grid justify="space-between" align="stretch"  gutter={{ base: 2 }} grow>
+                <Grid.Col span="8">
                     <Tooltip
                         label={t('EnterSearchAnyKeyword')}
                         opened={searchKeywordTooltip}
@@ -103,7 +103,7 @@ function KeywordSearch(props) {
                         />
                     </Tooltip>
                 </Grid.Col>
-                <Grid.Col span={2}>
+                <Grid.Col span="auto">
                     <ActionIcon.Group mt={'1'} justify="center">
                         <ActionIcon variant="default"
                             c={'red.4'}
@@ -207,6 +207,61 @@ function KeywordSearch(props) {
                                 }} />
                             </Tooltip>
                         </ActionIcon>
+                        <ActionIcon variant="default"
+                                    c={'green.8'}
+                                    size="lg"  aria-label="Filter"
+                                    onClick={() => {
+                                        searchKeyword.length > 0 ?
+                                            (dispatch(setFetching(true)),
+                                                setSearchKeywordTooltip(false))
+                                            :
+                                            (setSearchKeywordTooltip(true),
+                                                setTimeout(() => {
+                                                    setSearchKeywordTooltip(false)
+                                                }, 1500))
+                                    }}
+                        >
+                            <Tooltip
+                                label={t('DownloadPdfFile')}
+                                px={16}
+                                py={2}
+                                withArrow
+                                position={"bottom"}
+                                c={'red'}
+                                bg={`red.1`}
+                                transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
+                            >
+                                <IconPdf style={{ width: rem(18) }} stroke={1.5} />
+                            </Tooltip>
+                        </ActionIcon>
+                        <ActionIcon variant="default"
+                                    c={'green.8'}
+                                    size="lg"  aria-label="Filter"
+                                    onClick={() => {
+                                        searchKeyword.length > 0 ?
+                                            (dispatch(setFetching(true)),
+                                                setSearchKeywordTooltip(false))
+                                            :
+                                            (setSearchKeywordTooltip(true),
+                                                setTimeout(() => {
+                                                    setSearchKeywordTooltip(false)
+                                                }, 1500))
+                                    }}
+                        >
+                            <Tooltip
+                                label={t('DownloadExcelFile')}
+                                px={16}
+                                py={2}
+                                withArrow
+                                position={"bottom"}
+                                c={'red'}
+                                bg={`red.1`}
+                                transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
+                            >
+                                <IconFileTypeXls style={{ width: rem(18) }} stroke={1.5} />
+                            </Tooltip>
+                        </ActionIcon>
+
                     </ActionIcon.Group>
                 </Grid.Col>
             </Grid>

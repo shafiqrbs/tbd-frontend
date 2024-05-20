@@ -3,10 +3,10 @@ import { useOutletContext } from "react-router-dom";
 import {
     Group,
     Box,
-    ActionIcon, Text
+    ActionIcon, Text, Menu, rem,Anchor
 } from "@mantine/core";
 import { useTranslation } from "react-i18next";
-import { IconEye, IconEdit, IconTrash } from "@tabler/icons-react";
+import {IconEye, IconEdit, IconTrash, IconInfoCircle, IconSettings, IconEyeEdit, IconTrashX, IconPencil, IconDotsVertical} from "@tabler/icons-react";
 import { DataTable } from 'mantine-datatable';
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -84,52 +84,34 @@ function CustomerTable() {
                             textAlign: "right",
                             render: (data) => (
                                 <Group gap={4} justify="right" wrap="nowrap">
-                                    <ActionIcon
-                                        size="sm"
-                                        variant="subtle"
-                                        color="green"
-                                        onClick={() => {
-                                            setCustomerViewModel(true)
-                                            dispatch(showEntityData('core/customer/' + data.id))
-                                        }}
-                                    >
-                                        <IconEye size={16} />
-                                    </ActionIcon>
-                                    <ActionIcon
-                                        size="sm"
-                                        variant="subtle"
-                                        color="blue"
-                                        onClick={() => {
-                                            dispatch(setInsertType('update'))
-                                            dispatch(editEntityData('core/customer/' + data.id))
-                                            dispatch(setFormLoading(true))
-                                        }}
-                                    >
-                                        <IconEdit size={16} />
-                                    </ActionIcon>
-                                    <ActionIcon
-                                        size="sm"
-                                        variant="subtle"
-                                        color="red"
-                                        onClick={() => {
-                                            modals.openConfirmModal({
-                                                title: (
-                                                    <Text size="md"> {t("FormConfirmationTitle")}</Text>
-                                                ),
-                                                children: (
-                                                    <Text size="sm"> {t("FormConfirmationMessage")}</Text>
-                                                ),
-                                                labels: { confirm: 'Confirm', cancel: 'Cancel' },
-                                                onCancel: () => console.log('Cancel'),
-                                                onConfirm: () => {
-                                                    dispatch(deleteEntityData('core/customer/' + data.id))
-                                                    dispatch(setFetching(true))
-                                                },
-                                            });
-                                        }}
-                                    >
-                                        <IconTrash size={16} />
-                                    </ActionIcon>
+                                    <Menu position="bottom-end" offset={3} withArrow trigger="hover" openDelay={100} closeDelay={400}>
+                                        <Menu.Target>
+                                            <ActionIcon variant="outline" color="gray.6" radius="xl" aria-label="Settings">
+                                                <IconDotsVertical height={'18'} width={'18'} stroke={1.5} />
+                                            </ActionIcon>
+                                        </Menu.Target>
+                                        <Menu.Dropdown>
+                                            <Menu.Item w={'200'} href="/inventory/config" leftSection={<IconPencil style={{ width: rem(14), height: rem(14) }} />} >
+                                                <Anchor href="https://mantine.dev/" target="_blank">
+                                                    Edit
+                                                </Anchor>
+                                            </Menu.Item>
+                                            <Menu.Item href="/inventory/config"
+                                                       leftSection={<IconEyeEdit style={{ width: rem(14), height: rem(14) }} />}>
+
+                                                <Anchor href="https://mantine.dev/" target="_blank">
+                                                    {t('Show')}
+                                                </Anchor>
+                                            </Menu.Item>
+                                            <Menu.Item href=""
+                                                        leftSection={<IconTrashX style={{ width: rem(14), height: rem(14) }} />}>
+                                                <Anchor href="/inventory/config" >
+                                                    {t('Delete')}
+                                                </Anchor>
+                                            </Menu.Item>
+                                        </Menu.Dropdown>
+                                    </Menu>
+
                                 </Group>
                             ),
                         },
