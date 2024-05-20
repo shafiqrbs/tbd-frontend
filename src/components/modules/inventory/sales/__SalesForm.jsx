@@ -41,7 +41,7 @@ import getSettingOrderProcessDropdownData from "../../../global-hook/dropdown/ge
 
 function __SalesForm(props) {
 
-    const { currencySymbol,domainId,isSMSActive } = props
+    const { currencySymbol,domainId,isSMSActive,isZeroReceiveAllow } = props
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
@@ -65,6 +65,7 @@ function __SalesForm(props) {
     const [loadCardProducts, setLoadCardProducts] = useState(false)
     const [discountType, setDiscountType] = useToggle(['Flat', 'Percent']);
     const [invoicePrintData,setInvoicePrintData] = useState(null)
+    const [invoicePrintForSave,setInvoicePrintForSave] = useState(false)
 
 
     useEffect(() => {
@@ -191,6 +192,11 @@ function __SalesForm(props) {
     }, [transactionModeData, form]);
     /*END FOR TRANSACTION MODE DEFAULT SELECT*/
 
+    /*START FOR SUBMIT Disabled*/
+        const isDefaultCustomer = !customerData || customerData == defaultCustomerId;
+        const isDisabled = isDefaultCustomer && (isZeroReceiveAllow ? false : salesDueAmount > 0);
+    /*END FOR SUBMIT Disabled*/
+
 
 
 
@@ -216,7 +222,14 @@ function __SalesForm(props) {
 
     return (
         <>
-            { domainId=='359' && invoicePrintData &&  <_InvoiceForDomain359 invoicePrintData={invoicePrintData}/>}
+            {
+                domainId=='359' && invoicePrintForSave &&
+                <_InvoiceForDomain359
+                    invoicePrintData={invoicePrintData}
+                    setInvoicePrintData={setInvoicePrintData}
+                    setInvoicePrintForSave={setInvoicePrintForSave}
+                    invoicePrintForSave={invoicePrintForSave}
+                />}
 
             <form onSubmit={form.onSubmit((values) => {
                 const tempProducts = localStorage.getItem('temp-sales-products');
@@ -239,7 +252,7 @@ function __SalesForm(props) {
                 });
 
                 const formValue = {}
-                formValue['customer_id'] = form.values.customer_id;
+                formValue['customer_id'] = form.values.customer_id?form.values.customer_id:defaultCustomerId;
                 formValue['sub_total'] = salesSubTotalAmount;
                 formValue['transaction_mode_id'] = form.values.transaction_mode_id;
                 formValue['discount_type'] = discountType;
@@ -247,16 +260,27 @@ function __SalesForm(props) {
                 formValue['discount_calculation'] = discountType === 'Percent' ? form.values.discount : 0;
                 formValue['vat'] = 0;
                 formValue['total'] = salesTotalAmount;
-                formValue['payment'] = form.values.receive_amount;
+                /*formValue['payment'] = form.values.receive_amount ? (customerData && customerData !=defaultCustomerId ? form.values.receive_amount:isZeroReceiveAllow ? salesTotalAmount:form.values.receive_amount) :(isZeroReceiveAllow && (!form.values.customer_id || form.values.customer_id == defaultCustomerId) ?salesTotalAmount:0);*/
                 formValue['sales_by_id'] = form.values.sales_by;
                 formValue['created_by_id'] = Number(createdBy['id']);
                 formValue['process'] = form.values.order_process;
                 formValue['narration'] = form.values.narration;
                 formValue['items'] = transformedArray ? transformedArray : [];
 
-                console.log(formValue)
+                const hasReceiveAmount = form.values.receive_amount;
+                const isDefaultCustomer = !form.values.customer_id || form.values.customer_id == defaultCustomerId;
+                formValue['payment'] = hasReceiveAmount
+                    ? (customerData && customerData != defaultCustomerId
+                        ? form.values.receive_amount
+                        : isZeroReceiveAllow
+                            ? salesTotalAmount
+                            : form.values.receive_amount)
+                    : (isZeroReceiveAllow && isDefaultCustomer
+                        ? salesTotalAmount
+                        : 0);
 
-                /*setInvoicePrintData(formValue)
+                setInvoicePrintData(formValue)
+                setInvoicePrintForSave(true)
 
                 const data = {
                     url: 'inventory/sales',
@@ -274,19 +298,24 @@ function __SalesForm(props) {
                 });
 
                 setTimeout(() => {
-                    let printContents = document.getElementById('printElement').innerHTML;
-                    let originalContents = document.body.innerHTML;
-                    document.body.innerHTML = printContents;
-                    window.print();
-                    document.body.innerHTML = originalContents;
-
                     localStorage.removeItem('temp-sales-products');
                     form.reset()
                     setCustomerData(null)
                     setSalesByUser(null)
                     setOrderProcess(null)
                     props.setLoadCardProducts(true)
-                }, 700)*/
+
+                }, 100)
+
+                setTimeout(() => {
+                    setInvoicePrintForSave(true)
+                    let printContents = document.getElementById('printElement').innerHTML;
+                    let originalContents = document.body.innerHTML;
+                    document.body.innerHTML = printContents;
+                    window.print();
+                    document.body.innerHTML = originalContents;
+                    window.location.reload()
+                }, 200);
 
             })}>
                 <Box>
@@ -697,7 +726,7 @@ function __SalesForm(props) {
                                 <Box>
                                     <Box p={'xs'} pb={'0'} pt={'0'}>
                                         <SelectForm
-                                            tooltip={t('SalesByValidateMessage')}
+                                            tooltip={t('ChooseSalesBy')}
                                             label=''
                                             placeholder={t('SalesBy')}
                                             required={true}
@@ -713,7 +742,7 @@ function __SalesForm(props) {
                                     </Box>
                                     <Box p={'xs'} >
                                         <SelectForm
-                                            tooltip={t('ProductUnitValidateMessage')}
+                                            tooltip={t('ChooseOrderProcess')}
                                             label=''
                                             placeholder={t('OrderProcess')}
                                             required={true}
@@ -750,7 +779,11 @@ function __SalesForm(props) {
                                         variant="filled"
                                         leftSection={<IconPrinter size={14} />}
                                         color="green.5"
-                                        disabled={(!customerData || customerData == defaultCustomerId) && salesDueAmount>0}
+                                        disabled={isDisabled}
+                                        style={{
+                                            transition: "all 0.3s ease",
+                                            backgroundColor: isDisabled ? "#f1f3f500" : ""
+                                        }}
                                     >
                                         Print
                                     </Button>
@@ -759,7 +792,11 @@ function __SalesForm(props) {
                                         variant="filled"
                                         leftSection={<IconReceipt size={14} />}
                                         color="red.5"
-                                        disabled={(!customerData || customerData == defaultCustomerId) && salesDueAmount>0}
+                                        disabled={isDisabled}
+                                        style={{
+                                            transition: "all 0.3s ease",
+                                            backgroundColor: isDisabled ? "#f1f3f500" : ""
+                                        }}
                                     >
                                         Pos
                                     </Button>
@@ -769,7 +806,11 @@ function __SalesForm(props) {
                                         variant="filled"
                                         leftSection={<IconDeviceFloppy size={14}/>}
                                         color="cyan.5"
-                                        disabled={(!customerData || customerData == defaultCustomerId) && salesDueAmount>0}
+                                        disabled={isDisabled}
+                                        style={{
+                                            transition: "all 0.3s ease",
+                                            backgroundColor: isDisabled ? "#f1f3f500" : ""
+                                        }}
                                     >
                                         Save
                                     </Button>
@@ -778,7 +819,6 @@ function __SalesForm(props) {
                                         variant="filled"
                                         leftSection={<IconStackPush size={14} />}
                                         color="orange.5"
-                                        // disabled={(!customerData || customerData == defaultCustomerId) && salesDueAmount>0}
                                     >
                                         Hold
                                     </Button>

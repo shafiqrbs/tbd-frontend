@@ -10,7 +10,7 @@ import {ReactToPrint} from "react-to-print";
 import {useOutletContext} from "react-router-dom";
 
 function _InvoiceForDomain359(props) {
-    const {invoicePrintData} = props
+    const {invoicePrintData,setInvoicePrintData,invoicePrintForSave,setInvoicePrintForSave} = props
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
@@ -38,6 +38,11 @@ function _InvoiceForDomain359(props) {
         },
 
     ]
+
+    window.onafterprint = () => {
+        setInvoicePrintData(null)
+        setInvoicePrintForSave(false)
+    };
 
     console.log(invoicePrintData)
 

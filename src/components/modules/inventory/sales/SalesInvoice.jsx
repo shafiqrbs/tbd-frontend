@@ -39,6 +39,7 @@ function SalesInvoice() {
                                         currencySymbol={configData.currency.symbol}
                                         domainId={configData.domain_id}
                                         isSMSActive={configData.is_active_sms}
+                                        isZeroReceiveAllow={configData.is_zero_receive_allow}
                                     />
                                 }
                             </Box>
