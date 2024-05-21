@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React from "react";
 import { useTranslation } from 'react-i18next';
 import classes from './SmsPurchaseModel.module.css';
 
@@ -17,17 +17,14 @@ import {
     rem, SimpleGrid,
 } from '@mantine/core';
 
-function _CustomerViewModel(props) {
-    const {customerViewModel,setCustomerViewModel,customerObject} = props
+function _SmsPurchaseModel(props) {
+    const {isShowSMSPackageModel,setIsShowSMSPackageModel} = props
     const { t, i18n } = useTranslation();
 
     const handelModal = () => {
-        setCustomerViewModel(!customerViewModel)
+        setIsShowSMSPackageModel(!isShowSMSPackageModel)
     }
 
-    useEffect(()=>{
-        console.log(customerObject)
-    },[])
     const linkProps = { href: 'https://mantine.dev', target: '_blank', rel: 'noopener noreferrer' };
     const theme = useMantineTheme();
 
@@ -40,7 +37,7 @@ function _CustomerViewModel(props) {
         </Card.Section>
 
         <Badge className={classes.rating} variant="gradient" gradient={{ from: 'yellow', to: 'red' }}>
-            outstanding {customerObject.name}
+            outstanding
         </Badge>
 
         <Text className={classes.title} fw={500} component="a" {...linkProps}>
@@ -86,7 +83,7 @@ function _CustomerViewModel(props) {
     )
     return (
         <>
-            <Modal size={"100%"} opened={customerViewModel} onClose={handelModal} title={t('CustomerDetails')} centered>
+            <Modal size={"100%"} opened={isShowSMSPackageModel} onClose={handelModal} title={t('PurchaseSMS')} centered>
                 <SimpleGrid cols={3}>
                     <div>{card}</div>
                     <div>{card}</div>
@@ -98,4 +95,4 @@ function _CustomerViewModel(props) {
     );
 }
 
-export default _CustomerViewModel;
+export default _SmsPurchaseModel;

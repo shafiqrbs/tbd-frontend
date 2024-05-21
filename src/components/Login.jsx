@@ -22,6 +22,7 @@ import axios from "axios";
 import { getIndexEntityData } from "../store/core/crudSlice.js";
 import { useDispatch, useSelector } from "react-redux";
 import storeDataIntoLocalStorage from "./global-hook/local-storage/storeDataIntoLocalStorage.js";
+import orderProcessDropdownDataStore from "./global-hook/local-storage/orderProcessDropdownDataStore.js";
 
 export default function Login() {
 
@@ -73,7 +74,8 @@ export default function Login() {
                     if (res.data.status === 200) {
 
                         localStorage.setItem("user", JSON.stringify(res.data.data));
-                        const local = storeDataIntoLocalStorage(res.data.data.id)
+                        const allLocal = storeDataIntoLocalStorage(res.data.data.id)
+                        const orderProcess = orderProcessDropdownDataStore(res.data.data.id)
 
                         setErrorMessage('')
                         setSpinner(false)

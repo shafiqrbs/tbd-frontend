@@ -133,7 +133,7 @@ function __SalesForm(props) {
 
     const [profitShow, setProfitShow] = useState(false);
 
-
+    /*START CUSTOMER ADDED FORM INITIAL*/
     const [customerAddFormOpened, setCustomerAddFormOpened] = useState(false);
     const customerAddedForm = useForm({
         initialValues: {
@@ -145,14 +145,17 @@ function __SalesForm(props) {
             mobile: isNotEmpty()
         }
     });
+    /*END CUSTOMER ADDED FORM INITIAL*/
 
+
+    /*START ALL LOCAL STORAGE DATA RESTORE*/
     const [stockProductRestore, setStockProductRestore] = useState(false)
-
     useEffect(() => {
         if (stockProductRestore){
             const local = storeDataIntoLocalStorage(JSON.parse(localStorage.getItem('user')).id)
         }
     }, [stockProductRestore])
+    /*END ALL LOCAL STORAGE DATA RESTORE*/
 
     /*START GET CUSTOMER DROPDOWN FROM LOCAL STORAGE*/
     const [customersDropdownData,setCustomersDropdownData] = useState([])
@@ -178,6 +181,18 @@ function __SalesForm(props) {
     }, [refreshCustomerDropdown])
     /*END GET CUSTOMER DROPDOWN FROM LOCAL STORAGE*/
 
+    /*START GET SALES BY / USERS DROPDOWN FROM LOCAL STORAGE*/
+    const [salesByDropdownData,setSalesByDropdownData] = useState([])
+    useEffect(() => {
+        let coreUsers = localStorage.getItem('core-users')?JSON.parse(localStorage.getItem('core-users')):[];
+        if (coreUsers && coreUsers.length > 0) {
+            const transformedData = coreUsers.map(type => {
+                return ({'label': type.username+' - '+type.email, 'value': String(type.id)})
+            });
+            setSalesByDropdownData(transformedData);
+        }
+    }, [])
+    /*END GET SALES BY / USERS DROPDOWN FROM LOCAL STORAGE*/
 
     /*START FOR TRANSACTION MODE DEFAULT SELECT*/
     useEffect(() => {
@@ -197,6 +212,19 @@ function __SalesForm(props) {
         const isDisabled = isDefaultCustomer && (isZeroReceiveAllow ? false : salesDueAmount > 0);
     /*END FOR SUBMIT Disabled*/
 
+    /*START GET CUSTOMER DATA FROM LOCAL STORAGE*/
+    const [customerObject, setCustomerObject] = useState({});
+    useEffect(() => {
+        if (customerData && (customerData != defaultCustomerId)) {
+            const coreCustomers = JSON.parse(localStorage.getItem('core-customers') || '[]');
+            const foundCustomer = coreCustomers.find(type => type.id == customerData);
+
+            if (foundCustomer) {
+                setCustomerObject(foundCustomer);
+            }
+        }
+    }, [customerData]);
+    /*END GET CUSTOMER DATA FROM LOCAL STORAGE*/
 
 
 
@@ -229,7 +257,8 @@ function __SalesForm(props) {
                     setInvoicePrintData={setInvoicePrintData}
                     setInvoicePrintForSave={setInvoicePrintForSave}
                     invoicePrintForSave={invoicePrintForSave}
-                />}
+                />
+            }
 
             <form onSubmit={form.onSubmit((values) => {
                 const tempProducts = localStorage.getItem('temp-sales-products');
@@ -279,43 +308,53 @@ function __SalesForm(props) {
                         ? salesTotalAmount
                         : 0);
 
-                setInvoicePrintData(formValue)
-                setInvoicePrintForSave(true)
-
-                const data = {
-                    url: 'inventory/sales',
-                    data: formValue
-                }
-                dispatch(storeEntityData(data))
-
-                notifications.show({
-                    color: 'teal',
-                    title: t('CreateSuccessfully'),
-                    icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
-                    loading: false,
-                    autoClose: 700,
-                    style: { backgroundColor: 'lightgray' },
-                });
-
-                setTimeout(() => {
-                    localStorage.removeItem('temp-sales-products');
-                    form.reset()
-                    setCustomerData(null)
-                    setSalesByUser(null)
-                    setOrderProcess(null)
-                    props.setLoadCardProducts(true)
-
-                }, 100)
-
-                setTimeout(() => {
+                if (items && items.length>0){
+                    setInvoicePrintData(formValue)
                     setInvoicePrintForSave(true)
-                    let printContents = document.getElementById('printElement').innerHTML;
-                    let originalContents = document.body.innerHTML;
-                    document.body.innerHTML = printContents;
-                    window.print();
-                    document.body.innerHTML = originalContents;
-                    window.location.reload()
-                }, 200);
+
+                    const data = {
+                        url: 'inventory/sales',
+                        data: formValue
+                    }
+                    dispatch(storeEntityData(data))
+
+                    notifications.show({
+                        color: 'teal',
+                        title: t('CreateSuccessfully'),
+                        icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
+                        loading: false,
+                        autoClose: 700,
+                        style: { backgroundColor: 'lightgray' },
+                    });
+
+                    setTimeout(() => {
+                        localStorage.removeItem('temp-sales-products');
+                        form.reset()
+                        setCustomerData(null)
+                        setSalesByUser(null)
+                        setOrderProcess(null)
+                        props.setLoadCardProducts(true)
+                    }, 100)
+
+                    setTimeout(() => {
+                        setInvoicePrintForSave(true)
+                        let printContents = document.getElementById('printElement').innerHTML;
+                        let originalContents = document.body.innerHTML;
+                        document.body.innerHTML = printContents;
+                        window.print();
+                        document.body.innerHTML = originalContents;
+                        window.location.reload()
+                    }, 200);
+                }else {
+                    notifications.show({
+                        color: 'red',
+                        title: t('PleaseChooseItems'),
+                        icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
+                        loading: false,
+                        autoClose: 700,
+                        style: { backgroundColor: 'lightgray' },
+                    });
+                }
 
             })}>
                 <Box>
@@ -478,7 +517,10 @@ function __SalesForm(props) {
                                     <Grid gutter={{ base: 6 }} bg={'red.1'}  pb={'3'}  pt={'3'} >
                                         <Grid.Col span={6}>
                                             <Box pl={'md'}>
-                                                <Text fz={'md'} order={1} fw={'800'}>{currencySymbol} 1200000</Text>
+                                                <Text fz={'md'} order={1} fw={'800'}>
+                                                    {currencySymbol+" "}
+                                                    {(customerData && customerObject && customerData != defaultCustomerId? Number(customerObject.balance).toFixed(2) : "0.00")}
+                                                </Text>
                                                 <Text fz={'xs'} c="dimmed" >{t('Outstanding')}</Text>
                                             </Box>
                                         </Grid.Col>
@@ -676,52 +718,55 @@ function __SalesForm(props) {
                                         </Grid.Col>
                                     </Grid>
                                     <Box mt={'xs'} h={1} bg={`red.3`}></Box>
-                                    <Grid gutter={{ base: 2 }} mt={'xs'}>
-                                        <Grid.Col span={4}>
-                                            <Button
-                                                fullWidth
-                                                onClick={() => setDiscountType()}
-                                                variant="filled"
-                                                fz={'xs'}
-                                                leftSection={
-                                                    discountType === 'Flat' ? <IconCurrencyTaka size={14} /> :
-                                                        <IconPercentage size={14} />
-                                                } color="red.4">
-                                                {discountType}
-                                            </Button>
-                                        </Grid.Col>
-                                        <Grid.Col span={4}>
-                                            <InputButtonForm
-                                                tooltip={t('DiscountValidateMessage')}
-                                                label=''
-                                                placeholder={t('Discount')}
-                                                required={false}
-                                                nextField={'receive_amount'}
-                                                form={form}
-                                                name={'discount'}
-                                                id={'discount'}
-                                                leftSection={<IconDiscountOff size={16} opacity={0.5} />}
-                                                rightSection={inputGroupCurrency}
-                                                rightSectionWidth={30}
-                                            />
-                                        </Grid.Col>
-                                        <Grid.Col span={4}>
-                                            <InputNumberForm
-                                                type="number"
-                                                tooltip={t('ReceiveAmountValidateMessage')}
-                                                label=''
-                                                placeholder={t('Amount')}
-                                                required={false}
-                                                nextField={'sales_by'}
-                                                form={form}
-                                                name={'receive_amount'}
-                                                id={'receive_amount'}
-                                                rightIcon={<IconCurrency size={16} opacity={0.5} />}
-                                                leftSection={<IconPlusMinus size={16} opacity={0.5} />}
-                                                closeIcon={true}
-                                            />
-                                        </Grid.Col>
-                                    </Grid>
+
+                                    <Tooltip label={t('MustBeNeedReceiveAmountWithoutCustomer')} opened={isDisabled} position="bottom-end" withArrow>
+                                        <Grid gutter={{ base: 2 }} mt={'xs'}>
+                                            <Grid.Col span={4}>
+                                                <Button
+                                                    fullWidth
+                                                    onClick={() => setDiscountType()}
+                                                    variant="filled"
+                                                    fz={'xs'}
+                                                    leftSection={
+                                                        discountType === 'Flat' ? <IconCurrencyTaka size={14} /> :
+                                                            <IconPercentage size={14} />
+                                                    } color="red.4">
+                                                    {discountType}
+                                                </Button>
+                                            </Grid.Col>
+                                            <Grid.Col span={4}>
+                                                <InputButtonForm
+                                                    tooltip={t('DiscountValidateMessage')}
+                                                    label=''
+                                                    placeholder={t('Discount')}
+                                                    required={false}
+                                                    nextField={'receive_amount'}
+                                                    form={form}
+                                                    name={'discount'}
+                                                    id={'discount'}
+                                                    leftSection={<IconDiscountOff size={16} opacity={0.5} />}
+                                                    rightSection={inputGroupCurrency}
+                                                    rightSectionWidth={30}
+                                                />
+                                            </Grid.Col>
+                                            <Grid.Col span={4}>
+                                                <InputNumberForm
+                                                    type="number"
+                                                    tooltip={t('ReceiveAmountValidateMessage')}
+                                                    label=''
+                                                    placeholder={t('Amount')}
+                                                    required={false}
+                                                    nextField={'sales_by'}
+                                                    form={form}
+                                                    name={'receive_amount'}
+                                                    id={'receive_amount'}
+                                                    rightIcon={<IconCurrency size={16} opacity={0.5} />}
+                                                    leftSection={<IconPlusMinus size={16} opacity={0.5} />}
+                                                    closeIcon={true}
+                                                />
+                                            </Grid.Col>
+                                        </Grid>
+                                    </Tooltip>
                                 </Box>
                                 <Box>
                                     <Box p={'xs'} pb={'0'} pt={'0'}>
@@ -732,7 +777,7 @@ function __SalesForm(props) {
                                             required={true}
                                             name={'sales_by'}
                                             form={form}
-                                            dropdownValue={getUserDropdownData()}
+                                            dropdownValue={salesByDropdownData}
                                             id={'sales_by'}
                                             nextField={'order_process'}
                                             searchable={false}
@@ -748,7 +793,7 @@ function __SalesForm(props) {
                                             required={true}
                                             name={'order_process'}
                                             form={form}
-                                            dropdownValue={getSettingOrderProcessDropdownData()}
+                                            dropdownValue={localStorage.getItem('order-process')?JSON.parse(localStorage.getItem('order-process')):[]}
                                             id={'order_process'}
                                             nextField={'narration'}
                                             searchable={false}
@@ -774,6 +819,15 @@ function __SalesForm(props) {
                             </ScrollArea>
                             <Box>
                                 <Button.Group fullWidth>
+
+                                    <Button
+                                        fullWidth
+                                        variant="filled"
+                                        leftSection={<IconStackPush size={14} />}
+                                        color="orange.5"
+                                    >
+                                        Hold
+                                    </Button>
                                     <Button
                                         fullWidth
                                         variant="filled"
@@ -814,14 +868,6 @@ function __SalesForm(props) {
                                     >
                                         Save
                                     </Button>
-                                    <Button
-                                        fullWidth
-                                        variant="filled"
-                                        leftSection={<IconStackPush size={14} />}
-                                        color="orange.5"
-                                    >
-                                        Hold
-                                    </Button>
                                 </Button.Group>
                             </Box>
                         </Box>
@@ -839,7 +885,7 @@ function __SalesForm(props) {
                 <_CustomerViewModel
                     customerViewModel={customerViewModel}
                     setCustomerViewModel={setCustomerViewModel}
-                    customerData={customerData}
+                    customerObject={customerObject}
                 />
             }
         </>

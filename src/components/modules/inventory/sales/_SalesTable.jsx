@@ -4,7 +4,7 @@ import tableCss from '../../../../assets/css/Table.module.css';
 import {
     Group,
     Box,
-    ActionIcon, Text, Grid, Stack, Button, ScrollArea, Table, Loader
+    ActionIcon, Text, Grid, Stack, Button, ScrollArea, Table, Loader, Menu, rem, Anchor
 } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import {
@@ -12,7 +12,7 @@ import {
     IconEdit,
     IconTrash,
     IconPrinter,
-    IconReceipt,
+    IconReceipt, IconDotsVertical, IconPencil, IconEyeEdit, IconTrashX,
 } from "@tabler/icons-react";
 import { DataTable } from 'mantine-datatable';
 import { useDispatch, useSelector } from "react-redux";
@@ -112,65 +112,104 @@ function _SalesTable() {
                                             textAlignment: 'right',
                                             render: (item) => (indexData.data.indexOf(item) + 1)
                                         },
-                                        { accessor: 'id', title: t("ID") },
                                         { accessor: 'created', title: t("Created") },
-                                        { accessor: 'invoice', title: t("Invoice") },
+                                        {
+                                            accessor: 'invoice',
+                                            title: t("Invoice"),
+                                            render: (item) => (
+                                                <Text
+                                                    component="a"
+                                                    size="sm"
+                                                    variant="subtle"
+                                                    color="red.6"
+                                                    href="desiredURL"
+                                                    onClick={(e) => {
+                                                        e.preventDefault();
+                                                        setSalesViewData(item)
+                                                    }}
+                                                >
+                                                    {item.invoice}
+                                                </Text>
+
+                                            )
+                                        },
                                         { accessor: 'customerName', title: t("Customer") },
-                                        { accessor: 'sub_total', title: t("SubTotal") },
-                                        { accessor: 'discount', title: t("Discount") },
-                                        { accessor: 'total', title: t("Total") },
+                                        {
+                                            accessor: 'total',
+                                            title: t("Total"),
+                                            textAlign:"right",
+                                            render: (data) => (
+                                                <>
+                                                    {data.total?Number(data.total).toFixed(2):"0.00"}
+                                                </>
+                                            )
+                                        },
+                                        {
+                                            accessor: 'payment',
+                                            title: t("Receive"),
+                                            textAlign:"right",
+                                            render: (data) => (
+                                                <>
+                                                    {data.payment?Number(data.payment).toFixed(2):"0.00"}
+                                                </>
+                                            )
+                                        },
+                                        {
+                                            accessor: 'due',
+                                            title: t("Due"),
+                                            textAlign:"right",
+                                            render: (data) => (
+                                                <>
+                                                    {data.total?(Number(data.total)-Number(data.payment)).toFixed(2):"0.00"}
+                                                </>
+                                            )
+                                        },
                                         {
                                             accessor: "action",
                                             title: t("Action"),
                                             textAlign: "right",
                                             render: (data) => (
-                                                <Group gap={4} justify="right" wrap="nowrap">
-                                                    <ActionIcon
-                                                        size="sm"
-                                                        variant="subtle"
-                                                        color="green"
-                                                        onClick={() => {
-                                                            setSalesViewData(data)
-                                                        }}
-                                                    >
-                                                        <IconEye size={16} />
-                                                    </ActionIcon>
-                                                    <ActionIcon
-                                                        size="sm"
-                                                        variant="subtle"
-                                                        color="blue"
-                                                        onClick={() => {
-                                                            dispatch(setInsertType('update'))
-                                                            dispatch(editEntityData('inventory/sales/' + data.id))
-                                                            dispatch(setFormLoading(true))
-                                                        }}
-                                                    >
-                                                        <IconEdit size={16} />
-                                                    </ActionIcon>
-                                                    <ActionIcon
-                                                        size="sm"
-                                                        variant="subtle"
-                                                        color="red"
-                                                        onClick={() => {
-                                                            modals.openConfirmModal({
-                                                                title: (
-                                                                    <Text size="md"> {t("FormConfirmationTitle")}</Text>
-                                                                ),
-                                                                children: (
-                                                                    <Text size="sm"> {t("FormConfirmationMessage")}</Text>
-                                                                ),
-                                                                labels: { confirm: 'Confirm', cancel: 'Cancel' },
-                                                                onCancel: () => console.log('Cancel'),
-                                                                onConfirm: () => {
-                                                                    dispatch(deleteEntityData('vendor/' + data.id))
-                                                                    dispatch(setFetching(true))
-                                                                },
-                                                            });
-                                                        }}
-                                                    >
-                                                        <IconTrash size={16} />
-                                                    </ActionIcon>
-                                                </Group>
+
+                <Group gap={4} justify="right" wrap="nowrap">
+                    <Menu position="bottom-end" offset={3} withArrow trigger="hover" openDelay={100} closeDelay={400}>
+                        <Menu.Target>
+                            <ActionIcon variant="outline" color="gray.6" radius="xl" aria-label="Settings">
+                                <IconDotsVertical height={'18'} width={'18'} stroke={1.5} />
+                            </ActionIcon>
+                        </Menu.Target>
+                        <Menu.Dropdown>
+                                <Menu.Item
+                                    href= {`/inventory/sales/edit/${data.id}`}
+                                    target="_blank"
+                                    component="a"
+                                    w={'200'}
+                                    leftSection={<IconPencil style={{ width: rem(14), height: rem(14) }} />}
+                                >
+                                    {t('Edit')}
+                                </Menu.Item>
+
+                                <Menu.Item
+                                    href= {``}
+                                    target="_blank"
+                                    component="a"
+                                    w={'200'}
+                                    leftSection={<IconEyeEdit style={{ width: rem(14), height: rem(14) }} />}
+                                >
+                                    {t('Show')}
+                                </Menu.Item>
+
+                                <Menu.Item
+                                    href= {``}
+                                    target="_blank"
+                                    component="a"
+                                    w={'200'}
+                                    leftSection={<IconTrashX style={{ width: rem(14), height: rem(14) }} />}
+                                >
+                                    {t('Delete')}
+                                </Menu.Item>
+                        </Menu.Dropdown>
+                    </Menu>
+                </Group>
                                             ),
                                         },
                                     ]
@@ -316,6 +355,12 @@ function _SalesTable() {
                                                     <Table.Th colspan={'5'} ta="right" fz="xs" w={'100'}>{t('Receive')}</Table.Th>
                                                     <Table.Th ta="right" fz="xs" w={'100'}>
                                                         {salesViewData && salesViewData.payment && Number(salesViewData.payment).toFixed(2)}
+                                                    </Table.Th>
+                                                </Table.Tr>
+                                                <Table.Tr>
+                                                    <Table.Th colspan={'5'} ta="right" fz="xs" w={'100'}>{t('Due')}</Table.Th>
+                                                    <Table.Th ta="right" fz="xs" w={'100'}>
+                                                        {salesViewData && salesViewData.total &&(Number(salesViewData.total)- Number(salesViewData.payment)).toFixed(2)}
                                                     </Table.Th>
                                                 </Table.Tr>
                                             </Table.Tfoot>

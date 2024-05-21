@@ -28,6 +28,7 @@ import LedgerIndex from "./components/modules/accounting/ledger/LedgerIndex";
 import ProductionIndex from './components/modules/inventory/production/ProductionIndex.jsx';
 import InhouseIndex from './components/modules/inventory/production-inhouse/InhouseIndex.jsx';
 import ReceipeIndex from './components/modules/inventory/receipe/ReceipeIndex.jsx';
+import SalesEdit from "./components/modules/inventory/sales/SalesEdit.jsx";
 function AppRoute() {
 
     return (
@@ -45,6 +46,7 @@ function AppRoute() {
                     <Route path="vendor" element={<VendorIndex />} />
                 </Route>
                 <Route path="/inventory/">
+                    <Route path="sales/edit/:id" element={<SalesEdit />} />
                     <Route path="sales" element={<SalesIndex />} />
                     <Route path="sales-invoice" element={<SalesInvoice />} />
                     <Route path="purchase" element={<PurchaseIndex />} />
