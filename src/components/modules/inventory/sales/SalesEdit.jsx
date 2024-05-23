@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import {
     Box, Button,
-    Grid, Progress, Title
+    Grid, Progress, rem, Title
 } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from "react-redux";
@@ -10,17 +10,51 @@ import getConfigData from "../../../global-hook/config-data/getConfigData.js";
 import _SalesTable from "./_SalesTable.jsx";
 import _SalesPurchaseHeaderNavbar from "../configuraton/_SalesPurchaseHeaderNavbar.jsx";
 import _GenericInvoiceForm from "./_GenericInvoiceForm.jsx";
-import {useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
+import {editEntityData} from "../../../../store/inventory/crudSlice.js";
+import {notifications} from "@mantine/notifications";
+import {IconCheck} from "@tabler/icons-react";
 
 function SalesEdit() {
     let { id } = useParams();
+    const navigate = useNavigate()
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
-    const insertType = useSelector((state) => state.crudSlice.insertType)
     const progress = getLoadingProgress()
     const configData = getConfigData()
 
-    console.log(id)
+
+    const dataStatus = useSelector((state) => state.inventoryCrudSlice.dataStatus);
+    const editedData = useSelector((state) => state.inventoryCrudSlice.entityEditData);
+    const [entityEditData,setEntityEditData] = useState({});
+    const [hasNotified, setHasNotified] = useState(false);
+
+    useEffect(() => {
+        if(!entityEditData.id){
+            dispatch(editEntityData(`inventory/sales/edit/${id}`))
+        }
+
+        if(dataStatus === 200){
+            setEntityEditData(editedData);
+        }
+        if (dataStatus === 404 && !hasNotified){
+            notifications.show({
+                color: 'teal',
+                title: t('InvalidRequest'),
+                icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
+                loading: false,
+                autoClose: 1000,
+                style: { backgroundColor: 'lightgray' },
+            });
+            setTimeout(()=>{
+                navigate('/inventory/sales')
+            },1000)
+            setHasNotified(true);
+        }
+    },[dataStatus, entityEditData.id]);
+    
+
+    console.log(entityEditData)
     return (
         <>
             {progress !== 100 &&
@@ -38,7 +72,7 @@ function SalesEdit() {
                             />
                             <Box p={'8'}>
                                 {
-                                    insertType === 'create' && configData.business_model.slug === 'general' &&
+                                    configData.business_model.slug === 'general' &&
                                     <_GenericInvoiceForm
                                         allowZeroPercentage={configData.zero_stock}
                                         currencySymbol={configData.currency.symbol}

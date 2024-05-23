@@ -82,6 +82,7 @@ const crudSlice = createSlice({
     initialState: {
         isLoading: true,
         fetching: true,
+        dataStatus: null,
         showEntityData: [],
         validation: false,
         validationMessage: [],
@@ -156,6 +157,7 @@ const crudSlice = createSlice({
         })
 
         builder.addCase(editEntityData.fulfilled, (state, action) => {
+            state.dataStatus = action.payload.data.status
             state.entityEditData = action.payload.data.data
         })
 
