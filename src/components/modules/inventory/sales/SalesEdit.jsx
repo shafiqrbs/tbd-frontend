@@ -52,7 +52,7 @@ function SalesEdit() {
             setHasNotified(true);
         }
     },[dataStatus, entityEditData.id]);
-    
+
 
     console.log(entityEditData)
     return (

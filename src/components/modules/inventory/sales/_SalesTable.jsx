@@ -4,7 +4,7 @@ import tableCss from '../../../../assets/css/Table.module.css';
 import {
     Group,
     Box,
-    ActionIcon, Text, Grid, Stack, Button, ScrollArea, Table, Loader, Menu, rem, Anchor
+    ActionIcon, Text, Grid, Stack, Button, ScrollArea, Table, Loader, Menu, rem, Anchor, Checkbox, Tooltip
 } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import {
@@ -20,7 +20,7 @@ import {
     editEntityData,
     getIndexEntityData, setEditEntityData,
     setFetching, setFormLoading,
-    setInsertType,
+    setInsertType, setSalesFilterData,
     showEntityData
 } from "../../../../store/inventory/crudSlice.js";
 import { modals } from "@mantine/modals";
@@ -28,6 +28,7 @@ import { deleteEntityData } from "../../../../store/core/crudSlice";
 import ShortcutTable from "../../shortcut/ShortcutTable";
 import KeywordDateRangeSearch from "../../filter/KeywordDateRangeSearch";
 import { ReactToPrint } from "react-to-print";
+import _SalesSearch from "./_SalesSearch.jsx";
 
 function _SalesTable() {
     const printRef = useRef()
@@ -40,9 +41,10 @@ function _SalesTable() {
     const perPage = 50;
     const [page, setPage] = useState(1);
 
-    const fetching = useSelector((state) => state.crudSlice.fetching)
-    const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword)
-    const indexData = useSelector((state) => state.crudSlice.indexEntityData)
+    const fetching = useSelector((state) => state.inventoryCrudSlice.fetching)
+    const searchKeyword = useSelector((state) => state.inventoryCrudSlice.searchKeyword)
+    const salesFilterData = useSelector((state) => state.inventoryCrudSlice.salesFilterData)
+    const indexData = useSelector((state) => state.inventoryCrudSlice.indexEntityData)
     const [salesViewData, setSalesViewData] = useState({})
 
     useEffect(() => {
@@ -62,16 +64,50 @@ function _SalesTable() {
     ));
 
     useEffect(() => {
+        const options = {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit'
+        };
         const value = {
             url: 'inventory/sales',
             param: {
                 term: searchKeyword,
+                customer_id: salesFilterData.customer_id,
+                start_date: salesFilterData.start_date && new Date(salesFilterData.start_date).toLocaleDateString("en-CA", options),
+                end_date: salesFilterData.end_date && new Date(salesFilterData.end_date).toLocaleDateString("en-CA", options),
                 page: page,
                 offset: perPage
             }
         }
         dispatch(getIndexEntityData(value))
     }, [fetching]);
+
+    const [checkList, setCheckList] = useState({});
+
+    const CheckItemsHandel = (e,item) => {
+        if (e.currentTarget.checked === true) {
+            if (Object.keys(checkList).length == 0){
+                dispatch(setSalesFilterData({
+                    ...salesFilterData,
+                    ['customer_id']: item.customerId
+                }))
+                dispatch(setFetching(true))
+            }
+            setCheckList({...checkList,[e.currentTarget.value] : Number(e.currentTarget.value)});
+        } else {
+            delete checkList[e.currentTarget.value];
+            setCheckList({...checkList}) ;
+            if (Object.keys(checkList).length == 0){
+                dispatch(setSalesFilterData({
+                    ...salesFilterData,
+                    ['customer_id']: ''
+                }))
+                dispatch(setFetching(true))
+            }
+        }
+    }
+
 
 
     return (
@@ -83,7 +119,7 @@ function _SalesTable() {
                             <Grid>
                                 <Grid.Col>
                                     <Stack >
-                                        <KeywordDateRangeSearch />
+                                        <_SalesSearch checkList={checkList} />
                                     </Stack>
                                 </Grid.Col>
                             </Grid>
@@ -112,6 +148,35 @@ function _SalesTable() {
                                             textAlignment: 'right',
                                             render: (item) => (indexData.data.indexOf(item) + 1)
                                         },
+                                        {
+                                            accessor: '',
+                                            render: (item) => (
+                                                <Tooltip label={item.invoice+' - '+item.customerName}>
+                                                    <Checkbox
+                                                        value={item.id}
+                                                        checked={checkList && checkList.hasOwnProperty(item.id)?true:false}
+                                                        variant="outline"
+                                                        radius="xl"
+                                                        onChange={(e) => {
+                                                            CheckItemsHandel(e,item)
+                                                        }}
+                                                        // checked={checked}
+                                                        /*onChange={(e) => {
+                                                            if (!salesFilterData.customer_id) {
+                                                                dispatch(setSalesFilterData({
+                                                                    ...salesFilterData,
+                                                                    ['customer_id']: e.currentTarget.value
+                                                                }))
+                                                                dispatch(setFetching(true))
+                                                            }else {
+
+                                                            }
+                                                        }}*/
+                                                    />
+                                                </Tooltip>
+                                            )
+                                        },
+
                                         { accessor: 'created', title: t("Created") },
                                         {
                                             accessor: 'invoice',
