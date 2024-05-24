@@ -36,8 +36,8 @@ import ShortcutInvoice from "../../shortcut/ShortcutInvoice";
 import tableCss from "../../../../assets/css/Table.module.css";
 import PurchaseForm from "./PurchaseForm";
 
-function GenericInvoiceForm(props) {
-    const { currencySymbol, allowZeroPercentage } = props
+function _GenericInvoiceForm(props) {
+    const { currencySymbol, allowZeroPercentage,isPurchaseByPurchasePrice } = props
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
@@ -52,27 +52,15 @@ function GenericInvoiceForm(props) {
     const [loadCardProducts, setLoadCardProducts] = useState(false)
     const [focusIntoProductSearch, setFocusIntoProductSearch] = useState(false)
 
-    let salesSubTotalAmount = tempCardProducts?.reduce((total, item) => total + item.sub_total, 0) || 0;
-    let totalPurchaseAmount = tempCardProducts?.reduce((total, item) => total + (item.purchase_price * item.quantity), 0) || 0;
+    console.log(tempCardProducts)
+    let purchaseSubTotalAmount = tempCardProducts?.reduce((total, item) => total + item.sub_total, 0) || 0;
+    // let totalPurchaseAmount = tempCardProducts?.reduce((total, item) => total + (item.purchase_price * item.quantity), 0) || 0;
 
-
-    const locationDropdown = getLocationDropdownData();
-    const executiveDropdown = getExecutiveDropdownData();
-    const vendorDropdown = getVendorDropdownData();
-    const customerDropdown = getCustomerDropdownData();
-    const transactionModeDropdown = getTransactionModeDropdownData();
-    const userDropdown = getUserDropdownData();
-
-    // console.log(locationDropdown,executiveDropdown,vendorDropdown,customerDropdown,transactionModeDropdown,userDropdown)
-
+    console.log(purchaseSubTotalAmount)
     useEffect(() => {
         const tempProducts = localStorage.getItem('temp-purchase-products');
         setTempCardProducts(tempProducts ? JSON.parse(tempProducts) : [])
         setLoadCardProducts(false)
-        /*if (focusIntoProductSearch) {
-            document.getElementById('product_id').focus();
-            setFocusIntoProductSearch(false)
-        }*/
     }, [loadCardProducts])
 
     useEffect(() => {
@@ -99,21 +87,23 @@ function GenericInvoiceForm(props) {
     function handleAddProductByProductId(values, myCardProducts, localProducts) {
         const addProducts = localProducts.reduce((acc, product) => {
             if (product.id === Number(values.product_id)) {
+                // console.log(product,values.purchase_price)
                 acc.push({
                     product_id: product.id,
                     display_name: product.display_name,
-                    sales_price: values.sales_price,
-                    price: values.price,
-                    percent: values.percent,
-                    stock: product.quantity,
-                    quantity: values.quantity,
+                    // sales_price: product.sales_price,
+                    // price: values.price,
+                    // percent: values.percent,
+                    // stock: product.quantity,
+                    quantity: Number(values.quantity),
                     unit_name: product.unit_name,
-                    purchase_price: product.purchase_price,
-                    sub_total: selectProductDetails.sub_total,
+                    purchase_price: Number(values.purchase_price),
+                    sub_total: Number(values.sub_total),
                 });
             }
             return acc;
         }, myCardProducts);
+        // console.log(addProducts)
         updateLocalStorageAndResetForm(addProducts);
     }
 
@@ -140,6 +130,7 @@ function GenericInvoiceForm(props) {
     }
 
     function updateLocalStorageAndResetForm(addProducts) {
+        // console.log(addProducts)
         localStorage.setItem('temp-purchase-products', JSON.stringify(addProducts));
         setSearchValue('');
         form.reset();
@@ -262,16 +253,13 @@ function GenericInvoiceForm(props) {
     });
 
     const [selectProductDetails, setSelectProductDetails] = useState('')
-
     useEffect(() => {
         const storedProducts = localStorage.getItem('user-products');
         const localProducts = storedProducts ? JSON.parse(storedProducts) : [];
 
         const filteredProducts = localProducts.filter(product => product.id === Number(form.values.product_id));
-
         if (filteredProducts.length > 0) {
             const selectedProduct = filteredProducts[0];
-
             setSelectProductDetails(selectedProduct);
 
             form.setFieldValue('price', selectedProduct.sales_price);
@@ -286,7 +274,6 @@ function GenericInvoiceForm(props) {
         }
     }, [form.values.product_id]);
 
-    //  console.log(localProducts);
     useEffect(() => {
         const quantity = Number(form.values.quantity);
         const purchase_price = Number(form.values.purchase_price);
@@ -313,14 +300,23 @@ function GenericInvoiceForm(props) {
             }
         }
     }, [form.values.quantity, form.values.sales_price]);
-    /* useEffect(() => {
-         if (form.values.quantity && form.values.purchase_price) {
-             const discountAmount = (form.values.price * form.values.percent) / 100;
-             const salesPrice = form.values.purchase_price - discountAmount;
-             form.setFieldValue('sales_price', salesPrice);
-             form.setFieldValue('sub_total', salesPrice);
-         }
-     }, [form.values.percent]);*/
+
+
+    /*START SUBTOTAL WISE PURCHASE PRICE*/
+    useEffect(() => {
+        const quantity = Number(form.values.quantity);
+        const subTotal = Number(form.values.sub_total);
+
+        if (!isNaN(quantity) && !isNaN(subTotal) && quantity > 0 && subTotal >= 0) {
+            setSelectProductDetails(prevDetails => ({
+                ...prevDetails,
+                purchase_price: subTotal/quantity,
+            }));
+            form.setFieldValue('purchase_price', subTotal/quantity);
+        }
+    }, [form.values.sub_total]);
+    /*END SUBTOTAL WISE PURCHASE PRICE*/
+
 
 
     useHotkeys([['alt+n', () => {
@@ -370,6 +366,8 @@ function GenericInvoiceForm(props) {
                                     const storedProducts = localStorage.getItem('user-products');
                                     const localProducts = storedProducts ? JSON.parse(storedProducts) : [];
 
+                                    // console.log(myCardProducts,storedProducts,localProducts)
+
                                     if (values.product_id && !values.barcode) {
                                         if (!allowZeroPercentage) {
                                             showNotification({
@@ -383,11 +381,9 @@ function GenericInvoiceForm(props) {
                                                 style: { backgroundColor: 'mistyrose' },
                                             });
                                         } else {
-                                            // setFocusIntoProductSearch(true)
                                             handleAddProductByProductId(values, myCardProducts, localProducts);
                                         }
                                     } else if (!values.product_id && values.barcode) {
-                                        // setFocusIntoProductSearch(true)
                                         handleAddProductByBarcode(values, myCardProducts, localProducts);
                                     }
                                 }
@@ -418,7 +414,6 @@ function GenericInvoiceForm(props) {
                                                     nextField={'quantity'}
                                                     name={'product_id'}
                                                     form={form}
-
                                                     id={'product_id'}
                                                     searchable={true}
                                                     searchValue={searchValue}
@@ -454,6 +449,7 @@ function GenericInvoiceForm(props) {
                                                     type={'number'}
                                                     rightSection={inputGroupCurrency}
                                                     closeIcon={true}
+                                                    disabled={!isPurchaseByPurchasePrice}
                                                 />
                                             </Grid.Col>
                                             <Grid.Col span={3}>
@@ -469,11 +465,11 @@ function GenericInvoiceForm(props) {
                                                     type={'number'}
                                                     rightSection={inputGroupCurrency}
                                                     closeIcon={false}
+                                                    disabled={isPurchaseByPurchasePrice?true:false}
                                                 />
                                             </Grid.Col>
                                             <Grid.Col span={2}>
                                                 <>
-                                                    {/*{!saveCreateLoading &&*/}
                                                     <Button
                                                         size="sm"
                                                         color={`red.5`}
@@ -490,7 +486,6 @@ function GenericInvoiceForm(props) {
                                                             </Text>
                                                         </Flex>
                                                     </Button>
-                                                    {/*}*/}
                                                 </>
                                             </Grid.Col>
                                             <Grid.Col span={1} bg={'white'}>
@@ -828,19 +823,16 @@ function GenericInvoiceForm(props) {
                                             }, [editedPurchasePrice, item.product_id, item.quantity]);
 
                                             return (
-                                                item.percent ?
-                                                    Number(item.sales_price).toFixed(2)
-                                                    :
-                                                    <>
-                                                        <TextInput
-                                                            type="number"
-                                                            label=""
-                                                            size="xs"
-                                                            id={'inline-update-quantity-' + item.product_id}
-                                                            value={editedPurchasePrice}
-                                                            onChange={handlePurchasePriceChange}
-                                                        />
-                                                    </>
+                                                <>
+                                                    <TextInput
+                                                        type="number"
+                                                        label=""
+                                                        size="xs"
+                                                        id={'inline-update-quantity-' + item.product_id}
+                                                        value={editedPurchasePrice}
+                                                        onChange={handlePurchasePriceChange}
+                                                    />
+                                                </>
                                             );
                                         }
                                     },
@@ -861,7 +853,7 @@ function GenericInvoiceForm(props) {
                                                     <IconSum size="1.25em" />
                                                 </Group>
                                                 <Text fw={'600'} fz={'md'}>{
-                                                    salesSubTotalAmount.toFixed(2)
+                                                    purchaseSubTotalAmount.toFixed(2)
                                                 }</Text>
                                             </Group>
                                         ),
@@ -910,13 +902,13 @@ function GenericInvoiceForm(props) {
                 </Grid.Col>
                 <Grid.Col span={8} >
                     <Box bg={'white'} p={'md'} className={'borderRadiusAll'}>
-                        <PurchaseForm
-                            salesSubTotalAmount={salesSubTotalAmount}
+                        {/*<PurchaseForm
+                            purchaseSubTotalAmount={purchaseSubTotalAmount}
                             tempCardProducts={tempCardProducts}
                             totalPurchaseAmount={totalPurchaseAmount}
                             currencySymbol={currencySymbol}
                             setLoadCardProducts={setLoadCardProducts}
-                        />
+                        />*/}
                     </Box>
                 </Grid.Col>
                 <Grid.Col span={1} >
@@ -934,4 +926,4 @@ function GenericInvoiceForm(props) {
     );
 }
 
-export default GenericInvoiceForm;
+export default _GenericInvoiceForm;

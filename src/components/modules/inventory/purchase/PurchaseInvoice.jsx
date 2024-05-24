@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress.js";
 import getConfigData from "../../../global-hook/config-data/getConfigData.js";
 import _SalesPurchaseHeaderNavbar from "../configuraton/_SalesPurchaseHeaderNavbar.jsx";
-import GenericInvoiceForm from "./GenericInvoiceForm";
+import _GenericInvoiceForm from "./_GenericInvoiceForm.jsx";
 
 function PurchaseInvoice() {
     const { t, i18n } = useTranslation();
@@ -16,6 +16,7 @@ function PurchaseInvoice() {
     const insertType = useSelector((state) => state.crudSlice.insertType)
     const progress = getLoadingProgress()
     const configData = getConfigData()
+    // console.log(configData)
     return (
         <>
             {progress !== 100 &&
@@ -33,10 +34,11 @@ function PurchaseInvoice() {
                             />
                             <Box p={'8'}>
                                 {
-                                    insertType === 'create' && configData.business_model.slug === 'general' &&
-                                    <GenericInvoiceForm
+                                    configData.business_model.slug === 'general' &&
+                                    <_GenericInvoiceForm
                                         allowZeroPercentage={configData.zero_stock}
                                         currencySymbol={configData.currency.symbol}
+                                        isPurchaseByPurchasePrice={configData.is_purchase_by_purchase_price}
                                     />
                                 }
                             </Box>
