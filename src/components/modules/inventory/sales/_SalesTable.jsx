@@ -8,25 +8,14 @@ import {
 } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import {
-    IconEye,
     IconEdit,
-    IconTrash,
     IconPrinter,
     IconReceipt, IconDotsVertical, IconPencil, IconEyeEdit, IconTrashX,
 } from "@tabler/icons-react";
 import { DataTable } from 'mantine-datatable';
 import { useDispatch, useSelector } from "react-redux";
-import {
-    editEntityData,
-    getIndexEntityData, setEditEntityData,
-    setFetching, setFormLoading,
-    setInsertType, setSalesFilterData,
-    showEntityData
-} from "../../../../store/inventory/crudSlice.js";
-import { modals } from "@mantine/modals";
-import { deleteEntityData } from "../../../../store/core/crudSlice";
+import {getIndexEntityData, setFetching, setSalesFilterData} from "../../../../store/inventory/crudSlice.js";
 import ShortcutTable from "../../shortcut/ShortcutTable";
-import KeywordDateRangeSearch from "../../filter/KeywordDateRangeSearch";
 import { ReactToPrint } from "react-to-print";
 import _SalesSearch from "./_SalesSearch.jsx";
 
@@ -84,31 +73,27 @@ function _SalesTable() {
     }, [fetching]);
 
     const [checkList, setCheckList] = useState({});
+    const CheckItemsHandel = (e, item) => {
+        const value = e.currentTarget.value;
+        const isChecked = e.currentTarget.checked;
 
-    const CheckItemsHandel = (e,item) => {
-        if (e.currentTarget.checked === true) {
-            if (Object.keys(checkList).length == 0){
-                dispatch(setSalesFilterData({
-                    ...salesFilterData,
-                    ['customer_id']: item.customerId
-                }))
-                dispatch(setFetching(true))
-            }
-            setCheckList({...checkList,[e.currentTarget.value] : Number(e.currentTarget.value)});
+        if (isChecked) {
+            setCheckList(prevCheckList => ({ ...prevCheckList, [value]: Number(value) }));
         } else {
-            delete checkList[e.currentTarget.value];
-            setCheckList({...checkList}) ;
-            if (Object.keys(checkList).length == 0){
-                dispatch(setSalesFilterData({
-                    ...salesFilterData,
-                    ['customer_id']: ''
-                }))
-                dispatch(setFetching(true))
-            }
+            setCheckList(prevCheckList => {
+                delete prevCheckList[value];
+                return { ...prevCheckList };
+            });
+        }
+
+        if ((isChecked && !Object.keys(checkList).length) || (!isChecked && !Object.keys(checkList).length)) {
+            dispatch(setSalesFilterData({
+                ...salesFilterData,
+                ['customer_id']: isChecked ? item.customerId : ''
+            }));
+            dispatch(setFetching(true));
         }
     }
-
-
 
     return (
         <>
@@ -154,24 +139,10 @@ function _SalesTable() {
                                                 <Tooltip label={item.invoice+' - '+item.customerName}>
                                                     <Checkbox
                                                         value={item.id}
-                                                        checked={checkList && checkList.hasOwnProperty(item.id)?true:false}
+                                                        checked={!!checkList?.[item.id]}
                                                         variant="outline"
                                                         radius="xl"
-                                                        onChange={(e) => {
-                                                            CheckItemsHandel(e,item)
-                                                        }}
-                                                        // checked={checked}
-                                                        /*onChange={(e) => {
-                                                            if (!salesFilterData.customer_id) {
-                                                                dispatch(setSalesFilterData({
-                                                                    ...salesFilterData,
-                                                                    ['customer_id']: e.currentTarget.value
-                                                                }))
-                                                                dispatch(setFetching(true))
-                                                            }else {
-
-                                                            }
-                                                        }}*/
+                                                        onChange={(e) => CheckItemsHandel(e, item)}
                                                     />
                                                 </Tooltip>
                                             )
