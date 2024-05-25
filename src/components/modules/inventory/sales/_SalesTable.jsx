@@ -131,10 +131,6 @@ function _SalesTable() {
                                             accessor: 'index',
                                             title: t('S/N'),
                                             textAlignment: 'right',
-                                            render: (item) => (indexData.data.indexOf(item) + 1)
-                                        },
-                                        {
-                                            accessor: '',
                                             render: (item) => (
                                                 <Tooltip label={item.invoice+' - '+item.customerName}>
                                                     <Checkbox
@@ -142,6 +138,8 @@ function _SalesTable() {
                                                         checked={!!checkList?.[item.id]}
                                                         variant="outline"
                                                         radius="xl"
+                                                        size="md"
+                                                        color="red"
                                                         onChange={(e) => CheckItemsHandel(e, item)}
                                                     />
                                                 </Tooltip>
@@ -158,11 +156,11 @@ function _SalesTable() {
                                                     size="sm"
                                                     variant="subtle"
                                                     color="red.6"
-                                                    href="desiredURL"
                                                     onClick={(e) => {
                                                         e.preventDefault();
                                                         setSalesViewData(item)
                                                     }}
+                                                    style={{cursor: "pointer"}}
                                                 >
                                                     {item.invoice}
                                                 </Text>

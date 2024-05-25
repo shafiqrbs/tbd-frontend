@@ -41,7 +41,7 @@ import { setFetching, storeEntityDataWithFile } from "../../../../store/accounti
 import { notifications } from "@mantine/notifications";
 
 function PurchaseForm(props) {
-
+    console.log(props.purchaseSubTotalAmount)
     const { currencySymbol } = props
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
@@ -53,12 +53,12 @@ function PurchaseForm(props) {
         dispatch(getTransactionModeData('accounting/transaction-mode-data'))
     }, []);
 
-    const [salesSubTotalAmount, setSalesSubTotalAmount] = useState(0);
+    const [purchaseSubTotalAmount, setPurchaseSubTotalAmount] = useState(0);
     const [salesProfitAmount, setSalesProfitAmount] = useState(0);
-    const [salesVatAmount, setSalesVatAmount] = useState(0);
-    const [salesDiscountAmount, setSalesDiscountAmount] = useState(0);
-    const [salesTotalAmount, setSalesTotalAmount] = useState(0);
-    const [salesDueAmount, setSalesDueAmount] = useState(props.salesSubTotalAmount);
+    const [purchaseVatAmount, setPurchaseVatAmount] = useState(0);
+    const [purchaseDiscountAmount, setPurchaseDiscountAmount] = useState(0);
+    const [purchaseTotalAmount, setPurchaseTotalAmount] = useState(0);
+    const [purchaseDueAmount, setPurchaseDueAmount] = useState(props.purchaseSubTotalAmount);
     const [hoveredModeId, setHoveredModeId] = useState(false);
 
     const formHeight = mainAreaHeight - 268; //TabList height 104
@@ -100,16 +100,16 @@ function PurchaseForm(props) {
     const [returnOrDueText, setReturnOrDueText] = useState('Due');
 
     useEffect(() => {
-        setSalesSubTotalAmount(props.salesSubTotalAmount);
-        setSalesDueAmount(props.salesSubTotalAmount);
-    }, [props.salesSubTotalAmount]);
+        setPurchaseSubTotalAmount(props.purchaseSubTotalAmount);
+        setPurchaseDueAmount(props.purchaseSubTotalAmount);
+    }, [props.purchaseSubTotalAmount]);
 
     useEffect(() => {
-        const totalAmount = salesSubTotalAmount - salesDiscountAmount;
-        setSalesTotalAmount(totalAmount);
-        setSalesDueAmount(totalAmount);
+        const totalAmount = purchaseSubTotalAmount - purchaseDiscountAmount;
+        setPurchaseTotalAmount(totalAmount);
+        setPurchaseDueAmount(totalAmount);
         setSalesProfitAmount(totalAmount - props.totalPurchaseAmount)
-    }, [salesSubTotalAmount, salesDiscountAmount]);
+    }, [purchaseSubTotalAmount, purchaseDiscountAmount]);
 
     useEffect(() => {
         let discountAmount = 0;
@@ -117,19 +117,19 @@ function PurchaseForm(props) {
             if (discountType === 'Flat') {
                 discountAmount = form.values.discount;
             } else if (discountType === 'Percent') {
-                discountAmount = (salesSubTotalAmount * form.values.discount) / 100;
+                discountAmount = (purchaseSubTotalAmount * form.values.discount) / 100;
             }
         }
-        setSalesDiscountAmount(discountAmount);
+        setPurchaseDiscountAmount(discountAmount);
 
         let returnOrDueAmount = 0;
         if (form.values.receive_amount) {
-            const text = salesTotalAmount < form.values.receive_amount ? 'Return' : 'Due';
+            const text = purchaseTotalAmount < form.values.receive_amount ? 'Return' : 'Due';
             setReturnOrDueText(text);
-            returnOrDueAmount = salesTotalAmount - form.values.receive_amount;
-            setSalesDueAmount(returnOrDueAmount);
+            returnOrDueAmount = purchaseTotalAmount - form.values.receive_amount;
+            setPurchaseDueAmount(returnOrDueAmount);
         }
-    }, [form.values.discount, discountType, form.values.receive_amount, salesSubTotalAmount, salesTotalAmount]);
+    }, [form.values.discount, discountType, form.values.receive_amount, purchaseSubTotalAmount, purchaseTotalAmount]);
 
 
     const [profitShow, setProfitShow] = useState(false);
@@ -172,13 +172,13 @@ function PurchaseForm(props) {
 
                 const formValue = {}
                 formValue['vendor_id'] = form.values.vendor_id;
-                formValue['sub_total'] = salesSubTotalAmount;
+                formValue['sub_total'] = purchaseSubTotalAmount;
                 formValue['transaction_mode_id'] = form.values.transaction_mode_id;
                 formValue['discount_type'] = discountType;
-                formValue['discount'] = salesDiscountAmount;
+                formValue['discount'] = purchaseDiscountAmount;
                 formValue['discount_calculation'] = discountType === 'Percent' ? form.values.discount : 0;
                 formValue['vat'] = 0;
-                formValue['total'] = salesTotalAmount;
+                formValue['total'] = purchaseTotalAmount;
                 formValue['payment'] = form.values.receive_amount;
                 formValue['created_by_id'] = Number(createdBy['id']);
                 formValue['process'] = form.values.order_process;
@@ -359,19 +359,19 @@ function PurchaseForm(props) {
                                 <Grid gutter={{ base: 4 }}>
                                     <Grid.Col span={3}>
                                         <Center fz={'md'}
-                                            fw={'800'}>{currencySymbol} {salesSubTotalAmount.toFixed(2)}</Center>
+                                            fw={'800'}>{currencySymbol} {purchaseSubTotalAmount && Number(purchaseSubTotalAmount).toFixed(2)}</Center>
                                     </Grid.Col>
                                     <Grid.Col span={3}>
                                         <Center fz={'md'}
-                                            fw={'800'}> {currencySymbol} {salesDiscountAmount && Number(salesDiscountAmount).toFixed(2)}</Center>
+                                            fw={'800'}> {currencySymbol} {purchaseDiscountAmount && Number(purchaseDiscountAmount).toFixed(2)}</Center>
                                     </Grid.Col>
                                     <Grid.Col span={3}>
                                         <Center fz={'md'}
-                                            fw={'800'}>  {currencySymbol} {salesVatAmount.toFixed(2)}</Center>
+                                            fw={'800'}>  {currencySymbol} {purchaseVatAmount.toFixed(2)}</Center>
                                     </Grid.Col>
                                     <Grid.Col span={3}>
                                         <Center fz={'md'}
-                                            fw={'800'}>{currencySymbol} {salesTotalAmount.toFixed(2)}</Center>
+                                            fw={'800'}>{currencySymbol} {purchaseTotalAmount.toFixed(2)}</Center>
                                     </Grid.Col>
                                 </Grid>
                                 <Grid gutter={{ base: 4 }}>
@@ -489,7 +489,7 @@ function PurchaseForm(props) {
                                         <Grid.Col span={2}><Center fz={'xs'} mt={'8'}
                                             c={'red'}>{currencySymbol} {profitShow && salesProfitAmount}</Center></Grid.Col>
                                         <Grid.Col span={7}><Center fz={'md'} mt={'4'} c={'red'}
-                                            fw={'800'}>{returnOrDueText} {currencySymbol} {salesDueAmount.toFixed(2)}</Center></Grid.Col>
+                                            fw={'800'}>{returnOrDueText} {currencySymbol} {purchaseDueAmount.toFixed(2)}</Center></Grid.Col>
                                     </Grid>
                                     <Box mt={'xs'} h={1} bg={`red.3`}></Box>
                                     <Grid gutter={{ base: 6 }} mt={'xs'}>

@@ -52,11 +52,9 @@ function _GenericInvoiceForm(props) {
     const [loadCardProducts, setLoadCardProducts] = useState(false)
     const [focusIntoProductSearch, setFocusIntoProductSearch] = useState(false)
 
-    console.log(tempCardProducts)
     let purchaseSubTotalAmount = tempCardProducts?.reduce((total, item) => total + item.sub_total, 0) || 0;
-    // let totalPurchaseAmount = tempCardProducts?.reduce((total, item) => total + (item.purchase_price * item.quantity), 0) || 0;
+    let totalPurchaseAmount = tempCardProducts?.reduce((total, item) => total + (item.purchase_price * item.quantity), 0) || 0;
 
-    console.log(purchaseSubTotalAmount)
     useEffect(() => {
         const tempProducts = localStorage.getItem('temp-purchase-products');
         setTempCardProducts(tempProducts ? JSON.parse(tempProducts) : [])
@@ -84,17 +82,16 @@ function _GenericInvoiceForm(props) {
         }
     }, [searchValue]);
 
+
+    /**
+     * Adds a product to a collection based on ID, updates the local storage and resets the form
+     */
     function handleAddProductByProductId(values, myCardProducts, localProducts) {
         const addProducts = localProducts.reduce((acc, product) => {
             if (product.id === Number(values.product_id)) {
-                // console.log(product,values.purchase_price)
                 acc.push({
                     product_id: product.id,
                     display_name: product.display_name,
-                    // sales_price: product.sales_price,
-                    // price: values.price,
-                    // percent: values.percent,
-                    // stock: product.quantity,
                     quantity: Number(values.quantity),
                     unit_name: product.unit_name,
                     purchase_price: Number(values.purchase_price),
@@ -103,10 +100,12 @@ function _GenericInvoiceForm(props) {
             }
             return acc;
         }, myCardProducts);
-        // console.log(addProducts)
-        updateLocalStorageAndResetForm(addProducts);
+        updateLocalStorageAndResetForm(addProducts,'productId');
     }
 
+    /**
+     * Adds a product to a collection based on BARCODE, updates the local storage and resets the form
+     */
     function handleAddProductByBarcode(values, myCardProducts, localProducts) {
         const barcodeExists = localProducts.some(product => product.barcode === values.barcode);
         if (barcodeExists) {
@@ -116,7 +115,7 @@ function _GenericInvoiceForm(props) {
                 }
                 return acc;
             }, myCardProducts);
-            updateLocalStorageAndResetForm(addProducts);
+            updateLocalStorageAndResetForm(addProducts,'barcode');
         } else {
             notifications.show({
                 loading: true,
@@ -129,27 +128,30 @@ function _GenericInvoiceForm(props) {
         }
     }
 
-    function updateLocalStorageAndResetForm(addProducts) {
-        // console.log(addProducts)
+    /**
+     * Updates local storage with new products, resets form, and sets focus on the product search.
+     */
+    function updateLocalStorageAndResetForm(addProducts,type) {
         localStorage.setItem('temp-purchase-products', JSON.stringify(addProducts));
         setSearchValue('');
         form.reset();
         setLoadCardProducts(true);
         setFocusIntoProductSearch(true)
-        document.getElementById('product_id').focus();
+        if (type == 'productId') {
+            document.getElementById('product_id').focus();
+        }else {
+            document.getElementById('barcode').focus();
+        }
     }
 
     function createProductFromValues(product) {
         return {
             product_id: product.id,
             display_name: product.display_name,
-            price: product.purchase_price,
-            percent: '',
-            stock: product.quantity,
             quantity: 1,
             unit_name: product.unit_name,
             purchase_price: product.purchase_price,
-            sub_total: product.purchase_price,
+            sub_total: Number(product.sub_total),
         };
     }
 
@@ -235,7 +237,7 @@ function _GenericInvoiceForm(props) {
         }
     });
 
-    const productAddedForm = useForm({
+    /*const productAddedForm = useForm({
         initialValues: {
             name: '',
             purchase_price: '',
@@ -250,8 +252,9 @@ function _GenericInvoiceForm(props) {
         validate: {
             name: isNotEmpty()
         }
-    });
+    });*/
 
+    /*START PRODUCT SELECTED BY PRODUCT ID*/
     const [selectProductDetails, setSelectProductDetails] = useState('')
     useEffect(() => {
         const storedProducts = localStorage.getItem('user-products');
@@ -273,33 +276,22 @@ function _GenericInvoiceForm(props) {
             form.setFieldValue('purchase_price', '');
         }
     }, [form.values.product_id]);
+    /*END PRODUCT SELECTED BY PRODUCT ID*/
 
+    /*START QUANTITY AND PURCHASE PRICE WISE SUB TOTAL*/
     useEffect(() => {
         const quantity = Number(form.values.quantity);
         const purchase_price = Number(form.values.purchase_price);
 
         if (!isNaN(quantity) && !isNaN(purchase_price) && quantity > 0 && purchase_price >= 0) {
-            if (!allowZeroPercentage) {
-                showNotification({
-                    color: 'pink',
-                    title: t('WeNotifyYouThat'),
-                    message: t('ZeroQuantityNotAllow'),
-                    autoClose: 1500,
-                    loading: true,
-                    withCloseButton: true,
-                    position: 'top-center',
-                    style: { backgroundColor: 'mistyrose' },
-                });
-            } else {
-                setSelectProductDetails(prevDetails => ({
-                    ...prevDetails,
-                    sub_total: quantity * purchase_price,
-                    purchase_price: purchase_price,
-                }));
-                form.setFieldValue('sub_total', quantity * purchase_price);
-            }
+            setSelectProductDetails(prevDetails => ({
+                ...prevDetails,
+                sub_total: quantity * purchase_price,
+            }));
+            form.setFieldValue('sub_total', quantity * purchase_price);
         }
-    }, [form.values.quantity, form.values.sales_price]);
+    }, [form.values.quantity, form.values.purchase_price]);
+    /*END QUANTITY AND PURCHASE PRICE WISE SUB TOTAL*/
 
 
     /*START SUBTOTAL WISE PURCHASE PRICE*/
@@ -354,7 +346,6 @@ function _GenericInvoiceForm(props) {
                     <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
                         <Box>
                             <form onSubmit={form.onSubmit((values) => {
-
                                 if (!values.barcode && !values.product_id) {
                                     form.setFieldError('barcode', true);
                                     form.setFieldError('product_id', true);
@@ -366,23 +357,8 @@ function _GenericInvoiceForm(props) {
                                     const storedProducts = localStorage.getItem('user-products');
                                     const localProducts = storedProducts ? JSON.parse(storedProducts) : [];
 
-                                    // console.log(myCardProducts,storedProducts,localProducts)
-
                                     if (values.product_id && !values.barcode) {
-                                        if (!allowZeroPercentage) {
-                                            showNotification({
-                                                color: 'pink',
-                                                title: t('WeNotifyYouThat'),
-                                                message: t('ZeroQuantityNotAllow'),
-                                                autoClose: 1500,
-                                                loading: true,
-                                                withCloseButton: true,
-                                                position: 'top-center',
-                                                style: { backgroundColor: 'mistyrose' },
-                                            });
-                                        } else {
-                                            handleAddProductByProductId(values, myCardProducts, localProducts);
-                                        }
+                                        handleAddProductByProductId(values, myCardProducts, localProducts);
                                     } else if (!values.product_id && values.barcode) {
                                         handleAddProductByBarcode(values, myCardProducts, localProducts);
                                     }
@@ -398,7 +374,7 @@ function _GenericInvoiceForm(props) {
                                                     label=''
                                                     placeholder={t('barcode')}
                                                     required={true}
-                                                    nextField={''}
+                                                    nextField={'EntityFormSubmit'}
                                                     form={form}
                                                     name={'barcode'}
                                                     id={'barcode'}
@@ -427,7 +403,7 @@ function _GenericInvoiceForm(props) {
                                                     label=''
                                                     placeholder={t('Quantity')}
                                                     required={true}
-                                                    nextField={'purchase_price'}
+                                                    nextField={!isPurchaseByPurchasePrice?'sub_total':'purchase_price'}
                                                     form={form}
                                                     name={'quantity'}
                                                     id={'quantity'}
@@ -442,7 +418,7 @@ function _GenericInvoiceForm(props) {
                                                     label=''
                                                     placeholder={t('PurchasePrice')}
                                                     required={true}
-                                                    nextField={form.values.purchase_price ? 'EntityFormSubmit' : 'sales_price'}
+                                                    nextField={isPurchaseByPurchasePrice && 'EntityFormSubmit'}
                                                     form={form}
                                                     name={'purchase_price'}
                                                     id={'purchase_price'}
@@ -841,7 +817,7 @@ function _GenericInvoiceForm(props) {
                                         accessor: 'sub_total',
                                         title: t('SubTotal'),
                                         width: '15%',
-                                        textAlign: "left",
+                                        textAlign: "right",
                                         render: (item) => {
                                             return (
                                                 item.sub_total && Number(item.sub_total).toFixed(2)
@@ -902,13 +878,13 @@ function _GenericInvoiceForm(props) {
                 </Grid.Col>
                 <Grid.Col span={8} >
                     <Box bg={'white'} p={'md'} className={'borderRadiusAll'}>
-                        {/*<PurchaseForm
+                        <PurchaseForm
                             purchaseSubTotalAmount={purchaseSubTotalAmount}
                             tempCardProducts={tempCardProducts}
                             totalPurchaseAmount={totalPurchaseAmount}
                             currencySymbol={currencySymbol}
                             setLoadCardProducts={setLoadCardProducts}
-                        />*/}
+                        />
                     </Box>
                 </Grid.Col>
                 <Grid.Col span={1} >
