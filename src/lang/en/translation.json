@@ -190,6 +190,7 @@
   "AccountType": "Account Type",
   "MethodName": "Method Name",
   "CustomerValidateMessage": "Choose customer",
+  "PurchaseValidateMessage": "Choose purchase",
   "ChooseTransactionMode": "Choose transaction mode",
   "Accounting": "Accounting",
   "TransactionMode": "Transaction Mode",

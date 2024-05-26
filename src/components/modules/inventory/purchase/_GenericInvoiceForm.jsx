@@ -26,15 +26,9 @@ import { DataTable } from "mantine-datatable";
 import SelectForm from "../../../form-builders/SelectForm.jsx";
 import { storeEntityData } from "../../../../store/inventory/crudSlice.js";
 import axios from "axios";
-import getLocationDropdownData from "../../../global-hook/dropdown/getLocationDropdownData.js";
-import getExecutiveDropdownData from "../../../global-hook/dropdown/getExecutiveDropdownData.js";
-import getVendorDropdownData from "../../../global-hook/dropdown/getVendorDropdownData.js";
-import getCustomerDropdownData from "../../../global-hook/dropdown/getCustomerDropdownData.js";
-import getTransactionModeDropdownData from "../../../global-hook/dropdown/getTransactionModeDropdownData.js";
-import getUserDropdownData from "../../../global-hook/dropdown/getUserDropdownData.js";
 import ShortcutInvoice from "../../shortcut/ShortcutInvoice";
 import tableCss from "../../../../assets/css/Table.module.css";
-import PurchaseForm from "./PurchaseForm";
+import __PurchaseForm from "./__PurchaseForm.jsx";
 
 function _GenericInvoiceForm(props) {
     const { currencySymbol, allowZeroPercentage,isPurchaseByPurchasePrice } = props
@@ -96,6 +90,7 @@ function _GenericInvoiceForm(props) {
                     unit_name: product.unit_name,
                     purchase_price: Number(values.purchase_price),
                     sub_total: Number(values.sub_total),
+                    sales_price: Number(product.sales_price),
                 });
             }
             return acc;
@@ -152,57 +147,10 @@ function _GenericInvoiceForm(props) {
             unit_name: product.unit_name,
             purchase_price: product.purchase_price,
             sub_total: Number(product.sub_total),
+            sales_price: Number(product.sales_price),
         };
     }
 
-    const [categoryData, setCategoryData] = useState(null);
-    const dropdownLoad = useSelector((state) => state.inventoryCrudSlice.dropdownLoad)
-
-    const categoryDropdownData = useSelector((state) => state.inventoryUtilitySlice.categoryDropdownData)
-    let categoryDropdown = categoryDropdownData && categoryDropdownData.length > 0 ?
-        categoryDropdownData.map((type, index) => {
-            return ({ 'label': type.name, 'value': String(type.id) })
-        }) : []
-    useEffect(() => {
-        const value = {
-            url: 'inventory/select/category',
-            param: {
-                type: 'parent'
-            }
-        }
-        dispatch(getCategoryDropdown(value))
-    }, [dropdownLoad]);
-
-
-    const [productTypeData, setProductTypeData] = useState(null);
-    const productTypeDropdownData = useSelector((state) => state.utilityUtilitySlice.settingDropdown)
-    let productTypeDropdown = productTypeDropdownData && productTypeDropdownData.length > 0 ?
-        productTypeDropdownData.map((type, index) => {
-            return ({ 'label': type.name, 'value': String(type.id) })
-        }) : []
-
-    useEffect(() => {
-        const value = {
-            url: 'utility/select/setting',
-            param: {
-                'dropdown-type': 'product-type'
-            }
-        }
-        dispatch(getSettingDropdown(value))
-    }, []);
-
-    const [productUnitData, setProductUnitData] = useState(null);
-    const productUnitDropdownData = useSelector((state) => state.utilityUtilitySlice.productUnitDropdown)
-    let productUnitDropdown = productUnitDropdownData && productUnitDropdownData.length > 0 ?
-        productUnitDropdownData.map((type, index) => {
-            return ({ 'label': type.name, 'value': String(type.id) })
-        }) : []
-    useEffect(() => {
-        const value = {
-            url: 'utility/select/product-unit'
-        }
-        dispatch(getProductUnitDropdown(value))
-    }, []);
 
     const form = useForm({
         initialValues: {
@@ -878,7 +826,7 @@ function _GenericInvoiceForm(props) {
                 </Grid.Col>
                 <Grid.Col span={8} >
                     <Box bg={'white'} p={'md'} className={'borderRadiusAll'}>
-                        <PurchaseForm
+                        <__PurchaseForm
                             purchaseSubTotalAmount={purchaseSubTotalAmount}
                             tempCardProducts={tempCardProducts}
                             totalPurchaseAmount={totalPurchaseAmount}

@@ -19,7 +19,7 @@ import {
 import KeywordSearch from "../../filter/KeywordSearch";
 import { modals } from "@mantine/modals";
 import { deleteEntityData } from "../../../../store/core/crudSlice";
-import VendorViewModel from "./VendorViewModel.jsx";
+import _VendorViewModel from "./_VendorViewModel.jsx";
 import tableCss from "../../../../assets/css/Table.module.css";
 function VendorTable() {
 
@@ -36,6 +36,8 @@ function VendorTable() {
     const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword)
     const indexData = useSelector((state) => state.crudSlice.indexEntityData)
     const vendorFilterData = useSelector((state) => state.crudSlice.vendorFilterData)
+
+    const [vendorObject,setVendorObject] = useState({})
 
 
 
@@ -91,7 +93,13 @@ function VendorTable() {
                                         color="green"
                                         onClick={() => {
                                             setVendorViewModel(true)
-                                            dispatch(showEntityData('core/vendor/' + data.id))
+                                            const coreVendors = JSON.parse(localStorage.getItem('core-vendors') || '[]');
+                                            const foundVendors = coreVendors.find(type => type.id == data.id);
+
+                                            if (foundVendors) {
+                                                setVendorObject(foundVendors);
+                                            }
+                                            // dispatch(showEntityData('core/vendor/' + data.id))
                                         }}
                                     >
                                         <IconEye size={16} />
@@ -151,7 +159,12 @@ function VendorTable() {
                 />
             </Box>
             {
-                vendorViewModel && <VendorViewModel vendorViewModel={vendorViewModel} setVendorViewModel={setVendorViewModel} />
+                vendorViewModel &&
+                <_VendorViewModel
+                    vendorViewModel={vendorViewModel}
+                    setVendorViewModel={setVendorViewModel}
+                    vendorObject={vendorObject}
+                />
             }
         </>
     );

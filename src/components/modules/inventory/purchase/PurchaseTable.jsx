@@ -43,14 +43,14 @@ function PurchaseTable() {
     const fetching = useSelector((state) => state.crudSlice.fetching)
     const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword)
     const indexData = useSelector((state) => state.crudSlice.indexEntityData)
-    const [salesViewData,setSalesViewData] =useState({})
+    const [purchaseViewData,setPurchaseViewData] =useState({})
 
     useEffect(()=>{
-        setSalesViewData(indexData.data && indexData.data[0] && indexData.data[0])
+        setPurchaseViewData(indexData.data && indexData.data[0] && indexData.data[0])
     },[indexData.data])
 
 
-    const rows = salesViewData && salesViewData.sales_items && salesViewData.sales_items.map((element,index) => (
+    const rows = purchaseViewData && purchaseViewData.sales_items && purchaseViewData.sales_items.map((element,index) => (
         <Table.Tr key={element.name}>
             <Table.Td fz="xs" width={'20'}>{index + 1}</Table.Td>
             <Table.Td ta="left" fz="xs" width={'300'}>{element.item_name}</Table.Td>
@@ -63,7 +63,7 @@ function PurchaseTable() {
 
     useEffect(() => {
         const value = {
-            url: 'inventory/sales',
+            url: 'inventory/purchase',
             param: {
                 term: searchKeyword,
                 page: page,
@@ -115,7 +115,7 @@ function PurchaseTable() {
                                         { accessor: 'id',  title: "ID" },
                                         { accessor: 'created',  title: "Created" },
                                         { accessor: 'invoice',  title: "Invoice" },
-                                        { accessor: 'customerName',  title: "Customer" },
+                                        { accessor: 'customerName',  title: "Vendor" },
                                         { accessor: 'sub_total',  title: "SubTotal" },
                                         { accessor: 'discount',  title: "Dis." },
                                         { accessor: 'total',  title: "Total" },
@@ -130,7 +130,7 @@ function PurchaseTable() {
                                                         variant="subtle"
                                                         color="green"
                                                         onClick={()=>{
-                                                            setSalesViewData(data)
+                                                            setPurchaseViewData(data)
                                                         }}
                                                     >
                                                         <IconEye size={16}/>
@@ -196,17 +196,17 @@ function PurchaseTable() {
                     <Grid.Col span={8} >
                         <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} ref={printRef}>
                             <Box h={'36'} pl={`xs`} fz={'sm'} fw={'600'} pr={8} pt={'6'} mb={'4'} className={'boxBackground textColor borderRadiusAll'} >
-                                {t('Invoice')}: {salesViewData && salesViewData.invoice && salesViewData.invoice}
+                                {t('Invoice')}: {purchaseViewData && purchaseViewData.invoice && purchaseViewData.invoice}
                             </Box>
                             <Box className={'borderRadiusAll'}  fz={'sm'}  >
                                 <Box pl={`xs`} fz={'sm'} fw={'600'} pr={'xs'}  pt={'6'} pb={'xs'} className={'boxBackground textColor'} >
                                     <Grid gutter={{base:4}}>
                                         <Grid.Col span={'6'}>
                                             <Grid columns={15} gutter={{base:4}}>
-                                                <Grid.Col span={6} ><Text fz="sm" lh="xs">Customer</Text></Grid.Col>
+                                                <Grid.Col span={6} ><Text fz="sm" lh="xs">Vendor</Text></Grid.Col>
                                                 <Grid.Col span={9} >
                                                     <Text fz="sm" lh="xs">
-                                                        {salesViewData && salesViewData.customerName && salesViewData.customerName}
+                                                        {purchaseViewData && purchaseViewData.customerName && purchaseViewData.customerName}
                                                     </Text>
                                                 </Grid.Col>
                                             </Grid>
@@ -214,7 +214,7 @@ function PurchaseTable() {
                                                 <Grid.Col span={6} ><Text fz="sm" lh="xs">Mobile</Text></Grid.Col>
                                                 <Grid.Col span={9} >
                                                     <Text fz="sm" lh="xs">
-                                                        {salesViewData && salesViewData.customerMobile && salesViewData.customerMobile}
+                                                        {purchaseViewData && purchaseViewData.customerMobile && purchaseViewData.customerMobile}
                                                     </Text>
                                                 </Grid.Col>
                                             </Grid>
@@ -222,7 +222,7 @@ function PurchaseTable() {
                                                 <Grid.Col span={6} ><Text fz="sm" lh="xs">Address</Text></Grid.Col>
                                                 <Grid.Col span={9} >
                                                     <Text fz="sm" lh="xs">
-                                                        {salesViewData && salesViewData.customer_address && salesViewData.customer_address}
+                                                        {purchaseViewData && purchaseViewData.customer_address && purchaseViewData.customer_address}
                                                     </Text>
                                                 </Grid.Col>
                                             </Grid>
@@ -230,7 +230,7 @@ function PurchaseTable() {
                                                 <Grid.Col span={6} ><Text fz="sm" lh="xs">Balance</Text></Grid.Col>
                                                 <Grid.Col span={9} >
                                                     <Text fz="sm" lh="xs">
-                                                        {salesViewData && salesViewData.balance ? Number(salesViewData.balance).toFixed(2) : 0.00}
+                                                        {purchaseViewData && purchaseViewData.balance ? Number(purchaseViewData.balance).toFixed(2) : 0.00}
                                                     </Text>
                                                 </Grid.Col>
                                             </Grid>
@@ -240,7 +240,7 @@ function PurchaseTable() {
                                                 <Grid.Col span={6} ><Text fz="sm" lh="xs">Created</Text></Grid.Col>
                                                 <Grid.Col span={9} >
                                                     <Text fz="sm" lh="xs">
-                                                        {salesViewData && salesViewData.created && salesViewData.created}
+                                                        {purchaseViewData && purchaseViewData.created && purchaseViewData.created}
                                                     </Text>
                                                 </Grid.Col>
                                             </Grid>
@@ -248,7 +248,7 @@ function PurchaseTable() {
                                                 <Grid.Col span={6} ><Text fz="sm" lh="xs">Created By</Text></Grid.Col>
                                                 <Grid.Col span={9} >
                                                     <Text fz="sm" lh="xs">
-                                                        {salesViewData && salesViewData.createdByName && salesViewData.createdByName}
+                                                        {purchaseViewData && purchaseViewData.createdByName && purchaseViewData.createdByName}
                                                     </Text>
                                                 </Grid.Col>
                                             </Grid>
@@ -256,7 +256,7 @@ function PurchaseTable() {
                                                 <Grid.Col span={6} ><Text fz="sm" lh="xs">Sales By</Text></Grid.Col>
                                                 <Grid.Col span={9} >
                                                     <Text fz="sm" lh="xs">
-                                                        {salesViewData && salesViewData.salesByUser && salesViewData.salesByUser}
+                                                        {purchaseViewData && purchaseViewData.salesByUser && purchaseViewData.salesByUser}
                                                     </Text>
                                                 </Grid.Col>
                                             </Grid>
@@ -264,7 +264,7 @@ function PurchaseTable() {
                                                 <Grid.Col span={6} ><Text fz="sm" lh="xs">Mode</Text></Grid.Col>
                                                 <Grid.Col span={9} >
                                                     <Text fz="sm" lh="xs">
-                                                        {salesViewData && salesViewData.mode_name && salesViewData.mode_name}
+                                                        {purchaseViewData && purchaseViewData.mode_name && purchaseViewData.mode_name}
                                                     </Text>
                                                 </Grid.Col>
                                             </Grid>
@@ -272,7 +272,7 @@ function PurchaseTable() {
                                                 <Grid.Col span={6} ><Text fz="sm" lh="xs">Process</Text></Grid.Col>
                                                 <Grid.Col span={9} >
                                                     <Text fz="sm" lh="xs">
-                                                        {salesViewData && salesViewData.process && salesViewData.process}
+                                                        {purchaseViewData && purchaseViewData.process && purchaseViewData.process}
                                                     </Text>
                                                 </Grid.Col>
                                             </Grid>
@@ -297,25 +297,25 @@ function PurchaseTable() {
                                              <Table.Tr>
                                                 <Table.Th colspan={'5'} ta="right" fz="xs" w={'100'}>{t('SubTotal')}</Table.Th>
                                                 <Table.Th ta="right" fz="xs" w={'100'}>
-                                                    {salesViewData && salesViewData.sub_total && Number(salesViewData.sub_total).toFixed(2)}
+                                                    {purchaseViewData && purchaseViewData.sub_total && Number(purchaseViewData.sub_total).toFixed(2)}
                                                 </Table.Th>
                                             </Table.Tr>
                                             <Table.Tr>
                                                 <Table.Th colspan={'5'} ta="right" fz="xs" w={'100'}>{t('Discount')}</Table.Th>
                                                 <Table.Th ta="right" fz="xs" w={'100'}>
-                                                    {salesViewData && salesViewData.discount && Number(salesViewData.discount).toFixed(2)}
+                                                    {purchaseViewData && purchaseViewData.discount && Number(purchaseViewData.discount).toFixed(2)}
                                                 </Table.Th>
                                             </Table.Tr>
                                             <Table.Tr>
                                                 <Table.Th colspan={'5'} ta="right" fz="xs" w={'100'}>{t('Total')}</Table.Th>
                                                 <Table.Th ta="right" fz="xs" w={'100'}>
-                                                    {salesViewData && salesViewData.total && Number(salesViewData.total).toFixed(2)}
+                                                    {purchaseViewData && purchaseViewData.total && Number(purchaseViewData.total).toFixed(2)}
                                                 </Table.Th>
                                             </Table.Tr>
                                             <Table.Tr>
                                                 <Table.Th colspan={'5'} ta="right" fz="xs" w={'100'}>{t('Receive')}</Table.Th>
                                                 <Table.Th ta="right" fz="xs" w={'100'}>
-                                                    {salesViewData && salesViewData.payment && Number(salesViewData.payment).toFixed(2)}
+                                                    {purchaseViewData && purchaseViewData.payment && Number(purchaseViewData.payment).toFixed(2)}
                                                 </Table.Th>
                                             </Table.Tr>
                                         </Table.Tfoot>

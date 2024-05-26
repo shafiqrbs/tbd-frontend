@@ -7,17 +7,13 @@ import {
 import { useTranslation } from 'react-i18next';
 import {
     IconDeviceFloppy,
-    IconUserCog,
     IconStackPush,
     IconPrinter,
     IconReceipt,
     IconPercentage,
     IconCurrencyTaka,
-    IconMessage,
     IconEyeEdit,
-    IconDeviceMobile,
-    IconHelpCircle,
-    IconCircleCheck, IconUserCircle, IconRefreshDot, IconDiscountOff, IconCurrency, IconPlusMinus, IconCheck,
+    IconDeviceMobile, IconUserCircle, IconRefreshDot, IconDiscountOff, IconCurrency, IconPlusMinus, IconCheck,
 
 } from "@tabler/icons-react";
 import { useHotkeys, useToggle } from "@mantine/hooks";
@@ -27,34 +23,22 @@ import { hasLength, isNotEmpty, useForm } from "@mantine/form";
 import SelectForm from "../../../form-builders/SelectForm";
 import TextAreaForm from "../../../form-builders/TextAreaForm";
 
-import {
-    getShowEntityData, storeEntityData,
-} from "../../../../store/inventory/crudSlice.js";
-import { getTransactionModeData } from "../../../../store/accounting/utilitySlice.js";
-import getCustomerDropdownData from "../../../global-hook/dropdown/getCustomerDropdownData.js";
-import getVendorDropdownData from "../../../global-hook/dropdown/getVendorDropdownData.js";
+import { storeEntityData} from "../../../../store/inventory/crudSlice.js";
 import InputNumberForm from "../../../form-builders/InputNumberForm";
 import InputButtonForm from "../../../form-builders/InputButtonForm";
-import getUserDropdownData from "../../../global-hook/dropdown/getUserDropdownData";
 import InputForm from "../../../form-builders/InputForm";
-import { setFetching, storeEntityDataWithFile } from "../../../../store/accounting/crudSlice.js";
 import { notifications } from "@mantine/notifications";
+import _VendorViewModel from "../../core/vendor/_VendorViewModel.jsx";
 
-function PurchaseForm(props) {
-    console.log(props.purchaseSubTotalAmount)
+function __PurchaseForm(props) {
     const { currencySymbol } = props
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
-    const transactionModeData = useSelector((state) => state.accountingUtilitySlice.transactionModeData)
+    const transactionModeData = JSON.parse(localStorage.getItem('accounting-transaction-mode'))?JSON.parse(localStorage.getItem('accounting-transaction-mode')):[];
 
-    useEffect(() => {
-        dispatch(getShowEntityData('inventory/config'))
-        dispatch(getTransactionModeData('accounting/transaction-mode-data'))
-    }, []);
 
     const [purchaseSubTotalAmount, setPurchaseSubTotalAmount] = useState(0);
-    const [salesProfitAmount, setSalesProfitAmount] = useState(0);
     const [purchaseVatAmount, setPurchaseVatAmount] = useState(0);
     const [purchaseDiscountAmount, setPurchaseDiscountAmount] = useState(0);
     const [purchaseTotalAmount, setPurchaseTotalAmount] = useState(0);
@@ -62,7 +46,22 @@ function PurchaseForm(props) {
     const [hoveredModeId, setHoveredModeId] = useState(false);
 
     const formHeight = mainAreaHeight - 268; //TabList height 104
-    const [viewCustomerModel, setCustomerViewModel] = useState(false);
+    const [viewVendorModel, setVendorViewModel] = useState(false);
+
+    /*START GET VENDOR DATA BY ID FROM LOCAL STORAGE*/
+    const [vendorData, setVendorData] = useState(null);
+    const [vendorObject, setVendorObject] = useState({});
+    useEffect(() => {
+        if (vendorData) {
+            const coreVendors = JSON.parse(localStorage.getItem('core-vendors') || '[]');
+            const foundVendors = coreVendors.find(type => type.id == vendorData);
+
+            if (foundVendors) {
+                setVendorObject(foundVendors);
+            }
+        }
+    }, [vendorData]);
+    /*END GET VENDOR DATA BY ID FROM LOCAL STORAGE*/
 
 
     const [tempCardProducts, setTempCardProducts] = useState([])
@@ -76,10 +75,25 @@ function PurchaseForm(props) {
         setLoadCardProducts(false)
     }, [loadCardProducts])
 
-    const [vendorData, setVendorData] = useState(null);
-    const [salesByUser, setSalesByUser] = useState(null);
     const [orderProcess, setOrderProcess] = useState(null);
 
+    /*START GET VENDOR DROPDOWN FROM LOCAL STORAGE*/
+    const [vendorsDropdownData,setVendorsDropdownData] = useState([])
+    const [refreshVendorDropdown,setRefreshVendorDropdown] = useState(false)
+
+    useEffect(() => {
+        let coreVendors = localStorage.getItem('core-vendors');
+        coreVendors = coreVendors?JSON.parse(coreVendors):[]
+
+        if (coreVendors && coreVendors.length > 0) {
+            const transformedData = coreVendors.map(type => {
+                return ({'label': type.mobile+' -- '+type.name, 'value': String(type.id)})
+            });
+            setVendorsDropdownData(transformedData);
+        }
+        setRefreshVendorDropdown(false);
+    }, [refreshVendorDropdown])
+    /*END GET CUSTOMER DROPDOWN FROM LOCAL STORAGE*/
 
     const form = useForm({
         initialValues: {
@@ -97,6 +111,19 @@ function PurchaseForm(props) {
         }
     });
 
+    /*START FOR TRANSACTION MODE DEFAULT SELECT*/
+    useEffect(() => {
+        if (transactionModeData && transactionModeData.length > 0) {
+            for (let mode of transactionModeData) {
+                if (mode.is_selected) {
+                    form.setFieldValue('transaction_mode_id', form.values.transaction_mode_id?form.values.transaction_mode_id:mode.id);
+                    break;
+                }
+            }
+        }
+    }, [transactionModeData, form]);
+    /*END FOR TRANSACTION MODE DEFAULT SELECT*/
+
     const [returnOrDueText, setReturnOrDueText] = useState('Due');
 
     useEffect(() => {
@@ -108,9 +135,11 @@ function PurchaseForm(props) {
         const totalAmount = purchaseSubTotalAmount - purchaseDiscountAmount;
         setPurchaseTotalAmount(totalAmount);
         setPurchaseDueAmount(totalAmount);
-        setSalesProfitAmount(totalAmount - props.totalPurchaseAmount)
     }, [purchaseSubTotalAmount, purchaseDiscountAmount]);
 
+    /**
+     * Discount calculation with due or return amount
+     */
     useEffect(() => {
         let discountAmount = 0;
         if (form.values.discount && Number(form.values.discount) > 0) {
@@ -123,16 +152,14 @@ function PurchaseForm(props) {
         setPurchaseDiscountAmount(discountAmount);
 
         let returnOrDueAmount = 0;
-        if (form.values.receive_amount) {
-            const text = purchaseTotalAmount < form.values.receive_amount ? 'Return' : 'Due';
+        let receiveAmount = form.values.receive_amount==''?0:form.values.receive_amount
+        if (receiveAmount>=0) {
+            const text = purchaseTotalAmount < receiveAmount ? 'Return' : 'Due';
             setReturnOrDueText(text);
-            returnOrDueAmount = purchaseTotalAmount - form.values.receive_amount;
+            returnOrDueAmount = purchaseTotalAmount - receiveAmount;
             setPurchaseDueAmount(returnOrDueAmount);
         }
     }, [form.values.discount, discountType, form.values.receive_amount, purchaseSubTotalAmount, purchaseTotalAmount]);
-
-
-    const [profitShow, setProfitShow] = useState(false);
 
 
     useHotkeys([['alt+n', () => {
@@ -166,6 +193,7 @@ function PurchaseForm(props) {
                         "product_id": product.product_id,
                         "quantity": product.quantity,
                         "purchase_price": product.purchase_price,
+                        "sales_price": product.sales_price,
                         "sub_total": product.sub_total
                     }
                 });
@@ -184,11 +212,12 @@ function PurchaseForm(props) {
                 formValue['process'] = form.values.order_process;
                 formValue['narration'] = form.values.narration;
                 formValue['items'] = transformedArray ? transformedArray : [];
+
                 const data = {
                     url: 'inventory/purchase',
                     data: formValue
                 }
-                //    console.log(formValue);
+
                 dispatch(storeEntityData(data))
                 notifications.show({
                     color: 'teal',
@@ -203,7 +232,6 @@ function PurchaseForm(props) {
                     localStorage.removeItem('temp-purchase-products');
                     form.reset()
                     setVendorData(null)
-                    setSalesByUser(null)
                     setOrderProcess(null)
                     props.setLoadCardProducts(true)
                 }, 700)
@@ -218,14 +246,14 @@ function PurchaseForm(props) {
                                         <Grid.Col span={11}  >
                                             <Box pt={'xs'}>
                                                 <SelectForm
-                                                    tooltip={t('CustomerValidateMessage')}
+                                                    tooltip={t('PurchaseValidateMessage')}
                                                     label=''
                                                     placeholder={t('Vendor')}
                                                     required={false}
                                                     nextField={'receive_amount'}
                                                     name={'vendor_id'}
                                                     form={form}
-                                                    dropdownValue={getVendorDropdownData()}
+                                                    dropdownValue={vendorsDropdownData}
                                                     id={'vendor_id'}
                                                     mt={1}
                                                     searchable={false}
@@ -334,21 +362,26 @@ function PurchaseForm(props) {
                                         <Grid.Col span={6} >
                                             <Text mt={'8'} mr={'xl'} style={{ textAlign: 'right', float: 'right' }}>
                                                 <Group>
-                                                    <ActionIcon bg={'white'} variant="outline"
-                                                        color={'red'} >
-                                                        <IconMessage size={18} stroke={1.5} />
-                                                    </ActionIcon>
-                                                    <ActionIcon
-                                                        variant="filled"
-                                                        color={'red'}
-                                                        onClick={setCustomerViewModel}
+                                                    <Tooltip
+                                                        multiline
+                                                        bg={'orange.8'}
+                                                        position="top"
+                                                        withArrow
+                                                        transitionProps={{ duration: 200 }}
+                                                        label={vendorData ?t('VendorDetails'):t('ChooseVendor')}
                                                     >
-                                                        <IconEyeEdit
-                                                            size={18}
-                                                            stroke={1.5}
-                                                        />
-                                                    </ActionIcon>
-
+                                                        <ActionIcon
+                                                            variant="filled"
+                                                            color={'red'}
+                                                            disabled={!vendorData}
+                                                            onClick={setVendorViewModel}
+                                                        >
+                                                            <IconEyeEdit
+                                                                size={18}
+                                                                stroke={1.5}
+                                                            />
+                                                        </ActionIcon>
+                                                    </Tooltip>
                                                 </Group>
                                             </Text>
                                         </Grid.Col>
@@ -435,6 +468,7 @@ function PurchaseForm(props) {
                                                                         form.setFieldValue('transaction_mode_id', e.currentTarget.value)
                                                                         form.setFieldError('transaction_mode_id', null)
                                                                     }}
+                                                                    defaultChecked={mode.is_selected?true:false}
                                                                 />
                                                                 <Tooltip
                                                                     label={mode.name}
@@ -457,7 +491,7 @@ function PurchaseForm(props) {
                                                                             src={mode.path}
                                                                             alt={mode.method_name}
                                                                         />
-                                                                        <Center fz={'xs'} className={'textColor'} >{mode.authorised}</Center>
+                                                                        <Center fz={'xs'} className={'textColor'} >{mode.authorized_name}</Center>
                                                                     </label>
                                                                 </Tooltip>
                                                             </Box>
@@ -473,7 +507,7 @@ function PurchaseForm(props) {
                                 <Box p={'xs'} className={'boxBackground'} mt={'4'} pt={'xs'} mb={'xs'} pb={'xs'} >
                                     <Grid gutter={{ base: 2 }}>
                                         <Grid.Col span={2}>
-                                            <Switch
+                                            {/*<Switch
                                                 fullWidth
                                                 size="lg"
                                                 w={'100%'}
@@ -484,10 +518,13 @@ function PurchaseForm(props) {
                                                 offLabel={t('Hide')}
                                                 radius="xs"
                                                 onChange={(event) => setProfitShow(event.currentTarget.checked)}
-                                            />
+                                            />*/}
                                         </Grid.Col>
-                                        <Grid.Col span={2}><Center fz={'xs'} mt={'8'}
-                                            c={'red'}>{currencySymbol} {profitShow && salesProfitAmount}</Center></Grid.Col>
+                                        <Grid.Col span={2}>
+                                            {/*<Center fz={'xs'} mt={'8'} c={'red'}>
+                                                {currencySymbol} {profitShow && salesProfitAmount}
+                                            </Center>*/}
+                                        </Grid.Col>
                                         <Grid.Col span={7}><Center fz={'md'} mt={'4'} c={'red'}
                                             fw={'800'}>{returnOrDueText} {currencySymbol} {purchaseDueAmount.toFixed(2)}</Center></Grid.Col>
                                     </Grid>
@@ -542,13 +579,13 @@ function PurchaseForm(props) {
                                 <Box>
                                     <Box p={'xs'} >
                                         <SelectForm
-                                            tooltip={t('ProductUnitValidateMessage')}
+                                            tooltip={t('ChooseOrderProcess')}
                                             label=''
                                             placeholder={t('OrderProcess')}
                                             required={true}
                                             name={'order_process'}
                                             form={form}
-                                            dropdownValue={['Order', 'Process']}
+                                            dropdownValue={localStorage.getItem('order-process')?JSON.parse(localStorage.getItem('order-process')):[]}
                                             id={'order_process'}
                                             nextField={'narration'}
                                             searchable={false}
@@ -590,9 +627,18 @@ function PurchaseForm(props) {
                     </Grid>
                 </Box>
             </form>
+
+
+            {viewVendorModel && vendorData &&
+                <_VendorViewModel
+                    vendorViewModel={viewVendorModel}
+                    setVendorViewModel={setVendorViewModel}
+                    vendorObject={vendorObject}
+                />
+            }
         </>
 
     );
 }
 
-export default PurchaseForm;
+export default __PurchaseForm;

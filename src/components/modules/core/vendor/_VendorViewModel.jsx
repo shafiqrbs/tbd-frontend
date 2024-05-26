@@ -3,20 +3,16 @@ import {
     rem, Modal, List, ThemeIcon, useMantineTheme, Grid, ScrollArea, Box
 } from "@mantine/core";
 import {useTranslation} from 'react-i18next';
-import {
-    IconCircleCheck
-} from "@tabler/icons-react";
 
-import {useDispatch, useSelector} from "react-redux";
-import InputForm from "../../../form-builders/InputForm";
-import SelectForm from "../../../form-builders/SelectForm";
-import TextAreaForm from "../../../form-builders/TextAreaForm";
 
-function VendorViewModel(props) {
+function _VendorViewModel(props) {
     const {t, i18n} = useTranslation();
-    const showEntityData = useSelector((state) => state.crudSlice.showEntityData)
+    
+    let showData = {}
+    if (props.vendorObject){
+        showData = props.vendorObject
+    }
     const theme = useMantineTheme();
-    // console.log(showEntityData)
 
     const closeModel = () => {
         props.setVendorViewModel(false)
@@ -32,27 +28,27 @@ function VendorViewModel(props) {
                 <Grid columns={24}>
                     <Grid.Col span={'6'} align={'left'} fw={'600'} fz={'14'}>{t('CompanyName')}</Grid.Col>
                     <Grid.Col span={'1'}>:</Grid.Col>
-                    <Grid.Col span={'auto'}>{showEntityData && showEntityData.company_name && showEntityData.company_name}</Grid.Col>
+                    <Grid.Col span={'auto'}>{showData && showData.company_name && showData.company_name}</Grid.Col>
                 </Grid>
                 <Grid columns={24}>
                     <Grid.Col span={'6'} align={'left'} fw={'600'} fz={'14'}>{t('Name')}</Grid.Col>
                     <Grid.Col span={'1'}>:</Grid.Col>
-                    <Grid.Col span={'auto'}>{showEntityData && showEntityData.name && showEntityData.name}</Grid.Col>
+                    <Grid.Col span={'auto'}>{showData && showData.name && showData.name}</Grid.Col>
                 </Grid>
                 <Grid columns={24}>
                     <Grid.Col span={'6'} align={'left'} fw={'600'} fz={'14'}>{t('Mobile')}</Grid.Col>
                     <Grid.Col span={'1'}>:</Grid.Col>
-                    <Grid.Col span={'auto'}>{showEntityData && showEntityData.mobile && showEntityData.mobile}</Grid.Col>
+                    <Grid.Col span={'auto'}>{showData && showData.mobile && showData.mobile}</Grid.Col>
                 </Grid>
                 <Grid columns={24}>
                     <Grid.Col span={'6'} align={'left'} fw={'600'} fz={'14'}>{t('Email')}</Grid.Col>
                     <Grid.Col span={'1'}>:</Grid.Col>
-                    <Grid.Col span={'auto'}>{showEntityData && showEntityData.email && showEntityData.email}</Grid.Col>
+                    <Grid.Col span={'auto'}>{showData && showData.email && showData.email}</Grid.Col>
                 </Grid>
                 <Grid columns={24}>
                     <Grid.Col span={'6'} align={'left'} fw={'600'} fz={'14'}>{t('Address')}</Grid.Col>
                     <Grid.Col span={'1'}>:</Grid.Col>
-                    <Grid.Col span={'auto'}>{showEntityData && showEntityData.address && showEntityData.address}</Grid.Col>
+                    <Grid.Col span={'auto'}>{showData && showData.address && showData.address}</Grid.Col>
                 </Grid>
             </Box>
         </Modal>
@@ -60,4 +56,4 @@ function VendorViewModel(props) {
     );
 }
 
-export default VendorViewModel;
+export default _VendorViewModel;
