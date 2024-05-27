@@ -61,7 +61,7 @@ function PurchaseTable() {
         </Table.Tr>
     ));
 
-    useEffect(() => {
+    /*useEffect(() => {
         const value = {
             url: 'inventory/purchase',
             param: {
@@ -71,7 +71,7 @@ function PurchaseTable() {
             }
         }
         dispatch(getIndexEntityData(value))
-    }, [fetching]);
+    }, [fetching]);*/
 
 
     return (

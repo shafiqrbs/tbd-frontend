@@ -1,5 +1,5 @@
 git status
 git add .
-git commit -m "Check git pusher"
+git commit -m "purchase index update"
 git pull origin main
 git push origin main
