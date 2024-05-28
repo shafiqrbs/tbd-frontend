@@ -179,7 +179,7 @@ function CustomerForm() {
                                                         >
 
                                                             <Flex direction={`column`} gap={0}>
-                                                                <Text fz={14}  fw={400}>
+                                                                <Text fz={14} fw={400}>
                                                                     {t("CreateAndSave")}
                                                                 </Text>
                                                             </Flex>
@@ -228,8 +228,8 @@ function CustomerForm() {
                                                             <Tooltip
                                                                 ta="center"
                                                                 multiline
-                                                                w={280}
-                                                                offset={{ crossAxis: '-100', mainAxis: '5' }}
+                                                                bg={'orange.8'}
+                                                                offset={{ crossAxis: '-110', mainAxis: '5' }}
                                                                 withArrow
                                                                 transitionProps={{ duration: 200 }}
                                                                 label={t('QuickCustomerGroup')}
@@ -242,7 +242,7 @@ function CustomerForm() {
 
                                                     </Grid.Col>
                                                     {opened &&
-                                                    <CustomerGroupModel openedModel={opened} open={open} close={close} />
+                                                        <CustomerGroupModel openedModel={opened} open={open} close={close} />
                                                     }
                                                 </Grid>
                                             </Box>

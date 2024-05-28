@@ -240,7 +240,9 @@ function ProductForm() {
                                                     <Box pt={'xl'}>
                                                         <Tooltip
                                                             multiline
-                                                            w={420}
+                                                            ta={'center'}
+                                                            bg={'orange.8'}
+                                                            offset={{ crossAxis: '-90', mainAxis: '5' }}
                                                             withArrow
                                                             transitionProps={{ duration: 200 }}
                                                             label={t('QuickCategory')}
@@ -387,7 +389,9 @@ function ProductForm() {
                                                     <Box pt={'xl'} >
                                                         <Tooltip
                                                             multiline
-                                                            w={420}
+                                                            ta={'center'}
+                                                            bg={'orange.8'}
+                                                            offset={{ crossAxis: '-80', mainAxis: '5' }}
                                                             withArrow
                                                             transitionProps={{ duration: 200 }}
                                                             label={t('QuickBrand')}

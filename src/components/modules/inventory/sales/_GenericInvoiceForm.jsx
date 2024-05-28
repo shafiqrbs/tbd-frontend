@@ -29,7 +29,7 @@ import tableCss from "../../../../assets/css/Table.module.css";
 import storeDataIntoLocalStorage from "../../../global-hook/local-storage/storeDataIntoLocalStorage.js";
 
 function _GenericInvoiceForm(props) {
-    const { currencySymbol, allowZeroPercentage,domainId,isSMSActive,isZeroReceiveAllow } = props
+    const { currencySymbol, allowZeroPercentage, domainId, isSMSActive, isZeroReceiveAllow } = props
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
@@ -47,7 +47,7 @@ function _GenericInvoiceForm(props) {
 
     const [stockProductRestore, setStockProductRestore] = useState(false)
     useEffect(() => {
-        if (stockProductRestore){
+        if (stockProductRestore) {
             const local = storeDataIntoLocalStorage(JSON.parse(localStorage.getItem('user')).id)
         }
     }, [stockProductRestore])
@@ -541,6 +541,8 @@ function _GenericInvoiceForm(props) {
                                                                 bg={'orange.8'}
                                                                 position="top"
                                                                 withArrow
+                                                                ta={'center'}
+                                                                offset={{ crossAxis: '-50', mainAxis: '5' }}
                                                                 transitionProps={{ duration: 200 }}
                                                                 label={t('InstantProductCreate')}
                                                             >
@@ -671,7 +673,7 @@ function _GenericInvoiceForm(props) {
                                                                                 fullWidth
                                                                                 id=""
                                                                                 comboboxProps={{ withinPortal: false }}
-                                                                                onClick={()=>{
+                                                                                onClick={() => {
                                                                                     productAddedForm.reset()
                                                                                     setCategoryData(null)
                                                                                     setProductTypeData(null)

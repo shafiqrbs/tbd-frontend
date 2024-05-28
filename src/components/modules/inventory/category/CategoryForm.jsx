@@ -170,7 +170,9 @@ function CategoryForm() {
                                                         <Box pt={'xl'}>
                                                             <Tooltip
                                                                 multiline
-                                                                w={420}
+                                                                ta={'center'}
+                                                                bg={'orange.8'}
+                                                                offset={{ crossAxis: '-95', mainAxis: '5' }}
                                                                 withArrow
                                                                 transitionProps={{ duration: 200 }}
                                                                 label={t('CreateCategoryGroup')}

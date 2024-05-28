@@ -31,7 +31,7 @@ import tableCss from "../../../../assets/css/Table.module.css";
 import __PurchaseForm from "./__PurchaseForm.jsx";
 
 function _GenericInvoiceForm(props) {
-    const { currencySymbol, allowZeroPercentage,isPurchaseByPurchasePrice } = props
+    const { currencySymbol, allowZeroPercentage, isPurchaseByPurchasePrice } = props
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
@@ -95,7 +95,7 @@ function _GenericInvoiceForm(props) {
             }
             return acc;
         }, myCardProducts);
-        updateLocalStorageAndResetForm(addProducts,'productId');
+        updateLocalStorageAndResetForm(addProducts, 'productId');
     }
 
     /**
@@ -110,7 +110,7 @@ function _GenericInvoiceForm(props) {
                 }
                 return acc;
             }, myCardProducts);
-            updateLocalStorageAndResetForm(addProducts,'barcode');
+            updateLocalStorageAndResetForm(addProducts, 'barcode');
         } else {
             notifications.show({
                 loading: true,
@@ -126,7 +126,7 @@ function _GenericInvoiceForm(props) {
     /**
      * Updates local storage with new products, resets form, and sets focus on the product search.
      */
-    function updateLocalStorageAndResetForm(addProducts,type) {
+    function updateLocalStorageAndResetForm(addProducts, type) {
         localStorage.setItem('temp-purchase-products', JSON.stringify(addProducts));
         setSearchValue('');
         form.reset();
@@ -134,7 +134,7 @@ function _GenericInvoiceForm(props) {
         setFocusIntoProductSearch(true)
         if (type == 'productId') {
             document.getElementById('product_id').focus();
-        }else {
+        } else {
             document.getElementById('barcode').focus();
         }
     }
@@ -250,9 +250,9 @@ function _GenericInvoiceForm(props) {
         if (!isNaN(quantity) && !isNaN(subTotal) && quantity > 0 && subTotal >= 0) {
             setSelectProductDetails(prevDetails => ({
                 ...prevDetails,
-                purchase_price: subTotal/quantity,
+                purchase_price: subTotal / quantity,
             }));
-            form.setFieldValue('purchase_price', subTotal/quantity);
+            form.setFieldValue('purchase_price', subTotal / quantity);
         }
     }, [form.values.sub_total]);
     /*END SUBTOTAL WISE PURCHASE PRICE*/
@@ -351,7 +351,7 @@ function _GenericInvoiceForm(props) {
                                                     label=''
                                                     placeholder={t('Quantity')}
                                                     required={true}
-                                                    nextField={!isPurchaseByPurchasePrice?'sub_total':'purchase_price'}
+                                                    nextField={!isPurchaseByPurchasePrice ? 'sub_total' : 'purchase_price'}
                                                     form={form}
                                                     name={'quantity'}
                                                     id={'quantity'}
@@ -389,7 +389,7 @@ function _GenericInvoiceForm(props) {
                                                     type={'number'}
                                                     rightSection={inputGroupCurrency}
                                                     closeIcon={false}
-                                                    disabled={isPurchaseByPurchasePrice?true:false}
+                                                    disabled={isPurchaseByPurchasePrice ? true : false}
                                                 />
                                             </Grid.Col>
                                             <Grid.Col span={2}>
@@ -426,7 +426,9 @@ function _GenericInvoiceForm(props) {
                                                         <Popover.Target>
                                                             <Tooltip
                                                                 multiline
-                                                                w={420}
+                                                                ta={'center'}
+                                                                bg={'orange.8'}
+                                                                offset={{ crossAxis: '-40', mainAxis: '5' }}
                                                                 withArrow
                                                                 transitionProps={{ duration: 200 }}
                                                                 label={t('InstantProductCreate')}

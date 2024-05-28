@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import {
     Button, rem, Center, Switch, ActionIcon,
-    Grid, Box, ScrollArea, Tooltip, Group, Text, Popover, Flex,Notification
+    Grid, Box, ScrollArea, Tooltip, Group, Text, Popover, Flex, Notification
 } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
 import {
@@ -26,7 +26,7 @@ import { isNotEmpty, useForm } from "@mantine/form";
 import SelectForm from "../../../form-builders/SelectForm";
 import TextAreaForm from "../../../form-builders/TextAreaForm";
 
-import {storeEntityData,} from "../../../../store/inventory/crudSlice.js";
+import { storeEntityData, } from "../../../../store/inventory/crudSlice.js";
 import { getTransactionModeData } from "../../../../store/accounting/utilitySlice.js";
 import InputNumberForm from "../../../form-builders/InputNumberForm";
 import InputButtonForm from "../../../form-builders/InputButtonForm";
@@ -41,12 +41,12 @@ import getSettingOrderProcessDropdownData from "../../../global-hook/dropdown/ge
 
 function __SalesForm(props) {
 
-    const { currencySymbol,domainId,isSMSActive,isZeroReceiveAllow } = props
+    const { currencySymbol, domainId, isSMSActive, isZeroReceiveAllow } = props
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
 
-    const transactionModeData = JSON.parse(localStorage.getItem('accounting-transaction-mode'))?JSON.parse(localStorage.getItem('accounting-transaction-mode')):[];
+    const transactionModeData = JSON.parse(localStorage.getItem('accounting-transaction-mode')) ? JSON.parse(localStorage.getItem('accounting-transaction-mode')) : [];
 
     const [salesSubTotalAmount, setSalesSubTotalAmount] = useState(0);
     const [salesProfitAmount, setSalesProfitAmount] = useState(0);
@@ -55,7 +55,7 @@ function __SalesForm(props) {
     const [salesTotalAmount, setSalesTotalAmount] = useState(0);
     const [salesDueAmount, setSalesDueAmount] = useState(props.salesSubTotalAmount);
     const [hoveredModeId, setHoveredModeId] = useState(false);
-    const [isShowSMSPackageModel,setIsShowSMSPackageModel] = useState(false)
+    const [isShowSMSPackageModel, setIsShowSMSPackageModel] = useState(false)
 
     const formHeight = mainAreaHeight - 268; //TabList height 104
     const [customerViewModel, setCustomerViewModel] = useState(false);
@@ -64,8 +64,8 @@ function __SalesForm(props) {
     const [tempCardProducts, setTempCardProducts] = useState([])
     const [loadCardProducts, setLoadCardProducts] = useState(false)
     const [discountType, setDiscountType] = useToggle(['Flat', 'Percent']);
-    const [invoicePrintData,setInvoicePrintData] = useState(null)
-    const [invoicePrintForSave,setInvoicePrintForSave] = useState(false)
+    const [invoicePrintData, setInvoicePrintData] = useState(null)
+    const [invoicePrintForSave, setInvoicePrintForSave] = useState(false)
 
 
     useEffect(() => {
@@ -121,8 +121,8 @@ function __SalesForm(props) {
         setSalesDiscountAmount(discountAmount);
 
         let returnOrDueAmount = 0;
-        let receiveAmount = form.values.receive_amount==''?0:form.values.receive_amount
-        if (receiveAmount>=0) {
+        let receiveAmount = form.values.receive_amount == '' ? 0 : form.values.receive_amount
+        if (receiveAmount >= 0) {
             const text = salesTotalAmount < receiveAmount ? 'Return' : 'Due';
             setReturnOrDueText(text);
             returnOrDueAmount = salesTotalAmount - receiveAmount;
@@ -151,27 +151,27 @@ function __SalesForm(props) {
     /*START ALL LOCAL STORAGE DATA RESTORE*/
     const [stockProductRestore, setStockProductRestore] = useState(false)
     useEffect(() => {
-        if (stockProductRestore){
+        if (stockProductRestore) {
             const local = storeDataIntoLocalStorage(JSON.parse(localStorage.getItem('user')).id)
         }
     }, [stockProductRestore])
     /*END ALL LOCAL STORAGE DATA RESTORE*/
 
     /*START GET CUSTOMER DROPDOWN FROM LOCAL STORAGE*/
-    const [customersDropdownData,setCustomersDropdownData] = useState([])
-    const [refreshCustomerDropdown,setRefreshCustomerDropdown] = useState(false)
-    const [defaultCustomerId,setDefaultCustomerId] = useState(null)
+    const [customersDropdownData, setCustomersDropdownData] = useState([])
+    const [refreshCustomerDropdown, setRefreshCustomerDropdown] = useState(false)
+    const [defaultCustomerId, setDefaultCustomerId] = useState(null)
 
     useEffect(() => {
         let coreCustomers = localStorage.getItem('core-customers');
-        coreCustomers = coreCustomers?JSON.parse(coreCustomers):[]
+        coreCustomers = coreCustomers ? JSON.parse(coreCustomers) : []
         let defaultId = defaultCustomerId;
         if (coreCustomers && coreCustomers.length > 0) {
             const transformedData = coreCustomers.map(type => {
                 if (type.name === 'Default') {
                     defaultId = type.id;
                 }
-                return ({'label': type.mobile+' -- '+type.name, 'value': String(type.id)})
+                return ({ 'label': type.mobile + ' -- ' + type.name, 'value': String(type.id) })
             });
 
             setCustomersDropdownData(transformedData);
@@ -182,12 +182,12 @@ function __SalesForm(props) {
     /*END GET CUSTOMER DROPDOWN FROM LOCAL STORAGE*/
 
     /*START GET SALES BY / USERS DROPDOWN FROM LOCAL STORAGE*/
-    const [salesByDropdownData,setSalesByDropdownData] = useState([])
+    const [salesByDropdownData, setSalesByDropdownData] = useState([])
     useEffect(() => {
-        let coreUsers = localStorage.getItem('core-users')?JSON.parse(localStorage.getItem('core-users')):[];
+        let coreUsers = localStorage.getItem('core-users') ? JSON.parse(localStorage.getItem('core-users')) : [];
         if (coreUsers && coreUsers.length > 0) {
             const transformedData = coreUsers.map(type => {
-                return ({'label': type.username+' - '+type.email, 'value': String(type.id)})
+                return ({ 'label': type.username + ' - ' + type.email, 'value': String(type.id) })
             });
             setSalesByDropdownData(transformedData);
         }
@@ -199,7 +199,7 @@ function __SalesForm(props) {
         if (transactionModeData && transactionModeData.length > 0) {
             for (let mode of transactionModeData) {
                 if (mode.is_selected) {
-                    form.setFieldValue('transaction_mode_id', form.values.transaction_mode_id?form.values.transaction_mode_id:mode.id);
+                    form.setFieldValue('transaction_mode_id', form.values.transaction_mode_id ? form.values.transaction_mode_id : mode.id);
                     break;
                 }
             }
@@ -208,8 +208,8 @@ function __SalesForm(props) {
     /*END FOR TRANSACTION MODE DEFAULT SELECT*/
 
     /*START FOR SUBMIT Disabled*/
-        const isDefaultCustomer = !customerData || customerData == defaultCustomerId;
-        const isDisabled = isDefaultCustomer && (isZeroReceiveAllow ? false : salesDueAmount > 0);
+    const isDefaultCustomer = !customerData || customerData == defaultCustomerId;
+    const isDisabled = isDefaultCustomer && (isZeroReceiveAllow ? false : salesDueAmount > 0);
     /*END FOR SUBMIT Disabled*/
 
     /*START GET CUSTOMER DATA FROM LOCAL STORAGE*/
@@ -251,7 +251,7 @@ function __SalesForm(props) {
     return (
         <>
             {
-                domainId=='359' && invoicePrintForSave &&
+                domainId == '359' && invoicePrintForSave &&
                 <_InvoiceForDomain359
                     invoicePrintData={invoicePrintData}
                     setInvoicePrintData={setInvoicePrintData}
@@ -281,7 +281,7 @@ function __SalesForm(props) {
                 });
 
                 const formValue = {}
-                formValue['customer_id'] = form.values.customer_id?form.values.customer_id:defaultCustomerId;
+                formValue['customer_id'] = form.values.customer_id ? form.values.customer_id : defaultCustomerId;
                 formValue['sub_total'] = salesSubTotalAmount;
                 formValue['transaction_mode_id'] = form.values.transaction_mode_id;
                 formValue['discount_type'] = discountType;
@@ -308,7 +308,7 @@ function __SalesForm(props) {
                         ? salesTotalAmount
                         : 0);
 
-                if (items && items.length>0){
+                if (items && items.length > 0) {
                     setInvoicePrintData(formValue)
                     setInvoicePrintForSave(true)
 
@@ -345,7 +345,7 @@ function __SalesForm(props) {
                         document.body.innerHTML = originalContents;
                         window.location.reload()
                     }, 200);
-                }else {
+                } else {
                     notifications.show({
                         color: 'red',
                         title: t('PleaseChooseItems'),
@@ -397,7 +397,9 @@ function __SalesForm(props) {
                                                         <Tooltip
                                                             multiline
                                                             bg={'orange.8'}
+                                                            offset={{ crossAxis: '-52', mainAxis: '5' }}
                                                             position="top"
+                                                            ta={'center'}
                                                             withArrow
                                                             transitionProps={{ duration: 200 }}
                                                             label={t('InstantCustomerCreate')}
@@ -514,12 +516,12 @@ function __SalesForm(props) {
                                     </Grid>
                                 </Box>
                                 <Box>
-                                    <Grid gutter={{ base: 6 }} bg={'red.1'}  pb={'3'}  pt={'3'} >
+                                    <Grid gutter={{ base: 6 }} bg={'red.1'} pb={'3'} pt={'3'} >
                                         <Grid.Col span={6}>
                                             <Box pl={'md'}>
                                                 <Text fz={'md'} order={1} fw={'800'}>
-                                                    {currencySymbol+" "}
-                                                    {(customerData && customerObject && customerData != defaultCustomerId? Number(customerObject.balance).toFixed(2) : "0.00")}
+                                                    {currencySymbol + " "}
+                                                    {(customerData && customerObject && customerData != defaultCustomerId ? Number(customerObject.balance).toFixed(2) : "0.00")}
                                                 </Text>
                                                 <Text fz={'xs'} c="dimmed" >{t('Outstanding')}</Text>
                                             </Box>
@@ -531,54 +533,57 @@ function __SalesForm(props) {
                                                         multiline
                                                         bg={'orange.8'}
                                                         position="top"
+                                                        ta={'center'}
                                                         withArrow
                                                         transitionProps={{ duration: 200 }}
-                                                        label={customerData && customerData != defaultCustomerId?(isSMSActive?t('SendSms'):t('PleasePurchaseAsmsPackage')):t('ChooseCustomer')}
+                                                        label={customerData && customerData != defaultCustomerId ? (isSMSActive ? t('SendSms') : t('PleasePurchaseAsmsPackage')) : t('ChooseCustomer')}
                                                     >
-                                                    <ActionIcon
-                                                        bg={'white'}
-                                                        variant="outline"
-                                                        color={'red'}
-                                                        disabled={!customerData || customerData == defaultCustomerId}
-                                                        onClick={(e)=>{
-                                                            if (isSMSActive) {
-                                                                notifications.show({
-                                                                    withCloseButton: true,
-                                                                    autoClose: 1000,
-                                                                    title: t('smsSendSuccessfully'),
-                                                                    message: t('smsSendSuccessfully'),
-                                                                    icon: <IconTallymark1 />,
-                                                                    className: 'my-notification-class',
-                                                                    style: {  },
-                                                                    loading: true,
-                                                                })
-                                                            }else {
-                                                                setIsShowSMSPackageModel(true)
-                                                            }
-                                                        }}
-                                                    >
-                                                        <IconMessage size={18} stroke={1.5} />
-                                                    </ActionIcon>
+                                                        <ActionIcon
+                                                            bg={'white'}
+                                                            variant="outline"
+                                                            color={'red'}
+                                                            disabled={!customerData || customerData == defaultCustomerId}
+                                                            onClick={(e) => {
+                                                                if (isSMSActive) {
+                                                                    notifications.show({
+                                                                        withCloseButton: true,
+                                                                        autoClose: 1000,
+                                                                        title: t('smsSendSuccessfully'),
+                                                                        message: t('smsSendSuccessfully'),
+                                                                        icon: <IconTallymark1 />,
+                                                                        className: 'my-notification-class',
+                                                                        style: {},
+                                                                        loading: true,
+                                                                    })
+                                                                } else {
+                                                                    setIsShowSMSPackageModel(true)
+                                                                }
+                                                            }}
+                                                        >
+                                                            <IconMessage size={18} stroke={1.5} />
+                                                        </ActionIcon>
                                                     </Tooltip>
                                                     <Tooltip
                                                         multiline
                                                         bg={'orange.8'}
                                                         position="top"
                                                         withArrow
+                                                        offset={{ crossAxis: '-45', mainAxis: '5' }}
+                                                        ta={'center'}
                                                         transitionProps={{ duration: 200 }}
-                                                        label={customerData && customerData != defaultCustomerId?t('CustomerDetails'):t('ChooseCustomer')}
+                                                        label={customerData && customerData != defaultCustomerId ? t('CustomerDetails') : t('ChooseCustomer')}
                                                     >
-                                                    <ActionIcon
-                                                        variant="filled"
-                                                        color={'red'}
-                                                        disabled={!customerData || customerData == defaultCustomerId}
-                                                        onClick={setCustomerViewModel}
-                                                    >
-                                                        <IconEyeEdit
-                                                            size={18}
-                                                            stroke={1.5}
-                                                        />
-                                                    </ActionIcon>
+                                                        <ActionIcon
+                                                            variant="filled"
+                                                            color={'red'}
+                                                            disabled={!customerData || customerData == defaultCustomerId}
+                                                            onClick={setCustomerViewModel}
+                                                        >
+                                                            <IconEyeEdit
+                                                                size={18}
+                                                                stroke={1.5}
+                                                            />
+                                                        </ActionIcon>
                                                     </Tooltip>
 
                                                 </Group>
@@ -638,56 +643,56 @@ function __SalesForm(props) {
                             <ScrollArea h={formHeight} scrollbarSize={2} type="never" bg={'gray.1'}>
                                 <Box pl={'xs'} pt={'xs'} pr={'xs'} bg={`white`}>
 
-                                        <Grid columns={'16'} gutter="6">
+                                    <Grid columns={'16'} gutter="6">
 
-                                            {
-                                                (transactionModeData && transactionModeData.length > 0) && transactionModeData.map((mode, index) => {
-                                                    return (
-                                                        <Grid.Col span={4}>
-                                                            <Box bg={'gray.1'} h={'82'}>
-                                                                <input
-                                                                    type="radio"
-                                                                    name="transaction_mode_id"
-                                                                    id={'transaction_mode_id_' + mode.id}
-                                                                    className="input-hidden"
-                                                                    value={mode.id}
-                                                                    onChange={(e) => {
-                                                                        form.setFieldValue('transaction_mode_id', e.currentTarget.value)
-                                                                        form.setFieldError('transaction_mode_id', null)
+                                        {
+                                            (transactionModeData && transactionModeData.length > 0) && transactionModeData.map((mode, index) => {
+                                                return (
+                                                    <Grid.Col span={4}>
+                                                        <Box bg={'gray.1'} h={'82'}>
+                                                            <input
+                                                                type="radio"
+                                                                name="transaction_mode_id"
+                                                                id={'transaction_mode_id_' + mode.id}
+                                                                className="input-hidden"
+                                                                value={mode.id}
+                                                                onChange={(e) => {
+                                                                    form.setFieldValue('transaction_mode_id', e.currentTarget.value)
+                                                                    form.setFieldError('transaction_mode_id', null)
+                                                                }}
+                                                                defaultChecked={mode.is_selected ? true : false}
+                                                            />
+                                                            <Tooltip
+                                                                label={mode.name}
+                                                                opened={hoveredModeId === mode.id}
+                                                                position="top"
+                                                                bg={'orange.8'}
+                                                                offset={12}
+                                                                withArrow
+                                                                arrowSize={8}
+                                                            >
+                                                                <label
+                                                                    htmlFor={'transaction_mode_id_' + mode.id}
+                                                                    onMouseEnter={() => {
+                                                                        setHoveredModeId(mode.id)
                                                                     }}
-                                                                    defaultChecked={mode.is_selected?true:false}
-                                                                />
-                                                                <Tooltip
-                                                                    label={mode.name}
-                                                                    opened={hoveredModeId === mode.id}
-                                                                    position="top"
-                                                                    bg={'orange.8'}
-                                                                    offset={12}
-                                                                    withArrow
-                                                                    arrowSize={8}
+                                                                    onMouseLeave={() => {
+                                                                        setHoveredModeId(null)
+                                                                    }}
                                                                 >
-                                                                    <label
-                                                                        htmlFor={'transaction_mode_id_' + mode.id}
-                                                                        onMouseEnter={() => {
-                                                                            setHoveredModeId(mode.id)
-                                                                        }}
-                                                                        onMouseLeave={() => {
-                                                                            setHoveredModeId(null)
-                                                                        }}
-                                                                    >
-                                                                        <img
-                                                                            src={isOnline?mode.path:'/images/transaction-mode-offline.jpg'}
-                                                                            alt={mode.method_name}
-                                                                        />
-                                                                        <Center fz={'xs'} className={'textColor'} >{mode.authorized_name}</Center>
-                                                                    </label>
-                                                                </Tooltip>
-                                                            </Box>
-                                                        </Grid.Col>
-                                                    );
-                                                })}
+                                                                    <img
+                                                                        src={isOnline ? mode.path : '/images/transaction-mode-offline.jpg'}
+                                                                        alt={mode.method_name}
+                                                                    />
+                                                                    <Center fz={'xs'} className={'textColor'} >{mode.authorized_name}</Center>
+                                                                </label>
+                                                            </Tooltip>
+                                                        </Box>
+                                                    </Grid.Col>
+                                                );
+                                            })}
 
-                                        </Grid>
+                                    </Grid>
 
 
                                 </Box>
@@ -709,7 +714,7 @@ function __SalesForm(props) {
                                         </Grid.Col>
                                         <Grid.Col span={2}>
                                             <Center fz={'md'} mt={'4'}
-                                            c={'black.5'}>{currencySymbol} {profitShow && salesProfitAmount}</Center>
+                                                c={'black.5'}>{currencySymbol} {profitShow && salesProfitAmount}</Center>
                                         </Grid.Col>
                                         <Grid.Col span={8}>
                                             <Box fz={'xl'} pr={'8'} mt={'4'} c={'red'} style={{ textAlign: 'right', float: 'right' }} fw={'800'}>
@@ -793,7 +798,7 @@ function __SalesForm(props) {
                                             required={true}
                                             name={'order_process'}
                                             form={form}
-                                            dropdownValue={localStorage.getItem('order-process')?JSON.parse(localStorage.getItem('order-process')):[]}
+                                            dropdownValue={localStorage.getItem('order-process') ? JSON.parse(localStorage.getItem('order-process')) : []}
                                             id={'order_process'}
                                             nextField={'narration'}
                                             searchable={false}
@@ -858,7 +863,7 @@ function __SalesForm(props) {
                                         fullWidth
                                         type={'submit'}
                                         variant="filled"
-                                        leftSection={<IconDeviceFloppy size={14}/>}
+                                        leftSection={<IconDeviceFloppy size={14} />}
                                         color="cyan.5"
                                         disabled={isDisabled}
                                         style={{

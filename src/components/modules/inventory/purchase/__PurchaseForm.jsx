@@ -23,7 +23,7 @@ import { hasLength, isNotEmpty, useForm } from "@mantine/form";
 import SelectForm from "../../../form-builders/SelectForm";
 import TextAreaForm from "../../../form-builders/TextAreaForm";
 
-import { storeEntityData} from "../../../../store/inventory/crudSlice.js";
+import { storeEntityData } from "../../../../store/inventory/crudSlice.js";
 import InputNumberForm from "../../../form-builders/InputNumberForm";
 import InputButtonForm from "../../../form-builders/InputButtonForm";
 import InputForm from "../../../form-builders/InputForm";
@@ -35,7 +35,7 @@ function __PurchaseForm(props) {
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
-    const transactionModeData = JSON.parse(localStorage.getItem('accounting-transaction-mode'))?JSON.parse(localStorage.getItem('accounting-transaction-mode')):[];
+    const transactionModeData = JSON.parse(localStorage.getItem('accounting-transaction-mode')) ? JSON.parse(localStorage.getItem('accounting-transaction-mode')) : [];
 
 
     const [purchaseSubTotalAmount, setPurchaseSubTotalAmount] = useState(0);
@@ -78,16 +78,16 @@ function __PurchaseForm(props) {
     const [orderProcess, setOrderProcess] = useState(null);
 
     /*START GET VENDOR DROPDOWN FROM LOCAL STORAGE*/
-    const [vendorsDropdownData,setVendorsDropdownData] = useState([])
-    const [refreshVendorDropdown,setRefreshVendorDropdown] = useState(false)
+    const [vendorsDropdownData, setVendorsDropdownData] = useState([])
+    const [refreshVendorDropdown, setRefreshVendorDropdown] = useState(false)
 
     useEffect(() => {
         let coreVendors = localStorage.getItem('core-vendors');
-        coreVendors = coreVendors?JSON.parse(coreVendors):[]
+        coreVendors = coreVendors ? JSON.parse(coreVendors) : []
 
         if (coreVendors && coreVendors.length > 0) {
             const transformedData = coreVendors.map(type => {
-                return ({'label': type.mobile+' -- '+type.name, 'value': String(type.id)})
+                return ({ 'label': type.mobile + ' -- ' + type.name, 'value': String(type.id) })
             });
             setVendorsDropdownData(transformedData);
         }
@@ -116,7 +116,7 @@ function __PurchaseForm(props) {
         if (transactionModeData && transactionModeData.length > 0) {
             for (let mode of transactionModeData) {
                 if (mode.is_selected) {
-                    form.setFieldValue('transaction_mode_id', form.values.transaction_mode_id?form.values.transaction_mode_id:mode.id);
+                    form.setFieldValue('transaction_mode_id', form.values.transaction_mode_id ? form.values.transaction_mode_id : mode.id);
                     break;
                 }
             }
@@ -152,8 +152,8 @@ function __PurchaseForm(props) {
         setPurchaseDiscountAmount(discountAmount);
 
         let returnOrDueAmount = 0;
-        let receiveAmount = form.values.receive_amount==''?0:form.values.receive_amount
-        if (receiveAmount>=0) {
+        let receiveAmount = form.values.receive_amount == '' ? 0 : form.values.receive_amount
+        if (receiveAmount >= 0) {
             const text = purchaseTotalAmount < receiveAmount ? 'Return' : 'Due';
             setReturnOrDueText(text);
             returnOrDueAmount = purchaseTotalAmount - receiveAmount;
@@ -268,7 +268,9 @@ function __PurchaseForm(props) {
                                                     <Popover.Target>
                                                         <Tooltip
                                                             multiline
-                                                            w={420}
+                                                            bg={'orange.8'}
+                                                            ta={'center'}
+                                                            offset={{ crossAxis: '-45', mainAxis: '5' }}
                                                             withArrow
                                                             transitionProps={{ duration: 200 }}
                                                             label={t('InstantCustomerCreate')}
@@ -368,7 +370,7 @@ function __PurchaseForm(props) {
                                                         position="top"
                                                         withArrow
                                                         transitionProps={{ duration: 200 }}
-                                                        label={vendorData ?t('VendorDetails'):t('ChooseVendor')}
+                                                        label={vendorData ? t('VendorDetails') : t('ChooseVendor')}
                                                     >
                                                         <ActionIcon
                                                             variant="filled"
@@ -468,7 +470,7 @@ function __PurchaseForm(props) {
                                                                         form.setFieldValue('transaction_mode_id', e.currentTarget.value)
                                                                         form.setFieldError('transaction_mode_id', null)
                                                                     }}
-                                                                    defaultChecked={mode.is_selected?true:false}
+                                                                    defaultChecked={mode.is_selected ? true : false}
                                                                 />
                                                                 <Tooltip
                                                                     label={mode.name}
@@ -585,7 +587,7 @@ function __PurchaseForm(props) {
                                             required={true}
                                             name={'order_process'}
                                             form={form}
-                                            dropdownValue={localStorage.getItem('order-process')?JSON.parse(localStorage.getItem('order-process')):[]}
+                                            dropdownValue={localStorage.getItem('order-process') ? JSON.parse(localStorage.getItem('order-process')) : []}
                                             id={'order_process'}
                                             nextField={'narration'}
                                             searchable={false}
