@@ -20,10 +20,10 @@ import InputForm from "../../../form-builders/InputForm";
 import SelectForm from "../../../form-builders/SelectForm";
 import SwitchForm from "../../../form-builders/SwitchForm";
 import { getBrandDropdown, getCategoryDropdown } from "../../../../store/inventory/utilitySlice";
-import { getSettingDropdown, getProductUnitDropdown } from "../../../../store/utility/utilitySlice.js";
-
 import { setFetching, storeEntityData } from "../../../../store/inventory/crudSlice.js";
-import getSettingProductDropdownData from "../../../global-hook/dropdown/getSettingProductDropdownData.js";
+import getSettingProductTypeDropdownData from "../../../global-hook/dropdown/getSettingProductTypeDropdownData.js";
+import getSettingProductUnitDropdownData from "../../../global-hook/dropdown/getSettingProductUnitDropdownData.js";
+import getSettingCategoryDropdownData from "../../../global-hook/dropdown/getSettingCategoryDropdownData.js";
 
 function ProductForm() {
     const { t, i18n } = useTranslation();
@@ -34,24 +34,9 @@ function ProductForm() {
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
 
     const [categoryData, setCategoryData] = useState(null);
-    const categoryDropdownData = useSelector((state) => state.inventoryUtilitySlice.categoryDropdownData)
-    const dropdownLoad = useSelector((state) => state.inventoryCrudSlice.dropdownLoad)
-
-    let categoryDropdown = categoryDropdownData && categoryDropdownData.length > 0 ?
-        categoryDropdownData.map((type, index) => {
-            return ({ 'label': type.name, 'value': String(type.id) })
-        }) : []
-    useEffect(() => {
-        const value = {
-            url: 'inventory/select/category',
-            param: {
-                type: 'parent'
-            }
-        }
-        dispatch(getCategoryDropdown(value))
-    }, [dropdownLoad]);
-
     const [brandData, setBrandData] = useState(null);
+
+
     const brandDropdownData = useSelector((state) => state.inventoryUtilitySlice.brandDropdownData)
     const dropdownBrandLoad = useSelector((state) => state.inventoryCrudSlice.dropdownLoad)
     let brandDropdown = brandDropdownData && brandDropdownData.length > 0 ?
@@ -66,21 +51,8 @@ function ProductForm() {
     }, [dropdownBrandLoad]);
 
     const [productTypeData, setProductTypeData] = useState(null);
-    const productTypeDropdownData = useSelector((state) => state.utilityUtilitySlice.settingDropdown)
-    let productTypeDropdown = getSettingProductDropdownData()
-
     const [productUnitData, setProductUnitData] = useState(null);
-    const productUnitDropdownData = useSelector((state) => state.utilityUtilitySlice.productUnitDropdown)
-    let productUnitDropdown = productUnitDropdownData && productUnitDropdownData.length > 0 ?
-        productUnitDropdownData.map((type, index) => {
-            return ({ 'label': type.name, 'value': String(type.id) })
-        }) : []
-    useEffect(() => {
-        const value = {
-            url: 'utility/select/product-unit'
-        }
-        dispatch(getProductUnitDropdown(value))
-    }, []);
+
 
     const form = useForm({
         initialValues: {
@@ -205,7 +177,7 @@ function ProductForm() {
                                                 required={true}
                                                 name={'product_type_id'}
                                                 form={form}
-                                                dropdownValue={productTypeDropdown}
+                                                dropdownValue={getSettingProductTypeDropdownData()}
                                                 mt={0}
                                                 id={'product_type_id'}
                                                 nextField={'category_id'}
@@ -225,7 +197,7 @@ function ProductForm() {
                                                             required={true}
                                                             name={'category_id'}
                                                             form={form}
-                                                            dropdownValue={categoryDropdown}
+                                                            dropdownValue={getSettingCategoryDropdownData()}
                                                             mt={8}
                                                             id={'category_id'}
                                                             nextField={'name'}
@@ -356,7 +328,7 @@ function ProductForm() {
                                                             required={true}
                                                             name={'unit_id'}
                                                             form={form}
-                                                            dropdownValue={productUnitDropdown}
+                                                            dropdownValue={getSettingProductUnitDropdownData()}
                                                             mt={8}
                                                             id={'unit_id'}
                                                             nextField={'brand_id'}

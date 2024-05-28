@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress.js";
 import getConfigData from "../../../global-hook/config-data/getConfigData.js";
 import _SalesPurchaseHeaderNavbar from "../configuraton/_SalesPurchaseHeaderNavbar.jsx";
-import PurchaseTable from "./PurchaseTable";
+import _PurchaseTable from "./_PurchaseTable.jsx";
 
 function PurchaseIndex() {
     const { t, i18n } = useTranslation();
@@ -35,7 +35,7 @@ function PurchaseIndex() {
                                 currancySymbol={configData.currency.symbol}
                             />
                             <Box p={'8'}>
-                                <PurchaseTable
+                                <_PurchaseTable
                                     allowZeroPercentage={configData.zero_stock}
                                     currancySymbol={configData.currency.symbol}
                                 />

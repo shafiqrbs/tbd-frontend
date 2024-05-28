@@ -50,7 +50,6 @@ import InputNumberForm from "../../../form-builders/InputNumberForm";
 import SelectForm from "../../../form-builders/SelectForm.jsx";
 import getTransactionMethodDropdownData from "../../../global-hook/dropdown/getTransactionMethodDropdownData.js";
 import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
-import getSettingProductDropdownData from "../../../global-hook/dropdown/getSettingProductDropdownData.js";
 import { getSettingDropdown } from "../../../../store/utility/utilitySlice.js";
 import getSettingAccountTypeDropdownData from "../../../global-hook/dropdown/getSettingAccountTypeDropdownData.js";
 import getSettingAuthorizedTypeDropdownData from "../../../global-hook/dropdown/getSettingAuthorizedTypeDropdownData.js";

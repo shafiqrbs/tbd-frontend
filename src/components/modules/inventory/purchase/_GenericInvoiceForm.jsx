@@ -29,6 +29,10 @@ import axios from "axios";
 import ShortcutInvoice from "../../shortcut/ShortcutInvoice";
 import tableCss from "../../../../assets/css/Table.module.css";
 import __PurchaseForm from "./__PurchaseForm.jsx";
+import storeDataIntoLocalStorage from "../../../global-hook/local-storage/storeDataIntoLocalStorage.js";
+import getSettingProductTypeDropdownData from "../../../global-hook/dropdown/getSettingProductTypeDropdownData.js";
+import getSettingProductUnitDropdownData from "../../../global-hook/dropdown/getSettingProductUnitDropdownData.js";
+import getSettingCategoryDropdownData from "../../../global-hook/dropdown/getSettingCategoryDropdownData.js";
 
 function _GenericInvoiceForm(props) {
     const { currencySymbol, allowZeroPercentage, isPurchaseByPurchasePrice } = props
@@ -48,6 +52,13 @@ function _GenericInvoiceForm(props) {
 
     let purchaseSubTotalAmount = tempCardProducts?.reduce((total, item) => total + item.sub_total, 0) || 0;
     let totalPurchaseAmount = tempCardProducts?.reduce((total, item) => total + (item.purchase_price * item.quantity), 0) || 0;
+
+    const [stockProductRestore, setStockProductRestore] = useState(false)
+    useEffect(() => {
+        if (stockProductRestore) {
+            const local = storeDataIntoLocalStorage(JSON.parse(localStorage.getItem('user')).id)
+        }
+    }, [stockProductRestore])
 
     useEffect(() => {
         const tempProducts = localStorage.getItem('temp-purchase-products');
@@ -185,7 +196,13 @@ function _GenericInvoiceForm(props) {
         }
     });
 
-    /*const productAddedForm = useForm({
+
+    const [productTypeData, setProductTypeData] = useState(null);
+    const [productUnitData, setProductUnitData] = useState(null);
+    const [categoryData, setCategoryData] = useState(null);
+
+
+    const productAddedForm = useForm({
         initialValues: {
             name: '',
             purchase_price: '',
@@ -200,7 +217,7 @@ function _GenericInvoiceForm(props) {
         validate: {
             name: isNotEmpty()
         }
-    });*/
+    });
 
     /*START PRODUCT SELECTED BY PRODUCT ID*/
     const [selectProductDetails, setSelectProductDetails] = useState('')
@@ -448,6 +465,196 @@ function _GenericInvoiceForm(props) {
                                                             </Tooltip>
                                                         </Popover.Target>
                                                         <Popover.Dropdown bg={'gray.1'}>
+                                                            <Fieldset legend={t('InstantProductCreate')} className={'bodyBackground'} fz={'xs'} variant="filled">
+                                                                <Box mt={'xs'}>
+                                                                    <SelectForm
+                                                                        tooltip={t('ChooseProductType')}
+                                                                        label={t('ProductType')}
+                                                                        placeholder={t('ChooseProductType')}
+                                                                        required={true}
+                                                                        name={'product_type_id'}
+                                                                        form={productAddedForm}
+                                                                        dropdownValue={getSettingProductTypeDropdownData()}
+                                                                        mt={'xs'}
+                                                                        id={'product_type_id'}
+                                                                        nextField={'category_id'}
+                                                                        searchable={true}
+                                                                        value={productTypeData}
+                                                                        changeValue={setProductTypeData}
+                                                                        comboboxProps={{ withinPortal: false }}
+                                                                    />
+                                                                </Box>
+                                                                <Box mt={'xs'}>
+                                                                    <SelectForm
+                                                                        tooltip={t('ChooseCategory')}
+                                                                        label={t('Category')}
+                                                                        placeholder={t('ChooseCategory')}
+                                                                        required={true}
+                                                                        nextField={'name'}
+                                                                        name={'category_id'}
+                                                                        form={productAddedForm}
+                                                                        dropdownValue={getSettingCategoryDropdownData()}
+                                                                        mt={'md'}
+                                                                        id={'category_id'}
+                                                                        searchable={true}
+                                                                        value={categoryData}
+                                                                        changeValue={setCategoryData}
+                                                                        comboboxProps={{ withinPortal: false }}
+                                                                    />
+                                                                </Box>
+                                                                <Box mt={'xs'}>
+                                                                    <InputForm
+                                                                        tooltip={t('ProductNameValidateMessage')}
+                                                                        label={t('ProductName')}
+                                                                        placeholder={t('ProductName')}
+                                                                        required={true}
+                                                                        nextField={'unit_id'}
+                                                                        form={productAddedForm}
+                                                                        name={'name'}
+                                                                        mt={8}
+                                                                        id={'name'}
+                                                                    />
+                                                                </Box>
+                                                                <Box mt={'xs'}>
+                                                                    <SelectForm
+                                                                        tooltip={t('ChooseProductUnit')}
+                                                                        label={t('ProductUnit')}
+                                                                        placeholder={t('ChooseProductUnit')}
+                                                                        required={true}
+                                                                        name={'unit_id'}
+                                                                        form={productAddedForm}
+                                                                        dropdownValue={getSettingProductUnitDropdownData()}
+                                                                        mt={8}
+                                                                        id={'unit_id'}
+                                                                        nextField={'product_purchase_price'}
+                                                                        searchable={true}
+                                                                        value={productUnitData}
+                                                                        changeValue={setProductUnitData}
+                                                                        comboboxProps={{ withinPortal: false }}
+                                                                    />
+                                                                </Box>
+                                                                <Box mt={'xs'}>
+                                                                    <InputNumberForm
+                                                                        tooltip={t('PurchasePriceValidateMessage')}
+                                                                        label={t('PurchasePrice')}
+                                                                        placeholder={t('PurchasePrice')}
+                                                                        required={true}
+                                                                        nextField={'product_sales_price'}
+                                                                        form={productAddedForm}
+                                                                        name={'purchase_price'}
+                                                                        id={'product_purchase_price'}
+                                                                        leftSection={<IconCoinMonero size={16} opacity={0.5} />}
+                                                                        rightIcon={<IconCurrency size={16} opacity={0.5} />}
+                                                                        closeIcon={true}
+                                                                    />
+                                                                </Box>
+                                                                <Box mt={'xs'}>
+                                                                    <InputNumberForm
+                                                                        tooltip={t('SalesPriceValidateMessage')}
+                                                                        label={t('SalesPrice')}
+                                                                        placeholder={t('SalesPrice')}
+                                                                        required={true}
+                                                                        nextField={'EntityProductFormSubmit'}
+                                                                        form={productAddedForm}
+                                                                        name={'sales_price'}
+                                                                        mt={8}
+                                                                        id={'product_sales_price'}
+                                                                        leftSection={<IconCoinMonero size={16} opacity={0.5} />}
+                                                                        rightIcon={<IconCurrency size={16} opacity={0.5} />}
+                                                                        closeIcon={true}
+                                                                    />
+                                                                </Box>
+                                                                <Box mt={'xs'}>
+                                                                    <Grid columns={12} gutter={{ base: 1 }}>
+                                                                        <Grid.Col span={6}>&nbsp;</Grid.Col>
+                                                                        <Grid.Col span={2}>
+                                                                            <Button
+                                                                                variant="transparent"
+                                                                                size="sm"
+                                                                                color={`red.4`}
+                                                                                type="reset"
+                                                                                mt={0}
+                                                                                mr={'xs'}
+                                                                                fullWidth
+                                                                                id=""
+                                                                                comboboxProps={{ withinPortal: false }}
+                                                                                onClick={() => {
+                                                                                    productAddedForm.reset()
+                                                                                    setCategoryData(null)
+                                                                                    setProductTypeData(null)
+                                                                                    setProductUnitData(null)
+                                                                                    setProductAddFormOpened(false)
+                                                                                }}
+                                                                            >
+                                                                                <IconRefreshDot style={{ width: '100%', height: '70%' }} stroke={1.5} />
+                                                                            </Button>
+                                                                        </Grid.Col>
+                                                                        <Grid.Col span={4}>
+                                                                            <Button
+                                                                                size="sm"
+                                                                                color={`red.5`}
+                                                                                type="submit"
+                                                                                mt={0}
+                                                                                mr={'xs'}
+                                                                                fullWidth
+                                                                                comboboxProps={{ withinPortal: false }}
+                                                                                id="EntityProductFormSubmit"
+                                                                                leftSection={<IconDeviceFloppy size={16} />}
+                                                                                onClick={() => {
+                                                                                    let validation = true
+                                                                                    if (!productAddedForm.values.name) {
+                                                                                        validation = false
+                                                                                        productAddedForm.setFieldError('name', true);
+                                                                                    }
+                                                                                    if (!productAddedForm.values.product_type_id) {
+                                                                                        validation = false
+                                                                                        productAddedForm.setFieldError('product_type_id', true);
+                                                                                    }
+                                                                                    if (!productAddedForm.values.purchase_price) {
+                                                                                        validation = false
+                                                                                        productAddedForm.setFieldError('purchase_price', true);
+                                                                                    }
+                                                                                    if (!productAddedForm.values.sales_price) {
+                                                                                        validation = false
+                                                                                        productAddedForm.setFieldError('sales_price', true);
+                                                                                    }
+                                                                                    if (!productAddedForm.values.unit_id) {
+                                                                                        validation = false
+                                                                                        productAddedForm.setFieldError('unit_id', true);
+                                                                                    }
+                                                                                    if (!productAddedForm.values.category_id) {
+                                                                                        validation = false
+                                                                                        productAddedForm.setFieldError('category_id', true);
+                                                                                    }
+
+                                                                                    if (validation) {
+                                                                                        const value = {
+                                                                                            url: 'inventory/product',
+                                                                                            data: productAddedForm.values
+                                                                                        }
+                                                                                        dispatch(storeEntityData(value))
+
+                                                                                        productAddedForm.reset()
+                                                                                        setCategoryData(null)
+                                                                                        setProductTypeData(null)
+                                                                                        setProductUnitData(null)
+                                                                                        setProductAddFormOpened(false)
+                                                                                        setStockProductRestore(true)
+                                                                                        document.getElementById('product_id').focus()
+                                                                                    }
+
+                                                                                }}
+                                                                            >
+                                                                                <Flex direction={`column`} gap={0}>
+                                                                                    <Text fz={12} fw={400}>
+                                                                                        {t("Add")}
+                                                                                    </Text>
+                                                                                </Flex>
+                                                                            </Button>
+                                                                        </Grid.Col>
+                                                                    </Grid>
+                                                                </Box>
+                                                            </Fieldset>
                                                             {/*<Fieldset legend={t('InstantProductCreate')}  className={'bodyBackground'}  fz={'xs'} variant="filled">
                                                             <Box mt={'xs'}>
                                                                 <SelectForm

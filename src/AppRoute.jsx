@@ -29,6 +29,7 @@ import ProductionIndex from './components/modules/inventory/production/Productio
 import InhouseIndex from './components/modules/inventory/production-inhouse/InhouseIndex.jsx';
 import ReceipeIndex from './components/modules/inventory/receipe/ReceipeIndex.jsx';
 import SalesEdit from "./components/modules/inventory/sales/SalesEdit.jsx";
+import PurchaseEdit from "./components/modules/inventory/purchase/PurchaseEdit.jsx";
 function AppRoute() {
 
     return (
@@ -49,6 +50,7 @@ function AppRoute() {
                     <Route path="sales/edit/:id" element={<SalesEdit />} />
                     <Route path="sales" element={<SalesIndex />} />
                     <Route path="sales-invoice" element={<SalesInvoice />} />
+                    <Route path="purchase/edit/:id" element={<PurchaseEdit />} />
                     <Route path="purchase" element={<PurchaseIndex />} />
                     <Route path="purchase-invoice" element={<PurchaseInvoice />} />
                     <Route path="product" element={<ProductIndex />} />

@@ -95,7 +95,8 @@ const crudSlice = createSlice({
         entityDataDelete: null,
         productFilterData: { name: '', alternative_name: '', sku: '', sales_price: '' },
         categoryFilterData: { name: '', parentName: '' },
-        salesFilterData: { customer_id: '',start_date:'',end_date:''}
+        salesFilterData: { customer_id: '',start_date:'',end_date:'',searchKeyword:''},
+        purchaseFilterData: { vendor_id: '',start_date:'',end_date:'',searchKeyword:''}
 
     },
     reducers: {
@@ -143,6 +144,13 @@ const crudSlice = createSlice({
             state.salesFilterData.customer_id = action.payload.customer_id
             state.salesFilterData.start_date = action.payload.start_date
             state.salesFilterData.end_date = action.payload.end_date
+            state.salesFilterData.searchKeyword = action.payload.searchKeyword
+        },
+        setPurchaseFilterData: (state, action) => {
+            state.purchaseFilterData.vendor_id = action.payload.vendor_id
+            state.purchaseFilterData.start_date = action.payload.start_date
+            state.purchaseFilterData.end_date = action.payload.end_date
+            state.purchaseFilterData.searchKeyword = action.payload.searchKeyword
         }
     },
 
@@ -191,6 +199,6 @@ const crudSlice = createSlice({
     }
 })
 
-export const { setFetching, setEntityNewData, setDropdownLoad, setEditEntityData, setFormLoading, setInsertType, setSearchKeyword, setDeleteMessage, setValidationData, setValidationMessage, setCategoryFilterData ,setProductFilterData,setSalesFilterData} = crudSlice.actions
+export const { setFetching, setEntityNewData, setDropdownLoad, setEditEntityData, setFormLoading, setInsertType, setSearchKeyword, setDeleteMessage, setValidationData, setValidationMessage, setCategoryFilterData ,setProductFilterData,setSalesFilterData,setPurchaseFilterData} = crudSlice.actions
 
 export default crudSlice.reducer;

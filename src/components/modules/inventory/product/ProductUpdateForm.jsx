@@ -29,7 +29,7 @@ import SelectForm from "../../../form-builders/SelectForm.jsx";
 import SwitchForm from "../../../form-builders/SwitchForm.jsx";
 import { getBrandDropdown, getCategoryDropdown } from "../../../../store/inventory/utilitySlice.js";
 import { getProductUnitDropdown, getSettingDropdown } from "../../../../store/utility/utilitySlice.js";
-import getSettingProductDropdownData from "../../../global-hook/dropdown/getSettingProductDropdownData";
+import getSettingProductTypeDropdownData from "../../../global-hook/dropdown/getSettingProductTypeDropdownData.js";
 
 function ProductUpdateForm() {
     const { t, i18n } = useTranslation();
@@ -78,7 +78,7 @@ function ProductUpdateForm() {
     }, [dropdownBrandLoad]);
 
     const [productTypeData, setProductTypeData] = useState(null);
-    let productTypeDropdown = getSettingProductDropdownData()
+    let productTypeDropdown = getSettingProductTypeDropdownData()
 
 
     const [productUnitData, setProductUnitData] = useState(null);

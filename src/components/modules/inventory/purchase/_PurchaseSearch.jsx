@@ -17,37 +17,37 @@ import {useHotkeys} from "@mantine/hooks";
 import {useDispatch, useSelector} from "react-redux";
 import {setSearchKeyword} from "../../../../store/core/crudSlice.js";
 import FilterModel from "../../filter/FilterModel.jsx";
-import {setFetching, setSalesFilterData} from "../../../../store/inventory/crudSlice.js";
+import {setFetching, setPurchaseFilterData} from "../../../../store/inventory/crudSlice.js";
 import {DateInput} from "@mantine/dates";
 
-function _SalesSearch(props) {
+function _PurchaseSearch(props) {
     const {t, i18n} = useTranslation();
     const dispatch = useDispatch();
     const {isOnline} = useOutletContext();
 
     const [searchKeywordTooltip, setSearchKeywordTooltip] = useState(false)
-    const [customerTooltip, setCustomerTooltip] = useState(false)
+    const [vendorTooltip, setVendorTooltip] = useState(false)
     const [startDateTooltip, setStartDateTooltip] = useState(false)
     const [endDateTooltip, setEndDateTooltip] = useState(false)
     const [filterModel, setFilterModel] = useState(false)
 
-    const salesFilterData = useSelector((state) => state.inventoryCrudSlice.salesFilterData)
+    const purchaseFilterData = useSelector((state) => state.inventoryCrudSlice.purchaseFilterData)
 
     /*START GET CUSTOMER DROPDOWN FROM LOCAL STORAGE*/
-    const [customersDropdownData, setCustomersDropdownData] = useState([])
-    const [refreshCustomerDropdown, setRefreshCustomerDropdown] = useState(false)
+    const [vendorsDropdownData, setVendorsDropdownData] = useState([])
+    const [refreshVendorDropdown, setRefreshVendorDropdown] = useState(false)
 
     useEffect(() => {
-        let coreCustomers = localStorage.getItem('core-customers');
-        coreCustomers = coreCustomers ? JSON.parse(coreCustomers) : []
-        if (coreCustomers && coreCustomers.length > 0) {
-            const transformedData = coreCustomers.map(type => {
+        let coreVendors = localStorage.getItem('core-vendors');
+        coreVendors = coreVendors ? JSON.parse(coreVendors) : []
+        if (coreVendors && coreVendors.length > 0) {
+            const transformedData = coreVendors.map(type => {
                 return ({'label': type.mobile + ' -- ' + type.name, 'value': String(type.id)})
             });
-            setCustomersDropdownData(transformedData);
-            setRefreshCustomerDropdown(false)
+            setVendorsDropdownData(transformedData);
+            setRefreshVendorDropdown(false)
         }
-    }, [refreshCustomerDropdown])
+    }, [refreshVendorDropdown])
     /*END GET CUSTOMER DROPDOWN FROM LOCAL STORAGE*/
 
     let [resetKey, setResetKey] = useState(0);
@@ -83,7 +83,7 @@ function _SalesSearch(props) {
                             size="sm"
                             placeholder={t('EnterSearchAnyKeyword')}
                             onChange={(e) => {
-                                dispatch(setSalesFilterData({...salesFilterData, ['searchKeyword']: e.currentTarget.value}))
+                                dispatch(setPurchaseFilterData({...purchaseFilterData, ['searchKeyword']: e.currentTarget.value}))
                                 e.target.value !== '' ?
                                     setSearchKeywordTooltip(false) :
                                     (setSearchKeywordTooltip(true),
@@ -91,17 +91,17 @@ function _SalesSearch(props) {
                                             setSearchKeywordTooltip(false)
                                         }, 1000))
                             }}
-                            value={salesFilterData.searchKeyword}
+                            value={purchaseFilterData.searchKeyword}
                             id={'SearchKeyword'}
                             rightSection={
-                                salesFilterData.searchKeyword ?
+                                purchaseFilterData.searchKeyword ?
                                     <Tooltip
                                         label={t("Close")}
                                         withArrow
                                         bg={`red.5`}
                                     >
                                         <IconX color={`red`} size={16} opacity={0.5} onClick={() => {
-                                            dispatch(setSalesFilterData({...salesFilterData, ['searchKeyword']: ''}))
+                                            dispatch(setPurchaseFilterData({...purchaseFilterData, ['searchKeyword']: ''}))
                                         }}/>
                                     </Tooltip>
                                     :
@@ -120,8 +120,8 @@ function _SalesSearch(props) {
                 </Grid.Col>
                 <Grid.Col span={3}>
                     <Tooltip
-                        label={t('ChooseCustomer')}
-                        opened={customerTooltip}
+                        label={t('ChooseVendor')}
+                        opened={vendorTooltip}
                         px={16}
                         py={2}
                         position="top-end"
@@ -134,20 +134,20 @@ function _SalesSearch(props) {
                         <Select
                             key={resetKey}
                             id={"Customer"}
-                            placeholder={t('ChooseCustomer')}
+                            placeholder={t('ChooseVendor')}
                             size="sm"
-                            data={customersDropdownData}
+                            data={vendorsDropdownData}
                             autoComplete="off"
                             clearable
                             searchable
-                            value={salesFilterData.customer_id}
+                            value={purchaseFilterData.vendor_id}
                             onChange={(e) => {
-                                dispatch(setSalesFilterData({...salesFilterData, ['customer_id']: e}))
+                                dispatch(setPurchaseFilterData({...purchaseFilterData, ['vendor_id']: e}))
                                 e !== '' ?
-                                    setCustomerTooltip(false) :
-                                    (setCustomerTooltip(true),
+                                    setVendorTooltip(false) :
+                                    (setVendorTooltip(true),
                                         setTimeout(() => {
-                                            setCustomerTooltip(false)
+                                            setVendorTooltip(false)
                                         }, 1000))
                             }}
                             comboboxProps={true}
@@ -170,7 +170,7 @@ function _SalesSearch(props) {
                         <DateInput
                             clearable
                             onChange={(e) => {
-                                dispatch(setSalesFilterData({...salesFilterData, ['start_date']: e}))
+                                dispatch(setPurchaseFilterData({...purchaseFilterData, ['start_date']: e}))
                                 e !== '' ?
                                     setStartDateTooltip(false) :
                                     (setStartDateTooltip(true),
@@ -178,7 +178,7 @@ function _SalesSearch(props) {
                                             setStartDateTooltip(false)
                                         }, 1000))
                             }}
-                            value={salesFilterData.start_date}
+                            value={purchaseFilterData.start_date}
                             placeholder={t('StartDate')}
                         />
                     </Tooltip>
@@ -199,7 +199,7 @@ function _SalesSearch(props) {
                         <DateInput
                             clearable
                             onChange={(e) => {
-                                dispatch(setSalesFilterData({...salesFilterData, ['end_date']: e}))
+                                dispatch(setPurchaseFilterData({...purchaseFilterData, ['end_date']: e}))
                                 e !== '' ?
                                     setEndDateTooltip(false) :
                                     (setEndDateTooltip(true),
@@ -217,7 +217,7 @@ function _SalesSearch(props) {
                                     c={'red.4'}
                                     size="lg" mr={16} aria-label="Filter"
                                     onClick={() => {
-                                        (salesFilterData.searchKeyword.length > 0 || salesFilterData.customer_id || salesFilterData.start_date) ?
+                                        (purchaseFilterData.searchKeyword.length > 0 || purchaseFilterData.vendor_id || purchaseFilterData.start_date) ?
                                             (dispatch(setFetching(true)),
                                                 setSearchKeywordTooltip(false))
                                             :
@@ -281,12 +281,12 @@ function _SalesSearch(props) {
                             >
                                 <IconRestore style={{width: rem(20)}} stroke={2.0} onClick={() => {
                                     dispatch(setFetching(true))
-                                    setRefreshCustomerDropdown(true)
+                                    setRefreshVendorDropdown(true)
                                     resetDropDownState();
 
-                                    dispatch(setSalesFilterData({
-                                        ...salesFilterData,
-                                        ['customer_id']: '',
+                                    dispatch(setPurchaseFilterData({
+                                        ...purchaseFilterData,
+                                        ['vendor_id']: '',
                                         ['start_date']: '',
                                         ['end_date']: '',
                                         ['searchKeyword']: '',
@@ -294,32 +294,6 @@ function _SalesSearch(props) {
                                 }}/>
                             </Tooltip>
                         </ActionIcon>
-
-                        {
-                            Object.keys(props.checkList).length > 1 &&
-                            <ActionIcon variant="transparent" c={'gray.6'} size="lg" aria-label="Settings">
-                                <Tooltip
-                                    label={t("GenerateInvoice")}
-                                    px={16}
-                                    py={2}
-                                    withArrow
-                                    position={"bottom"}
-                                    c={'red'}
-                                    bg={`red.1`}
-                                    transitionProps={{transition: "pop-bottom-left", duration: 500}}
-                                >
-                                    <Button
-                                        fullWidth
-                                        variant="filled"
-                                        color="cyan.5"
-                                        onClick={(e) => {
-                                            console.log(props.checkList)
-                                        }}
-                                    ><IconBrandOkRu size={14} /></Button>
-                                </Tooltip>
-                            </ActionIcon>
-
-                        }
 
                     </ActionIcon.Group>
                 </Grid.Col>
@@ -333,4 +307,4 @@ function _SalesSearch(props) {
     );
 }
 
-export default _SalesSearch;
+export default _PurchaseSearch;

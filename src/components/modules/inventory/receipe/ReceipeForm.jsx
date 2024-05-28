@@ -23,10 +23,8 @@ import InputForm from "../../../form-builders/InputForm";
 import SelectForm from "../../../form-builders/SelectForm";
 import SwitchForm from "../../../form-builders/SwitchForm";
 import { getBrandDropdown, getCategoryDropdown } from "../../../../store/inventory/utilitySlice";
-import { getSettingDropdown, getProductUnitDropdown } from "../../../../store/utility/utilitySlice.js";
 
 import { setFetching, storeEntityData } from "../../../../store/inventory/crudSlice.js";
-import getSettingProductDropdownData from "../../../global-hook/dropdown/getSettingProductDropdownData.js";
 import { DateInput, DatePicker } from "@mantine/dates";
 
 function ReceipeForm() {
@@ -55,38 +53,6 @@ function ReceipeForm() {
         dispatch(getCategoryDropdown(value))
     }, [dropdownLoad]);
 
-    const [brandData, setBrandData] = useState(null);
-    const brandDropdownData = useSelector((state) => state.inventoryUtilitySlice.brandDropdownData)
-    const dropdownBrandLoad = useSelector((state) => state.inventoryCrudSlice.dropdownLoad)
-    let brandDropdown = brandDropdownData && brandDropdownData.length > 0 ?
-        brandDropdownData.map((type, index) => {
-            return ({ 'label': type.name, 'value': String(type.id) })
-        }) : []
-    useEffect(() => {
-        const value = {
-            url: 'inventory/select/product-brand',
-        }
-        dispatch(getBrandDropdown(value))
-    }, [dropdownBrandLoad]);
-
-    const [productTypeData, setProductTypeData] = useState(null);
-    const productTypeDropdownData = useSelector((state) => state.utilityUtilitySlice.settingDropdown)
-    let productTypeDropdown = getSettingProductDropdownData()
-
-    const [productUnitData, setProductUnitData] = useState(null);
-    const [value, setValue] = useState(null);
-    const [value1, setValue1] = useState(null);
-    const productUnitDropdownData = useSelector((state) => state.utilityUtilitySlice.productUnitDropdown)
-    let productUnitDropdown = productUnitDropdownData && productUnitDropdownData.length > 0 ?
-        productUnitDropdownData.map((type, index) => {
-            return ({ 'label': type.name, 'value': String(type.id) })
-        }) : []
-    useEffect(() => {
-        const value = {
-            url: 'utility/select/product-unit'
-        }
-        dispatch(getProductUnitDropdown(value))
-    }, []);
 
     const form = useForm({
         initialValues: {

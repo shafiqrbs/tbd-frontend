@@ -36,7 +36,6 @@ import { useHotkeys } from "@mantine/hooks";
 import { useDispatch, useSelector } from "react-redux";
 import SelectForm from "../../../form-builders/SelectForm";
 import { hasLength, isNotEmpty, useForm } from "@mantine/form";
-import getSettingProductDropdownData from "../../../global-hook/dropdown/getSettingProductDropdownData.js";
 import InputNumberForm from "../../../form-builders/InputNumberForm.jsx";
 import SelectServerSideForm from "../../../form-builders/SelectServerSideForm.jsx";
 import InputButtonForm from "../../../form-builders/InputButtonForm.jsx";
@@ -65,8 +64,7 @@ function InhouseAddItem(props) {
     const vendorFilterData = useSelector((state) => state.crudSlice.vendorFilterData)
     const userFilterData = useSelector((state) => state.crudSlice.userFilterData)
     const productFilterData = useSelector((state) => state.inventoryCrudSlice.productFilterData)
-    const productTypeDropdownData = useSelector((state) => state.utilityUtilitySlice.settingDropdown)
-    let productTypeDropdown = getSettingProductDropdownData()
+
     const [productTypeData, setProductTypeData] = useState(null);
 
 

@@ -27,6 +27,9 @@ import { storeEntityData } from "../../../../store/inventory/crudSlice.js";
 import ShortcutInvoice from "../../shortcut/ShortcutInvoice";
 import tableCss from "../../../../assets/css/Table.module.css";
 import storeDataIntoLocalStorage from "../../../global-hook/local-storage/storeDataIntoLocalStorage.js";
+import getSettingProductTypeDropdownData from "../../../global-hook/dropdown/getSettingProductTypeDropdownData.js";
+import getSettingProductUnitDropdownData from "../../../global-hook/dropdown/getSettingProductUnitDropdownData.js";
+import getSettingCategoryDropdownData from "../../../global-hook/dropdown/getSettingCategoryDropdownData.js";
 
 function _GenericInvoiceForm(props) {
     const { currencySymbol, allowZeroPercentage, domainId, isSMSActive, isZeroReceiveAllow } = props
@@ -152,52 +155,8 @@ function _GenericInvoiceForm(props) {
 
     const [categoryData, setCategoryData] = useState(null);
     const dropdownLoad = useSelector((state) => state.inventoryCrudSlice.dropdownLoad)
-
-    const categoryDropdownData = useSelector((state) => state.inventoryUtilitySlice.categoryDropdownData)
-    let categoryDropdown = categoryDropdownData && categoryDropdownData.length > 0 ?
-        categoryDropdownData.map((type, index) => {
-            return ({ 'label': type.name, 'value': String(type.id) })
-        }) : []
-    useEffect(() => {
-        const value = {
-            url: 'inventory/select/category',
-            param: {
-                type: 'parent'
-            }
-        }
-        dispatch(getCategoryDropdown(value))
-    }, [dropdownLoad]);
-
-
     const [productTypeData, setProductTypeData] = useState(null);
-    const productTypeDropdownData = useSelector((state) => state.utilityUtilitySlice.productDropdownData)
-    let productTypeDropdown = productTypeDropdownData && productTypeDropdownData.length > 0 ?
-        productTypeDropdownData.map((type, index) => {
-            return ({ 'label': type.name, 'value': String(type.id) })
-        }) : []
-
-    useEffect(() => {
-        const value = {
-            url: 'utility/select/setting',
-            param: {
-                'dropdown-type': 'product-type'
-            }
-        }
-        dispatch(getSettingDropdown(value))
-    }, []);
-
     const [productUnitData, setProductUnitData] = useState(null);
-    const productUnitDropdownData = useSelector((state) => state.utilityUtilitySlice.productUnitDropdown)
-    let productUnitDropdown = productUnitDropdownData && productUnitDropdownData.length > 0 ?
-        productUnitDropdownData.map((type, index) => {
-            return ({ 'label': type.name, 'value': String(type.id) })
-        }) : []
-    useEffect(() => {
-        const value = {
-            url: 'utility/select/product-unit'
-        }
-        dispatch(getProductUnitDropdown(value))
-    }, []);
 
     const form = useForm({
         initialValues: {
@@ -569,7 +528,7 @@ function _GenericInvoiceForm(props) {
                                                                         required={true}
                                                                         name={'product_type_id'}
                                                                         form={productAddedForm}
-                                                                        dropdownValue={productTypeDropdown}
+                                                                        dropdownValue={getSettingProductTypeDropdownData()}
                                                                         mt={'xs'}
                                                                         id={'product_type_id'}
                                                                         nextField={'category_id'}
@@ -588,7 +547,7 @@ function _GenericInvoiceForm(props) {
                                                                         nextField={'name'}
                                                                         name={'category_id'}
                                                                         form={productAddedForm}
-                                                                        dropdownValue={categoryDropdown}
+                                                                        dropdownValue={getSettingCategoryDropdownData()}
                                                                         mt={'md'}
                                                                         id={'category_id'}
                                                                         searchable={true}
@@ -618,7 +577,7 @@ function _GenericInvoiceForm(props) {
                                                                         required={true}
                                                                         name={'unit_id'}
                                                                         form={productAddedForm}
-                                                                        dropdownValue={productUnitDropdown}
+                                                                        dropdownValue={getSettingProductUnitDropdownData()}
                                                                         mt={8}
                                                                         id={'unit_id'}
                                                                         nextField={'purchase_price'}

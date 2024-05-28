@@ -26,7 +26,6 @@ import { getBrandDropdown, getCategoryDropdown } from "../../../../store/invento
 import { getSettingDropdown, getProductUnitDropdown } from "../../../../store/utility/utilitySlice.js";
 
 import { setFetching, storeEntityData } from "../../../../store/inventory/crudSlice.js";
-import getSettingProductDropdownData from "../../../global-hook/dropdown/getSettingProductDropdownData.js";
 import { DateInput, DatePicker } from "@mantine/dates";
 
 function InhouseForm(Props) {
@@ -70,8 +69,6 @@ function InhouseForm(Props) {
     }, [dropdownBrandLoad]);
 
     const [productTypeData, setProductTypeData] = useState(null);
-    const productTypeDropdownData = useSelector((state) => state.utilityUtilitySlice.settingDropdown)
-    let productTypeDropdown = getSettingProductDropdownData()
 
     const [productUnitData, setProductUnitData] = useState(null);
     const [value, setValue] = useState(null);

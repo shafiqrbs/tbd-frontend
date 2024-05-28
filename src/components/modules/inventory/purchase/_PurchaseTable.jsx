@@ -4,7 +4,7 @@ import tableCss from '../../../../assets/css/Table.module.css';
 import {
     Group,
     Box,
-    ActionIcon, Text, Grid, Stack, Button, ScrollArea, Table, Loader
+    ActionIcon, Text, Grid, Stack, Button, ScrollArea, Table, Loader, Menu, rem
 } from "@mantine/core";
 import {useTranslation} from "react-i18next";
 import {
@@ -12,7 +12,7 @@ import {
     IconEdit,
     IconTrash,
     IconPrinter,
-    IconReceipt,
+    IconReceipt, IconDotsVertical, IconPencil, IconEyeEdit, IconTrashX,
 } from "@tabler/icons-react";
 import {DataTable} from 'mantine-datatable';
 import {useDispatch, useSelector} from "react-redux";
@@ -28,8 +28,9 @@ import {deleteEntityData} from "../../../../store/core/crudSlice";
 import ShortcutTable from "../../shortcut/ShortcutTable";
 import KeywordDateRangeSearch from "../../filter/KeywordDateRangeSearch";
 import {ReactToPrint} from "react-to-print";
+import _PurchaseSearch from "./_PurchaseSearch.jsx";
 
-function PurchaseTable() {
+function _PurchaseTable() {
     const printRef = useRef()
     const dispatch = useDispatch();
     const {t, i18n} = useTranslation();
@@ -40,9 +41,12 @@ function PurchaseTable() {
     const perPage = 50;
     const [page,setPage] = useState(1);
 
-    const fetching = useSelector((state) => state.crudSlice.fetching)
-    const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword)
-    const indexData = useSelector((state) => state.crudSlice.indexEntityData)
+
+    const fetching = useSelector((state) => state.inventoryCrudSlice.fetching)
+    const searchKeyword = useSelector((state) => state.inventoryCrudSlice.searchKeyword)
+    const purchaseFilterData = useSelector((state) => state.inventoryCrudSlice.purchaseFilterData)
+    const indexData = useSelector((state) => state.inventoryCrudSlice.indexEntityData)
+
     const [purchaseViewData,setPurchaseViewData] =useState({})
 
     useEffect(()=>{
@@ -50,28 +54,37 @@ function PurchaseTable() {
     },[indexData.data])
 
 
-    const rows = purchaseViewData && purchaseViewData.sales_items && purchaseViewData.sales_items.map((element,index) => (
+    const rows = purchaseViewData && purchaseViewData.purchase_items && purchaseViewData.purchase_items.map((element,index) => (
         <Table.Tr key={element.name}>
             <Table.Td fz="xs" width={'20'}>{index + 1}</Table.Td>
             <Table.Td ta="left" fz="xs" width={'300'}>{element.item_name}</Table.Td>
             <Table.Td ta="center" fz="xs" width={'60'}>{element.quantity}</Table.Td>
-            <Table.Td ta="right" fz="xs" width={'80'}>{element.price}</Table.Td>
-            <Table.Td ta="right" fz="xs" width={'100'}>{element.sales_price}</Table.Td>
+            <Table.Td ta="right" fz="xs" width={'80'}>{element.purchase_price}</Table.Td>
+            <Table.Td ta="right" fz="xs" width={'100'}>{element.purchase_price}</Table.Td>
             <Table.Td ta="right" fz="xs" width={'100'}>{element.sub_total}</Table.Td>
         </Table.Tr>
     ));
 
-    /*useEffect(() => {
+    useEffect(() => {
+        const options = {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit'
+        };
+
         const value = {
             url: 'inventory/purchase',
             param: {
-                term: searchKeyword,
+                term: purchaseFilterData.searchKeyword,
+                vendor_id: purchaseFilterData.vendor_id,
+                start_date: purchaseFilterData.start_date && new Date(purchaseFilterData.start_date).toLocaleDateString("en-CA", options),
+                end_date: purchaseFilterData.end_date && new Date(purchaseFilterData.end_date).toLocaleDateString("en-CA", options),
                 page: page,
                 offset: perPage
             }
         }
         dispatch(getIndexEntityData(value))
-    }, [fetching]);*/
+    }, [fetching]);
 
 
     return (
@@ -83,7 +96,7 @@ function PurchaseTable() {
                             <Grid>
                                 <Grid.Col>
                                     <Stack >
-                                        <KeywordDateRangeSearch/>
+                                        <_PurchaseSearch/>
                                     </Stack>
                                 </Grid.Col>
                             </Grid>
@@ -112,9 +125,27 @@ function PurchaseTable() {
                                             textAlignment: 'right',
                                             render: (item) => (indexData.data.indexOf(item) + 1)
                                         },
-                                        { accessor: 'id',  title: "ID" },
                                         { accessor: 'created',  title: "Created" },
-                                        { accessor: 'invoice',  title: "Invoice" },
+                                        {
+                                            accessor: 'invoice',
+                                            title: t("Invoice"),
+                                            render: (item) => (
+                                                <Text
+                                                    component="a"
+                                                    size="sm"
+                                                    variant="subtle"
+                                                    color="red.6"
+                                                    onClick={(e) => {
+                                                        e.preventDefault();
+                                                        setPurchaseViewData(item)
+                                                    }}
+                                                    style={{cursor: "pointer"}}
+                                                >
+                                                    {item.invoice}
+                                                </Text>
+
+                                            )
+                                        },
                                         { accessor: 'customerName',  title: "Vendor" },
                                         { accessor: 'sub_total',  title: "SubTotal" },
                                         { accessor: 'discount',  title: "Dis." },
@@ -125,51 +156,44 @@ function PurchaseTable() {
                                             textAlign: "right",
                                             render: (data) => (
                                                 <Group gap={4} justify="right" wrap="nowrap">
-                                                    <ActionIcon
-                                                        size="sm"
-                                                        variant="subtle"
-                                                        color="green"
-                                                        onClick={()=>{
-                                                            setPurchaseViewData(data)
-                                                        }}
-                                                    >
-                                                        <IconEye size={16}/>
-                                                    </ActionIcon>
-                                                    <ActionIcon
-                                                        size="sm"
-                                                        variant="subtle"
-                                                        color="blue"
-                                                        onClick={() => {
-                                                            dispatch(setInsertType('update'))
-                                                            dispatch(editEntityData('inventory/sales/' + data.id))
-                                                            dispatch(setFormLoading(true))
-                                                        }}
-                                                    >
-                                                        <IconEdit size={16}/>
-                                                    </ActionIcon>
-                                                    <ActionIcon
-                                                        size="sm"
-                                                        variant="subtle"
-                                                        color="red"
-                                                        onClick={() => {
-                                                            modals.openConfirmModal({
-                                                                title: (
-                                                                    <Text size="md"> {t("FormConfirmationTitle")}</Text>
-                                                                ),
-                                                                children: (
-                                                                    <Text size="sm"> {t("FormConfirmationMessage")}</Text>
-                                                                ),
-                                                                labels: {confirm: 'Confirm', cancel: 'Cancel'},
-                                                                onCancel: () => console.log('Cancel'),
-                                                                onConfirm: () => {
-                                                                    dispatch(deleteEntityData('vendor/' + data.id))
-                                                                    dispatch(setFetching(true))
-                                                                },
-                                                            });
-                                                        }}
-                                                    >
-                                                        <IconTrash size={16}/>
-                                                    </ActionIcon>
+                                                    <Menu position="bottom-end" offset={3} withArrow trigger="hover" openDelay={100} closeDelay={400}>
+                                                        <Menu.Target>
+                                                            <ActionIcon variant="outline" color="gray.6" radius="xl" aria-label="Settings">
+                                                                <IconDotsVertical height={'18'} width={'18'} stroke={1.5} />
+                                                            </ActionIcon>
+                                                        </Menu.Target>
+                                                        <Menu.Dropdown>
+                                                            <Menu.Item
+                                                                href= {`/inventory/purchase/edit/${data.id}`}
+                                                                target="_blank"
+                                                                component="a"
+                                                                w={'200'}
+                                                                leftSection={<IconPencil style={{ width: rem(14), height: rem(14) }} />}
+                                                            >
+                                                                {t('Edit')}
+                                                            </Menu.Item>
+
+                                                            <Menu.Item
+                                                                href= {``}
+                                                                target="_blank"
+                                                                component="a"
+                                                                w={'200'}
+                                                                leftSection={<IconEyeEdit style={{ width: rem(14), height: rem(14) }} />}
+                                                            >
+                                                                {t('Show')}
+                                                            </Menu.Item>
+
+                                                            <Menu.Item
+                                                                href= {``}
+                                                                target="_blank"
+                                                                component="a"
+                                                                w={'200'}
+                                                                leftSection={<IconTrashX style={{ width: rem(14), height: rem(14) }} />}
+                                                            >
+                                                                {t('Delete')}
+                                                            </Menu.Item>
+                                                        </Menu.Dropdown>
+                                                    </Menu>
                                                 </Group>
                                             ),
                                         },
@@ -248,18 +272,11 @@ function PurchaseTable() {
                                                 <Grid.Col span={6} ><Text fz="sm" lh="xs">Created By</Text></Grid.Col>
                                                 <Grid.Col span={9} >
                                                     <Text fz="sm" lh="xs">
-                                                        {purchaseViewData && purchaseViewData.createdByName && purchaseViewData.createdByName}
+                                                        {purchaseViewData && purchaseViewData.createdByUser && purchaseViewData.createdByUser}
                                                     </Text>
                                                 </Grid.Col>
                                             </Grid>
-                                            <Grid columns={15} gutter={{base:4}}>
-                                                <Grid.Col span={6} ><Text fz="sm" lh="xs">Sales By</Text></Grid.Col>
-                                                <Grid.Col span={9} >
-                                                    <Text fz="sm" lh="xs">
-                                                        {purchaseViewData && purchaseViewData.salesByUser && purchaseViewData.salesByUser}
-                                                    </Text>
-                                                </Grid.Col>
-                                            </Grid>
+
                                             <Grid columns={15} gutter={{base:4}}>
                                                 <Grid.Col span={6} ><Text fz="sm" lh="xs">Mode</Text></Grid.Col>
                                                 <Grid.Col span={9} >
@@ -268,14 +285,7 @@ function PurchaseTable() {
                                                     </Text>
                                                 </Grid.Col>
                                             </Grid>
-                                            <Grid columns={15} gutter={{base:4}}>
-                                                <Grid.Col span={6} ><Text fz="sm" lh="xs">Process</Text></Grid.Col>
-                                                <Grid.Col span={9} >
-                                                    <Text fz="sm" lh="xs">
-                                                        {purchaseViewData && purchaseViewData.process && purchaseViewData.process}
-                                                    </Text>
-                                                </Grid.Col>
-                                            </Grid>
+
                                         </Grid.Col>
                                     </Grid>
                                 </Box>
@@ -316,6 +326,12 @@ function PurchaseTable() {
                                                 <Table.Th colspan={'5'} ta="right" fz="xs" w={'100'}>{t('Receive')}</Table.Th>
                                                 <Table.Th ta="right" fz="xs" w={'100'}>
                                                     {purchaseViewData && purchaseViewData.payment && Number(purchaseViewData.payment).toFixed(2)}
+                                                </Table.Th>
+                                            </Table.Tr>
+                                            <Table.Tr>
+                                                <Table.Th colspan={'5'} ta="right" fz="xs" w={'100'}>{t('Receive')}</Table.Th>
+                                                <Table.Th ta="right" fz="xs" w={'100'}>
+                                                    {purchaseViewData && purchaseViewData.total && Number(purchaseViewData.total-purchaseViewData.payment).toFixed(2)}
                                                 </Table.Th>
                                             </Table.Tr>
                                         </Table.Tfoot>
@@ -374,4 +390,4 @@ function PurchaseTable() {
     );
 }
 
-export default PurchaseTable;
+export default _PurchaseTable;

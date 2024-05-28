@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {getSettingDropdown,} from "../../../store/utility/utilitySlice.js";
 
-const getSettingProductDropdownData = () => {
+const getSettingProductTypeDropdownData = () => {
     const dispatch = useDispatch();
     const [settingDropdown, setSettingDropdown] = useState([]);
 
@@ -14,18 +14,19 @@ const getSettingProductDropdownData = () => {
         dispatch(getSettingDropdown(value))
     }, [dispatch]);
 
-    const productTypeDropdownData = useSelector((state) => state.utilityUtilitySlice.productDropdownData);
+    const productTypeDropdown = useSelector((state) => state.utilityUtilitySlice.productDropdownData);
+
 
     useEffect(() => {
-        if (productTypeDropdownData && productTypeDropdownData.length > 0) {
-            const transformedData = productTypeDropdownData.map(type => {
+        if (productTypeDropdown && productTypeDropdown.length > 0) {
+            const transformedData = productTypeDropdown.map(type => {
                 return { 'label': type.name, 'value': String(type.id) }
             });
             setSettingDropdown(transformedData);
         }
-    }, [productTypeDropdownData]);
+    }, [productTypeDropdown]);
 
     return settingDropdown;
 };
 
-export default getSettingProductDropdownData;
+export default getSettingProductTypeDropdownData;

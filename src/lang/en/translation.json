@@ -80,6 +80,7 @@
   "VendorNameValidateMessage": "Please enter a valid vendor name",
   "VendorName": "Vendor Name",
   "VendorMobile": "Vendor Mobile",
+  "ChooseVendor": "Choose Vendor",
   "TPPercent": "TP Percent",
   "TPPercentValidateMessage": "TP Percent must be digit or fraction",
   "ChooseCustomer": "Choose Customer",

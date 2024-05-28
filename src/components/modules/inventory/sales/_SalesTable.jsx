@@ -18,6 +18,7 @@ import {getIndexEntityData, setFetching, setSalesFilterData} from "../../../../s
 import ShortcutTable from "../../shortcut/ShortcutTable";
 import { ReactToPrint } from "react-to-print";
 import _SalesSearch from "./_SalesSearch.jsx";
+import {setSearchKeyword} from "../../../../store/core/crudSlice.js";
 
 function _SalesTable() {
     const printRef = useRef()
@@ -30,8 +31,12 @@ function _SalesTable() {
     const perPage = 50;
     const [page, setPage] = useState(1);
 
+    useEffect(() => {
+       dispatch(setSearchKeyword(''))
+    },[])
+
     const fetching = useSelector((state) => state.inventoryCrudSlice.fetching)
-    const searchKeyword = useSelector((state) => state.inventoryCrudSlice.searchKeyword)
+    // const searchKeyword = useSelector((state) => state.inventoryCrudSlice.searchKeyword)
     const salesFilterData = useSelector((state) => state.inventoryCrudSlice.salesFilterData)
     const indexData = useSelector((state) => state.inventoryCrudSlice.indexEntityData)
     const [salesViewData, setSalesViewData] = useState({})
@@ -61,7 +66,7 @@ function _SalesTable() {
         const value = {
             url: 'inventory/sales',
             param: {
-                term: searchKeyword,
+                term: salesFilterData.searchKeyword,
                 customer_id: salesFilterData.customer_id,
                 start_date: salesFilterData.start_date && new Date(salesFilterData.start_date).toLocaleDateString("en-CA", options),
                 end_date: salesFilterData.end_date && new Date(salesFilterData.end_date).toLocaleDateString("en-CA", options),
