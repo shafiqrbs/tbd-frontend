@@ -116,10 +116,10 @@ function CategoryForm() {
                                 <Box bg={"white"} >
                                     <Box pl={`xs`} pb={'xs'} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'} >
                                         <Grid>
-                                            <Grid.Col span={6} h={54}>
+                                            <Grid.Col span={8} h={54}>
                                                 <Title order={6} mt={'xs'} pl={'6'}>{t('CreateCategoryGroup')}</Title>
                                             </Grid.Col>
-                                            <Grid.Col span={6}>
+                                            <Grid.Col span={4}>
                                                 <Stack right align="flex-end">
                                                     <>
                                                         {

@@ -1,20 +1,20 @@
-import React, {useState} from "react";
-import {useOutletContext} from "react-router-dom";
+import React, { useState } from "react";
+import { useOutletContext } from "react-router-dom";
 import {
-    Button, rem, Flex, Grid, Box, ScrollArea, Group, Text, Title, Stack, useMantineTheme,Switch
+    Button, rem, Flex, Grid, Box, ScrollArea, Group, Text, Title, Stack, useMantineTheme, Switch
 } from "@mantine/core";
-import {useTranslation} from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import {
     IconCheck,
-    IconDeviceFloppy,IconX
+    IconDeviceFloppy, IconX
 } from "@tabler/icons-react";
-import {useHotkeys} from "@mantine/hooks";
-import {useDispatch} from "react-redux";
-import {hasLength, useForm} from "@mantine/form";
-import {modals} from "@mantine/modals";
-import {notifications} from "@mantine/notifications";
+import { useHotkeys } from "@mantine/hooks";
+import { useDispatch } from "react-redux";
+import { hasLength, useForm } from "@mantine/form";
+import { modals } from "@mantine/modals";
+import { notifications } from "@mantine/notifications";
 
-import {setFetching, storeEntityData} from "../../../../store/inventory/crudSlice.js";
+import { setFetching, storeEntityData } from "../../../../store/inventory/crudSlice.js";
 
 import Shortcut from "../../shortcut/Shortcut";
 import InputForm from "../../../form-builders/InputForm";
@@ -22,9 +22,9 @@ import SwitchForm from "../../../form-builders/SwitchForm";
 
 
 function CategoryGroupForm() {
-    const {t, i18n} = useTranslation();
+    const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
-    const {isOnline, mainAreaHeight} = useOutletContext();
+    const { isOnline, mainAreaHeight } = useOutletContext();
     const height = mainAreaHeight - 130; //TabList height 104
     const [saveCreateLoading, setSaveCreateLoading] = useState(false)
     const theme = useMantineTheme();
@@ -34,7 +34,7 @@ function CategoryGroupForm() {
             name: '', status: true
         },
         validate: {
-            name: hasLength({min: 2, max: 20}),
+            name: hasLength({ min: 2, max: 20 }),
         }
     });
 
@@ -62,7 +62,7 @@ function CategoryGroupForm() {
                         children: (
                             <Text size="sm"> {t("FormConfirmationMessage")}</Text>
                         ),
-                        labels: {confirm: 'Submit', cancel: 'Cancel'}, confirmProps: { color: 'red' },
+                        labels: { confirm: 'Submit', cancel: 'Cancel' }, confirmProps: { color: 'red' },
                         onCancel: () => console.log('Cancel'),
                         onConfirm: () => {
                             setSaveCreateLoading(true)
@@ -75,10 +75,10 @@ function CategoryGroupForm() {
                             notifications.show({
                                 color: 'teal',
                                 title: t('CreateSuccessfully'),
-                                icon: <IconCheck style={{width: rem(18), height: rem(18)}}/>,
+                                icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
                                 loading: false,
                                 autoClose: 700,
-                                style: {backgroundColor: 'lightgray'},
+                                style: { backgroundColor: 'lightgray' },
                             });
 
                             setTimeout(() => {
@@ -89,17 +89,17 @@ function CategoryGroupForm() {
                         },
                     });
                 })}>
-                    <Grid columns={9} gutter={{base:8}}>
+                    <Grid columns={9} gutter={{ base: 8 }}>
                         <Grid.Col span={8} >
                             <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
                                 <Box bg={"white"} >
                                     <Box pl={`xs`} pb={'xs'} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'} >
                                         <Grid>
-                                            <Grid.Col span={6} h={54}>
+                                            <Grid.Col span={8} h={54}>
                                                 <Title order={6} mt={'xs'} pl={'6'}>{t('CreateCategoryGroup')}</Title>
                                             </Grid.Col>
-                                            <Grid.Col span={6}>
-                                                <Stack right  align="flex-end">
+                                            <Grid.Col span={4}>
+                                                <Stack right align="flex-end">
                                                     <>
                                                         {
                                                             !saveCreateLoading && isOnline &&
@@ -109,7 +109,7 @@ function CategoryGroupForm() {
                                                                 type="submit"
                                                                 mt={4}
                                                                 id="EntityFormSubmit"
-                                                                leftSection={<IconDeviceFloppy size={16}/>}
+                                                                leftSection={<IconDeviceFloppy size={16} />}
                                                             >
 
                                                                 <Flex direction={`column`} gap={0}>
@@ -123,7 +123,7 @@ function CategoryGroupForm() {
                                             </Grid.Col>
                                         </Grid>
                                     </Box>
-                                    <Box pl={`xs`} pr={'xs'} mt={'xs'}  className={'borderRadiusAll'}>
+                                    <Box pl={`xs`} pr={'xs'} mt={'xs'} className={'borderRadiusAll'}>
                                         <ScrollArea h={height} scrollbarSize={2} scrollbars="y" type="never">
                                             <Box mt={'xs'}>
                                                 <InputForm
@@ -139,7 +139,7 @@ function CategoryGroupForm() {
                                                 />
                                             </Box>
                                             <Box mt={'xs'}>
-                                                <Grid gutter={{base:1}}>
+                                                <Grid gutter={{ base: 1 }}>
                                                     <Grid.Col span={2}>
                                                         <SwitchForm
                                                             tooltip={t('Status')}
