@@ -9,11 +9,13 @@ import { setSearchKeyword } from "../../../../store/core/crudSlice";
 import { setInsertType } from "../../../../store/generic/crudSlice";
 import getConfigData from "../../../global-hook/config-data/getConfigData.js";
 import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress.js";
-import HeadSubGroupUpdateFrom from "./HeadSubGroupUpdateFrom";
-import HeadSubGroupTable from "./HeadSubGroupTable";
+import HeadGroupForm from "./HeadSubGroupForm";
+import HeadGroupUpdateFrom from "./HeadSubGroupUpdateFrom";
+import HeadGroupTable from "./HeadSubGroupTable";
 import AccountingHeaderNavbar from "../AccountingHeaderNavbar";
 import HeadSubGroupForm from "./HeadSubGroupForm";
-function HeadSubGroupIndex() {
+import HeadSubGroupUpdateFrom from "./HeadSubGroupUpdateFrom";
+function HeadGroupIndex() {
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const insertType = useSelector((state) => state.crudSlice.insertType)
@@ -33,7 +35,7 @@ function HeadSubGroupIndex() {
                 <>
                     <Box>
                         <AccountingHeaderNavbar
-                            pageTitle={t('ManageAccountHeadSubGroup')}
+                            pageTitle={t('ManageAccountSubHeadGroup')}
                             roles={t('Roles')}
                             allowZeroPercentage=''
                             currencySymbol=''
@@ -42,7 +44,7 @@ function HeadSubGroupIndex() {
                             <Grid columns={24} gutter={{ base: 8 }}>
                                 <Grid.Col span={15} >
                                     <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
-                                        <HeadSubGroupTable />
+                                        <HeadGroupTable />
                                     </Box>
                                 </Grid.Col>
                                 <Grid.Col span={9}>
@@ -59,4 +61,4 @@ function HeadSubGroupIndex() {
     );
 }
 
-export default HeadSubGroupIndex;
+export default HeadGroupIndex;

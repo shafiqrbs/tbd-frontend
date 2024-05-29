@@ -19,7 +19,7 @@ import {
     Kbd,
     Menu,
     Modal,
-    Notification, NavLink, Container, Flex, ScrollArea
+    Notification, NavLink, Container, Flex, ScrollArea, Grid
 } from "@mantine/core";
 import Logo from "../../assets/images/tbd-logo.png";
 
@@ -149,7 +149,7 @@ export default function Header({
             <Modal.Root
                 opened={opened}
                 onClose={close}
-                size="60%"
+                size="64%"
             >
                 <Modal.Overlay />
                 <Modal.Content p={'xs'}>
@@ -163,182 +163,117 @@ export default function Header({
                 </Modal.Content>
             </Modal.Root>
             <Box bg={'white'} h={`100%`} pos={`relative`}>
-                <Group justify="space-between" h="100%" pl={'md'} px={`xs`} mr={'4'}>
-                    <Group>
+                <Grid columns={24} gutter={{ base:2}}>
+                    <Grid.Col span={6} >
                         <NavLink
-                            href="/"
-                            c={'red'}
-                            fw={'800'}
-                            component="button"
-                            label={configData && configData.domain ? configData.domain.name : 'Store Name'}
-                            onClick={(e) => { navigate('/') }}
+                        href="/"
+                        c={'red'}
+                        fw={'800'}
+                        component="button"
+                        label={configData && configData.domain ? configData.domain.name : 'Store Name'}
+                        onClick={(e) => { navigate('/') }}
+                    />
+                    </Grid.Col>
+                    <Grid.Col span={12} >
+                        <Group justify="space-between" h="100%" >
+                        <Flex direction={`column`} align={'center'} w={'100%'} border={'red'} >
+                        <Button
+                            leftSection={
+                                <>
+                                    <IconSearch size={16} c={'red.5'} />
+                                    <Text fz={`xs`} pl={'xs'} c={'gray.8'}>{t("SearchMenu")}</Text>
+                                </>
+                            }
+                            fullWidth
+                            variant="transparent"
+                            rightSection={
+                                <>
+                                    <Kbd h={'24'} c={'gray.8'} fz={'12'}>Alt </Kbd> + <Kbd c={'gray.8'} h={'24'}
+                                                                                           fz={'12'}> K</Kbd>
+                                </>
+                            }
+                            w={`100%`}
+                            h={'32'}
+                            justify="space-between"
+                            style={{ border: `2px solid var(--mantine-color-red-8)` }}
+                            color={`gray`}
+                            onClick={open}
                         />
-                        {/*<Tooltip
-                            label={navbarOpened ? t("collapse_navbar") : t("expand_navbar")}
-                            bg={`red.4`}
-                            position="right-center"
-                            color="red"
-                            withArrow
-                        >
-                            <Burger onClick={toggleNavbar} size="sm"/>
-                        </Tooltip>*/}
-                        {/*  <HoverCard
-                            width={600}
-                            position="bottom"
-                            radius="md"
-                            shadow="md"
-                            withinPortal
-                        >
-                            <HoverCard.Target>
-                                <Center
-                                    inline
-                                    fw={500}
-                                    fz={`var(--mantine-font-size-sm)`}
-                                    style={{cursor: "default"}}
-                                >
-                                    <Box component="span" mr={5}>
-                                        {t("QuickMenu")}
-                                    </Box>
-                                    <IconChevronDown
-                                        style={{width: rem(16), height: rem(16)}}
-                                        color={theme.colors.blue[6]}
-                                    />
-                                </Center>
-                            </HoverCard.Target>
-                            <HoverCard.Dropdown style={{overflow: "hidden"}} mt={"xs"}>
-                                <Group justify="space-between" px="md">
-                                    <Text fw={500}>Features</Text>
-                                    <Anchor href="#" fz="xs">
-                                        View all
-                                    </Anchor>
-                                </Group>
-
-                                <Divider my="sm"/>
-
-                                <SimpleGrid cols={2}>{links}</SimpleGrid>
-
-                                <div className={HeaderStyle.dropdownFooter}>
-                                    <Group justify="space-between">
-                                        <div>
-                                            <Text fw={500} fz="sm">
-                                                Get started
-                                            </Text>
-                                            <Text size="xs" c="dimmed">
-                                                Their food sources have decreased, and their numbers
-                                            </Text>
-                                        </div>
-                                        <Button variant="default">Get started</Button>
-                                    </Group>
-                                </div>
-                            </HoverCard.Dropdown>
-                        </HoverCard>*/}
-                    </Group>
-                    <Group>
-                        <Flex direction={`column`} align={'center'} w={'1000'} border={'red'} >
-                            <Button
-                                leftSection={
-                                    <>
-                                        <IconSearch size={16} c={'red.5'} />
-                                        <Text fz={`xs`} pl={'xs'} c={'gray.8'}>{t("SearchMenu")}</Text>
-                                    </>
-                                }
-                                fullWidth
-                                variant="transparent"
-                                rightSection={
-                                    <>
-                                        <Kbd h={'24'} c={'gray.8'} fz={'12'}>Alt </Kbd> + <Kbd c={'gray.8'} h={'24'}
-                                            fz={'12'}> K</Kbd>
-                                    </>
-                                }
-                                w={`100%`}
-                                h={'32'}
-                                justify="space-between"
-                                style={{ border: `2px solid var(--mantine-color-red-8)` }}
-                                color={`gray`}
-                                onClick={open}
-                            />
-                        </Flex>
-
-                    </Group>
-                    <Group>
-                        <Menu
-                            onOpen={() => setLanguageOpened(true)}
-                            onClose={() => setLanguageOpened(false)}
-                            radius="md"
-                            width="target"
-                            withinPortal
-                            withArrow arrowPosition="center"
-                        >
-                            <Menu.Target>
-                                <UnstyledButton
-                                    p={2}
-                                    className={LanguagePickerStyle.control}
-                                    data-expanded={languageOpened || undefined}
-                                >
-                                    <Group gap="xs">
-                                        <Image
-                                            src={languageSelected?.flag}
-                                            width={18}
-                                            height={18}
-                                        />
-                                        <span className={LanguagePickerStyle.label}>
-                                            {languageSelected?.label}
-                                        </span>
-                                    </Group>
-                                    <IconChevronDown
-                                        size="1rem"
-                                        className={LanguagePickerStyle.icon}
-                                        stroke={1}
-                                    />
-                                </UnstyledButton>
-                            </Menu.Target>
-                            <Menu.Dropdown p={4} className={LanguagePickerStyle.dropdown}>
-                                {languages.map((item) => (
-                                    <Menu.Item
-                                        p={4}
-                                        leftSection={
-                                            <Image src={item.flag} width={18} height={18} />
-                                        }
-                                        onClick={() => {
-                                            setLanguageSelected(item);
-                                            i18n.changeLanguage(item.value);
-                                        }}
-                                        key={item.label}
+                    </Flex>
+                        </Group>
+                    </Grid.Col>
+                    <Grid.Col span={3} offset={3}>
+                        <Group justify="space-between" align={'right'} float={'right'} h="100%" w={'100%'} pl={'md'} px={`xs`} pr={'24'}>
+                                <Menu
+                                onOpen={() => setLanguageOpened(true)}
+                                onClose={() => setLanguageOpened(false)}
+                                radius="md"
+                                width="target"
+                                withinPortal
+                                withArrow arrowPosition="center"
+                            >
+                                <Menu.Target>
+                                    <UnstyledButton
+                                        p={2}
+                                        className={LanguagePickerStyle.control}
+                                        data-expanded={languageOpened || undefined}
                                     >
-                                        {item.label}
-                                    </Menu.Item>
-                                ))}
-                            </Menu.Dropdown>
-                        </Menu>
-                        <Tooltip
-                            label={fullscreen ? t("NormalScreen") : t("Fullscreen")}
-                            bg={`red.5`} withArrow
-                            position={"left"}
-                        >
-                            <ActionIcon onClick={toggle} variant="subtle" color={`red.4`}>
-                                {fullscreen ? (
-                                    <IconWindowMinimize size={24} />
-                                ) : (
-                                    <IconWindowMaximize size={24} />
-                                )}
-                            </ActionIcon>
-                        </Tooltip>
-                        <Tooltip label={t("Logout")} bg={`red.5`} withArrow position={"left"}>
-                            <ActionIcon onClick={() => logout()} variant="subtle" color={`gray.6`}>
-                                <IconLogout size={24} />
-                            </ActionIcon>
-                        </Tooltip>
-                    </Group>
-                </Group>
-                {/*<Spotlight
-                    actions={getSpotlightDropdownData()}
-                    nothingFound={t("NothingFound")}
-                    highlightQuery
-                    searchProps={{
-                        leftSection: <IconSearch size={'xs'} style={{ width: rem(20), height: rem(20) }} stroke={1.5} />,
-                        placeholder: t("SearchMenu"),
-                    }}
-                />*/}
+                                        <Group gap="xs">
+                                            <Image
+                                                src={languageSelected?.flag}
+                                                width={18}
+                                                height={18}
+                                            />
+                                            <span className={LanguagePickerStyle.label}>
+                                                    {languageSelected?.label}
+                                                </span>
+                                        </Group>
+                                        <IconChevronDown
+                                            size="1rem"
+                                            className={LanguagePickerStyle.icon}
+                                            stroke={1}
+                                        />
+                                    </UnstyledButton>
+                                </Menu.Target>
+                                <Menu.Dropdown p={4} className={LanguagePickerStyle.dropdown}>
+                                    {languages.map((item) => (
+                                        <Menu.Item
+                                            p={4}
+                                            leftSection={
+                                                <Image src={item.flag} width={18} height={18} />
+                                            }
+                                            onClick={() => {
+                                                setLanguageSelected(item);
+                                                i18n.changeLanguage(item.value);
+                                            }}
+                                            key={item.label}
+                                        >
+                                            {item.label}
+                                        </Menu.Item>
+                                    ))}
+                                </Menu.Dropdown>
+                            </Menu>
+                            <Tooltip
+                                label={fullscreen ? t("NormalScreen") : t("Fullscreen")}
+                                bg={`red.5`} withArrow
+                                position={"left"}
+                            >
+                                <ActionIcon onClick={toggle} variant="subtle" mt={'6'} color={`red.4`}>
+                                    {fullscreen ? (
+                                        <IconWindowMinimize size={24} />
+                                    ) : (
+                                        <IconWindowMaximize size={24} />
+                                    )}
+                                </ActionIcon>
+                            </Tooltip>
+                            <Tooltip label={t("Logout")} bg={`red.5`} withArrow position={"left"}>
+                                <ActionIcon onClick={() => logout()} variant="subtle" mt={'6'}  color={`gray.6`}>
+                                    <IconLogout size={24} />
+                                </ActionIcon>
+                            </Tooltip>
+                        </Group>
+                    </Grid.Col>
+                    </Grid>
                 <Notification
                     pos={`absolute`}
                     display={isOnline ? "none" : ""}

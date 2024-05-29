@@ -9,8 +9,8 @@ import { setSearchKeyword } from "../../../../store/core/crudSlice";
 import { setInsertType } from "../../../../store/generic/crudSlice";
 import getConfigData from "../../../global-hook/config-data/getConfigData.js";
 import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress.js";
-import HeadGroupForm from "./HeadGroupForm.jsx";
-import HeadGroupUpdateFrom from "./HeadGroupUpdateFrom.jsx";
+import HeadGroupForm from "./HeadGroupForm";
+import HeadGroupUpdateFrom from "./HeadGroupUpdateFrom";
 import HeadGroupTable from "./HeadGroupTable";
 import AccountingHeaderNavbar from "../AccountingHeaderNavbar";
 function HeadGroupIndex() {

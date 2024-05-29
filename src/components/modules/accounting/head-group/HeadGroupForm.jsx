@@ -32,6 +32,7 @@ import getTransactionMethodDropdownData from "../../../global-hook/dropdown/getT
 import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
 import getSettingAccountTypeDropdownData from "../../../global-hook/dropdown/getSettingAccountTypeDropdownData.js";
 import getSettingAuthorizedTypeDropdownData from "../../../global-hook/dropdown/getSettingAuthorizedTypeDropdownData.js";
+import SwitchForm from "../../../form-builders/SwitchForm";
 
 function HeadGroupForm(props) {
     const { t, i18n } = useTranslation();
@@ -66,29 +67,16 @@ function HeadGroupForm(props) {
 
     const form = useForm({
         initialValues: {
-            method_id: '', name: '', short_name: '', authorised_mode_id: '', account_mode_id: '', service_charge: '', account_owner: '', path: ''
+            mother_account_id: '', name: '', code: '', status: ''
         },
         validate: {
-            method_id: isNotEmpty(),
-            name: hasLength({ min: 2, max: 20 }),
-            short_name: hasLength({ min: 2, max: 20 }),
-            authorised_mode_id: isNotEmpty(),
-            account_mode_id: isNotEmpty(),
-            path: isNotEmpty(),
-            service_charge: (value, values) => {
-                if (value) {
-                    const isNumberOrFractional = /^-?\d+(\.\d+)?$/.test(value);
-                    if (!isNumberOrFractional) {
-                        return true;
-                    }
-                }
-                return null;
-            },
+            mother_account_id: isNotEmpty(),
+            name: hasLength({ min: 2, max: 20 })
         }
     });
 
     useHotkeys([['alt+n', () => {
-        document.getElementById('group_nature').click()
+        document.getElementById('mother_account_id').click()
     }]], []);
 
     useHotkeys([['alt+r', () => {
@@ -120,7 +108,7 @@ function HeadGroupForm(props) {
                                 formValue['path'] = files[0];
 
                                 const data = {
-                                    url: 'accounting/transaction-mode',
+                                    url: 'accounting/account-head',
                                     data: formValue
                                 }
                                 dispatch(storeEntityDataWithFile(data))
@@ -181,19 +169,19 @@ function HeadGroupForm(props) {
                                     <Grid columns={24}>
                                         <Grid.Col span={'auto'} >
                                             <ScrollArea h={height} scrollbarSize={2} scrollbars="y" type="never">
-                                                <Box>
+                                                <Box >
                                                     <Box mt={'xs'}>
                                                         <SelectForm
                                                             tooltip={t('ChooseMethod')}
                                                             label={t('NatureOfGroup')}
-                                                            placeholder={t('ChooseMethod')}
+                                                            placeholder={t('ChooseMotherAccount')}
                                                             required={true}
                                                             nextField={'name'}
-                                                            name={'group_nature'}
+                                                            name={'mother_account_id'}
                                                             form={form}
                                                             dropdownValue={getTransactionMethodDropdownData()}
                                                             mt={8}
-                                                            id={'group_nature'}
+                                                            id={'mother_account_id'}
                                                             searchable={false}
                                                             value={methodData}
                                                             changeValue={setMethodData}
@@ -205,7 +193,7 @@ function HeadGroupForm(props) {
                                                             label={t('Name')}
                                                             placeholder={t('Name')}
                                                             required={true}
-                                                            nextField={'short_name'}
+                                                            nextField={'code'}
                                                             name={'name'}
                                                             form={form}
                                                             mt={0}
@@ -214,28 +202,33 @@ function HeadGroupForm(props) {
                                                     </Box>
                                                     <Box mt={'xs'}>
                                                         <InputForm
-                                                            tooltip={t('ShortNameValidateMessage')}
-                                                            label={t('ShortName')}
-                                                            placeholder={t('ShortName')}
-                                                            required={true}
-                                                            nextField={'authorised_mode_id'}
-                                                            name={'short_name'}
-                                                            form={form}
-                                                            mt={0}
-                                                            id={'short_name'}
-                                                        />
-                                                    </Box>
-                                                    <Box mt={'xs'}>
-                                                        <InputForm
                                                             tooltip={t('AccountCodeValidateMessage')}
                                                             label={t('AccountCode')}
                                                             placeholder={t('AccountCode')}
                                                             required={true}
-                                                            nextField={'account_code'}
-                                                            name={'account_code'}
+                                                            name={'code'}
                                                             form={form}
-                                                            id={'account_code'}
+                                                            id={'code'}
+                                                            nextField={'statusz'}
                                                         />
+                                                    </Box>
+                                                    <Box mt={'xs'} ml={'xs'}>
+                                                        <Grid gutter={{ base: 1 }}>
+                                                            <Grid.Col span={2}>
+                                                                <SwitchForm
+                                                                    tooltip={t('Status')}
+                                                                    label=''
+                                                                    nextField={'EntityFormSubmit'}
+                                                                    name={'status'}
+                                                                    form={form}
+                                                                    color="red"
+                                                                    id={'status'}
+                                                                    position={'left'}
+                                                                    defaultChecked={1}
+                                                                />
+                                                            </Grid.Col>
+                                                            <Grid.Col span={6} fz={'sm'} pt={'1'}>{t('Status')}</Grid.Col>
+                                                        </Grid>
                                                     </Box>
 
                                                 </Box>

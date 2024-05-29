@@ -14,16 +14,12 @@ import {
     getIndexEntityData,
     setFetching, setFormLoading,
     setInsertType,
-    showEntityData
+    showEntityData,
+    deleteEntityData
 } from "../../../../store/accounting/crudSlice.js";
 import KeywordSearch from "../../filter/KeywordSearch";
 import { modals } from "@mantine/modals";
-import { deleteEntityData } from "../../../../store/core/crudSlice";
 import tableCss from "../../../../assets/css/Table.module.css";
-import CustomerViewModel from "../../core/customer/CustomerViewModel.jsx";
-
-
-
 function HeadGroupTable(props) {
 
     const dispatch = useDispatch();
@@ -32,20 +28,18 @@ function HeadGroupTable(props) {
     const height = mainAreaHeight - 128; //TabList height 104
     const perPage = 50;
     const [page, setPage] = useState(1);
-    const [customerViewModel, setCustomerViewModel] = useState(false)
+
 
     const fetching = useSelector((state) => state.crudSlice.fetching)
     const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword)
     const indexData = useSelector((state) => state.crudSlice.indexEntityData)
-    const customerFilterData = useSelector((state) => state.crudSlice.customerFilterData)
+
 
     useEffect(() => {
         const value = {
-            url: 'accounting/transaction-mode',
+            url: 'accounting/account-head',
             param: {
-                term: searchKeyword,
-                // name: customerFilterData.name,
-                // mobile: customerFilterData.mobile,
+                mode: 'mother-account',
                 page: page,
                 offset: perPage
             }
@@ -77,9 +71,8 @@ function HeadGroupTable(props) {
                             render: (item) => (indexData.data.indexOf(item) + 1)
                         },
                         { accessor: 'name', title: t('Name') },
-                        { accessor: 'short_name', title: t('NatureOfGroup') },
-                        { accessor: 'method_name', title: t('ShortName') },
-                        { accessor: 'authorized_name', title: t('AccountCode') },
+                        { accessor: 'mother_account', title: t('NatureOfGroup') },
+                        { accessor: 'code', title: t('AccountCode') },
                         {
                             accessor: "action",
                             title: t("Action"),
@@ -136,7 +129,7 @@ function HeadGroupTable(props) {
                                                         labels: { confirm: 'Confirm', cancel: 'Cancel' },
                                                         onCancel: () => console.log('Cancel'),
                                                         onConfirm: () => {
-                                                            dispatch(deleteEntityData('core/customer/' + data.id))
+                                                            dispatch(deleteEntityData('accounting/account-head/' + data.id))
                                                             dispatch(setFetching(true))
                                                         },
                                                     });
@@ -165,10 +158,7 @@ function HeadGroupTable(props) {
                     height={height}
                     scrollAreaProps={{ type: 'never' }}
                 />
-                {
-                    customerViewModel &&
-                    <CustomerViewModel customerViewModel={customerViewModel} setCustomerViewModel={setCustomerViewModel} />
-                }
+
 
             </Box>
         </>
