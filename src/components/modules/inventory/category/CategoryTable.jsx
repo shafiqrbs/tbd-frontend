@@ -118,15 +118,15 @@ function CategoryTable() {
                                             </Menu.Item>
 
                                             <Menu.Item
-                                            // href={``}
-                                            // onClick={() => {
-                                            //     dispatch(setInsertType('update'))
-                                            //     dispatch(editEntityData('core/user/' + data.id))
-                                            //     dispatch(setFormLoading(true))
-                                            // }}
-                                            // target="_blank"
-                                            // component="a"
-                                            // w={'200'}
+                                                href={``}
+                                                // onClick={() => {
+                                                //     dispatch(setInsertType('update'))
+                                                //     dispatch(editEntityData('core/user/' + data.id))
+                                                //     dispatch(setFormLoading(true))
+                                                // }}
+                                                target="_blank"
+                                                component="a"
+                                                w={'200'}
                                             >
                                                 {t('Show')}
                                             </Menu.Item>

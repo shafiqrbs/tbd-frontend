@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
-    Box, Button, Flex, Grid, Progress, rem, ScrollArea, SimpleGrid, Stack, Text, Title, Tooltip
+    Box, Button, Flex, Grid, Progress, rem, Menu
 } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from "react-redux";
@@ -13,19 +13,8 @@ import { setInsertType } from "../../../../store/inventory/crudSlice.js";
 import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress.js";
 import getConfigData from "../../../global-hook/config-data/getConfigData.js";
 import InventoryHeaderNavbar from "../configuraton/InventoryHeaderNavbar";
-import TransactionModeTable from "../../accounting/transaction-mode/TransactionModeTable";
-import { setFetching, setValidationData, storeEntityDataWithFile } from "../../../../store/accounting/crudSlice";
-import { modals } from "@mantine/modals";
-import { notifications } from "@mantine/notifications";
-import { IconCheck, IconDeviceFloppy } from "@tabler/icons-react";
-import SelectForm from "../../../form-builders/SelectForm";
-import getTransactionMethodDropdownData from "../../../global-hook/dropdown/getTransactionMethodDropdownData";
-import InputForm from "../../../form-builders/InputForm";
-import InputNumberForm from "../../../form-builders/InputNumberForm";
-import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
-import Shortcut from "../../shortcut/Shortcut";
-import CategoryForm from "../category/CategoryForm";
-import CategoryUpdateForm from "../category/CategoryUpdateForm";
+
+
 
 function CategoryGroupIndex() {
     const { t, i18n } = useTranslation();
