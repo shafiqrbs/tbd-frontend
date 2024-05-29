@@ -58,22 +58,55 @@ function ConfigurationForm() {
 
     const [setFormData, setFormDataForUpdate] = useState(false);
     const [formLoad, setFormLoad] = useState(true);
-    const executiveDropdownData = useSelector((state) => state.utilitySlice.executiveDropdownData)
-    let businessModelDropdown = getSettingBusinessModelDropdownData();
-    const locationDropdownData = useSelector((state) => state.utilitySlice.locationDropdownData)
-    let locationDropdown = locationDropdownData && locationDropdownData.length > 0 ? locationDropdownData.map((type, index) => { return ({ 'label': type.name, 'value': String(type.id) }) }) : []
-    let executiveDropdown = executiveDropdownData && executiveDropdownData.length > 0 ? executiveDropdownData.map((type, index) => { return ({ 'label': type.name, 'value': String(type.id) }) }) : []
     useEffect(() => {
-        dispatch(getShowEntityData('inventory/config'))
+        // dispatch(getShowEntityData('inventory/config'))
     }, []);
 
     const form = useForm({
         initialValues: {
             business_model_id: '',
-            vat_percent: '',
-            ait_percent: '',
             address: '',
-            invoice_comment: ''
+            sku_wearhouse: '',
+            sku_category: '',
+            vat_percent: '',
+            is_vat_enabled: '',
+            ait_percent: '',
+            is_ait_enabled: '',
+            production_type: '',
+            invoice_comment: '',
+            logo: '',
+            remove_image: '',
+            invoice_print_logo: '',
+            print_outstanding: '',
+            pos_print: '',
+            is_print_header: '',
+            is_invoice_title: '',
+            is_print_footer: '',
+            is_powered: '',
+            print_footer_text: '',
+            body_font_size: '',
+            invoice_height: '',
+            invoice_width: '',
+            border_color: '',
+            border_width: '',
+            print_left_margin: '',
+            print_top_margin: '',
+            custom_invoice: '',
+            bonus_from_stock: '',
+            is_unit_price: '',
+            zero_stock: '',
+            stock_item: '',
+            custom_invoice_print: '',
+            is_stock_history: '',
+            condition_sales: '',
+            store_ledger: '',
+            is_marketing_executive: '',
+            fuel_station: '',
+            tlo_commission: '',
+            sales_return: '',
+            sr_commission: '',
+            due_sales_without_customer: ''
+
         },
         validate: {
             business_model_id: isNotEmpty(),
@@ -184,7 +217,7 @@ function ConfigurationForm() {
                             url: 'core/customer',
                             data: values
                         }
-                        dispatch(storeEntityData(value))
+                        // dispatch(storeEntityData(value))
                     },
                 });
             })}>
@@ -200,15 +233,17 @@ function ConfigurationForm() {
                                     </Grid>
                                 </Box>
                                 <Box pl={`xs`} pr={'xs'} mt={'xs'} className={'borderRadiusAll'}>
-                                    <ScrollArea h={height} scrollbarSize={2} scrollbars="y" type="never">
+                                    <ScrollArea h={height} scrollbarSize={2} scrollbars="y" type="never" >
                                         <Box>
                                             {
                                                 Object.keys(form.errors).length > 0 && validationMessage != 0 &&
                                                 <Alert variant="light" color="red" radius="md" title={
                                                     <List withPadding size="sm">
-                                                        {validationMessage.name && <List.Item>{t('NameValidateMessage')}</List.Item>}
-                                                        {validationMessage.mobile && <List.Item>{t('MobileValidateMessage')}</List.Item>}
-                                                        {validationMessage.alternative_mobile && <List.Item>{t('AlternativeMobile')}</List.Item>}
+                                                        {validationMessage.business_model_id && <List.Item>{t('ValidateMessage')}</List.Item>}
+                                                        {validationMessage.vat_percent && <List.Item>{t('ValidateMessage')}</List.Item>}
+                                                        {validationMessage.ait_percent && <List.Item>{t('ValidateMessage')}</List.Item>}
+                                                        {validationMessage.address && <List.Item>{t('ValidateMessage')}</List.Item>}
+                                                        {validationMessage.invoice_comment && <List.Item>{t('ValidateMessage')}</List.Item>}
                                                     </List>
                                                 }></Alert>
                                             }
@@ -219,11 +254,11 @@ function ConfigurationForm() {
                                                     placeholder={t('ChooseBusinessModel')}
                                                     required={false}
                                                     nextField={'address'}
-                                                    name={'business_model'}
+                                                    name={'business_model_id'}
                                                     form={form}
                                                     dropdownValue={["Family", "Local"]}
                                                     mt={8}
-                                                    id={'businessModel'}
+                                                    id={'business_model_id'}
                                                     searchable={false}
                                                     value={customerGroupData}
                                                     changeValue={setCustomerGroupData}
@@ -237,7 +272,7 @@ function ConfigurationForm() {
                                                     label={t('Address')}
                                                     placeholder={t('Address')}
                                                     required={false}
-                                                    nextField={'warehouse'}
+                                                    nextField={'sku_wearhouse'}
                                                     name={'address'}
                                                     form={form}
                                                     mt={8}
@@ -254,11 +289,11 @@ function ConfigurationForm() {
                                                         <SwitchForm
                                                             tooltip={t('Warehouse')}
                                                             label=''
-                                                            nextField={'category'}
-                                                            name={'Warehouse'}
+                                                            nextField={'sku_category'}
+                                                            name={'sku_wearhouse'}
                                                             form={form}
                                                             color="red"
-                                                            id={'warehouse'}
+                                                            id={'sku_wearhouse'}
                                                             position={'left'}
                                                             defaultChecked={0}
                                                         />
@@ -272,11 +307,11 @@ function ConfigurationForm() {
                                                         <SwitchForm
                                                             tooltip={t('Category')}
                                                             label=''
-                                                            nextField={'vatPercent'}
-                                                            name={'category'}
+                                                            nextField={'vat_percent'}
+                                                            name={'sku_category'}
                                                             form={form}
                                                             color="red"
-                                                            id={'category'}
+                                                            id={'sku_category'}
                                                             position={'left'}
                                                             defaultChecked={0}
                                                         />
@@ -292,11 +327,11 @@ function ConfigurationForm() {
                                                             label={t('VatPercent')}
                                                             placeholder={t('VatPercent')}
                                                             required={false}
-                                                            nextField={'vatEnabled'}
+                                                            nextField={'is_vat_enabled'}
                                                             name={'vat_percent'}
                                                             form={form}
                                                             mt={0}
-                                                            id={'vatPercent'}
+                                                            id={'vat_percent'}
                                                         />
                                                     </Grid.Col>
                                                     <Grid.Col span={6} mt={'lg'}>
@@ -306,11 +341,11 @@ function ConfigurationForm() {
                                                                     <SwitchForm
                                                                         tooltip={t('VatEnabled')}
                                                                         label=''
-                                                                        nextField={'aitPercent'}
-                                                                        name={'vat_rnabled'}
+                                                                        nextField={'ait_percent'}
+                                                                        name={'is_vat_enabled'}
                                                                         form={form}
                                                                         color="red"
-                                                                        id={'vatEnabled'}
+                                                                        id={'is_vat_enabled'}
                                                                         position={'left'}
                                                                         defaultChecked={1}
                                                                     />
@@ -330,11 +365,11 @@ function ConfigurationForm() {
                                                             label={t('AITPercent')}
                                                             placeholder={t('AITPercent')}
                                                             required={false}
-                                                            nextField={'atiEnabled'}
+                                                            nextField={'is_ait_enabled'}
                                                             name={'ait_percent'}
                                                             form={form}
                                                             mt={0}
-                                                            id={'aitPercent'}
+                                                            id={'ait_percent'}
                                                         />
                                                     </Grid.Col>
                                                     <Grid.Col span={6} mt={'lg'}>
@@ -342,18 +377,18 @@ function ConfigurationForm() {
                                                             <Grid columns={6} gutter={{ base: 1 }}>
                                                                 <Grid.Col span={2}>
                                                                     <SwitchForm
-                                                                        tooltip={t('AtiEnabled')}
+                                                                        tooltip={t('AitEnabled')}
                                                                         label=''
-                                                                        nextField={'productionType'}
-                                                                        name={'ati_enabled'}
+                                                                        nextField={'production_type'}
+                                                                        name={'is_ait_enabled'}
                                                                         form={form}
                                                                         color="red"
-                                                                        id={'atiEnabled'}
+                                                                        id={'is_ait_enabled'}
                                                                         position={'left'}
                                                                         defaultChecked={1}
                                                                     />
                                                                 </Grid.Col>
-                                                                <Grid.Col span={4} fz={'sm'} pt={'1'}>{t('AtiEnabled')}
+                                                                <Grid.Col span={4} fz={'sm'} pt={'1'}>{t('AITEnabled')}
                                                                 </Grid.Col>
                                                             </Grid>
                                                         </Box>
@@ -366,12 +401,12 @@ function ConfigurationForm() {
                                                     label={t('ProductionType')}
                                                     placeholder={t('ChooseProductionType')}
                                                     required={false}
-                                                    nextField={'invoiceComment'}
+                                                    nextField={'invoice_comment'}
                                                     name={'production_type'}
                                                     form={form}
                                                     dropdownValue={["Family", "Local"]}
                                                     mt={8}
-                                                    id={'productionType'}
+                                                    id={'production_type'}
                                                     searchable={false}
                                                     value={customerGroupData}
                                                     changeValue={setCustomerGroupData}
@@ -384,11 +419,11 @@ function ConfigurationForm() {
                                                     label={t('InvoiceComment')}
                                                     placeholder={t('InvoiceComment')}
                                                     required={false}
-                                                    nextField={'removeImage'}
+                                                    nextField={'remove_image'}
                                                     name={'invoice_comment'}
                                                     form={form}
                                                     mt={8}
-                                                    id={'invoiceComment'}
+                                                    id={'invoice_comment'}
                                                 />
                                             </Box>
                                             <Box mt={'xs'}>
@@ -399,7 +434,7 @@ function ConfigurationForm() {
                                                     form={form}
                                                     required={false}
                                                     placeholder={t('DropLogoHere')}
-                                                    nextField={'removeImage'}
+                                                    nextField={'remove_image'}
 
                                                 />
                                             </Box>
@@ -409,11 +444,11 @@ function ConfigurationForm() {
                                                         <SwitchForm
                                                             tooltip={t('RemoveImage')}
                                                             label=''
-                                                            nextField={''}
+                                                            nextField={'invoice_print_logo'}
                                                             name={'remove_image'}
                                                             form={form}
                                                             color="red"
-                                                            id={'removeImage'}
+                                                            id={'remove_image'}
                                                             position={'left'}
                                                             defaultChecked={0}
                                                         />
@@ -440,28 +475,18 @@ function ConfigurationForm() {
                                 </Box>
                                 <Box pl={`xs`} pr={'xs'} mt={'xs'} className={'borderRadiusAll'}>
                                     <ScrollArea h={height} scrollbarSize={2} scrollbars="y" type="never">
-                                        <Box>
-                                            {
-                                                Object.keys(form.errors).length > 0 && validationMessage != 0 &&
-                                                <Alert variant="light" color="red" radius="md" title={
-                                                    <List withPadding size="sm">
-                                                        {validationMessage.name && <List.Item>{t('NameValidateMessage')}</List.Item>}
-                                                        {validationMessage.mobile && <List.Item>{t('MobileValidateMessage')}</List.Item>}
-                                                        {validationMessage.alternative_mobile && <List.Item>{t('AlternativeMobile')}</List.Item>}
-                                                    </List>
-                                                }></Alert>
-                                            }
+                                        <Box pl={'xs'} pt={'xs'}>
                                             <Box mt={'xs'}>
                                                 <Grid gutter={{ base: 1 }}>
                                                     <Grid.Col span={2}>
                                                         <SwitchForm
                                                             tooltip={t('PrintLogo')}
                                                             label=''
-                                                            nextField={'printWithOutstanding'}
-                                                            name={'print_logo'}
+                                                            nextField={'print_outstanding'}
+                                                            name={'invoice_print_logo'}
                                                             form={form}
                                                             color="red"
-                                                            id={'printLogo'}
+                                                            id={'invoice_print_logo'}
                                                             position={'left'}
                                                             defaultChecked={1}
                                                         />
@@ -475,11 +500,11 @@ function ConfigurationForm() {
                                                         <SwitchForm
                                                             tooltip={t('PrintWithOutstanding')}
                                                             label=''
-                                                            nextField={'posPrint'}
-                                                            name={'print_with_outstanding'}
+                                                            nextField={'pos_print'}
+                                                            name={'print_outstanding'}
                                                             form={form}
                                                             color="red"
-                                                            id={'printWithOutstanding'}
+                                                            id={'print_outstanding'}
                                                             position={'left'}
                                                             defaultChecked={1}
                                                         />
@@ -493,11 +518,11 @@ function ConfigurationForm() {
                                                         <SwitchForm
                                                             tooltip={t('PosPrint')}
                                                             label=''
-                                                            nextField={'printHeader'}
+                                                            nextField={'is_print_header'}
                                                             name={'pos_print'}
                                                             form={form}
                                                             color="red"
-                                                            id={'posPrint'}
+                                                            id={'pos_print'}
                                                             position={'left'}
                                                             defaultChecked={1}
                                                         />
@@ -511,11 +536,11 @@ function ConfigurationForm() {
                                                         <SwitchForm
                                                             tooltip={t('PrintHeader')}
                                                             label=''
-                                                            nextField={'printInvoiceTitle'}
-                                                            name={'print_header'}
+                                                            nextField={'is_invoice_title'}
+                                                            name={'is_print_header'}
                                                             form={form}
                                                             color="red"
-                                                            id={'printHeader'}
+                                                            id={'is_print_header'}
                                                             position={'left'}
                                                             defaultChecked={1}
                                                         />
@@ -529,11 +554,11 @@ function ConfigurationForm() {
                                                         <SwitchForm
                                                             tooltip={t('PrintInvoiceTitle')}
                                                             label=''
-                                                            nextField={'printFooter'}
-                                                            name={'print_invoice_title'}
+                                                            nextField={'is_print_footer'}
+                                                            name={'is_invoice_title'}
                                                             form={form}
                                                             color="red"
-                                                            id={'printInvoiceTitle'}
+                                                            id={'is_invoice_title'}
                                                             position={'left'}
                                                             defaultChecked={1}
                                                         />
@@ -547,11 +572,11 @@ function ConfigurationForm() {
                                                         <SwitchForm
                                                             tooltip={t('PrintFooter')}
                                                             label=''
-                                                            nextField={'printPowered'}
-                                                            name={'print_footer'}
+                                                            nextField={'is_powered'}
+                                                            name={'is_print_footer'}
                                                             form={form}
                                                             color="red"
-                                                            id={'printFooter'}
+                                                            id={'is_print_footer'}
                                                             position={'left'}
                                                             defaultChecked={0}
                                                         />
@@ -565,11 +590,11 @@ function ConfigurationForm() {
                                                         <SwitchForm
                                                             tooltip={t('PrintPowered')}
                                                             label=''
-                                                            nextField={'printFooterText'}
-                                                            name={'print_powered'}
+                                                            nextField={'print_footer_text'}
+                                                            name={'is_powered'}
                                                             form={form}
                                                             color="red"
-                                                            id={'printPowered'}
+                                                            id={'is_powered'}
                                                             position={'left'}
                                                             defaultChecked={0}
                                                         />
@@ -583,11 +608,11 @@ function ConfigurationForm() {
                                                     label={t('PrintFooterText')}
                                                     placeholder={t('EnterPrintFooterText')}
                                                     required={false}
-                                                    nextField={'bodyFontSize'}
-                                                    name={'address'}
+                                                    nextField={'body_font_size'}
+                                                    name={'print_footer_text'}
                                                     form={form}
                                                     mt={8}
-                                                    id={'printFooterText'}
+                                                    id={'print_footer_text'}
                                                 />
                                             </Box>
                                             <Grid columns={12} gutter={{ base: 8 }}>
@@ -599,12 +624,12 @@ function ConfigurationForm() {
                                                             label={t('BodyFontSize')}
                                                             placeholder={t('ChooseFontSize')}
                                                             required={false}
-                                                            nextField={'invoiceHeight'}
+                                                            nextField={'invoice_height'}
                                                             name={'body_font_size'}
                                                             form={form}
                                                             dropdownValue={["Family", "Local"]}
                                                             mt={8}
-                                                            id={'bodyFontSize'}
+                                                            id={'body_font_size'}
                                                             searchable={false}
                                                             value={customerGroupData}
                                                             changeValue={setCustomerGroupData}
@@ -618,11 +643,11 @@ function ConfigurationForm() {
                                                             label={t('InvoiceHeight')}
                                                             placeholder={t('InvoiceHeight')}
                                                             required={false}
-                                                            nextField={'invoiceWidth'}
+                                                            nextField={'invoice_width'}
                                                             name={'invoice_height'}
                                                             form={form}
                                                             mt={0}
-                                                            id={'invoiceHeight'}
+                                                            id={'invoice_height'}
                                                         />
                                                     </Box>
                                                 </Grid.Col>
@@ -635,11 +660,11 @@ function ConfigurationForm() {
                                                             label={t('InvoiceWidth')}
                                                             placeholder={t('InvoiceWidth')}
                                                             required={false}
-                                                            nextField={'bodyBorderColor'}
+                                                            nextField={'border_color'}
                                                             name={'invoice_width'}
                                                             form={form}
                                                             mt={0}
-                                                            id={'invoiceWidth'}
+                                                            id={'invoice_width'}
                                                         />
                                                     </Box>
                                                 </Grid.Col>
@@ -650,11 +675,11 @@ function ConfigurationForm() {
                                                             label={t('BodyBorderColor')}
                                                             placeholder={t('BodyBorderColor')}
                                                             required={false}
-                                                            nextField={'bodyBorderWidth'}
-                                                            name={'body_border_color'}
+                                                            nextField={'border_width'}
+                                                            name={'border_color'}
                                                             form={form}
                                                             mt={0}
-                                                            id={'bodyBorderColor'}
+                                                            id={'border_color'}
                                                         />
                                                     </Box>
                                                 </Grid.Col>
@@ -667,11 +692,11 @@ function ConfigurationForm() {
                                                             label={t('BodyBorderWidth')}
                                                             placeholder={t('BodyBorderWidth')}
                                                             required={false}
-                                                            nextField={'marginLeft'}
-                                                            name={'body_border_width'}
+                                                            nextField={'print_left_margin'}
+                                                            name={'border_width'}
                                                             form={form}
                                                             mt={0}
-                                                            id={'bodyBorderWidth'}
+                                                            id={'border_width'}
                                                         />
                                                     </Box>
                                                 </Grid.Col>
@@ -682,11 +707,11 @@ function ConfigurationForm() {
                                                             label={t('MarginLeft')}
                                                             placeholder={t('MarginLeft')}
                                                             required={false}
-                                                            nextField={'marginTop'}
-                                                            name={'margin_left'}
+                                                            nextField={'print_top_margin'}
+                                                            name={'print_left_margin'}
                                                             form={form}
                                                             mt={0}
-                                                            id={'marginLeft'}
+                                                            id={'print_left_margin'}
                                                         />
                                                     </Box>
                                                 </Grid.Col>
@@ -699,11 +724,11 @@ function ConfigurationForm() {
                                                             label={t('MarginTop')}
                                                             placeholder={t('MarginTop')}
                                                             required={false}
-                                                            nextField={''}
-                                                            name={'margin_top'}
+                                                            nextField={'custom_invoice'}
+                                                            name={'print_top_margin'}
                                                             form={form}
                                                             mt={0}
-                                                            id={'marginTop'}
+                                                            id={'print_top_margin'}
                                                         />
                                                     </Box>
                                                 </Grid.Col>
@@ -750,28 +775,18 @@ function ConfigurationForm() {
                                 </Box>
                                 <Box pl={`xs`} pr={'xs'} mt={'xs'} className={'borderRadiusAll'}>
                                     <ScrollArea h={height} scrollbarSize={2} scrollbars="y" type="never">
-                                        <Box>
-                                            {
-                                                Object.keys(form.errors).length > 0 && validationMessage != 0 &&
-                                                <Alert variant="light" color="red" radius="md" title={
-                                                    <List withPadding size="sm">
-                                                        {validationMessage.name && <List.Item>{t('NameValidateMessage')}</List.Item>}
-                                                        {validationMessage.mobile && <List.Item>{t('MobileValidateMessage')}</List.Item>}
-                                                        {validationMessage.alternative_mobile && <List.Item>{t('AlternativeMobile')}</List.Item>}
-                                                    </List>
-                                                }></Alert>
-                                            }
+                                        <Box pt={'xs'} pl={'xs'}>
                                             <Box mt={'xs'}>
                                                 <Grid gutter={{ base: 1 }}>
                                                     <Grid.Col span={2}>
                                                         <SwitchForm
                                                             tooltip={t('CustomInvoice')}
                                                             label=''
-                                                            nextField={'bonusFromStock'}
+                                                            nextField={'bonus_from_stock'}
                                                             name={'custom_invoice'}
                                                             form={form}
                                                             color="red"
-                                                            id={'customInvoice'}
+                                                            id={'custom_invoice'}
                                                             position={'left'}
                                                             defaultChecked={0}
                                                         />
@@ -785,11 +800,11 @@ function ConfigurationForm() {
                                                         <SwitchForm
                                                             tooltip={t('BonusFromStock')}
                                                             label=''
-                                                            nextField={'isUnitPrice'}
+                                                            nextField={'is_unit_price'}
                                                             name={'bonus_from_stock'}
                                                             form={form}
                                                             color="red"
-                                                            id={'bonusFromStock'}
+                                                            id={'bonus_from_stock'}
                                                             position={'left'}
                                                             defaultChecked={0}
                                                         />
@@ -803,11 +818,11 @@ function ConfigurationForm() {
                                                         <SwitchForm
                                                             tooltip={t('IsUnitPrice')}
                                                             label=''
-                                                            nextField={'isDescription'}
+                                                            nextField={'is_description'}
                                                             name={'is_unit_price'}
                                                             form={form}
                                                             color="red"
-                                                            id={'isUnitPrice'}
+                                                            id={'is_unit_price'}
                                                             position={'left'}
                                                             defaultChecked={0}
                                                         />
@@ -821,11 +836,11 @@ function ConfigurationForm() {
                                                         <SwitchForm
                                                             tooltip={t('IsDescription')}
                                                             label=''
-                                                            nextField={'zeroStockAllowed'}
+                                                            nextField={'zero_stock'}
                                                             name={'is_description'}
                                                             form={form}
                                                             color="red"
-                                                            id={'isDescription'}
+                                                            id={'is_description'}
                                                             position={'left'}
                                                             defaultChecked={0}
                                                         />
@@ -839,11 +854,11 @@ function ConfigurationForm() {
                                                         <SwitchForm
                                                             tooltip={t('ZeroStockAllowed')}
                                                             label=''
-                                                            nextField={'stockItem'}
-                                                            name={'zero_ztock_allowed'}
+                                                            nextField={'stock_item'}
+                                                            name={'zero_stock'}
                                                             form={form}
                                                             color="red"
-                                                            id={'zeroStockAllowed'}
+                                                            id={'zero_stock'}
                                                             position={'left'}
                                                             defaultChecked={0}
                                                         />
@@ -857,11 +872,11 @@ function ConfigurationForm() {
                                                         <SwitchForm
                                                             tooltip={t('StockItem')}
                                                             label=''
-                                                            nextField={'customInvoicePrint'}
+                                                            nextField={'custom_invoice_print'}
                                                             name={'stock_item'}
                                                             form={form}
                                                             color="red"
-                                                            id={'stockItem'}
+                                                            id={'stock_item'}
                                                             position={'left'}
                                                             defaultChecked={0}
                                                         />
@@ -875,11 +890,11 @@ function ConfigurationForm() {
                                                         <SwitchForm
                                                             tooltip={t('CustomInvoicePrint')}
                                                             label=''
-                                                            nextField={'stockHistory'}
+                                                            nextField={'is_stock_history'}
                                                             name={'custom_invoice_print'}
                                                             form={form}
                                                             color="red"
-                                                            id={'customInvoicePrint'}
+                                                            id={'custom_invoice_print'}
                                                             position={'left'}
                                                             defaultChecked={0}
                                                         />
@@ -893,11 +908,11 @@ function ConfigurationForm() {
                                                         <SwitchForm
                                                             tooltip={t('StockHistory')}
                                                             label=''
-                                                            nextField={'conditionSales'}
-                                                            name={'stock_history'}
+                                                            nextField={'condition_sales'}
+                                                            name={'is_stock_history'}
                                                             form={form}
                                                             color="red"
-                                                            id={'stockHistory'}
+                                                            id={'is_stock_history'}
                                                             position={'left'}
                                                             defaultChecked={0}
                                                         />
@@ -911,11 +926,11 @@ function ConfigurationForm() {
                                                         <SwitchForm
                                                             tooltip={t('ConditionSales')}
                                                             label=''
-                                                            nextField={'storeLedger'}
+                                                            nextField={'store_ledger'}
                                                             name={'condition_sales'}
                                                             form={form}
                                                             color="red"
-                                                            id={'conditionSales'}
+                                                            id={'condition_sales'}
                                                             position={'left'}
                                                             defaultChecked={0}
                                                         />
@@ -929,11 +944,11 @@ function ConfigurationForm() {
                                                         <SwitchForm
                                                             tooltip={t('StoreLedger')}
                                                             label=''
-                                                            nextField={'marketingExecutive'}
+                                                            nextField={'is_marketing_executive'}
                                                             name={'store_ledger'}
                                                             form={form}
                                                             color="red"
-                                                            id={'storeLedger'}
+                                                            id={'store_ledger'}
                                                             position={'left'}
                                                             defaultChecked={0}
                                                         />
@@ -947,11 +962,11 @@ function ConfigurationForm() {
                                                         <SwitchForm
                                                             tooltip={t('MarketingExecutive')}
                                                             label=''
-                                                            nextField={'fuelStation'}
-                                                            name={'marketing_executive'}
+                                                            nextField={'fuel_station'}
+                                                            name={'is_marketing_executive'}
                                                             form={form}
                                                             color="red"
-                                                            id={'marketingExecutive'}
+                                                            id={'is_marketing_executive'}
                                                             position={'left'}
                                                             defaultChecked={0}
                                                         />
@@ -965,11 +980,11 @@ function ConfigurationForm() {
                                                         <SwitchForm
                                                             tooltip={t('FuelStation')}
                                                             label=''
-                                                            nextField={'tloCommision'}
+                                                            nextField={'tlo_commission'}
                                                             name={'fuel_station'}
                                                             form={form}
                                                             color="red"
-                                                            id={'fuelStation'}
+                                                            id={'fuel_station'}
                                                             position={'left'}
                                                             defaultChecked={0}
                                                         />
@@ -983,11 +998,11 @@ function ConfigurationForm() {
                                                         <SwitchForm
                                                             tooltip={t('TloCommision')}
                                                             label=''
-                                                            nextField={'salesReturn'}
-                                                            name={'tlo_commision'}
+                                                            nextField={'sales_return'}
+                                                            name={'tlo_commission'}
                                                             form={form}
                                                             color="red"
-                                                            id={'tloCommision'}
+                                                            id={'tlo_commission'}
                                                             position={'left'}
                                                             defaultChecked={0}
                                                         />
@@ -1001,11 +1016,11 @@ function ConfigurationForm() {
                                                         <SwitchForm
                                                             tooltip={t('SalesReturn')}
                                                             label=''
-                                                            nextField={'srCommision'}
+                                                            nextField={'sr_commission'}
                                                             name={'sales_return'}
                                                             form={form}
                                                             color="red"
-                                                            id={'salesReturn'}
+                                                            id={'sales_return'}
                                                             position={'left'}
                                                             defaultChecked={0}
                                                         />
@@ -1019,11 +1034,11 @@ function ConfigurationForm() {
                                                         <SwitchForm
                                                             tooltip={t('SRCommision')}
                                                             label=''
-                                                            nextField={'dueSalesWC'}
-                                                            name={'sr_commision'}
+                                                            nextField={'due_sales_without_customer'}
+                                                            name={'sr_commission'}
                                                             form={form}
                                                             color="red"
-                                                            id={'srCommision'}
+                                                            id={'sr_commission'}
                                                             position={'left'}
                                                             defaultChecked={0}
                                                         />
@@ -1037,11 +1052,11 @@ function ConfigurationForm() {
                                                         <SwitchForm
                                                             tooltip={t('DueSalesWithoutCustomer')}
                                                             label=''
-                                                            nextField={''}
-                                                            name={'due_sales_wc'}
+                                                            nextField={'EntityFormSubmit'}
+                                                            name={'due_sales_without_customer'}
                                                             form={form}
                                                             color="red"
-                                                            id={'dueSalesWC'}
+                                                            id={'due_sales_without_customer'}
                                                             position={'left'}
                                                             defaultChecked={0}
                                                         />

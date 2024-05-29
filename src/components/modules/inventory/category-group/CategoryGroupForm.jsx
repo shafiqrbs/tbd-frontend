@@ -96,7 +96,7 @@ function CategoryGroupForm() {
                                     <Box pl={`xs`} pb={'xs'} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'} >
                                         <Grid>
                                             <Grid.Col span={8} h={54}>
-                                                <Title order={6} mt={'xs'} pl={'6'}>{t('CreateCategoryGroup')}</Title>
+                                                <Title order={6} mt={'xs'} pl={'6'}>{t('CreateProductCategoryGroup')}</Title>
                                             </Grid.Col>
                                             <Grid.Col span={4}>
                                                 <Stack right align="flex-end">

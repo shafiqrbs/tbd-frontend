@@ -277,7 +277,7 @@
   "ManageProduct": "Manage Product",
   "Unit": "Unit",
   "Brand": "Brand",
-  "CreateProduct": "CreateProduct",
+  "CreateProduct": "Create Product",
   "Barcode": "Barcode",
   "Warehouse": "Warehouse",
   "ProductionType": "Production Type",
@@ -409,7 +409,10 @@
   "StartDate": "Start Date",
   "EndDate": "End Date",
   "PurchaseInvoice": "Purchase Invoice",
-
-
-  "" : ""
+  "CreateProductCategory": "Create Product Category",
+  "CreateProductCategoryGroup": "Create Product Category Group",
+  "Due": "Due",
+  "Stock": "Stock",
+  "UOM": "UOM",
+  "": ""
 }

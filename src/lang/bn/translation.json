@@ -155,7 +155,7 @@
   "Unit": "ইউনিট",
   "Brand": "ব্র্যান্ড",
   "PurchasePrice": "ক্রয় মূল্য",
-  "CreateProduct": "CreateProduct",
+  "CreateProduct": "প্রোডাক্ট তৈরী",
   "ProductInformation": "পণ্যের বিবরণ",
   "AlternativeProductName": "বিকল্প পণ্যের নাম",
   "ProductType": "পণ্যের টাইপ",
@@ -321,6 +321,10 @@
   "Process": "প্রসেস",
   "SelectProductionItem": "প্রোডাকশন আইটেম সিলেক্ট করুন",
   "Issue": "ইস্যু",
-  "Damage": "ড্যামেজ"
-
+  "Damage": "ড্যামেজ",
+  "CreateProductCategory": "প্রোডাক্ট ক্যাটাগরি তৈরী",
+  "CreateProductCategoryGroup": "প্রোডাক্ট ক্যাটাগরি গ্রুপ তৈরী",
+  "Due": "ডিউ",
+  "Stock": "স্টক",
+  "UOM": "ইউ  ও এম"
 }
