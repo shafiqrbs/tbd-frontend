@@ -34,7 +34,7 @@ import getSettingAccountTypeDropdownData from "../../../global-hook/dropdown/get
 import getSettingAuthorizedTypeDropdownData from "../../../global-hook/dropdown/getSettingAuthorizedTypeDropdownData.js";
 import SwitchForm from "../../../form-builders/SwitchForm";
 
-function LedgerForm(props) {
+function ConfigForm(props) {
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
@@ -255,4 +255,4 @@ function LedgerForm(props) {
 
     );
 }
-export default LedgerForm;
+export default ConfigForm;

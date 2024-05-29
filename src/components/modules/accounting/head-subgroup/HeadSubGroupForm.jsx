@@ -25,7 +25,14 @@ import {
 
 import Shortcut from "../../shortcut/Shortcut";
 import InputForm from "../../../form-builders/InputForm";
+import TextAreaForm from "../../../form-builders/TextAreaForm";
+import InputNumberForm from "../../../form-builders/InputNumberForm";
 import SelectForm from "../../../form-builders/SelectForm.jsx";
+import getTransactionMethodDropdownData from "../../../global-hook/dropdown/getTransactionMethodDropdownData.js";
+import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
+import getSettingAccountTypeDropdownData from "../../../global-hook/dropdown/getSettingAccountTypeDropdownData.js";
+import getSettingAuthorizedTypeDropdownData from "../../../global-hook/dropdown/getSettingAuthorizedTypeDropdownData.js";
+import SwitchForm from "../../../form-builders/SwitchForm";
 
 function HeadSubGroupForm(props) {
     const { t, i18n } = useTranslation();
@@ -35,39 +42,41 @@ function HeadSubGroupForm(props) {
     const [opened, { open, close }] = useDisclosure(false);
 
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
+    const [authorisedData, setAuthorisedData] = useState(null);
     const [methodData, setMethodData] = useState(null);
+    const [accountTypeData, setAccountTypeData] = useState(null);
 
+    const validationMessage = useSelector((state) => state.crudSlice.validationMessage)
+    const validation = useSelector((state) => state.crudSlice.validation)
+    const entityNewData = useSelector((state) => state.crudSlice.entityNewData)
+    const authorisedTypeDropdownData = useSelector((state) => state.utilityUtilitySlice.settingDropdown);
+    const accountTypeDropdownData = useSelector((state) => state.utilityUtilitySlice.settingDropdown);
+
+
+    const authorizedDropdown = getSettingAuthorizedTypeDropdownData()
+    const accountDropdown = getSettingAccountTypeDropdownData()
 
 
 
     const [files, setFiles] = useState([]);
 
+    const previews = files.map((file, index) => {
+        const imageUrl = URL.createObjectURL(file);
+        return <Image key={index} src={imageUrl} onLoad={() => URL.revokeObjectURL(imageUrl)} />;
+    });
 
     const form = useForm({
         initialValues: {
-            method_id: '', name: '', short_name: '', authorised_mode_id: '', account_mode_id: '', service_charge: '', account_owner: '', path: ''
+            parent_id: '', name: '', code: '', status: ''
         },
         validate: {
-            method_id: isNotEmpty(),
-            name: hasLength({ min: 2, max: 20 }),
-            short_name: hasLength({ min: 2, max: 20 }),
-            authorised_mode_id: isNotEmpty(),
-            account_mode_id: isNotEmpty(),
-            path: isNotEmpty(),
-            service_charge: (value, values) => {
-                if (value) {
-                    const isNumberOrFractional = /^-?\d+(\.\d+)?$/.test(value);
-                    if (!isNumberOrFractional) {
-                        return true;
-                    }
-                }
-                return null;
-            },
+            parent_id: isNotEmpty(),
+            name: hasLength({ min: 2, max: 20 })
         }
     });
 
     useHotkeys([['alt+n', () => {
-        document.getElementById('group_nature').click()
+        document.getElementById('parent_id').click()
     }]], []);
 
     useHotkeys([['alt+r', () => {
@@ -77,7 +86,6 @@ function HeadSubGroupForm(props) {
     useHotkeys([['alt+s', () => {
         document.getElementById('EntityFormSubmit').click()
     }]], []);
-
 
     return (
         <Box>
@@ -99,7 +107,7 @@ function HeadSubGroupForm(props) {
                                 formValue['path'] = files[0];
 
                                 const data = {
-                                    url: 'accounting/transaction-mode',
+                                    url: 'accounting/account-head',
                                     data: formValue
                                 }
                                 dispatch(storeEntityDataWithFile(data))
@@ -129,7 +137,7 @@ function HeadSubGroupForm(props) {
                                 <Box pl={`xs`} pb={'xs'} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'} >
                                     <Grid>
                                         <Grid.Col span={6} h={54}>
-                                            <Title order={6} mt={'xs'} pl={'6'}>{t('CreateNewAccountSubGroup')}</Title>
+                                            <Title order={6} mt={'xs'} pl={'6'}>{t('CreateNewAccountGroup')}</Title>
                                         </Grid.Col>
                                         <Grid.Col span={6}>
                                             <Stack right align="flex-end">
@@ -160,19 +168,19 @@ function HeadSubGroupForm(props) {
                                     <Grid columns={24}>
                                         <Grid.Col span={'auto'} >
                                             <ScrollArea h={height} scrollbarSize={2} scrollbars="y" type="never">
-                                                <Box>
+                                                <Box >
                                                     <Box mt={'xs'}>
                                                         <SelectForm
                                                             tooltip={t('ChooseMethod')}
-                                                            label={t('NatureOfGroup')}
-                                                            placeholder={t('ChooseMethod')}
+                                                            label={t('HeadOfGroup')}
+                                                            placeholder={t('ChooseHeadGroup')}
                                                             required={true}
                                                             nextField={'name'}
-                                                            name={'group_nature'}
+                                                            name={'parent_id'}
                                                             form={form}
-                                                            dropdownValue={''}
+                                                            dropdownValue={getTransactionMethodDropdownData()}
                                                             mt={8}
-                                                            id={'group_nature'}
+                                                            id={'parent_id'}
                                                             searchable={false}
                                                             value={methodData}
                                                             changeValue={setMethodData}
@@ -180,11 +188,11 @@ function HeadSubGroupForm(props) {
                                                     </Box>
                                                     <Box mt={'xs'}>
                                                         <InputForm
-                                                            tooltip={t('TransactionModeNameValidateMessage')}
+                                                            tooltip={t('SubGroupNameValidateMessage')}
                                                             label={t('Name')}
                                                             placeholder={t('Name')}
                                                             required={true}
-                                                            nextField={'short_name'}
+                                                            nextField={'code'}
                                                             name={'name'}
                                                             form={form}
                                                             mt={0}
@@ -193,28 +201,33 @@ function HeadSubGroupForm(props) {
                                                     </Box>
                                                     <Box mt={'xs'}>
                                                         <InputForm
-                                                            tooltip={t('ShortNameValidateMessage')}
-                                                            label={t('ShortName')}
-                                                            placeholder={t('ShortName')}
-                                                            required={true}
-                                                            nextField={'authorised_mode_id'}
-                                                            name={'short_name'}
-                                                            form={form}
-                                                            mt={0}
-                                                            id={'short_name'}
-                                                        />
-                                                    </Box>
-                                                    <Box mt={'xs'}>
-                                                        <InputForm
                                                             tooltip={t('AccountCodeValidateMessage')}
                                                             label={t('AccountCode')}
                                                             placeholder={t('AccountCode')}
                                                             required={true}
-                                                            nextField={'account_code'}
-                                                            name={'account_code'}
+                                                            name={'code'}
                                                             form={form}
-                                                            id={'account_code'}
+                                                            id={'code'}
+                                                            nextField={'statusz'}
                                                         />
+                                                    </Box>
+                                                    <Box mt={'xs'} ml={'xs'}>
+                                                        <Grid gutter={{ base: 1 }}>
+                                                            <Grid.Col span={2}>
+                                                                <SwitchForm
+                                                                    tooltip={t('Status')}
+                                                                    label=''
+                                                                    nextField={'EntityFormSubmit'}
+                                                                    name={'status'}
+                                                                    form={form}
+                                                                    color="red"
+                                                                    id={'status'}
+                                                                    position={'left'}
+                                                                    defaultChecked={1}
+                                                                />
+                                                            </Grid.Col>
+                                                            <Grid.Col span={6} fz={'sm'} pt={'1'}>{t('Status')}</Grid.Col>
+                                                        </Grid>
                                                     </Box>
 
                                                 </Box>
