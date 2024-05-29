@@ -14,11 +14,11 @@ import {
 } from "@tabler/icons-react";
 import { DataTable } from 'mantine-datatable';
 import { useDispatch, useSelector } from "react-redux";
-import {getIndexEntityData, setFetching, setSalesFilterData} from "../../../../store/inventory/crudSlice.js";
+import { getIndexEntityData, setFetching, setSalesFilterData } from "../../../../store/inventory/crudSlice.js";
 import ShortcutTable from "../../shortcut/ShortcutTable";
 import { ReactToPrint } from "react-to-print";
 import _SalesSearch from "./_SalesSearch.jsx";
-import {setSearchKeyword} from "../../../../store/core/crudSlice.js";
+import { setSearchKeyword } from "../../../../store/core/crudSlice.js";
 
 function _SalesTable() {
     const printRef = useRef()
@@ -32,8 +32,8 @@ function _SalesTable() {
     const [page, setPage] = useState(1);
 
     useEffect(() => {
-       dispatch(setSearchKeyword(''))
-    },[])
+        dispatch(setSearchKeyword(''))
+    }, [])
 
     const fetching = useSelector((state) => state.inventoryCrudSlice.fetching)
     // const searchKeyword = useSelector((state) => state.inventoryCrudSlice.searchKeyword)
@@ -137,7 +137,7 @@ function _SalesTable() {
                                             title: t('S/N'),
                                             textAlignment: 'right',
                                             render: (item) => (
-                                                <Tooltip label={item.invoice+' - '+item.customerName}>
+                                                <Tooltip label={item.invoice + ' - ' + item.customerName}>
                                                     <Checkbox
                                                         value={item.id}
                                                         checked={!!checkList?.[item.id]}
@@ -160,12 +160,12 @@ function _SalesTable() {
                                                     component="a"
                                                     size="sm"
                                                     variant="subtle"
-                                                    color="red.6"
+                                                    c="red.6"
                                                     onClick={(e) => {
                                                         e.preventDefault();
                                                         setSalesViewData(item)
                                                     }}
-                                                    style={{cursor: "pointer"}}
+                                                    style={{ cursor: "pointer" }}
                                                 >
                                                     {item.invoice}
                                                 </Text>
@@ -176,30 +176,30 @@ function _SalesTable() {
                                         {
                                             accessor: 'total',
                                             title: t("Total"),
-                                            textAlign:"right",
+                                            textAlign: "right",
                                             render: (data) => (
                                                 <>
-                                                    {data.total?Number(data.total).toFixed(2):"0.00"}
+                                                    {data.total ? Number(data.total).toFixed(2) : "0.00"}
                                                 </>
                                             )
                                         },
                                         {
                                             accessor: 'payment',
                                             title: t("Receive"),
-                                            textAlign:"right",
+                                            textAlign: "right",
                                             render: (data) => (
                                                 <>
-                                                    {data.payment?Number(data.payment).toFixed(2):"0.00"}
+                                                    {data.payment ? Number(data.payment).toFixed(2) : "0.00"}
                                                 </>
                                             )
                                         },
                                         {
                                             accessor: 'due',
                                             title: t("Due"),
-                                            textAlign:"right",
+                                            textAlign: "right",
                                             render: (data) => (
                                                 <>
-                                                    {data.total?(Number(data.total)-Number(data.payment)).toFixed(2):"0.00"}
+                                                    {data.total ? (Number(data.total) - Number(data.payment)).toFixed(2) : "0.00"}
                                                 </>
                                             )
                                         },
@@ -209,46 +209,46 @@ function _SalesTable() {
                                             textAlign: "right",
                                             render: (data) => (
 
-                <Group gap={4} justify="right" wrap="nowrap">
-                    <Menu position="bottom-end" offset={3} withArrow trigger="hover" openDelay={100} closeDelay={400}>
-                        <Menu.Target>
-                            <ActionIcon variant="outline" color="gray.6" radius="xl" aria-label="Settings">
-                                <IconDotsVertical height={'18'} width={'18'} stroke={1.5} />
-                            </ActionIcon>
-                        </Menu.Target>
-                        <Menu.Dropdown>
-                                <Menu.Item
-                                    href= {`/inventory/sales/edit/${data.id}`}
-                                    target="_blank"
-                                    component="a"
-                                    w={'200'}
-                                >
-                                    {t('Edit')}
-                                </Menu.Item>
+                                                <Group gap={4} justify="right" wrap="nowrap">
+                                                    <Menu position="bottom-end" offset={3} withArrow trigger="hover" openDelay={100} closeDelay={400}>
+                                                        <Menu.Target>
+                                                            <ActionIcon variant="outline" color="gray.6" radius="xl" aria-label="Settings">
+                                                                <IconDotsVertical height={'18'} width={'18'} stroke={1.5} />
+                                                            </ActionIcon>
+                                                        </Menu.Target>
+                                                        <Menu.Dropdown>
+                                                            <Menu.Item
+                                                                href={`/inventory/sales/edit/${data.id}`}
+                                                                target="_blank"
+                                                                component="a"
+                                                                w={'200'}
+                                                            >
+                                                                {t('Edit')}
+                                                            </Menu.Item>
 
-                                <Menu.Item
-                                    href= {``}
-                                    target="_blank"
-                                    component="a"
-                                    w={'200'}
-                                >
-                                    {t('Show')}
-                                </Menu.Item>
-                                <Menu.Item
-                                    href= {``}
-                                    target="_blank"
-                                    component="a"
-                                    w={'200'}
-                                    mt={'2'}
-                                    bg={'red.1'}
-                                    c={'red.6'}
-                                    rightSection={<IconTrashX style={{ width: rem(14), height: rem(14) }} />}
-                                >
-                                    {t('Delete')}
-                                </Menu.Item>
-                        </Menu.Dropdown>
-                    </Menu>
-                </Group>
+                                                            <Menu.Item
+                                                                href={``}
+                                                                target="_blank"
+                                                                component="a"
+                                                                w={'200'}
+                                                            >
+                                                                {t('Show')}
+                                                            </Menu.Item>
+                                                            <Menu.Item
+                                                                href={``}
+                                                                target="_blank"
+                                                                component="a"
+                                                                w={'200'}
+                                                                mt={'2'}
+                                                                bg={'red.1'}
+                                                                c={'red.6'}
+                                                                rightSection={<IconTrashX style={{ width: rem(14), height: rem(14) }} />}
+                                                            >
+                                                                {t('Delete')}
+                                                            </Menu.Item>
+                                                        </Menu.Dropdown>
+                                                    </Menu>
+                                                </Group>
                                             ),
                                         },
                                     ]
@@ -399,7 +399,7 @@ function _SalesTable() {
                                                 <Table.Tr>
                                                     <Table.Th colspan={'5'} ta="right" fz="xs" w={'100'}>{t('Due')}</Table.Th>
                                                     <Table.Th ta="right" fz="xs" w={'100'}>
-                                                        {salesViewData && salesViewData.total &&(Number(salesViewData.total)- Number(salesViewData.payment)).toFixed(2)}
+                                                        {salesViewData && salesViewData.total && (Number(salesViewData.total) - Number(salesViewData.payment)).toFixed(2)}
                                                     </Table.Th>
                                                 </Table.Tr>
                                             </Table.Tfoot>

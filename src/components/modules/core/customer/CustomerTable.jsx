@@ -3,10 +3,10 @@ import { useOutletContext } from "react-router-dom";
 import {
     Group,
     Box,
-    ActionIcon, Text, Menu, rem,Anchor
+    ActionIcon, Text, Menu, rem, Anchor
 } from "@mantine/core";
 import { useTranslation } from "react-i18next";
-import {IconEye, IconEdit, IconTrash, IconInfoCircle, IconSettings, IconEyeEdit, IconTrashX, IconPencil, IconDotsVertical} from "@tabler/icons-react";
+import { IconEye, IconEdit, IconTrash, IconInfoCircle, IconSettings, IconEyeEdit, IconTrashX, IconPencil, IconDotsVertical } from "@tabler/icons-react";
 import { DataTable } from 'mantine-datatable';
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -91,23 +91,24 @@ function CustomerTable() {
                                             </ActionIcon>
                                         </Menu.Target>
                                         <Menu.Dropdown>
-                                            <Menu.Item w={'200'} href="/inventory/config" leftSection={<IconPencil style={{ width: rem(14), height: rem(14) }} />} >
-                                                <Anchor href="https://mantine.dev/" target="_blank">
-                                                    Edit
-                                                </Anchor>
+                                            <Menu.Item w={'200'} href="/inventory/config" >
+                                                {t('Edit')}
                                             </Menu.Item>
                                             <Menu.Item href="/inventory/config"
-                                                       leftSection={<IconEyeEdit style={{ width: rem(14), height: rem(14) }} />}>
-
-                                                <Anchor href="https://mantine.dev/" target="_blank">
-                                                    {t('Show')}
-                                                </Anchor>
+                                            >
+                                                {t('Show')}
                                             </Menu.Item>
-                                            <Menu.Item href=""
-                                                        leftSection={<IconTrashX style={{ width: rem(14), height: rem(14) }} />}>
-                                                <Anchor href="/inventory/config" >
-                                                    {t('Delete')}
-                                                </Anchor>
+                                            <Menu.Item
+                                                href={``}
+                                                target="_blank"
+                                                component="a"
+                                                w={'200'}
+                                                mt={'2'}
+                                                bg={'red.1'}
+                                                c={'red.6'}
+                                                rightSection={<IconTrashX style={{ width: rem(14), height: rem(14) }} />}
+                                            >
+                                                {t('Delete')}
                                             </Menu.Item>
                                         </Menu.Dropdown>
                                     </Menu>
