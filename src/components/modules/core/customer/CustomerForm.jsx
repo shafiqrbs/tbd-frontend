@@ -121,7 +121,7 @@ function CustomerForm() {
     }, [validation, validationMessage, form]);
 
     useHotkeys([['alt+n', () => {
-        document.getElementById('CustomerName').focus()
+        document.getElementById('customer_group').focus()
     }]], []);
 
     useHotkeys([['alt+r', () => {
@@ -250,7 +250,7 @@ function CustomerForm() {
                                                 <InputForm
                                                     tooltip={t('NameValidateMessage')}
                                                     label={t('Name')}
-                                                    placeholder={t('CustomerName')}
+                                                    placeholder={t('name')}
                                                     required={true}
                                                     nextField={'mobile'}
                                                     name={'name'}

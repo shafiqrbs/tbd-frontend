@@ -47,7 +47,7 @@ function CategoryGroupForm() {
     }]], []);
 
     useHotkeys([['alt+s', () => {
-        document.getElementById('CategoryFormSubmit').click()
+        document.getElementById('EntityFormSubmit').click()
     }]], []);
 
 
@@ -123,7 +123,7 @@ function CategoryGroupForm() {
                                             </Grid.Col>
                                         </Grid>
                                     </Box>
-                                    <Box pl={`xs`} pr={'xs'} mt={'xs'} className={'borderRadiusAll'}>
+                                    <Box pl={`sm`} pr={'sm'} mt={'xs'} className={'borderRadiusAll'}>
                                         <ScrollArea h={height} scrollbarSize={2} scrollbars="y" type="never">
                                             <Box mt={'xs'}>
                                                 <InputForm
@@ -140,7 +140,7 @@ function CategoryGroupForm() {
                                             </Box>
                                             <Box mt={'xs'}>
                                                 <Grid gutter={{ base: 1 }}>
-                                                    <Grid.Col span={2}>
+                                                    <Grid.Col span={2} pl={'2'}>
                                                         <SwitchForm
                                                             tooltip={t('Status')}
                                                             label=''

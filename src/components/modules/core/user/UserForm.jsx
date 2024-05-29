@@ -59,7 +59,7 @@ function UserForm() {
     }]], []);
 
     useHotkeys([['alt+s', () => {
-        document.getElementById('UserFormSubmit').click()
+        document.getElementById('EntityFormSubmit').click()
     }]], []);
 
 

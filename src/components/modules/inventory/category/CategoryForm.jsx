@@ -67,7 +67,7 @@ function CategoryForm() {
     }]], []);
 
     useHotkeys([['alt+s', () => {
-        document.getElementById('CategoryFormSubmit').click()
+        document.getElementById('EntityFormSubmit').click()
     }]], []);
 
 
@@ -144,7 +144,7 @@ function CategoryForm() {
                                             </Grid.Col>
                                         </Grid>
                                     </Box>
-                                    <Box pl={`xs`} pr={'xs'} mt={'xs'} className={'borderRadiusAll'}>
+                                    <Box pl={`md`} pr={'md'} mt={'xs'} className={'borderRadiusAll'}>
                                         <ScrollArea h={height} scrollbarSize={2} scrollbars="y" type="never">
                                             <Box>
                                                 <Grid gutter={{ base: 6 }}>
