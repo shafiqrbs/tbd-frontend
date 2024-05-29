@@ -88,7 +88,7 @@ function HeadGroupForm(props) {
     });
 
     useHotkeys([['alt+n', () => {
-        document.getElementById('method_id').click()
+        document.getElementById('group_nature').click()
     }]], []);
 
     useHotkeys([['alt+r', () => {

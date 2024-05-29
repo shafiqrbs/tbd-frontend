@@ -1,20 +1,20 @@
-import React, {useEffect, useState} from "react";
-import {useOutletContext} from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useOutletContext } from "react-router-dom";
 import {
     Button,
     rem, Flex,
     Grid, Box, ScrollArea, Group, Text, Title, Alert, List, Stack, SimpleGrid, Image, Tooltip
 } from "@mantine/core";
-import {useTranslation} from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import {
     IconCheck,
     IconDeviceFloppy, IconInfoCircle, IconPlus,
 } from "@tabler/icons-react";
-import {useDisclosure, useHotkeys} from "@mantine/hooks";
-import {useDispatch, useSelector} from "react-redux";
-import {hasLength, isNotEmpty, useForm} from "@mantine/form";
-import {modals} from "@mantine/modals";
-import {notifications} from "@mantine/notifications";
+import { useDisclosure, useHotkeys } from "@mantine/hooks";
+import { useDispatch, useSelector } from "react-redux";
+import { hasLength, isNotEmpty, useForm } from "@mantine/form";
+import { modals } from "@mantine/modals";
+import { notifications } from "@mantine/notifications";
 import {
     setEntityNewData,
     setFetching,
@@ -25,58 +25,37 @@ import {
 
 import Shortcut from "../../shortcut/Shortcut";
 import InputForm from "../../../form-builders/InputForm";
-import TextAreaForm from "../../../form-builders/TextAreaForm";
-import InputNumberForm from "../../../form-builders/InputNumberForm";
 import SelectForm from "../../../form-builders/SelectForm.jsx";
-import getTransactionMethodDropdownData from "../../../global-hook/dropdown/getTransactionMethodDropdownData.js";
-import {Dropzone, IMAGE_MIME_TYPE} from "@mantine/dropzone";
-import getSettingAccountTypeDropdownData from "../../../global-hook/dropdown/getSettingAccountTypeDropdownData.js";
-import getSettingAuthorizedTypeDropdownData from "../../../global-hook/dropdown/getSettingAuthorizedTypeDropdownData.js";
 
 function HeadSubGroupForm(props) {
-    const {t, i18n} = useTranslation();
+    const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
-    const {isOnline, mainAreaHeight} = useOutletContext();
+    const { isOnline, mainAreaHeight } = useOutletContext();
     const height = mainAreaHeight - 130; //TabList height 104
-    const [opened, {open, close}] = useDisclosure(false);
+    const [opened, { open, close }] = useDisclosure(false);
 
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
-    const [authorisedData, setAuthorisedData] = useState(null);
     const [methodData, setMethodData] = useState(null);
-    const [accountTypeData, setAccountTypeData] = useState(null);
 
-    const validationMessage = useSelector((state) => state.crudSlice.validationMessage)
-    const validation = useSelector((state) => state.crudSlice.validation)
-    const entityNewData = useSelector((state) => state.crudSlice.entityNewData)
-    const authorisedTypeDropdownData = useSelector((state) => state.utilityUtilitySlice.settingDropdown);
-    const accountTypeDropdownData = useSelector((state) => state.utilityUtilitySlice.settingDropdown);
-
-
-    const authorizedDropdown = getSettingAuthorizedTypeDropdownData()
-    const accountDropdown = getSettingAccountTypeDropdownData()
 
 
 
     const [files, setFiles] = useState([]);
 
-    const previews = files.map((file, index) => {
-        const imageUrl = URL.createObjectURL(file);
-        return <Image key={index} src={imageUrl} onLoad={() => URL.revokeObjectURL(imageUrl)} />;
-    });
 
     const form = useForm({
         initialValues: {
-            method_id: '',name:'',short_name:'',authorised_mode_id:'',account_mode_id:'',service_charge:'',account_owner:'',path:''
+            method_id: '', name: '', short_name: '', authorised_mode_id: '', account_mode_id: '', service_charge: '', account_owner: '', path: ''
         },
         validate: {
             method_id: isNotEmpty(),
-            name: hasLength({min: 2, max: 20}),
-            short_name: hasLength({min: 2, max: 20}),
+            name: hasLength({ min: 2, max: 20 }),
+            short_name: hasLength({ min: 2, max: 20 }),
             authorised_mode_id: isNotEmpty(),
             account_mode_id: isNotEmpty(),
             path: isNotEmpty(),
             service_charge: (value, values) => {
-                if (value ) {
+                if (value) {
                     const isNumberOrFractional = /^-?\d+(\.\d+)?$/.test(value);
                     if (!isNumberOrFractional) {
                         return true;
@@ -88,7 +67,7 @@ function HeadSubGroupForm(props) {
     });
 
     useHotkeys([['alt+n', () => {
-        document.getElementById('method_id').click()
+        document.getElementById('group_nature').click()
     }]], []);
 
     useHotkeys([['alt+r', () => {
@@ -102,7 +81,7 @@ function HeadSubGroupForm(props) {
 
     return (
         <Box>
-            <Grid columns={9} gutter={{base: 8}}>
+            <Grid columns={9} gutter={{ base: 8 }}>
                 <Grid.Col span={8} >
                     <form onSubmit={form.onSubmit((values) => {
                         dispatch(setValidationData(false))
@@ -113,10 +92,10 @@ function HeadSubGroupForm(props) {
                             children: (
                                 <Text size="sm"> {t("FormConfirmationMessage")}</Text>
                             ),
-                            labels: {confirm: 'Confirm', cancel: 'Cancel'}, confirmProps: { color: 'red' },
+                            labels: { confirm: 'Confirm', cancel: 'Cancel' }, confirmProps: { color: 'red' },
                             onCancel: () => console.log('Cancel'),
                             onConfirm: () => {
-                                const formValue = {...form.values};
+                                const formValue = { ...form.values };
                                 formValue['path'] = files[0];
 
                                 const data = {
@@ -128,10 +107,10 @@ function HeadSubGroupForm(props) {
                                 notifications.show({
                                     color: 'teal',
                                     title: t('CreateSuccessfully'),
-                                    icon: <IconCheck style={{width: rem(18), height: rem(18)}}/>,
+                                    icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
                                     loading: false,
                                     autoClose: 700,
-                                    style: {backgroundColor: 'lightgray'},
+                                    style: { backgroundColor: 'lightgray' },
                                 });
 
                                 setTimeout(() => {
@@ -146,14 +125,14 @@ function HeadSubGroupForm(props) {
                         });
                     })}>
                         <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
-                        <Box bg={"white"} >
+                            <Box bg={"white"} >
                                 <Box pl={`xs`} pb={'xs'} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'} >
                                     <Grid>
                                         <Grid.Col span={6} h={54}>
                                             <Title order={6} mt={'xs'} pl={'6'}>{t('CreateNewAccountSubGroup')}</Title>
                                         </Grid.Col>
                                         <Grid.Col span={6}>
-                                            <Stack right  align="flex-end">
+                                            <Stack right align="flex-end">
                                                 <>
                                                     {
                                                         !saveCreateLoading && isOnline &&
@@ -163,7 +142,7 @@ function HeadSubGroupForm(props) {
                                                             type="submit"
                                                             mt={4}
                                                             id="EntityFormSubmit"
-                                                            leftSection={<IconDeviceFloppy size={16}/>}
+                                                            leftSection={<IconDeviceFloppy size={16} />}
                                                         >
 
                                                             <Flex direction={`column`} gap={0}>
@@ -177,7 +156,7 @@ function HeadSubGroupForm(props) {
                                         </Grid.Col>
                                     </Grid>
                                 </Box>
-                                <Box pl={`xs`} pr={'xs'} mt={'xs'}  className={'borderRadiusAll'}>
+                                <Box pl={`xs`} pr={'xs'} mt={'xs'} className={'borderRadiusAll'}>
                                     <Grid columns={24}>
                                         <Grid.Col span={'auto'} >
                                             <ScrollArea h={height} scrollbarSize={2} scrollbars="y" type="never">
@@ -191,7 +170,7 @@ function HeadSubGroupForm(props) {
                                                             nextField={'name'}
                                                             name={'group_nature'}
                                                             form={form}
-                                                            dropdownValue={getTransactionMethodDropdownData()}
+                                                            dropdownValue={''}
                                                             mt={8}
                                                             id={'group_nature'}
                                                             searchable={false}
@@ -244,7 +223,7 @@ function HeadSubGroupForm(props) {
                                     </Grid>
                                 </Box>
 
-                        </Box>
+                            </Box>
                         </Box>
                     </form>
                 </Grid.Col>
