@@ -222,7 +222,6 @@ function _SalesTable() {
                                     target="_blank"
                                     component="a"
                                     w={'200'}
-                                    leftSection={<IconPencil style={{ width: rem(14), height: rem(14) }} />}
                                 >
                                     {t('Edit')}
                                 </Menu.Item>
@@ -232,17 +231,18 @@ function _SalesTable() {
                                     target="_blank"
                                     component="a"
                                     w={'200'}
-                                    leftSection={<IconEyeEdit style={{ width: rem(14), height: rem(14) }} />}
                                 >
                                     {t('Show')}
                                 </Menu.Item>
-
                                 <Menu.Item
                                     href= {``}
                                     target="_blank"
                                     component="a"
                                     w={'200'}
-                                    leftSection={<IconTrashX style={{ width: rem(14), height: rem(14) }} />}
+                                    mt={'2'}
+                                    bg={'red.1'}
+                                    c={'red.6'}
+                                    rightSection={<IconTrashX style={{ width: rem(14), height: rem(14) }} />}
                                 >
                                     {t('Delete')}
                                 </Menu.Item>
