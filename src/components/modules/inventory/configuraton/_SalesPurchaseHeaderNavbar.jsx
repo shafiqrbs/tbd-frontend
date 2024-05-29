@@ -46,7 +46,7 @@ function _SalesPurchaseHeaderNavbar(props) {
                         <Group ml={50} gap={5} className={classes.links} visibleFrom="sm">
                             {items}
                         </Group>
-                        <Menu withArrow arrowPosition="center" trigger="hover" openDelay={100} closeDelay={400}>
+                        <Menu withArrow arrowPosition="center" trigger="hover" openDelay={100} closeDelay={400}  mr={'xs'}>
                             <Menu.Target>
                                 <ActionIcon variant="filled" color="red.5" radius="xl" aria-label="Settings">
                                     <IconInfoCircle height={'12'} width={'12'} stroke={1.5} />
