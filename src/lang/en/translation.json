@@ -409,10 +409,12 @@
   "StartDate": "Start Date",
   "EndDate": "End Date",
   "PurchaseInvoice": "Purchase Invoice",
-  "CreateProductCategory": "Create Product Category",
-  "CreateProductCategoryGroup": "Create Product Category Group",
+  "CreateProductCategory": "Create Category",
+  "CreateProductCategoryGroup": "Create Category Group",
   "Due": "Due",
   "Stock": "Stock",
   "UOM": "UOM",
+  "ProductionInhouse": "Production Inhouse",
+  "ProductionReceipe": "Production Receipe",
   "": ""
 }

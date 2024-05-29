@@ -35,23 +35,6 @@ function ReceipeForm() {
     const [opened, { open, close }] = useDisclosure(false);
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
 
-    const [categoryData, setCategoryData] = useState(null);
-    const categoryDropdownData = useSelector((state) => state.inventoryUtilitySlice.categoryDropdownData)
-    const dropdownLoad = useSelector((state) => state.inventoryCrudSlice.dropdownLoad)
-
-    let categoryDropdown = categoryDropdownData && categoryDropdownData.length > 0 ?
-        categoryDropdownData.map((type, index) => {
-            return ({ 'label': type.name, 'value': String(type.id) })
-        }) : []
-    useEffect(() => {
-        const value = {
-            url: 'inventory/select/category',
-            param: {
-                type: 'parent'
-            }
-        }
-        dispatch(getCategoryDropdown(value))
-    }, [dropdownLoad]);
 
 
     const form = useForm({
@@ -98,7 +81,7 @@ function ReceipeForm() {
     }]], []);
     return (
         <Box>
-            <form onSubmit={form.onSubmit((values) => {
+            <form onSubmit={form.onSubmit((value) => {
                 modals.openConfirmModal({
                     title: (
                         <Text size="md"> {t("FormConfirmationTitle")}</Text>
@@ -111,7 +94,7 @@ function ReceipeForm() {
                     onConfirm: () => {
                         const value = {
                             url: 'inventory/product',
-                            data: values
+                            data: value
                         }
                         dispatch(storeEntityData(value))
                         notifications.show({
@@ -223,9 +206,9 @@ function ReceipeForm() {
                                                 <Grid.Col span={6}>
                                                     <Box mt={'xs'}>
                                                         <DateInput
-                                                            value={value}
+                                                            value={''}
                                                             valueFormat="DD-MM-YYYY "
-                                                            onChange={setValue}
+                                                            onChange={''}
                                                             id={'licenseDate'}
                                                             name={'license_date'}
                                                             placeholder={t('LicenseDate')}
@@ -272,9 +255,9 @@ function ReceipeForm() {
                                                 <Grid.Col span={6}>
                                                     <Box mt={'xs'}>
                                                         <DateInput
-                                                            value={value1}
+                                                            value={''}
                                                             valueFormat="DD-MM-YYYY "
-                                                            onChange={setValue1}
+                                                            onChange={''}
                                                             nextField={'issuedBy'}
                                                             placeholder={t('InitiateDate')}
                                                             id={'initiateDate'}

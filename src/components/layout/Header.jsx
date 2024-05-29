@@ -234,7 +234,7 @@ export default function Header({
                         </HoverCard>*/}
                     </Group>
                     <Group>
-                        <Flex direction={`column`} align={'center'} w={'600'}>
+                        <Flex direction={`column`} align={'center'} w={'1000'} border={'red'} >
                             <Button
                                 leftSection={
                                     <>
@@ -253,7 +253,7 @@ export default function Header({
                                 w={`100%`}
                                 h={'32'}
                                 justify="space-between"
-                                style={{ border: `2px solid var(--mantine-color-gray-5)` }}
+                                style={{ border: `2px solid var(--mantine-color-red-8)` }}
                                 color={`gray`}
                                 onClick={open}
                             />

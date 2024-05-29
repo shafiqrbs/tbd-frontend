@@ -322,9 +322,11 @@
   "SelectProductionItem": "প্রোডাকশন আইটেম সিলেক্ট করুন",
   "Issue": "ইস্যু",
   "Damage": "ড্যামেজ",
-  "CreateProductCategory": "প্রোডাক্ট ক্যাটাগরি তৈরী",
-  "CreateProductCategoryGroup": "প্রোডাক্ট ক্যাটাগরি গ্রুপ তৈরী",
+  "CreateProductCategory": "ক্যাটাগরি তৈরী",
+  "CreateProductCategoryGroup": "ক্যাটাগরি গ্রুপ তৈরী",
   "Due": "ডিউ",
   "Stock": "স্টক",
-  "UOM": "ইউ  ও এম"
+  "UOM": "ইউ  ও এম",
+  "ProductionInhouse": "প্রোডাকশন ইনহাউস",
+  "ProductionReceipe": "প্রোডাকশন রেসিপি"
 }

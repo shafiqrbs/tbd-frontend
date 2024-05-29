@@ -132,7 +132,40 @@ function SearchModal({ onClose }) {
                     },
                 ],
             },
+            {
+                group: t('Production'),
+                actions: [
+                    {
+                        id: 'production',
+                        label: t('Production'),
+                        description: t('WhereWePresentTheProductionInformation'),
+                        onClick: () => {
+                            navigate('/inventory/production');
+                            onClose();
+                        },
+                    },
+                    {
+                        id: 'production-inhouse',
+                        label: t('ProductionInhouse'),
+                        description: t('WhereWePresentTheProductionInformation'),
+                        onClick: () => {
+                            navigate('/inventory/production-inhouse');
+                            onClose();
+                        },
 
+                    },
+                    {
+                        id: 'production-receipe',
+                        label: t('ProductionReceipe'),
+                        description: t('WhereWePresentTheProductionInformation'),
+                        onClick: () => {
+                            navigate('/inventory/production-receipe');
+                            onClose();
+                        },
+
+                    },
+                ],
+            },
             {
                 group: t('Domain'),
                 actions: [

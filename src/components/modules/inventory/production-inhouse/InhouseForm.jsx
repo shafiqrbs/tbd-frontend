@@ -201,11 +201,11 @@ function InhouseForm(Props) {
                                 <Box pl={`xs`} pr={'xs'} mt={'xs'} className={'borderRadiusAll'}>
                                     <ScrollArea h={height} scrollbarSize={2} scrollbars="y" type="never">
                                         <Box mt={'xs'}>
-                                            <Grid gutter={{ base: 6 }}>
-                                                <Grid.Col span={6}>
+                                            <Grid columns={24} gutter={1}>
+                                                <Grid.Col span={10}>
                                                     <Box mt={'xs'}>
                                                         <Flex
-                                                            justify="center"
+                                                            justify="flex-start"
                                                             align="center"
                                                             direction="row"
                                                         >
@@ -217,7 +217,10 @@ function InhouseForm(Props) {
                                                         </Flex>
                                                     </Box>
                                                 </Grid.Col>
-                                                <Grid.Col span={6}>
+                                                <Grid.Col span={2}>
+
+                                                </Grid.Col>
+                                                <Grid.Col span={12}>
                                                     <Box >
                                                         <InputForm
                                                             tooltip={t('InvoiceNo')}
@@ -234,11 +237,11 @@ function InhouseForm(Props) {
                                             </Grid>
                                         </Box>
                                         <Box >
-                                            <Grid gutter={{ base: 6 }}>
-                                                <Grid.Col span={6}>
+                                            <Grid columns={24} gutter={1}>
+                                                <Grid.Col span={10}>
                                                     <Box mt={'md'}>
                                                         <Flex
-                                                            justify="center"
+                                                            justify="flex-start"
                                                             align="center"
                                                             direction="row"
                                                         >
@@ -249,7 +252,10 @@ function InhouseForm(Props) {
                                                         </Flex>
                                                     </Box>
                                                 </Grid.Col>
-                                                <Grid.Col span={6}>
+                                                <Grid.Col span={2}>
+
+                                                </Grid.Col>
+                                                <Grid.Col span={12}>
                                                     <Box mt={'xs'}>
                                                         <DateInput
                                                             value={value}
@@ -283,11 +289,11 @@ function InhouseForm(Props) {
                                             </Grid>
                                         </Box>
                                         <Box >
-                                            <Grid gutter={{ base: 6 }}>
-                                                <Grid.Col span={6}>
+                                            <Grid columns={24} gutter={1}>
+                                                <Grid.Col span={10}>
                                                     <Box mt={'md'}>
                                                         <Flex
-                                                            justify="center"
+                                                            justify="flex-start"
                                                             align="center"
                                                             direction="row"
                                                         >
@@ -298,7 +304,10 @@ function InhouseForm(Props) {
                                                         </Flex>
                                                     </Box>
                                                 </Grid.Col>
-                                                <Grid.Col span={6}>
+                                                <Grid.Col span={2}>
+
+                                                </Grid.Col>
+                                                <Grid.Col span={12}>
                                                     <Box mt={'xs'}>
                                                         <DateInput
                                                             value={value1}
@@ -331,11 +340,11 @@ function InhouseForm(Props) {
                                             </Grid>
                                         </Box>
                                         <Box >
-                                            <Grid gutter={{ base: 6 }}>
-                                                <Grid.Col span={6}>
+                                            <Grid columns={24} gutter={1}>
+                                                <Grid.Col span={10}>
                                                     <Box mt={'md'}>
                                                         <Flex
-                                                            justify="center"
+                                                            justify="flex-start"
                                                             align="center"
                                                             direction="row"
                                                         >
@@ -346,7 +355,10 @@ function InhouseForm(Props) {
                                                         </Flex>
                                                     </Box>
                                                 </Grid.Col>
-                                                <Grid.Col span={6}>
+                                                <Grid.Col span={2}>
+
+                                                </Grid.Col>
+                                                <Grid.Col span={12}>
                                                     <Box mt={'xs'}>
                                                         <InputForm
                                                             tooltip={t('Remarks')}
@@ -364,11 +376,11 @@ function InhouseForm(Props) {
                                         </Box>
 
                                         <Box mt={'xs'}>
-                                            <Grid gutter={{ base: 6 }}>
-                                                <Grid.Col span={6}>
+                                            <Grid columns={24} gutter={1}>
+                                                <Grid.Col span={10}>
                                                     <Box mt={6}>
                                                         <Flex
-                                                            justify="center"
+                                                            justify="flex-start"
                                                             align="center"
                                                             direction="row"
                                                         >
@@ -380,7 +392,10 @@ function InhouseForm(Props) {
                                                         </Flex>
                                                     </Box>
                                                 </Grid.Col>
-                                                <Grid.Col span={6}>
+                                                <Grid.Col span={2}>
+
+                                                </Grid.Col>
+                                                <Grid.Col span={12}>
                                                     <Box >
                                                         <SelectForm
                                                             tooltip={t('Process')}
