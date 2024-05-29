@@ -25,6 +25,8 @@ import TextAreaForm from "../../../form-builders/TextAreaForm";
 import CustomerGroupModel from "./CustomerGroupModal.jsx";
 import getLocationDropdownData from "../../../global-hook/dropdown/getLocationDropdownData.js";
 import getExecutiveDropdownData from "../../../global-hook/dropdown/getExecutiveDropdownData.js";
+import getCoreSettingCustomerGroupDropdownData
+    from "../../../global-hook/dropdown/getCoreSettingCustomerGroupDropdownData.js";
 
 function CustomerForm() {
     const { t, i18n } = useTranslation();
@@ -214,7 +216,7 @@ function CustomerForm() {
                                                                 nextField={'name'}
                                                                 name={'customer_group'}
                                                                 form={form}
-                                                                dropdownValue={["Family", "Local"]}
+                                                                dropdownValue={getCoreSettingCustomerGroupDropdownData()}
                                                                 mt={8}
                                                                 id={'customer_group'}
                                                                 searchable={false}

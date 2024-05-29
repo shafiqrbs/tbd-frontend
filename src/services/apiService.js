@@ -179,3 +179,28 @@ export const deleteData = async (value) => {
         })
     return data
 };
+
+
+export const getCoreSettingDropdown = async (value) => {
+    let data = []
+    await axios({
+        method: 'get',
+        url: `${import.meta.env.VITE_API_GATEWAY_URL+value.url}`,
+        headers: {
+            "Accept": `application/json`,
+            "Content-Type": `application/json`,
+            "Access-Control-Allow-Origin": '*',
+            "X-Api-Key": import.meta.env.VITE_API_KEY,
+            "X-Api-User": JSON.parse(localStorage.getItem('user')).id
+        },
+        params : value.param
+    })
+        .then(res => {
+            data['data'] = res.data
+            data['type'] = value.param["dropdown-type"]
+        })
+        .catch(function (error) {
+            console.log(error)
+        })
+    return data
+};

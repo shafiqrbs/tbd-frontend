@@ -1,5 +1,12 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
-import {createData, getDataWithoutParam,getSelectDataWithParam, getDataWithParam} from "../../services/apiService";
+import {
+    createData,
+    getDataWithoutParam,
+    getSelectDataWithParam,
+    getDataWithParam,
+    getCoreSettingDropdown
+} from "../../services/apiService";
+import {getSettingDropdown} from "../utility/utilitySlice.js";
 
 
 export const getUserDropdown = createAsyncThunk("user/select", async (value) => {
@@ -62,6 +69,15 @@ export const getExecutiveDropdown = createAsyncThunk("executive/select", async (
         throw error;
     }
 });
+export const coreSettingDropdown = createAsyncThunk("setting/select", async (value) => {
+    try {
+        const response = getCoreSettingDropdown(value);
+        return response;
+    } catch (error) {
+        console.log('error', error.message);
+        throw error;
+    }
+});
 
 
 const utilitySlice = createSlice({
@@ -74,6 +90,7 @@ const utilitySlice = createSlice({
         userDropdownData : [],
         locationDropdownData : [],
         executiveDropdownData : [],
+        customerGroupDropdownData : [],
     },
     reducers : {
         setFetching : (state,action) => {
@@ -105,6 +122,12 @@ const utilitySlice = createSlice({
 
         builder.addCase(getExecutiveDropdown.fulfilled, (state, action) => {
             state.executiveDropdownData = action.payload
+        })
+
+        builder.addCase(coreSettingDropdown.fulfilled, (state, action) => {
+            if (action.payload.type == 'customer-group'){
+                state.customerGroupDropdownData = action.payload.data.data
+            }
         })
 
     }
