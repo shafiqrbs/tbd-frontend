@@ -203,7 +203,13 @@ export default function Header({
                         </Group>
                     </Grid.Col>
                     <Grid.Col span={3} offset={3}>
-                        <Group justify="space-between" align={'right'} float={'right'} h="100%" w={'100%'} pl={'md'} px={`xs`} pr={'24'}>
+
+                        <Flex
+                              gap="sm"
+                              justify="flex-end"
+                              direction="row"
+                              wrap="wrap"
+                              align={'right'}  px={`xs`} pr={'24'}>
                                 <Menu
                                 onOpen={() => setLanguageOpened(true)}
                                 onClose={() => setLanguageOpened(false)}
@@ -258,7 +264,7 @@ export default function Header({
                                 bg={`red.5`} withArrow
                                 position={"left"}
                             >
-                                <ActionIcon onClick={toggle} variant="subtle" mt={'6'} color={`red.4`}>
+                                <ActionIcon onClick={toggle} variant="subtle"  color={`red.4`}>
                                     {fullscreen ? (
                                         <IconWindowMinimize size={24} />
                                     ) : (
@@ -267,11 +273,11 @@ export default function Header({
                                 </ActionIcon>
                             </Tooltip>
                             <Tooltip label={t("Logout")} bg={`red.5`} withArrow position={"left"}>
-                                <ActionIcon onClick={() => logout()} variant="subtle" mt={'6'}  color={`gray.6`}>
+                                <ActionIcon onClick={() => logout()} variant="subtle"   color={`gray.6`}>
                                     <IconLogout size={24} />
                                 </ActionIcon>
                             </Tooltip>
-                        </Group>
+                        </Flex>
                     </Grid.Col>
                     </Grid>
                 <Notification

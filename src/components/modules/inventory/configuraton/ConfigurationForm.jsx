@@ -101,7 +101,7 @@ function ConfigurationForm() {
             condition_sales: '',
             store_ledger: '',
             is_marketing_executive: '',
-            fuel_station: '',
+            //fuel_station: '',
             tlo_commission: '',
             sales_return: '',
             sr_commission: '',
@@ -347,7 +347,7 @@ function ConfigurationForm() {
                                                                         color="red"
                                                                         id={'is_vat_enabled'}
                                                                         position={'left'}
-                                                                        defaultChecked={1}
+                                                                        defaultChecked={0}
                                                                     />
                                                                 </Grid.Col>
                                                                 <Grid.Col span={4} fz={'sm'} pt={'1'}>{t('VatEnabled')}
@@ -385,7 +385,7 @@ function ConfigurationForm() {
                                                                         color="red"
                                                                         id={'is_ait_enabled'}
                                                                         position={'left'}
-                                                                        defaultChecked={1}
+                                                                        defaultChecked={0}
                                                                     />
                                                                 </Grid.Col>
                                                                 <Grid.Col span={4} fz={'sm'} pt={'1'}>{t('AITEnabled')}
@@ -395,22 +395,42 @@ function ConfigurationForm() {
                                                     </Grid.Col>
                                                 </Grid>
                                             </Box>
-                                            <Box mt={'xs'}>
-                                                <SelectForm
-                                                    tooltip={t('ProductionType')}
-                                                    label={t('ProductionType')}
-                                                    placeholder={t('ChooseProductionType')}
-                                                    required={false}
-                                                    nextField={'invoice_comment'}
-                                                    name={'production_type'}
-                                                    form={form}
-                                                    dropdownValue={["Family", "Local"]}
-                                                    mt={8}
-                                                    id={'production_type'}
-                                                    searchable={false}
-                                                    value={customerGroupData}
-                                                    changeValue={setCustomerGroupData}
-                                                />
+                                            <Box mt={'md'} mb={'md'}>
+                                                <Grid gutter={{ base: 6 }}>
+                                                    <Grid.Col span={6}>
+                                                        <InputForm
+                                                            tooltip={t('ZakatPercent')}
+                                                            label={t('ZakatPercent')}
+                                                            placeholder={t('ZakatPercent')}
+                                                            required={false}
+                                                            name={'ait_percent'}
+                                                            form={form}
+                                                            mt={0}
+                                                            id={'ait_percent'}
+                                                            nextField={'is_ait_enabled'}
+                                                        />
+                                                    </Grid.Col>
+                                                    <Grid.Col span={6} mt={'lg'}>
+                                                        <Box mt={'xs'}>
+                                                            <Grid columns={6} gutter={{ base: 1 }}>
+                                                                <Grid.Col span={2}>
+                                                                    <SwitchForm
+                                                                        tooltip={t('ZakatEnabled')}
+                                                                        label=''
+                                                                        nextField={'production_type'}
+                                                                        name={'is_zakat_enabled'}
+                                                                        form={form}
+                                                                        color="red"
+                                                                        id={'is_zakat_enabled'}
+                                                                        position={'left'}
+                                                                        defaultChecked={0}
+                                                                    />
+                                                                </Grid.Col>
+                                                                <Grid.Col span={4} fz={'sm'} pt={'1'}>{t('ZakatEnabled')}</Grid.Col>
+                                                            </Grid>
+                                                        </Box>
+                                                    </Grid.Col>
+                                                </Grid>
                                             </Box>
 
                                             <Box mt={'xs'} >
@@ -974,7 +994,7 @@ function ConfigurationForm() {
                                                     <Grid.Col span={6} fz={'sm'} pt={'1'} >{t('MarketingExecutive')}</Grid.Col>
                                                 </Grid>
                                             </Box>
-                                            <Box mt={'xs'}>
+                                            {/*<Box mt={'xs'}>
                                                 <Grid gutter={{ base: 1 }}>
                                                     <Grid.Col span={2}>
                                                         <SwitchForm
@@ -991,7 +1011,7 @@ function ConfigurationForm() {
                                                     </Grid.Col>
                                                     <Grid.Col span={6} fz={'sm'} pt={'1'} >{t('FuelStation')}</Grid.Col>
                                                 </Grid>
-                                            </Box>
+                                            </Box>*/}
                                             <Box mt={'xs'}>
                                                 <Grid gutter={{ base: 1 }}>
                                                     <Grid.Col span={2}>
