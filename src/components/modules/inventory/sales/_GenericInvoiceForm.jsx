@@ -24,7 +24,7 @@ import __SalesForm from "./__SalesForm.jsx";
 import { DataTable } from "mantine-datatable";
 import SelectForm from "../../../form-builders/SelectForm.jsx";
 import { storeEntityData } from "../../../../store/inventory/crudSlice.js";
-import ShortcutInvoice from "../../shortcut/ShortcutInvoice";
+import _ShortcutInvoice from "../../shortcut/_ShortcutInvoice";
 import tableCss from "../../../../assets/css/Table.module.css";
 import storeDataIntoLocalStorage from "../../../global-hook/local-storage/storeDataIntoLocalStorage.js";
 import getSettingProductTypeDropdownData from "../../../global-hook/dropdown/getSettingProductTypeDropdownData.js";
@@ -1008,7 +1008,7 @@ function _GenericInvoiceForm(props) {
                 </Grid.Col>
                 <Grid.Col span={1} >
                     <Box bg={'white'} className={'borderRadiusAll'} pt={'16'}>
-                        <ShortcutInvoice
+                        <_ShortcutInvoice
                             form={form}
                             FormSubmit={'EntityFormSubmit'}
                             Name={'CompanyName'}

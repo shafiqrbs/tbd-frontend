@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useOutletContext } from "react-router-dom";
+import { Navigate, Outlet, useLocation, useNavigate, useOutletContext } from "react-router-dom";
 import tableCss from '../../../../assets/css/Table.module.css';
 import {
     Group,
@@ -14,13 +14,15 @@ import {
 } from "@tabler/icons-react";
 import { DataTable } from 'mantine-datatable';
 import { useDispatch, useSelector } from "react-redux";
+import { useHotkeys, useToggle } from "@mantine/hooks";
 import { getIndexEntityData, setFetching, setSalesFilterData } from "../../../../store/inventory/crudSlice.js";
-import ShortcutTable from "../../shortcut/ShortcutTable";
+import _ShortcutTable from "../../shortcut/_ShortcutTable";
 import { ReactToPrint } from "react-to-print";
 import _SalesSearch from "./_SalesSearch.jsx";
 import { setSearchKeyword } from "../../../../store/core/crudSlice.js";
 
 function _SalesTable() {
+    const navigate = useNavigate();
     const printRef = useRef()
     const dispatch = useDispatch();
     const { t, i18n } = useTranslation();
@@ -44,6 +46,10 @@ function _SalesTable() {
     useEffect(() => {
         setSalesViewData(indexData.data && indexData.data[0] && indexData.data[0])
     }, [indexData.data])
+    useHotkeys([['alt+n', () => {
+        navigate('/inventory/sales-invoice');
+        // console.log('ok')
+    }]], []);
 
 
     const rows = salesViewData && salesViewData.sales_items && salesViewData.sales_items.map((element, index) => (
@@ -445,7 +451,7 @@ function _SalesTable() {
                     </Grid.Col>
                     <Grid.Col span={1} >
                         <Box bg={'white'} className={'borderRadiusAll'} pt={'16'}>
-                            <ShortcutTable
+                            <_ShortcutTable
                                 form=''
                                 FormSubmit={'EntityFormSubmit'}
                                 Name={'CompanyName'}

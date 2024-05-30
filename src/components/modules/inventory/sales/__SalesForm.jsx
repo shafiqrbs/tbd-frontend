@@ -229,7 +229,8 @@ function __SalesForm(props) {
 
 
     useHotkeys([['alt+n', () => {
-        document.getElementById('customer_id').focus()
+        // document.getElementById('customer_id').focus()
+
     }]], []);
 
     useHotkeys([['alt+r', () => {
