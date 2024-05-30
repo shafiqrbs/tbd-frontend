@@ -46,7 +46,7 @@ function InventoryHeaderNavbar(props) {
                         <Group ml={50} gap={5} className={classes.links} visibleFrom="sm">
                             {items}
                         </Group>
-                        <Menu withArrow arrowPosition="center" trigger="hover" openDelay={100} closeDelay={400}>
+                        <Menu withArrow arrowPosition="center" trigger="hover" openDelay={100} closeDelay={400} mr={'xs'}>
                             <Menu.Target>
                                 <ActionIcon variant="filled" color="red.5" radius="xl" aria-label="Settings">
                                     <IconInfoCircle height={'12'} width={'12'} stroke={1.5} />
@@ -57,7 +57,6 @@ function InventoryHeaderNavbar(props) {
                                     component="button" onClick={(e) => { navigate('/inventory/config') }} leftSection={<IconSettings style={{ width: rem(14), height: rem(14) }} />}>
                                     {t('Settings')}
                                 </Menu.Item>
-                                <Menu.Divider />
                             </Menu.Dropdown>
                         </Menu>
                     </Group>
