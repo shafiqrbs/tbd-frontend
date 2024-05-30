@@ -263,8 +263,15 @@ function SearchModal({ onClose }) {
                             <Grid columns={12} grow gutter={'xs'}>
                                 {groupData.items.map((action, itemIndex) => (
                                     <GridCol key={itemIndex} span={6} >
-                                        <Link to={`${groupData.group}/${action.id}`} onClick={onClose}
-                                            style={{ textDecoration: 'none', color: 'inherit' }}>
+                                        <Link
+                                            to={
+                                                groupData.group === 'Production'
+                                                    ? `inventory/${action.id}`
+                                                    : `${groupData.group}/${action.id}`
+                                            }
+                                            onClick={onClose}
+                                            style={{ textDecoration: 'none', color: 'inherit' }}
+                                        >
                                             <Stack
                                                 bg={'grey.2'}
                                                 ml={'sm'}

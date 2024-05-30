@@ -158,7 +158,7 @@ function ReceipeForm() {
                                                 <Grid.Col span={6}>
                                                     <Box mt={'xs'}>
                                                         <Flex
-                                                            justify="center"
+                                                            justify="flex-start"
                                                             align="center"
                                                             direction="row"
                                                         >
@@ -191,7 +191,7 @@ function ReceipeForm() {
                                                 <Grid.Col span={6}>
                                                     <Box mt={'md'}>
                                                         <Flex
-                                                            justify="center"
+                                                            justify="flex-start"
                                                             align="center"
                                                             direction="row"
                                                         >
@@ -241,7 +241,7 @@ function ReceipeForm() {
                                                 <Grid.Col span={6}>
                                                     <Box mt={'md'}>
                                                         <Flex
-                                                            justify="center"
+                                                            justify="flex-start"
                                                             align="center"
                                                             direction="row"
                                                         >
@@ -289,7 +289,7 @@ function ReceipeForm() {
                                                 <Grid.Col span={6}>
                                                     <Box mt={'md'}>
                                                         <Flex
-                                                            justify="center"
+                                                            justify="flex-start"
                                                             align="center"
                                                             direction="row"
                                                         >
@@ -321,7 +321,7 @@ function ReceipeForm() {
                                                 <Grid.Col span={6}>
                                                     <Box mt={'md'}>
                                                         <Flex
-                                                            justify="center"
+                                                            justify="flex-start"
                                                             align="center"
                                                             direction="row"
                                                         >
@@ -353,7 +353,7 @@ function ReceipeForm() {
                                                 <Grid.Col span={6}>
                                                     <Box mt={'md'}>
                                                         <Flex
-                                                            justify="center"
+                                                            justify="flex-start"
                                                             align="center"
                                                             direction="row"
                                                         >
@@ -385,7 +385,7 @@ function ReceipeForm() {
                                                 <Grid.Col span={6}>
                                                     <Box mt={6}>
                                                         <Flex
-                                                            justify="center"
+                                                            justify="flex-start"
                                                             align="center"
                                                             direction="row"
                                                         >
@@ -417,7 +417,7 @@ function ReceipeForm() {
                                                 <Grid.Col span={6}>
                                                     <Box mt={6}>
                                                         <Flex
-                                                            justify="center"
+                                                            justify="flex-start"
                                                             align="center"
                                                             direction="row"
                                                         >
@@ -450,7 +450,7 @@ function ReceipeForm() {
                                                 <Grid.Col span={6}>
                                                     <Box mt={6}>
                                                         <Flex
-                                                            justify="center"
+                                                            justify="flex-start"
                                                             align="center"
                                                             direction="row"
                                                         >
@@ -484,7 +484,7 @@ function ReceipeForm() {
                                                 <Grid.Col span={6}>
                                                     <Box mt={6}>
                                                         <Flex
-                                                            justify="center"
+                                                            justify="flex-start"
                                                             align="center"
                                                             direction="row"
                                                         >
@@ -517,7 +517,7 @@ function ReceipeForm() {
                                                 <Grid.Col span={6}>
                                                     <Box mt={6}>
                                                         <Flex
-                                                            justify="center"
+                                                            justify="flex-start"
                                                             align="center"
                                                             direction="row"
                                                         >
@@ -553,7 +553,7 @@ function ReceipeForm() {
                                                 <Grid.Col span={6}>
                                                     <Box mt={6}>
                                                         <Flex
-                                                            justify="center"
+                                                            justify="flex-start"
                                                             align="center"
                                                             direction="row"
                                                         >
@@ -586,7 +586,7 @@ function ReceipeForm() {
                                                 <Grid.Col span={6}>
                                                     <Box mt={6}>
                                                         <Flex
-                                                            justify="center"
+                                                            justify="flex-start"
                                                             align="center"
                                                             direction="row"
                                                         >
@@ -619,7 +619,7 @@ function ReceipeForm() {
                                                 <Grid.Col span={6}>
                                                     <Box mt={6}>
                                                         <Flex
-                                                            justify="center"
+                                                            justify="flex-start"
                                                             align="center"
                                                             direction="row"
                                                         >
@@ -652,7 +652,7 @@ function ReceipeForm() {
                                                 <Grid.Col span={6}>
                                                     <Box mt={6}>
                                                         <Flex
-                                                            justify="center"
+                                                            justify="flex-start"
                                                             align="center"
                                                             direction="row"
                                                         >
@@ -685,7 +685,7 @@ function ReceipeForm() {
                                                 <Grid.Col span={6}>
                                                     <Box mt={6}>
                                                         <Flex
-                                                            justify="center"
+                                                            justify="flex-start"
                                                             align="center"
                                                             direction="row"
                                                         >
@@ -718,7 +718,7 @@ function ReceipeForm() {
                                                 <Grid.Col span={6}>
                                                     <Box mt={6}>
                                                         <Flex
-                                                            justify="center"
+                                                            justify="flex-start"
                                                             align="center"
                                                             direction="row"
                                                         >
@@ -751,7 +751,7 @@ function ReceipeForm() {
                                                 <Grid.Col span={6}>
                                                     <Box mt={6}>
                                                         <Flex
-                                                            justify="center"
+                                                            justify="flex-start"
                                                             align="center"
                                                             direction="row"
                                                         >
@@ -784,7 +784,7 @@ function ReceipeForm() {
                                                 <Grid.Col span={6}>
                                                     <Box mt={6}>
                                                         <Flex
-                                                            justify="center"
+                                                            justify="flex-start"
                                                             align="center"
                                                             direction="row"
                                                         >
@@ -817,7 +817,7 @@ function ReceipeForm() {
                                                 <Grid.Col span={6}>
                                                     <Box mt={6}>
                                                         <Flex
-                                                            justify="center"
+                                                            justify="flex-start"
                                                             align="center"
                                                             direction="row"
                                                         >
@@ -834,7 +834,7 @@ function ReceipeForm() {
                                                         <Flex
                                                             mih={35}
                                                             className="borderRadiusAll"
-                                                            justify="center"
+                                                            justify="flex-start"
                                                             align="center"
                                                             direction="row"
 
@@ -843,6 +843,7 @@ function ReceipeForm() {
                                                             >
                                                                 <Text
                                                                     ta="center" fz="sm"
+                                                                    pl={'sm'}
                                                                     fw={300}>
                                                                     {t('1000')}
                                                                     {/*DYNAMIC DATA*/}

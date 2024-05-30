@@ -5,12 +5,16 @@ import {
     Box,
     ActionIcon,
     Text,
-    Table
+    Table,
+    Menu,
+    rem
 } from "@mantine/core";
 import {
     IconEye,
     IconEdit,
-    IconTrash
+    IconTrash,
+    IconTrashX,
+    IconDotsVertical
 } from "@tabler/icons-react";
 import { DataTable } from 'mantine-datatable';
 import { useDispatch, useSelector } from "react-redux";
@@ -136,52 +140,66 @@ function InhouseTable() {
                             textAlign: "right",
                             render: (datas) => (
                                 <Group gap={4} justify="right" wrap="nowrap">
-                                    <ActionIcon
-                                        size="sm"
-                                        variant="subtle"
-                                        color="green"
-                                        onClick={() => {
-                                            setProductViewModel(true)
-                                            dispatch(showEntityData('inventory/product/' + data.id))
-                                        }}
-                                    >
-                                        <IconEye size={16} />
-                                    </ActionIcon>
-                                    <ActionIcon
-                                        size="sm"
-                                        variant="subtle"
-                                        color="blue"
-                                        onClick={() => {
-                                            dispatch(setInsertType('update'))
-                                            dispatch(editEntityData('inventory/product/' + data.id))
-                                            dispatch(setFormLoading(true))
-                                        }}
-                                    >
-                                        <IconEdit size={16} />
-                                    </ActionIcon>
-                                    <ActionIcon
-                                        size="sm"
-                                        variant="subtle"
-                                        color="red"
-                                        onClick={() => {
-                                            modals.openConfirmModal({
-                                                title: (
-                                                    <Text size="md"> {t("FormConfirmationTitle")}</Text>
-                                                ),
-                                                children: (
-                                                    <Text size="sm"> {t("FormConfirmationMessage")}</Text>
-                                                ),
-                                                labels: { confirm: 'Confirm', cancel: 'Cancel' },
-                                                onCancel: () => console.log('Cancel'),
-                                                onConfirm: () => {
-                                                    dispatch(deleteEntityData('inventory/product/' + data.id))
-                                                    dispatch(setFetching(true))
-                                                },
-                                            });
-                                        }}
-                                    >
-                                        <IconTrash size={16} />
-                                    </ActionIcon>
+                                    <Menu position="bottom-end" offset={3} withArrow trigger="hover" openDelay={100} closeDelay={400}>
+                                        <Menu.Target>
+                                            <ActionIcon variant="outline" color="gray.6" radius="xl" aria-label="Settings">
+                                                <IconDotsVertical height={'18'} width={'18'} stroke={1.5} />
+                                            </ActionIcon>
+                                        </Menu.Target>
+                                        <Menu.Dropdown>
+                                            <Menu.Item
+                                                // href={`/inventory/sales/edit/${data.id}`}
+                                                onClick={() => {
+                                                    dispatch(setInsertType('update'))
+                                                    dispatch(editEntityData('inventory/product/' + data.id))
+                                                    dispatch(setFormLoading(true))
+                                                }}
+                                            >
+                                                {t('Edit')}
+                                            </Menu.Item>
+
+                                            <Menu.Item
+                                                href={``}
+                                                onClick={() => {
+                                                    setProductViewModel(true)
+                                                    dispatch(showEntityData('inventory/product/' + data.id))
+                                                }}
+                                                target="_blank"
+                                                component="a"
+                                                w={'200'}
+                                            >
+                                                {t('Show')}
+                                            </Menu.Item>
+                                            <Menu.Item
+                                                // href={``}
+                                                target="_blank"
+                                                component="a"
+                                                w={'200'}
+                                                mt={'2'}
+                                                bg={'red.1'}
+                                                c={'red.6'}
+                                                onClick={() => {
+                                                    modals.openConfirmModal({
+                                                        title: (
+                                                            <Text size="md"> {t("FormConfirmationTitle")}</Text>
+                                                        ),
+                                                        children: (
+                                                            <Text size="sm"> {t("FormConfirmationMessage")}</Text>
+                                                        ),
+                                                        labels: { confirm: 'Confirm', cancel: 'Cancel' },
+                                                        onCancel: () => console.log('Cancel'),
+                                                        onConfirm: () => {
+                                                            dispatch(deleteEntityData('inventory/product/' + data.id))
+                                                            dispatch(setFetching(true))
+                                                        },
+                                                    });
+                                                }}
+                                                rightSection={<IconTrashX style={{ width: rem(14), height: rem(14) }} />}
+                                            >
+                                                {t('Delete')}
+                                            </Menu.Item>
+                                        </Menu.Dropdown>
+                                    </Menu>
                                 </Group>
                             ),
                         },
