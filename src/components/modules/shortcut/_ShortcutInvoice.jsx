@@ -74,7 +74,7 @@ function _ShortcutInvoice(props) {
                         <Flex direction={`column`} align={'center'} fz={'12'} c={'gray.5'}>alt+r</Flex>
                     </Container>
                 </Center>
-                
+
                 <Center>
                     <Container fluid mb={'8'}>
                         <Tooltip

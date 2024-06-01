@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useOutletContext } from "react-router-dom";
 import {
     Button, Flex, ActionIcon, TextInput,
@@ -9,7 +9,7 @@ import {
     IconDeviceFloppy, IconPercentage,
     IconPlus, IconRefreshDot, IconSum, IconCurrency, IconX, IconBarcode, IconCoinMonero, IconSortAscendingNumbers, IconPlusMinus
 } from "@tabler/icons-react";
-import { getHotkeyHandler, useHotkeys } from "@mantine/hooks";
+import { getHotkeyHandler, useHotkeys, useFocusTrap } from "@mantine/hooks";
 import { useDispatch, useSelector } from "react-redux";
 import { isNotEmpty, useForm } from "@mantine/form";
 import { notifications, showNotification } from "@mantine/notifications";
@@ -32,7 +32,7 @@ import getSettingProductUnitDropdownData from "../../../global-hook/dropdown/get
 import getSettingCategoryDropdownData from "../../../global-hook/dropdown/getSettingCategoryDropdownData.js";
 
 function _GenericInvoiceForm(props) {
-    const { currencySymbol, allowZeroPercentage, domainId, isSMSActive, isZeroReceiveAllow } = props
+    const { currencySymbol, allowZeroPercentage, domainId, isSMSActive, isZeroReceiveAllow, focusFrom } = props
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
@@ -308,7 +308,27 @@ function _GenericInvoiceForm(props) {
         </Text>
     );
     const [productAddFormOpened, setProductAddFormOpened] = useState(false);
+
+
+    const inputRef = useRef(null);
+    useEffect(() => {
+        const inputElement = document.getElementById('product_id');
+        if (inputElement) {
+            inputElement.focus();
+        }
+    }, []);
+
+
+    /* const inputRef = useRef(null);
+
+    useEffect(() => {
+        if (focusFrom && inputRef.current) {
+            inputRef.current.focus();
+        }
+    }, [focusFrom]); */
+
     return (
+
         <Box>
             <Grid columns={24} gutter={{ base: 8 }}>
                 <Grid.Col span={15} >
@@ -364,6 +384,7 @@ function _GenericInvoiceForm(props) {
                                             />
                                         </Grid.Col>
                                         <Grid.Col span={20}>
+                                            {/* <div ref={focusTrapRef}> */}
                                             <SelectServerSideForm
                                                 tooltip={t('ChooseStockProduct')}
                                                 label=''
@@ -371,6 +392,7 @@ function _GenericInvoiceForm(props) {
                                                 required={false}
                                                 nextField={'quantity'}
                                                 name={'product_id'}
+                                                ref={inputRef}
                                                 form={form}
                                                 id={'product_id'}
                                                 searchable={true}
@@ -379,6 +401,8 @@ function _GenericInvoiceForm(props) {
                                                 dropdownValue={productDropdown}
                                                 closeIcon={true}
                                             />
+                                            {/* </div> */}
+
                                         </Grid.Col>
                                     </Grid>
                                     <Box mt={'xs'} pb={'xs'}>
@@ -1017,7 +1041,6 @@ function _GenericInvoiceForm(props) {
                 </Grid.Col>
             </Grid>
         </Box>
-
     );
 }
 

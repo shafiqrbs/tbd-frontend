@@ -11,6 +11,7 @@ import _GenericInvoiceForm from "./_GenericInvoiceForm.jsx";
 import _SalesPurchaseHeaderNavbar from "../configuraton/_SalesPurchaseHeaderNavbar.jsx";
 
 function SalesInvoice() {
+    
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const insertType = useSelector((state) => state.crudSlice.insertType)
