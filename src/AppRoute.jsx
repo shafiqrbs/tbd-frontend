@@ -30,6 +30,7 @@ import InhouseIndex from './components/modules/inventory/production-inhouse/Inho
 import ReceipeIndex from './components/modules/inventory/receipe/ReceipeIndex.jsx';
 import SalesEdit from "./components/modules/inventory/sales/SalesEdit.jsx";
 import PurchaseEdit from "./components/modules/inventory/purchase/PurchaseEdit.jsx";
+import SampleModalIndex from './components/modules/sample3Grid/SampleModalIndex.jsx';
 function AppRoute() {
 
     return (
@@ -40,6 +41,7 @@ function AppRoute() {
                     <Route path="" element={<SampleDashboard />} />
                     <Route path="invoice" element={<SampleInvoice />} />
                     <Route path="index" element={<SampleIndex />} />
+                    <Route path="modalIndex" element={<SampleModalIndex />} />
                 </Route>
                 <Route path="/core/">
                     <Route path="customer" element={<CustomerIndex />} />
