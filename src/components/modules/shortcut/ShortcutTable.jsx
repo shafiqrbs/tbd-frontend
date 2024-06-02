@@ -8,7 +8,7 @@ import {useOutletContext} from "react-router-dom";
 function ShortcutTable(props) {
     const {t, i18n} = useTranslation();
     const {isOnline, mainAreaHeight} = useOutletContext();
-    const ShortcutHeight = mainAreaHeight - 110; //TabList height 104
+    const ShortcutHeight = mainAreaHeight - 125; //TabList height 104
     return (
         <>
             <Stack

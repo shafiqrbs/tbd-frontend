@@ -41,7 +41,7 @@ function AppRoute() {
                     <Route path="" element={<SampleDashboard />} />
                     <Route path="invoice" element={<SampleInvoice />} />
                     <Route path="index" element={<SampleIndex />} />
-                    <Route path="modalIndex" element={<SampleModalIndex />} />
+
                 </Route>
                 <Route path="/core/">
                     <Route path="customer" element={<CustomerIndex />} />
@@ -72,6 +72,7 @@ function AppRoute() {
                     <Route path="head-group" element={<HeadGroupIndex />} />
                     <Route path="head-subgroup" element={<HeadSubGroupIndex />} />
                     <Route path="transaction-mode" element={<TransactionModeIndex />} />
+                    <Route path="modalIndex" element={<SampleModalIndex />} />
                 </Route>
                 <Route path="sitemap" element={<Sitemap />} />
             </Route>

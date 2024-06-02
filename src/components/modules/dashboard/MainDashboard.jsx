@@ -119,6 +119,7 @@ function MainDashboard(props) {
                                             }
                                         }} />
                                     </List.Item>
+
                                     {/*
                                 <List.Item pl={'xs'} icon={<ThemeIcon color="blue.6" size={20} radius="xl" variant="outline" ><IconShoppingBagSearch/></ThemeIcon>}>
                                     <NavLink pl={'md'} href="accounting/sales-invoice" label={t('NewSales')} component="button" onClick={(e)=>{navigate('inventory/sales')}}  />
@@ -155,6 +156,14 @@ function MainDashboard(props) {
                                             // Handle middle mouse button click for browsers that support it
                                             if (e.button === 1) {
                                                 window.open('/accounting/head-subgroup', '_blank');
+                                            }
+                                        }} />
+                                    </List.Item>
+                                    <List.Item pl={'xs'} icon={<ThemeIcon color="blue.6" size={20} radius="xl" variant="outline" ><IconBasket /></ThemeIcon>}>
+                                        <NavLink pl={'md'} href="accounting/voucher-entry" label={t('SampleModal')} component="button" onClick={(e) => { navigate('/accounting/modalIndex') }} onAuxClick={(e) => {
+                                            // Handle middle mouse button click for browsers that support it
+                                            if (e.button === 1) {
+                                                window.open('/accounting/voucher-entry', '_blank');
                                             }
                                         }} />
                                     </List.Item>

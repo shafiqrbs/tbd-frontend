@@ -74,71 +74,71 @@ function SampleModalTable(props) {
 
 
 
-    function handleAddProductByProductId(values, myCardProducts, localProducts) {
-        const addProducts = localProducts.reduce((acc, product) => {
-            if (product.id === Number(values.product_id)) {
-                acc.push({
-                    product_id: product.id,
-                    display_name: product.display_name,
-                    sales_price: values.sales_price,
-                    mrp: values.mrp,
-                    percent: values.percent,
-                    stock: product.quantity,
-                    quantity: values.quantity,
-                    unit_name: product.unit_name,
-                    sub_total: selectProductDetails.sub_total,
-                });
-            }
-            return acc;
-        }, myCardProducts);
+    // function handleAddProductByProductId(values, myCardProducts, localProducts) {
+    //     const addProducts = localProducts.reduce((acc, product) => {
+    //         if (product.id === Number(values.product_id)) {
+    //             acc.push({
+    //                 product_id: product.id,
+    //                 display_name: product.display_name,
+    //                 sales_price: values.sales_price,
+    //                 mrp: values.mrp,
+    //                 percent: values.percent,
+    //                 stock: product.quantity,
+    //                 quantity: values.quantity,
+    //                 unit_name: product.unit_name,
+    //                 sub_total: selectProductDetails.sub_total,
+    //             });
+    //         }
+    //         return acc;
+    //     }, myCardProducts);
+    //
+    //     updateLocalStorageAndResetForm(addProducts);
+    // }
 
-        updateLocalStorageAndResetForm(addProducts);
-    }
+    // function handleAddProductByBarcode(values, myCardProducts, localProducts) {
+    //     const barcodeExists = localProducts.some(product => product.barcode === values.barcode);
+    //
+    //     if (barcodeExists) {
+    //         const addProducts = localProducts.reduce((acc, product) => {
+    //             if (String(product.barcode) === String(values.barcode)) {
+    //                 acc.push(createProductFromValues(product));
+    //             }
+    //             return acc;
+    //         }, myCardProducts);
+    //
+    //         updateLocalStorageAndResetForm(addProducts);
+    //     } else {
+    //         notifications.show({
+    //             loading: true,
+    //             color: 'red',
+    //             title: 'Product not found with this barcode',
+    //             message: 'Data will be loaded in 3 seconds, you cannot close this yet',
+    //             autoClose: 1000,
+    //             withCloseButton: true,
+    //         });
+    //     }
+    // }
 
-    function handleAddProductByBarcode(values, myCardProducts, localProducts) {
-        const barcodeExists = localProducts.some(product => product.barcode === values.barcode);
+    // function updateLocalStorageAndResetForm(addProducts) {
+    //     localStorage.setItem('temp-sales-products', JSON.stringify(addProducts));
+    //     setSearchValue('');
+    //     form.reset();
+    //     setLoadCardProducts(true);
+    // }
 
-        if (barcodeExists) {
-            const addProducts = localProducts.reduce((acc, product) => {
-                if (String(product.barcode) === String(values.barcode)) {
-                    acc.push(createProductFromValues(product));
-                }
-                return acc;
-            }, myCardProducts);
-
-            updateLocalStorageAndResetForm(addProducts);
-        } else {
-            notifications.show({
-                loading: true,
-                color: 'red',
-                title: 'Product not found with this barcode',
-                message: 'Data will be loaded in 3 seconds, you cannot close this yet',
-                autoClose: 1000,
-                withCloseButton: true,
-            });
-        }
-    }
-
-    function updateLocalStorageAndResetForm(addProducts) {
-        localStorage.setItem('temp-sales-products', JSON.stringify(addProducts));
-        setSearchValue('');
-        form.reset();
-        setLoadCardProducts(true);
-    }
-
-    function createProductFromValues(product) {
-        return {
-            product_id: product.id,
-            display_name: product.display_name,
-            sales_price: product.sales_price,
-            mrp: product.sales_price,
-            percent: '',
-            stock: product.quantity,
-            quantity: 1,
-            unit_name: product.unit_name,
-            sub_total: product.sales_price,
-        };
-    }
+    // function createProductFromValues(product) {
+    //     return {
+    //         product_id: product.id,
+    //         display_name: product.display_name,
+    //         sales_price: product.sales_price,
+    //         mrp: product.sales_price,
+    //         percent: '',
+    //         stock: product.quantity,
+    //         quantity: 1,
+    //         unit_name: product.unit_name,
+    //         sub_total: product.sales_price,
+    //     };
+    // }
 
 
 
@@ -185,65 +185,65 @@ function SampleModalTable(props) {
     });
 
 
-    const [selectProductDetails, setSelectProductDetails] = useState('')
-
-    useEffect(() => {
-        const storedProducts = localStorage.getItem('user-products');
-        const localProducts = storedProducts ? JSON.parse(storedProducts) : [];
-
-        const filteredProducts = localProducts.filter(product => product.id === Number(form.values.product_id));
-
-        if (filteredProducts.length > 0) {
-            const selectedProduct = filteredProducts[0];
-
-            setSelectProductDetails(selectedProduct);
-
-            form.setFieldValue('mrp', selectedProduct.sales_price);
-            form.setFieldValue('sales_price', selectedProduct.sales_price);
-        } else {
-            setSelectProductDetails(null);
-            form.setFieldValue('mrp', '');
-            form.setFieldValue('sales_price', '');
-        }
-    }, [form.values.product_id]);
-
-
-    useEffect(() => {
-        const quantity = Number(form.values.quantity);
-        const salesPrice = Number(form.values.sales_price);
-
-        if (!isNaN(quantity) && !isNaN(salesPrice) && quantity > 0 && salesPrice >= 0) {
-            if (!allowZeroPercentage) {
-                showNotification({
-                    color: 'pink',
-                    title: t('WeNotifyYouThat'),
-                    message: t('ZeroQuantityNotAllow'),
-                    autoClose: 1500,
-                    loading: true,
-                    withCloseButton: true,
-                    position: 'top-center',
-                    style: { backgroundColor: 'mistyrose' },
-                });
-            } else {
-                setSelectProductDetails(prevDetails => ({
-                    ...prevDetails,
-                    sub_total: quantity * salesPrice,
-                    sales_price: salesPrice,
-                }));
-            }
-        }
-
-    }, [form.values.quantity, form.values.sales_price]);
-
-
-    useEffect(() => {
-        if (form.values.quantity && form.values.mrp) {
-            const discountAmount = (form.values.mrp * form.values.percent) / 100;
-            const salesPrice = form.values.mrp - discountAmount;
-
-            form.setFieldValue('sales_price', salesPrice);
-        }
-    }, [form.values.percent]);
+    // const [selectProductDetails, setSelectProductDetails] = useState('')
+    //
+    // useEffect(() => {
+    //     const storedProducts = localStorage.getItem('user-products');
+    //     const localProducts = storedProducts ? JSON.parse(storedProducts) : [];
+    //
+    //     const filteredProducts = localProducts.filter(product => product.id === Number(form.values.product_id));
+    //
+    //     if (filteredProducts.length > 0) {
+    //         const selectedProduct = filteredProducts[0];
+    //
+    //         setSelectProductDetails(selectedProduct);
+    //
+    //         form.setFieldValue('mrp', selectedProduct.sales_price);
+    //         form.setFieldValue('sales_price', selectedProduct.sales_price);
+    //     } else {
+    //         setSelectProductDetails(null);
+    //         form.setFieldValue('mrp', '');
+    //         form.setFieldValue('sales_price', '');
+    //     }
+    // }, [form.values.product_id]);
+    //
+    //
+    // useEffect(() => {
+    //     const quantity = Number(form.values.quantity);
+    //     const salesPrice = Number(form.values.sales_price);
+    //
+    //     if (!isNaN(quantity) && !isNaN(salesPrice) && quantity > 0 && salesPrice >= 0) {
+    //         if (!allowZeroPercentage) {
+    //             showNotification({
+    //                 color: 'pink',
+    //                 title: t('WeNotifyYouThat'),
+    //                 message: t('ZeroQuantityNotAllow'),
+    //                 autoClose: 1500,
+    //                 loading: true,
+    //                 withCloseButton: true,
+    //                 position: 'top-center',
+    //                 style: { backgroundColor: 'mistyrose' },
+    //             });
+    //         } else {
+    //             setSelectProductDetails(prevDetails => ({
+    //                 ...prevDetails,
+    //                 sub_total: quantity * salesPrice,
+    //                 sales_price: salesPrice,
+    //             }));
+    //         }
+    //     }
+    //
+    // }, [form.values.quantity, form.values.sales_price]);
+    //
+    //
+    // useEffect(() => {
+    //     if (form.values.quantity && form.values.mrp) {
+    //         const discountAmount = (form.values.mrp * form.values.percent) / 100;
+    //         const salesPrice = form.values.mrp - discountAmount;
+    //
+    //         form.setFieldValue('sales_price', salesPrice);
+    //     }
+    // }, [form.values.percent]);
 
 
     useHotkeys([['alt+n', () => {
@@ -258,43 +258,43 @@ function SampleModalTable(props) {
         document.getElementById('EntityFormSubmit').click()
     }]], []);
 
-    const [value, discountType] = useToggle(['Flat', 'Percent']);
+    // const [value, discountType] = useToggle(['Flat', 'Percent']);
+    //
+    //
+    // const inputGroupButton = (
+    //     <Button
+    //         color={'gray'}
+    //         variant={'outline'}
+    //         styles={{
+    //             button: {
+    //                 fontWeight: 500,
+    //                 borderTopLeftRadius: 0,
+    //                 borderBottomLeftRadius: 0,
+    //                 width: rem(1000),
+    //             },
+    //         }}
+    //     >
+    //         {selectProductDetails && selectProductDetails.unit_name}
+    //     </Button>
+    // );
 
-
-    const inputGroupButton = (
-        <Button
-            color={'gray'}
-            variant={'outline'}
-            styles={{
-                button: {
-                    fontWeight: 500,
-                    borderTopLeftRadius: 0,
-                    borderBottomLeftRadius: 0,
-                    width: rem(1000),
-                },
-            }}
-        >
-            {selectProductDetails && selectProductDetails.unit_name}
-        </Button>
-    );
-
-    const inputGroupText = (
-        <Text style={{ textAlign: 'right', width: '100%', paddingRight: 16 }}
-            color={'gray'}
-        >
-            {selectProductDetails && selectProductDetails.unit_name}
-        </Text>
-    );
-
-    const inputGroupCurrency = (
-        <Text style={{ textAlign: 'right', width: '100%', paddingRight: 16 }}
-            color={'gray'}
-        >
-            {currancySymbol}
-        </Text>
-    );
-
-    const [displayNameValue, setDisplayNameValue] = useState('');
+    // const inputGroupText = (
+    //     <Text style={{ textAlign: 'right', width: '100%', paddingRight: 16 }}
+    //         color={'gray'}
+    //     >
+    //         {selectProductDetails && selectProductDetails.unit_name}
+    //     </Text>
+    // );
+    //
+    // const inputGroupCurrency = (
+    //     <Text style={{ textAlign: 'right', width: '100%', paddingRight: 16 }}
+    //         color={'gray'}
+    //     >
+    //         {currancySymbol}
+    //     </Text>
+    // );
+    //
+    // const [displayNameValue, setDisplayNameValue] = useState('');
 
     return (
         <>
