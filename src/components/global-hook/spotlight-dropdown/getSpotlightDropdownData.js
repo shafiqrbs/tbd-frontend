@@ -1,11 +1,6 @@
-import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+const getSpotlightDropdownData = (t) => {
 
-const getSpotlightDropdownData = () => {
-    const { t, i18n } = useTranslation();
-    const navigate = useNavigate();
-
-    const actions = [
+    return ([
         {
             group: t('Core'),
             actions: [
@@ -13,19 +8,20 @@ const getSpotlightDropdownData = () => {
                     id: 'customer',
                     label: t('Customer'),
                     description: t('WhereWePresentTheCustomerInformation'),
-                    onClick: () => navigate('/core/customer'),
+
                 },
                 {
                     id: 'user',
                     label: t('User'),
                     description: t('WhereWePresentTheUserInformation'),
-                    onClick: () => navigate('/core/user'),
+
+
                 },
                 {
                     id: 'vendor',
                     label: t('Vendor'),
                     description: t('WhereWePresentTheVendorInformation'),
-                    onClick: () => navigate('/core/vendor'),
+
                 },
             ],
         },
@@ -37,61 +33,85 @@ const getSpotlightDropdownData = () => {
                     id: 'category',
                     label: t('Category'),
                     description: t('WhereWePresentTheCategoryInformation'),
-                    onClick: () => navigate('/inventory/category'),
+
                 },
                 {
                     id: 'category-group',
                     label: t('CategoryGroup'),
                     description: t('WhereWePresentTheCategoryGroupInformation'),
-                    onClick: () => navigate('/inventory/category-group'),
+
                 },
                 {
                     id: 'product',
                     label: t('Product'),
                     description: t('WhereWePresentTheProductInformation'),
-                    onClick: () => navigate('/inventory/product'),
+
                 },
                 {
-                    id: 'configuration',
+                    id: 'config',
                     label: t('Configuration'),
                     description: t('WhereWePresentTheConfigurationInformation'),
-                    onClick: () => navigate('/inventory/config'),
+
                 },
                 {
                     id: 'sales',
                     label: t('Sales'),
                     description: t('WhereWePresentTheSalesInformation'),
-                    onClick: () => navigate('/inventory/sales'),
+
                 },
                 {
                     id: 'sales-invoice',
-                    label: t('ManageInvoice'),
+                    label: t('NewSales'),
                     description: t('WhereWePresentTheSalesInvoiceInformation'),
-                    onClick: () => navigate('/inventory/sales-invoice'),
+
                 },
                 {
                     id: 'purchase',
                     label: t('Purchase'),
                     description: t('WhereWePresentThePurchaseInformation'),
-                    onClick: () => navigate('/inventory/purchase'),
+
                 },
                 {
-                    id: 'manage-purchase',
-                    label: t('ManagePurchase'),
+                    id: 'purchase-invoice',
+                    label: t('NewPurchase'),
                     description: t('WhereWePresentThePurchaseInvoiceInformation'),
-                    onClick: () => navigate('/inventory/purchase-invoice'),
+
                 },
             ],
         },
+        {
+            group: t('Production'),
+            actions: [
+                {
+                    id: 'production',
+                    label: t('Production'),
+                    description: t('WhereWePresentTheProductionInformation'),
 
+                },
+                {
+                    id: 'production-inhouse',
+                    label: t('ProductionInhouse'),
+                    description: t('WhereWePresentTheProductionInformation'),
+
+
+                },
+                {
+                    id: 'production-receipe',
+                    label: t('ProductionReceipe'),
+                    description: t('WhereWePresentTheProductionInformation'),
+
+
+                },
+            ],
+        },
         {
             group: t('Domain'),
             actions: [
                 {
-                    id: 'domain',
+                    id: '',
                     label: t('Domain'),
                     description: t('WhereWePresentTheDomainInformation'),
-                    onClick: () => navigate('/domain'),
+
                 },
             ],
         },
@@ -102,11 +122,35 @@ const getSpotlightDropdownData = () => {
                     id: 'transaction-mode',
                     label: t('TransactionMode'),
                     description: t('WhereWePresentTheTransactionModeInformation'),
-                    onClick: () => navigate('/accounting/transaction-mode'),
+
+                },
+                {
+                    id: 'voucher-entry',
+                    label: t('VoucherEntry'),
+                    description: t('WhereWePresentTheVoucherInformation'),
+
+                },
+                {
+                    id: 'ledger',
+                    label: t('Ledger'),
+                    description: t('WhereWePresentTheLedgerInformation'),
+
+                },
+                {
+                    id: 'head-group',
+                    label: t('HeadGroup'),
+                    description: t('WhereWePresentTheHeadGroupInformation'),
+
+                },
+                {
+                    id: 'head-subgroup',
+                    label: t('HeadSubGroup'),
+                    description: t('WhereWePresentTheHeadSubGroupInformation'),
+
                 },
             ],
-        },
-    ];
-    return actions;
+        }
+    ]);
+
 };
 export default getSpotlightDropdownData;
