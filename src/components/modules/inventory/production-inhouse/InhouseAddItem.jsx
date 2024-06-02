@@ -123,7 +123,7 @@ function InhouseAddItem(props) {
 
                                     const cardProducts = localStorage.getItem('temp-sales-products');
                                     const myCardProducts = cardProducts ? JSON.parse(cardProducts) : [];
-                                    const storedProducts = localStorage.getItem('user-products');
+                                    const storedProducts = localStorage.getItem('core-products');
                                     const localProducts = storedProducts ? JSON.parse(storedProducts) : [];
 
                                     if (values.product_id && !values.barcode) {

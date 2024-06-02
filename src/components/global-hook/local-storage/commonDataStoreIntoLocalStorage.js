@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const storeDataIntoLocalStorage = async (user_id) => {
+const commonDataStoreIntoLocalStorage = async (user_id) => {
     const apiBackendRoutes = [
         'inventory/stock-item',
         'core/customer/local-storage',
@@ -9,7 +9,7 @@ const storeDataIntoLocalStorage = async (user_id) => {
         'accounting/transaction-mode/local-storage',
     ];
     const localStorageKeys = [
-        'user-products',
+        'core-products',
         'core-customers',
         'core-vendors',
         'core-users',
@@ -38,4 +38,4 @@ const storeDataIntoLocalStorage = async (user_id) => {
     }
 };
 
-export default storeDataIntoLocalStorage;
+export default commonDataStoreIntoLocalStorage;

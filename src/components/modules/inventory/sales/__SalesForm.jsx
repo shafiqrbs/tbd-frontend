@@ -1,8 +1,8 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import {
     Button, rem, Center, Switch, ActionIcon,
-    Grid, Box, ScrollArea, Tooltip, Group, Text, Popover, Flex, Notification
+    Grid, Box, ScrollArea, Tooltip, Group, Text
 } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
 import {
@@ -13,31 +13,25 @@ import {
     IconPercentage,
     IconCurrencyTaka,
     IconMessage,
-    IconEyeEdit,
-    IconDeviceMobile,
-    IconUserCircle, IconRefreshDot, IconDiscountOff, IconCurrency, IconPlusMinus, IconCheck,
-    IconUserPlus, IconX, IconTallymark1,
+    IconEyeEdit, IconDiscountOff, IconCurrency, IconPlusMinus, IconCheck, IconTallymark1,
 
 } from "@tabler/icons-react";
 import { useHotkeys, useToggle } from "@mantine/hooks";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { isNotEmpty, useForm } from "@mantine/form";
 
 import SelectForm from "../../../form-builders/SelectForm";
 import TextAreaForm from "../../../form-builders/TextAreaForm";
 
 import { storeEntityData, } from "../../../../store/inventory/crudSlice.js";
-import { getTransactionModeData } from "../../../../store/accounting/utilitySlice.js";
 import InputNumberForm from "../../../form-builders/InputNumberForm";
 import InputButtonForm from "../../../form-builders/InputButtonForm";
-import getUserDropdownData from "../../../global-hook/dropdown/getUserDropdownData";
-import InputForm from "../../../form-builders/InputForm";
 import { notifications } from "@mantine/notifications";
 import _InvoiceForDomain359 from "./print-component/_InvoiceForDomain359.jsx";
-import storeDataIntoLocalStorage from "../../../global-hook/local-storage/storeDataIntoLocalStorage.js";
 import _SmsPurchaseModel from "./modal/_SmsPurchaseModel.jsx";
 import _CustomerViewModel from "./modal/_CustomerViewModel.jsx";
-import getSettingOrderProcessDropdownData from "../../../global-hook/dropdown/getSettingOrderProcessDropdownData.js";
+import customerDataStoreIntoLocalStorage from "../../../global-hook/local-storage/customerDataStoreIntoLocalStorage.js";
+import _addCustomer from "../../popover-form/_addCustomer.jsx";
 
 function __SalesForm(props) {
 
@@ -133,52 +127,33 @@ function __SalesForm(props) {
 
     const [profitShow, setProfitShow] = useState(false);
 
-    /*START CUSTOMER ADDED FORM INITIAL*/
-    const [customerAddFormOpened, setCustomerAddFormOpened] = useState(false);
-    const customerAddedForm = useForm({
-        initialValues: {
-            name: '',
-            mobile: ''
-        },
-        validate: {
-            name: isNotEmpty(),
-            mobile: isNotEmpty()
-        }
-    });
-    /*END CUSTOMER ADDED FORM INITIAL*/
-
-
-    /*START ALL LOCAL STORAGE DATA RESTORE*/
-    const [stockProductRestore, setStockProductRestore] = useState(false)
-    useEffect(() => {
-        if (stockProductRestore) {
-            const local = storeDataIntoLocalStorage(JSON.parse(localStorage.getItem('user')).id)
-        }
-    }, [stockProductRestore])
-    /*END ALL LOCAL STORAGE DATA RESTORE*/
-
     /*START GET CUSTOMER DROPDOWN FROM LOCAL STORAGE*/
-    const [customersDropdownData, setCustomersDropdownData] = useState([])
     const [refreshCustomerDropdown, setRefreshCustomerDropdown] = useState(false)
+    const [customersDropdownData, setCustomersDropdownData] = useState([])
     const [defaultCustomerId, setDefaultCustomerId] = useState(null)
 
     useEffect(() => {
-        let coreCustomers = localStorage.getItem('core-customers');
-        coreCustomers = coreCustomers ? JSON.parse(coreCustomers) : []
-        let defaultId = defaultCustomerId;
-        if (coreCustomers && coreCustomers.length > 0) {
-            const transformedData = coreCustomers.map(type => {
-                if (type.name === 'Default') {
-                    defaultId = type.id;
-                }
-                return ({ 'label': type.mobile + ' -- ' + type.name, 'value': String(type.id) })
-            });
+        const fetchCustomers = async () => {
+            await customerDataStoreIntoLocalStorage();
+            let coreCustomers = localStorage.getItem('core-customers');
+            coreCustomers = coreCustomers ? JSON.parse(coreCustomers) : []
+            let defaultId = defaultCustomerId;
+            if (coreCustomers && coreCustomers.length > 0) {
+                const transformedData = coreCustomers.map(type => {
+                    if (type.name === 'Default') {
+                        defaultId = type.id;
+                    }
+                    return ({ 'label': type.mobile + ' -- ' + type.name, 'value': String(type.id) })
+                });
 
-            setCustomersDropdownData(transformedData);
-            setDefaultCustomerId(defaultId);
-        }
-        setRefreshCustomerDropdown(false);
-    }, [refreshCustomerDropdown])
+                setCustomersDropdownData(transformedData);
+                setDefaultCustomerId(defaultId);
+            }
+            setRefreshCustomerDropdown(false);
+        };
+
+        fetchCustomers();
+    }, [refreshCustomerDropdown]);
     /*END GET CUSTOMER DROPDOWN FROM LOCAL STORAGE*/
 
     /*START GET SALES BY / USERS DROPDOWN FROM LOCAL STORAGE*/
@@ -226,11 +201,8 @@ function __SalesForm(props) {
     }, [customerData]);
     /*END GET CUSTOMER DATA FROM LOCAL STORAGE*/
 
-
-
     useHotkeys([['alt+n', () => {
         // document.getElementById('customer_id').focus()
-
     }]], []);
 
     useHotkeys([['alt+r', () => {
@@ -384,135 +356,11 @@ function __SalesForm(props) {
                                             </Box>
                                         </Grid.Col>
                                         <Grid.Col span={1}>
-                                            <Box pt={7}>
-                                                <Popover
-                                                    width={'450'}
-                                                    trapFocus
-                                                    position="bottom"
-                                                    withArrow
-                                                    shadow="xl"
-                                                    opened={customerAddFormOpened}
-                                                    onChange={setCustomerAddFormOpened}
-                                                >
-                                                    <Popover.Target>
-                                                        <Tooltip
-                                                            multiline
-                                                            bg={'orange.8'}
-                                                            offset={{ crossAxis: '-52', mainAxis: '5' }}
-                                                            position="top"
-                                                            ta={'center'}
-                                                            withArrow
-                                                            transitionProps={{ duration: 200 }}
-                                                            label={t('InstantCustomerCreate')}
-                                                        >
-                                                            <ActionIcon
-                                                                fullWidth
-                                                                variant="outline"
-                                                                bg={'white'}
-                                                                size={'lg'}
-                                                                color="red.5"
-                                                                mt={'1'}
-                                                                aria-label="Settings"
-                                                                onClick={() => setCustomerAddFormOpened(true)}
-                                                            >
-                                                                <IconUserPlus style={{ width: '100%', height: '70%' }} stroke={1.5} />
-                                                            </ActionIcon>
-                                                        </Tooltip>
-                                                    </Popover.Target>
-                                                    <Popover.Dropdown>
-                                                        <Box mt={'xs'}>
-                                                            <InputForm
-                                                                tooltip={t('NameValidateMessage')}
-                                                                label={t('Name')}
-                                                                placeholder={t('CustomerName')}
-                                                                required={true}
-                                                                nextField={'mobile'}
-                                                                form={customerAddedForm}
-                                                                name={'name'}
-                                                                id={'name'}
-                                                                leftSection={<IconUserCircle size={16} opacity={0.5} />}
-                                                                rightIcon={''}
-                                                            />
-                                                        </Box>
-                                                        <Box mt={'xs'}>
-                                                            <InputNumberForm
-                                                                tooltip={t('MobileValidateMessage')}
-                                                                label={t('Mobile')}
-                                                                placeholder={t('Mobile')}
-                                                                required={true}
-                                                                nextField={'EntityCustomerFormSubmit'}
-                                                                form={customerAddedForm}
-                                                                name={'mobile'}
-                                                                id={'mobile'}
-                                                                leftSection={<IconDeviceMobile size={16} opacity={0.5} />}
-                                                                rightIcon={''}
-                                                            />
-                                                        </Box>
-                                                        <Box mt={'xs'}>
-                                                            <Grid columns={12} gutter={{ base: 1 }} >
-                                                                <Grid.Col span={6}>&nbsp;</Grid.Col>
-                                                                <Grid.Col span={2}>
-                                                                    <Button
-                                                                        variant="transparent"
-                                                                        size="sm"
-                                                                        color={`red.4`}
-                                                                        type="submit"
-                                                                        mt={0}
-                                                                        mr={'xs'}
-                                                                        fullWidth
-                                                                    >
-                                                                        <IconRefreshDot style={{ width: '100%', height: '70%' }} stroke={1.5} />
-                                                                    </Button>
-                                                                </Grid.Col>
-                                                                <Grid.Col span={4}>
-                                                                    <Button
-                                                                        size="sm"
-                                                                        color={`red.5`}
-                                                                        type="submit"
-                                                                        mt={0}
-                                                                        mr={'xs'}
-                                                                        fullWidth
-                                                                        id="EntityCustomerFormSubmit"
-                                                                        leftSection={<IconDeviceFloppy size={16} />}
-                                                                        onClick={() => {
-                                                                            let validation = true
-                                                                            if (!customerAddedForm.values.name) {
-                                                                                validation = false
-                                                                                customerAddedForm.setFieldError('name', true);
-                                                                            }
-                                                                            if (!customerAddedForm.values.mobile) {
-                                                                                validation = false
-                                                                                customerAddedForm.setFieldError('mobile', true);
-                                                                            }
-
-                                                                            if (validation) {
-                                                                                const value = {
-                                                                                    url: 'core/customer',
-                                                                                    data: customerAddedForm.values
-                                                                                }
-                                                                                dispatch(storeEntityData(value))
-
-                                                                                customerAddedForm.reset()
-                                                                                setStockProductRestore(true)
-                                                                                setCustomerAddFormOpened(false)
-                                                                                setRefreshCustomerDropdown(true)
-                                                                                document.getElementById('customer_id').focus()
-                                                                            }
-
-                                                                        }}
-                                                                    >
-                                                                        <Flex direction={`column`} gap={0}>
-                                                                            <Text fz={12} fw={400}>
-                                                                                {t("Add Customer")}
-                                                                            </Text>
-                                                                        </Flex>
-                                                                    </Button>
-                                                                </Grid.Col>
-                                                            </Grid>
-                                                        </Box>
-                                                    </Popover.Dropdown>
-                                                </Popover>
-                                            </Box>
+                                            <_addCustomer
+                                                setRefreshCustomerDropdown={setRefreshCustomerDropdown}
+                                                focusField={'customer_id'}
+                                                fieldPrefix="sales_"
+                                            />
                                         </Grid.Col>
                                     </Grid>
                                 </Box>
@@ -692,11 +540,9 @@ function __SalesForm(props) {
                                                     </Grid.Col>
                                                 );
                                             })}
-
                                     </Grid>
-
-
                                 </Box>
+
                                 <Box p={'xs'} className={'boxBackground'} mt={'4'} pt={'xs'} mb={'xs'} pb={'xs'} >
                                     <Grid gutter={{ base: 2 }}>
                                         <Grid.Col span={2}>

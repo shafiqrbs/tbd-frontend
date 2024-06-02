@@ -4,7 +4,21 @@ import tableCss from '../../../../assets/css/Table.module.css';
 import {
     Group,
     Box,
-    ActionIcon, Text, Grid, Stack, Button, ScrollArea, Table, Loader, Menu, rem, Anchor, Checkbox, Tooltip
+    ActionIcon,
+    Text,
+    Grid,
+    Stack,
+    Button,
+    ScrollArea,
+    Table,
+    Loader,
+    Menu,
+    rem,
+    Anchor,
+    Checkbox,
+    Tooltip,
+    Overlay,
+    LoadingOverlay
 } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import {
@@ -38,9 +52,15 @@ function _SalesTable() {
     }, [])
 
     const fetching = useSelector((state) => state.inventoryCrudSlice.fetching)
-    // const searchKeyword = useSelector((state) => state.inventoryCrudSlice.searchKeyword)
     const salesFilterData = useSelector((state) => state.inventoryCrudSlice.salesFilterData)
     const indexData = useSelector((state) => state.inventoryCrudSlice.indexEntityData)
+
+    const [loading, setLoading] = useState(true);
+    useEffect(() => {
+        setTimeout(() => {
+            setLoading(false);
+        }, 500);
+    }, [loading]);
     const [salesViewData, setSalesViewData] = useState({})
 
     useEffect(() => {
@@ -48,7 +68,6 @@ function _SalesTable() {
     }, [indexData.data])
     useHotkeys([['alt+n', () => {
         navigate('/inventory/sales-invoice');
-        // console.log('ok')
     }]], []);
 
 
@@ -169,6 +188,7 @@ function _SalesTable() {
                                                     c="red.6"
                                                     onClick={(e) => {
                                                         e.preventDefault();
+                                                        setLoading(true)
                                                         setSalesViewData(item)
                                                     }}
                                                     style={{ cursor: "pointer" }}
@@ -278,7 +298,16 @@ function _SalesTable() {
                     </Grid.Col>
 
                     <Grid.Col span={8} >
-                        <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} ref={printRef}>
+
+                        <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} ref={printRef} pos="relative">
+                            {loading &&
+                                <LoadingOverlay
+                                    visible={loading}
+                                    zIndex={1000}
+                                    overlayProps={{ radius: "sm", blur: 2 }}
+                                    loaderProps={{ color: 'red' }}
+                                />
+                            }
                             <Box h={'36'} pl={`xs`} fz={'sm'} fw={'600'} pr={8} pt={'6'} mb={'4'} className={'boxBackground textColor borderRadiusAll'} >
                                 {t('Invoice')}: {salesViewData && salesViewData.invoice && salesViewData.invoice}
                             </Box>

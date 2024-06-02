@@ -4,7 +4,7 @@ import tableCss from '../../../../assets/css/Table.module.css';
 import {
     Group,
     Box,
-    ActionIcon, Text, Grid, Stack, Button, ScrollArea, Table, Loader, Menu, rem
+    ActionIcon, Text, Grid, Stack, Button, ScrollArea, Table, Loader, Menu, rem, LoadingOverlay
 } from "@mantine/core";
 import {useTranslation} from "react-i18next";
 import {
@@ -43,9 +43,15 @@ function _PurchaseTable() {
 
 
     const fetching = useSelector((state) => state.inventoryCrudSlice.fetching)
-    const searchKeyword = useSelector((state) => state.inventoryCrudSlice.searchKeyword)
     const purchaseFilterData = useSelector((state) => state.inventoryCrudSlice.purchaseFilterData)
     const indexData = useSelector((state) => state.inventoryCrudSlice.indexEntityData)
+
+    const [loading, setLoading] = useState(true);
+    useEffect(() => {
+        setTimeout(() => {
+            setLoading(false);
+        }, 500);
+    }, [loading]);
 
     const [purchaseViewData,setPurchaseViewData] =useState({})
 
@@ -137,6 +143,7 @@ function _PurchaseTable() {
                                                     color="red.6"
                                                     onClick={(e) => {
                                                         e.preventDefault();
+                                                        setLoading(true)
                                                         setPurchaseViewData(item)
                                                     }}
                                                     style={{cursor: "pointer"}}
@@ -218,7 +225,15 @@ function _PurchaseTable() {
                     </Grid.Col>
 
                     <Grid.Col span={8} >
-                        <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} ref={printRef}>
+                        <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} ref={printRef} pos={"relative"}>
+                            {loading &&
+                                <LoadingOverlay
+                                    visible={loading}
+                                    zIndex={1000}
+                                    overlayProps={{ radius: 'sm', blur: 2 }}
+                                    loaderProps={{ color: 'red' }}
+                                />
+                            }
                             <Box h={'36'} pl={`xs`} fz={'sm'} fw={'600'} pr={8} pt={'6'} mb={'4'} className={'boxBackground textColor borderRadiusAll'} >
                                 {t('Invoice')}: {purchaseViewData && purchaseViewData.invoice && purchaseViewData.invoice}
                             </Box>

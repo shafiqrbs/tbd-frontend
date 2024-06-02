@@ -416,5 +416,7 @@
   "UOM": "UOM",
   "ProductionInhouse": "Production Inhouse",
   "ProductionReceipe": "Production Receipe",
+  "AddVendor": "Add Vendor",
+  "InstantVendorCreate": "Instant Vendor Create",
   "": ""
 }

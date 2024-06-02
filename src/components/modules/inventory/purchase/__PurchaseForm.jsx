@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import {
-    Button, rem, Center, Switch, ActionIcon,
-    Grid, Box, ScrollArea, Tooltip, Group, Text, List, ThemeIcon, Popover, Flex,
+    Button, rem, Center, ActionIcon,
+    Grid, Box, ScrollArea, Tooltip, Group, Text
 } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
 import {
@@ -12,13 +12,12 @@ import {
     IconReceipt,
     IconPercentage,
     IconCurrencyTaka,
-    IconEyeEdit,
-    IconDeviceMobile, IconUserCircle, IconRefreshDot, IconDiscountOff, IconCurrency, IconPlusMinus, IconCheck,
+    IconEyeEdit, IconDiscountOff, IconCurrency, IconPlusMinus, IconCheck,
 
 } from "@tabler/icons-react";
 import { useHotkeys, useToggle } from "@mantine/hooks";
-import { useDispatch, useSelector } from "react-redux";
-import { hasLength, isNotEmpty, useForm } from "@mantine/form";
+import { useDispatch } from "react-redux";
+import { isNotEmpty, useForm } from "@mantine/form";
 
 import SelectForm from "../../../form-builders/SelectForm";
 import TextAreaForm from "../../../form-builders/TextAreaForm";
@@ -26,9 +25,10 @@ import TextAreaForm from "../../../form-builders/TextAreaForm";
 import { storeEntityData } from "../../../../store/inventory/crudSlice.js";
 import InputNumberForm from "../../../form-builders/InputNumberForm";
 import InputButtonForm from "../../../form-builders/InputButtonForm";
-import InputForm from "../../../form-builders/InputForm";
 import { notifications } from "@mantine/notifications";
 import _VendorViewModel from "../../core/vendor/_VendorViewModel.jsx";
+import _addVendor from "../../popover-form/_addVendor.jsx";
+import vendorDataStoreIntoLocalStorage from "../../../global-hook/local-storage/vendorDataStoreIntoLocalStorage.js";
 
 function __PurchaseForm(props) {
     const { currencySymbol } = props
@@ -36,7 +36,6 @@ function __PurchaseForm(props) {
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
     const transactionModeData = JSON.parse(localStorage.getItem('accounting-transaction-mode')) ? JSON.parse(localStorage.getItem('accounting-transaction-mode')) : [];
-
 
     const [purchaseSubTotalAmount, setPurchaseSubTotalAmount] = useState(0);
     const [purchaseVatAmount, setPurchaseVatAmount] = useState(0);
@@ -82,18 +81,23 @@ function __PurchaseForm(props) {
     const [refreshVendorDropdown, setRefreshVendorDropdown] = useState(false)
 
     useEffect(() => {
-        let coreVendors = localStorage.getItem('core-vendors');
-        coreVendors = coreVendors ? JSON.parse(coreVendors) : []
+        const fetchVendors = async () => {
+            await vendorDataStoreIntoLocalStorage()
+            let coreVendors = localStorage.getItem('core-vendors');
+            coreVendors = coreVendors ? JSON.parse(coreVendors) : []
 
-        if (coreVendors && coreVendors.length > 0) {
-            const transformedData = coreVendors.map(type => {
-                return ({ 'label': type.mobile + ' -- ' + type.name, 'value': String(type.id) })
-            });
-            setVendorsDropdownData(transformedData);
+            if (coreVendors && coreVendors.length > 0) {
+                const transformedData = coreVendors.map(type => {
+                    return ({'label': type.mobile + ' -- ' + type.name, 'value': String(type.id)})
+                });
+                setVendorsDropdownData(transformedData);
+            }
+            setRefreshVendorDropdown(false);
         }
-        setRefreshVendorDropdown(false);
+        fetchVendors()
     }, [refreshVendorDropdown])
     /*END GET CUSTOMER DROPDOWN FROM LOCAL STORAGE*/
+
 
     const form = useForm({
         initialValues: {
@@ -254,102 +258,20 @@ function __PurchaseForm(props) {
                                                     name={'vendor_id'}
                                                     form={form}
                                                     dropdownValue={vendorsDropdownData}
-                                                    id={'vendor_id'}
+                                                    id={'purchase_vendor_id'}
                                                     mt={1}
-                                                    searchable={false}
+                                                    searchable={true}
                                                     value={vendorData}
                                                     changeValue={setVendorData}
                                                 />
                                             </Box>
                                         </Grid.Col>
                                         <Grid.Col span={1}>
-                                            <Box pt={'xs'}>
-                                                <Popover width={'450'} trapFocus position="bottom" withArrow shadow="xl">
-                                                    <Popover.Target>
-                                                        <Tooltip
-                                                            multiline
-                                                            bg={'orange.8'}
-                                                            ta={'center'}
-                                                            offset={{ crossAxis: '-45', mainAxis: '5' }}
-                                                            withArrow
-                                                            transitionProps={{ duration: 200 }}
-                                                            label={t('InstantCustomerCreate')}
-                                                        >
-                                                            <ActionIcon fullWidth variant="outline" bg={'white'} size={'lg'} color="red.5" mt={'1'} aria-label="Settings">
-
-                                                                <IconUserCircle style={{ width: '100%', height: '70%' }} stroke={1.5} />
-                                                            </ActionIcon>
-                                                        </Tooltip>
-                                                    </Popover.Target>
-                                                    <Popover.Dropdown>
-                                                        <Box mt={'xs'}>
-                                                            <InputForm
-                                                                tooltip={t('SalesPriceValidateMessage')}
-                                                                label={t('Name')}
-                                                                placeholder={t('CustomerName')}
-                                                                required={true}
-                                                                nextField={'EntityFormSubmit'}
-                                                                form={form}
-                                                                name={'customer_name'}
-                                                                id={'customer_name'}
-                                                                leftSection={<IconUserCircle size={16} opacity={0.5} />}
-                                                                rightIcon={''}
-                                                            />
-                                                        </Box>
-                                                        <Box mt={'xs'}>
-                                                            <InputNumberForm
-                                                                tooltip={t('MobileValidateMessage')}
-                                                                label={t('MobileNo')}
-                                                                placeholder={t('MobileNo')}
-                                                                required={true}
-                                                                nextField={'EntityFormSubmit'}
-                                                                form={form}
-                                                                name={'mobile_no'}
-                                                                id={'mobile_no'}
-                                                                leftSection={<IconDeviceMobile size={16} opacity={0.5} />}
-                                                                rightIcon={''}
-                                                            />
-                                                        </Box>
-                                                        <Box mt={'xs'}>
-                                                            <Grid columns={12} gutter={{ base: 1 }} >
-                                                                <Grid.Col span={6}>&nbsp;</Grid.Col>
-                                                                <Grid.Col span={2}>
-                                                                    <Button
-                                                                        variant="transparent"
-                                                                        size="sm"
-                                                                        color={`red.4`}
-                                                                        type="submit"
-                                                                        mt={0}
-                                                                        mr={'xs'}
-                                                                        fullWidth
-                                                                        id="EntityCustomerFormSubmit"
-                                                                    >
-                                                                        <IconRefreshDot style={{ width: '100%', height: '70%' }} stroke={1.5} />
-                                                                    </Button>
-                                                                </Grid.Col>
-                                                                <Grid.Col span={4}>
-                                                                    <Button
-                                                                        size="sm"
-                                                                        color={`red.5`}
-                                                                        type="submit"
-                                                                        mt={0}
-                                                                        mr={'xs'}
-                                                                        fullWidth
-                                                                        id="EntityCustomerFormSubmit"
-                                                                        leftSection={<IconDeviceFloppy size={16} />}
-                                                                    >
-                                                                        <Flex direction={`column`} gap={0}>
-                                                                            <Text fz={12} fw={400}>
-                                                                                {t("Add Customer")}
-                                                                            </Text>
-                                                                        </Flex>
-                                                                    </Button>
-                                                                </Grid.Col>
-                                                            </Grid>
-                                                        </Box>
-                                                    </Popover.Dropdown>
-                                                </Popover>
-                                            </Box>
+                                            <_addVendor
+                                                setRefreshVendorDropdown={setRefreshVendorDropdown}
+                                                focusField={'purchase_vendor_id'}
+                                                fieldPrefix="purchase_"
+                                            />
                                         </Grid.Col>
                                     </Grid>
                                 </Box>
@@ -509,23 +431,10 @@ function __PurchaseForm(props) {
                                 <Box p={'xs'} className={'boxBackground'} mt={'4'} pt={'xs'} mb={'xs'} pb={'xs'} >
                                     <Grid gutter={{ base: 2 }}>
                                         <Grid.Col span={2}>
-                                            {/*<Switch
-                                                fullWidth
-                                                size="lg"
-                                                w={'100%'}
-                                                color={'red.3'}
-                                                mt={'2'}
-                                                ml={'6'}
-                                                onLabel={t('Profit')}
-                                                offLabel={t('Hide')}
-                                                radius="xs"
-                                                onChange={(event) => setProfitShow(event.currentTarget.checked)}
-                                            />*/}
+
                                         </Grid.Col>
                                         <Grid.Col span={2}>
-                                            {/*<Center fz={'xs'} mt={'8'} c={'red'}>
-                                                {currencySymbol} {profitShow && salesProfitAmount}
-                                            </Center>*/}
+
                                         </Grid.Col>
                                         <Grid.Col span={7}><Center fz={'md'} mt={'4'} c={'red'}
                                             fw={'800'}>{returnOrDueText} {currencySymbol} {purchaseDueAmount.toFixed(2)}</Center></Grid.Col>
