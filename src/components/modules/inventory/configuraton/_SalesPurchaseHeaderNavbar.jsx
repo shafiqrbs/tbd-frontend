@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from "react-redux";
 import classes from '../../../../assets/css/HeaderSearch.module.css';
 import {
-    IconInfoCircle, IconTrash, IconSearch, IconSettings
+    IconInfoCircle, IconTrash, IconSearch, IconSettings,IconTable
 } from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
 
@@ -19,6 +19,7 @@ function _SalesPurchaseHeaderNavbar(props) {
         { link: '/inventory/sales-invoice', label: t('NewSales') },
         { link: '/inventory/purchase', label: t('Purchase') },
         { link: '/inventory/purchase-invoice', label: t('NewPurchase') },
+
     ];
     const { pageTitle, roles, currancySymbol, allowZeroPercentage } = props
     const dispatch = useDispatch();
@@ -53,17 +54,17 @@ function _SalesPurchaseHeaderNavbar(props) {
                                 </ActionIcon>
                             </Menu.Target>
                             <Menu.Dropdown>
-                                <Menu.Label>Application</Menu.Label>
-                                <Menu.Item leftSection={<IconSettings style={{ width: rem(14), height: rem(14) }} />}>
-                                    Settings
+                                <Menu.Item href="/inventory/opening-stock"
+                                           component="button" onClick={(e) => { navigate('/inventory/opening-stock') }} leftSection={<IconTable style={{ width: rem(14), height: rem(14) }} />}>
+                                    {t('OpeningStock')}
                                 </Menu.Item>
-                                <Menu.Divider />
-                                <Menu.Label>Danger zone</Menu.Label>
-                                <Menu.Item
-                                    color="red"
-                                    leftSection={<IconTrash style={{ width: rem(14), height: rem(14) }} />}
-                                >
-                                    Delete my account
+                                <Menu.Item href="/inventory/opening-approve-stock"
+                                           component="button" onClick={(e) => { navigate('/inventory/opening-approve-stock') }} leftSection={<IconTable style={{ width: rem(14), height: rem(14) }} />}>
+                                    {t('OpeningApproveStock')}
+                                </Menu.Item>
+                                <Menu.Item href="/inventory/config"
+                                           component="button" onClick={(e) => { navigate('/inventory/config') }} leftSection={<IconSettings style={{ width: rem(14), height: rem(14) }} />}>
+                                    {t('Settings')}
                                 </Menu.Item>
                             </Menu.Dropdown>
                         </Menu>

@@ -31,6 +31,9 @@ import ReceipeIndex from './components/modules/inventory/receipe/ReceipeIndex.js
 import SalesEdit from "./components/modules/inventory/sales/SalesEdit.jsx";
 import PurchaseEdit from "./components/modules/inventory/purchase/PurchaseEdit.jsx";
 import SampleModalIndex from './components/modules/sample3Grid/SampleModalIndex.jsx';
+import OpeningApproveIndex from "./components/modules/inventory/opening-stock/OpeningApproveIndex";
+import OpeningStockIndex from "./components/modules/inventory/opening-stock/OpeningStockIndex";
+
 function AppRoute() {
 
     return (
@@ -55,6 +58,8 @@ function AppRoute() {
                     <Route path="purchase/edit/:id" element={<PurchaseEdit />} />
                     <Route path="purchase" element={<PurchaseIndex />} />
                     <Route path="purchase-invoice" element={<PurchaseInvoice />} />
+                    <Route path="opening-stock" element={<OpeningStockIndex />} />
+                    <Route path="opening-approve-stock" element={<OpeningApproveIndex />} />
                     <Route path="product" element={<ProductIndex />} />
                     <Route path="category" element={<CategoryIndex />} />
                     <Route path="category-group" element={<CategoryGroupIndex />} />
