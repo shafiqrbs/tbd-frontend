@@ -35,7 +35,7 @@ function ProductIndex() {
                                 pageTitle={t('ManageProduct')}
                                 roles={t('Roles')}
                                 allowZeroPercentage={configData.zero_stock}
-                                currencySymbol={configData.currency.symbol}
+                                currencySymbol={configData?.currency?.symbol}
                             />
                             <Box p={'8'}>
                                 <Grid columns={24} gutter={{ base: 8 }}>
