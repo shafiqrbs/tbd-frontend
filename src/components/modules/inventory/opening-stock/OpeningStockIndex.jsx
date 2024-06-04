@@ -9,7 +9,6 @@ import _SalesPurchaseHeaderNavbar from "../configuraton/_SalesPurchaseHeaderNavb
 import _CreateStockForm from "./_CreateStockForm";
 
 
-
 function OpeningStockIndex() {
     const { t, i18n } = useTranslation();
     const progress = getLoadingProgress()
@@ -27,14 +26,10 @@ function OpeningStockIndex() {
                             <_SalesPurchaseHeaderNavbar
                                 pageTitle={t('OpeningStock')}
                                 roles={t('Roles')}
-                                allowZeroPercentage={configData.zero_stock}
-                                currencySymbol={configData.currency.symbol}
                             />
                             <Box p={'8'}>
                                 <_CreateStockForm
-                                    allowZeroPercentage={configData.zero_stock}
-                                    currencySymbol={configData.currency.symbol}
-                                    isPurchaseByPurchasePrice={configData.is_purchase_by_purchase_price}
+                                    currencySymbol={configData?.currency?.symbol}
                                 />
                             </Box>
                         </>

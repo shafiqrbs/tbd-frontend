@@ -18,7 +18,7 @@ import {
     IconArrowRight
 } from "@tabler/icons-react";
 import { getHotkeyHandler, useHotkeys } from "@mantine/hooks";
-import { useDispatch } from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import { isNotEmpty, useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
 import SelectServerSideForm from "../../../form-builders/SelectServerSideForm.jsx";
@@ -31,7 +31,7 @@ import tableCss from "../../../../assets/css/Table.module.css";
 import _addProduct from "../../popover-form/_addProduct.jsx";
 import productsDataStoreIntoLocalStorage from "../../../global-hook/local-storage/productsDataStoreIntoLocalStorage.js";
 import _OpeningSearch from "./_OpeningSearch";
-import {setFetching} from "../../../../store/inventory/crudSlice";
+import {getIndexEntityData, inlineUpdateEntityData, setFetching} from "../../../../store/inventory/crudSlice";
 
 function _ApproveTable(props) {
     const { currencySymbol, allowZeroPercentage, isPurchaseByPurchasePrice } = props
@@ -39,6 +39,35 @@ function _ApproveTable(props) {
     const { isOnline, mainAreaHeight } = useOutletContext();
     const height = mainAreaHeight - 130; //TabList height 104
     const [fetching, setFetching] = useState(false);
+    const dispatch = useDispatch();
+
+    const perPage = 15;
+    const [page, setPage] = useState(1);
+
+    // const fetching = useSelector((state) => state.inventoryCrudSlice.fetching)
+    const indexData = useSelector((state) => state.inventoryCrudSlice.indexEntityData)
+
+    // console.log(indexData.data)
+
+    const [openingStockItems, setOpeningStockItems] = useState([indexData])
+
+
+    useEffect(() => {
+        const value = {
+            url: 'inventory/opening-stock',
+            param: {
+                page: page,
+                offset: perPage,
+                mode:"opening",
+                is_approved:1
+            }
+        }
+        dispatch(getIndexEntityData(value))
+        setTimeout(()=>{
+            setFetching(false)
+        },500)
+    }, [fetching]);
+
 
     const [searchValue, setSearchValue] = useState('');
     const [productDropdown, setProductDropdown] = useState([]);
@@ -314,28 +343,18 @@ function _ApproveTable(props) {
                                         footer: tableCss.footer,
                                         pagination: tableCss.pagination,
                                     }}
-                                    records={tempCardProducts}
+                                    records={indexData.data}
                                     columns={[
                                         {
                                             accessor: 'index',
                                             title: t('S/N'),
                                             textAlignment: 'right',
-                                            render: (item) => (tempCardProducts.indexOf(item) + 1)
+                                            render: (item) => (indexData.data.indexOf(item) + 1)
                                         },
                                         {
-                                            accessor: 'created',
-                                            title: t("Created"),
-                                            width: '35%',
-                                        },
-                                        {
-                                            accessor: 'display_name',
+                                            accessor: 'product_name',
                                             title: t("Name"),
                                             width: '35%',
-                                        },
-                                        {
-                                            accessor: 'quantity',
-                                            title: t('Quantity'),
-                                            width: '10%',
                                         },
                                         {
                                             accessor: 'unit_name',
@@ -344,9 +363,33 @@ function _ApproveTable(props) {
                                             textAlign: "center"
                                         },
                                         {
-                                            accessor: 'purchase_price',
-                                            title: t('Price'),
+                                            accessor: 'opening_quantity',
+                                            title: t('Quantity'),
                                             width: '10%',
+                                            textAlign: "right",
+                                        },
+
+                                        {
+                                            accessor: 'purchase_price',
+                                            title: t('PurchasePrice'),
+                                            width: '10%',
+                                            textAlign: "right",
+                                            render: (item) => {
+                                                return (
+                                                    item.purchase_price && Number(item.purchase_price).toFixed(2)
+                                                );
+                                            },
+                                        },
+                                        {
+                                            accessor: 'sales_price',
+                                            title: t('SalesPrice'),
+                                            width: '10%',
+                                            textAlign: "right",
+                                            render: (item) => {
+                                                return (
+                                                    item.sales_price && Number(item.sales_price).toFixed(2)
+                                                );
+                                            },
                                         },
 
                                         {
@@ -354,17 +397,22 @@ function _ApproveTable(props) {
                                             title: t('SubTotal'),
                                             width: '15%',
                                             textAlign: "right",
-                                        },
+                                            render: (item) => {
+                                                return (
+                                                    item.sub_total && Number(item.sub_total).toFixed(2)
+                                                );
+                                            },
 
+                                        },
                                     ]
                                     }
                                     fetching={fetching}
-                                    totalRecords={100}
-                                    recordsPerPage={20}
-                                    page={2}
+                                    totalRecords={indexData.total}
+                                    recordsPerPage={perPage}
+                                    page={page}
                                     onPageChange={(p) => {
                                         setPage(p)
-                                        dispatch(setFetching(true))
+                                        setFetching(true)
                                     }}
                                     loaderSize="xs"
                                     loaderColor="grape"

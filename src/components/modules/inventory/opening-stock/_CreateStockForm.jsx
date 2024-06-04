@@ -2,14 +2,14 @@ import React, { useEffect, useState } from "react";
 import {useNavigate, useOutletContext} from "react-router-dom";
 import {
     Button, Flex, ActionIcon, TextInput,
-    Grid, Box, Group, Text, Menu, rem,
+    Grid, Box, Group, Text, Menu, rem, LoadingOverlay,
 } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
 import {
     IconDeviceFloppy, IconSum, IconX, IconBarcode, IconDotsVertical, IconPencil, IconEyeEdit, IconTrashX,IconChevronsRight,IconArrowRight
 } from "@tabler/icons-react";
 import { getHotkeyHandler, useHotkeys } from "@mantine/hooks";
-import { useDispatch } from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import { isNotEmpty, useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
 import SelectServerSideForm from "../../../form-builders/SelectServerSideForm.jsx";
@@ -21,23 +21,49 @@ import ShortcutInvoice from "../../shortcut/ShortcutInvoice";
 import tableCss from "../../../../assets/css/Table.module.css";
 import _addProduct from "../../popover-form/_addProduct.jsx";
 import productsDataStoreIntoLocalStorage from "../../../global-hook/local-storage/productsDataStoreIntoLocalStorage.js";
+import {getIndexEntityData, inlineUpdateEntityData, storeEntityData} from "../../../../store/inventory/crudSlice.js";
 
 function _CreateStockForm(props) {
-    const { currencySymbol, allowZeroPercentage, isPurchaseByPurchasePrice } = props
+    const { currencySymbol } = props
     const { t, i18n } = useTranslation();
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
     const height = mainAreaHeight - 130; //TabList height 104
     const [fetching, setFetching] = useState(false);
 
+    const perPage = 15;
+    const [page, setPage] = useState(1);
+
+    // const fetching = useSelector((state) => state.inventoryCrudSlice.fetching)
+    const indexData = useSelector((state) => state.inventoryCrudSlice.indexEntityData)
+
+    // console.log(indexData.data)
+
     const [searchValue, setSearchValue] = useState('');
     const [productDropdown, setProductDropdown] = useState([]);
 
-    const [tempCardProducts, setTempCardProducts] = useState([])
+    const [openingStockItems, setOpeningStockItems] = useState([indexData])
     const [loadCardProducts, setLoadCardProducts] = useState(false)
 
-    let purchaseSubTotalAmount = tempCardProducts?.reduce((total, item) => total + item.sub_total, 0) || 0;
-    let totalPurchaseAmount = tempCardProducts?.reduce((total, item) => total + (item.purchase_price * item.quantity), 0) || 0;
+    let purchaseSubTotalAmount = openingStockItems?.reduce((total, item) => total + item.sub_total, 0) || 0;
+    let totalPurchaseAmount = openingStockItems?.reduce((total, item) => total + (item.purchase_price * item.opening_quantity), 0) || 0;
+
+    useEffect(() => {
+        const value = {
+            url: 'inventory/opening-stock',
+            param: {
+                page: page,
+                offset: perPage,
+                mode:"opening",
+                is_approved:0
+            }
+        }
+        dispatch(getIndexEntityData(value))
+        setTimeout(()=>{
+            setFetching(false)
+        },500)
+    }, [fetching]);
 
     const [stockProductRestore, setStockProductRestore] = useState(false)
     useEffect(() => {
@@ -46,11 +72,11 @@ function _CreateStockForm(props) {
         }
     }, [stockProductRestore])
 
-    useEffect(() => {
+    /*useEffect(() => {
         const tempProducts = localStorage.getItem('temp-purchase-products');
         setTempCardProducts(tempProducts ? JSON.parse(tempProducts) : [])
         setLoadCardProducts(false)
-    }, [loadCardProducts])
+    }, [loadCardProducts])*/
 
     useEffect(() => {
         if (searchValue.length > 0) {
@@ -77,37 +103,34 @@ function _CreateStockForm(props) {
     /**
      * Adds a product to a collection based on ID, updates the local storage and resets the form
      */
-    function handleAddProductByProductId(values, myCardProducts, localProducts) {
-        const addProducts = localProducts.reduce((acc, product) => {
-            if (product.id === Number(values.product_id)) {
-                acc.push({
-                    product_id: product.id,
-                    display_name: product.display_name,
-                    quantity: Number(values.quantity),
-                    unit_name: product.unit_name,
-                    purchase_price: Number(values.purchase_price),
-                    sub_total: Number(values.sub_total),
-                    sales_price: Number(product.sales_price),
-                });
-            }
-            return acc;
-        }, myCardProducts);
-        updateLocalStorageAndResetForm(addProducts, 'productId');
+    function handleAddProductByProductId(values, localProducts) {
+        const product = localProducts.find(product => product.id === Number(values.product_id));
+
+        if (product) {
+            createOpeningStockAndResetForm({
+                product_id: product.id,
+                display_name: product.display_name,
+                opening_quantity: Number(values.opening_quantity),
+                unit_name: product.unit_name,
+                purchase_price: Number(values.purchase_price),
+                sub_total: Number(values.sub_total),
+                sales_price: Number(values.sales_price),
+                mode:"opening"
+            }, 'productId');
+        }
     }
 
     /**
      * Adds a product to a collection based on BARCODE, updates the local storage and resets the form
      */
-    function handleAddProductByBarcode(values, myCardProducts, localProducts) {
+    function handleAddProductByBarcode(values, localProducts) {
         const barcodeExists = localProducts.some(product => product.barcode === values.barcode);
         if (barcodeExists) {
-            const addProducts = localProducts.reduce((acc, product) => {
-                if (String(product.barcode) === String(values.barcode)) {
-                    acc.push(createProductFromValues(product));
-                }
-                return acc;
-            }, myCardProducts);
-            updateLocalStorageAndResetForm(addProducts, 'barcode');
+            const product = localProducts.find(product => String(product.barcode) === String(values.barcode));
+            if (product){
+                const addProduct = bindProductValueForBarcode(product);
+                createOpeningStockAndResetForm(addProduct, 'barcode');
+            }
         } else {
             notifications.show({
                 loading: true,
@@ -120,37 +143,46 @@ function _CreateStockForm(props) {
         }
     }
 
-    /**
-     * Updates local storage with new products, resets form, and sets focus on the product search.
-     */
-    function updateLocalStorageAndResetForm(addProducts, type) {
-        localStorage.setItem('temp-purchase-products', JSON.stringify(addProducts));
-        setSearchValue('');
-        form.reset();
-        setLoadCardProducts(true);
-        if (type == 'productId') {
-            document.getElementById('product_id').focus();
-        } else {
-            document.getElementById('barcode').focus();
-        }
-    }
-
-    function createProductFromValues(product) {
+    function bindProductValueForBarcode(product) {
         return {
             product_id: product.id,
             display_name: product.display_name,
-            quantity: 1,
+            opening_quantity: 1,
             unit_name: product.unit_name,
             purchase_price: product.purchase_price,
-            sub_total: Number(product.sub_total),
+            sub_total: Number(product.purchase_price),
             sales_price: Number(product.sales_price),
+            mode:"opening"
         };
     }
+
+    /**
+     * Updates local storage with new products, resets form, and sets focus on the product search.
+     */
+    function createOpeningStockAndResetForm(addProducts, type) {
+        if (addProducts){
+            const data = {
+                url: 'inventory/opening-stock',
+                data: addProducts
+            }
+            dispatch(storeEntityData(data))
+            setSearchValue('');
+            form.reset();
+            setFetching(true)
+            if (type == 'productId') {
+                document.getElementById('product_id').focus();
+            } else {
+                document.getElementById('barcode').focus();
+            }
+        }
+    }
+
+
 
 
     const form = useForm({
         initialValues: {
-            product_id: '', price: '', purchase_price: '', barcode: '', sub_total: '', quantity: ''
+            product_id: '', sales_price: '', purchase_price: '', barcode: '', sub_total: '', opening_quantity: ''
         },
         validate: {
             product_id: (value, values) => {
@@ -160,7 +192,7 @@ function _CreateStockForm(props) {
                 }
                 return null;
             },
-            quantity: (value, values) => {
+            opening_quantity: (value, values) => {
                 if (values.product_id) {
                     const isNumberOrFractional = /^-?\d+(\.\d+)?$/.test(value);
                     if (!isNumberOrFractional) {
@@ -212,7 +244,7 @@ function _CreateStockForm(props) {
             form.setFieldValue('price', selectedProduct.sales_price);
             form.setFieldValue('sales_price', selectedProduct.sales_price);
             form.setFieldValue('purchase_price', selectedProduct.purchase_price);
-            document.getElementById('quantity').focus();
+            document.getElementById('opening_quantity').focus();
         } else {
             setSelectProductDetails(null);
             form.setFieldValue('price', '');
@@ -224,33 +256,33 @@ function _CreateStockForm(props) {
 
     /*START QUANTITY AND PURCHASE PRICE WISE SUB TOTAL*/
     useEffect(() => {
-        const quantity = Number(form.values.quantity);
+        const opening_quantity = Number(form.values.opening_quantity);
         const purchase_price = Number(form.values.purchase_price);
 
-        if (!isNaN(quantity) && !isNaN(purchase_price) && quantity > 0 && purchase_price >= 0) {
+        if (!isNaN(opening_quantity) && !isNaN(purchase_price) && opening_quantity > 0 && purchase_price >= 0) {
             setSelectProductDetails(prevDetails => ({
                 ...prevDetails,
-                sub_total: quantity * purchase_price,
+                sub_total: opening_quantity * purchase_price,
             }));
-            form.setFieldValue('sub_total', quantity * purchase_price);
+            form.setFieldValue('sub_total', opening_quantity * purchase_price);
         }
-    }, [form.values.quantity, form.values.purchase_price]);
+    }, [form.values.opening_quantity, form.values.purchase_price]);
     /*END QUANTITY AND PURCHASE PRICE WISE SUB TOTAL*/
 
 
     /*START SUBTOTAL WISE PURCHASE PRICE*/
-    useEffect(() => {
-        const quantity = Number(form.values.quantity);
+    /*useEffect(() => {
+        const opening_quantity = Number(form.values.opening_quantity);
         const subTotal = Number(form.values.sub_total);
 
-        if (!isNaN(quantity) && !isNaN(subTotal) && quantity > 0 && subTotal >= 0) {
+        if (!isNaN(opening_quantity) && !isNaN(subTotal) && opening_quantity > 0 && subTotal >= 0) {
             setSelectProductDetails(prevDetails => ({
                 ...prevDetails,
-                purchase_price: subTotal / quantity,
+                purchase_price: subTotal / opening_quantity,
             }));
-            form.setFieldValue('purchase_price', subTotal / quantity);
+            form.setFieldValue('purchase_price', subTotal / opening_quantity);
         }
-    }, [form.values.sub_total]);
+    }, [form.values.sub_total]);*/
     /*END SUBTOTAL WISE PURCHASE PRICE*/
 
 
@@ -294,16 +326,13 @@ function _CreateStockForm(props) {
                                     form.setFieldError('product_id', true);
                                     setTimeout(() => { }, 1000)
                                 } else {
-
-                                    const cardProducts = localStorage.getItem('temp-purchase-products');
-                                    const myCardProducts = cardProducts ? JSON.parse(cardProducts) : [];
                                     const storedProducts = localStorage.getItem('core-products');
                                     const localProducts = storedProducts ? JSON.parse(storedProducts) : [];
 
                                     if (values.product_id && !values.barcode) {
-                                        handleAddProductByProductId(values, myCardProducts, localProducts);
+                                        handleAddProductByProductId(values, localProducts);
                                     } else if (!values.product_id && values.barcode) {
-                                        handleAddProductByBarcode(values, myCardProducts, localProducts);
+                                        handleAddProductByBarcode(values, localProducts);
                                     }
                                 }
 
@@ -330,7 +359,7 @@ function _CreateStockForm(props) {
                                                     label=''
                                                     placeholder={t('ChooseStockProduct')}
                                                     required={false}
-                                                    nextField={'quantity'}
+                                                    nextField={'opening_quantity'}
                                                     name={'product_id'}
                                                     form={form}
                                                     id={'product_id'}
@@ -346,10 +375,10 @@ function _CreateStockForm(props) {
                                                     label=''
                                                     placeholder={t('Quantity')}
                                                     required={true}
-                                                    nextField={!isPurchaseByPurchasePrice ? 'sub_total' : 'purchase_price'}
+                                                    nextField={'purchase_price'}
                                                     form={form}
-                                                    name={'quantity'}
-                                                    id={'quantity'}
+                                                    name={'opening_quantity'}
+                                                    id={'opening_quantity'}
                                                     type={'number'}
                                                     rightSection={inputGroupText}
                                                     rightSectionWidth={50}
@@ -361,7 +390,7 @@ function _CreateStockForm(props) {
                                                     label=''
                                                     placeholder={t('PurchasePrice')}
                                                     required={true}
-                                                    nextField={isPurchaseByPurchasePrice && 'EntityFormSubmit'}
+                                                    nextField={'sales_price'}
                                                     form={form}
                                                     name={'purchase_price'}
                                                     id={'purchase_price'}
@@ -377,7 +406,7 @@ function _CreateStockForm(props) {
                                                     label=''
                                                     placeholder={t('SalesPrice')}
                                                     required={true}
-                                                    nextField={isPurchaseByPurchasePrice && 'EntityFormSubmit'}
+                                                    nextField={'EntityFormSubmit'}
                                                     form={form}
                                                     name={'sales_price'}
                                                     id={'sales_price'}
@@ -400,7 +429,7 @@ function _CreateStockForm(props) {
                                                     type={'number'}
                                                     rightSection={inputGroupCurrency}
                                                     closeIcon={false}
-                                                    disabled={isPurchaseByPurchasePrice ? false : true}
+                                                    disabled={true}
 
                                                 />
                                             </Grid.Col>
@@ -442,6 +471,14 @@ function _CreateStockForm(props) {
 
                         </Box>
                         <Box className={'borderRadiusAll'}>
+                            {/*{loading &&
+                                <LoadingOverlay
+                                    visible={loading}
+                                    zIndex={1000}
+                                    overlayProps={{ radius: "sm", blur: 2 }}
+                                    loaderProps={{ color: 'red' }}
+                                />
+                            }*/}
                             <DataTable
                                 classNames={{
                                     root: tableCss.root,
@@ -450,25 +487,32 @@ function _CreateStockForm(props) {
                                     footer: tableCss.footer,
                                     pagination: tableCss.pagination,
                                 }}
-                                records={tempCardProducts}
+                                records={indexData.data}
                                 columns={[
                                     {
                                         accessor: 'index',
                                         title: t('S/N'),
                                         textAlignment: 'right',
-                                        render: (item) => (tempCardProducts.indexOf(item) + 1)
+                                        render: (item) => (indexData.data.indexOf(item) + 1)
                                     },
                                     {
-                                        accessor: 'display_name',
+                                        accessor: 'product_name',
                                         title: t("Name"),
                                         width: '35%',
                                     },
                                     {
-                                        accessor: 'quantity',
+                                        accessor: 'unit_name',
+                                        title: t('UOM'),
+                                        width: '10%',
+                                        textAlign: "center"
+                                    },
+                                    {
+                                        accessor: 'opening_quantity',
                                         title: t('Quantity'),
                                         width: '10%',
-                                        render: (item) => {
-                                            const [editedQuantity, setEditedQuantity] = useState(item.quantity);
+                                        textAlign: "right",
+                                        /*render: (item) => {
+                                            const [editedQuantity, setEditedQuantity] = useState(item.opening_quantity);
 
                                             const handlQuantityChange = (e) => {
                                                 const editedQuantity = e.currentTarget.value;
@@ -481,7 +525,7 @@ function _CreateStockForm(props) {
                                                     if (product.product_id === item.product_id) {
                                                         return {
                                                             ...product,
-                                                            quantity: e.currentTarget.value,
+                                                            opening_quantity: e.currentTarget.value,
                                                             sub_total: e.currentTarget.value * item.sales_price,
                                                         };
                                                     }
@@ -508,19 +552,20 @@ function _CreateStockForm(props) {
                                                     />
                                                 </>
                                             );
-                                        }
+                                        }*/
                                     },
-                                    {
-                                        accessor: 'unit_name',
-                                        title: t('UOM'),
-                                        width: '10%',
-                                        textAlign: "center"
-                                    },
+
                                     {
                                         accessor: 'purchase_price',
-                                        title: t('Price'),
+                                        title: t('PurchasePrice'),
                                         width: '10%',
+                                        textAlign: "right",
                                         render: (item) => {
+                                            return (
+                                                item.purchase_price && Number(item.purchase_price).toFixed(2)
+                                            );
+                                        },
+                                        /*render: (item) => {
                                             const [editedPurchasePrice, setEditedPurchasePrice] = useState(item.purchase_price);
                                             const handlePurchasePriceChange = (e) => {
                                                 const newSalesPrice = e.currentTarget.value;
@@ -535,7 +580,7 @@ function _CreateStockForm(props) {
                                                             return {
                                                                 ...product,
                                                                 purchase_price: editedPurchasePrice,
-                                                                sub_total: editedPurchasePrice * item.quantity,
+                                                                sub_total: editedPurchasePrice * item.opening_quantity,
                                                             };
                                                         }
                                                         return product;
@@ -546,7 +591,7 @@ function _CreateStockForm(props) {
                                                 }, 1000);
 
                                                 return () => clearTimeout(timeoutId);
-                                            }, [editedPurchasePrice, item.product_id, item.quantity]);
+                                            }, [editedPurchasePrice, item.product_id, item.opening_quantity]);
 
                                             return (
                                                 <>
@@ -560,7 +605,18 @@ function _CreateStockForm(props) {
                                                     />
                                                 </>
                                             );
-                                        }
+                                        }*/
+                                    },
+                                    {
+                                        accessor: 'sales_price',
+                                        title: t('SalesPrice'),
+                                        width: '10%',
+                                        textAlign: "right",
+                                        render: (item) => {
+                                            return (
+                                                item.sales_price && Number(item.sales_price).toFixed(2)
+                                            );
+                                        },
                                     },
 
                                     {
@@ -582,7 +638,27 @@ function _CreateStockForm(props) {
                                         textAlign: "right",
                                         render: (item) => (
                                             <Group gap={'xs'} justify="right" wrap="nowrap">
-                                                <Button rightSection={<IconChevronsRight size={14} />} variant="light" color="red" size="xs" radius="xs">{t('Approve')}</Button>
+                                                <Button
+                                                    rightSection={<IconChevronsRight size={14} />}
+                                                    variant="light"
+                                                    color="red"
+                                                    size="xs"
+                                                    radius="xs"
+                                                    onClick={()=>{
+                                                        const approveData = {
+                                                            url: 'inventory/opening-stock/inline-update',
+                                                            data: {
+                                                                field_name: "approve",
+                                                                value: 1,
+                                                                id: item.id
+                                                            }
+                                                        }
+                                                        dispatch(inlineUpdateEntityData(approveData))
+                                                        setFetching(true)
+                                                    }}
+                                                >
+                                                        {t('Approve')}
+                                                </Button>
                                                 <ActionIcon
                                                     size="sm"
                                                     variant="subtle"
@@ -609,8 +685,14 @@ function _CreateStockForm(props) {
                                 ]
                                 }
                                 fetching={fetching}
-                                totalRecords={100}
-                                recordsPerPage={10}
+                                totalRecords={indexData.total}
+                                recordsPerPage={perPage}
+                                page={page}
+                                onPageChange={(p) => {
+                                    setPage(p)
+                                    setFetching(true)
+                                    // dispatch(setFetching(true))
+                                }}
                                 loaderSize="xs"
                                 loaderColor="grape"
                                 height={height}

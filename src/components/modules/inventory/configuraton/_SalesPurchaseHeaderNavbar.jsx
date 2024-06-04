@@ -21,7 +21,7 @@ function _SalesPurchaseHeaderNavbar(props) {
         { link: '/inventory/purchase-invoice', label: t('NewPurchase') },
 
     ];
-    const { pageTitle, roles, currancySymbol, allowZeroPercentage } = props
+    const { pageTitle} = props
     const dispatch = useDispatch();
     const [opened, { toggle }] = useDisclosure(false);
     const navigate = useNavigate();

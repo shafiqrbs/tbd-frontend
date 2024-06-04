@@ -4,7 +4,7 @@ import {
     deleteData,
     editData,
     getDataWithoutParam,
-    getDataWithParam, showData,
+    getDataWithParam, inlineUpdateData, showData,
     updateData
 } from "../../services/inventoryApiService.js";
 
@@ -77,6 +77,16 @@ export const deleteEntityData = createAsyncThunk("delete", async (value) => {
     }
 });
 
+export const inlineUpdateEntityData = createAsyncThunk("inline-update", async (value) => {
+    try {
+        const response = inlineUpdateData(value);
+        return response;
+    } catch (error) {
+        console.log('error', error.message);
+        throw error;
+    }
+});
+
 const crudSlice = createSlice({
     name: "crud",
     initialState: {
@@ -93,6 +103,7 @@ const crudSlice = createSlice({
         entityEditData: [],
         insertType: 'create',
         entityDataDelete: null,
+        openingInlineUpdateStatus: null,
         productFilterData: { name: '', alternative_name: '', sku: '', sales_price: '' },
         categoryFilterData: { name: '', parentName: '' },
         salesFilterData: { customer_id: '',start_date:'',end_date:'',searchKeyword:''},
@@ -190,6 +201,15 @@ const crudSlice = createSlice({
                 state.validationMessage = action.payload.data.data
                 state.validation = true
             }
+        })
+
+        builder.addCase(inlineUpdateEntityData.fulfilled,(state,action) => {
+            /*if ( 404 === action.payload.data.status) {
+            } else {
+                state.validationMessage = action.payload.data.data
+                state.validation = true
+            }*/
+            state.openingInlineUpdateStatus = action.payload.data.status
         })
 
         builder.addCase(deleteEntityData.fulfilled, (state, action) => {
