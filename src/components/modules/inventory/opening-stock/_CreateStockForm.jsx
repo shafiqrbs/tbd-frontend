@@ -1,16 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import {useNavigate, useOutletContext} from "react-router-dom";
 import {
-    Button, Flex, ActionIcon, TextInput,
-    Grid, Box, Group, Text, Menu, rem, LoadingOverlay,
+    Button, ActionIcon, TextInput, Grid, Box, Group, Text,
 } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
 import {
-    IconDeviceFloppy, IconSum, IconX, IconBarcode, IconDotsVertical, IconPencil, IconEyeEdit, IconTrashX,IconChevronsRight,IconArrowRight
+    IconDeviceFloppy, IconX, IconBarcode,IconChevronsRight,IconArrowRight
 } from "@tabler/icons-react";
 import { getHotkeyHandler, useHotkeys } from "@mantine/hooks";
 import {useDispatch, useSelector} from "react-redux";
-import { isNotEmpty, useForm } from "@mantine/form";
+import { useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
 import SelectServerSideForm from "../../../form-builders/SelectServerSideForm.jsx";
 import InputButtonForm from "../../../form-builders/InputButtonForm";
@@ -21,7 +20,12 @@ import ShortcutInvoice from "../../shortcut/ShortcutInvoice";
 import tableCss from "../../../../assets/css/Table.module.css";
 import _addProduct from "../../popover-form/_addProduct.jsx";
 import productsDataStoreIntoLocalStorage from "../../../global-hook/local-storage/productsDataStoreIntoLocalStorage.js";
-import {getIndexEntityData, inlineUpdateEntityData, storeEntityData} from "../../../../store/inventory/crudSlice.js";
+import {
+    deleteEntityData,
+    getIndexEntityData,
+    inlineUpdateEntityData,
+    storeEntityData
+} from "../../../../store/inventory/crudSlice.js";
 
 function _CreateStockForm(props) {
     const { currencySymbol } = props
@@ -35,19 +39,9 @@ function _CreateStockForm(props) {
     const perPage = 15;
     const [page, setPage] = useState(1);
 
-    // const fetching = useSelector((state) => state.inventoryCrudSlice.fetching)
     const indexData = useSelector((state) => state.inventoryCrudSlice.indexEntityData)
-
-    // console.log(indexData.data)
-
     const [searchValue, setSearchValue] = useState('');
     const [productDropdown, setProductDropdown] = useState([]);
-
-    const [openingStockItems, setOpeningStockItems] = useState([indexData])
-    const [loadCardProducts, setLoadCardProducts] = useState(false)
-
-    let purchaseSubTotalAmount = openingStockItems?.reduce((total, item) => total + item.sub_total, 0) || 0;
-    let totalPurchaseAmount = openingStockItems?.reduce((total, item) => total + (item.purchase_price * item.opening_quantity), 0) || 0;
 
     useEffect(() => {
         const value = {
@@ -71,12 +65,6 @@ function _CreateStockForm(props) {
             const local = productsDataStoreIntoLocalStorage()
         }
     }, [stockProductRestore])
-
-    /*useEffect(() => {
-        const tempProducts = localStorage.getItem('temp-purchase-products');
-        setTempCardProducts(tempProducts ? JSON.parse(tempProducts) : [])
-        setLoadCardProducts(false)
-    }, [loadCardProducts])*/
 
     useEffect(() => {
         if (searchValue.length > 0) {
@@ -177,9 +165,6 @@ function _CreateStockForm(props) {
         }
     }
 
-
-
-
     const form = useForm({
         initialValues: {
             product_id: '', sales_price: '', purchase_price: '', barcode: '', sub_total: '', opening_quantity: ''
@@ -213,22 +198,6 @@ function _CreateStockForm(props) {
         }
     });
 
-    const productAddedForm = useForm({
-        initialValues: {
-            name: '',
-            purchase_price: '',
-            sales_price: '',
-            unit_id: '',
-            category_id: '',
-            product_type_id: '',
-            product_name: '',
-            quantity: '',
-            status: 1
-        },
-        validate: {
-            name: isNotEmpty()
-        }
-    });
 
     /*START PRODUCT SELECTED BY PRODUCT ID*/
     const [selectProductDetails, setSelectProductDetails] = useState('')
@@ -270,22 +239,7 @@ function _CreateStockForm(props) {
     /*END QUANTITY AND PURCHASE PRICE WISE SUB TOTAL*/
 
 
-    /*START SUBTOTAL WISE PURCHASE PRICE*/
-    /*useEffect(() => {
-        const opening_quantity = Number(form.values.opening_quantity);
-        const subTotal = Number(form.values.sub_total);
-
-        if (!isNaN(opening_quantity) && !isNaN(subTotal) && opening_quantity > 0 && subTotal >= 0) {
-            setSelectProductDetails(prevDetails => ({
-                ...prevDetails,
-                purchase_price: subTotal / opening_quantity,
-            }));
-            form.setFieldValue('purchase_price', subTotal / opening_quantity);
-        }
-    }, [form.values.sub_total]);*/
-    /*END SUBTOTAL WISE PURCHASE PRICE*/
-
-
+    const [editedSubtotal,setEditedSubtotal] = useState(0)
 
     useHotkeys([['alt+n', () => {
         document.getElementById('product_id').focus()
@@ -335,7 +289,6 @@ function _CreateStockForm(props) {
                                         handleAddProductByBarcode(values, localProducts);
                                     }
                                 }
-
                             })}>
                                 <Box pl={`xs`} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'}>
                                     <Box pb={'xs'}>
@@ -468,17 +421,8 @@ function _CreateStockForm(props) {
                                     </Box>
                                 </Box>
                             </form>
-
                         </Box>
                         <Box className={'borderRadiusAll'}>
-                            {/*{loading &&
-                                <LoadingOverlay
-                                    visible={loading}
-                                    zIndex={1000}
-                                    overlayProps={{ radius: "sm", blur: 2 }}
-                                    loaderProps={{ color: 'red' }}
-                                />
-                            }*/}
                             <DataTable
                                 classNames={{
                                     root: tableCss.root,
@@ -496,9 +440,14 @@ function _CreateStockForm(props) {
                                         render: (item) => (indexData.data.indexOf(item) + 1)
                                     },
                                     {
+                                        accessor: 'created',
+                                        title: t("CreatedDate"),
+                                        width: '10%',
+                                    },
+                                    {
                                         accessor: 'product_name',
                                         title: t("Name"),
-                                        width: '35%',
+                                        width: '25%',
                                     },
                                     {
                                         accessor: 'unit_name',
@@ -511,29 +460,37 @@ function _CreateStockForm(props) {
                                         title: t('Quantity'),
                                         width: '10%',
                                         textAlign: "right",
-                                        /*render: (item) => {
+                                        render: (item) => {
                                             const [editedQuantity, setEditedQuantity] = useState(item.opening_quantity);
 
                                             const handlQuantityChange = (e) => {
                                                 const editedQuantity = e.currentTarget.value;
                                                 setEditedQuantity(editedQuantity);
 
-                                                const tempCardProducts = localStorage.getItem('temp-purchase-products');
-                                                const cardProducts = tempCardProducts ? JSON.parse(tempCardProducts) : [];
+                                                let purchasePriceElement = document.getElementById('inline-update-purchase-price-'+item.id);
+                                                let purchasePrice = parseFloat(purchasePriceElement.value);
+                                                let subTotal = Number(editedQuantity) * purchasePrice;
 
-                                                const updatedProducts = cardProducts.map(product => {
-                                                    if (product.product_id === item.product_id) {
-                                                        return {
-                                                            ...product,
-                                                            opening_quantity: e.currentTarget.value,
-                                                            sub_total: e.currentTarget.value * item.sales_price,
-                                                        };
+                                                setEditedSubtotal(prevSubTotal => ({
+                                                    ...prevSubTotal,
+                                                    [item.id]: subTotal
+                                                }));
+
+                                                const editedQuantityData = {
+                                                    url: 'inventory/opening-stock/inline-update',
+                                                    data: {
+                                                        field_name: "opening_quantity",
+                                                        opening_quantity: editedQuantity,
+                                                        subTotal: subTotal,
+                                                        id: item.id
                                                     }
-                                                    return product
-                                                });
+                                                }
 
-                                                localStorage.setItem('temp-purchase-products', JSON.stringify(updatedProducts));
-                                                setLoadCardProducts(true)
+                                                setTimeout(() => {
+                                                    dispatch(inlineUpdateEntityData(editedQuantityData));
+                                                    setFetching(true);
+                                                }, 700);
+
                                             };
 
                                             return (
@@ -542,17 +499,18 @@ function _CreateStockForm(props) {
                                                         type="number"
                                                         label=""
                                                         size="xs"
-                                                        value={editedQuantity}
+                                                        id={"inline-update-quantity-"+item.id}
+                                                        value={Number(editedQuantity)}
                                                         onChange={handlQuantityChange}
                                                         onKeyDown={getHotkeyHandler([
                                                             ['Enter', (e) => {
-                                                                document.getElementById('inline-update-quantity-' + item.product_id).focus();
+                                                                document.getElementById('inline-update-purchase-price-' + item.id).focus();
                                                             }],
                                                         ])}
                                                     />
                                                 </>
                                             );
-                                        }*/
+                                        }
                                     },
 
                                     {
@@ -561,37 +519,36 @@ function _CreateStockForm(props) {
                                         width: '10%',
                                         textAlign: "right",
                                         render: (item) => {
-                                            return (
-                                                item.purchase_price && Number(item.purchase_price).toFixed(2)
-                                            );
-                                        },
-                                        /*render: (item) => {
-                                            const [editedPurchasePrice, setEditedPurchasePrice] = useState(item.purchase_price);
+                                            const [editedPurchaseQuantity, setEditedPurchaseQuantity] = useState(item.purchase_price);
+
                                             const handlePurchasePriceChange = (e) => {
-                                                const newSalesPrice = e.currentTarget.value;
-                                                setEditedPurchasePrice(newSalesPrice);
-                                            };
-                                            useEffect(() => {
-                                                const timeoutId = setTimeout(() => {
-                                                    const tempCardProducts = localStorage.getItem('temp-purchase-products');
-                                                    const cardProducts = tempCardProducts ? JSON.parse(tempCardProducts) : [];
-                                                    const updatedProducts = cardProducts.map(product => {
-                                                        if (product.product_id === item.product_id) {
-                                                            return {
-                                                                ...product,
-                                                                purchase_price: editedPurchasePrice,
-                                                                sub_total: editedPurchasePrice * item.opening_quantity,
-                                                            };
-                                                        }
-                                                        return product;
-                                                    });
+                                                const editedPurchaseQuantity = e.currentTarget.value;
+                                                setEditedPurchaseQuantity(editedPurchaseQuantity);
 
-                                                    localStorage.setItem('temp-purchase-products', JSON.stringify(updatedProducts));
-                                                    setLoadCardProducts(true);
-                                                }, 1000);
+                                                let quantityElement = document.getElementById('inline-update-quantity-'+item.id);
+                                                let quantity = parseFloat(quantityElement.value);
+                                                let subTotal = quantity * editedPurchaseQuantity;
 
-                                                return () => clearTimeout(timeoutId);
-                                            }, [editedPurchasePrice, item.product_id, item.opening_quantity]);
+                                                setEditedSubtotal(prevSubTotal => ({
+                                                    ...prevSubTotal,
+                                                    [item.id]: subTotal
+                                                }));
+
+                                                const editedQuantityData = {
+                                                    url: 'inventory/opening-stock/inline-update',
+                                                    data: {
+                                                        field_name: "purchase_price",
+                                                        purchase_price: editedPurchaseQuantity,
+                                                        subTotal: subTotal,
+                                                        id: item.id
+                                                    }
+                                                }
+
+                                                setTimeout(() => {
+                                                    dispatch(inlineUpdateEntityData(editedQuantityData));
+                                                    setFetching(true);
+                                                }, 700);
+                                            }
 
                                             return (
                                                 <>
@@ -599,13 +556,13 @@ function _CreateStockForm(props) {
                                                         type="number"
                                                         label=""
                                                         size="xs"
-                                                        id={'inline-update-quantity-' + item.product_id}
-                                                        value={editedPurchasePrice}
+                                                        id={'inline-update-purchase-price-' + item.id}
+                                                        value={editedPurchaseQuantity}
                                                         onChange={handlePurchasePriceChange}
                                                     />
                                                 </>
                                             );
-                                        }*/
+                                        }
                                     },
                                     {
                                         accessor: 'sales_price',
@@ -626,7 +583,7 @@ function _CreateStockForm(props) {
                                         textAlign: "right",
                                         render: (item) => {
                                             return (
-                                                item.sub_total && Number(item.sub_total).toFixed(2)
+                                                editedSubtotal[item.id] !== undefined ? editedSubtotal[item.id].toFixed(2) : item.sub_total && Number(item.sub_total).toFixed(2)
                                             );
                                         },
 
@@ -664,15 +621,8 @@ function _CreateStockForm(props) {
                                                     variant="subtle"
                                                     color="red"
                                                     onClick={() => {
-                                                        const dataString = localStorage.getItem('temp-purchase-products');
-                                                        let data = dataString ? JSON.parse(dataString) : [];
-
-                                                        data = data.filter(d => d.product_id !== item.product_id);
-
-                                                        const updatedDataString = JSON.stringify(data);
-
-                                                        localStorage.setItem('temp-purchase-products', updatedDataString);
-                                                        setLoadCardProducts(true)
+                                                        dispatch(deleteEntityData('inventory/opening-stock/'+item.id))
+                                                        setFetching(true)
                                                     }}
                                                 >
                                                     <IconX size={16} style={{ width: '70%', height: '70%' }}
@@ -691,7 +641,6 @@ function _CreateStockForm(props) {
                                 onPageChange={(p) => {
                                     setPage(p)
                                     setFetching(true)
-                                    // dispatch(setFetching(true))
                                 }}
                                 loaderSize="xs"
                                 loaderColor="grape"

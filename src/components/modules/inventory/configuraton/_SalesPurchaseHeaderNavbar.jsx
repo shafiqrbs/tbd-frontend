@@ -60,7 +60,7 @@ function _SalesPurchaseHeaderNavbar(props) {
                                 </Menu.Item>
                                 <Menu.Item href="/inventory/opening-approve-stock"
                                            component="button" onClick={(e) => { navigate('/inventory/opening-approve-stock') }} leftSection={<IconTable style={{ width: rem(14), height: rem(14) }} />}>
-                                    {t('OpeningApproveStock')}
+                                    {t('ApproveOpeningStock')}
                                 </Menu.Item>
                                 <Menu.Item href="/inventory/config"
                                            component="button" onClick={(e) => { navigate('/inventory/config') }} leftSection={<IconSettings style={{ width: rem(14), height: rem(14) }} />}>

@@ -1,13 +1,11 @@
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import {useNavigate, useOutletContext} from "react-router-dom";
 import {
-    rem,
-    Grid, Tooltip, TextInput, ActionIcon, Select, Button,Group,Flex
+    rem, Grid, Tooltip, TextInput, ActionIcon, Button,Flex
 } from "@mantine/core";
 import {useTranslation} from 'react-i18next';
 import {
     IconArrowRight,
-    IconBrandOkRu,
     IconFilter,
     IconInfoCircle,
     IconRestore,
@@ -16,9 +14,8 @@ import {
 } from "@tabler/icons-react";
 import {useHotkeys} from "@mantine/hooks";
 import {useDispatch, useSelector} from "react-redux";
-import {setSearchKeyword} from "../../../../store/core/crudSlice.js";
 import FilterModel from "../../filter/FilterModel.jsx";
-import {setFetching, setSalesFilterData} from "../../../../store/inventory/crudSlice.js";
+import {setFetching, setPurchaseItemsFilterData} from "../../../../store/inventory/crudSlice.js";
 import {DateInput} from "@mantine/dates";
 
 function _OpeningSearch(props) {
@@ -28,30 +25,11 @@ function _OpeningSearch(props) {
     const {isOnline} = useOutletContext();
 
     const [searchKeywordTooltip, setSearchKeywordTooltip] = useState(false)
-    const [customerTooltip, setCustomerTooltip] = useState(false)
     const [startDateTooltip, setStartDateTooltip] = useState(false)
     const [endDateTooltip, setEndDateTooltip] = useState(false)
     const [filterModel, setFilterModel] = useState(false)
 
-    const salesFilterData = useSelector((state) => state.inventoryCrudSlice.salesFilterData)
-
-    /*START GET CUSTOMER DROPDOWN FROM LOCAL STORAGE*/
-    const [customersDropdownData, setCustomersDropdownData] = useState([])
-    const [refreshCustomerDropdown, setRefreshCustomerDropdown] = useState(false)
-
-    useEffect(() => {
-        let coreCustomers = localStorage.getItem('core-customers');
-        coreCustomers = coreCustomers ? JSON.parse(coreCustomers) : []
-        if (coreCustomers && coreCustomers.length > 0) {
-            const transformedData = coreCustomers.map(type => {
-                return ({'label': type.mobile + ' -- ' + type.name, 'value': String(type.id)})
-            });
-            setCustomersDropdownData(transformedData);
-            setRefreshCustomerDropdown(false)
-        }
-    }, [refreshCustomerDropdown])
-    /*END GET CUSTOMER DROPDOWN FROM LOCAL STORAGE*/
-
+    const purchaseItemsFilterData = useSelector((state) => state.inventoryCrudSlice.purchaseItemsFilterData)
     let [resetKey, setResetKey] = useState(0);
 
     const resetDropDownState = () => setResetKey(prevKey => prevKey + 1);
@@ -85,7 +63,7 @@ function _OpeningSearch(props) {
                             size="sm"
                             placeholder={t('EnterSearchAnyKeyword')}
                             onChange={(e) => {
-                                dispatch(setSalesFilterData({...salesFilterData, ['searchKeyword']: e.currentTarget.value}))
+                                dispatch(setPurchaseItemsFilterData({...purchaseItemsFilterData, ['searchKeyword']: e.currentTarget.value}))
                                 e.target.value !== '' ?
                                     setSearchKeywordTooltip(false) :
                                     (setSearchKeywordTooltip(true),
@@ -93,17 +71,17 @@ function _OpeningSearch(props) {
                                             setSearchKeywordTooltip(false)
                                         }, 1000))
                             }}
-                            value={salesFilterData.searchKeyword}
+                            value={purchaseItemsFilterData.searchKeyword}
                             id={'SearchKeyword'}
                             rightSection={
-                                salesFilterData.searchKeyword ?
+                                purchaseItemsFilterData.searchKeyword ?
                                     <Tooltip
                                         label={t("Close")}
                                         withArrow
                                         bg={`red.5`}
                                     >
                                         <IconX color={`red`} size={16} opacity={0.5} onClick={() => {
-                                            dispatch(setSalesFilterData({...salesFilterData, ['searchKeyword']: ''}))
+                                            dispatch(setPurchaseItemsFilterData({...purchaseItemsFilterData, ['searchKeyword']: ''}))
                                         }}/>
                                     </Tooltip>
                                     :
@@ -134,9 +112,10 @@ function _OpeningSearch(props) {
                         transitionProps={{transition: "pop-bottom-left", duration: 5000}}
                     >
                         <DateInput
+                            key={resetKey}
                             clearable
                             onChange={(e) => {
-                                dispatch(setSalesFilterData({...salesFilterData, ['start_date']: e}))
+                                dispatch(setPurchaseItemsFilterData({...purchaseItemsFilterData, ['start_date']: e}))
                                 e !== '' ?
                                     setStartDateTooltip(false) :
                                     (setStartDateTooltip(true),
@@ -144,7 +123,7 @@ function _OpeningSearch(props) {
                                             setStartDateTooltip(false)
                                         }, 1000))
                             }}
-                            value={salesFilterData.start_date}
+                            value={purchaseItemsFilterData.start_date}
                             placeholder={t('StartDate')}
                         />
                     </Tooltip>
@@ -163,9 +142,10 @@ function _OpeningSearch(props) {
                         transitionProps={{transition: "pop-bottom-left", duration: 5000}}
                     >
                         <DateInput
+                            key={resetKey}
                             clearable
                             onChange={(e) => {
-                                dispatch(setSalesFilterData({...salesFilterData, ['end_date']: e}))
+                                dispatch(setPurchaseItemsFilterData({...purchaseItemsFilterData, ['end_date']: e}))
                                 e !== '' ?
                                     setEndDateTooltip(false) :
                                     (setEndDateTooltip(true),
@@ -183,7 +163,7 @@ function _OpeningSearch(props) {
                                     c={'red.4'}
                                     size="lg" mr={16} aria-label="Filter"
                                     onClick={() => {
-                                        (salesFilterData.searchKeyword.length > 0 || salesFilterData.customer_id || salesFilterData.start_date) ?
+                                        (purchaseItemsFilterData.searchKeyword.length > 0 ||  purchaseItemsFilterData.start_date) ?
                                             (dispatch(setFetching(true)),
                                                 setSearchKeywordTooltip(false))
                                             :
@@ -247,12 +227,10 @@ function _OpeningSearch(props) {
                             >
                                 <IconRestore style={{width: rem(20)}} stroke={2.0} onClick={() => {
                                     dispatch(setFetching(true))
-                                    setRefreshCustomerDropdown(true)
                                     resetDropDownState();
 
-                                    dispatch(setSalesFilterData({
-                                        ...salesFilterData,
-                                        ['customer_id']: '',
+                                    dispatch(setPurchaseItemsFilterData({
+                                        ...purchaseItemsFilterData,
                                         ['start_date']: '',
                                         ['end_date']: '',
                                         ['searchKeyword']: '',

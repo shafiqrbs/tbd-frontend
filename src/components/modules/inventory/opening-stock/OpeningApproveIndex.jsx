@@ -6,10 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress.js";
 import getConfigData from "../../../global-hook/config-data/getConfigData.js";
 import _SalesPurchaseHeaderNavbar from "../configuraton/_SalesPurchaseHeaderNavbar.jsx";
-import _CreateStockForm from "./_CreateStockForm";
 import _ApproveTable from "./_ApproveTable";
-
-
 
 function OpeningApproveIndex() {
     const { t, i18n } = useTranslation();
@@ -28,14 +25,11 @@ function OpeningApproveIndex() {
                             <_SalesPurchaseHeaderNavbar
                                 pageTitle={t('ApproveOpeningStock')}
                                 roles={t('Roles')}
-                                allowZeroPercentage={configData.zero_stock}
-                                currencySymbol={configData.currency.symbol}
+                                currencySymbol={configData?.currency?.symbol}
                             />
                             <Box p={'8'}>
                                 <_ApproveTable
-                                    allowZeroPercentage={configData.zero_stock}
-                                    currencySymbol={configData.currency.symbol}
-                                    isPurchaseByPurchasePrice={configData.is_purchase_by_purchase_price}
+                                    currencySymbol={configData?.currency?.symbol}
                                 />
                             </Box>
                         </>
