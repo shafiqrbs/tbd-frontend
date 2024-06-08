@@ -14,6 +14,7 @@ import {useNavigate, useParams} from "react-router-dom";
 import {editEntityData} from "../../../../store/inventory/crudSlice.js";
 import {notifications} from "@mantine/notifications";
 import {IconCheck} from "@tabler/icons-react";
+import _UpdateInvoice from "./_UpdateInvoice.jsx";
 
 function SalesEdit() {
     let { id } = useParams();
@@ -54,7 +55,6 @@ function SalesEdit() {
     },[dataStatus, entityEditData.id]);
 
 
-    console.log(entityEditData)
     return (
         <>
             {progress !== 100 &&
@@ -67,18 +67,19 @@ function SalesEdit() {
                             <_SalesPurchaseHeaderNavbar
                                 pageTitle={t('SalesInvoice')}
                                 roles={t('Roles')}
-                                allowZeroPercentage={configData.zero_stock}
-                                currencySymbol={configData.currency.symbol}
+                                allowZeroPercentage={configData?.zero_stock}
+                                currencySymbol={configData?.currency.symbol}
                             />
                             <Box p={'8'}>
                                 {
                                     configData.business_model.slug === 'general' &&
-                                    <_GenericInvoiceForm
-                                        allowZeroPercentage={configData.zero_stock}
-                                        currencySymbol={configData.currency.symbol}
+                                    <_UpdateInvoice
+                                        allowZeroPercentage={configData?.zero_stock}
+                                        currencySymbol={configData?.currency?.symbol}
                                         domainId={configData.domain_id}
                                         isSMSActive={configData.is_active_sms}
                                         isZeroReceiveAllow={configData.is_zero_receive_allow}
+                                        entityEditData={entityEditData}
                                     />
                                 }
                             </Box>
