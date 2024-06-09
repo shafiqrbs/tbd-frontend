@@ -20,6 +20,7 @@ import _ShortcutInvoice from "../../shortcut/_ShortcutInvoice";
 import tableCss from "../../../../assets/css/Table.module.css";
 import productsDataStoreIntoLocalStorage from "../../../global-hook/local-storage/productsDataStoreIntoLocalStorage.js";
 import _addProduct from "../../popover-form/_addProduct.jsx";
+import __UpdateInvoiceForm from "./__UpdateInvoiceForm.jsx";
 
 function _UpdateInvoice(props) {
     const { currencySymbol, allowZeroPercentage, domainId, isSMSActive, isZeroReceiveAllow, focusFrom,entityEditData } = props
@@ -44,12 +45,11 @@ function _UpdateInvoice(props) {
         }
     }, [stockProductRestore])
 
-    console.log(entityEditData.sales_items)
-
     useEffect(() => {
         setTempCardProducts(entityEditData?.sales_items ? entityEditData.sales_items : [])
         setLoadCardProducts(false)
-    }, [loadCardProducts])
+    }, [])
+
 
     useEffect(() => {
         if (searchValue.length > 0) {
@@ -73,11 +73,33 @@ function _UpdateInvoice(props) {
     }, [searchValue]);
 
     function handleAddProductByProductId(values, myCardProducts, localProducts) {
+        const addProducts = [...myCardProducts, ...localProducts.reduce((acc, product) => {
+            if (product.id === Number(values.product_id)) {
+                acc.push({
+                    product_id: product.id,
+                    item_name: product.display_name,
+                    sales_price: values.sales_price,
+                    price: values.price,
+                    percent: values.percent,
+                    stock: product.quantity,
+                    quantity: values.quantity,
+                    unit_name: product.unit_name,
+                    purchase_price: product.purchase_price,
+                    sub_total: selectProductDetails.sub_total,
+                });
+            }
+            return acc;
+        }, [])];
+        updateLocalStorageAndResetForm(addProducts);
+    }
+
+
+    /*function handleAddProductByProductId(values, myCardProducts, localProducts) {
         const addProducts = localProducts.reduce((acc, product) => {
             if (product.id === Number(values.product_id)) {
                 acc.push({
                     product_id: product.id,
-                    display_name: product.display_name,
+                    name: product.display_name,
                     sales_price: values.sales_price,
                     price: values.price,
                     percent: values.percent,
@@ -90,11 +112,10 @@ function _UpdateInvoice(props) {
             }
             return acc;
         }, myCardProducts);
+        // updateLocalStorageAndResetForm(addProducts);
+    }*/
 
-        updateLocalStorageAndResetForm(addProducts);
-    }
-
-    function handleAddProductByBarcode(values, myCardProducts, localProducts) {
+    /*function handleAddProductByBarcode(values, myCardProducts, localProducts) {
         const barcodeExists = localProducts.some(product => product.barcode === values.barcode);
 
         if (barcodeExists) {
@@ -116,14 +137,16 @@ function _UpdateInvoice(props) {
                 withCloseButton: true,
             });
         }
-    }
+    }*/
 
     function updateLocalStorageAndResetForm(addProducts) {
-        localStorage.setItem('temp-sales-products', JSON.stringify(addProducts));
+        setTempCardProducts(addProducts);
+
+        /*localStorage.setItem('temp-sales-products', JSON.stringify(addProducts));
         setSearchValue('');
         form.reset();
         setLoadCardProducts(true);
-        document.getElementById('product_id').focus();
+        document.getElementById('product_id').focus();*/
     }
 
     function createProductFromValues(product) {
@@ -296,8 +319,7 @@ function _UpdateInvoice(props) {
                                     setTimeout(() => { }, 1000)
                                 } else {
 
-                                    const cardProducts = localStorage.getItem('temp-sales-products');
-                                    const myCardProducts = cardProducts ? JSON.parse(cardProducts) : [];
+                                    const myCardProducts = tempCardProducts ? tempCardProducts : [];
                                     const storedProducts = localStorage.getItem('core-products');
                                     const localProducts = storedProducts ? JSON.parse(storedProducts) : [];
 
@@ -489,7 +511,7 @@ function _UpdateInvoice(props) {
                                         render: (item) => (tempCardProducts.indexOf(item) + 1)
                                     },
                                     {
-                                        accessor: 'display_name',
+                                        accessor: 'item_name',
                                         title: t("Name"),
                                         footer: (
                                             <Group spacing="xs">
@@ -526,10 +548,10 @@ function _UpdateInvoice(props) {
                                                 const editedQuantity = e.currentTarget.value;
                                                 setEditedQuantity(editedQuantity);
 
-                                                const tempCardProducts = localStorage.getItem('temp-sales-products');
-                                                const cardProducts = tempCardProducts ? JSON.parse(tempCardProducts) : [];
+                                                // const tempCardProducts = localStorage.getItem('temp-sales-products');
+                                                // const cardProducts = tempCardProducts ? JSON.parse(tempCardProducts) : [];
 
-                                                const updatedProducts = cardProducts.map(product => {
+                                                const updatedProducts = tempCardProducts.map(product => {
                                                     if (product.product_id === item.product_id) {
                                                         return {
                                                             ...product,
@@ -540,8 +562,7 @@ function _UpdateInvoice(props) {
                                                     return product
                                                 });
 
-                                                localStorage.setItem('temp-sales-products', JSON.stringify(updatedProducts));
-                                                setLoadCardProducts(true)
+                                                setTempCardProducts(updatedProducts)
                                             };
 
                                             return (
@@ -582,9 +603,9 @@ function _UpdateInvoice(props) {
 
                                             useEffect(() => {
                                                 const timeoutId = setTimeout(() => {
-                                                    const tempCardProducts = localStorage.getItem('temp-sales-products');
-                                                    const cardProducts = tempCardProducts ? JSON.parse(tempCardProducts) : [];
-                                                    const updatedProducts = cardProducts.map(product => {
+                                                    // const tempCardProducts = localStorage.getItem('temp-sales-products');
+                                                    // const cardProducts = tempCardProducts ? JSON.parse(tempCardProducts) : [];
+                                                    const updatedProducts = tempCardProducts.map(product => {
                                                         if (product.product_id === item.product_id) {
                                                             return {
                                                                 ...product,
@@ -595,8 +616,9 @@ function _UpdateInvoice(props) {
                                                         return product;
                                                     });
 
-                                                    localStorage.setItem('temp-sales-products', JSON.stringify(updatedProducts));
-                                                    setLoadCardProducts(true);
+                                                    setTempCardProducts(updatedProducts)
+                                                    // localStorage.setItem('temp-sales-products', JSON.stringify(updatedProducts));
+                                                    // setLoadCardProducts(true);
                                                 }, 1000);
 
                                                 return () => clearTimeout(timeoutId);
@@ -746,7 +768,7 @@ function _UpdateInvoice(props) {
                 </Grid.Col>
                 <Grid.Col span={8} >
                     <Box bg={'white'} p={'md'} className={'borderRadiusAll'}>
-                        <__SalesForm
+                        <__UpdateInvoiceForm
                             salesSubTotalAmount={salesSubTotalAmount}
                             tempCardProducts={tempCardProducts}
                             totalPurchaseAmount={totalPurchaseAmount}
@@ -755,6 +777,7 @@ function _UpdateInvoice(props) {
                             domainId={domainId}
                             isSMSActive={isSMSActive}
                             isZeroReceiveAllow={isZeroReceiveAllow}
+                            entityEditData={entityEditData}
                         />
                     </Box>
                 </Grid.Col>
