@@ -7,7 +7,7 @@ import Footer from "./Footer";
 import MainDashboard from "../modules/dashboard/MainDashboard";
 
 
-function Layout() {
+function Layout_bk() {
     const [mobileOpened, {toggle: toggleMobile}] = useDisclosure(false);
     const [navbarOpened, {toggle: toggleNavbar}] = useDisclosure(true);
     const [rightSidebarOpened, {toggle: toggleRightSideBar}] = useDisclosure(false);
@@ -67,4 +67,4 @@ function Layout() {
     );
 }
 
-export default Layout;
+export default Layout_bk;
