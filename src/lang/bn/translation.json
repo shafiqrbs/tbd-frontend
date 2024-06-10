@@ -328,5 +328,7 @@
   "Stock": "স্টক",
   "UOM": "ইউ  ও এম",
   "ProductionInhouse": "প্রোডাকশন ইনহাউস",
-  "ProductionReceipe": "প্রোডাকশন রেসিপি"
+  "ProductionReceipe": "প্রোডাকশন রেসিপি",
+  "InvoiceBatch": "ইনভয়েস ব্যাচ",
+  "ViewInvoiceBatch": "ভিউ ইনভয়েস ব্যাচ"
 }

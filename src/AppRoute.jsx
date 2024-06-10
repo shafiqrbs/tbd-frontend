@@ -33,6 +33,7 @@ import PurchaseEdit from "./components/modules/inventory/purchase/PurchaseEdit.j
 import SampleModalIndex from './components/modules/sample3Grid/SampleModalIndex.jsx';
 import OpeningApproveIndex from "./components/modules/inventory/opening-stock/OpeningApproveIndex";
 import OpeningStockIndex from "./components/modules/inventory/opening-stock/OpeningStockIndex";
+import InvoiceBatchIndex from './components/modules/inventory/invoice-batch/InvoiceBatchIndex.jsx';
 
 function AppRoute() {
 
@@ -67,6 +68,7 @@ function AppRoute() {
                     <Route path="production" element={<ProductionIndex />} />
                     <Route path="production-inhouse" element={<InhouseIndex />} />
                     <Route path="production-receipe" element={<ReceipeIndex />} />
+                    <Route path="invoice-batch" element={<InvoiceBatchIndex />} />
                 </Route>
                 <Route path="/domain/">
                     <Route path="" element={<DomainIndex />} />

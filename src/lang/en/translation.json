@@ -422,5 +422,6 @@
   "OpeningStock": "Opening Stock",
   "ApproveStock": "Approve Stock",
   "ApproveOpeningStock": "Approve Stock",
-  "": ""
+  "InvoiceBatch": "Invoice Batch",
+  "ViewInvoiceBatch": "View Invoice Batch"
 }
