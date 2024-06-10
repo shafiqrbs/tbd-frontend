@@ -54,20 +54,10 @@ function __UpdateInvoiceForm(props) {
     const formHeight = mainAreaHeight - 268; //TabList height 104
     const [customerViewModel, setCustomerViewModel] = useState(false);
 
+    const [discountType, setDiscountType] = useState(entityEditData.discount_type);
 
-    // const [tempCardProducts, setTempCardProducts] = useState([])
-    const [loadCardProducts, setLoadCardProducts] = useState(false)
-    const [discountType, setDiscountType] = useToggle(['Flat', 'Percent']);
     const [invoicePrintData, setInvoicePrintData] = useState(null)
     const [invoicePrintForSave, setInvoicePrintForSave] = useState(false)
-
-
-    /*useEffect(() => {
-        const tempProducts = localStorage.getItem('temp-sales-products');
-        setTempCardProducts(tempProducts ? JSON.parse(tempProducts) : [])
-        setLoadCardProducts(false)
-    }, [loadCardProducts])*/
-
 
     const [customerData, setCustomerData] = useState(entityEditData?.customer_id.toString());
     const [salesByUser, setSalesByUser] = useState(entityEditData?.sales_by_id.toString());
@@ -80,7 +70,7 @@ function __UpdateInvoiceForm(props) {
             sales_by: entityEditData?.sales_by_id,
             order_process: entityEditData?.process_id,
             narration: entityEditData?.narration,
-            discount: entityEditData?.discount,
+            discount: discountType==='Flat'?entityEditData?.discount:entityEditData?.discount_calculation,
             receive_amount: entityEditData?.payment
         },
         validate: {
@@ -233,9 +223,6 @@ function __UpdateInvoiceForm(props) {
             }
 
             <form onSubmit={form.onSubmit((values) => {
-                // console.log(form.values)
-                // const tempProducts = localStorage.getItem('temp-sales-products');
-                // let items = tempProducts ? JSON.parse(tempProducts) : [];
                 let createdBy = JSON.parse(localStorage.getItem('user'));
 
                 let transformedArray = tempCardProducts.map(product => {
@@ -577,7 +564,9 @@ function __UpdateInvoiceForm(props) {
                                             <Grid.Col span={4}>
                                                 <Button
                                                     fullWidth
-                                                    onClick={() => setDiscountType()}
+                                                    onClick={() =>{
+                                                        setDiscountType(discountType==='Flat'?'Percent':'Flat')
+                                                    }}
                                                     variant="filled"
                                                     fz={'xs'}
                                                     leftSection={

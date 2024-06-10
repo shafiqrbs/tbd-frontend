@@ -1,15 +1,10 @@
-import React, {useCallback, useEffect, useState} from "react";
-import {
-    Box, Button,
-    Grid, Progress, rem, Title
-} from "@mantine/core";
+import React, {useEffect, useState} from "react";
+import {Box, Progress, rem} from "@mantine/core";
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from "react-redux";
 import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress.js";
 import getConfigData from "../../../global-hook/config-data/getConfigData.js";
-import _SalesTable from "./_SalesTable.jsx";
 import _SalesPurchaseHeaderNavbar from "../configuraton/_SalesPurchaseHeaderNavbar.jsx";
-import _GenericInvoiceForm from "./_GenericInvoiceForm.jsx";
 import {useNavigate, useParams} from "react-router-dom";
 import {editEntityData} from "../../../../store/inventory/crudSlice.js";
 import {notifications} from "@mantine/notifications";
@@ -85,7 +80,6 @@ function SalesEdit() {
                             </Box>
                         </>
                     }
-
                 </Box>
             }
         </>

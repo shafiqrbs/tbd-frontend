@@ -31,13 +31,13 @@ const Layout = () => {
     }, []);
 
     // Automatically log the user out after 30 minute
-    useEffect(() => {
+    /*useEffect(() => {
         const timeout = setTimeout(() => {
             localStorage.clear();
             navigate("/login");
         }, 1800000);
         return () => clearTimeout(timeout);
-    }, [navigate]);
+    }, [navigate]);*/
 
 
 

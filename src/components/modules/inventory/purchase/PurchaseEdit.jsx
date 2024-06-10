@@ -12,6 +12,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {editEntityData} from "../../../../store/inventory/crudSlice.js";
 import {notifications} from "@mantine/notifications";
 import {IconCheck} from "@tabler/icons-react";
+import _UpdateInvoice from "./_UpdateInvoice.jsx";
 
 function PurchaseEdit() {
     let { id } = useParams();
@@ -51,7 +52,7 @@ function PurchaseEdit() {
     },[dataStatus, entityEditData.id]);
 
 
-    console.log(entityEditData,id)
+    console.log(editedData,id)
 
     return (
         <>
@@ -71,7 +72,7 @@ function PurchaseEdit() {
                             <Box p={'8'}>
                                 {
                                     configData.business_model.slug === 'general' &&
-                                    <_GenericInvoiceForm
+                                    <_UpdateInvoice
                                         allowZeroPercentage={configData.zero_stock}
                                         currencySymbol={configData.currency.symbol}
                                         isPurchaseByPurchasePrice={configData.is_purchase_by_purchase_price}
