@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useOutletContext } from "react-router-dom";
+import {useNavigate, useOutletContext, useParams} from "react-router-dom";
 import {
     Button, rem, Center, Switch, ActionIcon,
     Grid, Box, ScrollArea, Tooltip, Group, Text
@@ -16,14 +16,14 @@ import {
     IconEyeEdit, IconDiscountOff, IconCurrency, IconPlusMinus, IconCheck, IconTallymark1,
 
 } from "@tabler/icons-react";
-import { useHotkeys, useToggle } from "@mantine/hooks";
+import { useHotkeys } from "@mantine/hooks";
 import { useDispatch } from "react-redux";
 import { isNotEmpty, useForm } from "@mantine/form";
 
 import SelectForm from "../../../form-builders/SelectForm";
 import TextAreaForm from "../../../form-builders/TextAreaForm";
 
-import { storeEntityData, } from "../../../../store/inventory/crudSlice.js";
+import {updateEntityData,} from "../../../../store/inventory/crudSlice.js";
 import InputNumberForm from "../../../form-builders/InputNumberForm";
 import InputButtonForm from "../../../form-builders/InputButtonForm";
 import { notifications } from "@mantine/notifications";
@@ -34,13 +34,20 @@ import customerDataStoreIntoLocalStorage from "../../../global-hook/local-storag
 import _addCustomer from "../../popover-form/_addCustomer.jsx";
 
 function __UpdateInvoiceForm(props) {
-
+    let { id } = useParams();
     const { currencySymbol, domainId, isSMSActive, isZeroReceiveAllow,entityEditData,tempCardProducts } = props
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
+    const navigate = useNavigate()
     const { isOnline, mainAreaHeight } = useOutletContext();
 
     const transactionModeData = JSON.parse(localStorage.getItem('accounting-transaction-mode')) ? JSON.parse(localStorage.getItem('accounting-transaction-mode')) : [];
+
+    const [lastClicked, setLastClicked] = useState(null);
+
+    const handleClick = (event) => {
+        setLastClicked(event.currentTarget.name);
+    };
 
     const [salesSubTotalAmount, setSalesSubTotalAmount] = useState(0);
     const [salesProfitAmount, setSalesProfitAmount] = useState(0);
@@ -51,14 +58,11 @@ function __UpdateInvoiceForm(props) {
     const [hoveredModeId, setHoveredModeId] = useState(false);
     const [isShowSMSPackageModel, setIsShowSMSPackageModel] = useState(false)
 
-    const formHeight = mainAreaHeight - 268; //TabList height 104
+    const formHeight = mainAreaHeight - 268;
     const [customerViewModel, setCustomerViewModel] = useState(false);
-
     const [discountType, setDiscountType] = useState(entityEditData.discount_type);
-
     const [invoicePrintData, setInvoicePrintData] = useState(null)
     const [invoicePrintForSave, setInvoicePrintForSave] = useState(false)
-
     const [customerData, setCustomerData] = useState(entityEditData?.customer_id.toString());
     const [salesByUser, setSalesByUser] = useState(entityEditData?.sales_by_id.toString());
     const [orderProcess, setOrderProcess] = useState(entityEditData?.process_id.toString());
@@ -210,6 +214,18 @@ function __UpdateInvoiceForm(props) {
         </Text>
     );
 
+
+    useEffect(() => {
+        if (invoicePrintForSave) {
+            let printContents = document.getElementById('printElement').innerHTML;
+            let originalContents = document.body.innerHTML;
+            document.body.innerHTML = printContents;
+            window.print();
+            document.body.innerHTML = originalContents;
+            window.location.reload()
+        }
+    }, [invoicePrintForSave]);
+
     return (
         <>
             {
@@ -227,14 +243,15 @@ function __UpdateInvoiceForm(props) {
 
                 let transformedArray = tempCardProducts.map(product => {
                     return {
+                        "sale_id": id,
                         "product_id": product.product_id,
-                        "item_name": product.display_name,
+                        "unit_id": product.unit_id,
+                        "uom": product.unit_name,
+                        "item_name": product.item_name,
+                        "quantity": product.quantity,
+                        "percent": product.percent,
                         "sales_price": product.sales_price,
                         "price": product.price,
-                        "percent": product.percent,
-                        "quantity": product.quantity,
-                        "uom": product.unit_name,
-                        "unit_id": 2,
                         "purchase_price": product.purchase_price,
                         "sub_total": product.sub_total
                     }
@@ -267,45 +284,57 @@ function __UpdateInvoiceForm(props) {
                         ? salesTotalAmount
                         : 0);
 
-                console.log(formValue)
-
-                /*if (items && items.length > 0) {
-                    setInvoicePrintData(formValue)
-                    setInvoicePrintForSave(true)
-
+                if (transformedArray && transformedArray.length > 0) {
                     const data = {
-                        url: 'inventory/sales',
+                        url: 'inventory/sales/'+id,
                         data: formValue
                     }
-                    dispatch(storeEntityData(data))
+                    dispatch(updateEntityData(data))
 
                     notifications.show({
                         color: 'teal',
-                        title: t('CreateSuccessfully'),
+                        title: t('UpdatedSuccessfully'),
                         icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
                         loading: false,
                         autoClose: 700,
                         style: { backgroundColor: 'lightgray' },
                     });
 
-                    setTimeout(() => {
-                        localStorage.removeItem('temp-sales-products');
-                        form.reset()
-                        setCustomerData(null)
-                        setSalesByUser(null)
-                        setOrderProcess(null)
-                        props.setLoadCardProducts(true)
-                    }, 100)
-
-                    setTimeout(() => {
-                        setInvoicePrintForSave(true)
-                        let printContents = document.getElementById('printElement').innerHTML;
-                        let originalContents = document.body.innerHTML;
-                        document.body.innerHTML = printContents;
-                        window.print();
-                        document.body.innerHTML = originalContents;
-                        window.location.reload()
-                    }, 200);
+                    if (lastClicked === 'save'){
+                        navigate('/inventory/sales')
+                    }
+                    if (lastClicked === 'print'){
+                        setTimeout(() => {
+                            setInvoicePrintData(formValue)
+                            setInvoicePrintForSave(true)
+                        }, 200);
+                        /*setTimeout(() => {
+                            setInvoicePrintData(formValue)
+                            setInvoicePrintForSave(true)
+                            let printContents = document.getElementById('printElement').innerHTML;
+                            let originalContents = document.body.innerHTML;
+                            document.body.innerHTML = printContents;
+                            window.print();
+                            document.body.innerHTML = originalContents;
+                            window.location.reload()
+                        }, 200);*/
+                    }
+                    if (lastClicked === 'pos'){
+                        setTimeout(() => {
+                            setInvoicePrintData(formValue)
+                            setInvoicePrintForSave(true)
+                        }, 200);
+                        /*setTimeout(() => {
+                            setInvoicePrintData(formValue)
+                            setInvoicePrintForSave(true)
+                            let printContents = document.getElementById('printElement').innerHTML;
+                            let originalContents = document.body.innerHTML;
+                            document.body.innerHTML = printContents;
+                            window.print();
+                            document.body.innerHTML = originalContents;
+                            window.location.reload()
+                        }, 200);*/
+                    }
                 } else {
                     notifications.show({
                         color: 'red',
@@ -315,7 +344,7 @@ function __UpdateInvoiceForm(props) {
                         autoClose: 700,
                         style: { backgroundColor: 'lightgray' },
                     });
-                }*/
+                }
 
             })}>
                 <Box>
@@ -672,10 +701,13 @@ function __UpdateInvoiceForm(props) {
                                     </Button>
                                     <Button
                                         fullWidth
+                                        type={'submit'}
+                                        onClick={handleClick}
                                         variant="filled"
                                         leftSection={<IconPrinter size={14} />}
                                         color="green.5"
                                         disabled={isDisabled}
+                                        name="print"
                                         style={{
                                             transition: "all 0.3s ease",
                                             backgroundColor: isDisabled ? "#f1f3f500" : ""
@@ -685,9 +717,12 @@ function __UpdateInvoiceForm(props) {
                                     </Button>
                                     <Button
                                         fullWidth
+                                        type={'submit'}
                                         variant="filled"
                                         leftSection={<IconReceipt size={14} />}
                                         color="red.5"
+                                        name="pos"
+                                        onClick={handleClick}
                                         disabled={isDisabled}
                                         style={{
                                             transition: "all 0.3s ease",
@@ -702,11 +737,13 @@ function __UpdateInvoiceForm(props) {
                                         variant="filled"
                                         leftSection={<IconDeviceFloppy size={14} />}
                                         color="cyan.5"
-                                        /*disabled={isDisabled}
+                                        name="save"
+                                        onClick={handleClick}
+                                        disabled={isDisabled}
                                         style={{
                                             transition: "all 0.3s ease",
                                             backgroundColor: isDisabled ? "#f1f3f500" : ""
-                                        }}*/
+                                        }}
                                     >
                                         Save
                                     </Button>

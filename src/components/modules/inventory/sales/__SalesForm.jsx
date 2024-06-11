@@ -247,7 +247,7 @@ function __SalesForm(props) {
                         "percent": product.percent,
                         "quantity": product.quantity,
                         "uom": product.unit_name,
-                        "unit_id": 2,
+                        "unit_id": product.unit_id,
                         "purchase_price": product.purchase_price,
                         "sub_total": product.sub_total
                     }

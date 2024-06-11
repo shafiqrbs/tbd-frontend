@@ -85,6 +85,7 @@ function _GenericInvoiceForm(props) {
                     unit_name: product.unit_name,
                     purchase_price: product.purchase_price,
                     sub_total: selectProductDetails.sub_total,
+                    unit_id: product.unit_id,
                 });
             }
             return acc;
@@ -137,6 +138,7 @@ function _GenericInvoiceForm(props) {
             unit_name: product.unit_name,
             purchase_price: product.purchase_price,
             sub_total: product.sales_price,
+            unit_id: product.unit_id,
         };
     }
 

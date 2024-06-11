@@ -80,6 +80,7 @@ function _UpdateInvoice(props) {
                     sales_price: values.sales_price,
                     price: values.price,
                     percent: values.percent,
+                    unit_id: product.unit_id,
                     stock: product.quantity,
                     quantity: values.quantity,
                     unit_name: product.unit_name,
@@ -140,6 +141,7 @@ function _UpdateInvoice(props) {
             unit_name: product.unit_name,
             purchase_price: product.purchase_price,
             sub_total: product.sales_price,
+            unit_id: product.unit_id,
         };
     }
 
