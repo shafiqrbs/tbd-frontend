@@ -35,7 +35,7 @@ import { ReactToPrint } from "react-to-print";
 import _SalesSearch from "../sales/_SalesSearch.jsx";
 import { setSearchKeyword } from "../../../../store/core/crudSlice.js";
 import InvoiceBatchModal from "./InvoiceBatchModal.jsx";
-import { DataTable } from 'mantine-datatable';
+// import { DataTable } from 'mantine-datatable';
 
 function InvoiceBatchTable() {
     const navigate = useNavigate();
@@ -399,7 +399,7 @@ function InvoiceBatchTable() {
                                         </Grid.Col>
                                     </Grid>
                                 </Box>
-                                <ScrollArea h={height} scrollbarSize={2} type="never" >
+                                <ScrollArea h={height + 20} scrollbarSize={2} type="never" >
                                     <Box>
                                         <Table stickyHeader >
                                             <Table.Thead>
@@ -450,40 +450,7 @@ function InvoiceBatchTable() {
                                 </ScrollArea>
                             </Box>
                         </Box>
-                        <Box>
-                            <Button.Group fullWidth>
 
-                                <Button
-                                    fullWidth
-                                    variant="filled"
-                                    leftSection={<IconPrinter size={14} />}
-                                    color="green.5"
-                                >
-                                    <ReactToPrint
-                                        trigger={() => {
-                                            return <a href="#">Print</a>;
-                                        }}
-                                        content={() => printRef.current}
-                                    />
-                                </Button>
-                                <Button
-                                    fullWidth
-                                    variant="filled"
-                                    leftSection={<IconReceipt size={14} />}
-                                    color="red.5"
-                                >
-                                    Pos
-                                </Button>
-                                <Button
-                                    fullWidth
-                                    variant="filled"
-                                    leftSection={<IconEdit size={14} />}
-                                    color="cyan.5"
-                                >
-                                    Edit
-                                </Button>
-                            </Button.Group>
-                        </Box>
                     </Grid.Col>
                     <Grid.Col span={1} >
                         <Box bg={'white'} className={'borderRadiusAll'} pt={'16'}>

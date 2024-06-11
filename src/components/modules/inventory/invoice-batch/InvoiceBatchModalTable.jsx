@@ -43,14 +43,14 @@ function InvoiceBatchModalTable(props) {
         { name: 'T-Shirt', quantity: 5, price: 50, total: 250 },
         { name: 'Jeans', quantity: 2, price: 400, total: 800 },
     ]
-    const row = element.map((element) => (
-        <Table.Tr key={element.name}>
-            <Table.Td>{element.quantity}</Table.Td>
-            <Table.Td>{element.price}</Table.Td>
-            <Table.Td>{element.total}</Table.Td>
-        </Table.Tr>
-    ));
-
+    // const row = element.map((element) => (
+    //     <Table.Tr key={element.name}>
+    //         <Table.Td>{element.quantity}</Table.Td>
+    //         <Table.Td>{element.price}</Table.Td>
+    //         <Table.Td>{element.total}</Table.Td>
+    //     </Table.Tr>
+    // ));
+    
     return (
         <>
             <Box className='borderRadiusAll' p={'xs'}>
