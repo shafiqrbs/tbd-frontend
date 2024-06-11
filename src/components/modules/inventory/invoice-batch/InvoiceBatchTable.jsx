@@ -35,6 +35,7 @@ import { ReactToPrint } from "react-to-print";
 import _SalesSearch from "../sales/_SalesSearch.jsx";
 import { setSearchKeyword } from "../../../../store/core/crudSlice.js";
 import InvoiceBatchModal from "./InvoiceBatchModal.jsx";
+import { DataTable } from 'mantine-datatable';
 
 function InvoiceBatchTable() {
     const navigate = useNavigate();

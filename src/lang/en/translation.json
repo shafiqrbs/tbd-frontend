@@ -423,5 +423,9 @@
   "ApproveStock": "Approve Stock",
   "ApproveOpeningStock": "Approve Stock",
   "InvoiceBatch": "Invoice Batch",
-  "ViewInvoiceBatch": "View Invoice Batch"
+  "ViewInvoiceBatch": "View Invoice Batch",
+  "InvoiceBatchInformation": "Invoice Batch Information",
+  "TransactionNumber": "Transaction Number",
+  "CreatedBy": "Created By",
+  "ApprovedBy": "Approved By"
 }

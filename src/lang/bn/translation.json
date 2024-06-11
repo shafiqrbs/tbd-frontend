@@ -330,5 +330,9 @@
   "ProductionInhouse": "প্রোডাকশন ইনহাউস",
   "ProductionReceipe": "প্রোডাকশন রেসিপি",
   "InvoiceBatch": "ইনভয়েস ব্যাচ",
-  "ViewInvoiceBatch": "ভিউ ইনভয়েস ব্যাচ"
+  "ViewInvoiceBatch": "ভিউ ইনভয়েস ব্যাচ",
+  "InvoiceBatchInformation": "ইনভয়েস ব্যাচ ইনফরমেশন",
+  "TransactionNumber": "ট্রানজেক্শন নম্বর",
+  "CreatedBy": "ক্রিয়েটেড বাই",
+  "ApprovedBy": "এপ্রুভড বাই"
 }
