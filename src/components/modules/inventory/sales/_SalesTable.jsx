@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Navigate, Outlet, useLocation, useNavigate, useOutletContext } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import tableCss from '../../../../assets/css/Table.module.css';
 import {
     Group,
@@ -11,24 +11,21 @@ import {
     Button,
     ScrollArea,
     Table,
-    Loader,
     Menu,
     rem,
-    Anchor,
     Checkbox,
     Tooltip,
-    Overlay,
     LoadingOverlay
 } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import {
     IconEdit,
     IconPrinter,
-    IconReceipt, IconDotsVertical, IconPencil, IconEyeEdit, IconTrashX,
+    IconReceipt, IconDotsVertical, IconTrashX,
 } from "@tabler/icons-react";
 import { DataTable } from 'mantine-datatable';
 import { useDispatch, useSelector } from "react-redux";
-import { useHotkeys, useToggle } from "@mantine/hooks";
+import { useHotkeys } from "@mantine/hooks";
 import { getIndexEntityData, setFetching, setSalesFilterData } from "../../../../store/inventory/crudSlice.js";
 import _ShortcutTable from "../../shortcut/_ShortcutTable";
 import { ReactToPrint } from "react-to-print";
@@ -465,9 +462,17 @@ function _SalesTable() {
                                     leftSection={<IconReceipt size={14} />}
                                     color="red.5"
                                 >
-                                    Pos
+                                    <ReactToPrint
+                                        trigger={() => {
+                                            return <a href="#">Pos</a>;
+                                        }}
+                                        content={() => printRef.current}
+                                    />
                                 </Button>
+
                                 <Button
+                                    href={`/inventory/sales/edit/${salesViewData?.id}`}
+                                    component="a"
                                     fullWidth
                                     variant="filled"
                                     leftSection={<IconEdit size={14} />}

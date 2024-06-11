@@ -23,7 +23,10 @@ import { isNotEmpty, useForm } from "@mantine/form";
 import SelectForm from "../../../form-builders/SelectForm";
 import TextAreaForm from "../../../form-builders/TextAreaForm";
 
-import {updateEntityData,} from "../../../../store/inventory/crudSlice.js";
+import {
+    getSalesDetails,
+    updateEntityData,
+} from "../../../../store/inventory/crudSlice.js";
 import InputNumberForm from "../../../form-builders/InputNumberForm";
 import InputButtonForm from "../../../form-builders/InputButtonForm";
 import { notifications } from "@mantine/notifications";
@@ -64,8 +67,8 @@ function __UpdateInvoiceForm(props) {
     const [invoicePrintData, setInvoicePrintData] = useState(null)
     const [invoicePrintForSave, setInvoicePrintForSave] = useState(false)
     const [customerData, setCustomerData] = useState(entityEditData?.customer_id.toString());
-    const [salesByUser, setSalesByUser] = useState(entityEditData?.sales_by_id.toString());
-    const [orderProcess, setOrderProcess] = useState(entityEditData?.process_id.toString());
+    const [salesByUser, setSalesByUser] = useState(entityEditData?.sales_by_id?entityEditData?.sales_by_id.toString():null);
+    const [orderProcess, setOrderProcess] = useState(entityEditData?.process_id?entityEditData?.process_id.toString():null);
 
     const form = useForm({
         initialValues: {
@@ -231,10 +234,7 @@ function __UpdateInvoiceForm(props) {
             {
                 domainId == '359' && invoicePrintForSave &&
                 <_InvoiceForDomain359
-                    invoicePrintData={invoicePrintData}
-                    setInvoicePrintData={setInvoicePrintData}
                     setInvoicePrintForSave={setInvoicePrintForSave}
-                    invoicePrintForSave={invoicePrintForSave}
                 />
             }
 
@@ -305,35 +305,19 @@ function __UpdateInvoiceForm(props) {
                     }
                     if (lastClicked === 'print'){
                         setTimeout(() => {
-                            setInvoicePrintData(formValue)
-                            setInvoicePrintForSave(true)
+                            dispatch(getSalesDetails('inventory/sales/'+id))
                         }, 200);
-                        /*setTimeout(() => {
-                            setInvoicePrintData(formValue)
-                            setInvoicePrintForSave(true)
-                            let printContents = document.getElementById('printElement').innerHTML;
-                            let originalContents = document.body.innerHTML;
-                            document.body.innerHTML = printContents;
-                            window.print();
-                            document.body.innerHTML = originalContents;
-                            window.location.reload()
-                        }, 200);*/
                     }
                     if (lastClicked === 'pos'){
                         setTimeout(() => {
-                            setInvoicePrintData(formValue)
-                            setInvoicePrintForSave(true)
+                            dispatch(getSalesDetails('inventory/sales/'+id))
                         }, 200);
-                        /*setTimeout(() => {
-                            setInvoicePrintData(formValue)
+                    }
+
+                    if (lastClicked === 'print' || lastClicked==='pos'){
+                        setTimeout(() => {
                             setInvoicePrintForSave(true)
-                            let printContents = document.getElementById('printElement').innerHTML;
-                            let originalContents = document.body.innerHTML;
-                            document.body.innerHTML = printContents;
-                            window.print();
-                            document.body.innerHTML = originalContents;
-                            window.location.reload()
-                        }, 200);*/
+                        }, 500);
                     }
                 } else {
                     notifications.show({

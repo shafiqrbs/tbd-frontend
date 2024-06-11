@@ -17,13 +17,13 @@ import {
 
 } from "@tabler/icons-react";
 import { useHotkeys, useToggle } from "@mantine/hooks";
-import { useDispatch } from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import { isNotEmpty, useForm } from "@mantine/form";
 
 import SelectForm from "../../../form-builders/SelectForm";
 import TextAreaForm from "../../../form-builders/TextAreaForm";
 
-import { storeEntityData, } from "../../../../store/inventory/crudSlice.js";
+import {getSalesDetails, storeEntityData,} from "../../../../store/inventory/crudSlice.js";
 import InputNumberForm from "../../../form-builders/InputNumberForm";
 import InputButtonForm from "../../../form-builders/InputButtonForm";
 import { notifications } from "@mantine/notifications";
@@ -39,6 +39,8 @@ function __SalesForm(props) {
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
+    const entityNewData = useSelector((state) => state.inventoryCrudSlice.entityNewData);
+
 
     const transactionModeData = JSON.parse(localStorage.getItem('accounting-transaction-mode')) ? JSON.parse(localStorage.getItem('accounting-transaction-mode')) : [];
 
@@ -60,6 +62,12 @@ function __SalesForm(props) {
     const [discountType, setDiscountType] = useToggle(['Flat', 'Percent']);
     const [invoicePrintData, setInvoicePrintData] = useState(null)
     const [invoicePrintForSave, setInvoicePrintForSave] = useState(false)
+
+    const [lastClicked, setLastClicked] = useState(null);
+
+    const handleClick = (event) => {
+        setLastClicked(event.currentTarget.name);
+    };
 
 
     useEffect(() => {
@@ -84,8 +92,6 @@ function __SalesForm(props) {
         },
         validate: {
             transaction_mode_id: isNotEmpty(),
-            sales_by: isNotEmpty(),
-            order_process: isNotEmpty()
         }
     });
 
@@ -221,15 +227,41 @@ function __SalesForm(props) {
         </Text>
     );
 
+    useEffect(() => {
+        if (entityNewData?.data?.id && (lastClicked === 'print' || lastClicked==='pos')){
+            setTimeout(() => {
+                dispatch(getSalesDetails('inventory/sales/'+entityNewData?.data?.id))
+            }, 400);
+        }
+    }, [entityNewData, dispatch, lastClicked]);
+
+    useEffect(() => {
+        if (entityNewData?.data?.id && (lastClicked === 'print' || lastClicked==='pos')){
+            setTimeout(() => {
+                setInvoicePrintForSave(true)
+            }, 500);
+        }
+    }, [entityNewData, lastClicked]);
+
+    useEffect(() => {
+        setTimeout(() => {
+            if (invoicePrintForSave) {
+                let printContents = document.getElementById('printElement').innerHTML;
+                let originalContents = document.body.innerHTML;
+                document.body.innerHTML = printContents;
+                window.print();
+                document.body.innerHTML = originalContents;
+                window.location.reload()
+            }
+        },500)
+    }, [invoicePrintForSave]);
+
     return (
         <>
             {
                 domainId == '359' && invoicePrintForSave &&
                 <_InvoiceForDomain359
-                    invoicePrintData={invoicePrintData}
-                    setInvoicePrintData={setInvoicePrintData}
                     setInvoicePrintForSave={setInvoicePrintForSave}
-                    invoicePrintForSave={invoicePrintForSave}
                 />
             }
 
@@ -282,9 +314,6 @@ function __SalesForm(props) {
                         : 0);
 
                 if (items && items.length > 0) {
-                    setInvoicePrintData(formValue)
-                    setInvoicePrintForSave(true)
-
                     const data = {
                         url: 'inventory/sales',
                         data: formValue
@@ -307,17 +336,7 @@ function __SalesForm(props) {
                         setSalesByUser(null)
                         setOrderProcess(null)
                         props.setLoadCardProducts(true)
-                    }, 100)
-
-                    setTimeout(() => {
-                        setInvoicePrintForSave(true)
-                        let printContents = document.getElementById('printElement').innerHTML;
-                        let originalContents = document.body.innerHTML;
-                        document.body.innerHTML = printContents;
-                        window.print();
-                        document.body.innerHTML = originalContents;
-                        window.location.reload()
-                    }, 200);
+                    }, 500)
                 } else {
                     notifications.show({
                         color: 'red',
@@ -626,7 +645,7 @@ function __SalesForm(props) {
                                             tooltip={t('ChooseSalesBy')}
                                             label=''
                                             placeholder={t('SalesBy')}
-                                            required={true}
+                                            required={false}
                                             name={'sales_by'}
                                             form={form}
                                             dropdownValue={salesByDropdownData}
@@ -642,7 +661,7 @@ function __SalesForm(props) {
                                             tooltip={t('ChooseOrderProcess')}
                                             label=''
                                             placeholder={t('OrderProcess')}
-                                            required={true}
+                                            required={false}
                                             name={'order_process'}
                                             form={form}
                                             dropdownValue={localStorage.getItem('order-process') ? JSON.parse(localStorage.getItem('order-process')) : []}
@@ -683,6 +702,9 @@ function __SalesForm(props) {
                                     <Button
                                         fullWidth
                                         variant="filled"
+                                        type={'submit'}
+                                        onClick={handleClick}
+                                        name="print"
                                         leftSection={<IconPrinter size={14} />}
                                         color="green.5"
                                         disabled={isDisabled}
@@ -695,6 +717,9 @@ function __SalesForm(props) {
                                     </Button>
                                     <Button
                                         fullWidth
+                                        type={'submit'}
+                                        onClick={handleClick}
+                                        name="pos"
                                         variant="filled"
                                         leftSection={<IconReceipt size={14} />}
                                         color="red.5"
@@ -709,6 +734,8 @@ function __SalesForm(props) {
                                     <Button
                                         fullWidth
                                         type={'submit'}
+                                        onClick={handleClick}
+                                        name="save"
                                         variant="filled"
                                         leftSection={<IconDeviceFloppy size={14} />}
                                         color="cyan.5"

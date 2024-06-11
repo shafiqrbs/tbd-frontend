@@ -122,7 +122,7 @@ function _UpdateInvoice(props) {
         setSearchValue('');
         form.reset();
         setLoadCardProducts(true);
-        if (type == 'productId') {
+        if (type == 'product') {
             document.getElementById('product_id').focus();
         } else {
             document.getElementById('barcode').focus();

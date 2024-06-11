@@ -37,6 +37,16 @@ export const editEntityData = createAsyncThunk("edit", async (value) => {
     }
 });
 
+export const getSalesDetails = createAsyncThunk("sales/details", async (value) => {
+    try {
+        const response = editData(value);
+        return response;
+    } catch (error) {
+        console.log('error', error.message);
+        throw error;
+    }
+});
+
 export const getShowEntityData = createAsyncThunk("config/show", async (value) => {
     try {
         const response = showData(value);
@@ -101,6 +111,7 @@ const crudSlice = createSlice({
         searchKeyword: '',
         indexEntityData: [],
         entityEditData: [],
+        salesDetails: [],
         insertType: 'create',
         entityDataDelete: null,
         openingInlineUpdateStatus: null,
@@ -190,6 +201,11 @@ const crudSlice = createSlice({
         builder.addCase(editEntityData.fulfilled, (state, action) => {
             state.dataStatus = action.payload.data.status
             state.entityEditData = action.payload.data.data
+        })
+
+        builder.addCase(getSalesDetails.fulfilled, (state, action) => {
+            state.dataStatus = action.payload.data.status
+            state.salesDetails = action.payload.data.data
         })
 
         builder.addCase(getShowEntityData.fulfilled, (state, action) => {
