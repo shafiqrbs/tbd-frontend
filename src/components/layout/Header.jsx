@@ -162,8 +162,8 @@ export default function Header({
                     </Modal.Body>
                 </Modal.Content>
             </Modal.Root>
-            <Box bg={'white'} h={`100%`} pos={`relative`}>
-                <Grid columns={24} gutter={{ base:2}}>
+            <Box bg={'white'} mb={'2'} pos={`relative`}>
+                <Grid columns={24} gutter={{ base:2}} justify="space-between">
                     <Grid.Col span={6} >
                         <NavLink
                         href="/"
@@ -174,41 +174,49 @@ export default function Header({
                         onClick={(e) => { navigate('/') }}
                     />
                     </Grid.Col>
-                    <Grid.Col span={12} >
-                        <Group justify="space-between" h="100%" >
-                        <Flex direction={`column`} align={'center'} w={'100%'} border={'red'} >
-                        <Button
-                            leftSection={
-                                <>
-                                    <IconSearch size={16} c={'red.5'} />
-                                    <Text fz={`xs`} pl={'xs'} c={'gray.8'}>{t("SearchMenu")}</Text>
-                                </>
-                            }
-                            fullWidth
-                            variant="transparent"
-                            rightSection={
-                                <>
-                                    <Kbd h={'24'} c={'gray.8'} fz={'12'}>Alt </Kbd> + <Kbd c={'gray.8'} h={'24'}
-                                                                                           fz={'12'}> K</Kbd>
-                                </>
-                            }
-                            w={`100%`}
-                            h={'32'}
-                            justify="space-between"
-                            style={{ border: `2px solid var(--mantine-color-red-8)` }}
-                            color={`gray`}
-                            onClick={open}
-                        />
-                    </Flex>
+                    <Grid.Col span={12}  justify="flex-end"
+                              align="center"
+                              direction="row"
+                              wrap="wrap">
+                        <Group >
+                                <Flex justify="center"
+                                      align="center"
+                                      direction="row"
+                                      wrap="wrap"
+                                      mih={42}
+                                      w={'100%'} border={'red'} >
+                                    <Button
+                                        leftSection={
+                                            <>
+                                                <IconSearch size={16} c={'red.5'} />
+                                                <Text fz={`xs`} pl={'xs'} c={'gray.8'}>{t("SearchMenu")}</Text>
+                                            </>
+                                        }
+                                        fullWidth
+                                        variant="transparent"
+                                        rightSection={
+                                            <>
+                                                <Kbd h={'24'} c={'gray.8'} fz={'12'}>Alt </Kbd> + <Kbd c={'gray.8'} h={'24'}
+                                                                                                       fz={'12'}> K</Kbd>
+                                            </>
+                                        }
+                                        w={`100%`}
+                                        justify="space-between"
+                                        style={{ border: `2px solid var(--mantine-color-red-8)` }}
+                                        color={`gray`}
+                                        onClick={open}
+                                    />
+                                </Flex>
                         </Group>
                     </Grid.Col>
-                    <Grid.Col span={3} offset={3}>
-
+                    <Grid.Col span={6} >
                         <Flex
                               gap="sm"
                               justify="flex-end"
                               direction="row"
+                              v-align={'center'}
                               wrap="wrap"
+                              mih={42}
                               align={'right'}  px={`xs`} pr={'24'}>
                                 <Menu
                                 onOpen={() => setLanguageOpened(true)}

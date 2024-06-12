@@ -42,7 +42,7 @@ const Layout = () => {
 
 
     const headerHeight = 42;
-    const footerHeight = 36;
+    const footerHeight = 58;
     const padding = 0;
     const mainAreaHeight = height - headerHeight - footerHeight - padding;
 
