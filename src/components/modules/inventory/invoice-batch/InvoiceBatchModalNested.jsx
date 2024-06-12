@@ -52,7 +52,7 @@ function InvoiceBatchModalNested(props) {
 
     return (
         <>
-            <Box className='borderRadiusAll' p={'xs'}>
+            <Box p={'xs'}>
                 <DataTable
                     classNames={{
                         root: tableCss.root,
@@ -75,8 +75,9 @@ function InvoiceBatchModalNested(props) {
                         {
                             accessor: 'invoiceNumber',
                             title: 'Invoice Number',
+
                             render: (rowData) => (
-                                <Box component="a" size="sm" variant="subtle">
+                                <Box component="a" size="sm" variant="subtle" c={'red.6'} style={{ cursor: "pointer" }}>
                                     {rowData.invoiceNumber}
                                 </Box>
                             )
