@@ -2,11 +2,12 @@ import React, { useEffect, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import {
     rem,
-    Grid, Tooltip, TextInput, ActionIcon, Select, Button,
+    Grid, Tooltip, TextInput, ActionIcon, Select, Button, Input
 } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
 import {
     IconBrandOkRu,
+    IconCalendar,
     IconFilter,
     IconInfoCircle,
     IconRestore,
@@ -20,7 +21,7 @@ import FilterModel from "../../filter/FilterModel.jsx";
 import { setFetching, setSalesFilterData } from "../../../../store/inventory/crudSlice.js";
 import { DateInput } from "@mantine/dates";
 
-function _SalesSearch(props) {
+function VoucherSearch(props) {
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const { isOnline } = useOutletContext();
@@ -81,7 +82,7 @@ function _SalesSearch(props) {
                         <TextInput
                             leftSection={<IconSearch size={16} opacity={0.5} />}
                             size="sm"
-                            placeholder={t('EnterSearchAnyKeyword')}
+                            placeholder={t('ChooseVoucherType')}
                             onChange={(e) => {
                                 dispatch(setSalesFilterData({ ...salesFilterData, ['searchKeyword']: e.currentTarget.value }))
                                 e.target.value !== '' ?
@@ -119,40 +120,44 @@ function _SalesSearch(props) {
                     </Tooltip>
                 </Grid.Col>
                 <Grid.Col span={3}>
-                    <Tooltip
-                        label={t('ChooseCustomer')}
-                        opened={customerTooltip}
-                        px={16}
-                        py={2}
-                        position="top-end"
-                        color="red"
-                        withArrow
-                        offset={2}
-                        zIndex={100}
-                        transitionProps={{ transition: "pop-bottom-left", duration: 5000 }}
-                    >
-                        <Select
-                            key={resetKey}
-                            id={"Customer"}
-                            placeholder={t('ChooseCustomer')}
-                            size="sm"
-                            data={customersDropdownData}
-                            autoComplete="off"
-                            clearable
-                            searchable
-                            value={salesFilterData.customer_id}
-                            onChange={(e) => {
-                                dispatch(setSalesFilterData({ ...salesFilterData, ['customer_id']: e }))
-                                e !== '' ?
-                                    setCustomerTooltip(false) :
-                                    (setCustomerTooltip(true),
-                                        setTimeout(() => {
-                                            setCustomerTooltip(false)
-                                        }, 1000))
-                            }}
-                            comboboxProps={true}
-                        />
-                    </Tooltip>
+                    <TextInput
+
+                        size="sm"
+                        placeholder={t('EnterVoucherNo')}
+                        onChange={(e) => {
+                            dispatch(setSalesFilterData({ ...salesFilterData, ['searchKeyword']: e.currentTarget.value }))
+                            e.target.value !== '' ?
+                                setSearchKeywordTooltip(false) :
+                                (setSearchKeywordTooltip(true),
+                                    setTimeout(() => {
+                                        setSearchKeywordTooltip(false)
+                                    }, 1000))
+                        }}
+                        value={salesFilterData.searchKeyword}
+                        id={'SearchKeyword'}
+                        rightSection={
+                            salesFilterData.searchKeyword ?
+                                <Tooltip
+                                    label={t("Close")}
+                                    withArrow
+                                    bg={`red.5`}
+                                >
+                                    <IconX color={`red`} size={16} opacity={0.5} onClick={() => {
+                                        dispatch(setSalesFilterData({ ...salesFilterData, ['searchKeyword']: '' }))
+                                    }} />
+                                </Tooltip>
+                                :
+                                <Tooltip
+                                    label={t("FieldIsRequired")}
+                                    withArrow
+                                    position={"bottom"}
+                                    c={'red'}
+                                    bg={`red.1`}
+                                >
+                                    <IconInfoCircle size={16} opacity={0.5} />
+                                </Tooltip>
+                        }
+                    />
                 </Grid.Col>
                 <Grid.Col span={2}>
                     <Tooltip
@@ -168,6 +173,7 @@ function _SalesSearch(props) {
                         transitionProps={{ transition: "pop-bottom-left", duration: 5000 }}
                     >
                         <DateInput
+                            rightSection={<IconCalendar size={16} opacity={0.5} />}
                             clearable
                             onChange={(e) => {
                                 dispatch(setSalesFilterData({ ...salesFilterData, ['start_date']: e }))
@@ -197,6 +203,7 @@ function _SalesSearch(props) {
                         transitionProps={{ transition: "pop-bottom-left", duration: 5000 }}
                     >
                         <DateInput
+                            rightSection={<IconCalendar size={16} opacity={0.5} />}
                             clearable
                             onChange={(e) => {
                                 dispatch(setSalesFilterData({ ...salesFilterData, ['end_date']: e }))
@@ -295,8 +302,8 @@ function _SalesSearch(props) {
                             </Tooltip>
                         </ActionIcon>
 
-                        {
-                            Object.keys(props.checkList).length > 1 &&
+                        {/* {
+                            // Object.keys(props.checkList).length > 1 &&
                             <ActionIcon variant="transparent" c={'gray.6'} size="lg" aria-label="Settings">
                                 <Tooltip
                                     label={t("GenerateInvoice")}
@@ -319,7 +326,7 @@ function _SalesSearch(props) {
                                 </Tooltip>
                             </ActionIcon>
 
-                        }
+                        } */}
 
                     </ActionIcon.Group>
                 </Grid.Col>
@@ -333,4 +340,4 @@ function _SalesSearch(props) {
     );
 }
 
-export default _SalesSearch;
+export default VoucherSearch;

@@ -11,8 +11,8 @@
 }
 
 .mantine-Tabs-list{
-/*    height: 52px !important;*/
-  /*  border-bottom: 1px solid red!important;*/
+   /* height: 52px !important; */
+  /* border-bottom: 1px solid red!important; */
 }
 
 .titleBackground {
@@ -82,6 +82,11 @@ textarea:focus {
 }
 .borderRadiusAll{
     border: 1px solid rgba(226, 194, 194, 0.39);
+    border-radius:4px;
+}
+.borderRadiusAllVoucher{
+    border-top: 1px solid rgba(226, 194, 194, 0.39);
+    border-bottom: 1px solid rgba(226, 194, 194, 0.39);;
     border-radius:4px;
 }
 .mantine-AppShell-main{

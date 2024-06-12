@@ -53,12 +53,13 @@ import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
 import { getSettingDropdown } from "../../../../store/utility/utilitySlice.js";
 import getSettingAccountTypeDropdownData from "../../../global-hook/dropdown/getSettingAccountTypeDropdownData.js";
 import getSettingAuthorizedTypeDropdownData from "../../../global-hook/dropdown/getSettingAuthorizedTypeDropdownData.js";
+import ShortcutVoucher from "../../shortcut/ShortcutVoucher.jsx";
 
 function VoucherForm(props) {
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
-    const height = mainAreaHeight - 130; //TabList height 104
+    const height = mainAreaHeight - 240; //TabList height 104
     const [opened, { open, close }] = useDisclosure(false);
 
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
@@ -283,10 +284,6 @@ function VoucherForm(props) {
         setFilteredItems(updatedList);
     };
 
-    useEffect(() => {
-        setFilteredItems(getActions().reduce((acc, group) => [...acc, ...group.actions.map(action => ({ ...action, group: group.group }))], []));
-    }, []);
-
     return (
         <Box>
             <form onSubmit={form.onSubmit((values) => {
@@ -332,7 +329,7 @@ function VoucherForm(props) {
             })}>
                 <Grid columns={24} gutter={{ base: 8 }}>
                     <Grid.Col span={3} >
-                        <Box bg={'white'} className={'borderRadiusAll'} pt={'16'}>
+                        <Box bg={'white'} className={'borderRadiusAll'} pt={'16'} pl={0}>
                             <Box pl={`xs`} pb={'xs'} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'} >
                                 <Grid>
                                     <Grid.Col span={12} h={54}>
@@ -341,7 +338,7 @@ function VoucherForm(props) {
                                 </Grid>
                             </Box>
                             <Stack
-                                h={height}
+                                h={height + 40}
                                 bg="var(--mantine-color-body)"
                                 align="center"
                             >
@@ -543,7 +540,7 @@ function VoucherForm(props) {
                                     </Grid.Col>
                                 </Grid>
                             </Box>
-                            <ScrollArea h={height} className={'borderRadiusAll'} type="never" >
+                            <ScrollArea h={height + 35} className={'borderRadiusAll'} type="never" >
                                 <Box p={'xs'}>
                                     {filteredItems.reduce((groups, item, index) => {
                                         if (!index || item.group !== filteredItems[index - 1].group) {
@@ -621,7 +618,7 @@ function VoucherForm(props) {
                                 <Box pl={`xs`} pr={'xs'} mt={'xs'} className={'borderRadiusAll'}>
                                     <Grid columns={24}>
                                         <Grid.Col span={'auto'} >
-                                            <ScrollArea h={height} scrollbarSize={2} scrollbars="y" type="never">
+                                            <ScrollArea h={height + 33} scrollbarSize={2} scrollbars="y" type="never">
                                                 <Box>
                                                     <Box mt={'xs'}>
                                                         <SelectForm
@@ -775,7 +772,7 @@ function VoucherForm(props) {
                     </Grid.Col>
                     <Grid.Col span={1} >
                         <Box bg={'white'} className={'borderRadiusAll'} pt={'16'}>
-                            <Shortcut
+                            <ShortcutVoucher
                                 form={form}
                                 FormSubmit={'EntityFormSubmit'}
                                 Name={'method_id'}

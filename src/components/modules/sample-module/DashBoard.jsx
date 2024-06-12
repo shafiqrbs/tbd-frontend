@@ -1,5 +1,5 @@
-import React, {useState} from "react";
-import {useOutletContext} from "react-router-dom";
+import React, { useState } from "react";
+import { useOutletContext } from "react-router-dom";
 import {
     Button,
     Group,
@@ -10,7 +10,7 @@ import {
     Flex,
     LoadingOverlay,
 } from "@mantine/core";
-import {useTranslation} from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import {
     IconCircleCheck,
     IconColorFilter,
@@ -18,9 +18,9 @@ import {
     IconX,
 } from "@tabler/icons-react";
 import ThreeGrid from "./ThreeGrid";
-import {hasLength, isEmail, useForm} from "@mantine/form";
-import {modals} from '@mantine/modals';
-import {notifications} from '@mantine/notifications';
+import { hasLength, isEmail, useForm } from "@mantine/form";
+import { modals } from '@mantine/modals';
+import { notifications } from '@mantine/notifications';
 import TwoGrid from "./TwoGrid";
 import FullForm from "./FullForm";
 import FullTable from "./FullTable";
@@ -28,8 +28,8 @@ import FormAndFile from "./FormAndFile";
 
 
 function DashBoard() {
-    const {t, i18n} = useTranslation();
-    const iconStyle = {width: rem(12), height: rem(12)};
+    const { t, i18n } = useTranslation();
+    const iconStyle = { width: rem(12), height: rem(12) };
     const [activeTab, setActiveTab] = useState("ThreeGrid");
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
     const [isFormSubmit, setFormSubmit] = useState(false);
@@ -39,7 +39,7 @@ function DashBoard() {
     const form = useForm({
         initialValues: {},
         validate: {
-            name: hasLength({min: 2, max: 10}),
+            name: hasLength({ min: 2, max: 10 }),
             email: isEmail(),
 
         },
@@ -58,10 +58,10 @@ function DashBoard() {
                 color={`red.8`}
                 withArrow
                 offset={2}
-                transitionProps={{transition: "pop-bottom-left", duration: 500}}
+                transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
             >
                 <Button size="xs" color={`red.8`}>
-                    <IconColorFilter size={18}/>
+                    <IconColorFilter size={18} />
                 </Button>
             </Tooltip>
             <Tooltip
@@ -71,7 +71,7 @@ function DashBoard() {
                 color={`green.8`}
                 withArrow
                 offset={2}
-                transitionProps={{transition: "pop-bottom-left", duration: 500}}
+                transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
             >
                 <Button size="xs" ml={`xs`} color={`green.8`}>
                     CSV
@@ -85,7 +85,7 @@ function DashBoard() {
                 color={`blue.7`}
                 withArrow
                 offset={2}
-                transitionProps={{transition: "pop-bottom-left", duration: 500}}
+                transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
             >
                 <Button size="xs" ml={`xs`} color={`blue.7`}>
                     PDF
@@ -104,10 +104,10 @@ function DashBoard() {
                 withArrow
                 offset={2}
                 position={"bottom"}
-                transitionProps={{transition: "pop-bottom-left", duration: 500}}
+                transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
             >
                 <Button size="sm" color={`red.3`} variant="light">
-                    <IconX size={18}/>
+                    <IconX size={18} />
                 </Button>
             </Tooltip>
             <Tooltip
@@ -118,10 +118,10 @@ function DashBoard() {
                 withArrow
                 offset={2}
                 position={"bottom"}
-                transitionProps={{transition: "pop-bottom-left", duration: 500}}
+                transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
             >
                 <Button size="sm" ml={1} mr={1} variant="light" color={`yellow.5`}>
-                    <IconCircleCheck/>
+                    <IconCircleCheck />
                 </Button>
             </Tooltip>
 
@@ -132,12 +132,12 @@ function DashBoard() {
                     color={`blue.7`}
                     type="submit"
                 >
-                    <LoadingOverlay visible={saveCreateLoading} zIndex={1000} overlayProps={{radius: "xs", blur: 2}}
-                                    size={'xs'} position="center"/>
+                    <LoadingOverlay visible={saveCreateLoading} zIndex={1000} overlayProps={{ radius: "xs", blur: 2 }}
+                        size={'xs'} position="center" />
 
                     <Flex direction={`column`} gap={0}>
                         <Text fz={12} fw={700}>
-                            {t("CreateAndSave")} <br/>{" "}
+                            {t("CreateAndSave")} <br />{" "}
                             <Text fz={9} fw={900}>
                                 ctrl + s
                             </Text>
@@ -158,7 +158,7 @@ function DashBoard() {
                             one of these buttons to proceed.
                         </Text>
                     ),
-                    labels: {confirm: 'Confirm', cancel: 'Cancel'},
+                    labels: { confirm: 'Confirm', cancel: 'Cancel' },
                     onCancel: () => console.log('Cancel'),
                     onConfirm: () => {
                         setSaveCreateLoading(true)
@@ -187,41 +187,43 @@ function DashBoard() {
 
 
 
-                     <Tabs.Tab
+                    <Tabs.Tab
                         value="ThreeGrid"
-                        leftSection={<IconList style={iconStyle}/>}
+                        leftSection={<IconList style={iconStyle} />}
                     >
                         {t("ThreeGrid")}
                     </Tabs.Tab>
 
                     <Tabs.Tab
                         value="TwoGrid"
-                        leftSection={<IconList style={iconStyle}/>}
+                        leftSection={<IconList style={iconStyle} />}
                     >
                         {t("TwoGrid")}
                     </Tabs.Tab>
 
                     <Tabs.Tab
                         value="FullForm"
-                        leftSection={<IconList style={iconStyle}/>}
+                        leftSection={<IconList style={iconStyle} />}
                     >
                         {t("FullForm")}
                     </Tabs.Tab>
 
                     <Tabs.Tab
                         value="FullTable"
-                        leftSection={<IconList style={iconStyle}/>}
+                        leftSection={<IconList style={iconStyle} />}
                     >
                         {t("FullTable")}
                     </Tabs.Tab>
 
                     <Tabs.Tab
                         value="FormAndFile"
-                        leftSection={<IconList style={iconStyle}/>}
+                        leftSection={<IconList style={iconStyle} />}
                     >
                         {t("FormAndFile")}
                     </Tabs.Tab>
 
+
+                    {/* rendering buttons based on active tab */}
                     {activeTab === "FullTable" && tabDataListRightButtons}
                     {activeTab === "ThreeGrid" && tabCreateNewRightButtons}
                 </Tabs.List>
@@ -256,11 +258,11 @@ function DashBoard() {
                 </Tabs.Panel>
 
                 <Tabs.Panel value="FullTable">
-                    <FullTable/>
+                    <FullTable />
                 </Tabs.Panel>
 
                 <Tabs.Panel value="FormAndFile">
-                    <FormAndFile/>
+                    <FormAndFile />
                 </Tabs.Panel>
             </Tabs>
         </form>
