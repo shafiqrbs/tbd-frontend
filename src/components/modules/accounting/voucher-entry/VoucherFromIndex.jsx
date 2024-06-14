@@ -35,7 +35,7 @@ import { notifications } from "@mantine/notifications";
 
 import {
     getExecutiveDropdown, getLocationDropdown,
-} from "../../../../store/core/utilitySlice";
+} from "../../../../store/core/utilitySlice.js";
 import {
     setEntityNewData,
     setFetching,
@@ -44,11 +44,11 @@ import {
     storeEntityDataWithFile
 } from "../../../../store/accounting/crudSlice.js";
 
-import Shortcut from "../../shortcut/Shortcut";
-import InputForm from "../../../form-builders/InputForm";
-import TextAreaForm from "../../../form-builders/TextAreaForm";
+import Shortcut from "../../shortcut/Shortcut.jsx";
+import InputForm from "../../../form-builders/InputForm.jsx";
+import TextAreaForm from "../../../form-builders/TextAreaForm.jsx";
 import VoucherTable from "./VoucherTable.jsx";
-import InputNumberForm from "../../../form-builders/InputNumberForm";
+import InputNumberForm from "../../../form-builders/InputNumberForm.jsx";
 import SelectForm from "../../../form-builders/SelectForm.jsx";
 import getTransactionMethodDropdownData from "../../../global-hook/dropdown/getTransactionMethodDropdownData.js";
 import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
@@ -57,8 +57,9 @@ import getSettingAccountTypeDropdownData from "../../../global-hook/dropdown/get
 import getSettingAuthorizedTypeDropdownData from "../../../global-hook/dropdown/getSettingAuthorizedTypeDropdownData.js";
 import ShortcutVoucher from "../../shortcut/ShortcutVoucher.jsx";
 import VoucherDetailSection from "./VoucherDetailSection.jsx";
+import VoucherFormSection from "./VoucherFormSection.jsx";
 
-function VoucherForm(props) {
+function VoucherFormIndex(props) {
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
@@ -416,190 +417,8 @@ function VoucherForm(props) {
                             </Box>
                         </Grid.Col>
                         <Grid.Col span={14} >
-                            <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
-                                <Box bg={"white"} >
-                                    <Box pl={`xs`} pb={'xs'} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'} >
-                                        <Grid>
-                                            <Grid.Col span={6} h={54}>
-                                                <Title order={6} mt={'xs'} pl={'6'}>{t('CreateNewVoucher')}</Title>
-                                            </Grid.Col>
-                                            <Grid.Col span={6}>
-                                                <Stack right align="flex-end">
-                                                    <>
-                                                        {
-                                                            !saveCreateLoading && isOnline &&
-                                                            <Button
-                                                                size="xs"
-                                                                color={`red.6`}
-                                                                type="submit"
-                                                                mt={4}
-                                                                id="EntityFormSubmit"
-                                                                leftSection={<IconDeviceFloppy size={16} />}
-                                                            >
-
-                                                                <Flex direction={`column`} gap={0}>
-                                                                    <Text fz={12} fw={400}>
-                                                                        {t("CreateAndSave")}
-                                                                    </Text>
-                                                                </Flex>
-                                                            </Button>
-                                                        }
-                                                    </></Stack>
-                                            </Grid.Col>
-                                        </Grid>
-                                    </Box>
-                                    <Box pl={`xs`} pr={'xs'} mt={'xs'} className={'borderRadiusAll'}>
-                                        <Grid columns={24}>
-                                            <Grid.Col span={'auto'} >
-                                                <ScrollArea h={height + 33} scrollbarSize={2} scrollbars="y" type="never">
-                                                    <Box>
-                                                        <Box mt={'xs'}>
-                                                            <SelectForm
-                                                                tooltip={t('ChooseMethod')}
-                                                                label={t('Method')}
-                                                                placeholder={t('ChooseMethod')}
-                                                                required={true}
-                                                                nextField={'name'}
-                                                                name={'method_id'}
-                                                                form={form}
-                                                                dropdownValue={getTransactionMethodDropdownData()}
-                                                                mt={8}
-                                                                id={'method_id'}
-                                                                searchable={false}
-                                                                value={methodData}
-                                                                changeValue={setMethodData}
-                                                            />
-                                                        </Box>
-                                                        <Box mt={'xs'}>
-                                                            <InputForm
-                                                                tooltip={t('VoucherNameValidateMessage')}
-                                                                label={t('Name')}
-                                                                placeholder={t('Name')}
-                                                                required={true}
-                                                                nextField={'short_name'}
-                                                                name={'name'}
-                                                                form={form}
-                                                                mt={0}
-                                                                id={'name'}
-                                                            />
-                                                        </Box>
-                                                        <Box mt={'xs'}>
-                                                            <InputForm
-                                                                tooltip={t('ShortNameValidateMessage')}
-                                                                label={t('ShortName')}
-                                                                placeholder={t('ShortName')}
-                                                                required={true}
-                                                                nextField={'authorised_mode_id'}
-                                                                name={'short_name'}
-                                                                form={form}
-                                                                mt={0}
-                                                                id={'short_name'}
-                                                            />
-                                                        </Box>
-                                                        <Box mt={'xs'}>
-                                                            <SelectForm
-                                                                tooltip={t('ChooseAuthorised')}
-                                                                label={t('Authorised')}
-                                                                placeholder={t('ChooseAuthorised')}
-                                                                required={true}
-                                                                nextField={'account_mode_id'}
-                                                                name={'authorised_mode_id'}
-                                                                form={form}
-                                                                dropdownValue={authorizedDropdown}
-                                                                mt={8}
-                                                                id={'authorised_mode_id'}
-                                                                searchable={false}
-                                                                value={authorisedData}
-                                                                changeValue={setAuthorisedData}
-                                                            />
-                                                        </Box>
-                                                        <Box mt={'xs'}>
-                                                            <SelectForm
-                                                                tooltip={t('ChooseAccountType')}
-                                                                label={t('AccountType')}
-                                                                placeholder={t('ChooseAccountType')}
-                                                                required={true}
-                                                                nextField={'service_charge'}
-                                                                name={'account_mode_id'}
-                                                                form={form}
-                                                                dropdownValue={accountDropdown}
-                                                                mt={8}
-                                                                id={'account_mode_id'}
-                                                                searchable={false}
-                                                                value={accountTypeData}
-                                                                changeValue={setAccountTypeData}
-                                                            />
-                                                        </Box>
-                                                        <Box mt={'xs'}>
-                                                            <InputNumberForm
-                                                                tooltip={t('ServiceChargeValidationMessage')}
-                                                                label={t('ServiceCharge')}
-                                                                placeholder={t('ServiceCharge')}
-                                                                required={false}
-                                                                nextField={'account_owner'}
-                                                                name={'service_charge'}
-                                                                form={form}
-                                                                mt={'md'}
-                                                                id={'service_charge'}
-                                                            />
-                                                        </Box>
-                                                        <Box mt={'xs'}>
-                                                            <InputForm
-                                                                tooltip={t('AccountOwnerValidateMessage')}
-                                                                label={t('AccountOwner')}
-                                                                placeholder={t('AccountOwner')}
-                                                                required={false}
-                                                                nextField={'service_name'}
-                                                                name={'account_owner'}
-                                                                form={form}
-                                                                mt={8}
-                                                                id={'account_owner'}
-                                                            />
-                                                        </Box>
-                                                        <Box mt={'xs'}>
-                                                            <Tooltip
-                                                                label={t('ChooseImage')}
-                                                                opened={('path' in form.errors) && !!form.errors['path']}
-                                                                px={16}
-                                                                py={2}
-                                                                position="top-end"
-                                                                color="red"
-                                                                withArrow
-                                                                offset={2}
-                                                                zIndex={999}
-                                                                transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
-                                                            >
-                                                                <Dropzone
-                                                                    label={t('ChooseImage')}
-                                                                    accept={IMAGE_MIME_TYPE}
-                                                                    onDrop={(e) => {
-                                                                        setFiles(e)
-                                                                        form.setFieldError('path', false);
-                                                                        form.setFieldValue('path', true)
-                                                                    }}
-                                                                >
-                                                                    <Text ta="center">
-                                                                        {
-                                                                            files && files.length > 0 && files[0].path ?
-                                                                                files[0].path
-                                                                                :
-                                                                                <span>Drop images here <span style={{ color: 'red' }}>*</span></span>
-                                                                        }
-                                                                    </Text>
-                                                                </Dropzone>
-                                                            </Tooltip>
-
-                                                            <SimpleGrid cols={{ base: 1, sm: 4 }} mt={previews.length > 0 ? 'xl' : 0}>
-                                                                {previews}
-                                                            </SimpleGrid>
-                                                        </Box>
-                                                    </Box>
-                                                </ScrollArea>
-                                            </Grid.Col>
-                                        </Grid>
-                                    </Box>
-
-                                </Box>
+                            <Box >
+                                <VoucherFormSection />
                             </Box>
 
                         </Grid.Col>
@@ -619,4 +438,4 @@ function VoucherForm(props) {
         </Box >
     );
 }
-export default VoucherForm;
+export default VoucherFormIndex;

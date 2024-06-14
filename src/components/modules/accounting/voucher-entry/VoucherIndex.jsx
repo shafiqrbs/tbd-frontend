@@ -11,7 +11,7 @@ import { setInsertType } from "../../../../store/inventory/crudSlice";
 import { setSearchKeyword } from "../../../../store/core/crudSlice";
 import getConfigData from "../../../global-hook/config-data/getConfigData.js";
 import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress.js";
-import VoucherForm from "./VoucherFrom.jsx";
+import VoucherFormIndex from "./VoucherFromIndex.jsx";
 import VoucherTableNew from "./VoucherTableNew.jsx";
 import AccountingHeaderNavbar from "../AccountingHeaderNavbar";
 import { useOutletContext } from "react-router-dom";
@@ -145,7 +145,7 @@ function VoucherIndex() {
                                     </Tabs.Panel>
                                     <Tabs.Panel value="VoucherEntry" >
                                         <Box bg={'white'} >
-                                            <VoucherForm />
+                                            <VoucherFormIndex />
                                         </Box>
                                     </Tabs.Panel>
 
