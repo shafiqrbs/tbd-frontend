@@ -6,7 +6,7 @@ import {
     ActionIcon, Text, Menu, rem, Anchor
 } from "@mantine/core";
 import { useTranslation } from "react-i18next";
-import { IconEye, IconEdit, IconTrash, IconInfoCircle, IconSettings, IconEyeEdit, IconTrashX, IconPencil, IconDotsVertical } from "@tabler/icons-react";
+import { IconEye, IconEdit, IconTrash, IconInfoCircle, IconSettings, IconEyeEdit, IconTrashX, IconPencil, IconDotsVertical, IconProgress } from "@tabler/icons-react";
 import { DataTable } from 'mantine-datatable';
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -28,7 +28,7 @@ function VoucherTableInProgress() {
     const dispatch = useDispatch();
     const { t, i18n } = useTranslation();
     const { isOnline, mainAreaHeight } = useOutletContext();
-    const height = mainAreaHeight - 170; //TabList height 104
+    const height = mainAreaHeight - 171; //TabList height 104
 
     const perPage = 50;
     const [page, setPage] = useState(1);
@@ -109,6 +109,18 @@ function VoucherTableInProgress() {
                                                     <Menu.Item href="/inventory/config"
                                                     >
                                                         {t('Show')}
+                                                    </Menu.Item>
+                                                    <Menu.Item
+                                                        href={``}
+                                                        target="_blank"
+                                                        component="a"
+                                                        w={'200'}
+                                                        mt={'2'}
+                                                        bg={'red.1'}
+                                                        c={'red.5'}
+                                                        rightSection={<IconProgress style={{ width: rem(14), height: rem(14) }} />}
+                                                    >
+                                                        {t('Process')}
                                                     </Menu.Item>
                                                     <Menu.Item
                                                         href={``}
