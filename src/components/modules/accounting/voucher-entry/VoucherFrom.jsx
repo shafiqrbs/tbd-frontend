@@ -24,6 +24,8 @@ import { useTranslation } from 'react-i18next';
 import {
     IconCheck,
     IconDeviceFloppy, IconInfoCircle, IconPlus, IconRestore, IconSearch,
+    IconCreditCardPay,
+    IconCreditCardRefund
 } from "@tabler/icons-react";
 import { useDisclosure, useHotkeys } from "@mantine/hooks";
 import { useDispatch, useSelector } from "react-redux";
@@ -54,6 +56,7 @@ import { getSettingDropdown } from "../../../../store/utility/utilitySlice.js";
 import getSettingAccountTypeDropdownData from "../../../global-hook/dropdown/getSettingAccountTypeDropdownData.js";
 import getSettingAuthorizedTypeDropdownData from "../../../global-hook/dropdown/getSettingAuthorizedTypeDropdownData.js";
 import ShortcutVoucher from "../../shortcut/ShortcutVoucher.jsx";
+import VoucherDetailSection from "./VoucherDetailSection.jsx";
 
 function VoucherForm(props) {
     const { t, i18n } = useTranslation();
@@ -285,7 +288,7 @@ function VoucherForm(props) {
     };
 
     return (
-        <Box>
+        <Box className="borderRadiusAll" p={'xs'}>
             <form onSubmit={form.onSubmit((values) => {
                 dispatch(setValidationData(false))
                 modals.openConfirmModal({
@@ -327,460 +330,291 @@ function VoucherForm(props) {
                     },
                 });
             })}>
-                <Grid columns={24} gutter={{ base: 8 }}>
-                    <Grid.Col span={3} >
-                        <Box bg={'white'} className={'borderRadiusAll'} pt={'16'} pl={0}>
-                            <Box p={'sm'} className={'boxBackground borderRadiusAll'} >
-                                <Grid >
-                                    <Grid.Col span={12} h={54}>
-                                        <Title order={5} mt={'xs'} >{t('NameOfVoucher')}</Title>
-                                    </Grid.Col>
-                                </Grid>
+                <Box >
+                    <Grid columns={24} gutter={{ base: 8 }}>
+                        <Grid.Col span={2.5} >
+                            <Box>
+                                <VoucherDetailSection />
                             </Box>
-                            <Stack
-                                h={height + 45}
-                                bg="var(--mantine-color-body)"
-                                align="center"
-                            >
-                                <Center>
-                                    <Container fluid mb={'8'}>
-                                        <Tooltip
-                                            label={t('AltTextNew')}
-                                            px={16}
-                                            py={2}
-                                            withArrow
-                                            position={"left"}
-                                            c={'white'}
-                                            bg={`red.5`}
-                                            transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
-                                        >
-
-                                            <Button
-                                                size="md"
-                                                pl={'12'}
-                                                pr={'12'}
-                                                variant={'light'}
-                                                color={`red.5`}
-                                                radius="xl"
-                                                onClick={(e) => {
-                                                    props.inputType === 'select' ?
-                                                        document.getElementById(props.Name).click() :
-                                                        document.getElementById(props.Name).focus()
-                                                }}
-                                            >
-                                                <Flex direction={`column`} align={'center'}>
-                                                    <IconPlus size={16} />
-                                                </Flex>
-                                            </Button>
-                                        </Tooltip>
-                                        <Flex direction={`column`} align={'center'} fz={'12'} c={'gray.5'}>{t('CustomerVoucher')}</Flex>
-                                    </Container>
-                                </Center>
-                                <Center>
-                                    <Container fluid mb={'8'}>
-                                        <Tooltip
-                                            label={t('AltTextReset')}
-                                            px={16}
-                                            py={2}
-                                            withArrow
-                                            position={"left"}
-                                            c={'white'}
-                                            bg={`red.5`}
-                                            transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
-                                        >
-                                            <Button
-                                                size="md"
-                                                pl={'12'}
-                                                pr={'12'}
-                                                variant={'light'}
-                                                color={`red`}
-                                                radius="xl"
-                                                onClick={(e) => {
-                                                    props.form.reset()
-                                                }}
-                                            >
-                                                <Flex direction={`column`} align={'center'}>
-                                                    <IconRestore size={16} />
-                                                </Flex>
-                                            </Button>
-                                        </Tooltip>
-                                        <Flex direction={`column`} align={'center'} fz={'12'} c={'gray.5'}>{t('VendorVoucher')}</Flex>
-                                    </Container>
-                                </Center>
-                                <Center>
-                                    <Container fluid mb={'8'}>
-                                        <Tooltip
-                                            label={t('AltTextSave')}
-                                            px={16}
-                                            py={2}
-                                            withArrow
-                                            position={"left"}
-                                            c={'white'}
-                                            bg={`red.5`}
-                                            transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
-                                        >
-                                            <Button
-                                                size="md"
-                                                pl={'12'}
-                                                pr={'12'}
-                                                variant={'filled'}
-                                                color={`red`}
-                                                radius="xl"
-                                                onClick={(e) => {
-                                                    document.getElementById(props.FormSubmit).click()
-                                                }}
-                                            >
-                                                <Flex direction={`column`} align={'center'}>
-                                                    <IconDeviceFloppy size={16} />
-                                                </Flex>
-                                            </Button>
-                                        </Tooltip>
-                                        <Flex direction={`column`} align={'center'} fz={'12'} c={'gray.5'}>{t('ContraVoucher')}</Flex>
-                                    </Container>
-                                </Center>
-                                <Center>
-                                    <Container fluid mb={'8'}>
-                                        <Tooltip
-                                            label={t('AltTextSave')}
-                                            px={16}
-                                            py={2}
-                                            withArrow
-                                            position={"left"}
-                                            c={'white'}
-                                            bg={`red.5`}
-                                            transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
-                                        >
-                                            <Button
-                                                size="md"
-                                                pl={'12'}
-                                                pr={'12'}
-                                                variant={'filled'}
-                                                color={`red`}
-                                                radius="xl"
-                                                onClick={(e) => {
-                                                    document.getElementById(props.FormSubmit).click()
-                                                }}
-                                            >
-                                                <Flex direction={`column`} align={'center'}>
-                                                    <IconDeviceFloppy size={16} />
-                                                </Flex>
-                                            </Button>
-                                        </Tooltip>
-                                        <Flex direction={`column`} align={'center'} fz={'12'} c={'gray.5'}>{t('DebitNote')}</Flex>
-                                    </Container>
-                                </Center>
-                                <Center>
-                                    <Container fluid mb={'8'}>
-                                        <Tooltip
-                                            label={t('AltTextSave')}
-                                            px={16}
-                                            py={2}
-                                            withArrow
-                                            position={"left"}
-                                            c={'white'}
-                                            bg={`red.5`}
-                                            transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
-                                        >
-                                            <Button
-                                                size="md"
-                                                pl={'12'}
-                                                pr={'12'}
-                                                variant={'filled'}
-                                                color={`red`}
-                                                radius="xl"
-                                                onClick={(e) => {
-                                                    document.getElementById(props.FormSubmit).click()
-                                                }}
-                                            >
-                                                <Flex direction={`column`} align={'center'}>
-                                                    <IconDeviceFloppy size={16} />
-                                                </Flex>
-                                            </Button>
-                                        </Tooltip>
-                                        <Flex direction={`column`} align={'center'} fz={'12'} c={'gray.5'}>{t('CreditNote')}</Flex>
-                                    </Container>
-                                </Center>
-
-                            </Stack>
-                        </Box>
-                    </Grid.Col>
-                    <Grid.Col span={6} >
-                        <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
-                            <Box pl={`xs`} pb={'xs'} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'} >
-                                <Grid>
-                                    <Grid.Col span={12} h={54}>
-                                        <Box>
-                                            <TextInput
-                                                ref={ref}
-                                                data-autofocus
-                                                mb={4}
-                                                leftSection={< IconSearch size={16} c={'red'} />}
-                                                placeholder={t('SearchMenu')}
-                                                value={value}
-                                                rightSectionPointerEvents="all"
-                                                onChange={(event) => {
-                                                    setValue(event.target.value);
-                                                    filterList(event);
-                                                }}
-                                                rightSection={
-                                                    <CloseButton
-                                                        icon={<IconRestore style={{ width: rem(20) }} stroke={2.0} />}
-                                                        aria-label="Clear input"
-                                                        onClick={() => {
-                                                            setValue('');
-                                                            filterList({ target: { value: '' } });
-                                                            ref.current.focus();
-                                                        }}
-                                                        style={{ display: value ? undefined : 'none' }}
-                                                    />
-
-                                                }
-                                            />
-                                        </Box>
-                                    </Grid.Col>
-                                </Grid>
-                            </Box>
-                            <ScrollArea h={height + 35} className={'borderRadiusAll'} type="never" >
-                                <Box p={'xs'}>
-                                    {filteredItems.reduce((groups, item, index) => {
-                                        if (!index || item.group !== filteredItems[index - 1].group) {
-                                            groups.push({ group: item.group, items: [item] });
-                                        } else {
-                                            groups[groups.length - 1].items.push(item);
-                                        }
-                                        return groups;
-                                    }, []).map((groupData, groupIndex) => (
-                                        <React.Fragment key={groupIndex}>
-                                            <Text size="md" fw="bold" c="#828282" mt={groupIndex ? 'md' : undefined}>
-                                                {groupData.group}
-                                            </Text>
-                                            <Grid columns={12} grow gutter={'xs'}>
-                                                {groupData.items.map((action, itemIndex) => (
-                                                    <GridCol key={itemIndex} span={12} >
-                                                        <Stack
-                                                            bg={'grey.2'}
-                                                            ml={'sm'}
-                                                            style={{ cursor: 'pointer' }}
-                                                            gap={'0'}
-                                                            onClick={() => action.onClick()}
-                                                        >
-                                                            <Stack direction="column" mt={'xs'} gap={'0'}>
-                                                                <Title order={6} mt={'2px'}>
-                                                                    {action.label}
-                                                                </Title>
-                                                                <Text size="sm" c={'#828282'}>
-                                                                    {action.description}
-                                                                </Text>
-                                                            </Stack>
-                                                        </Stack>
-                                                    </GridCol>
-                                                ))}
-                                            </Grid>
-                                        </React.Fragment>
-                                    ))}
-                                </Box>
-                            </ScrollArea >
-                        </Box>
-                    </Grid.Col>
-                    <Grid.Col span={14} >
-                        <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
-                            <Box bg={"white"} >
+                        </Grid.Col>
+                        <Grid.Col span={6.5} >
+                            <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
                                 <Box pl={`xs`} pb={'xs'} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'} >
                                     <Grid>
-                                        <Grid.Col span={6} h={54}>
-                                            <Title order={6} mt={'xs'} pl={'6'}>{t('CreateNewVoucher')}</Title>
-                                        </Grid.Col>
-                                        <Grid.Col span={6}>
-                                            <Stack right align="flex-end">
-                                                <>
-                                                    {
-                                                        !saveCreateLoading && isOnline &&
-                                                        <Button
-                                                            size="xs"
-                                                            color={`red.6`}
-                                                            type="submit"
-                                                            mt={4}
-                                                            id="EntityFormSubmit"
-                                                            leftSection={<IconDeviceFloppy size={16} />}
-                                                        >
+                                        <Grid.Col span={12} h={54}>
+                                            <Box>
+                                                <TextInput
+                                                    ref={ref}
+                                                    data-autofocus
+                                                    mb={4}
+                                                    leftSection={< IconSearch size={16} c={'red'} />}
+                                                    placeholder={t('SearchMenu')}
+                                                    value={value}
+                                                    rightSectionPointerEvents="all"
+                                                    onChange={(event) => {
+                                                        setValue(event.target.value);
+                                                        filterList(event);
+                                                    }}
+                                                    rightSection={
+                                                        <CloseButton
+                                                            icon={<IconRestore style={{ width: rem(20) }} stroke={2.0} />}
+                                                            aria-label="Clear input"
+                                                            onClick={() => {
+                                                                setValue('');
+                                                                filterList({ target: { value: '' } });
+                                                                ref.current.focus();
+                                                            }}
+                                                            style={{ display: value ? undefined : 'none' }}
+                                                        />
 
-                                                            <Flex direction={`column`} gap={0}>
-                                                                <Text fz={12} fw={400}>
-                                                                    {t("CreateAndSave")}
-                                                                </Text>
-                                                            </Flex>
-                                                        </Button>
                                                     }
-                                                </></Stack>
+                                                />
+                                            </Box>
                                         </Grid.Col>
                                     </Grid>
                                 </Box>
-                                <Box pl={`xs`} pr={'xs'} mt={'xs'} className={'borderRadiusAll'}>
-                                    <Grid columns={24}>
-                                        <Grid.Col span={'auto'} >
-                                            <ScrollArea h={height + 33} scrollbarSize={2} scrollbars="y" type="never">
-                                                <Box>
-                                                    <Box mt={'xs'}>
-                                                        <SelectForm
-                                                            tooltip={t('ChooseMethod')}
-                                                            label={t('Method')}
-                                                            placeholder={t('ChooseMethod')}
-                                                            required={true}
-                                                            nextField={'name'}
-                                                            name={'method_id'}
-                                                            form={form}
-                                                            dropdownValue={getTransactionMethodDropdownData()}
-                                                            mt={8}
-                                                            id={'method_id'}
-                                                            searchable={false}
-                                                            value={methodData}
-                                                            changeValue={setMethodData}
-                                                        />
-                                                    </Box>
-                                                    <Box mt={'xs'}>
-                                                        <InputForm
-                                                            tooltip={t('VoucherNameValidateMessage')}
-                                                            label={t('Name')}
-                                                            placeholder={t('Name')}
-                                                            required={true}
-                                                            nextField={'short_name'}
-                                                            name={'name'}
-                                                            form={form}
-                                                            mt={0}
-                                                            id={'name'}
-                                                        />
-                                                    </Box>
-                                                    <Box mt={'xs'}>
-                                                        <InputForm
-                                                            tooltip={t('ShortNameValidateMessage')}
-                                                            label={t('ShortName')}
-                                                            placeholder={t('ShortName')}
-                                                            required={true}
-                                                            nextField={'authorised_mode_id'}
-                                                            name={'short_name'}
-                                                            form={form}
-                                                            mt={0}
-                                                            id={'short_name'}
-                                                        />
-                                                    </Box>
-                                                    <Box mt={'xs'}>
-                                                        <SelectForm
-                                                            tooltip={t('ChooseAuthorised')}
-                                                            label={t('Authorised')}
-                                                            placeholder={t('ChooseAuthorised')}
-                                                            required={true}
-                                                            nextField={'account_mode_id'}
-                                                            name={'authorised_mode_id'}
-                                                            form={form}
-                                                            dropdownValue={authorizedDropdown}
-                                                            mt={8}
-                                                            id={'authorised_mode_id'}
-                                                            searchable={false}
-                                                            value={authorisedData}
-                                                            changeValue={setAuthorisedData}
-                                                        />
-                                                    </Box>
-                                                    <Box mt={'xs'}>
-                                                        <SelectForm
-                                                            tooltip={t('ChooseAccountType')}
-                                                            label={t('AccountType')}
-                                                            placeholder={t('ChooseAccountType')}
-                                                            required={true}
-                                                            nextField={'service_charge'}
-                                                            name={'account_mode_id'}
-                                                            form={form}
-                                                            dropdownValue={accountDropdown}
-                                                            mt={8}
-                                                            id={'account_mode_id'}
-                                                            searchable={false}
-                                                            value={accountTypeData}
-                                                            changeValue={setAccountTypeData}
-                                                        />
-                                                    </Box>
-                                                    <Box mt={'xs'}>
-                                                        <InputNumberForm
-                                                            tooltip={t('ServiceChargeValidationMessage')}
-                                                            label={t('ServiceCharge')}
-                                                            placeholder={t('ServiceCharge')}
-                                                            required={false}
-                                                            nextField={'account_owner'}
-                                                            name={'service_charge'}
-                                                            form={form}
-                                                            mt={'md'}
-                                                            id={'service_charge'}
-                                                        />
-                                                    </Box>
-                                                    <Box mt={'xs'}>
-                                                        <InputForm
-                                                            tooltip={t('AccountOwnerValidateMessage')}
-                                                            label={t('AccountOwner')}
-                                                            placeholder={t('AccountOwner')}
-                                                            required={false}
-                                                            nextField={'service_name'}
-                                                            name={'account_owner'}
-                                                            form={form}
-                                                            mt={8}
-                                                            id={'account_owner'}
-                                                        />
-                                                    </Box>
-                                                    <Box mt={'xs'}>
-                                                        <Tooltip
-                                                            label={t('ChooseImage')}
-                                                            opened={('path' in form.errors) && !!form.errors['path']}
-                                                            px={16}
-                                                            py={2}
-                                                            position="top-end"
-                                                            color="red"
-                                                            withArrow
-                                                            offset={2}
-                                                            zIndex={999}
-                                                            transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
-                                                        >
-                                                            <Dropzone
-                                                                label={t('ChooseImage')}
-                                                                accept={IMAGE_MIME_TYPE}
-                                                                onDrop={(e) => {
-                                                                    setFiles(e)
-                                                                    form.setFieldError('path', false);
-                                                                    form.setFieldValue('path', true)
-                                                                }}
+                                <ScrollArea h={height + 35} className={'borderRadiusAll'} type="never" >
+                                    <Box p={'xs'}>
+                                        {filteredItems.reduce((groups, item, index) => {
+                                            if (!index || item.group !== filteredItems[index - 1].group) {
+                                                groups.push({ group: item.group, items: [item] });
+                                            } else {
+                                                groups[groups.length - 1].items.push(item);
+                                            }
+                                            return groups;
+                                        }, []).map((groupData, groupIndex) => (
+                                            <React.Fragment key={groupIndex}>
+                                                <Text size="md" fw="bold" c="#828282" mt={groupIndex ? 'md' : undefined}>
+                                                    {groupData.group}
+                                                </Text>
+                                                <Grid columns={12} grow gutter={'xs'}>
+                                                    {groupData.items.map((action, itemIndex) => (
+                                                        <GridCol key={itemIndex} span={12} >
+                                                            <Stack
+                                                                bg={'grey.2'}
+                                                                ml={'sm'}
+                                                                style={{ cursor: 'pointer' }}
+                                                                gap={'0'}
+                                                                onClick={() => action.onClick()}
                                                             >
-                                                                <Text ta="center">
-                                                                    {
-                                                                        files && files.length > 0 && files[0].path ?
-                                                                            files[0].path
-                                                                            :
-                                                                            <span>Drop images here <span style={{ color: 'red' }}>*</span></span>
-                                                                    }
-                                                                </Text>
-                                                            </Dropzone>
-                                                        </Tooltip>
-
-                                                        <SimpleGrid cols={{ base: 1, sm: 4 }} mt={previews.length > 0 ? 'xl' : 0}>
-                                                            {previews}
-                                                        </SimpleGrid>
-                                                    </Box>
-                                                </Box>
-                                            </ScrollArea>
-                                        </Grid.Col>
-                                    </Grid>
-                                </Box>
-
+                                                                <Stack direction="column" mt={'xs'} gap={'0'}>
+                                                                    <Title order={6} mt={'2px'}>
+                                                                        {action.label}
+                                                                    </Title>
+                                                                    <Text size="sm" c={'#828282'}>
+                                                                        {action.description}
+                                                                    </Text>
+                                                                </Stack>
+                                                            </Stack>
+                                                        </GridCol>
+                                                    ))}
+                                                </Grid>
+                                            </React.Fragment>
+                                        ))}
+                                    </Box>
+                                </ScrollArea >
                             </Box>
-                        </Box>
+                        </Grid.Col>
+                        <Grid.Col span={14} >
+                            <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
+                                <Box bg={"white"} >
+                                    <Box pl={`xs`} pb={'xs'} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'} >
+                                        <Grid>
+                                            <Grid.Col span={6} h={54}>
+                                                <Title order={6} mt={'xs'} pl={'6'}>{t('CreateNewVoucher')}</Title>
+                                            </Grid.Col>
+                                            <Grid.Col span={6}>
+                                                <Stack right align="flex-end">
+                                                    <>
+                                                        {
+                                                            !saveCreateLoading && isOnline &&
+                                                            <Button
+                                                                size="xs"
+                                                                color={`red.6`}
+                                                                type="submit"
+                                                                mt={4}
+                                                                id="EntityFormSubmit"
+                                                                leftSection={<IconDeviceFloppy size={16} />}
+                                                            >
 
-                    </Grid.Col>
-                    <Grid.Col span={1} >
-                        <Box bg={'white'} className={'borderRadiusAll'} pt={'16'}>
-                            <ShortcutVoucher
-                                form={form}
-                                FormSubmit={'EntityFormSubmit'}
-                                Name={'method_id'}
-                                inputType="select"
-                            />
-                        </Box>
-                    </Grid.Col>
-                </Grid>
+                                                                <Flex direction={`column`} gap={0}>
+                                                                    <Text fz={12} fw={400}>
+                                                                        {t("CreateAndSave")}
+                                                                    </Text>
+                                                                </Flex>
+                                                            </Button>
+                                                        }
+                                                    </></Stack>
+                                            </Grid.Col>
+                                        </Grid>
+                                    </Box>
+                                    <Box pl={`xs`} pr={'xs'} mt={'xs'} className={'borderRadiusAll'}>
+                                        <Grid columns={24}>
+                                            <Grid.Col span={'auto'} >
+                                                <ScrollArea h={height + 33} scrollbarSize={2} scrollbars="y" type="never">
+                                                    <Box>
+                                                        <Box mt={'xs'}>
+                                                            <SelectForm
+                                                                tooltip={t('ChooseMethod')}
+                                                                label={t('Method')}
+                                                                placeholder={t('ChooseMethod')}
+                                                                required={true}
+                                                                nextField={'name'}
+                                                                name={'method_id'}
+                                                                form={form}
+                                                                dropdownValue={getTransactionMethodDropdownData()}
+                                                                mt={8}
+                                                                id={'method_id'}
+                                                                searchable={false}
+                                                                value={methodData}
+                                                                changeValue={setMethodData}
+                                                            />
+                                                        </Box>
+                                                        <Box mt={'xs'}>
+                                                            <InputForm
+                                                                tooltip={t('VoucherNameValidateMessage')}
+                                                                label={t('Name')}
+                                                                placeholder={t('Name')}
+                                                                required={true}
+                                                                nextField={'short_name'}
+                                                                name={'name'}
+                                                                form={form}
+                                                                mt={0}
+                                                                id={'name'}
+                                                            />
+                                                        </Box>
+                                                        <Box mt={'xs'}>
+                                                            <InputForm
+                                                                tooltip={t('ShortNameValidateMessage')}
+                                                                label={t('ShortName')}
+                                                                placeholder={t('ShortName')}
+                                                                required={true}
+                                                                nextField={'authorised_mode_id'}
+                                                                name={'short_name'}
+                                                                form={form}
+                                                                mt={0}
+                                                                id={'short_name'}
+                                                            />
+                                                        </Box>
+                                                        <Box mt={'xs'}>
+                                                            <SelectForm
+                                                                tooltip={t('ChooseAuthorised')}
+                                                                label={t('Authorised')}
+                                                                placeholder={t('ChooseAuthorised')}
+                                                                required={true}
+                                                                nextField={'account_mode_id'}
+                                                                name={'authorised_mode_id'}
+                                                                form={form}
+                                                                dropdownValue={authorizedDropdown}
+                                                                mt={8}
+                                                                id={'authorised_mode_id'}
+                                                                searchable={false}
+                                                                value={authorisedData}
+                                                                changeValue={setAuthorisedData}
+                                                            />
+                                                        </Box>
+                                                        <Box mt={'xs'}>
+                                                            <SelectForm
+                                                                tooltip={t('ChooseAccountType')}
+                                                                label={t('AccountType')}
+                                                                placeholder={t('ChooseAccountType')}
+                                                                required={true}
+                                                                nextField={'service_charge'}
+                                                                name={'account_mode_id'}
+                                                                form={form}
+                                                                dropdownValue={accountDropdown}
+                                                                mt={8}
+                                                                id={'account_mode_id'}
+                                                                searchable={false}
+                                                                value={accountTypeData}
+                                                                changeValue={setAccountTypeData}
+                                                            />
+                                                        </Box>
+                                                        <Box mt={'xs'}>
+                                                            <InputNumberForm
+                                                                tooltip={t('ServiceChargeValidationMessage')}
+                                                                label={t('ServiceCharge')}
+                                                                placeholder={t('ServiceCharge')}
+                                                                required={false}
+                                                                nextField={'account_owner'}
+                                                                name={'service_charge'}
+                                                                form={form}
+                                                                mt={'md'}
+                                                                id={'service_charge'}
+                                                            />
+                                                        </Box>
+                                                        <Box mt={'xs'}>
+                                                            <InputForm
+                                                                tooltip={t('AccountOwnerValidateMessage')}
+                                                                label={t('AccountOwner')}
+                                                                placeholder={t('AccountOwner')}
+                                                                required={false}
+                                                                nextField={'service_name'}
+                                                                name={'account_owner'}
+                                                                form={form}
+                                                                mt={8}
+                                                                id={'account_owner'}
+                                                            />
+                                                        </Box>
+                                                        <Box mt={'xs'}>
+                                                            <Tooltip
+                                                                label={t('ChooseImage')}
+                                                                opened={('path' in form.errors) && !!form.errors['path']}
+                                                                px={16}
+                                                                py={2}
+                                                                position="top-end"
+                                                                color="red"
+                                                                withArrow
+                                                                offset={2}
+                                                                zIndex={999}
+                                                                transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
+                                                            >
+                                                                <Dropzone
+                                                                    label={t('ChooseImage')}
+                                                                    accept={IMAGE_MIME_TYPE}
+                                                                    onDrop={(e) => {
+                                                                        setFiles(e)
+                                                                        form.setFieldError('path', false);
+                                                                        form.setFieldValue('path', true)
+                                                                    }}
+                                                                >
+                                                                    <Text ta="center">
+                                                                        {
+                                                                            files && files.length > 0 && files[0].path ?
+                                                                                files[0].path
+                                                                                :
+                                                                                <span>Drop images here <span style={{ color: 'red' }}>*</span></span>
+                                                                        }
+                                                                    </Text>
+                                                                </Dropzone>
+                                                            </Tooltip>
+
+                                                            <SimpleGrid cols={{ base: 1, sm: 4 }} mt={previews.length > 0 ? 'xl' : 0}>
+                                                                {previews}
+                                                            </SimpleGrid>
+                                                        </Box>
+                                                    </Box>
+                                                </ScrollArea>
+                                            </Grid.Col>
+                                        </Grid>
+                                    </Box>
+
+                                </Box>
+                            </Box>
+
+                        </Grid.Col>
+                        <Grid.Col span={1} >
+                            <Box bg={'white'} className={'borderRadiusAll'} pt={'16'}>
+                                <ShortcutVoucher
+                                    form={form}
+                                    FormSubmit={'EntityFormSubmit'}
+                                    Name={'method_id'}
+                                    inputType="select"
+                                />
+                            </Box>
+                        </Grid.Col>
+                    </Grid>
+                </Box>
             </form>
         </Box >
     );

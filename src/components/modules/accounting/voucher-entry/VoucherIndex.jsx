@@ -144,7 +144,7 @@ function VoucherIndex() {
                                         </Box>
                                     </Tabs.Panel>
                                     <Tabs.Panel value="VoucherEntry" >
-                                        <Box bg={'white'} className="borderRadiusAll" p={'xs'}>
+                                        <Box bg={'white'} >
                                             <VoucherForm />
                                         </Box>
                                     </Tabs.Panel>

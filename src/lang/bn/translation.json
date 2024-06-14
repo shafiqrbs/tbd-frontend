@@ -334,5 +334,6 @@
   "InvoiceBatchInformation": "ইনভয়েস ব্যাচ ইনফরমেশন",
   "TransactionNumber": "ট্রানজেক্শন নম্বর",
   "CreatedBy": "ক্রিয়েটেড বাই",
-  "ApprovedBy": "এপ্রুভড বাই"
+  "ApprovedBy": "এপ্রুভড বাই",
+  "VoucherDetails": "ভাউচার ডিটেইলস"
 }

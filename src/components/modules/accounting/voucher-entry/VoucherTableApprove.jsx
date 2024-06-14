@@ -60,7 +60,7 @@ function VoucherTableApprove() {
     return (
         <>
 
-            <Box className={' borderRadiusAll'} bg={'white'}>
+            <Box className={' borderRadiusAllVoucherNew'} bg={'white'}>
                 <Box bg='white' className="borderRadiusAll" m={'xs'}>
                     <Box className="boxBackground" pl={`xs`} pb={'sm'} pr={8} pt={'xs'} bg={'white'}>
                         <VoucherSearch module={'customer'} />
