@@ -74,13 +74,13 @@ function VoucherIndex() {
                             allowZeroPercentage=''
                             currencySymbol=''
                         />
-                        <Box className="" p={'xs'} pt={4}>
+                        <Box className=""  >
                             <Box className="" bg={'#f0f1f9'} >
                                 <Tabs
                                     height={50}
                                     p={4}
                                     bg={'#f0f1f9'}
-                                    defaultValue=''
+                                    defaultValue='VoucherEntry'
                                     color="red.6" variant="pills" radius="sm"
                                     onChange={(value) => setActiveTab(value)}
                                 >
@@ -149,9 +149,7 @@ function VoucherIndex() {
                                         </Box>
                                     </Tabs.Panel>
 
-                                    <Box bg={'white'} className="borderRadiusAll" p={'sm'}>
-                                        {activeTab === '' && <VoucherForm />}
-                                    </Box>
+
                                 </Tabs>
 
                             </Box>

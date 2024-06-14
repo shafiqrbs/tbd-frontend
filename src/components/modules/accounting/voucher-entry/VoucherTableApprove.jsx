@@ -28,7 +28,7 @@ function VoucherTableApprove() {
     const dispatch = useDispatch();
     const { t, i18n } = useTranslation();
     const { isOnline, mainAreaHeight } = useOutletContext();
-    const height = mainAreaHeight - 195; //TabList height 104
+    const height = mainAreaHeight - 170; //TabList height 104
 
     const perPage = 50;
     const [page, setPage] = useState(1);

@@ -59,7 +59,7 @@ function VoucherForm(props) {
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
-    const height = mainAreaHeight - 240; //TabList height 104
+    const height = mainAreaHeight - 215; //TabList height 104
     const [opened, { open, close }] = useDisclosure(false);
 
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
@@ -330,15 +330,15 @@ function VoucherForm(props) {
                 <Grid columns={24} gutter={{ base: 8 }}>
                     <Grid.Col span={3} >
                         <Box bg={'white'} className={'borderRadiusAll'} pt={'16'} pl={0}>
-                            <Box pl={`xs`} pb={'xs'} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'} >
-                                <Grid>
+                            <Box p={'sm'} className={'boxBackground borderRadiusAll'} >
+                                <Grid >
                                     <Grid.Col span={12} h={54}>
-                                        <Title order={6} mt={'xs'} pl={'6'}>{t('NameOfVoucher')}</Title>
+                                        <Title order={5} mt={'xs'} >{t('NameOfVoucher')}</Title>
                                     </Grid.Col>
                                 </Grid>
                             </Box>
                             <Stack
-                                h={height + 40}
+                                h={height + 45}
                                 bg="var(--mantine-color-body)"
                                 align="center"
                             >
@@ -782,7 +782,7 @@ function VoucherForm(props) {
                     </Grid.Col>
                 </Grid>
             </form>
-        </Box>
+        </Box >
     );
 }
 export default VoucherForm;
