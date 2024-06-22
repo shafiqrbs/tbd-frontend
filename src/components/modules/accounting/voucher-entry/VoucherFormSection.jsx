@@ -1,270 +1,323 @@
-import { Stack, Box, CloseButton, Button, Container, TextInput, ScrollArea, Grid, Title, Text, Flex, Tooltip, SimpleGrid } from "@mantine/core";
+import React, { useState, useEffect, useRef } from "react";
+import {
+    Stack,
+    Box,
+    Button,
+    Grid,
+    Title,
+    Text,
+    Flex,
+    ScrollArea,
+} from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 import { useOutletContext } from "react-router-dom";
-import React, { useState, useRef, useEffect } from "react";
 import { IconDeviceFloppy } from "@tabler/icons-react";
+import { useForm } from "@mantine/form";
 import SelectForm from "../../../form-builders/SelectForm";
-import { useForm, hasLength, isNotEmpty } from "@mantine/form";
-import InputForm from "../../../form-builders/InputForm";
-import InputNumberForm from "../../../form-builders/InputNumberForm";
-import ImageUploadDropzone from "../../../form-builders/ImageUploadDropzone";
-import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
+import _SelectForm from "../../../form-builders/_SelectForm";
+import _InputForm from "../../../form-builders/_InputForm";
+import TextAreaForm from "../../../form-builders/TextAreaForm";
 
 export default function VoucherFormSection(props) {
-    const { t, i18n } = useTranslation();
+    const { t } = useTranslation();
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
     const height = mainAreaHeight - 215;
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
-    const [methodData, setMethodData] = useState(null);
-    const [authorisedData, setAuthorisedData] = useState(null);
-    const [accountTypeData, setAccountTypeData] = useState(null);
-    const [files, setFiles] = useState([]);
-
+    const [paymentMode, setPaymentMode] = useState("");
+    const [ledgerHead, setLedgerHead] = useState("");
+    const [paymentMode2, setPaymentMode2] = useState("");
+    const [nextField, setNextField] = useState("amount");
 
     const form = useForm({
-        intitialValues: {
-            method_id: '', name: '', short_name: '', authorised_mode_id: '', account_mode_id: '', service_charge: '', account_owner: '', path: ''
+        initialValues: {
+            payment_mode: "",
+            ledger_head: "",
+            cheque_no: "",
+            bank_name: "",
+            branch_name: "",
+            received_from: "",
+            amount: "",
+            narration: "",
+            pay_mode: "",
         },
         validate: {
-
-        }
-    })
-    const previews = files.map((file, index) => {
-        const imageUrl = URL.createObjectURL(file);
-        return <Image key={index} src={imageUrl} onLoad={() => URL.revokeObjectURL(imageUrl)} />;
+            amount: (value) => (value ? null : "Amount is required"),
+            narration: (value) => (value ? null : "Narration is required"),
+        },
     });
 
+    const paymentModeData = ["Debit", "Credit"];
+    const paymentModeData2 = ["Cheque", "Cash", "Transfer"];
+    const categorizedOptions = [
+        {
+            group: t("Arms&Ammunition"),
+            items: [
+                { value: "arms_ammunition_32", label: ".32 Bore Cartridges" },
+                { value: "arms_ammunition_7", label: "7 mm Cartridges" },
+            ],
+        },
+        {
+            group: t("AccountReceivable"),
+            items: [
+                {
+                    value: "account_receivable_asian",
+                    label: "15th Asian Airgun Championship, Daegu Korea",
+                },
+                {
+                    value: "account_receivable_shooting",
+                    label: "15th Asian Shooting Championship, Korea 2023",
+                },
+            ],
+        },
+        {
+            group: t("BankAccount"),
+            items: [
+                {
+                    value: "bank_account_sonali",
+                    label: "Sonali Bank, Gulshan Branch (00115633005315)",
+                },
+                { value: "bank_account_agrani", label: "Agrani Bank" },
+            ],
+        },
+    ];
+
+    const amountInputRef = useRef(null);
+    const chequeNoInputRef = useRef(null);
+    const payModeInputRef = useRef(null);
+
+    useEffect(() => {
+        if (ledgerHead && ledgerHead.startsWith("bank_account")) {
+            chequeNoInputRef.current?.focus();
+        }
+    }, [ledgerHead]);
+
+    useEffect(() => {
+        if (nextField === "pay_mode" && payModeInputRef.current) {
+            payModeInputRef.current.focus();
+        } else if (nextField === "amount" && amountInputRef.current) {
+            amountInputRef.current.focus();
+        }
+    }, [nextField]);
+
+    const handleLedgerHeadChange = (value) => {
+        form.setFieldValue("ledger_head", value);
+        setLedgerHead(value);
+        setPaymentMode2("");
+        if (value && value.startsWith("bank_account")) {
+            setNextField("cheque_no");
+        } else {
+            setNextField("amount");
+        }
+    };
+
     return (
-        <Box >
-            <form onSubmit={form.onSubmit((values) => {
-                dispatch(setValidationData(false))
-                modals.openConfirmModal({
-                    title: (
-                        <Text size="md"> {t("FormConfirmationTitle")}</Text>
-                    ),
-                    children: (
-                        <Text size="sm"> {t("FormConfirmationMessage")}</Text>
-                    ),
-                    labels: { confirm: 'Confirm', cancel: 'Cancel' }, confirmProps: { color: 'red' },
-                    onCancel: () => console.log('Cancel'),
-                    onConfirm: () => {
-                        const formValue = { ...form.values };
-                        formValue['path'] = files[0];
-
-                        const data = {
-                            url: 'accounting/transaction-mode',
-                            data: formValue
-                        }
-                        dispatch(storeEntityDataWithFile(data))
-
-                        notifications.show({
-                            color: 'teal',
-                            title: t('CreateSuccessfully'),
-                            icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
-                            loading: false,
-                            autoClose: 700,
-                            style: { backgroundColor: 'lightgray' },
-                        });
-
-                        setTimeout(() => {
-                            form.reset()
-                            setFiles([])
-                            setMethodData(null)
-                            setAccountTypeData(null)
-                            setAuthorisedData(null)
-                            dispatch(setFetching(true))
-                        }, 700)
-                    },
-                });
-            })}>
-                <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
-                    <Box bg={"white"} >
-                        <Box pl={`xs`} pb={'xs'} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'} >
+        <Box>
+            <form
+                onSubmit={form.onSubmit((values) => {
+                    console.log(values);
+                })}
+            >
+                <Box bg={"white"} p={"xs"} className={"borderRadiusAll"}>
+                    <Box bg={"white"}>
+                        <Box
+                            pl={"xs"}
+                            pb={"xs"}
+                            pr={8}
+                            pt={"xs"}
+                            mb={"xs"}
+                            className={"boxBackground borderRadiusAll"}
+                        >
                             <Grid>
                                 <Grid.Col span={6} h={54}>
-                                    <Title order={6} mt={'xs'} pl={'6'}>{t('CreateNewVoucher')}</Title>
+                                    <Title order={6} mt={"xs"} pl={"6"}>
+                                        {t("CreateNewVoucher")}
+                                    </Title>
                                 </Grid.Col>
                                 <Grid.Col span={6}>
                                     <Stack right align="flex-end">
-                                        <>
-                                            {
-                                                !saveCreateLoading && isOnline &&
-                                                <Button
-                                                    size="xs"
-                                                    color={`red.6`}
-                                                    type="submit"
-                                                    mt={4}
-                                                    id="EntityFormSubmit"
-                                                    leftSection={<IconDeviceFloppy size={16} />}
-                                                >
-
-                                                    <Flex direction={`column`} gap={0}>
-                                                        <Text fz={12} fw={400}>
-                                                            {t("CreateAndSave")}
-                                                        </Text>
-                                                    </Flex>
-                                                </Button>
-                                            }
-                                        </></Stack>
+                                        {!saveCreateLoading && isOnline && (
+                                            <Button
+                                                size="xs"
+                                                color={"red.6"}
+                                                type="submit"
+                                                mt={4}
+                                                id="EntityFormSubmit"
+                                                leftSection={<IconDeviceFloppy size={16} />}
+                                            >
+                                                <Flex direction={'column'} gap={0}>
+                                                    <Text fz={12} fw={400}>
+                                                        {t("AddVoucher")}
+                                                    </Text>
+                                                </Flex>
+                                            </Button>
+                                        )}
+                                    </Stack>
                                 </Grid.Col>
                             </Grid>
                         </Box>
-                        <Box pl={`xs`} pr={'xs'} mt={'xs'} className={'borderRadiusAll'}>
+                        <Box pl={"xs"} pr={"xs"} mt={"xs"} className={"borderRadiusAll"}>
                             <Grid columns={24}>
-                                <Grid.Col span={'auto'} >
-                                    <ScrollArea h={height + 33} scrollbarSize={2} scrollbars="y" type="never">
+                                <Grid.Col span={"auto"}>
+                                    <ScrollArea
+                                        h={height + 33}
+                                        scrollbarSize={2}
+                                        scrollbars="y"
+                                        type="never"
+                                        pb={"xs"}
+                                    >
                                         <Box>
-                                            <Box mt={'xs'}>
+                                            <Box mt={"xs"}>
                                                 <SelectForm
-                                                    tooltip={t('ChooseMethod')}
-                                                    label={t('Method')}
-                                                    placeholder={t('ChooseMethod')}
+                                                    tooltip={t("PaymentMode")}
+                                                    label={t("PaymentMode")}
+                                                    placeholder={t("ChoosePaymentMode")}
                                                     required={true}
-                                                    nextField={'name'}
-                                                    name={'method_id'}
+                                                    nextField={"ledger_head"}
+                                                    name={"payment_mode"}
                                                     form={form}
-                                                    dropdownValue={''}
+                                                    dropdownValue={paymentModeData}
                                                     mt={8}
-                                                    id={'method_id'}
+                                                    id={"payment_mode"}
                                                     searchable={false}
-                                                    value={methodData}
-                                                    changeValue={setMethodData}
+                                                    value={paymentMode}
+                                                    changeValue={(value) => {
+                                                        setPaymentMode(value);
+                                                        form.setFieldValue("payment_mode", value);
+                                                    }}
                                                 />
                                             </Box>
-                                            <Box mt={'xs'}>
-                                                <InputForm
-                                                    tooltip={t('VoucherNameValidateMessage')}
-                                                    label={t('Name')}
-                                                    placeholder={t('Name')}
-                                                    required={true}
-                                                    nextField={'short_name'}
-                                                    name={'name'}
-                                                    form={form}
-                                                    mt={0}
-                                                    id={'name'}
-                                                />
-                                            </Box>
-                                            <Box mt={'xs'}>
-                                                <InputForm
-                                                    tooltip={t('ShortNameValidateMessage')}
-                                                    label={t('ShortName')}
-                                                    placeholder={t('ShortName')}
-                                                    required={true}
-                                                    nextField={'authorised_mode_id'}
-                                                    name={'short_name'}
-                                                    form={form}
-                                                    mt={0}
-                                                    id={'short_name'}
-                                                />
-                                            </Box>
-                                            <Box mt={'xs'}>
+                                            <Box mt={"xs"}>
                                                 <SelectForm
-                                                    tooltip={t('ChooseAuthorised')}
-                                                    label={t('Authorised')}
-                                                    placeholder={t('ChooseAuthorised')}
+                                                    tooltip={t("LedgerHead")}
+                                                    label={t("LedgerHead")}
+                                                    placeholder={t("ChooseLedgerHead")}
                                                     required={true}
-                                                    nextField={'account_mode_id'}
-                                                    name={'authorised_mode_id'}
+                                                    nextField={nextField}
+                                                    name={"ledger_head"}
                                                     form={form}
-                                                    dropdownValue={''}
+                                                    dropdownValue={categorizedOptions}
                                                     mt={8}
-                                                    id={'authorised_mode_id'}
-                                                    searchable={false}
-                                                    value={authorisedData}
-                                                    changeValue={setAuthorisedData}
+                                                    id={"ledger_head"}
+                                                    searchable={true}
+                                                    value={ledgerHead}
+                                                    changeValue={handleLedgerHeadChange}
+                                                />
+                                            </Box>
+                                            {ledgerHead && ledgerHead.startsWith("bank_account") && (
+                                                <>
+                                                    <Box mt={'xs'}>
+                                                        <_InputForm
+                                                            tooltip={t('ChequeNo')}
+                                                            label={t('ChequeNo')}
+                                                            placeholder={t('ChequeNo')}
+                                                            required={true}
+                                                            nextField={'pay_mode'}
+                                                            name={'cheque_no'}
+                                                            form={form}
+                                                            mt={0}
+                                                            id={'cheque_no'}
+                                                            ref={chequeNoInputRef}
+                                                        />
+                                                    </Box>
+                                                    <Box mt={"xs"}>
+                                                        <_SelectForm
+                                                            tooltip={t("PaymentMode")}
+                                                            label={t("PaymentMode")}
+                                                            placeholder={t("ChoosePaymentMode")}
+                                                            required={true}
+                                                            nextField={"bank_name"}
+                                                            name={"pay_mode"}
+                                                            form={form}
+                                                            dropdownValue={paymentModeData2}
+                                                            mt={8}
+                                                            id={"pay_mode"}
+                                                            searchable={false}
+                                                            value={paymentMode2}
+                                                            changeValue={(value) => {
+                                                                setPaymentMode2(value);
+                                                                form.setFieldValue("pay_mode", value);
+                                                            }}
+                                                            ref={payModeInputRef}
+                                                        />
+                                                    </Box>
+                                                    <Box mt={'xs'}>
+                                                        <_InputForm
+                                                            tooltip={t('BankName')}
+                                                            label={t('BankName')}
+                                                            placeholder={t('BankName')}
+                                                            required={true}
+                                                            nextField={'branch_name'}
+                                                            name={'bank_name'}
+                                                            form={form}
+                                                            mt={0}
+                                                            id={'bank_name'}
+                                                        />
+                                                    </Box>
+                                                    <Box mt={'xs'}>
+                                                        <_InputForm
+                                                            tooltip={t('BranchName')}
+                                                            label={t('BranchName')}
+                                                            placeholder={t('BranchName')}
+                                                            required={true}
+                                                            nextField={'received_from'}
+                                                            name={'branch_name'}
+                                                            form={form}
+                                                            mt={0}
+                                                            id={'branch_name'}
+                                                        />
+                                                    </Box>
+                                                    <Box mt={'xs'}>
+                                                        <_InputForm
+                                                            tooltip={t('ReceivedFrom')}
+                                                            label={t('ReceivedFrom')}
+                                                            placeholder={t('ReceivedFrom')}
+                                                            required={true}
+                                                            nextField={'narration'}
+                                                            name={'received_from'}
+                                                            form={form}
+                                                            mt={0}
+                                                            id={'received_from'}
+                                                        />
+                                                    </Box>
+                                                </>
+                                            )}
+                                            <Box mt={'xs'}>
+                                                <TextAreaForm
+                                                    tooltip={t('Amount')}
+                                                    label={t('Amount')}
+                                                    placeholder={t('Amount')}
+                                                    required={true}
+                                                    nextField={'narration'}
+                                                    name={'amount'}
+                                                    form={form}
+                                                    mt={8}
+                                                    id={'amount'}
+                                                    ref={amountInputRef}
                                                 />
                                             </Box>
                                             <Box mt={'xs'}>
-                                                <SelectForm
-                                                    tooltip={t('ChooseAccountType')}
-                                                    label={t('AccountType')}
-                                                    placeholder={t('ChooseAccountType')}
-                                                    required={true}
-                                                    nextField={'service_charge'}
-                                                    name={'account_mode_id'}
-                                                    form={form}
-                                                    dropdownValue={''}
-                                                    mt={8}
-                                                    id={'account_mode_id'}
-                                                    searchable={false}
-                                                    value={accountTypeData}
-                                                    changeValue={setAccountTypeData}
-                                                />
-                                            </Box>
-                                            <Box mt={'xs'}>
-                                                <InputNumberForm
-                                                    tooltip={t('ServiceChargeValidationMessage')}
-                                                    label={t('ServiceCharge')}
-                                                    placeholder={t('ServiceCharge')}
+                                                <TextAreaForm
+                                                    tooltip={t('Narration')}
+                                                    label={t('Narration')}
+                                                    placeholder={t('Narration')}
                                                     required={false}
-                                                    nextField={'account_owner'}
-                                                    name={'service_charge'}
-                                                    form={form}
-                                                    mt={'md'}
-                                                    id={'service_charge'}
-                                                />
-                                            </Box>
-                                            <Box mt={'xs'}>
-                                                <InputForm
-                                                    tooltip={t('AccountOwnerValidateMessage')}
-                                                    label={t('AccountOwner')}
-                                                    placeholder={t('AccountOwner')}
-                                                    required={false}
-                                                    nextField={'service_name'}
-                                                    name={'account_owner'}
+                                                    nextField={'EntityFormSubmit'}
+                                                    name={'narration'}
                                                     form={form}
                                                     mt={8}
-                                                    id={'account_owner'}
+                                                    id={'narration'}
                                                 />
-                                            </Box>
-                                            <Box mt={'xs'}>
-                                                <Tooltip
-                                                    label={t('ChooseImage')}
-                                                    opened={('path' in form.errors) && !!form.errors['path']}
-                                                    px={16}
-                                                    py={2}
-                                                    position="top-end"
-                                                    color="red"
-                                                    withArrow
-                                                    offset={2}
-                                                    zIndex={999}
-                                                    transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
-                                                >
-                                                    <Dropzone
-                                                        label={t('ChooseImage')}
-                                                        accept={IMAGE_MIME_TYPE}
-                                                        onDrop={(e) => {
-                                                            setFiles(e)
-                                                            form.setFieldError('path', false);
-                                                            form.setFieldValue('path', true)
-                                                        }}
-                                                    >
-                                                        <Text ta="center">
-                                                            {
-                                                                files && files.length > 0 && files[0].path ?
-                                                                    files[0].path
-                                                                    :
-                                                                    <span>Drop images here <span style={{ color: 'red' }}>*</span></span>
-                                                            }
-                                                        </Text>
-                                                    </Dropzone>
-                                                </Tooltip>
-
-                                                <SimpleGrid cols={{ base: 1, sm: 4 }} mt={previews.length > 0 ? 'xl' : 0}>
-                                                    {previews}
-                                                </SimpleGrid>
                                             </Box>
                                         </Box>
                                     </ScrollArea>
                                 </Grid.Col>
                             </Grid>
                         </Box>
-
                     </Box>
                 </Box>
             </form>
         </Box>
-    )
+    );
 }

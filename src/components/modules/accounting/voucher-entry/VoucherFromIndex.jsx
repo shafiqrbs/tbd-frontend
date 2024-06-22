@@ -44,21 +44,11 @@ import {
     storeEntityDataWithFile
 } from "../../../../store/accounting/crudSlice.js";
 
-import Shortcut from "../../shortcut/Shortcut.jsx";
-import InputForm from "../../../form-builders/InputForm.jsx";
-import TextAreaForm from "../../../form-builders/TextAreaForm.jsx";
-import VoucherTable from "./VoucherTable.jsx";
-import InputNumberForm from "../../../form-builders/InputNumberForm.jsx";
-import SelectForm from "../../../form-builders/SelectForm.jsx";
-import getTransactionMethodDropdownData from "../../../global-hook/dropdown/getTransactionMethodDropdownData.js";
-import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
-import { getSettingDropdown } from "../../../../store/utility/utilitySlice.js";
 import getSettingAccountTypeDropdownData from "../../../global-hook/dropdown/getSettingAccountTypeDropdownData.js";
 import getSettingAuthorizedTypeDropdownData from "../../../global-hook/dropdown/getSettingAuthorizedTypeDropdownData.js";
 import ShortcutVoucher from "../../shortcut/ShortcutVoucher.jsx";
 import VoucherDetailSection from "./VoucherDetailSection.jsx";
 import VoucherFormSection from "./VoucherFormSection.jsx";
-import Dummm from "./dumm.jsx";
 
 function VoucherFormIndex(props) {
     const { t, i18n } = useTranslation();
@@ -419,7 +409,7 @@ function VoucherFormIndex(props) {
                         </Grid.Col>
                         <Grid.Col span={14} >
                             <Box >
-                                <Dummm />
+                                <VoucherFormSection />
                             </Box>
 
                         </Grid.Col>
