@@ -58,6 +58,7 @@ import getSettingAuthorizedTypeDropdownData from "../../../global-hook/dropdown/
 import ShortcutVoucher from "../../shortcut/ShortcutVoucher.jsx";
 import VoucherDetailSection from "./VoucherDetailSection.jsx";
 import VoucherFormSection from "./VoucherFormSection.jsx";
+import Dummm from "./dumm.jsx";
 
 function VoucherFormIndex(props) {
     const { t, i18n } = useTranslation();
@@ -418,7 +419,7 @@ function VoucherFormIndex(props) {
                         </Grid.Col>
                         <Grid.Col span={14} >
                             <Box >
-                                <VoucherFormSection />
+                                <Dummm />
                             </Box>
 
                         </Grid.Col>
