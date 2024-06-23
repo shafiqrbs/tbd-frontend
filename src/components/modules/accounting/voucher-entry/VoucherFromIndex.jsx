@@ -13,7 +13,8 @@ import {
     Title,
     Stack,
     Button,
-    Flex
+    Flex,
+    NumberInput
 } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
 import {
@@ -21,14 +22,15 @@ import {
     IconCheck,
     IconDotsVertical,
     IconTrashX,
-    IconDeviceFloppy
+    IconDeviceFloppy,
+    IconPlus
 } from "@tabler/icons-react";
 import { useDisclosure, useHotkeys } from "@mantine/hooks";
 import { useDispatch, useSelector } from "react-redux";
 import { hasLength, isNotEmpty, useForm } from "@mantine/form";
 import { modals } from "@mantine/modals";
 import { notifications } from "@mantine/notifications";
-import { DataTable } from 'mantine-datatable';
+import { DataTable, useDataTableColumns } from 'mantine-datatable';
 import {
     setFetching,
     setValidationData,
@@ -269,21 +271,43 @@ function VoucherFormIndex(props) {
                                         }}
                                         records={records}
                                         columns={[
-                                            { accessor: 'mode', title: t("Mode") },
-                                            { accessor: 'ledger_name', title: t("LedgerName") },
                                             {
-                                                accessor: 'debit', title: t("Debit"),
+                                                accessor: 'item_index',
+                                                title: t('S/N'),
+                                                width: 70,
+                                                render: (record) => (
+                                                    <ActionIcon color="red.5" size={'sm'} >
+                                                        <IconPlus height={18} width={18} stroke={1.5} />
+                                                    </ActionIcon>
+                                                ),
+                                            },
+                                            {
+                                                accessor: 'mode', title: t("Mode"), width: 100,
+                                            },
+                                            {
+                                                accessor: 'ledger_name', title: t("LedgerName"), width: 540,
+                                            },
+                                            {
+                                                accessor: 'debit',
+                                                title: t("Debit"),
+                                                width: 130,
                                                 render: (record, index) => (
-                                                    <TextInput
+                                                    <NumberInput
+                                                        hideControls
+                                                        ta={'right'}
                                                         value={record.debit}
                                                         onChange={(e) => handleInputChange(index, 'debit', e.target.value)}
                                                     />
                                                 ),
                                             },
                                             {
-                                                accessor: 'credit', title: t("Credit"),
+                                                accessor: 'credit',
+                                                title: t("Credit"),
+                                                width: 130,
+                                                resizable: true,
                                                 render: (record, index) => (
-                                                    <TextInput
+                                                    <NumberInput
+                                                        hideControls
                                                         value={record.credit}
                                                         onChange={(e) => handleInputChange(index, 'credit', e.target.value)}
                                                     />
@@ -294,38 +318,21 @@ function VoucherFormIndex(props) {
                                                 title: t("Action"),
                                                 textAlign: "right",
                                                 render: (record) => (
-                                                    <Group gap={4} justify="right" wrap="nowrap">
-                                                        <Menu position="bottom-end" offset={3} withArrow trigger="hover" openDelay={100} closeDelay={400}>
-                                                            <Menu.Target>
-                                                                <ActionIcon variant="outline" color="gray.6" radius="xl" aria-label="Settings">
-                                                                    <IconDotsVertical height={'18'} width={'18'} stroke={1.5} />
-                                                                </ActionIcon>
-                                                            </Menu.Target>
-                                                            <Menu.Dropdown>
-                                                                <Menu.Item onClick={() => console.log('Edit')}>
-                                                                    {t('Edit')}
-                                                                </Menu.Item>
-                                                                <Menu.Item onClick={() => console.log('Show')}>
-                                                                    {t('Show')}
-                                                                </Menu.Item>
-                                                                <Menu.Item
-                                                                    target="_blank"
-                                                                    component="a"
-                                                                    style={{ width: '200px', marginTop: '2px', backgroundColor: 'red.1', color: 'red.6' }}
-                                                                    rightSection={<IconTrashX style={{ width: rem(14), height: rem(14) }} />}
-                                                                    onClick={() => console.log('Delete')}
-                                                                >
-                                                                    {t('Delete')}
-                                                                </Menu.Item>
-                                                            </Menu.Dropdown>
-                                                        </Menu>
+                                                    <Group gap={8} justify="right" wrap="nowrap">
+                                                        <ActionIcon size={'sm'} variant="transparent" color="red.5">
+                                                            <IconTrashX size="xs" stroke={1.5} />
+                                                        </ActionIcon>
+
                                                     </Group>
                                                 ),
                                             },
                                         ]}
                                         fetching={fetching}
                                         totalRecords={indexData.total}
+                                        // useDataTableColumns
+                                        key={'item_index'}
                                         recordsPerPage={perPage}
+                                        // resizableColumns
                                         onPageChange={(p) => {
                                             setPage(p);
                                             dispatch(setFetching(true));
@@ -334,16 +341,6 @@ function VoucherFormIndex(props) {
                                         loaderColor="grape"
                                         height={height - 132}
                                         scrollAreaProps={{ type: 'never' }}
-                                        footer={
-                                            <Table.Tfoot>
-                                                <Table.Tr>
-                                                    <td colSpan={2} style={{ textAlign: 'right' }}>Total</td>
-                                                    <td>{totalDebit.toFixed(2)}</td>
-                                                    <td>{totalCredit.toFixed(2)}</td>
-                                                    <td></td>
-                                                </Table.Tr>
-                                            </Table.Tfoot>
-                                        }
                                     />
                                 </Box>
                             </Box>
@@ -400,13 +397,14 @@ function VoucherFormIndex(props) {
                                             <Box className="borderRadiusAll" pl={'xs'} pr={'xs'} h={154} bg={'white'}>
                                                 <Box mt={'md'} >
                                                     <TextAreaForm
-                                                        autosize
+                                                        autosize={true}
                                                         minRows={4}
+                                                        maxRows={4}
                                                         tooltip={t('Narration')}
                                                         label={t('Narration')}
                                                         placeholder={t('Narration')}
                                                         required={false}
-                                                        nextField={'EntityFormSubmit'}
+                                                        nextField={'EntityFormSubmits'}
                                                         name={'narration'}
                                                         form={form}
                                                         mt={8}
@@ -434,7 +432,7 @@ function VoucherFormIndex(props) {
                                                                 color={"red.6"}
                                                                 type="submit"
                                                                 mt={4}
-                                                                id="EntityFormSubmit"
+                                                                id="EntityFormSubmits"
                                                                 leftSection={<IconDeviceFloppy size={16} />}
                                                             >
                                                                 <Flex direction={'column'} gap={0}>
