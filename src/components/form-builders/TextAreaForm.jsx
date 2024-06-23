@@ -8,7 +8,7 @@ import { IconInfoCircle, IconX } from "@tabler/icons-react";
 import { getHotkeyHandler } from "@mantine/hooks";
 
 function TextAreaForm(props) {
-    const { label, placeholder, required, nextField, name, form, tooltip, mt, id } = props
+    const { label, placeholder, required, nextField, name, form, tooltip, mt, id, minRows, autosize } = props
     const { t, i18n } = useTranslation();
     return (
         <>
@@ -28,6 +28,8 @@ function TextAreaForm(props) {
                     transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
                 >
                     <Textarea
+                        autosize={autosize}
+                        minRows={minRows}
                         id={id}
                         size="sm"
                         label={label}

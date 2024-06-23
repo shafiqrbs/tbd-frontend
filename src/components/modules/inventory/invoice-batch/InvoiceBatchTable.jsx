@@ -399,7 +399,7 @@ function InvoiceBatchTable() {
                                         </Grid.Col>
                                     </Grid>
                                 </Box>
-                                <ScrollArea h={height + 20} scrollbarSize={2} type="never" >
+                                <ScrollArea h={height + 36} scrollbarSize={2} type="never" >
                                     <Box>
                                         <Table stickyHeader >
                                             <Table.Thead>

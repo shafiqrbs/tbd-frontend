@@ -74,7 +74,7 @@ function VoucherIndex() {
                             allowZeroPercentage=''
                             currencySymbol=''
                         />
-                        <Box className=""  >
+                        <Box   >
                             <Box className="" bg={'#f0f1f9'} >
                                 <Tabs
                                     height={50}
@@ -123,7 +123,7 @@ function VoucherIndex() {
                                             )}
                                     </Tabs.List>
 
-                                    <Tabs.Panel value="New" >
+                                    <Tabs.Panel value="New"  >
                                         <Box >
                                             <VoucherTableNew />
                                         </Box>

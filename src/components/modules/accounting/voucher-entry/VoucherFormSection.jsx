@@ -12,18 +12,24 @@ import {
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 import { useOutletContext } from "react-router-dom";
-import { IconDeviceFloppy } from "@tabler/icons-react";
+import { IconDeviceFloppy, IconCalendar } from "@tabler/icons-react";
 import { useForm } from "@mantine/form";
 import SelectForm from "../../../form-builders/SelectForm";
 import _SelectForm from "../../../form-builders/_SelectForm";
 import _InputForm from "../../../form-builders/_InputForm";
 import TextAreaForm from "../../../form-builders/TextAreaForm";
+import InputForm from "../../../form-builders-filter/InputForm";
+import InputNumberForm from "../../../form-builders/InputNumberForm";
+import { DateInput } from "@mantine/dates";
+import SwitchForm from "../../../form-builders/SwitchForm";
+
+
 
 export default function VoucherFormSection(props) {
     const { t } = useTranslation();
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
-    const height = mainAreaHeight - 215;
+    const height = mainAreaHeight - 200;
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
     const [paymentMode, setPaymentMode] = useState("");
     const [ledgerHead, setLedgerHead] = useState("");
@@ -112,6 +118,7 @@ export default function VoucherFormSection(props) {
         }
     };
 
+
     return (
         <Box>
             <form
@@ -119,49 +126,22 @@ export default function VoucherFormSection(props) {
                     console.log(values);
                 })}
             >
-                <Box bg={"white"} p={"xs"} className={"borderRadiusAll"}>
+                <Box p={"xs"} pt={'0'} className={"borderRadiusAll"}>
+                    <Box pl={"xs"} pb={"8"} pr={8} pt={"8"} mb={'xs'} mt={'xs'} className={"boxBackground borderRadiusAll"}>
+                        <Grid>
+                            <Grid.Col span={9}>
+                                <Title order={6} pl={"6"}>
+                                    {t("CreateNewVoucher")}
+                                </Title>
+                            </Grid.Col>
+                        </Grid>
+                    </Box>
                     <Box bg={"white"}>
-                        <Box
-                            pl={"xs"}
-                            pb={"xs"}
-                            pr={8}
-                            pt={"xs"}
-                            mb={"xs"}
-                            className={"boxBackground borderRadiusAll"}
-                        >
-                            <Grid>
-                                <Grid.Col span={6} h={54}>
-                                    <Title order={6} mt={"xs"} pl={"6"}>
-                                        {t("CreateNewVoucher")}
-                                    </Title>
-                                </Grid.Col>
-                                <Grid.Col span={6}>
-                                    <Stack right align="flex-end">
-                                        {!saveCreateLoading && isOnline && (
-                                            <Button
-                                                size="xs"
-                                                color={"red.6"}
-                                                type="submit"
-                                                mt={4}
-                                                id="EntityFormSubmit"
-                                                leftSection={<IconDeviceFloppy size={16} />}
-                                            >
-                                                <Flex direction={'column'} gap={0}>
-                                                    <Text fz={12} fw={400}>
-                                                        {t("AddVoucher")}
-                                                    </Text>
-                                                </Flex>
-                                            </Button>
-                                        )}
-                                    </Stack>
-                                </Grid.Col>
-                            </Grid>
-                        </Box>
-                        <Box pl={"xs"} pr={"xs"} mt={"xs"} className={"borderRadiusAll"}>
+                        <Box pl={"xs"} pr={"xs"} className={"borderRadiusAll"}>
                             <Grid columns={24}>
                                 <Grid.Col span={"auto"}>
                                     <ScrollArea
-                                        h={height + 33}
+                                        h={height - 15}
                                         scrollbarSize={2}
                                         scrollbars="y"
                                         type="never"
@@ -284,12 +264,12 @@ export default function VoucherFormSection(props) {
                                                 </>
                                             )}
                                             <Box mt={'xs'}>
-                                                <TextAreaForm
+                                                <InputNumberForm
                                                     tooltip={t('Amount')}
                                                     label={t('Amount')}
                                                     placeholder={t('Amount')}
                                                     required={true}
-                                                    nextField={'narration'}
+                                                    nextField={'EntityFormSubmit'}
                                                     name={'amount'}
                                                     form={form}
                                                     mt={8}
@@ -297,24 +277,50 @@ export default function VoucherFormSection(props) {
                                                     ref={amountInputRef}
                                                 />
                                             </Box>
-                                            <Box mt={'xs'}>
-                                                <TextAreaForm
-                                                    tooltip={t('Narration')}
-                                                    label={t('Narration')}
-                                                    placeholder={t('Narration')}
-                                                    required={false}
-                                                    nextField={'EntityFormSubmit'}
-                                                    name={'narration'}
-                                                    form={form}
-                                                    mt={8}
-                                                    id={'narration'}
-                                                />
-                                            </Box>
+
                                         </Box>
                                     </ScrollArea>
                                 </Grid.Col>
                             </Grid>
                         </Box>
+                    </Box>
+                    <Box pl={"xs"} pb={"xs"} pr={8} pt={"xs"} mt={'xs'} className={"boxBackground borderRadiusAll"}>
+                        <Grid>
+                            <Grid.Col span={8} h={54}>
+                                <InputNumberForm
+                                    tooltip={t('Amount')}
+                                    label={t('')}
+                                    placeholder={t('Amount')}
+                                    required={true}
+                                    nextField={'EntityFormSubmit'}
+                                    name={'amount'}
+                                    form={form}
+
+                                    id={'amount'}
+                                    ref={amountInputRef}
+                                />
+                            </Grid.Col>
+                            <Grid.Col span={4}>
+                                <Stack right align="flex-end">
+                                    {!saveCreateLoading && isOnline && (
+                                        <Button
+                                            size="xs"
+                                            color={"red.6"}
+                                            type="submit"
+                                            mt={4}
+                                            id="EntityFormSubmit"
+                                            leftSection={<IconDeviceFloppy size={16} />}
+                                        >
+                                            <Flex direction={'column'} gap={0}>
+                                                <Text fz={12} fw={400}>
+                                                    {t("AddVoucher")}
+                                                </Text>
+                                            </Flex>
+                                        </Button>
+                                    )}
+                                </Stack>
+                            </Grid.Col>
+                        </Grid>
                     </Box>
                 </Box>
             </form>
