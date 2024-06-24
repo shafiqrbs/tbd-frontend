@@ -163,62 +163,63 @@ export default function Header({
                 </Modal.Content>
             </Modal.Root>
             <Box bg={'white'} mb={'2'} pos={`relative`}>
-                <Grid columns={24} gutter={{ base:2}} justify="space-between">
+                <Grid columns={24} gutter={{ base: 2 }} justify="space-between">
                     <Grid.Col span={6} >
                         <NavLink
-                        href="/"
-                        c={'red'}
-                        fw={'800'}
-                        component="button"
-                        label={configData && configData.domain ? configData.domain.name : 'Store Name'}
-                        onClick={(e) => { navigate('/') }}
-                    />
+                            href="/"
+                            c={'red'}
+                            fw={'800'}
+                            component="button"
+                            label={configData && configData.domain ? configData.domain.name : 'Store Name'}
+                            onClick={(e) => { navigate('/') }}
+                        />
                     </Grid.Col>
-                    <Grid.Col span={12}  justify="flex-end"
-                              align="center"
-                              direction="row"
-                              wrap="wrap">
+                    <Grid.Col span={12} justify="flex-end"
+                        align="center"
+                        direction="row"
+                        wrap="wrap">
                         <Group >
-                                <Flex justify="center"
-                                      align="center"
-                                      direction="row"
-                                      wrap="wrap"
-                                      mih={42}
-                                      w={'100%'} border={'red'} >
-                                    <Button
-                                        leftSection={
-                                            <>
-                                                <IconSearch size={16} c={'red.5'} />
-                                                <Text fz={`xs`} pl={'xs'} c={'gray.8'}>{t("SearchMenu")}</Text>
-                                            </>
-                                        }
-                                        fullWidth
-                                        variant="transparent"
-                                        rightSection={
-                                            <>
-                                                <Kbd h={'24'} c={'gray.8'} fz={'12'}>Alt </Kbd> + <Kbd c={'gray.8'} h={'24'}
-                                                                                                       fz={'12'}> K</Kbd>
-                                            </>
-                                        }
-                                        w={`100%`}
-                                        justify="space-between"
-                                        style={{ border: `2px solid var(--mantine-color-red-8)` }}
-                                        color={`gray`}
-                                        onClick={open}
-                                    />
-                                </Flex>
+                            <Flex justify="center"
+                                align="center"
+                                direction="row"
+                                wrap="wrap"
+                                mih={42}
+                                w={'100%'} border={'red'} >
+                                <Button
+                                    leftSection={
+                                        <>
+                                            <IconSearch size={16} c={'red.5'} />
+                                            <Text fz={`xs`} pl={'xs'} c={'gray.8'}>{t("SearchMenu")}</Text>
+                                        </>
+                                    }
+                                    fullWidth
+                                    variant="transparent"
+                                    rightSection={
+                                        <>
+                                            <Kbd h={'24'} c={'gray.8'} fz={'12'}>Alt </Kbd> + <Kbd c={'gray.8'} h={'24'}
+                                                fz={'12'}> K</Kbd>
+                                        </>
+                                    }
+                                    w={`100%`}
+                                    justify="space-between"
+                                    style={{ border: `2px solid var(--mantine-color-red-8)` }}
+                                    color={`gray`}
+                                    onClick={open}
+                                    className="no-focus-outline"
+                                />
+                            </Flex>
                         </Group>
                     </Grid.Col>
                     <Grid.Col span={6} >
                         <Flex
-                              gap="sm"
-                              justify="flex-end"
-                              direction="row"
-                              v-align={'center'}
-                              wrap="wrap"
-                              mih={42}
-                              align={'right'}  px={`xs`} pr={'24'}>
-                                <Menu
+                            gap="sm"
+                            justify="flex-end"
+                            direction="row"
+                            v-align={'center'}
+                            wrap="wrap"
+                            mih={42}
+                            align={'right'} px={`xs`} pr={'24'}>
+                            <Menu
                                 onOpen={() => setLanguageOpened(true)}
                                 onClose={() => setLanguageOpened(false)}
                                 radius="md"
@@ -239,8 +240,8 @@ export default function Header({
                                                 height={18}
                                             />
                                             <span className={LanguagePickerStyle.label}>
-                                                    {languageSelected?.label}
-                                                </span>
+                                                {languageSelected?.label}
+                                            </span>
                                         </Group>
                                         <IconChevronDown
                                             size="1rem"
@@ -272,7 +273,7 @@ export default function Header({
                                 bg={`red.5`} withArrow
                                 position={"left"}
                             >
-                                <ActionIcon onClick={toggle} variant="subtle"  color={`red.4`}>
+                                <ActionIcon onClick={toggle} variant="subtle" color={`red.4`}>
                                     {fullscreen ? (
                                         <IconWindowMinimize size={24} />
                                     ) : (
@@ -281,13 +282,13 @@ export default function Header({
                                 </ActionIcon>
                             </Tooltip>
                             <Tooltip label={t("Logout")} bg={`red.5`} withArrow position={"left"}>
-                                <ActionIcon onClick={() => logout()} variant="subtle"   color={`gray.6`}>
+                                <ActionIcon onClick={() => logout()} variant="subtle" color={`gray.6`}>
                                     <IconLogout size={24} />
                                 </ActionIcon>
                             </Tooltip>
                         </Flex>
                     </Grid.Col>
-                    </Grid>
+                </Grid>
                 <Notification
                     pos={`absolute`}
                     display={isOnline ? "none" : ""}

@@ -145,3 +145,13 @@ input[type=radio]:checked + label>img {
             rotateX(10deg);*/
 }
 
+.no-focus-outline:focus {
+    outline: none !important;
+    box-shadow: none !important;
+}
+.highlightedItem {
+    background-color: #ffffff; 
+    border: 1px solid rgba(226, 194, 194, 0.39);
+    border-radius:4px;
+}
+

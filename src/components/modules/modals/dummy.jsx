@@ -42,7 +42,6 @@ function SearchModal({ onClose }) {
             return [...acc, ...filteredActions];
         }, []);
         setFilteredItems(updatedList);
-        setSelectedIndex(-1); // Reset selectedIndex when the filtered list changes
     };
 
     useEffect(() => {
@@ -51,7 +50,7 @@ function SearchModal({ onClose }) {
 
     useEffect(() => {
         if (selectedIndex >= 0 && filteredItems.length > 0) {
-            const selectedElement = document.getElementById(`item-${filteredItems[selectedIndex].index}`);
+            const selectedElement = document.getElementById(`item-${selectedIndex}`);
             if (selectedElement) {
                 selectedElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
             }
@@ -59,24 +58,14 @@ function SearchModal({ onClose }) {
     }, [selectedIndex, filteredItems]);
 
     const handleKeyDown = (event) => {
-        if (filteredItems.length === 0) return;
-
         if (event.key === 'ArrowDown') {
-            event.preventDefault(); // Prevent scrolling the page with arrow keys
-            setSelectedIndex((prevIndex) => {
-                const nextIndex = prevIndex === filteredItems.length - 1 ? 0 : prevIndex + 1;
-                return nextIndex;
-            });
+            setSelectedIndex((prevIndex) => (prevIndex + 1) % filteredItems.length);
         } else if (event.key === 'ArrowUp') {
-            event.preventDefault(); // Prevent scrolling the page with arrow keys
-            setSelectedIndex((prevIndex) => {
-                const nextIndex = prevIndex === 0 ? filteredItems.length - 1 : prevIndex - 1;
-                return nextIndex;
-            });
+            setSelectedIndex((prevIndex) => (prevIndex - 1 + filteredItems.length) % filteredItems.length);
         } else if (event.key === 'Enter' && selectedIndex >= 0) {
             const selectedAction = filteredItems[selectedIndex];
             if (selectedAction) {
-                const path = selectedAction.group === 'Production'
+                const path = selectedAction.group === 'Inventory'
                     ? `inventory/${selectedAction.id}`
                     : `${selectedAction.group.toLowerCase()}/${selectedAction.id}`;
                 navigate(path);
@@ -84,7 +73,6 @@ function SearchModal({ onClose }) {
             }
         }
     };
-
 
 
     return (
@@ -160,13 +148,13 @@ function SearchModal({ onClose }) {
                                     <GridCol key={itemIndex} span={6}>
                                         <Link
                                             to={
-                                                action.group === 'Production'
+                                                action.group === 'Inventory'
                                                     ? `inventory/${action.id}`
                                                     : `${action.group.toLowerCase()}/${action.id}`
                                             }
                                             onClick={(e) => {
                                                 e.preventDefault();
-                                                navigate(action.group === 'Production'
+                                                navigate(action.group === 'Inventory'
                                                     ? `inventory/${action.id}`
                                                     : `${action.group.toLowerCase()}/${action.id}`);
                                                 onClose();
@@ -195,6 +183,7 @@ function SearchModal({ onClose }) {
                                             </Stack>
                                         </Link>
                                     </GridCol>
+
                                 ))}
                             </Grid>
                         </React.Fragment>
