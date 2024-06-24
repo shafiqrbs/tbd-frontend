@@ -149,9 +149,18 @@ input[type=radio]:checked + label>img {
     outline: none !important;
     box-shadow: none !important;
 }
-.highlightedItem {
-    background-color: #ffffff; 
-    border: 1px solid rgba(226, 194, 194, 0.39);
-    border-radius:4px;
+
+.highlightedItem {  
+    background-color: #FF6B6B; 
+    border: 1px solid #E74C3C;
+    border-radius: 4px;
 }
 
+.highlightedItem .title {
+    font-weight: bold !important;
+    color: #FFFFFF !important; /* White for the title */
+}
+
+.highlightedItem .description {
+    color: #F0F0F0 !important; /* Very light grey for the description */
+}

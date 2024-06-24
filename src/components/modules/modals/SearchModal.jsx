@@ -17,7 +17,7 @@ function SearchModal({ onClose }) {
 
     useHotkeys([['alt+c', () => {
         setValue('');
-        filterList({ target: { value: '' } });
+        filterList('');
         ref.current.focus();
     }]], []);
 
@@ -34,15 +34,16 @@ function SearchModal({ onClose }) {
         }));
     };
 
-    const filterList = (event) => {
+    const filterList = (searchValue) => {
         const updatedList = getActions().reduce((acc, group) => {
             const filteredActions = group.actions.filter(action =>
-                action.label.toLowerCase().includes(event.target.value.toLowerCase())
+                action.label.toLowerCase().includes(searchValue.toLowerCase())
             );
             return [...acc, ...filteredActions];
         }, []);
+
         setFilteredItems(updatedList);
-        setSelectedIndex(-1); // Reset selectedIndex when the filtered list changes
+        setSelectedIndex(-1);
     };
 
     useEffect(() => {
@@ -62,17 +63,13 @@ function SearchModal({ onClose }) {
         if (filteredItems.length === 0) return;
 
         if (event.key === 'ArrowDown') {
-            event.preventDefault(); // Prevent scrolling the page with arrow keys
-            setSelectedIndex((prevIndex) => {
-                const nextIndex = prevIndex === filteredItems.length - 1 ? 0 : prevIndex + 1;
-                return nextIndex;
-            });
+            event.preventDefault();
+            setSelectedIndex((prevIndex) => (prevIndex + 1) % filteredItems.length);
         } else if (event.key === 'ArrowUp') {
-            event.preventDefault(); // Prevent scrolling the page with arrow keys
-            setSelectedIndex((prevIndex) => {
-                const nextIndex = prevIndex === 0 ? filteredItems.length - 1 : prevIndex - 1;
-                return nextIndex;
-            });
+            event.preventDefault();
+            setSelectedIndex((prevIndex) =>
+                prevIndex <= 0 ? filteredItems.length - 1 : prevIndex - 1
+            );
         } else if (event.key === 'Enter' && selectedIndex >= 0) {
             const selectedAction = filteredItems[selectedIndex];
             if (selectedAction) {
@@ -84,8 +81,6 @@ function SearchModal({ onClose }) {
             }
         }
     };
-
-
 
     return (
         <>
@@ -111,7 +106,7 @@ function SearchModal({ onClose }) {
                                     aria-label="Clear input"
                                     onClick={() => {
                                         setValue('');
-                                        filterList({ target: { value: '' } });
+                                        filterList('');
                                         ref.current.focus();
                                     }}
                                 />
@@ -124,9 +119,7 @@ function SearchModal({ onClose }) {
                                     mr={'lg'}
                                     icon={<IconXboxX style={{ width: rem(20) }} stroke={2.0} />}
                                     aria-label="Close"
-                                    onClick={() => {
-                                        onClose();
-                                    }}
+                                    onClick={onClose}
                                 />
                                 <Kbd ml={"-lg"} h={'24'} c={'gray.8'} fz={'12'}>Alt </Kbd> + <Kbd c={'gray.8'} h={'24'} fz={'12'} mr={'xl'}> X</Kbd>
                             </>
@@ -135,7 +128,7 @@ function SearchModal({ onClose }) {
                 }
                 onChange={(event) => {
                     setValue(event.target.value);
-                    filterList(event);
+                    filterList(event.target.value);
                 }}
                 onKeyDown={handleKeyDown}
                 className="no-focus-outline"
@@ -143,62 +136,71 @@ function SearchModal({ onClose }) {
 
             <ScrollArea h={'400'} className={'boxBackground borderRadiusAll'} type="never" ref={scrollRef}>
                 <Box p={'xs'}>
-                    {filteredItems.reduce((groups, item) => {
-                        if (!groups.length || item.group !== groups[groups.length - 1].group) {
-                            groups.push({ group: item.group, items: [item] });
-                        } else {
-                            groups[groups.length - 1].items.push(item);
-                        }
-                        return groups;
-                    }, []).map((groupData, groupIndex) => (
-                        <React.Fragment key={groupIndex}>
-                            <Text size="md" fw="bold" c="#828282" mt={groupIndex ? 'md' : undefined}>
-                                {groupData.group}
-                            </Text>
-                            <Grid columns={12} grow gutter={'xs'}>
-                                {groupData.items.map((action, itemIndex) => (
-                                    <GridCol key={itemIndex} span={6}>
-                                        <Link
-                                            to={
-                                                action.group === 'Production'
-                                                    ? `inventory/${action.id}`
-                                                    : `${action.group.toLowerCase()}/${action.id}`
-                                            }
-                                            onClick={(e) => {
-                                                e.preventDefault();
-                                                navigate(action.group === 'Production'
-                                                    ? `inventory/${action.id}`
-                                                    : `${action.group.toLowerCase()}/${action.id}`);
-                                                onClose();
-                                            }}
-                                            style={{ textDecoration: 'none', color: 'inherit' }}
-                                        >
-                                            <Stack
-                                                bg={'grey.2'}
-                                                ml={'sm'}
-                                                id={`item-${action.index}`}
-                                                className={selectedIndex === action.index ? 'highlightedItem' : ''}
-                                                style={{
-                                                    cursor: 'pointer',
-                                                    padding: '8px'
+                    {filteredItems.length > 0 ? (
+
+                        filteredItems.reduce((groups, item) => {
+                            if (!groups.length || item.group !== groups[groups.length - 1].group) {
+                                groups.push({ group: item.group, items: [item] });
+                            } else {
+                                groups[groups.length - 1].items.push(item);
+                            }
+                            return groups;
+                        }, []).map((groupData, groupIndex) => (
+                            <React.Fragment key={groupIndex}>
+                                <Text size="md" fw="bold" c="#828282" mt={groupIndex ? 'md' : undefined}>
+                                    {groupData.group}
+                                </Text>
+                                <Grid columns={12} grow gutter={'xs'}>
+                                    {groupData.items.map((action, itemIndex) => (
+                                        <GridCol key={itemIndex} span={6}>
+                                            <Link
+                                                to={
+                                                    action.group === 'Production'
+                                                        ? `inventory/${action.id}`
+                                                        : `${action.group.toLowerCase()}/${action.id}`
+                                                }
+                                                onClick={(e) => {
+                                                    e.preventDefault();
+                                                    navigate(action.group === 'Production'
+                                                        ? `inventory/${action.id}`
+                                                        : `${action.group.toLowerCase()}/${action.id}`);
+                                                    onClose();
                                                 }}
-                                                gap={'0'}
+                                                style={{ textDecoration: 'none', color: 'inherit' }}
                                             >
-                                                <Stack direction="column" mt={'xs'} gap={'0'}>
-                                                    <Title order={6} mt={'2px'}>
-                                                        {action.label}
-                                                    </Title>
-                                                    <Text size="sm" c={'#828282'}>
-                                                        {action.description}
-                                                    </Text>
+                                                <Stack
+                                                    bg={'grey.2'}
+                                                    ml={'sm'}
+                                                    id={`item-${action.index}`}
+                                                    className={filteredItems.indexOf(action) === selectedIndex ? 'highlightedItem' : ''}
+                                                    style={{
+                                                        cursor: 'pointer',
+                                                        padding: '8px'
+                                                    }}
+                                                    gap={'0'}
+                                                >
+                                                    <Stack direction="column" mt={'xs'} gap={'0'}>
+                                                        <Title order={6} mt={'2px'} className="title">
+                                                            {action.label}
+                                                        </Title>
+                                                        <Text size="sm" c={'#828282'} className="description">
+                                                            {action.description}
+                                                        </Text>
+                                                    </Stack>
                                                 </Stack>
-                                            </Stack>
-                                        </Link>
-                                    </GridCol>
-                                ))}
-                            </Grid>
-                        </React.Fragment>
-                    ))}
+                                            </Link>
+                                        </GridCol>
+                                    ))}
+                                </Grid>
+                            </React.Fragment>
+                        ))
+                    )
+                        : (
+                            <Text align="center" size="md" c="#828282" mt="md">
+                                {t('NoResultsFound.TryDifferentSearchTerm.')}
+                            </Text>
+                        )
+                    }
                 </Box>
             </ScrollArea>
         </>
