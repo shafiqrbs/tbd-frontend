@@ -264,11 +264,7 @@ function CustomerForm() {
                                                 <Grid gutter={{ base: 6 }}>
                                                     <Grid.Col span={6} >
                                                         <Box>
-
-                                                            <PhoneNumber
-
                                                             <InputNumberForm
-
                                                                 tooltip={t('MobileValidateMessage')}
                                                                 label={t('Mobile')}
                                                                 placeholder={t('Mobile')}

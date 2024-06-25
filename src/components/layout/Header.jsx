@@ -44,6 +44,7 @@ import {
     IconCategory
 } from "@tabler/icons-react";
 import HeaderStyle from "./../../assets/css/Header.module.css";
+import classes from "./../../assets/css/Header.module.css";
 import LanguagePickerStyle from "./../../assets/css/LanguagePicker.module.css";
 import { Spotlight, spotlight } from "@mantine/spotlight";
 import "@mantine/spotlight/styles.css";
@@ -96,12 +97,12 @@ const languages = [
 ];
 
 export default function Header({
-    isOnline,
-    navbarOpened,
-    toggleNavbar,
-    rightSidebarOpened,
-    toggleRightSideBar,
-}) {
+                                   isOnline,
+                                   navbarOpened,
+                                   toggleNavbar,
+                                   rightSidebarOpened,
+                                   toggleRightSideBar,
+                               }) {
     const [opened, { open, close }] = useDisclosure(false);
     const { t, i18n } = useTranslation();
     const navigate = useNavigate();
@@ -147,50 +148,45 @@ export default function Header({
     ));
     return (
         <>
-            <Modal.Root
-                opened={opened}
-                onClose={close}
-                size="64%"
-            >
-                <Modal.Overlay />
-                <Modal.Content p={'xs'}>
-                    <Modal.Header>
-                        <Modal.Title>{configData && configData.domain ? configData.domain.name : 'Store Name'}</Modal.Title>
-                        <Modal.CloseButton />
-                    </Modal.Header>
-                    <Modal.Body>
-                        <SearchModal onClose={close} />
-                    </Modal.Body>
-                </Modal.Content>
-            </Modal.Root>
-            <Box bg={'white'} mb={'2'} pos={`relative`}>
-                <Grid columns={24} gutter={{ base: 2 }} justify="space-between">
-                    <Grid.Col span={6} >
-                        <NavLink
-                            href="/"
-                            c={'red'}
-                            fw={'800'}
-                            component="button"
-                            label={configData && configData.domain ? configData.domain.name : 'Store Name'}
-                            onClick={(e) => { navigate('/') }}
-                        />
-                    </Grid.Col>
-                    <Grid.Col span={12} justify="flex-end"
-                        align="center"
-                        direction="row"
-                        wrap="wrap">
-
-                    <Grid.Col span={12}  justify="flex-end">
-                        <HoverCard width={600} position="bottom" radius="md" shadow="md" withinPortal>
+        <Modal.Root
+            opened={opened}
+            onClose={close}
+            size="64%"
+        >
+            <Modal.Overlay />
+            <Modal.Content p={'xs'}>
+                <Modal.Header>
+                    <Modal.Title>{configData && configData.domain ? configData.domain.name : 'Store Name'}</Modal.Title>
+                    <Modal.CloseButton />
+                </Modal.Header>
+                <Modal.Body>
+                    <SearchModal onClose={close} />
+                </Modal.Body>
+            </Modal.Content>
+        </Modal.Root>
+        <Box bg={'white'} mb={'2'} pos={`relative`}>
+            <Grid columns={24} gutter={{ base: 2 }} justify="space-between">
+                <Grid.Col span={3} >
+                    <NavLink
+                        href="/"
+                        c={'red'}
+                        fw={'800'}
+                        component="button"
+                        label={configData && configData.domain ? configData.domain.name : 'Store Name'}
+                        onClick={(e) => { navigate('/') }}
+                    />
+                </Grid.Col>
+                    <Grid.Col span={3}  justify="flex-end" align={'center'} mt={'xs'}>
+                        <HoverCard width={600} position="bottom" radius="md" shadow="md" withinPortal withArrow arrowPosition="center">
                             <HoverCard.Target>
                                 <a href="#" className={classes.link}>
                                     <Center inline>
-                                        <Box component="span" mr={5}>
-                                            Features
+                                        <Box component="span" mr={'xs'} c={'red.8'} >
+                                            Shortcut Menu
                                         </Box>
                                         <IconChevronDown
                                             style={{ width: rem(16), height: rem(16) }}
-                                            color={theme.colors.blue[6]}
+                                            color={theme.colors.red[6]}
                                         />
                                     </Center>
                                 </a>
@@ -232,11 +228,11 @@ export default function Header({
                               wrap="wrap">
                         <Group >
                             <Flex justify="center"
-                                align="center"
-                                direction="row"
-                                wrap="wrap"
-                                mih={42}
-                                w={'100%'} border={'red'} >
+                                  align="center"
+                                  direction="row"
+                                  wrap="wrap"
+                                  mih={42}
+                                  w={'100%'} border={'red'} >
                                 <Button
                                     leftSection={
                                         <>
@@ -249,7 +245,7 @@ export default function Header({
                                     rightSection={
                                         <>
                                             <Kbd h={'24'} c={'gray.8'} fz={'12'}>Alt </Kbd> + <Kbd c={'gray.8'} h={'24'}
-                                                fz={'12'}> K</Kbd>
+                                                                                                   fz={'12'}> K</Kbd>
                                         </>
                                     }
                                     w={`100%`}
@@ -324,57 +320,37 @@ export default function Header({
                                 label={fullscreen ? t("NormalScreen") : t("Fullscreen")}
                                 bg={`red.5`} withArrow
                             >
-
-                                <ActionIcon onClick={toggle} variant="subtle" color={`red.4`}>
-
-                                <ActionIcon mt={'6'}  onClick={toggle} variant="subtle"  color={`red.4`}>
-
-                                    {fullscreen ? (
-                                        <IconWindowMinimize  size={24} />
-                                    ) : (
-                                        <IconWindowMaximize  size={24} />
-                                    )}
-                                </ActionIcon>
+                                    <ActionIcon mt={'6'}  onClick={toggle} variant="subtle"  color={`red.4`}>
+                                        {fullscreen ? (
+                                            <IconWindowMinimize  size={24} />
+                                        ) : (
+                                            <IconWindowMaximize  size={24} />
+                                        )}
+                                    </ActionIcon>
                             </Tooltip>
                             <Tooltip label={t("Logout")} bg={`red.5`} withArrow position={"left"}>
-
-                                <ActionIcon onClick={() => logout()} variant="subtle" color={`gray.6`}>
-
-                                <ActionIcon onClick={() => logout()} variant="subtle" mt={'6'}   color={`gray.6`}>
-                                    <IconLogout size={24} />
-                                </ActionIcon>
+                                    <ActionIcon onClick={() => logout()} variant="subtle" mt={'6'}   color={`gray.6`}>
+                                        <IconLogout size={24} />
+                                    </ActionIcon>
                             </Tooltip>
                             <Tooltip
                                 label={isOnline ? t("Online") : t("Offline")}
                                 bg={isOnline ? ('green.5') : ('red.5') }  withArrow
                             >
-                            <ActionIcon mt={'6'} variant="filled" radius="xl"  color={isOnline ? ('green.5') : ('red.5') }>
-                                {isOnline ? (
-                                    <IconWifi color={'white'}  size={24} />
-                                ) : (
-                                    <IconWifiOff color={'white'}  size={24} />
-                                )}
-                            </ActionIcon>
+                                <ActionIcon mt={'6'} variant="filled" radius="xl"  color={isOnline ? ('green.5') : ('red.5') }>
+                                    {isOnline ? (
+                                        <IconWifi color={'white'}  size={24} />
+                                    ) : (
+                                        <IconWifiOff color={'white'}  size={24} />
+                                    )}
+                                </ActionIcon>
                             </Tooltip>
                         </Flex>
                     </Grid.Col>
 
-                </Grid>
-                <Notification
-                    pos={`absolute`}
-                    display={isOnline ? "none" : ""}
-                    right={0}
-                    top={5}
-                    withCloseButton={false}
-                    icon={<IconWifiOff />}
-                    color={`yellow`}
-                    radius="xs"
-                    title={t("Offline")}
-                ></Notification>
+            </Grid>
 
-                    </Grid>
-
-            </Box>
-        </>
-    );
+        </Box>
+</>
+);
 }
