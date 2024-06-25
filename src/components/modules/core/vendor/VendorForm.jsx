@@ -30,6 +30,7 @@ import getCustomerDropdownData from "../../../global-hook/dropdown/getCustomerDr
 import CategoryGroupModal from "../../inventory/category/CategoryGroupModal";
 import SwitchForm from "../../../form-builders/SwitchForm";
 import InputNumberForm from "../../../form-builders/InputNumberForm";
+import PhoneNumber from "../../../form-builders/PhoneNumberInput.jsx";
 
 function VendorForm() {
     const { t, i18n } = useTranslation();
@@ -65,6 +66,7 @@ function VendorForm() {
     return (
         <Box>
             <form onSubmit={form.onSubmit((values) => {
+                console.log(values);
                 modals.openConfirmModal({
                     title: (
                         <Text size="md"> {t("FormConfirmationTitle")}</Text>
@@ -165,8 +167,9 @@ function VendorForm() {
                                                     mt={8}
                                                 />
                                             </Box>
+                                            
                                             <Box mt={'xs'}>
-                                                <InputForm
+                                                <PhoneNumber
                                                     form={form}
                                                     tooltip={t('MobileValidateMessage')}
                                                     label={t('VendorMobile')}
@@ -177,6 +180,7 @@ function VendorForm() {
                                                     nextField={'TPPercent'}
                                                     mt={8}
                                                 />
+
                                             </Box>
                                             <Box mt={'xs'}>
                                                 <InputNumberForm

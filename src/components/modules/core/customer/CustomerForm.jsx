@@ -27,6 +27,7 @@ import getLocationDropdownData from "../../../global-hook/dropdown/getLocationDr
 import getExecutiveDropdownData from "../../../global-hook/dropdown/getExecutiveDropdownData.js";
 import getCoreSettingCustomerGroupDropdownData
     from "../../../global-hook/dropdown/getCoreSettingCustomerGroupDropdownData.js";
+import PhoneNumber from "../../../form-builders/PhoneNumberInput.jsx";
 
 function CustomerForm() {
     const { t, i18n } = useTranslation();
@@ -138,6 +139,7 @@ function CustomerForm() {
     return (
         <Box>
             <form onSubmit={form.onSubmit((values) => {
+                
                 dispatch(setValidationData(false))
                 modals.openConfirmModal({
                     title: (
@@ -265,7 +267,7 @@ function CustomerForm() {
                                                 <Grid gutter={{ base: 6 }}>
                                                     <Grid.Col span={6} >
                                                         <Box>
-                                                            <InputForm
+                                                            <PhoneNumber
                                                                 tooltip={t('MobileValidateMessage')}
                                                                 label={t('Mobile')}
                                                                 placeholder={t('Mobile')}

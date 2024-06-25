@@ -9,6 +9,11 @@ import { getShowEntityData } from "../../../../store/inventory/crudSlice.js";
 import SampleInvoiceItemForm from "./SampleInvoiceItemForm";
 import SampleHeaderNavbar from "./SampleHeaderNavbar";
 import SampleTableView from "./SampleTableView";
+import PhoneNumber from "../../../form-builders/PhoneNumberInput.jsx";
+import { useForm } from "@mantine/form";
+import { IconInfoCircle } from "@tabler/icons-react";
+
+
 function SampleInvoice() {
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
@@ -28,6 +33,25 @@ function SampleInvoice() {
         dispatch(getShowEntityData('inventory/config'))
     }, []);
 
+    const form = useForm({
+        initialValues: {
+            mobile: '',
+        },
+        validate: {
+            mobile: (value) => {
+                if (!value) return 'MobileRequired';
+                if (!/^\d+$/.test(value.replace(/[+\s]/g, ''))) return 'MobileMustBeDigit';
+                return null;
+            },
+        },
+        validateInputOnChange: true,
+    });
+
+    const handleSubmit = (values) => {
+        console.log(values);
+        // Here you would typically send the data to a server
+    };
+
     return (
         <>
             {progress !== 100 &&
@@ -42,11 +66,28 @@ function SampleInvoice() {
                     />
                     <Box p={'8'}>
                         {
-                            insertType === 'create' && configData.business_model.slug === 'general' &&
-                            <SampleTableView
-                                allowZeroPercentage={configData.zero_stock}
-                                currancySymbol={configData.currency.symbol}
-                            />
+                            // insertType === 'create' && configData.business_model.slug === 'general' &&
+                            // <SampleTableView
+                            //     allowZeroPercentage={configData.zero_stock}
+                            //     currancySymbol={configData.currency.symbol}
+                            // />
+                            <form onSubmit={form.onSubmit(handleSubmit)}>
+                                <Grid columns={12}>
+                                    <Grid.Col span={3}>
+                                        <PhoneNumber
+                                            name="mobile"
+                                            label={t('Mobile')}
+                                            placeholder={t('EnterMobile')}
+                                            required
+                                            form={form}
+                                            value={form.values.mobile}
+                                            onChange={(value) => form.setFieldValue('mobile', value)}
+                                            tooltip={t('EnterMobileNumber')}
+                                        />
+                                    </Grid.Col>
+                                </Grid>
+                                <Button type="submit" mt="md">{t('Submit')}</Button>
+                            </form>
                         }
                     </Box>
                 </Box>
