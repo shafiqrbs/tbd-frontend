@@ -39,6 +39,7 @@ import {
     IconChevronLeft,
     IconChevronRight,
     IconWifiOff,
+    IconWifi,
     IconTableShortcut,
     IconCategory
 } from "@tabler/icons-react";
@@ -178,6 +179,57 @@ export default function Header({
                         align="center"
                         direction="row"
                         wrap="wrap">
+
+                    <Grid.Col span={12}  justify="flex-end">
+                        <HoverCard width={600} position="bottom" radius="md" shadow="md" withinPortal>
+                            <HoverCard.Target>
+                                <a href="#" className={classes.link}>
+                                    <Center inline>
+                                        <Box component="span" mr={5}>
+                                            Features
+                                        </Box>
+                                        <IconChevronDown
+                                            style={{ width: rem(16), height: rem(16) }}
+                                            color={theme.colors.blue[6]}
+                                        />
+                                    </Center>
+                                </a>
+                            </HoverCard.Target>
+
+                            <HoverCard.Dropdown style={{ overflow: 'hidden' }}>
+                                <Group justify="space-between" px="md">
+                                    <Text fw={500}>Features</Text>
+                                    <Anchor href="#" fz="xs">
+                                        View all
+                                    </Anchor>
+                                </Group>
+
+                                <Divider my="sm" />
+
+                                <SimpleGrid cols={2} spacing={0}>
+                                    {links}
+                                </SimpleGrid>
+
+                                <div className={classes.dropdownFooter}>
+                                    <Group justify="space-between">
+                                        <div>
+                                            <Text fw={500} fz="sm">
+                                                Get started
+                                            </Text>
+                                            <Text size="xs" c="dimmed">
+                                                Their food sources have decreased, and their numbers
+                                            </Text>
+                                        </div>
+                                        <Button variant="default">Get started</Button>
+                                    </Group>
+                                </div>
+                            </HoverCard.Dropdown>
+                        </HoverCard>
+                    </Grid.Col>
+                    <Grid.Col span={12}  justify="flex-end"
+                              align="center"
+                              direction="row"
+                              wrap="wrap">
                         <Group >
                             <Flex justify="center"
                                 align="center"
@@ -271,23 +323,42 @@ export default function Header({
                             <Tooltip
                                 label={fullscreen ? t("NormalScreen") : t("Fullscreen")}
                                 bg={`red.5`} withArrow
-                                position={"left"}
                             >
+
                                 <ActionIcon onClick={toggle} variant="subtle" color={`red.4`}>
+
+                                <ActionIcon mt={'6'}  onClick={toggle} variant="subtle"  color={`red.4`}>
+
                                     {fullscreen ? (
-                                        <IconWindowMinimize size={24} />
+                                        <IconWindowMinimize  size={24} />
                                     ) : (
-                                        <IconWindowMaximize size={24} />
+                                        <IconWindowMaximize  size={24} />
                                     )}
                                 </ActionIcon>
                             </Tooltip>
                             <Tooltip label={t("Logout")} bg={`red.5`} withArrow position={"left"}>
+
                                 <ActionIcon onClick={() => logout()} variant="subtle" color={`gray.6`}>
+
+                                <ActionIcon onClick={() => logout()} variant="subtle" mt={'6'}   color={`gray.6`}>
                                     <IconLogout size={24} />
                                 </ActionIcon>
                             </Tooltip>
+                            <Tooltip
+                                label={isOnline ? t("Online") : t("Offline")}
+                                bg={isOnline ? ('green.5') : ('red.5') }  withArrow
+                            >
+                            <ActionIcon mt={'6'} variant="filled" radius="xl"  color={isOnline ? ('green.5') : ('red.5') }>
+                                {isOnline ? (
+                                    <IconWifi color={'white'}  size={24} />
+                                ) : (
+                                    <IconWifiOff color={'white'}  size={24} />
+                                )}
+                            </ActionIcon>
+                            </Tooltip>
                         </Flex>
                     </Grid.Col>
+
                 </Grid>
                 <Notification
                     pos={`absolute`}
@@ -300,6 +371,9 @@ export default function Header({
                     radius="xs"
                     title={t("Offline")}
                 ></Notification>
+
+                    </Grid>
+
             </Box>
         </>
     );

@@ -69,7 +69,6 @@
     text-align: center !important;
 }
 
-
 input:focus {
     border: 1px solid rgba(226,194,194,0.39);
 }
@@ -84,6 +83,7 @@ textarea:focus {
     border: 1px solid rgba(226, 194, 194, 0.39);
     border-radius:4px;
 }
+
 .borderRadiusAllVoucherNew{
   border-top: 1px solid rgba(226, 194, 194, 0.39);  
   border-left: 1px solid rgba(226, 194, 194, 0.39);
@@ -94,6 +94,33 @@ textarea:focus {
     border-bottom: 1px solid rgba(226, 194, 194, 0.39);;
     border-radius:4px;
 }
+
+
+.border-top-none{
+    border-top:none;
+    border-radius:0;
+}
+.border-bottom-none{
+    border-bottom:none;
+    border-radius:0;
+}
+.border-left-none{
+    border-left:none;
+    border-radius:0;
+}
+.border-right-none{
+    border-right:none;
+    border-radius:0;
+}
+
+.form-box-title{
+
+}
+.form-box-table{
+
+}
+
+
 .mantine-AppShell-main{
     padding-top: 42px !important;
     padding-bottom: 0 !important;

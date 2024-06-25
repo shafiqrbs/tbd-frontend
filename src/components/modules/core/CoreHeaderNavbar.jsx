@@ -43,12 +43,12 @@ function CoreHeaderNavbar(props) {
                 <div className={classes.inner}>
                     <Group ml={10}><Text>{pageTitle}</Text></Group>
                     <Group>
-                        <Group ml={50} gap={5} className={classes.links} visibleFrom="sm">
+                        <Group ml={50} gap={5} className={classes.links} visibleFrom="sm" mt={'2'} >
                             {items}
                         </Group>
-                        <Menu withArrow arrowPosition="center" trigger="hover" openDelay={100} closeDelay={400} mr={'xs'}>
+                        <Menu withArrow arrowPosition="center" trigger="hover" openDelay={100} closeDelay={400} mr={'8'}>
                             <Menu.Target>
-                                <ActionIcon variant="filled" color="red.5" radius="xl" aria-label="Settings">
+                                <ActionIcon mt={'4'} variant="filled" color="red.5" radius="xl" aria-label="Settings">
                                     <IconInfoCircle height={'12'} width={'12'} stroke={1.5} />
                                 </ActionIcon>
                             </Menu.Target>

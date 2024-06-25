@@ -242,7 +242,6 @@ function _SalesTable() {
                                                         <Menu.Dropdown>
                                                             <Menu.Item
                                                                 href={`/inventory/sales/edit/${data.id}`}
-                                                                target="_blank"
                                                                 component="a"
                                                                 w={'200'}
                                                             >
@@ -251,7 +250,11 @@ function _SalesTable() {
 
                                                             <Menu.Item
                                                                 href={``}
-                                                                target="_blank"
+                                                                onClick={(e) => {
+                                                                    e.preventDefault();
+                                                                    setLoading(true)
+                                                                    setSalesViewData(item)
+                                                                }}
                                                                 component="a"
                                                                 w={'200'}
                                                             >
@@ -259,7 +262,6 @@ function _SalesTable() {
                                                             </Menu.Item>
                                                             <Menu.Item
                                                                 href={``}
-                                                                target="_blank"
                                                                 component="a"
                                                                 w={'200'}
                                                                 mt={'2'}

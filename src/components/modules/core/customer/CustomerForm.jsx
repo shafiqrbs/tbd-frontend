@@ -28,12 +28,14 @@ import getExecutiveDropdownData from "../../../global-hook/dropdown/getExecutive
 import getCoreSettingCustomerGroupDropdownData
     from "../../../global-hook/dropdown/getCoreSettingCustomerGroupDropdownData.js";
 import PhoneNumber from "../../../form-builders/PhoneNumberInput.jsx";
+import InputNumberForm from "../../../form-builders/InputNumberForm";
+
 
 function CustomerForm() {
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
-    const height = mainAreaHeight - 130; //TabList height 104
+    const height = mainAreaHeight - 100; //TabList height 104
     const [opened, { open, close }] = useDisclosure(false);
 
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
@@ -163,10 +165,10 @@ function CustomerForm() {
                     <Grid.Col span={8} >
                         <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
                             <Box bg={"white"} >
-                                <Box pl={`xs`} pb={'xs'} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'} >
+                                <Box pl={`xs`} pr={8} pt={'6'} pb={'6'} mb={'4'} className={'boxBackground borderRadiusAll'} >
                                     <Grid>
-                                        <Grid.Col span={6} h={54}>
-                                            <Title order={6} mt={'xs'} pl={'6'}>{t('CreateCustomer')}</Title>
+                                        <Grid.Col span={6}>
+                                            <Title order={6} pt={'6'}>{t('CreateCustomer')}</Title>
                                         </Grid.Col>
                                         <Grid.Col span={6}>
                                             <Stack right align="flex-end">
@@ -175,25 +177,21 @@ function CustomerForm() {
                                                         !saveCreateLoading && isOnline &&
                                                         <Button
                                                             size="xs"
-                                                            color={`red.6`}
+                                                            color={`green.8`}
                                                             type="submit"
-                                                            mt={4}
                                                             id="EntityFormSubmit"
-                                                            leftSection={<IconDeviceFloppy size={16} />}
-                                                        >
-
+                                                            leftSection={<IconDeviceFloppy size={16} />}>
                                                             <Flex direction={`column`} gap={0}>
-                                                                <Text fz={14} fw={400}>
-                                                                    {t("CreateAndSave")}
-                                                                </Text>
+                                                                <Text fz={14} fw={400}> {t("CreateAndSave")}</Text>
                                                             </Flex>
                                                         </Button>
                                                     }
-                                                </></Stack>
+                                                </>
+                                            </Stack>
                                         </Grid.Col>
                                     </Grid>
                                 </Box>
-                                <Box pl={`xs`} pr={'xs'} mt={'xs'} className={'borderRadiusAll'}>
+                                <Box pl={`xs`} pr={'xs'} className={'borderRadiusAll'}>
                                     <ScrollArea h={height} scrollbarSize={2} scrollbars="y" type="never">
                                         <Box>
                                             {
@@ -202,7 +200,6 @@ function CustomerForm() {
                                                     <List withPadding size="sm">
                                                         {validationMessage.name && <List.Item>{t('NameValidateMessage')}</List.Item>}
                                                         {validationMessage.mobile && <List.Item>{t('MobileValidateMessage')}</List.Item>}
-                                                        {validationMessage.alternative_mobile && <List.Item>{t('AlternativeMobile')}</List.Item>}
                                                     </List>
                                                 }></Alert>
                                             }
@@ -267,7 +264,11 @@ function CustomerForm() {
                                                 <Grid gutter={{ base: 6 }}>
                                                     <Grid.Col span={6} >
                                                         <Box>
+
                                                             <PhoneNumber
+
+                                                            <InputNumberForm
+
                                                                 tooltip={t('MobileValidateMessage')}
                                                                 label={t('Mobile')}
                                                                 placeholder={t('Mobile')}
@@ -282,7 +283,7 @@ function CustomerForm() {
                                                     </Grid.Col>
                                                     <Grid.Col span={6}>
                                                         <Box>
-                                                            <InputForm
+                                                            <InputNumberForm
                                                                 tooltip={t('MobileValidateMessage')}
                                                                 label={t('AlternativeMobile')}
                                                                 placeholder={t('AlternativeMobile')}
@@ -316,21 +317,7 @@ function CustomerForm() {
                                                     <Grid.Col span={6} >
                                                         <Box>
                                                             <InputForm
-                                                                tooltip={t('OpeningValidateMessage')}
-                                                                label={t('Opening')}
-                                                                placeholder={t('Opening')}
-                                                                required={false}
-                                                                nextField={'credit_limit'}
-                                                                name={'opening'}
-                                                                form={form}
-                                                                id={'opening'}
-                                                            />
-                                                        </Box>
-                                                    </Grid.Col>
-                                                    <Grid.Col span={6}>
-                                                        <Box>
-                                                            <InputForm
-                                                                tooltip={t('CreditLimitValidateMessage')}
+                                                                tooltip={t('CreditLimit')}
                                                                 label={t('CreditLimit')}
                                                                 placeholder={t('CreditLimit')}
                                                                 required={false}
@@ -341,22 +328,23 @@ function CustomerForm() {
                                                             />
                                                         </Box>
                                                     </Grid.Col>
+                                                    <Grid.Col span={6}>
+                                                        <Box>
+                                                            <InputForm
+                                                                tooltip={t('OLDReferenceNo')}
+                                                                label={t('OLDReferenceNo')}
+                                                                placeholder={t('OLDReferenceNo')}
+                                                                required={false}
+                                                                nextField={'location_id'}
+                                                                name={'reference_id'}
+                                                                form={form}
+                                                                mt={8}
+                                                                id={'reference_id'}
+                                                            />
+                                                        </Box>
+                                                    </Grid.Col>
                                                 </Grid>
                                             </Box>
-                                            <Box mt={'xs'}>
-                                                <InputForm
-                                                    tooltip={t('OLDReferenceNo')}
-                                                    label={t('OLDReferenceNo')}
-                                                    placeholder={t('OLDReferenceNo')}
-                                                    required={false}
-                                                    nextField={'location_id'}
-                                                    name={'reference_id'}
-                                                    form={form}
-                                                    mt={8}
-                                                    id={'reference_id'}
-                                                />
-                                            </Box>
-
                                             <Box mt={'xs'}>
                                                 <SelectForm
                                                     tooltip={t('Location')}
