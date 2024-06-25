@@ -179,7 +179,7 @@ function SearchModal({ onClose }) {
                                                     }}
                                                     gap={'0'}
                                                 >
-                                                    <Stack direction="column" mt={'xs'} gap={'0'}>
+                                                    <Stack direction="column" mt={'xs'} gap={'0'} pl={'xs'}>
                                                         <Title order={6} mt={'2px'} className="title">
                                                             {action.label}
                                                         </Title>
