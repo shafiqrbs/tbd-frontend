@@ -181,12 +181,12 @@ export default function Header({
                             <HoverCard.Target>
                                 <a href="#" className={classes.link}>
                                     <Center inline>
-                                        <Box component="span" mr={'xs'} c={'red.8'} >
-                                            Shortcut Menu
+                                        <Box component="span" mr={'xs'} c={'green.8'} fw={'800'} >
+                                            { t("Shortcut") }
                                         </Box>
                                         <IconChevronDown
                                             style={{ width: rem(16), height: rem(16) }}
-                                            color={theme.colors.red[6]}
+                                            color={'green'}
                                         />
                                     </Center>
                                 </a>

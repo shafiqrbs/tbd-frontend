@@ -598,7 +598,7 @@ function _CreateStockForm(props) {
                                                 <Button
                                                     rightSection={<IconChevronsRight size={14} />}
                                                     variant="light"
-                                                    color="red"
+                                                    color="green"
                                                     size="xs"
                                                     radius="xs"
                                                     onClick={()=>{
