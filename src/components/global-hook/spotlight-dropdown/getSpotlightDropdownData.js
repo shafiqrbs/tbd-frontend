@@ -6,21 +6,21 @@ const getSpotlightDropdownData = (t) => {
             actions: [
                 {
                     id: 'customer',
-                    label: 'Customer',
-                    description: 'WhereWePresentTheCustomerInformation',
+                    label: t('CustomerN'),
+                    description: t('WhereWePresentTheCustomerInformationN'),
 
                 },
                 {
                     id: 'user',
-                    label: 'User',
-                    description: 'WhereWePresentTheUserInformation',
+                    label: t('UserN'),
+                    description: t('WhereWePresentTheUserInformationN'),
 
 
                 },
                 {
                     id: 'vendor',
-                    label: 'Vendor',
-                    description: 'WhereWePresentTheVendorInformation',
+                    label: t('VendorN'),
+                    description: t('WhereWePresentTheVendorInformationN'),
 
                 },
             ],
@@ -31,56 +31,56 @@ const getSpotlightDropdownData = (t) => {
             actions: [
                 {
                     id: 'category',
-                    label: 'Category',
-                    description: 'WhereWePresentTheCategoryInformation',
+                    label: t('CategoryN'),
+                    description: t('WhereWePresentTheCategoryInformationN'),
 
                 },
                 {
                     id: 'category-group',
-                    label: 'CategoryGroup',
-                    description: 'WhereWePresentTheCategoryGroupInformation',
+                    label: t('CategoryGroupnN'),
+                    description: t('WhereWePresentTheCategoryGroupInformationN'),
 
                 },
                 {
                     id: 'product',
-                    label: 'Product',
-                    description: 'WhereWePresentTheProductInformation',
+                    label: t('ProductN'),
+                    description: t('WhereWePresentTheProductInformationN'),
 
                 },
                 {
                     id: 'config',
-                    label: 'Configuration',
-                    description: 'WhereWePresentTheConfigurationInformation',
+                    label: t('ConfigurationN'),
+                    description: t('WhereWePresentTheConfigurationInformationN'),
 
                 },
                 {
                     id: 'sales',
-                    label: 'Sales',
-                    description: 'WhereWePresentTheSalesInformation',
+                    label: t('SalesN'),
+                    description: t('WhereWePresentTheSalesInformationN'),
 
                 },
                 {
                     id: 'sales-invoice',
-                    label: 'NewSales',
-                    description: 'WhereWePresentTheSalesInvoiceInformation',
+                    label: t('NewSalesN'),
+                    description: t('WhereWePresentTheSalesInvoiceInformationN'),
 
                 },
                 {
                     id: 'purchase',
-                    label: 'Purchase',
-                    description: 'WhereWePresentThePurchaseInformation',
+                    label: t('PurchaseN'),
+                    description: t('WhereWePresentThePurchaseInformationN'),
 
                 },
                 {
                     id: 'purchase-invoice',
-                    label: 'NewPurchase',
-                    description: 'WhereWePresentThePurchaseInvoiceInformation',
+                    label: t('NewPurchaseN'),
+                    description: t('WhereWePresentThePurchaseInvoiceInformationN'),
 
                 },
                 {
                     id: 'invoice-batch',
-                    label: 'InvoiceBatch',
-                    description: 'WhereWePresentTheInvoiceBatchInformation',
+                    label: t('InvoiceBatchN'),
+                    description: t('WhereWePresentTheInvoiceBatchInformationN'),
 
                 },
             ],
@@ -90,21 +90,21 @@ const getSpotlightDropdownData = (t) => {
             actions: [
                 {
                     id: 'production',
-                    label: 'Production',
-                    description: 'WhereWePresentTheProductionInformation',
+                    label: t('ProductionN'),
+                    description: t('WhereWePresentTheProductionInformationN'),
 
                 },
                 {
                     id: 'production-inhouse',
-                    label: 'ProductionInhouse',
-                    description: 'WhereWePresentTheProductionInformation',
+                    label: t('ProductionInhouseN'),
+                    description: t('WhereWePresentTheProductionInhouseInformationN'),
 
 
                 },
                 {
                     id: 'production-receipe',
-                    label: 'ProductionReceipe',
-                    description: 'WhereWePresentTheProductionInformation',
+                    label: t('ProductionReceipeN'),
+                    description: t('WhereWePresentTheProductionReceipeInformationN'),
 
 
                 },
@@ -115,8 +115,8 @@ const getSpotlightDropdownData = (t) => {
             actions: [
                 {
                     id: '',
-                    label: 'Domain',
-                    description: 'WhereWePresentTheDomainInformation',
+                    label: t('DomainN'),
+                    description: t('WhereWePresentTheDomainInformationN'),
 
                 },
             ],
@@ -126,32 +126,32 @@ const getSpotlightDropdownData = (t) => {
             actions: [
                 {
                     id: 'transaction-mode',
-                    label: 'TransactionMode',
-                    description: 'WhereWePresentTheTransactionModeInformation',
+                    label: t('TransactionModeN'),
+                    description: t('WhereWePresentTheTransactionModeInformationN'),
 
                 },
                 {
                     id: 'voucher-entry',
-                    label: 'VoucherEntry',
-                    description: 'WhereWePresentTheVoucherInformation',
+                    label: t('VoucherEntryN'),
+                    description: t('WhereWePresentTheVoucherInformationN'),
 
                 },
                 {
                     id: 'ledger',
-                    label: 'Ledger',
-                    description: 'WhereWePresentTheLedgerInformation',
+                    label: t('LedgerN'),
+                    description: t('WhereWePresentTheLedgerInformationN'),
 
                 },
                 {
                     id: 'head-group',
-                    label: 'HeadGroup',
-                    description: 'WhereWePresentTheHeadGroupInformation',
+                    label: t('HeadGroupN'),
+                    description: t('WhereWePresentTheHeadGroupInformationN'),
 
                 },
                 {
                     id: 'head-subgroup',
-                    label: 'HeadSubGroup',
-                    description: 'WhereWePresentTheHeadSubGroupInformation',
+                    label: t('HeadSubGroupN'),
+                    description: t('WhereWePresentTheHeadSubGroupInformationN'),
 
                 },
             ],
