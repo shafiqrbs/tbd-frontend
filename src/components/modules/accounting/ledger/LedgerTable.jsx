@@ -71,7 +71,7 @@ function LedgerTable(props) {
                             render: (item) => (indexData.data.indexOf(item) + 1)
                         },
                         { accessor: 'name', title: t('Name') },
-                        { accessor: 'parent_name', title: t('Parent Head') },
+                        { accessor: 'parent_name', title: t('ParentHead') },
                         { accessor: 'code', title: t('AccountCode') },
                         {
                             accessor: "action",

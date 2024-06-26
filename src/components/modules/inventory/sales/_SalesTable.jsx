@@ -159,7 +159,7 @@ function _SalesTable() {
                                             title: t('S/N'),
                                             textAlignment: 'right',
                                             render: (item) => (
-                                                <Tooltip  color="green" withArrow={'center'} label={item.invoice + ' - ' + item.customerName}>
+                                                <Tooltip color="green" withArrow={'center'} label={item.invoice + ' - ' + item.customerName}>
                                                     <Checkbox
                                                         value={item.id}
                                                         checked={!!checkList?.[item.id]}
@@ -315,7 +315,7 @@ function _SalesTable() {
                                     <Grid gutter={{ base: 4 }}>
                                         <Grid.Col span={'6'}>
                                             <Grid columns={15} gutter={{ base: 4 }}>
-                                                <Grid.Col span={6} ><Text fz="sm" lh="xs">Customer</Text></Grid.Col>
+                                                <Grid.Col span={6} ><Text fz="sm" lh="xs">{t('Customer')}</Text></Grid.Col>
                                                 <Grid.Col span={9} >
                                                     <Text fz="sm" lh="xs">
                                                         {salesViewData && salesViewData.customerName && salesViewData.customerName}
@@ -323,7 +323,7 @@ function _SalesTable() {
                                                 </Grid.Col>
                                             </Grid>
                                             <Grid columns={15} gutter={{ base: 4 }}>
-                                                <Grid.Col span={6} ><Text fz="sm" lh="xs">Mobile</Text></Grid.Col>
+                                                <Grid.Col span={6} ><Text fz="sm" lh="xs">{t('Mobile')}</Text></Grid.Col>
                                                 <Grid.Col span={9} >
                                                     <Text fz="sm" lh="xs">
                                                         {salesViewData && salesViewData.customerMobile && salesViewData.customerMobile}
@@ -331,7 +331,7 @@ function _SalesTable() {
                                                 </Grid.Col>
                                             </Grid>
                                             <Grid columns={15} gutter={{ base: 4 }}>
-                                                <Grid.Col span={6} ><Text fz="sm" lh="xs">Address</Text></Grid.Col>
+                                                <Grid.Col span={6} ><Text fz="sm" lh="xs">{t('Address')}</Text></Grid.Col>
                                                 <Grid.Col span={9} >
                                                     <Text fz="sm" lh="xs">
                                                         {salesViewData && salesViewData.customer_address && salesViewData.customer_address}
@@ -339,7 +339,7 @@ function _SalesTable() {
                                                 </Grid.Col>
                                             </Grid>
                                             <Grid columns={15} gutter={{ base: 4 }}>
-                                                <Grid.Col span={6} ><Text fz="sm" lh="xs">Balance</Text></Grid.Col>
+                                                <Grid.Col span={6} ><Text fz="sm" lh="xs">{t('Balance')}</Text></Grid.Col>
                                                 <Grid.Col span={9} >
                                                     <Text fz="sm" lh="xs">
                                                         {salesViewData && salesViewData.balance ? Number(salesViewData.balance).toFixed(2) : 0.00}
@@ -349,7 +349,7 @@ function _SalesTable() {
                                         </Grid.Col>
                                         <Grid.Col span={'6'}>
                                             <Grid columns={15} gutter={{ base: 4 }}>
-                                                <Grid.Col span={6} ><Text fz="sm" lh="xs">Created</Text></Grid.Col>
+                                                <Grid.Col span={6} ><Text fz="sm" lh="xs">{t('Created')}</Text></Grid.Col>
                                                 <Grid.Col span={9} >
                                                     <Text fz="sm" lh="xs">
                                                         {salesViewData && salesViewData.created && salesViewData.created}
@@ -357,7 +357,7 @@ function _SalesTable() {
                                                 </Grid.Col>
                                             </Grid>
                                             <Grid columns={15} gutter={{ base: 4 }}>
-                                                <Grid.Col span={6} ><Text fz="sm" lh="xs">Created By</Text></Grid.Col>
+                                                <Grid.Col span={6} ><Text fz="sm" lh="xs">{t('CreatedBy')}</Text></Grid.Col>
                                                 <Grid.Col span={9} >
                                                     <Text fz="sm" lh="xs">
                                                         {salesViewData && salesViewData.createdByName && salesViewData.createdByName}
@@ -365,7 +365,7 @@ function _SalesTable() {
                                                 </Grid.Col>
                                             </Grid>
                                             <Grid columns={15} gutter={{ base: 4 }}>
-                                                <Grid.Col span={6} ><Text fz="sm" lh="xs">Sales By</Text></Grid.Col>
+                                                <Grid.Col span={6} ><Text fz="sm" lh="xs">{t('SalesBy')}</Text></Grid.Col>
                                                 <Grid.Col span={9} >
                                                     <Text fz="sm" lh="xs">
                                                         {salesViewData && salesViewData.salesByUser && salesViewData.salesByUser}
@@ -373,7 +373,7 @@ function _SalesTable() {
                                                 </Grid.Col>
                                             </Grid>
                                             <Grid columns={15} gutter={{ base: 4 }}>
-                                                <Grid.Col span={6} ><Text fz="sm" lh="xs">Mode</Text></Grid.Col>
+                                                <Grid.Col span={6} ><Text fz="sm" lh="xs">{t('Mode')}</Text></Grid.Col>
                                                 <Grid.Col span={9} >
                                                     <Text fz="sm" lh="xs">
                                                         {salesViewData && salesViewData.mode_name && salesViewData.mode_name}
@@ -381,7 +381,7 @@ function _SalesTable() {
                                                 </Grid.Col>
                                             </Grid>
                                             <Grid columns={15} gutter={{ base: 4 }}>
-                                                <Grid.Col span={6} ><Text fz="sm" lh="xs">Process</Text></Grid.Col>
+                                                <Grid.Col span={6} ><Text fz="sm" lh="xs">{t('Process')}</Text></Grid.Col>
                                                 <Grid.Col span={9} >
                                                     <Text fz="sm" lh="xs">
                                                         {salesViewData && salesViewData.process && salesViewData.process}
@@ -453,7 +453,7 @@ function _SalesTable() {
                                 >
                                     <ReactToPrint
                                         trigger={() => {
-                                            return <a href="#">Print</a>;
+                                            return <a href="#">{t('Print')}</a>;
                                         }}
                                         content={() => printRef.current}
                                     />
@@ -466,7 +466,7 @@ function _SalesTable() {
                                 >
                                     <ReactToPrint
                                         trigger={() => {
-                                            return <a href="#">Pos</a>;
+                                            return <a href="#">{t('Pos')}</a>;
                                         }}
                                         content={() => printRef.current}
                                     />
@@ -479,9 +479,7 @@ function _SalesTable() {
                                     variant="filled"
                                     leftSection={<IconEdit size={14} />}
                                     color="cyan.5"
-                                >
-                                    Edit
-                                </Button>
+                                >{t('Edit')}</Button>
                             </Button.Group>
                         </Box>
                     </Grid.Col>

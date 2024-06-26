@@ -208,7 +208,7 @@ function ConfigForm(props) {
                                                             name={'code'}
                                                             form={form}
                                                             id={'code'}
-                                                            nextField={'statusz'}
+                                                            nextField={'status'}
                                                         />
                                                     </Box>
                                                     <Box mt={'xs'} ml={'xs'}>
