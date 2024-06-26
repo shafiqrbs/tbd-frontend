@@ -77,15 +77,16 @@ function InvoiceBatchModal(props) {
                                     <Box pl={'xs'} pr={'xs'} pb={'xs'} pt={'xs'}>
                                         <Grid columns={24} gutter={{ base: 8 }} >
                                             <Grid.Col span={7} >
-                                                <Box h={120} bg={'white'} pl={`xs`} pr={8} pt={'xs'} className={' borderRadiusAll'} >
+                                                <Box h={110} bg={'white'} pl={`xs`} pr={8} pt={'xs'} className={' borderRadiusAll'} >
                                                     <Flex spacing={0} direction={'column'} >
                                                         <Text fw={900} pl={'6'} fz={'md'}>{t('CustomerDetails')}</Text>
                                                         <Stack
-                                                            h={70}
+                                                            h={60}
                                                             bg="var(--mantine-color-body)"
                                                             align="stretch"
                                                             justify="center"
                                                             gap="2"
+                                                            mt={4}
                                                         >
                                                             <Grid gutter={{ base: 0 }} pl={6}>
                                                                 <Grid.Col span={2}>
@@ -134,6 +135,7 @@ function InvoiceBatchModal(props) {
                                                             align="stretch"
                                                             justify="center"
                                                             gap="2"
+                                                            mt={4}
                                                         >
                                                             <Grid columns={12}>
                                                                 <Grid.Col span={10}>
@@ -241,15 +243,16 @@ function InvoiceBatchModal(props) {
                                                 </Box>
                                             </Grid.Col>
                                             <Grid.Col span={9} >
-                                                <Box h={120} bg={'white'} pl={`xs`} pr={8} pt={'xs'} className={' borderRadiusAll'} >
+                                                <Box h={110} bg={'white'} pl={`xs`} pr={8} pt={'xs'} className={' borderRadiusAll'} >
                                                     <Flex spacing={0} direction={'column'} >
                                                         <Text fw={900} pl={'6'} fz={'md'}>{t('BatchDetails')}</Text>
                                                         <Stack
-                                                            h={70}
+                                                            h={60}
                                                             bg="var(--mantine-color-body)"
                                                             align="stretch"
                                                             justify="center"
                                                             gap="2"
+                                                            mt={'4'}
                                                         >
                                                             <Grid columns={12} gutter={0}>
                                                                 <Grid.Col span={6}>
@@ -320,7 +323,7 @@ function InvoiceBatchModal(props) {
                                                 <Box h={40} pl={`xs`} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'} >
                                                     <Title order={6} pl={'6'}>{t('Invoices')}</Title>
                                                 </Box>
-                                                <Box className={'borderRadiusAll'} h={height - 110}>
+                                                <Box className={'borderRadiusAll'} h={height - 90}>
                                                     <InvoiceBatchModalInvoice />
                                                 </Box>
                                             </Box>
@@ -331,7 +334,7 @@ function InvoiceBatchModal(props) {
                                                 <Box h={40} pl={`xs`} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'} >
                                                     <Title order={6} pl={'6'}>{t('BatchItems')}</Title>
                                                 </Box>
-                                                <Box bg={'white'} h={height - 110} >
+                                                <Box bg={'white'} h={height - 90} >
                                                     <InvoiceBatchModalTable />
                                                 </Box>
 
@@ -342,7 +345,7 @@ function InvoiceBatchModal(props) {
                                                 <Box h={40} pl={`xs`} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'} >
                                                     <Title order={6} pl={'6'}>{t('Transactions')}</Title>
                                                 </Box>
-                                                <Box className={'borderRadiusAll'} h={height - 110}>
+                                                <Box className={'borderRadiusAll'} h={height - 90}>
                                                     <InvoiceBatchModalTransaction />
                                                 </Box>
                                             </Box>

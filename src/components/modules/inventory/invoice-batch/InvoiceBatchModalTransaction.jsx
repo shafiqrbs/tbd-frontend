@@ -42,7 +42,7 @@ function InvoiceBatchModalTransaction(props) {
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
-    const height = mainAreaHeight - 210; //TabList height 104
+    const height = mainAreaHeight - 190; //TabList height 104
     const tableHeight = mainAreaHeight - 150; //TabList height 104
     const navigate = useNavigate();
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
@@ -56,50 +56,17 @@ function InvoiceBatchModalTransaction(props) {
                         {elements.map((elements, index) => (
                             <Card shadow="md" radius="md" className={classes.card} mb={'4'} p={'xs'}>
                                 <SimpleGrid spacing={4}>
-                                    <Grid columns={12}>
+                                    <Grid columns={24}>
                                         <Grid.Col span={10}>
-                                            <Grid gutter={{ base: 2 }}>
+                                            <Grid gutter={0}>
                                                 <Grid.Col span={5}>
-                                                    <Text fz="sm" fw={600} >{t('TransactionNumber')}</Text>
+                                                    <Text fz="sm" fw={600} >{t('Transaction No')}</Text>
                                                 </Grid.Col>
                                                 <Grid.Col span={1}>
                                                     <Text fz={'sm'} fw={700}>:</Text>
                                                 </Grid.Col>
-                                                <Grid.Col span={6}>
+                                                <Grid.Col span={4}>
                                                     <Text fz="sm" fw={300} >{elements.transactionNumber}</Text>
-                                                </Grid.Col>
-                                            </Grid>
-                                            <Grid gutter={{ base: 2 }}>
-                                                <Grid.Col span={5}>
-                                                    <Text fz="sm" fw={600}  >{t('CreatedDate')}</Text>
-                                                </Grid.Col>
-                                                <Grid.Col span={1}>
-                                                    <Text fz={'sm'} fw={700}>:</Text>
-                                                </Grid.Col>
-                                                <Grid.Col span={6}>
-                                                    <Text fz="sm" fw={300}  >{elements.createdDate}</Text>
-                                                </Grid.Col>
-                                            </Grid>
-                                            <Grid gutter={{ base: 2 }}>
-                                                <Grid.Col span={5}>
-                                                    <Text fz="sm" fw={600}  >{t('CreatedBy')}</Text>
-                                                </Grid.Col>
-                                                <Grid.Col span={1}>
-                                                    <Text fz={'sm'} fw={700}>:</Text>
-                                                </Grid.Col>
-                                                <Grid.Col span={6}>
-                                                    <Text fz="sm" fw={300}  >{elements.createBy}</Text>
-                                                </Grid.Col>
-                                            </Grid>
-                                            <Grid gutter={{ base: 2 }}>
-                                                <Grid.Col span={5}>
-                                                    <Text fz="sm" fw={600}  >{t('ApprovedBy')}</Text>
-                                                </Grid.Col>
-                                                <Grid.Col span={1}>
-                                                    <Text fz={'sm'} fw={700}>:</Text>
-                                                </Grid.Col>
-                                                <Grid.Col span={6}>
-                                                    <Text fz="sm" fw={300}  >{elements.approvedby}</Text>
                                                 </Grid.Col>
                                             </Grid>
                                             <Grid gutter={{ base: 2 }}>
@@ -109,7 +76,7 @@ function InvoiceBatchModalTransaction(props) {
                                                 <Grid.Col span={1}>
                                                     <Text fz={'sm'} fw={700}>:</Text>
                                                 </Grid.Col>
-                                                <Grid.Col span={6}>
+                                                <Grid.Col span={4}>
                                                     <Text fz="sm" fw={300}  >{elements.discount}</Text>
                                                 </Grid.Col>
                                             </Grid>
@@ -120,8 +87,43 @@ function InvoiceBatchModalTransaction(props) {
                                                 <Grid.Col span={1}>
                                                     <Text fz={'sm'} fw={700}>:</Text>
                                                 </Grid.Col>
-                                                <Grid.Col span={6} >
+                                                <Grid.Col span={4} >
                                                     <Text fz="sm" fw={300}  >{elements.receive}</Text>
+                                                </Grid.Col>
+                                            </Grid>
+                                        </Grid.Col>
+                                        <Grid.Col span={10}>
+                                            <Grid gutter={{ base: 2 }}>
+                                                <Grid.Col span={5}>
+                                                    <Text fz="sm" fw={600}  >{t('CreatedDate')}</Text>
+                                                </Grid.Col>
+                                                <Grid.Col span={1}>
+                                                    <Text fz={'sm'} fw={700}>:</Text>
+                                                </Grid.Col>
+                                                <Grid.Col span={4}>
+                                                    <Text fz="sm" fw={300}  >{elements.createdDate}</Text>
+                                                </Grid.Col>
+                                            </Grid>
+                                            <Grid gutter={{ base: 2 }}>
+                                                <Grid.Col span={5}>
+                                                    <Text fz="sm" fw={600}  >{t('CreatedBy')}</Text>
+                                                </Grid.Col>
+                                                <Grid.Col span={1}>
+                                                    <Text fz={'sm'} fw={700}>:</Text>
+                                                </Grid.Col>
+                                                <Grid.Col span={4}>
+                                                    <Text fz="sm" fw={300}  >{elements.createBy}</Text>
+                                                </Grid.Col>
+                                            </Grid>
+                                            <Grid gutter={{ base: 2 }}>
+                                                <Grid.Col span={5}>
+                                                    <Text fz="sm" fw={600}  >{t('ApprovedBy')}</Text>
+                                                </Grid.Col>
+                                                <Grid.Col span={1}>
+                                                    <Text fz={'sm'} fw={700}>:</Text>
+                                                </Grid.Col>
+                                                <Grid.Col span={4}>
+                                                    <Text fz="sm" fw={300}  >{elements.approvedby}</Text>
                                                 </Grid.Col>
                                             </Grid>
                                         </Grid.Col>

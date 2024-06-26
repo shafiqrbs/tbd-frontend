@@ -30,7 +30,7 @@ function InvoiceBatchModalInvoice(props) {
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
     const height = mainAreaHeight - 100; //TabList height 104
-    const tableHeight = mainAreaHeight - 232; //TabList height 104
+    const tableHeight = mainAreaHeight - 212; //TabList height 104
     const navigate = useNavigate();
 
     const perPage = 50;
