@@ -565,21 +565,7 @@ function __SalesForm(props) {
 
                                 <Box p={'xs'} className={'boxBackground'} mt={'4'} pt={'xs'} mb={'xs'} pb={'xs'} >
                                     <Grid gutter={{ base: 2 }}>
-                                        <Grid.Col span={4}>
-                                            <DatePickerForm
-                                                tooltip={t('InvoiceDateValidateMessage')}
-                                                label=''
-                                                placeholder={t('InvoiceDate')}
-                                                required={false}
-                                                nextField={'discount'}
-                                                form={form}
-                                                name={'invoice_date'}
-                                                id={'invoice_date'}
-                                                leftSection={<IconCalendar size={16} opacity={0.5} />}
-                                                rightSection={inputGroupCurrency}
-                                                rightSectionWidth={30}
-                                            />
-                                        </Grid.Col>
+
                                         <Grid.Col span={2}>
                                             <Switch
                                                 fullWidth
@@ -597,6 +583,21 @@ function __SalesForm(props) {
                                         <Grid.Col span={2}>
                                             <Center fz={'md'} mt={'4'}
                                                 c={'black.5'}>{currencySymbol} {profitShow && salesProfitAmount}</Center>
+                                        </Grid.Col>
+                                        <Grid.Col span={4}>
+                                            <DatePickerForm
+                                                tooltip={t('InvoiceDateValidateMessage')}
+                                                label=''
+                                                placeholder={t('InvoiceDate')}
+                                                required={false}
+                                                nextField={'discount'}
+                                                form={form}
+                                                name={'invoice_date'}
+                                                id={'invoice_date'}
+                                                leftSection={<IconCalendar size={16} opacity={0.5} />}
+                                                rightSection={<IconCalendar size={16} opacity={0.5} />}
+                                                rightSectionWidth={30}
+                                            />
                                         </Grid.Col>
                                         <Grid.Col span={4}>
                                             <Box fz={'xl'} pr={'8'} mt={'4'} c={'red'} style={{ textAlign: 'right', float: 'right' }} fw={'800'}>

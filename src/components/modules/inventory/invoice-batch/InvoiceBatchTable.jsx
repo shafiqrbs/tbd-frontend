@@ -186,7 +186,7 @@ function InvoiceBatchTable() {
                                         { accessor: 'created', title: t("Created") },
                                         {
                                             accessor: 'invoice',
-                                            title: t("Invoice"),
+                                            title: t("Batch No"),
                                             render: (item) => (
                                                 <Text
                                                     component="a"
@@ -219,6 +219,16 @@ function InvoiceBatchTable() {
                                         {
                                             accessor: 'payment',
                                             title: t("Receive"),
+                                            textAlign: "right",
+                                            render: (data) => (
+                                                <>
+                                                    {data.payment ? Number(data.payment).toFixed(2) : "0.00"}
+                                                </>
+                                            )
+                                        },
+                                         {
+                                            accessor: 'discount',
+                                            title: t("Discount"),
                                             textAlign: "right",
                                             render: (data) => (
                                                 <>
