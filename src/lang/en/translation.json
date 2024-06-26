@@ -428,5 +428,7 @@
   "TransactionNumber": "Transaction Number",
   "CreatedBy": "Created By",
   "ApprovedBy": "Approved By",
-  "VoucherDetails": "Voucher Details"
+  "VoucherDetails": "Voucher Details",
+  "InvoiceDate": "Invoice Date",
+  "" : ""
 }

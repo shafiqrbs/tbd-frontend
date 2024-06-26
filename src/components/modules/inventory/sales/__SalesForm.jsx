@@ -286,6 +286,11 @@ function __SalesForm(props) {
                     }
                 });
 
+                const options = {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit'
+                };
                 const formValue = {}
                 formValue['customer_id'] = form.values.customer_id ? form.values.customer_id : defaultCustomerId;
                 formValue['sub_total'] = salesSubTotalAmount;
@@ -300,6 +305,8 @@ function __SalesForm(props) {
                 formValue['created_by_id'] = Number(createdBy['id']);
                 formValue['process'] = form.values.order_process;
                 formValue['narration'] = form.values.narration;
+                formValue['invoice_date'] = form.values.invoice_date && new Date(form.values.invoice_date).toLocaleDateString("en-CA", options)
+                ;
                 formValue['items'] = transformedArray ? transformedArray : [];
 
                 const hasReceiveAmount = form.values.receive_amount;
@@ -597,6 +604,7 @@ function __SalesForm(props) {
                                                 leftSection={<IconCalendar size={16} opacity={0.5} />}
                                                 rightSection={<IconCalendar size={16} opacity={0.5} />}
                                                 rightSectionWidth={30}
+                                                closeIcon={true}
                                             />
                                         </Grid.Col>
                                         <Grid.Col span={4}>

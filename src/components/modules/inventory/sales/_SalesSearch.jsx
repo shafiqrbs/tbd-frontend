@@ -17,7 +17,7 @@ import { useHotkeys } from "@mantine/hooks";
 import { useDispatch, useSelector } from "react-redux";
 import { setSearchKeyword } from "../../../../store/core/crudSlice.js";
 import FilterModel from "../../filter/FilterModel.jsx";
-import { setFetching, setSalesFilterData } from "../../../../store/inventory/crudSlice.js";
+import {setFetching, setSalesFilterData, storeEntityData} from "../../../../store/inventory/crudSlice.js";
 import { DateInput } from "@mantine/dates";
 import {
     setCategoryGroupFilterData,
@@ -402,7 +402,17 @@ function _SalesSearch(props) {
                                     variant="filled"
                                     color="green.8"
                                     onClick={(e) => {
-                                        console.log(props.checkList)
+                                        const formValue = {}
+                                        formValue['customer_id'] = props.customerId;
+                                        formValue['sales_id'] = props.checkList;
+                                        // console.log(formValue)
+                                        // {{base_url_local}}/api/inventory/invoice-batch
+                                        const data = {
+                                            url: 'inventory/invoice-batch',
+                                            data: formValue
+                                        }
+                                        dispatch(storeEntityData(data))
+                                        console.log(props.checkList,props.customerId)
                                     }}
                                 ><IconBrandOkRu size={14} /> { t('GenerateBatch')}</Button>
                             </Tooltip>

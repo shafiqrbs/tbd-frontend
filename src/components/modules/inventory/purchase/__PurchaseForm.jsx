@@ -12,7 +12,7 @@ import {
     IconReceipt,
     IconPercentage,
     IconCurrencyTaka,
-    IconEyeEdit, IconDiscountOff, IconCurrency, IconPlusMinus, IconCheck,
+    IconEyeEdit, IconDiscountOff, IconCurrency, IconPlusMinus, IconCheck, IconCalendar,
 
 } from "@tabler/icons-react";
 import { useHotkeys, useToggle } from "@mantine/hooks";
@@ -29,6 +29,7 @@ import { notifications } from "@mantine/notifications";
 import _VendorViewModel from "../../core/vendor/_VendorViewModel.jsx";
 import _addVendor from "../../popover-form/_addVendor.jsx";
 import vendorDataStoreIntoLocalStorage from "../../../global-hook/local-storage/vendorDataStoreIntoLocalStorage.js";
+import DatePickerForm from "../../../form-builders/DatePicker.jsx";
 
 function __PurchaseForm(props) {
     const { currencySymbol } = props
@@ -202,6 +203,11 @@ function __PurchaseForm(props) {
                     }
                 });
 
+                const options = {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit'
+                };
                 const formValue = {}
                 formValue['vendor_id'] = form.values.vendor_id;
                 formValue['sub_total'] = purchaseSubTotalAmount;
@@ -215,6 +221,7 @@ function __PurchaseForm(props) {
                 formValue['created_by_id'] = Number(createdBy['id']);
                 formValue['process'] = form.values.order_process;
                 formValue['narration'] = form.values.narration;
+                formValue['invoice_date'] = form.values.invoice_date && new Date(form.values.invoice_date).toLocaleDateString("en-CA", options)
                 formValue['items'] = transformedArray ? transformedArray : [];
 
                 const data = {
@@ -433,10 +440,23 @@ function __PurchaseForm(props) {
                                         <Grid.Col span={2}>
 
                                         </Grid.Col>
-                                        <Grid.Col span={2}>
-
+                                        <Grid.Col span={4}>
+                                            <DatePickerForm
+                                                tooltip={t('InvoiceDateValidateMessage')}
+                                                label=''
+                                                placeholder={t('InvoiceDate')}
+                                                required={false}
+                                                nextField={'discount'}
+                                                form={form}
+                                                name={'invoice_date'}
+                                                id={'invoice_date'}
+                                                leftSection={<IconCalendar size={16} opacity={0.5} />}
+                                                rightSection={<IconCalendar size={16} opacity={0.5} />}
+                                                rightSectionWidth={30}
+                                                closeIcon={true}
+                                            />
                                         </Grid.Col>
-                                        <Grid.Col span={7}><Center fz={'md'} mt={'4'} c={'red'}
+                                        <Grid.Col span={4}><Center fz={'md'} mt={'4'} c={'red'}
                                             fw={'800'}>{returnOrDueText} {currencySymbol} {purchaseDueAmount.toFixed(2)}</Center></Grid.Col>
                                     </Grid>
                                     <Box mt={'xs'} h={1} bg={`red.3`}></Box>

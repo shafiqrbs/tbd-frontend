@@ -131,7 +131,7 @@ function _SalesTable() {
                             <Grid>
                                 <Grid.Col>
                                     <Stack >
-                                        <_SalesSearch checkList={checkList} />
+                                        <_SalesSearch checkList={checkList} customerId={salesFilterData.customer_id} />
                                     </Stack>
                                 </Grid.Col>
                             </Grid>

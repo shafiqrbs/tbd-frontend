@@ -1,17 +1,17 @@
 import dayjs from 'dayjs';
-import customParseFormat from 'dayjs/plugin/customParseFormat';
+// import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { DateInput } from '@mantine/dates';
 import {TextInput, Tooltip} from "@mantine/core";
 import {getHotkeyHandler} from "@mantine/hooks";
 import {IconInfoCircle, IconX} from "@tabler/icons-react";
 import React from "react";
+import {useTranslation} from "react-i18next";
 
 
-dayjs.extend(customParseFormat);
+// dayjs.extend(customParseFormat);
 
 function DatePickerForm(props) {
     const {
-        format,
         label,
         placeholder,
         required,
@@ -21,14 +21,12 @@ function DatePickerForm(props) {
         tooltip,
         mt,
         id,
-        dropdownValue,
-        searchable,
-        value,
-        changeValue,
-        base,
         sm,
-        lg
+        lg,
+        closeIcon
     } = props
+    const { t, i18n } = useTranslation();
+
     return (
         <>
 
@@ -46,9 +44,8 @@ function DatePickerForm(props) {
                 transitionProps={{transition: "pop-bottom-left", duration: 500}}
             >
                 <DateInput
-                    type='number'
-                    valueFormat="DD/MM/YYYY"
-                    id={id}
+                    clearable
+                    defaultValue={new Date()}
                     size="sm"
                     label={label}
                     placeholder={placeholder}
