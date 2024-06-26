@@ -73,9 +73,16 @@ function SearchModal({ onClose }) {
         } else if (event.key === 'Enter' && selectedIndex >= 0) {
             const selectedAction = filteredItems[selectedIndex];
             if (selectedAction) {
-                const path = selectedAction.group === 'Production'
+                const path = (selectedAction.group === 'Production' || selectedAction.group === 'প্রোডাকশন')
                     ? `inventory/${selectedAction.id}`
-                    : `${selectedAction.group.toLowerCase()}/${selectedAction.id}`;
+                    : (selectedAction.group === 'Core' || selectedAction.group === 'কেন্দ্র') ? `core/${selectedAction.id}`
+                        : (selectedAction.group === 'Inventory' || selectedAction.group === 'ইনভেন্টরি')
+                            ? `inventory/${selectedAction.id}`
+                            : (selectedAction.group === 'Domain' || selectedAction.group === 'ডোমেইন')
+                                ? `domain/${selectedAction.id}`
+                                : (selectedAction.group === 'Accounting' || selectedAction.group === 'একাউন্টিং')
+                                    ? `accounting/${selectedAction.id}`
+                                    : `/sitemap`;
                 navigate(path);
                 onClose();
             }
