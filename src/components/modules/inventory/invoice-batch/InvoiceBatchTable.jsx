@@ -323,7 +323,7 @@ function InvoiceBatchTable() {
                                     <Grid gutter={{ base: 4 }}>
                                         <Grid.Col span={'6'}>
                                             <Grid columns={15} gutter={{ base: 4 }}>
-                                                <Grid.Col span={6} ><Text fz="sm" lh="xs">Customer</Text></Grid.Col>
+                                                <Grid.Col span={6} ><Text fz="sm" lh="xs">{t('Customer')}</Text></Grid.Col>
                                                 <Grid.Col span={9} >
                                                     <Text fz="sm" lh="xs">
                                                         {salesViewData && salesViewData.customerName && salesViewData.customerName}
@@ -331,7 +331,7 @@ function InvoiceBatchTable() {
                                                 </Grid.Col>
                                             </Grid>
                                             <Grid columns={15} gutter={{ base: 4 }}>
-                                                <Grid.Col span={6} ><Text fz="sm" lh="xs">Mobile</Text></Grid.Col>
+                                                <Grid.Col span={6} ><Text fz="sm" lh="xs">{t('Mobile')}</Text></Grid.Col>
                                                 <Grid.Col span={9} >
                                                     <Text fz="sm" lh="xs">
                                                         {salesViewData && salesViewData.customerMobile && salesViewData.customerMobile}
@@ -339,7 +339,7 @@ function InvoiceBatchTable() {
                                                 </Grid.Col>
                                             </Grid>
                                             <Grid columns={15} gutter={{ base: 4 }}>
-                                                <Grid.Col span={6} ><Text fz="sm" lh="xs">Address</Text></Grid.Col>
+                                                <Grid.Col span={6} ><Text fz="sm" lh="xs">{t('Address')}</Text></Grid.Col>
                                                 <Grid.Col span={9} >
                                                     <Text fz="sm" lh="xs">
                                                         {salesViewData && salesViewData.customer_address && salesViewData.customer_address}
@@ -347,7 +347,7 @@ function InvoiceBatchTable() {
                                                 </Grid.Col>
                                             </Grid>
                                             <Grid columns={15} gutter={{ base: 4 }}>
-                                                <Grid.Col span={6} ><Text fz="sm" lh="xs">Balance</Text></Grid.Col>
+                                                <Grid.Col span={6} ><Text fz="sm" lh="xs">{t('Balance')}</Text></Grid.Col>
                                                 <Grid.Col span={9} >
                                                     <Text fz="sm" lh="xs">
                                                         {salesViewData && salesViewData.balance ? Number(salesViewData.balance).toFixed(2) : 0.00}
@@ -357,7 +357,7 @@ function InvoiceBatchTable() {
                                         </Grid.Col>
                                         <Grid.Col span={'6'}>
                                             <Grid columns={15} gutter={{ base: 4 }}>
-                                                <Grid.Col span={6} ><Text fz="sm" lh="xs">Created</Text></Grid.Col>
+                                                <Grid.Col span={6} ><Text fz="sm" lh="xs">{t('Created')}</Text></Grid.Col>
                                                 <Grid.Col span={9} >
                                                     <Text fz="sm" lh="xs">
                                                         {salesViewData && salesViewData.created && salesViewData.created}
@@ -365,7 +365,7 @@ function InvoiceBatchTable() {
                                                 </Grid.Col>
                                             </Grid>
                                             <Grid columns={15} gutter={{ base: 4 }}>
-                                                <Grid.Col span={6} ><Text fz="sm" lh="xs">Created By</Text></Grid.Col>
+                                                <Grid.Col span={6} ><Text fz="sm" lh="xs">{t('CreatedBy')}</Text></Grid.Col>
                                                 <Grid.Col span={9} >
                                                     <Text fz="sm" lh="xs">
                                                         {salesViewData && salesViewData.createdByName && salesViewData.createdByName}
@@ -373,7 +373,7 @@ function InvoiceBatchTable() {
                                                 </Grid.Col>
                                             </Grid>
                                             <Grid columns={15} gutter={{ base: 4 }}>
-                                                <Grid.Col span={6} ><Text fz="sm" lh="xs">Sales By</Text></Grid.Col>
+                                                <Grid.Col span={6} ><Text fz="sm" lh="xs">{t('SalesBy')}</Text></Grid.Col>
                                                 <Grid.Col span={9} >
                                                     <Text fz="sm" lh="xs">
                                                         {salesViewData && salesViewData.salesByUser && salesViewData.salesByUser}
@@ -381,7 +381,7 @@ function InvoiceBatchTable() {
                                                 </Grid.Col>
                                             </Grid>
                                             <Grid columns={15} gutter={{ base: 4 }}>
-                                                <Grid.Col span={6} ><Text fz="sm" lh="xs">Mode</Text></Grid.Col>
+                                                <Grid.Col span={6} ><Text fz="sm" lh="xs">{t('Mode')}</Text></Grid.Col>
                                                 <Grid.Col span={9} >
                                                     <Text fz="sm" lh="xs">
                                                         {salesViewData && salesViewData.mode_name && salesViewData.mode_name}
@@ -389,7 +389,7 @@ function InvoiceBatchTable() {
                                                 </Grid.Col>
                                             </Grid>
                                             <Grid columns={15} gutter={{ base: 4 }}>
-                                                <Grid.Col span={6} ><Text fz="sm" lh="xs">Process</Text></Grid.Col>
+                                                <Grid.Col span={6} ><Text fz="sm" lh="xs">{t('Process')}</Text></Grid.Col>
                                                 <Grid.Col span={9} >
                                                     <Text fz="sm" lh="xs">
                                                         {salesViewData && salesViewData.process && salesViewData.process}

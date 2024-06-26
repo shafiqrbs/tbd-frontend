@@ -191,3 +191,7 @@ input[type=radio]:checked + label>img {
 .highlightedItem .description {
     color: #F0F0F0 !important; /* Very light grey for the description */
 }
+/* .invoiceBatchModal .mantine-Modal-body{
+    background-color: '#f0f1f9';
+    padding : 2px;
+} */

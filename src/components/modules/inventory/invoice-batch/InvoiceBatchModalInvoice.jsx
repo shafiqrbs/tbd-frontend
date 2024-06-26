@@ -20,7 +20,7 @@ import { DataTable } from 'mantine-datatable';
 import tableCss from '../../../../assets/css/Table.module.css';
 import classes from './RowExpansion.module.css';
 
-function InvoiceBatchModalNested(props) {
+function InvoiceBatchModalInvoice(props) {
     const theme = useMantineTheme();
 
     // useEffect(() => {
@@ -30,7 +30,7 @@ function InvoiceBatchModalNested(props) {
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
     const height = mainAreaHeight - 100; //TabList height 104
-    const tableHeight = mainAreaHeight - 122; //TabList height 104
+    const tableHeight = mainAreaHeight - 232; //TabList height 104
     const navigate = useNavigate();
 
     const perPage = 50;
@@ -182,4 +182,4 @@ function InvoiceBatchModalNested(props) {
     );
 }
 
-export default InvoiceBatchModalNested;
+export default InvoiceBatchModalInvoice;

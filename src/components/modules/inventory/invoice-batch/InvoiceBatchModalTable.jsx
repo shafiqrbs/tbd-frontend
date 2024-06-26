@@ -30,8 +30,8 @@ function InvoiceBatchModalTable(props) {
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
-    const height = mainAreaHeight - 100; //TabList height 104
-    const tableHeight = mainAreaHeight - 122; //TabList height 104
+    const height = mainAreaHeight - 140; //TabList height 104
+    const tableHeight = mainAreaHeight - 232; //TabList height 104
     const navigate = useNavigate();
 
 
@@ -50,7 +50,7 @@ function InvoiceBatchModalTable(props) {
     //         <Table.Td>{element.total}</Table.Td>
     //     </Table.Tr>
     // ));
-    
+
     return (
         <>
             <Box className='borderRadiusAll' p={'xs'}>
