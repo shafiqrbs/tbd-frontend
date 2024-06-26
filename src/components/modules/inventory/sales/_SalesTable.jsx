@@ -159,14 +159,14 @@ function _SalesTable() {
                                             title: t('S/N'),
                                             textAlignment: 'right',
                                             render: (item) => (
-                                                <Tooltip label={item.invoice + ' - ' + item.customerName}>
+                                                <Tooltip  color="green" withArrow={'center'} label={item.invoice + ' - ' + item.customerName}>
                                                     <Checkbox
                                                         value={item.id}
                                                         checked={!!checkList?.[item.id]}
-                                                        variant="outline"
-                                                        radius="xl"
+                                                        variant="filled"
+                                                        radius="xs"
                                                         size="md"
-                                                        color="red"
+                                                        color="green"
                                                         onChange={(e) => CheckItemsHandel(e, item)}
                                                     />
                                                 </Tooltip>

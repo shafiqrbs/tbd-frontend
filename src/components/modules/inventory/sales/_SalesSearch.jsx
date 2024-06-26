@@ -6,9 +6,9 @@ import {
 } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
 import {
-    IconBrandOkRu,
+    IconBrandOkRu, IconFileTypeXls,
     IconFilter,
-    IconInfoCircle,
+    IconInfoCircle, IconPdf,
     IconRestore,
     IconSearch,
     IconX,
@@ -19,6 +19,13 @@ import { setSearchKeyword } from "../../../../store/core/crudSlice.js";
 import FilterModel from "../../filter/FilterModel.jsx";
 import { setFetching, setSalesFilterData } from "../../../../store/inventory/crudSlice.js";
 import { DateInput } from "@mantine/dates";
+import {
+    setCategoryGroupFilterData,
+    setCustomerFilterData,
+    setUserFilterData,
+    setVendorFilterData
+} from "../../../../store/core/crudSlice";
+import {setProductFilterData} from "../../../../store/inventory/crudSlice";
 
 function _SalesSearch(props) {
     const { t, i18n } = useTranslation();
@@ -215,13 +222,13 @@ function _SalesSearch(props) {
                         </Grid.Col>
                     </Grid>
                 </Grid.Col>
-                <Grid.Col span={8}>
-                    <ActionIcon.Group mt={'1'}>
-                        <ActionIcon variant="transparent"
+                <Grid.Col span="auto">
+                    <ActionIcon.Group mt={'1'} justify="center">
+                        <ActionIcon variant="default"
                                     c={'red.4'}
-                                    size="lg" mr={16} aria-label="Filter"
+                                    size="lg"  aria-label="Filter"
                                     onClick={() => {
-                                        (salesFilterData.searchKeyword.length > 0 || salesFilterData.customer_id || salesFilterData.start_date) ?
+                                        searchKeyword.length > 0 ?
                                             (dispatch(setFetching(true)),
                                                 setSearchKeywordTooltip(false))
                                             :
@@ -241,16 +248,13 @@ function _SalesSearch(props) {
                                 bg={`red.1`}
                                 transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
                             >
-                                <IconSearch style={{ width: rem(20) }} stroke={2.0} />
+                                <IconSearch style={{ width: rem(18) }} stroke={1.5} />
                             </Tooltip>
                         </ActionIcon>
-
-
                         <ActionIcon
-                            variant="transparent"
+                            variant="default"
                             size="lg"
                             c={'gray.6'}
-                            mr={16}
                             aria-label="Settings"
                             onClick={(e) => {
                                 setFilterModel(true)
@@ -266,12 +270,10 @@ function _SalesSearch(props) {
                                 bg={`red.1`}
                                 transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
                             >
-                                <IconFilter style={{ width: rem(20) }} stroke={2.0} />
+                                <IconFilter style={{ width: rem(18) }} stroke={1.0} />
                             </Tooltip>
                         </ActionIcon>
-
-
-                        <ActionIcon variant="transparent" c={'gray.6'}
+                        <ActionIcon variant="default" c={'gray.6'}
                                     size="lg" aria-label="Settings">
                             <Tooltip
                                 label={t("ResetButton")}
@@ -283,50 +285,131 @@ function _SalesSearch(props) {
                                 bg={`red.1`}
                                 transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
                             >
-                                <IconRestore style={{ width: rem(20) }} stroke={2.0} onClick={() => {
+                                <IconRestore style={{ width: rem(18) }} stroke={1.5} onClick={() => {
+                                    dispatch(setSearchKeyword(''))
                                     dispatch(setFetching(true))
-                                    setRefreshCustomerDropdown(true)
-                                    resetDropDownState();
 
-                                    dispatch(setSalesFilterData({
-                                        ...salesFilterData,
-                                        ['customer_id']: '',
-                                        ['start_date']: '',
-                                        ['end_date']: '',
-                                        ['searchKeyword']: '',
-                                    }));
+                                    if (props.module === 'customer') {
+                                        dispatch(setCustomerFilterData({
+                                            ...customerFilterData,
+                                            name: '',
+                                            mobile: ''
+                                        }));
+                                    } else if (props.module === 'vendor') {
+                                        dispatch(setVendorFilterData({
+                                            ...vendorFilterData,
+                                            name: '',
+                                            mobile: '',
+                                            company_name: ''
+                                        }));
+                                    } else if (props.module === 'user') {
+                                        dispatch(setUserFilterData({
+                                            ...userFilterData,
+                                            name: '',
+                                            mobile: '',
+                                            email: ''
+                                        }));
+                                    } else if (props.module === 'product') {
+                                        dispatch(setProductFilterData({
+                                            ...productFilterData,
+                                            name: '',
+                                            alternative_name: '',
+                                            sales_price: '',
+                                            sku: ''
+                                        }));
+                                    } else if (props.module === 'category-group') {
+                                        dispatch(setCategoryGroupFilterData({
+                                            ...categoryGroupFilterData,
+                                            name: ''
+                                        }));
+                                    }
                                 }} />
                             </Tooltip>
                         </ActionIcon>
-
-                        {
-                            Object.keys(props.checkList).length > 1 &&
-                            <ActionIcon variant="transparent" c={'gray.6'} size="lg" aria-label="Settings">
-                                <Tooltip
-                                    label={t("GenerateInvoice")}
-                                    px={16}
-                                    py={2}
-                                    withArrow
-                                    position={"bottom"}
-                                    c={'red'}
-                                    bg={`red.1`}
-                                    transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
-                                >
-                                    <Button
-                                        fullWidth
-                                        variant="filled"
-                                        color="cyan.5"
-                                        onClick={(e) => {
-                                            console.log(props.checkList)
-                                        }}
-                                    ><IconBrandOkRu size={14} /></Button>
-                                </Tooltip>
-                            </ActionIcon>
-
-                        }
+                        <ActionIcon variant="default"
+                                    c={'green.8'}
+                                    size="lg"  aria-label="Filter"
+                                    onClick={() => {
+                                        searchKeyword.length > 0 ?
+                                            (dispatch(setFetching(true)),
+                                                setSearchKeywordTooltip(false))
+                                            :
+                                            (setSearchKeywordTooltip(true),
+                                                setTimeout(() => {
+                                                    setSearchKeywordTooltip(false)
+                                                }, 1500))
+                                    }}
+                        >
+                            <Tooltip
+                                label={t('DownloadPdfFile')}
+                                px={16}
+                                py={2}
+                                withArrow
+                                position={"bottom"}
+                                c={'red'}
+                                bg={`red.1`}
+                                transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
+                            >
+                                <IconPdf style={{ width: rem(18) }} stroke={1.5} />
+                            </Tooltip>
+                        </ActionIcon>
+                        <ActionIcon variant="default"
+                                    c={'green.8'}
+                                    size="lg"  aria-label="Filter"
+                                    onClick={() => {
+                                        searchKeyword.length > 0 ?
+                                            (dispatch(setFetching(true)),
+                                                setSearchKeywordTooltip(false))
+                                            :
+                                            (setSearchKeywordTooltip(true),
+                                                setTimeout(() => {
+                                                    setSearchKeywordTooltip(false)
+                                                }, 1500))
+                                    }}
+                        >
+                            <Tooltip
+                                label={t('DownloadExcelFile')}
+                                px={16}
+                                py={2}
+                                withArrow
+                                position={"bottom"}
+                                c={'red'}
+                                bg={`red.1`}
+                                transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
+                            >
+                                <IconFileTypeXls style={{ width: rem(18) }} stroke={1.5} />
+                            </Tooltip>
+                        </ActionIcon>
 
                     </ActionIcon.Group>
                 </Grid.Col>
+                <Grid.Col span={'3'}>
+                    <ActionIcon.Group mt={'1'} justify="right">
+                        {
+                            Object.keys(props.checkList).length > 1 &&
+                            <Tooltip
+                                label={t("GenerateBatchForCustomer")}
+                                px={16}
+                                py={2}
+                                withArrow
+                                position={"bottom"}
+                                c={'red'}
+                                bg={`red.1`}
+                                transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
+                            >
+                                <Button
+                                    fullWidth
+                                    variant="filled"
+                                    color="green.8"
+                                    onClick={(e) => {
+                                        console.log(props.checkList)
+                                    }}
+                                ><IconBrandOkRu size={14} /> { t('GenerateBatch')}</Button>
+                            </Tooltip>
+                        }
+                    </ActionIcon.Group>
+                </Grid.Col>
+
 
               {/*
                 <Grid.Col span={2}>
