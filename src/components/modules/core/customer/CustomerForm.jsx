@@ -141,7 +141,7 @@ function CustomerForm() {
     return (
         <Box>
             <form onSubmit={form.onSubmit((values) => {
-                
+
                 dispatch(setValidationData(false))
                 modals.openConfirmModal({
                     title: (
@@ -251,7 +251,7 @@ function CustomerForm() {
                                                 <InputForm
                                                     tooltip={t('NameValidateMessage')}
                                                     label={t('Name')}
-                                                    placeholder={t('name')}
+                                                    placeholder={t('Name')}
                                                     required={true}
                                                     nextField={'mobile'}
                                                     name={'name'}
@@ -301,7 +301,7 @@ function CustomerForm() {
                                                     label={t('Email')}
                                                     placeholder={t('Email')}
                                                     required={false}
-                                                    nextField={'opening'}
+                                                    nextField={'credit_limit'}
                                                     name={'email'}
                                                     form={form}
                                                     mt={8}
@@ -311,7 +311,7 @@ function CustomerForm() {
                                             <Box mt={'xs'}>
                                                 <Grid gutter={{ base: 6 }}>
                                                     <Grid.Col span={6} >
-                                                        <Box>
+                                                        <Box >
                                                             <InputForm
                                                                 tooltip={t('CreditLimit')}
                                                                 label={t('CreditLimit')}
@@ -320,6 +320,7 @@ function CustomerForm() {
                                                                 nextField={'reference_id'}
                                                                 name={'credit_limit'}
                                                                 form={form}
+                                                                mt={8}
                                                                 id={'credit_limit'}
                                                             />
                                                         </Box>

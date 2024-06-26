@@ -154,16 +154,31 @@ function SearchModal({ onClose }) {
                                     {groupData.items.map((action, itemIndex) => (
                                         <GridCol key={itemIndex} span={6}>
                                             <Link
+                                                // `${action.group.toLowerCase()}/${action.id}` 
                                                 to={
-                                                    action.group === 'Production'
+                                                    (action.group === 'Production' || action.group === 'প্রোডাকশন')
                                                         ? `inventory/${action.id}`
-                                                        : `${action.group.toLowerCase()}/${action.id}`
+                                                        : (action.group === 'Core' || action.group === 'কেন্দ্র') ? `core/${action.id}`
+                                                            : (action.group === 'Inventory' || action.group === 'ইনভেন্টরি')
+                                                                ? `inventory/${action.id}`
+                                                                : (action.group === 'Domain' || action.group === 'ডোমেইন')
+                                                                    ? `domain/${action.id}`
+                                                                    : (action.group === 'Accounting' || action.group === 'একাউন্টিং')
+                                                                        ? `accounting/${action.id}`
+                                                                        : `/sitemap`
                                                 }
                                                 onClick={(e) => {
                                                     e.preventDefault();
-                                                    navigate(action.group === 'Production'
+                                                    navigate((action.group === 'Production' || action.group === 'প্রোডাকশন')
                                                         ? `inventory/${action.id}`
-                                                        : `${action.group.toLowerCase()}/${action.id}`);
+                                                        : (action.group === 'Core' || action.group === 'কেন্দ্র') ? `core/${action.id}`
+                                                            : (action.group === 'Inventory' || action.group === 'ইনভেন্টরি')
+                                                                ? `inventory/${action.id}`
+                                                                : (action.group === 'Domain' || action.group === 'ডোমেইন')
+                                                                    ? `domain/${action.id}`
+                                                                    : (action.group === 'Accounting' || action.group === 'একাউন্টিং')
+                                                                        ? `accounting/${action.id}`
+                                                                        : `/sitemap`);
                                                     onClose();
                                                 }}
                                                 style={{ textDecoration: 'none', color: 'inherit' }}
@@ -197,7 +212,7 @@ function SearchModal({ onClose }) {
                     )
                         : (
                             <Text align="center" size="md" c="#828282" mt="md">
-                                {t('NoResultsFound.TryDifferentSearchTerm.')}
+                                {t('NoResultsFoundTryDifferentSearchTerm.')}
                             </Text>
                         )
                     }
