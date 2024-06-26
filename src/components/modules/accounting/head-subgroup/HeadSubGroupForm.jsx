@@ -56,6 +56,10 @@ function HeadSubGroupForm(props) {
     const authorizedDropdown = getSettingAuthorizedTypeDropdownData()
     const accountDropdown = getSettingAccountTypeDropdownData()
 
+    const value = [
+        'head', 'headGroup', 'headSubGroup'
+    ]
+
 
 
     const [files, setFiles] = useState([]);
@@ -92,6 +96,7 @@ function HeadSubGroupForm(props) {
             <Grid columns={9} gutter={{ base: 8 }}>
                 <Grid.Col span={8} >
                     <form onSubmit={form.onSubmit((values) => {
+                        console.log(values);
                         dispatch(setValidationData(false))
                         modals.openConfirmModal({
                             title: (
@@ -178,7 +183,8 @@ function HeadSubGroupForm(props) {
                                                             nextField={'name'}
                                                             name={'parent_id'}
                                                             form={form}
-                                                            dropdownValue={getTransactionMethodDropdownData()}
+                                                            // dropdownValue={getTransactionMethodDropdownData()}
+                                                            dropdownValue={value}
                                                             mt={8}
                                                             id={'parent_id'}
                                                             searchable={false}

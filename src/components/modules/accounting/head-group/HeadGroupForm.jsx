@@ -56,6 +56,10 @@ function HeadGroupForm(props) {
     const authorizedDropdown = getSettingAuthorizedTypeDropdownData()
     const accountDropdown = getSettingAccountTypeDropdownData()
 
+    const values = [
+        'account', 'accountsub', 'accounthead'
+    ]
+
 
 
     const [files, setFiles] = useState([]);
@@ -93,6 +97,7 @@ function HeadGroupForm(props) {
             <Grid columns={9} gutter={{ base: 8 }}>
                 <Grid.Col span={8} >
                     <form onSubmit={form.onSubmit((values) => {
+                        console.log(values)
                         dispatch(setValidationData(false))
                         modals.openConfirmModal({
                             title: (
@@ -179,7 +184,8 @@ function HeadGroupForm(props) {
                                                             nextField={'name'}
                                                             name={'mother_account_id'}
                                                             form={form}
-                                                            dropdownValue={getTransactionMethodDropdownData()}
+                                                            // dropdownValue={getTransactionMethodDropdownData()}
+                                                            dropdownValue={values}
                                                             mt={8}
                                                             id={'mother_account_id'}
                                                             searchable={false}
@@ -209,7 +215,7 @@ function HeadGroupForm(props) {
                                                             name={'code'}
                                                             form={form}
                                                             id={'code'}
-                                                            nextField={'statusz'}
+                                                            nextField={'status'}
                                                         />
                                                     </Box>
                                                     <Box mt={'xs'} ml={'xs'}>
