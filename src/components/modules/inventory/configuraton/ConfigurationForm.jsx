@@ -56,15 +56,20 @@ function ConfigurationForm() {
     const validationMessage = useSelector((state) => state.inventoryCrudSlice.validationMessage)
     const validation = useSelector((state) => state.inventoryCrudSlice.validation)
 
+    const businessModelDropdown = getSettingBusinessModelDropdownData()
+
     const [setFormData, setFormDataForUpdate] = useState(false);
     const [formLoad, setFormLoad] = useState(true);
-    useEffect(() => {
-        // dispatch(getShowEntityData('inventory/config'))
-    }, []);
+
+
+    const configData = localStorage.getItem('config-data')?JSON.parse(localStorage.getItem('config-data')):[]
+    console.log(configData)
+    const [businessModelId,setBusinessModelId] = useState(configData.business_model_id?configData.business_model_id.toString():null)
+
 
     const form = useForm({
         initialValues: {
-            business_model_id: '',
+            business_model_id: configData.business_model_id ? configData.business_model_id : '',
             address: '',
             sku_wearhouse: '',
             sku_category: '',
@@ -166,10 +171,10 @@ function ConfigurationForm() {
         setFormDataForUpdate(true)
     }, [dispatch])
 
-    useEffect(() => {
+    /*useEffect(() => {
 
         form.setValues({
-            business_model_id: showEntityData.business_model_id ? showEntityData.business_model_id : '',
+            business_model_id: configData.business_model_id ? configData.business_model_id : '',
             vat_percent: showEntityData.vat_percent ? showEntityData.vat_percent : '',
             ait_percent: showEntityData.ait_percent ? showEntityData.ait_percent : '',
             address: showEntityData.address ? showEntityData.address : '',
@@ -182,7 +187,7 @@ function ConfigurationForm() {
             setFormDataForUpdate(false)
         }, 500)
 
-    }, [dispatch, setFormData])
+    }, [dispatch, setFormData])*/
 
     // console.log(form.values)
 
@@ -202,7 +207,8 @@ function ConfigurationForm() {
     return (
         <Box>
             <form onSubmit={form.onSubmit((values) => {
-                dispatch(setValidationData(false))
+                console.log(values)
+                /*dispatch(setValidationData(false))
                 modals.openConfirmModal({
                     title: (
                         <Text size="md"> {t("FormConfirmationTitle")}</Text>
@@ -217,9 +223,9 @@ function ConfigurationForm() {
                             url: 'core/customer',
                             data: values
                         }
-                        // dispatch(storeEntityData(value))
+                        dispatch(storeEntityData(value))
                     },
-                });
+                });*/
             })}>
                 <Grid columns={24} gutter={{ base: 8 }}>
                     <Grid.Col span={7} >
@@ -235,7 +241,7 @@ function ConfigurationForm() {
                                 <Box pl={`xs`} pr={'xs'} mt={'xs'} className={'borderRadiusAll'}>
                                     <ScrollArea h={height} scrollbarSize={2} scrollbars="y" type="never" >
                                         <Box>
-                                            {
+                                            {/*{
                                                 Object.keys(form.errors).length > 0 && validationMessage != 0 &&
                                                 <Alert variant="light" color="red" radius="md" title={
                                                     <List withPadding size="sm">
@@ -246,22 +252,24 @@ function ConfigurationForm() {
                                                         {validationMessage.invoice_comment && <List.Item>{t('ValidateMessage')}</List.Item>}
                                                     </List>
                                                 }></Alert>
-                                            }
+                                            }*/}
                                             <Box mt={'xs'}>
                                                 <SelectForm
                                                     tooltip={t('BusinessModel')}
                                                     label={t('BusinessModel')}
                                                     placeholder={t('ChooseBusinessModel')}
-                                                    required={false}
+                                                    required={true}
                                                     nextField={'address'}
                                                     name={'business_model_id'}
                                                     form={form}
-                                                    dropdownValue={["Family", "Local"]}
+                                                    dropdownValue={businessModelDropdown}
                                                     mt={8}
                                                     id={'business_model_id'}
                                                     searchable={false}
-                                                    value={customerGroupData}
-                                                    changeValue={setCustomerGroupData}
+                                                    value={businessModelId}
+                                                    changeValue={setBusinessModelId}
+                                                    clearable={false}
+                                                    allowDeselect={false}
                                                 />
                                             </Box>
 

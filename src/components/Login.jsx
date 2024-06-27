@@ -23,6 +23,7 @@ import { getIndexEntityData } from "../store/core/crudSlice.js";
 import { useDispatch, useSelector } from "react-redux";
 import commonDataStoreIntoLocalStorage from "./global-hook/local-storage/commonDataStoreIntoLocalStorage.js";
 import orderProcessDropdownLocalDataStore from "./global-hook/local-storage/orderProcessDropdownLocalDataStore.js";
+import getConfigData from "./global-hook/config-data/getConfigData.js";
 
 export default function Login() {
 
@@ -30,16 +31,14 @@ export default function Login() {
     const { t, i18n } = useTranslation();
     const navigate = useNavigate()
     const { height, width } = useViewportSize()
+    const configData = getConfigData()
+
     const icon = <IconInfoCircle />;
 
     const [spinner, setSpinner] = useState(false);
     const [errorMessage, setErrorMessage] = useState('')
 
     const user = localStorage.getItem("user");
-
-    const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword)
-    const indexData = useSelector((state) => state.crudSlice.indexEntityData)
-    const productFilterData = useSelector((state) => state.inventoryCrudSlice.productFilterData)
 
 
     if (user) {
@@ -76,6 +75,8 @@ export default function Login() {
                         localStorage.setItem("user", JSON.stringify(res.data.data));
                         const allLocal = commonDataStoreIntoLocalStorage(res.data.data.id)
                         const orderProcess = orderProcessDropdownLocalDataStore(res.data.data.id)
+
+                        localStorage.setItem('config-data', JSON.stringify(configData));
 
                         setErrorMessage('')
                         setSpinner(false)

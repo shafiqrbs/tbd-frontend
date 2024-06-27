@@ -19,7 +19,9 @@ function SelectForm(props) {
         dropdownValue,
         searchable,
         value,
-        changeValue
+        changeValue,
+        clearable,
+        allowDeselect
     } = props
 
     return (
@@ -47,7 +49,7 @@ function SelectForm(props) {
                         size="sm"
                         data={dropdownValue}
                         autoComplete="off"
-                        clearable
+                        clearable={clearable === false ? false : true}
                         searchable={searchable}
                         {...form.getInputProps(name)}
                         value={value}
@@ -58,6 +60,7 @@ function SelectForm(props) {
                         }}
                         withAsterisk={required}
                         comboboxProps={props.comboboxProps}
+                        allowDeselect={allowDeselect === false?false:true}
                     />
                 </Tooltip>
             }
