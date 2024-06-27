@@ -29,7 +29,7 @@ function InvoiceBatchIndex() {
                         configData &&
                         <>
                             <_SalesPurchaseHeaderNavbar
-                                pageTitle={t('Sales')}
+                                pageTitle={t('BatchInvoice')}
                                 roles={t('Roles')}
                                 allowZeroPercentage={configData?.zero_stock}
                                 currancySymbol={configData?.currency?.symbol}

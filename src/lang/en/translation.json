@@ -470,5 +470,8 @@
   "HeadGroupN": "Head Group",
   "WhereWePresentTheHeadGroupInformationN": "Accounting Head Group detailed informationa and manage",
   "HeadSubGroupN": "Head Sub-Group",
-  "WhereWePresentTheHeadSubGroupInformationN": "Account Head Sub-group detailed informationa and manage"
+  "WhereWePresentTheHeadSubGroupInformationN": "Account Head Sub-group detailed informationa and manage",
+  "BatchInvoice": "Batch Invoice",
+  "AddTransaction": "Add Transaction",
+  "" : ""
 }

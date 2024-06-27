@@ -118,6 +118,7 @@ const crudSlice = createSlice({
         productFilterData: { name: '', alternative_name: '', sku: '', sales_price: '' },
         categoryFilterData: { name: '', parentName: '' },
         salesFilterData: { customer_id: '',start_date:'',end_date:'',searchKeyword:''},
+        invoiceBatchFilterData: { customer_id: '',start_date:'',end_date:'',searchKeyword:''},
         purchaseItemsFilterData: { start_date:'',end_date:'',searchKeyword:''},
         purchaseFilterData: { vendor_id: '',start_date:'',end_date:'',searchKeyword:''}
 
@@ -168,6 +169,12 @@ const crudSlice = createSlice({
             state.salesFilterData.start_date = action.payload.start_date
             state.salesFilterData.end_date = action.payload.end_date
             state.salesFilterData.searchKeyword = action.payload.searchKeyword
+        },
+        setInvoiceBatchFilterData: (state, action) => {
+            state.invoiceBatchFilterData.customer_id = action.payload.customer_id
+            state.invoiceBatchFilterData.start_date = action.payload.start_date
+            state.invoiceBatchFilterData.end_date = action.payload.end_date
+            state.invoiceBatchFilterData.searchKeyword = action.payload.searchKeyword
         },
         setPurchaseItemsFilterData: (state, action) => {
             state.purchaseItemsFilterData.start_date = action.payload.start_date
@@ -241,6 +248,6 @@ const crudSlice = createSlice({
     }
 })
 
-export const { setFetching, setEntityNewData, setDropdownLoad, setEditEntityData, setFormLoading, setInsertType, setSearchKeyword, setDeleteMessage, setValidationData, setValidationMessage, setCategoryFilterData ,setProductFilterData,setSalesFilterData,setPurchaseFilterData,setPurchaseItemsFilterData} = crudSlice.actions
+export const { setFetching, setEntityNewData, setDropdownLoad, setEditEntityData, setFormLoading, setInsertType, setSearchKeyword, setDeleteMessage, setValidationData, setValidationMessage, setCategoryFilterData ,setProductFilterData,setSalesFilterData,setPurchaseFilterData,setPurchaseItemsFilterData,setInvoiceBatchFilterData} = crudSlice.actions
 
 export default crudSlice.reducer;

@@ -162,12 +162,14 @@ function _SalesTable() {
                                                 <Tooltip color="green" withArrow={'center'} label={item.invoice + ' - ' + item.customerName}>
                                                     <Checkbox
                                                         value={item.id}
-                                                        checked={!!checkList?.[item.id]}
+                                                        // checked={!!checkList?.[item.id]}
+                                                        checked={!!checkList?.[item.id] || (item?.invoice_batch_id ? true : false)}
                                                         variant="filled"
                                                         radius="xs"
                                                         size="md"
                                                         color="green"
                                                         onChange={(e) => CheckItemsHandel(e, item)}
+                                                        disabled={item?.invoice_batch_id?true:false}
                                                     />
                                                 </Tooltip>
                                             )
@@ -240,13 +242,17 @@ function _SalesTable() {
                                                             </ActionIcon>
                                                         </Menu.Target>
                                                         <Menu.Dropdown>
-                                                            <Menu.Item
-                                                                href={`/inventory/sales/edit/${data.id}`}
-                                                                component="a"
-                                                                w={'200'}
-                                                            >
-                                                                {t('Edit')}
-                                                            </Menu.Item>
+                                                            {
+                                                                !data.invoice_batch_id &&
+                                                                    <Menu.Item
+                                                                        href={`/inventory/sales/edit/${data.id}`}
+                                                                        component="a"
+                                                                        w={'200'}
+                                                                    >
+                                                                        {t('Edit')}
+                                                                    </Menu.Item>
+                                                            }
+
 
                                                             <Menu.Item
                                                                 href={``}
@@ -260,17 +266,22 @@ function _SalesTable() {
                                                             >
                                                                 {t('Show')}
                                                             </Menu.Item>
-                                                            <Menu.Item
-                                                                href={``}
-                                                                component="a"
-                                                                w={'200'}
-                                                                mt={'2'}
-                                                                bg={'red.1'}
-                                                                c={'red.6'}
-                                                                rightSection={<IconTrashX style={{ width: rem(14), height: rem(14) }} />}
-                                                            >
-                                                                {t('Delete')}
-                                                            </Menu.Item>
+
+                                                            {
+                                                                !data.invoice_batch_id &&
+                                                                    <Menu.Item
+                                                                        href={``}
+                                                                        component="a"
+                                                                        w={'200'}
+                                                                        mt={'2'}
+                                                                        bg={'red.1'}
+                                                                        c={'red.6'}
+                                                                        rightSection={<IconTrashX style={{ width: rem(14), height: rem(14) }} />}
+                                                                    >
+                                                                        {t('Delete')}
+                                                                    </Menu.Item>
+                                                            }
+
                                                         </Menu.Dropdown>
                                                     </Menu>
                                                 </Group>

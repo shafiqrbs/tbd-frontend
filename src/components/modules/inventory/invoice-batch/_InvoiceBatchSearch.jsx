@@ -17,7 +17,7 @@ import { useHotkeys } from "@mantine/hooks";
 import { useDispatch, useSelector } from "react-redux";
 import { setSearchKeyword } from "../../../../store/core/crudSlice.js";
 import FilterModel from "../../filter/FilterModel.jsx";
-import {setFetching, setSalesFilterData, storeEntityData} from "../../../../store/inventory/crudSlice.js";
+import {setFetching, setInvoiceBatchFilterData, storeEntityData} from "../../../../store/inventory/crudSlice.js";
 import { DateInput } from "@mantine/dates";
 import {
     setCategoryGroupFilterData,
@@ -27,7 +27,7 @@ import {
 } from "../../../../store/core/crudSlice";
 import {setProductFilterData} from "../../../../store/inventory/crudSlice";
 
-function _SalesSearch(props) {
+function _InvoiceBatchSearch(props) {
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const navigate = useNavigate()
@@ -39,7 +39,7 @@ function _SalesSearch(props) {
     const [endDateTooltip, setEndDateTooltip] = useState(false)
     const [filterModel, setFilterModel] = useState(false)
 
-    const salesFilterData = useSelector((state) => state.inventoryCrudSlice.salesFilterData)
+    const invoiceBatchFilterData = useSelector((state) => state.inventoryCrudSlice.invoiceBatchFilterData)
 
     /*START GET CUSTOMER DROPDOWN FROM LOCAL STORAGE*/
     const [customersDropdownData, setCustomersDropdownData] = useState([])
@@ -93,7 +93,7 @@ function _SalesSearch(props) {
                                     size="sm"
                                     placeholder={t('EnterSearchAnyKeyword')}
                                     onChange={(e) => {
-                                        dispatch(setSalesFilterData({ ...salesFilterData, ['searchKeyword']: e.currentTarget.value }))
+                                        dispatch(setInvoiceBatchFilterData({ ...invoiceBatchFilterData, ['searchKeyword']: e.currentTarget.value }))
                                         e.target.value !== '' ?
                                             setSearchKeywordTooltip(false) :
                                             (setSearchKeywordTooltip(true),
@@ -101,17 +101,17 @@ function _SalesSearch(props) {
                                                     setSearchKeywordTooltip(false)
                                                 }, 1000))
                                     }}
-                                    value={salesFilterData.searchKeyword}
+                                    value={invoiceBatchFilterData.searchKeyword}
                                     id={'SearchKeyword'}
                                     rightSection={
-                                        salesFilterData.searchKeyword ?
+                                        invoiceBatchFilterData.searchKeyword ?
                                             <Tooltip
                                                 label={t("Close")}
                                                 withArrow
                                                 bg={`red.5`}
                                             >
                                                 <IconX color={`red`} size={16} opacity={0.5} onClick={() => {
-                                                    dispatch(setSalesFilterData({ ...salesFilterData, ['searchKeyword']: '' }))
+                                                    dispatch(setInvoiceBatchFilterData({ ...invoiceBatchFilterData, ['searchKeyword']: '' }))
                                                 }} />
                                             </Tooltip>
                                             :
@@ -150,9 +150,9 @@ function _SalesSearch(props) {
                                     autoComplete="off"
                                     clearable
                                     searchable
-                                    value={salesFilterData.customer_id}
+                                    value={invoiceBatchFilterData.customer_id}
                                     onChange={(e) => {
-                                        dispatch(setSalesFilterData({ ...salesFilterData, ['customer_id']: e }))
+                                        dispatch(setInvoiceBatchFilterData({ ...invoiceBatchFilterData, ['customer_id']: e }))
                                         e !== '' ?
                                             setCustomerTooltip(false) :
                                             (setCustomerTooltip(true),
@@ -180,7 +180,7 @@ function _SalesSearch(props) {
                                 <DateInput
                                     clearable
                                     onChange={(e) => {
-                                        dispatch(setSalesFilterData({ ...salesFilterData, ['start_date']: e }))
+                                        dispatch(setInvoiceBatchFilterData({ ...invoiceBatchFilterData, ['start_date']: e }))
                                         e !== '' ?
                                             setStartDateTooltip(false) :
                                             (setStartDateTooltip(true),
@@ -188,7 +188,7 @@ function _SalesSearch(props) {
                                                     setStartDateTooltip(false)
                                                 }, 1000))
                                     }}
-                                    value={salesFilterData.start_date}
+                                    value={invoiceBatchFilterData.start_date}
                                     placeholder={t('StartDate')}
                                 />
                             </Tooltip>
@@ -209,7 +209,7 @@ function _SalesSearch(props) {
                                 <DateInput
                                     clearable
                                     onChange={(e) => {
-                                        dispatch(setSalesFilterData({ ...salesFilterData, ['end_date']: e }))
+                                        dispatch(setInvoiceBatchFilterData({ ...invoiceBatchFilterData, ['end_date']: e }))
                                         e !== '' ?
                                             setEndDateTooltip(false) :
                                             (setEndDateTooltip(true),
@@ -229,7 +229,7 @@ function _SalesSearch(props) {
                                     c={'red.4'}
                                     size="lg"  aria-label="Filter"
                                     onClick={() => {
-                                        salesFilterData.searchKeyword.length > 0 || salesFilterData.customer_id || salesFilterData.start_date ?
+                                        invoiceBatchFilterData.searchKeyword.length > 0 || invoiceBatchFilterData.customer_id || invoiceBatchFilterData.start_date ?
                                             (dispatch(setFetching(true)),
                                                 setSearchKeywordTooltip(false))
                                             :
@@ -290,8 +290,8 @@ function _SalesSearch(props) {
                                     dispatch(setFetching(true))
                                     setRefreshCustomerDropdown(true)
                                     resetDropDownState();
-                                    dispatch(setSalesFilterData({
-                                        ...salesFilterData,
+                                    dispatch(setInvoiceBatchFilterData({
+                                        ...invoiceBatchFilterData,
                                         ['customer_id']: '',
                                         ['start_date']: '',
                                         ['end_date']: '',
@@ -357,47 +357,8 @@ function _SalesSearch(props) {
 
                     </ActionIcon.Group>
                 </Grid.Col>
-                <Grid.Col span={'3'}>
-                    <ActionIcon.Group mt={'1'} justify="right">
-                        {
-                            Object.keys(props.checkList).length > 1 &&
-                            <Tooltip
-                                label={t("GenerateBatchForCustomer")}
-                                px={16}
-                                py={2}
-                                withArrow
-                                position={"bottom"}
-                                c={'red'}
-                                bg={`red.1`}
-                                transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
-                            >
-                                <Button
-                                    fullWidth
-                                    variant="filled"
-                                    color="green.8"
-                                    onClick={(e) => {
-                                        const formValue = {}
-                                        formValue['customer_id'] = props.customerId;
-                                        formValue['sales_id'] = props.checkList;
-
-                                        const data = {
-                                            url: 'inventory/invoice-batch',
-                                            data: formValue
-                                        }
-                                        dispatch(storeEntityData(data))
-                                        navigate('/inventory/invoice-batch')
-                                    }}
-                                ><IconBrandOkRu size={14} /> { t('GenerateBatch')}</Button>
-                            </Tooltip>
-                        }
-                    </ActionIcon.Group>
-                </Grid.Col>
 
 
-              {/*
-                <Grid.Col span={2}>
-
-                </Grid.Col>*/}
             </Grid>
 
             {
@@ -408,4 +369,4 @@ function _SalesSearch(props) {
     );
 }
 
-export default _SalesSearch;
+export default _InvoiceBatchSearch;

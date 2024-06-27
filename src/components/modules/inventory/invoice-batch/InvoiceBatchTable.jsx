@@ -29,12 +29,19 @@ import {
 import { DataTable } from 'mantine-datatable';
 import { useDispatch, useSelector } from "react-redux";
 import { useHotkeys, useToggle } from "@mantine/hooks";
-import { getIndexEntityData, setFetching, setSalesFilterData } from "../../../../store/inventory/crudSlice.js";
+import {
+    getIndexEntityData,
+    setFetching,
+    setInvoiceBatchFilterData,
+    setSalesFilterData
+} from "../../../../store/inventory/crudSlice.js";
 import _ShortcutTable from "../../shortcut/_ShortcutTable";
 import { ReactToPrint } from "react-to-print";
 import _SalesSearch from "../sales/_SalesSearch.jsx";
 import { setSearchKeyword } from "../../../../store/core/crudSlice.js";
 import InvoiceBatchModal from "./InvoiceBatchModal.jsx";
+import _InvoiceBatchSearch from "./_InvoiceBatchSearch.jsx";
+import _AddTransactionModel from "./modal/_AddTransactionModel.jsx";
 // import { DataTable } from 'mantine-datatable';
 
 function InvoiceBatchTable() {
@@ -46,21 +53,32 @@ function InvoiceBatchTable() {
     const tableHeight = mainAreaHeight - 116; //TabList height 104
     const height = mainAreaHeight - 314; //TabList height 104
     const [batchViewModal, setBatchViewModal] = useState(false);
+    const [addTransactionModal, setAddTransactionModal] = useState(false);
 
     const perPage = 50;
     const [page, setPage] = useState(1);
 
-    useEffect(() => {
-        dispatch(setSearchKeyword(''))
-    }, [])
-
     const fetching = useSelector((state) => state.inventoryCrudSlice.fetching)
+    const invoiceBatchFilterData = useSelector((state) => state.inventoryCrudSlice.invoiceBatchFilterData)
     const salesFilterData = useSelector((state) => state.inventoryCrudSlice.salesFilterData)
     const indexData = useSelector((state) => state.inventoryCrudSlice.indexEntityData)
 
     useEffect(() => {
-        console.log(indexData);
+        dispatch(setSearchKeyword(''))
+        dispatch(setSalesFilterData({
+            ...salesFilterData,
+            ['customer_id']: null
+        }));
+        dispatch(setInvoiceBatchFilterData({
+            ...invoiceBatchFilterData,
+            ['customer_id']: '',
+            ['start_date']: '',
+            ['end_date']: '',
+            ['searchKeyword']: '',
+        }));
+        dispatch(setFetching(true))
     }, [])
+
 
     const [loading, setLoading] = useState(true);
     useEffect(() => {
@@ -68,17 +86,17 @@ function InvoiceBatchTable() {
             setLoading(false);
         }, 500);
     }, [loading]);
-    const [salesViewData, setSalesViewData] = useState({})
+    const [invoiceBatchData, setInvoiceBatchData] = useState({})
 
     useEffect(() => {
-        setSalesViewData(indexData.data && indexData.data[0] && indexData.data[0])
+        setInvoiceBatchData(indexData.data && indexData.data[0] && indexData.data[0])
     }, [indexData.data])
     useHotkeys([['alt+n', () => {
         navigate('/inventory/sales-invoice');
     }]], []);
 
 
-    const rows = salesViewData && salesViewData.sales_items && salesViewData.sales_items.map((element, index) => (
+    const rows = invoiceBatchData && invoiceBatchData.invoice_batch_items && invoiceBatchData.invoice_batch_items.map((element, index) => (
         <Table.Tr key={element.name}>
             <Table.Td fz="xs" width={'20'}>{index + 1}</Table.Td>
             <Table.Td ta="left" fz="xs" width={'300'}>{element.item_name}</Table.Td>
@@ -96,12 +114,12 @@ function InvoiceBatchTable() {
             day: '2-digit'
         };
         const value = {
-            url: 'inventory/sales',
+            url: 'inventory/invoice-batch',
             param: {
-                term: salesFilterData.searchKeyword,
-                customer_id: salesFilterData.customer_id,
-                start_date: salesFilterData.start_date && new Date(salesFilterData.start_date).toLocaleDateString("en-CA", options),
-                end_date: salesFilterData.end_date && new Date(salesFilterData.end_date).toLocaleDateString("en-CA", options),
+                term: invoiceBatchFilterData.searchKeyword,
+                customer_id: invoiceBatchFilterData.customer_id,
+                start_date: invoiceBatchFilterData.start_date && new Date(invoiceBatchFilterData.start_date).toLocaleDateString("en-CA", options),
+                end_date: invoiceBatchFilterData.end_date && new Date(invoiceBatchFilterData.end_date).toLocaleDateString("en-CA", options),
                 page: page,
                 offset: perPage
             }
@@ -109,28 +127,6 @@ function InvoiceBatchTable() {
         dispatch(getIndexEntityData(value))
     }, [fetching]);
 
-    const [checkList, setCheckList] = useState({});
-    const CheckItemsHandel = (e, item) => {
-        const value = e.currentTarget.value;
-        const isChecked = e.currentTarget.checked;
-
-        if (isChecked) {
-            setCheckList(prevCheckList => ({ ...prevCheckList, [value]: Number(value) }));
-        } else {
-            setCheckList(prevCheckList => {
-                delete prevCheckList[value];
-                return { ...prevCheckList };
-            });
-        }
-
-        if ((isChecked && !Object.keys(checkList).length) || (!isChecked && !Object.keys(checkList).length)) {
-            dispatch(setSalesFilterData({
-                ...salesFilterData,
-                ['customer_id']: isChecked ? item.customerId : ''
-            }));
-            dispatch(setFetching(true));
-        }
-    }
 
     return (
         <>
@@ -141,7 +137,7 @@ function InvoiceBatchTable() {
                             <Grid>
                                 <Grid.Col>
                                     <Stack >
-                                        <_SalesSearch checkList={checkList} />
+                                        <_InvoiceBatchSearch checkList={[]} />
                                     </Stack>
                                 </Grid.Col>
                             </Grid>
@@ -168,21 +164,8 @@ function InvoiceBatchTable() {
                                             accessor: 'index',
                                             title: t('S/N'),
                                             textAlignment: 'right',
-                                            render: (item) => (
-                                                <Tooltip label={item.invoice + ' - ' + item.customerName}>
-                                                    <Checkbox
-                                                        value={item.id}
-                                                        checked={!!checkList?.[item.id]}
-                                                        variant="outline"
-                                                        radius="xl"
-                                                        size="md"
-                                                        color="red"
-                                                        onChange={(e) => CheckItemsHandel(e, item)}
-                                                    />
-                                                </Tooltip>
-                                            )
+                                            render: (item) => (indexData.data.indexOf(item) + 1)
                                         },
-
                                         { accessor: 'created', title: t("Created") },
                                         {
                                             accessor: 'invoice',
@@ -196,7 +179,7 @@ function InvoiceBatchTable() {
                                                     onClick={(e) => {
                                                         e.preventDefault();
                                                         setLoading(true)
-                                                        setSalesViewData(item)
+                                                        setInvoiceBatchData(item)
                                                     }}
                                                     style={{ cursor: "pointer" }}
                                                 >
@@ -205,7 +188,7 @@ function InvoiceBatchTable() {
 
                                             )
                                         },
-                                        { accessor: 'customerName', title: t("Customer") },
+                                        { accessor: 'customer_name', title: t("Customer") },
                                         {
                                             accessor: 'total',
                                             title: t("Total"),
@@ -260,13 +243,25 @@ function InvoiceBatchTable() {
                                                             </ActionIcon>
                                                         </Menu.Target>
                                                         <Menu.Dropdown>
+
+                                                            <Menu.Item
+                                                                onClick={(e) => {
+                                                                    e.preventDefault();
+                                                                    setAddTransactionModal(true)
+                                                                }}
+                                                                target=""
+                                                                component="a"
+                                                                w={'200'}
+                                                            >
+                                                                {t('AddTransaction')}
+                                                            </Menu.Item>
+
                                                             <Menu.Item
                                                                 // href={`/inventory/sales/edit/${data.id}`}
                                                                 onClick={(e) => {
                                                                     e.preventDefault();
                                                                     setLoading(true)
-                                                                    setSalesViewData(item)
-                                                                    console.log('ok');
+                                                                    setInvoiceBatchData(item)
                                                                     setBatchViewModal(true)
                                                                     // dispatch(editEntityData('core/user/' + data.id))
 
@@ -326,7 +321,7 @@ function InvoiceBatchTable() {
                                 />
                             }
                             <Box h={'36'} pl={`xs`} fz={'sm'} fw={'600'} pr={8} pt={'6'} mb={'4'} className={'boxBackground textColor borderRadiusAll'} >
-                                {t('Invoice')}: {salesViewData && salesViewData.invoice && salesViewData.invoice}
+                                {t('Invoice')}: {invoiceBatchData && invoiceBatchData.invoice && invoiceBatchData.invoice}
                             </Box>
                             <Box className={'borderRadiusAll'} fz={'sm'}  >
                                 <Box pl={`xs`} fz={'sm'} fw={'600'} pr={'xs'} pt={'6'} pb={'xs'} className={'boxBackground textColor'} >
@@ -336,7 +331,7 @@ function InvoiceBatchTable() {
                                                 <Grid.Col span={6} ><Text fz="sm" lh="xs">{t('Customer')}</Text></Grid.Col>
                                                 <Grid.Col span={9} >
                                                     <Text fz="sm" lh="xs">
-                                                        {salesViewData && salesViewData.customerName && salesViewData.customerName}
+                                                        {invoiceBatchData && invoiceBatchData.customer_name && invoiceBatchData.customer_name}
                                                     </Text>
                                                 </Grid.Col>
                                             </Grid>
@@ -344,7 +339,7 @@ function InvoiceBatchTable() {
                                                 <Grid.Col span={6} ><Text fz="sm" lh="xs">{t('Mobile')}</Text></Grid.Col>
                                                 <Grid.Col span={9} >
                                                     <Text fz="sm" lh="xs">
-                                                        {salesViewData && salesViewData.customerMobile && salesViewData.customerMobile}
+                                                        {invoiceBatchData && invoiceBatchData.customer_mobile && invoiceBatchData.customer_mobile}
                                                     </Text>
                                                 </Grid.Col>
                                             </Grid>
@@ -352,7 +347,7 @@ function InvoiceBatchTable() {
                                                 <Grid.Col span={6} ><Text fz="sm" lh="xs">{t('Address')}</Text></Grid.Col>
                                                 <Grid.Col span={9} >
                                                     <Text fz="sm" lh="xs">
-                                                        {salesViewData && salesViewData.customer_address && salesViewData.customer_address}
+                                                        {invoiceBatchData && invoiceBatchData.customer_address && invoiceBatchData.customer_address}
                                                     </Text>
                                                 </Grid.Col>
                                             </Grid>
@@ -360,7 +355,7 @@ function InvoiceBatchTable() {
                                                 <Grid.Col span={6} ><Text fz="sm" lh="xs">{t('Balance')}</Text></Grid.Col>
                                                 <Grid.Col span={9} >
                                                     <Text fz="sm" lh="xs">
-                                                        {salesViewData && salesViewData.balance ? Number(salesViewData.balance).toFixed(2) : 0.00}
+                                                        {invoiceBatchData && invoiceBatchData.balance ? Number(invoiceBatchData.balance).toFixed(2) : 0.00}
                                                     </Text>
                                                 </Grid.Col>
                                             </Grid>
@@ -370,7 +365,7 @@ function InvoiceBatchTable() {
                                                 <Grid.Col span={6} ><Text fz="sm" lh="xs">{t('Created')}</Text></Grid.Col>
                                                 <Grid.Col span={9} >
                                                     <Text fz="sm" lh="xs">
-                                                        {salesViewData && salesViewData.created && salesViewData.created}
+                                                        {invoiceBatchData && invoiceBatchData.created && invoiceBatchData.created}
                                                     </Text>
                                                 </Grid.Col>
                                             </Grid>
@@ -378,34 +373,34 @@ function InvoiceBatchTable() {
                                                 <Grid.Col span={6} ><Text fz="sm" lh="xs">{t('CreatedBy')}</Text></Grid.Col>
                                                 <Grid.Col span={9} >
                                                     <Text fz="sm" lh="xs">
-                                                        {salesViewData && salesViewData.createdByName && salesViewData.createdByName}
+                                                        {invoiceBatchData && invoiceBatchData.created_by_name && invoiceBatchData.created_by_name}
                                                     </Text>
                                                 </Grid.Col>
                                             </Grid>
-                                            <Grid columns={15} gutter={{ base: 4 }}>
+                                            {/*<Grid columns={15} gutter={{ base: 4 }}>
                                                 <Grid.Col span={6} ><Text fz="sm" lh="xs">{t('SalesBy')}</Text></Grid.Col>
                                                 <Grid.Col span={9} >
                                                     <Text fz="sm" lh="xs">
-                                                        {salesViewData && salesViewData.salesByUser && salesViewData.salesByUser}
+                                                        {invoiceBatchData && invoiceBatchData.salesByUser && invoiceBatchData.salesByUser}
                                                     </Text>
                                                 </Grid.Col>
-                                            </Grid>
-                                            <Grid columns={15} gutter={{ base: 4 }}>
+                                            </Grid>*/}
+                                            {/*<Grid columns={15} gutter={{ base: 4 }}>
                                                 <Grid.Col span={6} ><Text fz="sm" lh="xs">{t('Mode')}</Text></Grid.Col>
                                                 <Grid.Col span={9} >
                                                     <Text fz="sm" lh="xs">
-                                                        {salesViewData && salesViewData.mode_name && salesViewData.mode_name}
+                                                        {invoiceBatchData && invoiceBatchData.mode_name && invoiceBatchData.mode_name}
                                                     </Text>
                                                 </Grid.Col>
-                                            </Grid>
-                                            <Grid columns={15} gutter={{ base: 4 }}>
+                                            </Grid>*/}
+                                            {/*<Grid columns={15} gutter={{ base: 4 }}>
                                                 <Grid.Col span={6} ><Text fz="sm" lh="xs">{t('Process')}</Text></Grid.Col>
                                                 <Grid.Col span={9} >
                                                     <Text fz="sm" lh="xs">
-                                                        {salesViewData && salesViewData.process && salesViewData.process}
+                                                        {invoiceBatchData && invoiceBatchData.process && invoiceBatchData.process}
                                                     </Text>
                                                 </Grid.Col>
-                                            </Grid>
+                                            </Grid>*/}
                                         </Grid.Col>
                                     </Grid>
                                 </Box>
@@ -427,31 +422,31 @@ function InvoiceBatchTable() {
                                                 <Table.Tr>
                                                     <Table.Th colspan={'5'} ta="right" fz="xs" w={'100'}>{t('SubTotal')}</Table.Th>
                                                     <Table.Th ta="right" fz="xs" w={'100'}>
-                                                        {salesViewData && salesViewData.sub_total && Number(salesViewData.sub_total).toFixed(2)}
+                                                        {invoiceBatchData && invoiceBatchData.sub_total && Number(invoiceBatchData.sub_total).toFixed(2)}
                                                     </Table.Th>
                                                 </Table.Tr>
                                                 <Table.Tr>
                                                     <Table.Th colspan={'5'} ta="right" fz="xs" w={'100'}>{t('Discount')}</Table.Th>
                                                     <Table.Th ta="right" fz="xs" w={'100'}>
-                                                        {salesViewData && salesViewData.discount && Number(salesViewData.discount).toFixed(2)}
+                                                        {invoiceBatchData && invoiceBatchData.discount && Number(invoiceBatchData.discount).toFixed(2)}
                                                     </Table.Th>
                                                 </Table.Tr>
                                                 <Table.Tr>
                                                     <Table.Th colspan={'5'} ta="right" fz="xs" w={'100'}>{t('Total')}</Table.Th>
                                                     <Table.Th ta="right" fz="xs" w={'100'}>
-                                                        {salesViewData && salesViewData.total && Number(salesViewData.total).toFixed(2)}
+                                                        {invoiceBatchData && invoiceBatchData.total && Number(invoiceBatchData.total).toFixed(2)}
                                                     </Table.Th>
                                                 </Table.Tr>
                                                 <Table.Tr>
                                                     <Table.Th colspan={'5'} ta="right" fz="xs" w={'100'}>{t('Receive')}</Table.Th>
                                                     <Table.Th ta="right" fz="xs" w={'100'}>
-                                                        {salesViewData && salesViewData.payment && Number(salesViewData.payment).toFixed(2)}
+                                                        {invoiceBatchData && invoiceBatchData.payment && Number(invoiceBatchData.payment).toFixed(2)}
                                                     </Table.Th>
                                                 </Table.Tr>
                                                 <Table.Tr>
                                                     <Table.Th colspan={'5'} ta="right" fz="xs" w={'100'}>{t('Due')}</Table.Th>
                                                     <Table.Th ta="right" fz="xs" w={'100'}>
-                                                        {salesViewData && salesViewData.total && (Number(salesViewData.total) - Number(salesViewData.payment)).toFixed(2)}
+                                                        {invoiceBatchData && invoiceBatchData.total && (Number(invoiceBatchData.total) - Number(invoiceBatchData.payment)).toFixed(2)}
                                                     </Table.Th>
                                                 </Table.Tr>
                                             </Table.Tfoot>
@@ -473,9 +468,8 @@ function InvoiceBatchTable() {
                     </Grid.Col>
                 </Grid>
             </Box>
-            {
-                batchViewModal && <InvoiceBatchModal batchViewModal={batchViewModal} setBatchViewModal={setBatchViewModal} />
-            }
+            {batchViewModal && <InvoiceBatchModal batchViewModal={batchViewModal} setBatchViewModal={setBatchViewModal} />}
+            {addTransactionModal && <_AddTransactionModel addTransactionModal={addTransactionModal} setAddTransactionModal={setAddTransactionModal} />}
         </>
     );
 }
