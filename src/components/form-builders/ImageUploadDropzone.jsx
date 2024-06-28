@@ -23,10 +23,11 @@ function ImageUploadDropzone(props) {
         changeValue,
         base,
         sm,
-        lg
+        lg,
+        files,
+        setFiles
     } = props
 
-    const [files, setFiles] = useState([]);
 
     const previews = files.map((file, index) => {
         const imageUrl = URL.createObjectURL(file);

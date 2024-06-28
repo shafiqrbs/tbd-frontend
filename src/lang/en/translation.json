@@ -473,5 +473,8 @@
   "WhereWePresentTheHeadSubGroupInformationN": "Account Head Sub-group detailed informationa and manage",
   "BatchInvoice": "Batch Invoice",
   "AddTransaction": "Add Transaction",
+  "AITEnabled": "AIT Enable",
+  "ZakatEnabled": "Zakat Enable",
+  "ZakatPercent": "Zakat Percent",
   "" : ""
 }

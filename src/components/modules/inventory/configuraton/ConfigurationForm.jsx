@@ -29,7 +29,7 @@ import {
     setFormLoading,
     setValidationData,
     getShowEntityData,
-    updateEntityData,
+    updateEntityData, editEntityData,
 
 } from "../../../../store/inventory/crudSlice.js";
 import getSettingBusinessModelDropdownData from "../../../global-hook/dropdown/getSettingBusinessModelDropdownData.js";
@@ -37,6 +37,8 @@ import SwitchForm from "../../../form-builders/SwitchForm.jsx";
 import ImageUploadDropzone from "../../../form-builders/ImageUploadDropzone.jsx";
 import InputNumberForm from "../../../form-builders/InputNumberForm.jsx";
 import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
+import {storeEntityData} from "../../../../store/core/crudSlice.js";
+import getConfigData from "../../../global-hook/config-data/getConfigData.js";
 
 function ConfigurationForm() {
     const { t, i18n } = useTranslation();
@@ -61,38 +63,42 @@ function ConfigurationForm() {
     const [setFormData, setFormDataForUpdate] = useState(false);
     const [formLoad, setFormLoad] = useState(true);
 
+    const [files, setFiles] = useState([]);
+
+    localStorage.setItem('config-data', JSON.stringify(getConfigData()));
 
     const configData = localStorage.getItem('config-data')?JSON.parse(localStorage.getItem('config-data')):[]
-    console.log(configData)
     const [businessModelId,setBusinessModelId] = useState(configData.business_model_id?configData.business_model_id.toString():null)
 
 
     const form = useForm({
         initialValues: {
-            business_model_id: configData.business_model_id ? configData.business_model_id : '',
-            address: '',
-            sku_wearhouse: '',
-            sku_category: '',
-            vat_percent: '',
-            is_vat_enabled: '',
-            ait_percent: '',
-            is_ait_enabled: '',
-            production_type: '',
-            invoice_comment: '',
-            logo: '',
-            remove_image: '',
-            invoice_print_logo: '',
-            print_outstanding: '',
-            pos_print: '',
-            is_print_header: '',
-            is_invoice_title: '',
-            is_print_footer: '',
-            is_powered: '',
-            print_footer_text: '',
-            body_font_size: '',
-            invoice_height: '',
-            invoice_width: '',
-            border_color: '',
+            business_model_id: configData.business_model_id ? configData?.business_model_id : '',
+            address: configData?.address,
+            sku_wearhouse: configData.sku_wearhouse,
+            sku_category: configData.sku_category,
+            vat_enable: configData.vat_enable,
+            vat_percent: configData.vat_percent,
+            ait_enable: configData.ait_enable,
+            ait_percent: configData.ait_percent,
+            zakat_enable: configData.zakat_enable,
+            zakat_percent: configData.zakat_percent,
+            production_type: configData.production_type,
+            invoice_comment: configData.invoice_comment,
+            logo: configData.logo,
+            remove_image: configData.remove_image,
+            invoice_print_logo: configData.invoice_print_logo,
+            print_outstanding: configData.print_outstanding,
+            pos_print: configData.pos_print,
+            is_print_header: configData.is_print_header,
+            is_invoice_title: configData.is_invoice_title,
+            is_print_footer: configData.is_print_footer,
+            is_powered: configData.is_powered,
+            print_footer_text: configData.print_footer_text,
+            body_font_size: configData.body_font_size,
+            invoice_height: configData.invoice_height,
+            invoice_width: configData.invoice_width,
+            border_color: configData.border_color,
             border_width: '',
             print_left_margin: '',
             print_top_margin: '',
@@ -138,7 +144,7 @@ function ConfigurationForm() {
 
 
     useEffect(() => {
-        if (validation) {
+        /*if (validation) {
             validationMessage.business_model_id && (form.setFieldError('business_model_id', true));
             validationMessage.vat_percent && (form.setFieldError('vat_percent', true));
             validationMessage.ait_percent && (form.setFieldError('ait_percent', true));
@@ -148,7 +154,7 @@ function ConfigurationForm() {
             setTimeout(() => {
                 // setSaveCreateLoading(false)
             }, 700)
-        }
+        }*/
 
         if (validationMessage.message === 'success') {
             notifications.show({
@@ -161,7 +167,7 @@ function ConfigurationForm() {
             });
 
             setTimeout(() => {
-                // setSaveCreateLoading(false)
+                setSaveCreateLoading(false)
             }, 700)
         }
     }, [validation, validationMessage]);
@@ -207,8 +213,24 @@ function ConfigurationForm() {
     return (
         <Box>
             <form onSubmit={form.onSubmit((values) => {
-                console.log(values)
-                /*dispatch(setValidationData(false))
+                if (files){
+                    form.values['logo'] = files[0]
+                }
+                form.values['sku_wearhouse'] = (values.sku_wearhouse===true || values.sku_wearhouse== 1)?1:0
+                form.values['sku_category'] = (values.sku_category===true || values.sku_category== 1)?1:0
+                form.values['vat_enable'] = (values.vat_enable===true || values.vat_enable==1)?1:0
+                form.values['ait_enable'] = (values.ait_enable===true || values.ait_enable==1)?1:0
+                form.values['zakat_enable'] = (values.zakat_enable===true || values.zakat_enable==1)?1:0
+                form.values['remove_image'] = (values.remove_image===true || values.remove_image==1)?1:0
+                form.values['invoice_print_logo'] = (values.invoice_print_logo===true || values.invoice_print_logo==1)?1:0
+                form.values['print_outstanding'] = (values.print_outstanding===true || values.print_outstanding==1)?1:0
+                form.values['pos_print'] = (values.pos_print===true || values.pos_print==1)?1:0
+                form.values['is_print_header'] = (values.is_print_header===true || values.is_print_header==1)?1:0
+                form.values['is_invoice_title'] = (values.is_invoice_title===true || values.is_invoice_title==1)?1:0
+                form.values['is_print_footer'] = (values.is_print_footer===true || values.is_print_footer==1)?1:0
+                form.values['is_powered'] = (values.is_powered===true || values.is_powered==1)?1:0
+
+                dispatch(setValidationData(false))
                 modals.openConfirmModal({
                     title: (
                         <Text size="md"> {t("FormConfirmationTitle")}</Text>
@@ -220,12 +242,12 @@ function ConfigurationForm() {
                     onCancel: () => console.log('Cancel'),
                     onConfirm: () => {
                         const value = {
-                            url: 'core/customer',
+                            url: 'inventory/config-update',
                             data: values
                         }
-                        dispatch(storeEntityData(value))
+                        dispatch(updateEntityData(value))
                     },
-                });*/
+                });
             })}>
                 <Grid columns={24} gutter={{ base: 8 }}>
                     <Grid.Col span={7} >
@@ -303,7 +325,7 @@ function ConfigurationForm() {
                                                             color="red"
                                                             id={'sku_wearhouse'}
                                                             position={'left'}
-                                                            defaultChecked={0}
+                                                            defaultChecked={configData.sku_wearhouse}
                                                         />
                                                     </Grid.Col>
                                                     <Grid.Col span={6} fz={'sm'} pt={'1'} >{t('Warehouse')}</Grid.Col>
@@ -321,7 +343,7 @@ function ConfigurationForm() {
                                                             color="red"
                                                             id={'sku_category'}
                                                             position={'left'}
-                                                            defaultChecked={0}
+                                                            defaultChecked={configData.sku_category}
                                                         />
                                                     </Grid.Col>
                                                     <Grid.Col span={6} fz={'sm'} pt={'1'} >{t('Category')}</Grid.Col>
@@ -335,7 +357,7 @@ function ConfigurationForm() {
                                                             label={t('VatPercent')}
                                                             placeholder={t('VatPercent')}
                                                             required={false}
-                                                            nextField={'is_vat_enabled'}
+                                                            nextField={'vat_enable'}
                                                             name={'vat_percent'}
                                                             form={form}
                                                             mt={0}
@@ -350,12 +372,12 @@ function ConfigurationForm() {
                                                                         tooltip={t('VatEnabled')}
                                                                         label=''
                                                                         nextField={'ait_percent'}
-                                                                        name={'is_vat_enabled'}
+                                                                        name={'vat_enable'}
                                                                         form={form}
                                                                         color="red"
-                                                                        id={'is_vat_enabled'}
+                                                                        id={'vat_enable'}
                                                                         position={'left'}
-                                                                        defaultChecked={0}
+                                                                        defaultChecked={configData.vat_enable}
                                                                     />
                                                                 </Grid.Col>
                                                                 <Grid.Col span={4} fz={'sm'} pt={'1'}>{t('VatEnabled')}
@@ -373,7 +395,7 @@ function ConfigurationForm() {
                                                             label={t('AITPercent')}
                                                             placeholder={t('AITPercent')}
                                                             required={false}
-                                                            nextField={'is_ait_enabled'}
+                                                            nextField={'ait_enable'}
                                                             name={'ait_percent'}
                                                             form={form}
                                                             mt={0}
@@ -387,13 +409,13 @@ function ConfigurationForm() {
                                                                     <SwitchForm
                                                                         tooltip={t('AitEnabled')}
                                                                         label=''
-                                                                        nextField={'production_type'}
-                                                                        name={'is_ait_enabled'}
+                                                                        nextField={'zakat_percent'}
+                                                                        name={'ait_enable'}
                                                                         form={form}
                                                                         color="red"
-                                                                        id={'is_ait_enabled'}
+                                                                        id={'ait_enable'}
                                                                         position={'left'}
-                                                                        defaultChecked={0}
+                                                                        defaultChecked={configData.ait_enable}
                                                                     />
                                                                 </Grid.Col>
                                                                 <Grid.Col span={4} fz={'sm'} pt={'1'}>{t('AITEnabled')}
@@ -411,11 +433,11 @@ function ConfigurationForm() {
                                                             label={t('ZakatPercent')}
                                                             placeholder={t('ZakatPercent')}
                                                             required={false}
-                                                            name={'ait_percent'}
+                                                            name={'zakat_percent'}
                                                             form={form}
                                                             mt={0}
-                                                            id={'ait_percent'}
-                                                            nextField={'is_ait_enabled'}
+                                                            id={'zakat_percent'}
+                                                            nextField={'zakat_enable'}
                                                         />
                                                     </Grid.Col>
                                                     <Grid.Col span={6} mt={'lg'}>
@@ -425,13 +447,13 @@ function ConfigurationForm() {
                                                                     <SwitchForm
                                                                         tooltip={t('ZakatEnabled')}
                                                                         label=''
-                                                                        nextField={'production_type'}
-                                                                        name={'is_zakat_enabled'}
+                                                                        nextField={'invoice_comment'}
+                                                                        name={'zakat_enable'}
                                                                         form={form}
                                                                         color="red"
-                                                                        id={'is_zakat_enabled'}
+                                                                        id={'zakat_enable'}
                                                                         position={'left'}
-                                                                        defaultChecked={0}
+                                                                        defaultChecked={configData.zakat_enable}
                                                                     />
                                                                 </Grid.Col>
                                                                 <Grid.Col span={4} fz={'sm'} pt={'1'}>{t('ZakatEnabled')}</Grid.Col>
@@ -447,7 +469,7 @@ function ConfigurationForm() {
                                                     label={t('InvoiceComment')}
                                                     placeholder={t('InvoiceComment')}
                                                     required={false}
-                                                    nextField={'remove_image'}
+                                                    nextField={'logo'}
                                                     name={'invoice_comment'}
                                                     form={form}
                                                     mt={8}
@@ -463,7 +485,8 @@ function ConfigurationForm() {
                                                     required={false}
                                                     placeholder={t('DropLogoHere')}
                                                     nextField={'remove_image'}
-
+                                                    files={files}
+                                                    setFiles={setFiles}
                                                 />
                                             </Box>
                                             <Box mt={'xs'} mb={'xs'}>
@@ -478,7 +501,7 @@ function ConfigurationForm() {
                                                             color="red"
                                                             id={'remove_image'}
                                                             position={'left'}
-                                                            defaultChecked={0}
+                                                            defaultChecked={configData.remove_image}
                                                         />
                                                     </Grid.Col>
                                                     <Grid.Col span={6} fz={'sm'} pt={'1'} >{t('RemoveImage')}</Grid.Col>
@@ -516,7 +539,7 @@ function ConfigurationForm() {
                                                             color="red"
                                                             id={'invoice_print_logo'}
                                                             position={'left'}
-                                                            defaultChecked={1}
+                                                            defaultChecked={configData.invoice_print_logo}
                                                         />
                                                     </Grid.Col>
                                                     <Grid.Col span={6} fz={'sm'} pt={'1'}>{t('PrintLogo')}</Grid.Col>
@@ -534,7 +557,7 @@ function ConfigurationForm() {
                                                             color="red"
                                                             id={'print_outstanding'}
                                                             position={'left'}
-                                                            defaultChecked={1}
+                                                            defaultChecked={configData.print_outstanding}
                                                         />
                                                     </Grid.Col>
                                                     <Grid.Col span={6} fz={'sm'} pt={'1'} >{t('PrintWithOutstanding')}</Grid.Col>
@@ -552,7 +575,7 @@ function ConfigurationForm() {
                                                             color="red"
                                                             id={'pos_print'}
                                                             position={'left'}
-                                                            defaultChecked={1}
+                                                            defaultChecked={configData.pos_print}
                                                         />
                                                     </Grid.Col>
                                                     <Grid.Col span={6} fz={'sm'} pt={'1'} >{t('PosPrint')}</Grid.Col>
@@ -570,7 +593,7 @@ function ConfigurationForm() {
                                                             color="red"
                                                             id={'is_print_header'}
                                                             position={'left'}
-                                                            defaultChecked={1}
+                                                            defaultChecked={configData.is_print_header}
                                                         />
                                                     </Grid.Col>
                                                     <Grid.Col span={6} fz={'sm'} pt={'1'} >{t('PrintHeader')}</Grid.Col>
@@ -588,7 +611,7 @@ function ConfigurationForm() {
                                                             color="red"
                                                             id={'is_invoice_title'}
                                                             position={'left'}
-                                                            defaultChecked={1}
+                                                            defaultChecked={configData.is_invoice_title}
                                                         />
                                                     </Grid.Col>
                                                     <Grid.Col span={6} fz={'sm'} pt={'1'} >{t('PrintInvoiceTitle')}</Grid.Col>
@@ -606,7 +629,7 @@ function ConfigurationForm() {
                                                             color="red"
                                                             id={'is_print_footer'}
                                                             position={'left'}
-                                                            defaultChecked={0}
+                                                            defaultChecked={configData.is_print_footer}
                                                         />
                                                     </Grid.Col>
                                                     <Grid.Col span={6} fz={'sm'} pt={'1'} >{t('PrintFooter')}</Grid.Col>
@@ -624,7 +647,7 @@ function ConfigurationForm() {
                                                             color="red"
                                                             id={'is_powered'}
                                                             position={'left'}
-                                                            defaultChecked={0}
+                                                            defaultChecked={configData.is_powered}
                                                         />
                                                     </Grid.Col>
                                                     <Grid.Col span={6} fz={'sm'} pt={'1'} >{t('PrintPowered')}</Grid.Col>
