@@ -64,8 +64,8 @@ function CustomerUpdateForm() {
             customer_group: '',
             credit_limit: '',
             reference_id: '',
-            mobile: '',
-            alternative_mobile: '',
+            mobile: '+880',
+            alternative_mobile: '+880',
             email: '',
             location_id: '',
             marketing_id: '',
@@ -100,7 +100,6 @@ function CustomerUpdateForm() {
             },
         }
     });
-
     useEffect(() => {
         setFormLoad(true)
         setFormDataForUpdate(true)
@@ -112,8 +111,8 @@ function CustomerUpdateForm() {
                 customer_group: entityEditData.customer_group ? entityEditData.customer_group : '',
                 credit_limit: entityEditData.credit_limit ? entityEditData.credit_limit : '',
                 reference_id: entityEditData.reference_id ? entityEditData.reference_id : '',
-                mobile: entityEditData.mobile ? entityEditData.mobile : '',
-                alternative_mobile: entityEditData.alternative_mobile ? entityEditData.alternative_mobile : '',
+                mobile: entityEditData.mobile ? entityEditData.mobile : '+880',
+                alternative_mobile: entityEditData.alternative_mobile ? entityEditData.alternative_mobile : '+880',
                 email: entityEditData.email ? entityEditData.email : '',
                 location_id: entityEditData.location_id ? entityEditData.location_id : '',
                 marketing_id: entityEditData.marketing_id ? entityEditData.marketing_id : '',

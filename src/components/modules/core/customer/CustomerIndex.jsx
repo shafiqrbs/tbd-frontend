@@ -100,7 +100,7 @@ function CustomerIndex() {
                             <Grid.Col span={9}>
                                 {
                                     insertType === 'create'
-                                        ? <CustomerForm setCustomerJustSaved={setCustomerJustSaved} />
+                                        ? <CustomerForm />
                                         : <CustomerUpdateForm setCustomerJustSaved={setCustomerJustSaved} />
                                 }
                             </Grid.Col>
