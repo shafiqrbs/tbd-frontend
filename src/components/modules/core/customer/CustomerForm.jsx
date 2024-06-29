@@ -24,7 +24,7 @@ import SelectForm from "../../../form-builders/SelectForm";
 import TextAreaForm from "../../../form-builders/TextAreaForm";
 import CustomerGroupModel from "./CustomerGroupModal.jsx";
 import getLocationDropdownData from "../../../global-hook/dropdown/getLocationDropdownData.js";
-import getExecutiveDropdownData from "../../../global-hook/dropdown/getExecutiveDropdownData.js";
+// import getExecutiveDropdownData from "../../../global-hook/dropdown/getExecutiveDropdownData.js";
 import getCoreSettingCustomerGroupDropdownData
     from "../../../global-hook/dropdown/getCoreSettingCustomerGroupDropdownData.js";
 import PhoneNumber from "../../../form-builders/PhoneNumberInput.jsx";
@@ -47,7 +47,7 @@ function CustomerForm() {
     const entityNewData = useSelector((state) => state.crudSlice.entityNewData)
 
     const locationDropdown = getLocationDropdownData();
-    const executiveDropdown = getExecutiveDropdownData();
+    // const executiveDropdown = getExecutiveDropdownData();
 
     const form = useForm({
         initialValues: {
@@ -143,7 +143,15 @@ function CustomerForm() {
     return (
         <Box>
             <form onSubmit={form.onSubmit((values) => {
-
+                dispatch(updateEntityData(values))
+                    .then(() => {
+                        // other success handling code
+                        navigate('/core/customer', { replace: true });
+                        dispatch(setInsertType('create')); // Reset to create mode
+                    })
+                    .catch((error) => {
+                        // error handling
+                    });
                 dispatch(setValidationData(false))
                 modals.openConfirmModal({
                     title: (

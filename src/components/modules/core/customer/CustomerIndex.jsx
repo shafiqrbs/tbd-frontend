@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import {
     Box,
     Grid, Progress, Title
@@ -13,35 +14,70 @@ import {
     setCustomerFilterData,
     setEntityNewData,
     setInsertType,
-    setSearchKeyword
+    setSearchKeyword,
+    editEntityData,
+    setFormLoading
 } from "../../../../store/core/crudSlice.js";
 import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress.js";
 import CoreHeaderNavbar from "../CoreHeaderNavbar";
-import VendorTable from "../vendor/VendorTable";
-import VendorForm from "../vendor/VendorForm";
-import VendorUpdateForm from "../vendor/VendorUpdateForm";
 
 function CustomerIndex() {
-    const { t, i18n } = useTranslation();
+    const { t } = useTranslation();
     const dispatch = useDispatch();
+    const { customerId } = useParams();
+    const navigate = useNavigate();
 
     const insertType = useSelector((state) => state.crudSlice.insertType)
     const customerFilterData = useSelector((state) => state.crudSlice.customerFilterData)
 
     const progress = getLoadingProgress()
 
-    useEffect(() => {
-        dispatch(setInsertType('create'))
-        dispatch(setSearchKeyword(''))
-        dispatch(setEntityNewData([]))
-        dispatch(setCustomerFilterData({
-            ...customerFilterData,
-            ['name']: '',
-            ['mobile']: ''
-        }))
-    }, [])
+    const [customerJustSaved, setCustomerJustSaved] = useState(false);
 
-    const user = localStorage.getItem("user");
+
+    useEffect(() => {
+        if (customerId && !customerJustSaved) {
+            dispatch(setInsertType('update'));
+            dispatch(editEntityData(`core/customer/${customerId}`));
+            dispatch(setFormLoading(true));
+        } else if (!customerId && !customerJustSaved) {
+            dispatch(setInsertType('create'));
+            dispatch(setSearchKeyword(''));
+            dispatch(setEntityNewData([]));
+            dispatch(setCustomerFilterData({
+                ...customerFilterData,
+                ['name']: '',
+                ['mobile']: ''
+            }));
+            navigate('/core/customer', { replace: true });
+        }
+    }, [customerId, customerJustSaved, dispatch, navigate, customerFilterData]);
+
+    useEffect(() => {
+        return () => {
+            dispatch(setInsertType('create'));
+            dispatch(setSearchKeyword(''));
+            dispatch(setEntityNewData([]));
+            dispatch(setCustomerFilterData({
+                name: '',
+                mobile: ''
+            }));
+        };
+    }, [dispatch]);
+    useEffect(() => {
+        if (customerJustSaved) {
+            navigate('/core/customer', { replace: true });
+            dispatch(setInsertType('create'));
+            dispatch(setSearchKeyword(''));
+            dispatch(setEntityNewData([]));
+            dispatch(setCustomerFilterData({
+                ...customerFilterData,
+                ['name']: '',
+                ['mobile']: ''
+            }));
+            setCustomerJustSaved(false);
+        }
+    }, [customerJustSaved, dispatch, navigate, customerFilterData]);
 
     return (
         <>
@@ -63,7 +99,9 @@ function CustomerIndex() {
                             </Grid.Col>
                             <Grid.Col span={9}>
                                 {
-                                    insertType === 'create' ? <CustomerForm /> : <CustomerUpdateForm />
+                                    insertType === 'create'
+                                        ? <CustomerForm setCustomerJustSaved={setCustomerJustSaved} />
+                                        : <CustomerUpdateForm setCustomerJustSaved={setCustomerJustSaved} />
                                 }
                             </Grid.Col>
                         </Grid>
@@ -71,7 +109,6 @@ function CustomerIndex() {
                 </>
             }
         </>
-
     );
 }
 

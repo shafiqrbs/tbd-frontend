@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useOutletContext } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import {
     Group,
     Box,
@@ -37,6 +37,8 @@ function CustomerTable() {
     const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword)
     const indexData = useSelector((state) => state.crudSlice.indexEntityData)
     const customerFilterData = useSelector((state) => state.crudSlice.customerFilterData)
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         const value = {
@@ -93,9 +95,7 @@ function CustomerTable() {
                                         <Menu.Dropdown>
                                             <Menu.Item
                                                 onClick={() => {
-                                                    dispatch(setInsertType('update'))
-                                                    dispatch(editEntityData('core/customer/' + data.id))
-                                                    dispatch(setFormLoading(true))
+                                                    navigate(`/core/customer/${data.id}`);
                                                 }}
                                                 target="_blank"
                                                 component="a"
