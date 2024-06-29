@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useOutletContext } from "react-router-dom";
+import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 import {
     Button,
     rem,
@@ -27,7 +27,7 @@ import Shortcut from "../../shortcut/Shortcut.jsx";
 import SelectForm from "../../../form-builders/SelectForm.jsx";
 import TextAreaForm from "../../../form-builders/TextAreaForm.jsx";
 import getLocationDropdownData from "../../../global-hook/dropdown/getLocationDropdownData.js";
-import getExecutiveDropdownData from "../../../global-hook/dropdown/getExecutiveDropdownData.js";
+// import getExecutiveDropdownData from "../../../global-hook/dropdown/getExecutiveDropdownData.js";
 import CustomerGroupModel from "./CustomerGroupModal";
 import PhoneNumber from "../../../form-builders/PhoneNumberInput.jsx";
 
@@ -47,7 +47,16 @@ function CustomerUpdateForm() {
     const entityEditData = useSelector((state) => state.crudSlice.entityEditData)
     const formLoading = useSelector((state) => state.crudSlice.formLoading)
     const locationDropdown = getLocationDropdownData();
-    const executiveDropdown = getExecutiveDropdownData();
+    // const executiveDropdown = getExecutiveDropdownData();
+
+    const { customerId } = useParams();
+    useEffect(() => {
+        if (customerId) {
+            dispatch(setEditEntityData(`core/customer/${customerId}`));
+            dispatch(setFormLoading(true));
+        }
+    }, [customerId, dispatch]);
+    const navigate = useNavigate();
 
     const form = useForm({
         initialValues: {
@@ -55,8 +64,8 @@ function CustomerUpdateForm() {
             customer_group: '',
             credit_limit: '',
             reference_id: '',
-            mobile: '',
-            alternative_mobile: '',
+            mobile: '+880',
+            alternative_mobile: '+880',
             email: '',
             location_id: '',
             marketing_id: '',
@@ -91,34 +100,32 @@ function CustomerUpdateForm() {
             },
         }
     });
-
     useEffect(() => {
         setFormLoad(true)
         setFormDataForUpdate(true)
     }, [dispatch, formLoading])
-
     useEffect(() => {
+        if (entityEditData && Object.keys(entityEditData).length > 0) {
+            form.setValues({
+                name: entityEditData.name ? entityEditData.name : '',
+                customer_group: entityEditData.customer_group ? entityEditData.customer_group : '',
+                credit_limit: entityEditData.credit_limit ? entityEditData.credit_limit : '',
+                reference_id: entityEditData.reference_id ? entityEditData.reference_id : '',
+                mobile: entityEditData.mobile ? entityEditData.mobile : '+880',
+                alternative_mobile: entityEditData.alternative_mobile ? entityEditData.alternative_mobile : '+880',
+                email: entityEditData.email ? entityEditData.email : '',
+                location_id: entityEditData.location_id ? entityEditData.location_id : '',
+                marketing_id: entityEditData.marketing_id ? entityEditData.marketing_id : '',
+                address: entityEditData.address ? entityEditData.address : '',
+            })
 
-        form.setValues({
-            name: entityEditData.name ? entityEditData.name : '',
-            customer_group: entityEditData.customer_group ? entityEditData.customer_group : '',
-            credit_limit: entityEditData.credit_limit ? entityEditData.credit_limit : '',
-            reference_id: entityEditData.reference_id ? entityEditData.reference_id : '',
-            mobile: entityEditData.mobile ? entityEditData.mobile : '',
-            alternative_mobile: entityEditData.alternative_mobile ? entityEditData.alternative_mobile : '',
-            email: entityEditData.email ? entityEditData.email : '',
-            location_id: entityEditData.location_id ? entityEditData.location_id : '',
-            marketing_id: entityEditData.marketing_id ? entityEditData.marketing_id : '',
-            address: entityEditData.address ? entityEditData.address : '',
-        })
-
-        dispatch(setFormLoading(false))
-        setTimeout(() => {
-            setFormLoad(false)
-            setFormDataForUpdate(false)
-        }, 500)
-
-    }, [dispatch, setFormData])
+            dispatch(setFormLoading(false))
+            setTimeout(() => {
+                setFormLoad(false)
+                setFormDataForUpdate(false)
+            }, 500)
+        }
+    }, [entityEditData, dispatch])
 
 
     useHotkeys([['alt+n', () => {
@@ -142,6 +149,16 @@ function CustomerUpdateForm() {
 
         <Box>
             <form onSubmit={form.onSubmit((values) => {
+                // In the submit handler of both forms
+                dispatch(updateEntityData(values))
+                    .then(() => {
+                        // other success handling code
+                        navigate('/core/customer', { replace: true });
+                        dispatch(setInsertType('create')); // Reset to create mode
+                    })
+                    .catch((error) => {
+                        // error handling
+                    });
                 modals.openConfirmModal({
                     title: (
                         <Text size="md"> {t("FormConfirmationTitle")}</Text>
@@ -173,6 +190,7 @@ function CustomerUpdateForm() {
                             dispatch(setEditEntityData([]))
                             dispatch(setFetching(true))
                             setSaveCreateLoading(false)
+                            navigate('/core/customer', { replace: true })
                         }, 700)
                     },
                 });

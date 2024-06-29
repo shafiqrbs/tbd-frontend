@@ -31,7 +31,7 @@ function CoreHeaderNavbar(props) {
             className={classes.link}
             onClick={(event) => {
                 event.preventDefault();
-                navigate(link.link)
+                navigate(link.link, { replace: true });
             }}
         >
             {link.label}
