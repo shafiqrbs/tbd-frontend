@@ -20,6 +20,18 @@ export const getUserDropdown = createAsyncThunk("user/select", async (value) => 
 });
 
 
+export const getCountryDropdown = createAsyncThunk("country/select", async (value) => {
+    try {
+        const response = getDataWithoutParam(value);
+        return response;
+    } catch (error) {
+        console.log('error', error.message);
+        throw error;
+    }
+});
+
+
+
 export const getCustomerDropdown = createAsyncThunk("customer/select", async (value) => {
     try {
         const response = getDataWithoutParam(value);
@@ -29,6 +41,7 @@ export const getCustomerDropdown = createAsyncThunk("customer/select", async (va
         throw error;
     }
 });
+
 
 export const getVendorDropdown = createAsyncThunk("vendor/select", async (value) => {
     try {
@@ -87,6 +100,7 @@ const utilitySlice = createSlice({
         fetching : true,
         customerDropdownData : [],
         vendorDropdownData : [],
+        countryDropdownData : [],
         userDropdownData : [],
         locationDropdownData : [],
         executiveDropdownData : [],
@@ -106,6 +120,10 @@ const utilitySlice = createSlice({
 
         builder.addCase(getCustomerDropdown.fulfilled, (state, action) => {
             state.customerDropdownData = action.payload
+        })
+
+        builder.addCase(getCountryDropdown.fulfilled, (state, action) => {
+            state.countryDropdownData = action.payload
         })
 
          builder.addCase(getVendorDropdown.fulfilled, (state, action) => {

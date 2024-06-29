@@ -1,31 +1,15 @@
-import React, { useState } from "react";
+import React from "react";
 import {
-    Tooltip,
-    Select, SimpleGrid, Text, Image, Flex, Center
+    SimpleGrid, Text, Image, Center
 } from "@mantine/core";
-import { getHotkeyHandler } from "@mantine/hooks";
 import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
 
 function ImageUploadDropzone(props) {
     const {
-        label,
         placeholder,
-        required,
-        nextField,
-        name,
-        form,
-        tooltip,
-        mt,
-        id,
-        dropdownValue,
-        searchable,
-        value,
-        changeValue,
-        base,
-        sm,
-        lg,
         files,
-        setFiles
+        setFiles,
+        existsFile
     } = props
 
 
@@ -45,7 +29,17 @@ function ImageUploadDropzone(props) {
                 <Center mt={previews.length > 0 ? 'xl' : 0}>
                     <div>
                         <SimpleGrid cols={{ base: 1, sm: 1, lg: 1 }}>
-                            {previews}
+                            {files[0] ? previews :
+                                <>
+                                    <Image
+                                        maw={240}
+                                        key={0}
+                                        mx="auto"
+                                        radius="md"
+                                        src={existsFile}
+                                        onLoad={() => URL.revokeObjectURL(existsFile)} />
+                                </>
+                            }
                         </SimpleGrid>
 
                     </div>

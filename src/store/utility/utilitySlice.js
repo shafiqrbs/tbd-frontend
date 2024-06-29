@@ -22,6 +22,16 @@ export const getProductUnitDropdown = createAsyncThunk("product-unit/select", as
     }
 });
 
+export const getCurrencyDropdown = createAsyncThunk("currency/select", async (value) => {
+    try {
+        const response = getDataWithParam(value);
+        return response;
+    } catch (error) {
+        console.log('error', error.message);
+        throw error;
+    }
+});
+
 
 const utilitySlice = createSlice({
     name : "utility",
@@ -33,6 +43,7 @@ const utilitySlice = createSlice({
         authorizedDropdownData : [],
         businessModelDropdownData : [],
         salesProcessTypeDropdownData : [],
+        currencyDropdown : [],
         productUnitDropdown : [],
     },
     reducers : {
@@ -63,6 +74,10 @@ const utilitySlice = createSlice({
 
         builder.addCase(getProductUnitDropdown.fulfilled, (state, action) => {
             state.productUnitDropdown = action.payload.data
+        })
+
+        builder.addCase(getCurrencyDropdown.fulfilled, (state, action) => {
+            state.currencyDropdown = action.payload.data
         })
 
 

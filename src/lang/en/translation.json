@@ -476,5 +476,12 @@
   "AITEnabled": "AIT Enable",
   "ZakatEnabled": "Zakat Enable",
   "ZakatPercent": "Zakat Percent",
+  "ZeroReceiveAllow": "Zero Receive Allow",
+  "PurchaseByPurchasePrice": "Purchase By Purchase Price",
+  "isActiveSms": "Is SMS Active",
+  "Country": "Country",
+  "ChooseCountry": "Choose Country",
+  "ChooseCurrency": "Choose Currency",
+  "Currency": "Currency",
   "" : ""
 }
