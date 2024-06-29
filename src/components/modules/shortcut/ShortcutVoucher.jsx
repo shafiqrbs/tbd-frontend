@@ -98,7 +98,7 @@ function ShortcutVoucher(props) {
                                 pl={'12'}
                                 pr={'12'}
                                 variant={'filled'}
-                                color={`red`}
+                                color={`green.8`}
                                 radius="xl"
                                 onClick={(e) => {
                                     document.getElementById(props.FormSubmit).click()
