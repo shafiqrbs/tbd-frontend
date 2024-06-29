@@ -91,21 +91,53 @@ function CustomerTable() {
                                             </ActionIcon>
                                         </Menu.Target>
                                         <Menu.Dropdown>
-                                            <Menu.Item w={'200'} href="/inventory/config" >
+                                            <Menu.Item
+                                                onClick={() => {
+                                                    dispatch(setInsertType('update'))
+                                                    dispatch(editEntityData('core/customer/' + data.id))
+                                                    dispatch(setFormLoading(true))
+                                                }}
+                                                target="_blank"
+                                                component="a"
+                                                w={'200'}
+                                            >
                                                 {t('Edit')}
                                             </Menu.Item>
-                                            <Menu.Item href="/inventory/config"
+                                            <Menu.Item
+                                                onClick={() => {
+                                                    setCustomerViewModel(true)
+                                                    dispatch(editEntityData('core/customer/' + data.id))
+                                                }}
+                                                target="_blank"
+                                                component="a"
+                                                w={'200'}
                                             >
                                                 {t('Show')}
                                             </Menu.Item>
                                             <Menu.Item
-                                                href={``}
                                                 target="_blank"
                                                 component="a"
                                                 w={'200'}
                                                 mt={'2'}
                                                 bg={'red.1'}
                                                 c={'red.6'}
+                                                onClick={() => {
+                                                    modals.openConfirmModal({
+                                                        title: (
+                                                            <Text size="md"> {t("FormConfirmationTitle")}</Text>
+                                                        ),
+                                                        children: (
+                                                            <Text size="sm"> {t("FormConfirmationMessage")}</Text>
+                                                        ),
+                                                        confirmProps: { color: 'red.6' },
+                                                        labels: { confirm: 'Confirm', cancel: 'Cancel' },
+                                                        onCancel: () => console.log('Cancel'),
+                                                        onConfirm: () => {
+                                                            dispatch(deleteEntityData('core/customer/' + data.id))
+                                                            dispatch(setFetching(true))
+                                                        },
+                                                    });
+                                                }}
                                                 rightSection={<IconTrashX style={{ width: rem(14), height: rem(14) }} />}
                                             >
                                                 {t('Delete')}

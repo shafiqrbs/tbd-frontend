@@ -27,16 +27,17 @@ export default function PhoneNumber(props) {
     const { t } = useTranslation();
     const error = form.errors[name];
 
+
     const handleChange = (value) => {
         form.setFieldValue(name, value);
     };
 
     const handleKeyDown = (event) => {
         if (event.key === 'Enter') {
-            if (nextField === 'EntityFormSubmit') {
-                document.getElementById(nextField).click();
-            } else {
-                document.getElementById(nextField)?.focus();
+            event.preventDefault(); // Prevent form submission
+            const nextElement = document.getElementById(nextField);
+            if (nextElement) {
+                nextElement.focus();
             }
         }
     };
@@ -79,6 +80,7 @@ export default function PhoneNumber(props) {
                         }}
                         containerStyle={{ marginBottom: 0 }}
                         placeholder={placeholder}
+                        countryCodeEditable={false}
                     />
 
                     <div style={{

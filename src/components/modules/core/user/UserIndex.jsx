@@ -9,13 +9,10 @@ import {
     setInsertType,
     setSearchKeyword,
     setUserFilterData,
-    setVendorFilterData
 } from "../../../../store/core/crudSlice.js";
 import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress.js";
 import CoreHeaderNavbar from "../CoreHeaderNavbar";
-import CustomerTable from "../customer/CustomerTable";
-import CustomerForm from "../customer/CustomerForm";
-import CustomerUpdateForm from "../customer/CustomerUpdateForm";
+
 
 function UserIndex() {
     const { t, i18n } = useTranslation();

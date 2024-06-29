@@ -29,12 +29,13 @@ import TextAreaForm from "../../../form-builders/TextAreaForm.jsx";
 import getLocationDropdownData from "../../../global-hook/dropdown/getLocationDropdownData.js";
 import getExecutiveDropdownData from "../../../global-hook/dropdown/getExecutiveDropdownData.js";
 import CustomerGroupModel from "./CustomerGroupModal";
+import PhoneNumber from "../../../form-builders/PhoneNumberInput.jsx";
 
 function CustomerUpdateForm() {
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
-    const height = mainAreaHeight - 130; //TabList height 104
+    const height = mainAreaHeight - 100; //TabList height 104
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
     const [setFormData, setFormDataForUpdate] = useState(false);
     const [formLoad, setFormLoad] = useState(true);
@@ -50,20 +51,44 @@ function CustomerUpdateForm() {
 
     const form = useForm({
         initialValues: {
-            location_id: '',
-            marketing_id: '',
             name: '',
-            mobile: '',
             customer_group: '',
             credit_limit: '',
             reference_id: '',
+            mobile: '',
             alternative_mobile: '',
-            address: '',
             email: '',
+            location_id: '',
+            marketing_id: '',
+            address: '',
         },
         validate: {
             name: hasLength({ min: 2, max: 20 }),
             mobile: (value) => (!/^\d+$/.test(value)),
+            email: (value) => {
+                if (value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+                    return true;
+                }
+                return null;
+            },
+            credit_limit: (value) => {
+                if (value) {
+                    const isNumberOrFractional = /^-?\d+(\.\d+)?$/.test(value);
+                    if (!isNumberOrFractional) {
+                        return true;
+                    }
+                }
+                return null;
+            },
+            alternative_mobile: (value) => {
+                if (value && value.trim()) {
+                    const isDigitsOnly = /^\d+$/.test(value);
+                    if (!isDigitsOnly) {
+                        return true;
+                    }
+                }
+                return null;
+            },
         }
     });
 
@@ -75,16 +100,16 @@ function CustomerUpdateForm() {
     useEffect(() => {
 
         form.setValues({
-            location_id: entityEditData.location_id ? entityEditData.location_id : '',
-            marketing_id: entityEditData.marketing_id ? entityEditData.marketing_id : '',
             name: entityEditData.name ? entityEditData.name : '',
-            mobile: entityEditData.mobile ? entityEditData.mobile : '',
             customer_group: entityEditData.customer_group ? entityEditData.customer_group : '',
             credit_limit: entityEditData.credit_limit ? entityEditData.credit_limit : '',
             reference_id: entityEditData.reference_id ? entityEditData.reference_id : '',
+            mobile: entityEditData.mobile ? entityEditData.mobile : '',
             alternative_mobile: entityEditData.alternative_mobile ? entityEditData.alternative_mobile : '',
+            email: entityEditData.email ? entityEditData.email : '',
+            location_id: entityEditData.location_id ? entityEditData.location_id : '',
+            marketing_id: entityEditData.marketing_id ? entityEditData.marketing_id : '',
             address: entityEditData.address ? entityEditData.address : '',
-            email: entityEditData.email ? entityEditData.email : ''
         })
 
         dispatch(setFormLoading(false))
@@ -97,7 +122,7 @@ function CustomerUpdateForm() {
 
 
     useHotkeys([['alt+n', () => {
-        document.getElementById('CustomerName').focus()
+        document.getElementById('customer_group').focus()
     }]], []);
 
     useHotkeys([['alt+r', () => {
@@ -105,9 +130,13 @@ function CustomerUpdateForm() {
     }]], []);
 
     useHotkeys([['alt+s', () => {
-        document.getElementById('CustomerFormSubmit').click()
+        document.getElementById('EntityFormSubmit').click()
     }]], []);
 
+
+    const marKValues = [
+        'test', 'test2'
+    ]
 
     return (
 
@@ -120,7 +149,7 @@ function CustomerUpdateForm() {
                     children: (
                         <Text size="sm"> {t("FormConfirmationMessage")}</Text>
                     ),
-                    labels: { confirm: t('Submit'), cancel: t('Cancel') }, confirmProps: { color: 'red' },
+                    labels: { confirm: t('Submit'), cancel: t('Cancel') }, confirmProps: { color: 'red.6' },
                     onCancel: () => console.log('Cancel'),
                     onConfirm: () => {
                         setSaveCreateLoading(true)
@@ -128,9 +157,7 @@ function CustomerUpdateForm() {
                             url: 'core/customer/' + entityEditData.id,
                             data: values
                         }
-
                         dispatch(updateEntityData(value))
-
                         notifications.show({
                             color: 'teal',
                             title: t('UpdateSuccessfully'),
@@ -156,10 +183,10 @@ function CustomerUpdateForm() {
                     <Grid.Col span={8} >
                         <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
                             <Box bg={"white"} >
-                                <Box pl={`xs`} pb={'xs'} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'} >
+                                <Box pl={`xs`} pr={8} pt={'6'} pb={'6'} mb={'4'} className={'boxBackground borderRadiusAll'} >
                                     <Grid>
-                                        <Grid.Col span={6} h={54}>
-                                            <Title order={6} mt={'xs'} pl={'6'}>{t('UpdateCustomer')}</Title>
+                                        <Grid.Col span={6}>
+                                            <Title order={6} pt={'6'}>{t('UpdateCustomer')}</Title>
                                         </Grid.Col>
                                         <Grid.Col span={6}>
                                             <Stack right align="flex-end">
@@ -168,15 +195,14 @@ function CustomerUpdateForm() {
                                                         !saveCreateLoading && isOnline &&
                                                         <Button
                                                             size="xs"
-                                                            color={`red.6`}
+                                                            color={`green.8`}
                                                             type="submit"
-                                                            mt={4}
                                                             id="EntityFormSubmit"
                                                             leftSection={<IconDeviceFloppy size={16} />}
                                                         >
 
                                                             <Flex direction={`column`} gap={0}>
-                                                                <Text fz={12} fw={400}>
+                                                                <Text fz={14} fw={400}>
                                                                     {t("UpdateAndSave")}
                                                                 </Text>
                                                             </Flex>
@@ -186,38 +212,25 @@ function CustomerUpdateForm() {
                                         </Grid.Col>
                                     </Grid>
                                 </Box>
-                                <Box pl={`xs`} pr={'xs'} mt={'xs'} className={'borderRadiusAll'}>
+                                <Box pl={`xs`} pr={'xs'} className={'borderRadiusAll'}>
                                     <ScrollArea h={height} scrollbarSize={2} scrollbars="y" type="never">
                                         <Box>
-                                            <LoadingOverlay visible={formLoad} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />
-                                            <Box mt={'xs'}>
-                                                <InputForm
-                                                    tooltip={t('NameValidateMessage')}
-                                                    label={t('Name')}
-                                                    placeholder={t('CustomerName')}
-                                                    required={true}
-                                                    nextField={'CustomerGroup'}
-                                                    name={'name'}
-                                                    form={form}
-                                                    mt={0}
-                                                    id={'CustomerName'}
-                                                />
-                                            </Box>
-                                            <Box mt={'xs'}>
+                                            <LoadingOverlay visible={formLoad} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} loaderProps={{ color: 'red.6' }} />
+                                            <Box>
                                                 <Grid gutter={{ base: 6 }}>
                                                     <Grid.Col span={11} >
-                                                        <Box>
+                                                        <Box mt={'8'}>
                                                             <SelectForm
                                                                 tooltip={t('CustomerGroup')}
                                                                 label={t('CustomerGroup')}
                                                                 placeholder={t('ChooseCustomerGroup')}
                                                                 required={false}
-                                                                nextField={'CreditLimit'}
+                                                                nextField={'name'}
                                                                 name={'customer_group'}
                                                                 form={form}
-                                                                dropdownValue={["Family", "Local"]}
+                                                                dropdownValue={['local', 'family']}
                                                                 mt={8}
-                                                                id={'CustomerGroup'}
+                                                                id={'customer_group'}
                                                                 searchable={false}
                                                                 value={customerGroupData ? String(customerGroupData) : (entityEditData.customer_group ? String(entityEditData.customer_group) : null)}
                                                                 changeValue={setCustomerGroupData}
@@ -227,11 +240,13 @@ function CustomerUpdateForm() {
                                                     <Grid.Col span={1}>
                                                         <Box pt={'xl'}>
                                                             <Tooltip
+                                                                ta="center"
                                                                 multiline
-                                                                w={420}
+                                                                bg={'orange.8'}
+                                                                offset={{ crossAxis: '-110', mainAxis: '5' }}
                                                                 withArrow
                                                                 transitionProps={{ duration: 200 }}
-                                                                label={t('QuickCategoryGroup')}
+                                                                label={t('QuickCustomerGroup')}
                                                             >
                                                                 <ActionIcon fullWidth variant="outline" bg={'white'} size={'lg'} color="red.5" mt={'1'} aria-label="Settings" onClick={open}>
                                                                     <IconUsersGroup style={{ width: '100%', height: '70%' }} stroke={1.5} />
@@ -247,55 +262,51 @@ function CustomerUpdateForm() {
                                             </Box>
                                             <Box mt={'xs'}>
                                                 <InputForm
-                                                    tooltip={t('CreditLimitValidateMessage')}
-                                                    label={t('CreditLimit')}
-                                                    placeholder={t('CreditLimit')}
-                                                    required={false}
-                                                    nextField={'OLDReferenceNo'}
-                                                    name={'credit_limit'}
-                                                    form={form}
-                                                    mt={8}
-                                                    id={'CreditLimit'}
-                                                />
-                                            </Box>
-                                            <Box mt={'xs'}>
-                                                <InputForm
-                                                    tooltip={t('OLDReferenceNo')}
-                                                    label={t('OLDReferenceNo')}
-                                                    placeholder={t('OLDReferenceNo')}
-                                                    required={false}
-                                                    nextField={'Mobile'}
-                                                    name={'reference_id'}
-                                                    form={form}
-                                                    mt={8}
-                                                    id={'OLDReferenceNo'}
-                                                />
-                                            </Box>
-                                            <Box mt={'xs'}>
-                                                <InputForm
-                                                    tooltip={t('MobileValidateMessage')}
-                                                    label={t('Mobile')}
-                                                    placeholder={t('Mobile')}
+                                                    tooltip={t('NameValidateMessage')}
+                                                    label={t('Name')}
+                                                    placeholder={t('Name')}
                                                     required={true}
-                                                    nextField={'AlternativeMobile'}
-                                                    name={'mobile'}
+                                                    nextField={'mobile'}
+                                                    name={'name'}
                                                     form={form}
-                                                    mt={8}
-                                                    id={'Mobile'}
+                                                    mt={0}
+                                                    id={'name'}
                                                 />
                                             </Box>
                                             <Box mt={'xs'}>
-                                                <InputForm
-                                                    tooltip={t('MobileValidateMessage')}
-                                                    label={t('AlternativeMobile')}
-                                                    placeholder={t('AlternativeMobile')}
-                                                    required={false}
-                                                    nextField={'Email'}
-                                                    name={'alternative_mobile'}
-                                                    form={form}
-                                                    mt={8}
-                                                    id={'AlternativeMobile'}
-                                                />
+                                                <Grid gutter={{ base: 6 }}>
+                                                    <Grid.Col span={6} >
+                                                        <Box>
+                                                            <PhoneNumber
+                                                                tooltip={t('MobileValidateMessage')}
+                                                                label={t('Mobile')}
+                                                                placeholder={t('Mobile')}
+                                                                required={true}
+                                                                nextField={'alternative_mobile'}
+                                                                name={'mobile'}
+                                                                form={form}
+                                                                mt={8}
+                                                                id={'mobile'} />
+
+                                                        </Box>
+                                                    </Grid.Col>
+                                                    <Grid.Col span={6}>
+                                                        <Box>
+                                                            <PhoneNumber
+                                                                tooltip={t('MobileValidateMessage')}
+                                                                label={t('AlternativeMobile')}
+                                                                placeholder={t('AlternativeMobile')}
+                                                                required={false}
+                                                                nextField={'email'}
+                                                                name={'alternative_mobile'}
+                                                                form={form}
+                                                                mt={8}
+                                                                id={'alternative_mobile'}
+                                                            />
+                                                        </Box>
+
+                                                    </Grid.Col>
+                                                </Grid>
                                             </Box>
                                             <Box mt={'xs'}>
                                                 <InputForm
@@ -303,12 +314,46 @@ function CustomerUpdateForm() {
                                                     label={t('Email')}
                                                     placeholder={t('Email')}
                                                     required={false}
-                                                    nextField={'Location'}
+                                                    nextField={'credit_limit'}
                                                     name={'email'}
                                                     form={form}
                                                     mt={8}
-                                                    id={'Email'}
+                                                    id={'email'}
                                                 />
+                                            </Box>
+                                            <Box mt={'xs'}>
+                                                <Grid gutter={{ base: 6 }}>
+                                                    <Grid.Col span={6} >
+                                                        <Box >
+                                                            <InputForm
+                                                                tooltip={t('CreditLimit')}
+                                                                label={t('CreditLimit')}
+                                                                placeholder={t('CreditLimit')}
+                                                                required={false}
+                                                                nextField={'reference_id'}
+                                                                name={'credit_limit'}
+                                                                form={form}
+                                                                mt={8}
+                                                                id={'credit_limit'}
+                                                            />
+                                                        </Box>
+                                                    </Grid.Col>
+                                                    <Grid.Col span={6}>
+                                                        <Box>
+                                                            <InputForm
+                                                                tooltip={t('OLDReferenceNo')}
+                                                                label={t('OLDReferenceNo')}
+                                                                placeholder={t('OLDReferenceNo')}
+                                                                required={false}
+                                                                nextField={'location_id'}
+                                                                name={'reference_id'}
+                                                                form={form}
+                                                                mt={8}
+                                                                id={'reference_id'}
+                                                            />
+                                                        </Box>
+                                                    </Grid.Col>
+                                                </Grid>
                                             </Box>
                                             <Box mt={'xs'}>
                                                 <SelectForm
@@ -316,12 +361,12 @@ function CustomerUpdateForm() {
                                                     label={t('Location')}
                                                     placeholder={t('ChooseLocation')}
                                                     required={false}
-                                                    nextField={'MarketingExecutive'}
+                                                    nextField={'marketing_id'}
                                                     name={'location_id'}
                                                     form={form}
                                                     dropdownValue={locationDropdown}
                                                     mt={8}
-                                                    id={'Location'}
+                                                    id={'location_id'}
                                                     searchable={true}
                                                     value={locationData ? String(locationData) : (entityEditData.location_id ? String(entityEditData.location_id) : null)}
                                                     changeValue={setLocationData}
@@ -333,12 +378,13 @@ function CustomerUpdateForm() {
                                                     label={t('MarketingExecutive')}
                                                     placeholder={t('ChooseMarketingExecutive')}
                                                     required={false}
-                                                    nextField={'Address'}
+                                                    nextField={'address'}
                                                     name={'marketing_id'}
                                                     form={form}
-                                                    dropdownValue={executiveDropdown}
+                                                    // dropdownValue={executiveDropdown}
+                                                    dropdownValue={marKValues}
                                                     mt={8}
-                                                    id={'MarketingExecutive'}
+                                                    id={'marketing_id'}
                                                     searchable={true}
                                                     value={marketingExeData ? String(marketingExeData) : (entityEditData.marketing_id ? String(entityEditData.marketing_id) : null)}
                                                     changeValue={setMarketingExeData}
@@ -351,11 +397,11 @@ function CustomerUpdateForm() {
                                                     label={t('Address')}
                                                     placeholder={t('Address')}
                                                     required={false}
-                                                    nextField={'Status'}
+                                                    nextField={'EntityFormSubmit'}
                                                     name={'address'}
                                                     form={form}
                                                     mt={8}
-                                                    id={'Address'}
+                                                    id={'address'}
                                                 />
                                             </Box>
                                         </Box>
@@ -369,7 +415,7 @@ function CustomerUpdateForm() {
                             <Shortcut
                                 form={form}
                                 FormSubmit={'EntityFormSubmit'}
-                                Name={'name'}
+                                Name={'customer_group'}
                                 inputType="select"
                             />
                         </Box>

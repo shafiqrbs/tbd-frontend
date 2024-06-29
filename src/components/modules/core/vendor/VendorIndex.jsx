@@ -16,10 +16,6 @@ import {
     setVendorFilterData
 } from "../../../../store/core/crudSlice.js";
 import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress.js";
-import InventoryHeaderNavbar from "../../inventory/configuraton/InventoryHeaderNavbar";
-import CategoryTable from "../../inventory/category/CategoryTable";
-import CategoryForm from "../../inventory/category/CategoryForm";
-import CategoryUpdateForm from "../../inventory/category/CategoryUpdateForm";
 import CoreHeaderNavbar from "../CoreHeaderNavbar";
 
 function VendorIndex() {

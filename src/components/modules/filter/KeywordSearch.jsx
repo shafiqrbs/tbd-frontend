@@ -10,7 +10,7 @@ import {
     IconInfoCircle,
     IconRestore,
     IconSearch,
-    IconX,IconPdf,IconFileTypeXls
+    IconX, IconPdf, IconFileTypeXls
 } from "@tabler/icons-react";
 import { useHotkeys } from "@mantine/hooks";
 import { useDispatch, useSelector } from "react-redux";
@@ -49,7 +49,7 @@ function KeywordSearch(props) {
 
     return (
         <>
-            <Grid justify="space-between" align="stretch"  gutter={{ base: 2 }} grow>
+            <Grid justify="space-between" align="stretch" gutter={{ base: 2 }} grow>
                 <Grid.Col span="8">
                     <Tooltip
                         label={t('EnterSearchAnyKeyword')}
@@ -61,7 +61,7 @@ function KeywordSearch(props) {
                         withArrow
                         offset={2}
                         zIndex={100}
-                        transitionProps={{ transition: "pop-bottom-left", duration: 5000 }}
+                        transitionProps={{ transition: "pop-bottom-left", duration: 1000 }}
                     >
                         <TextInput
                             leftSection={<IconSearch size={16} opacity={0.5} />}
@@ -107,7 +107,7 @@ function KeywordSearch(props) {
                     <ActionIcon.Group mt={'1'} justify="center">
                         <ActionIcon variant="default"
                             c={'red.4'}
-                            size="lg"  aria-label="Filter"
+                            size="lg" aria-label="Filter"
                             onClick={() => {
                                 searchKeyword.length > 0 ?
                                     (dispatch(setFetching(true)),
@@ -208,18 +208,18 @@ function KeywordSearch(props) {
                             </Tooltip>
                         </ActionIcon>
                         <ActionIcon variant="default"
-                                    c={'green.8'}
-                                    size="lg"  aria-label="Filter"
-                                    onClick={() => {
-                                        searchKeyword.length > 0 ?
-                                            (dispatch(setFetching(true)),
-                                                setSearchKeywordTooltip(false))
-                                            :
-                                            (setSearchKeywordTooltip(true),
-                                                setTimeout(() => {
-                                                    setSearchKeywordTooltip(false)
-                                                }, 1500))
-                                    }}
+                            c={'green.8'}
+                            size="lg" aria-label="Filter"
+                            onClick={() => {
+                                searchKeyword.length > 0 ?
+                                    (dispatch(setFetching(true)),
+                                        setSearchKeywordTooltip(false))
+                                    :
+                                    (setSearchKeywordTooltip(true),
+                                        setTimeout(() => {
+                                            setSearchKeywordTooltip(false)
+                                        }, 1500))
+                            }}
                         >
                             <Tooltip
                                 label={t('DownloadPdfFile')}
@@ -235,18 +235,18 @@ function KeywordSearch(props) {
                             </Tooltip>
                         </ActionIcon>
                         <ActionIcon variant="default"
-                                    c={'green.8'}
-                                    size="lg"  aria-label="Filter"
-                                    onClick={() => {
-                                        searchKeyword.length > 0 ?
-                                            (dispatch(setFetching(true)),
-                                                setSearchKeywordTooltip(false))
-                                            :
-                                            (setSearchKeywordTooltip(true),
-                                                setTimeout(() => {
-                                                    setSearchKeywordTooltip(false)
-                                                }, 1500))
-                                    }}
+                            c={'green.8'}
+                            size="lg" aria-label="Filter"
+                            onClick={() => {
+                                searchKeyword.length > 0 ?
+                                    (dispatch(setFetching(true)),
+                                        setSearchKeywordTooltip(false))
+                                    :
+                                    (setSearchKeywordTooltip(true),
+                                        setTimeout(() => {
+                                            setSearchKeywordTooltip(false)
+                                        }, 1500))
+                            }}
                         >
                             <Tooltip
                                 label={t('DownloadExcelFile')}

@@ -110,12 +110,10 @@ function VendorTable() {
                                             </Menu.Item>
 
                                             <Menu.Item
-                                                href={``}
                                                 onClick={() => {
                                                     setVendorViewModel(true)
                                                     const coreVendors = JSON.parse(localStorage.getItem('core-vendors') || '[]');
                                                     const foundVendors = coreVendors.find(type => type.id == data.id);
-
                                                     if (foundVendors) {
                                                         setVendorObject(foundVendors);
                                                     }

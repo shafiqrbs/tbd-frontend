@@ -28,7 +28,6 @@ import getExecutiveDropdownData from "../../../global-hook/dropdown/getExecutive
 import getCoreSettingCustomerGroupDropdownData
     from "../../../global-hook/dropdown/getCoreSettingCustomerGroupDropdownData.js";
 import PhoneNumber from "../../../form-builders/PhoneNumberInput.jsx";
-import InputNumberForm from "../../../form-builders/InputNumberForm";
 
 
 function CustomerForm() {
@@ -126,7 +125,7 @@ function CustomerForm() {
     }, [validation, validationMessage, form]);
 
     useHotkeys([['alt+n', () => {
-        document.getElementById('customer_group').focus()
+        document.getElementById('customer_group').click()
     }]], []);
 
     useHotkeys([['alt+r', () => {
@@ -137,6 +136,9 @@ function CustomerForm() {
         document.getElementById('EntityFormSubmit').click()
     }]], []);
 
+    const marKValues = [
+        'test', 'test2'
+    ]
 
     return (
         <Box>
@@ -264,7 +266,7 @@ function CustomerForm() {
                                                 <Grid gutter={{ base: 6 }}>
                                                     <Grid.Col span={6} >
                                                         <Box>
-                                                            <InputNumberForm
+                                                            <PhoneNumber
                                                                 tooltip={t('MobileValidateMessage')}
                                                                 label={t('Mobile')}
                                                                 placeholder={t('Mobile')}
@@ -273,13 +275,13 @@ function CustomerForm() {
                                                                 name={'mobile'}
                                                                 form={form}
                                                                 mt={8}
-                                                                id={'mobile'}
-                                                            />
+                                                                id={'mobile'} />
+
                                                         </Box>
                                                     </Grid.Col>
                                                     <Grid.Col span={6}>
                                                         <Box>
-                                                            <InputNumberForm
+                                                            <PhoneNumber
                                                                 tooltip={t('MobileValidateMessage')}
                                                                 label={t('AlternativeMobile')}
                                                                 placeholder={t('AlternativeMobile')}
@@ -368,7 +370,8 @@ function CustomerForm() {
                                                     nextField={'address'}
                                                     name={'marketing_id'}
                                                     form={form}
-                                                    dropdownValue={executiveDropdown}
+                                                    // dropdownValue={executiveDropdown}
+                                                    dropdownValue={marKValues}
                                                     mt={8}
                                                     id={'marketing_id'}
                                                     searchable={true}
@@ -401,7 +404,7 @@ function CustomerForm() {
                             <Shortcut
                                 form={form}
                                 FormSubmit={'EntityFormSubmit'}
-                                Name={'name'}
+                                Name={'customer_group'}
                                 inputType="select"
                             />
                         </Box>

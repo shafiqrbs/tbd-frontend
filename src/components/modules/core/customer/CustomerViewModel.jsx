@@ -2,15 +2,15 @@ import React from "react";
 import {
     rem, Modal, List, ThemeIcon, Box, Grid, useMantineTheme,
 } from "@mantine/core";
-import {useTranslation} from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import {
     IconCircleCheck
 } from "@tabler/icons-react";
 
-import {useSelector} from "react-redux";
+import { useSelector } from "react-redux";
 
 function CustomerViewModel(props) {
-    const {t, i18n} = useTranslation();
+    const { t, i18n } = useTranslation();
     const showEntityData = useSelector((state) => state.crudSlice.showEntityData)
     const theme = useMantineTheme();
 
