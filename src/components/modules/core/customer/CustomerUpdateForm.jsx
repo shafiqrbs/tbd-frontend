@@ -122,7 +122,7 @@ function CustomerUpdateForm() {
 
 
     useHotkeys([['alt+n', () => {
-        document.getElementById('customer_group').focus()
+        document.getElementById('customer_group').click()
     }]], []);
 
     useHotkeys([['alt+r', () => {
