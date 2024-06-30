@@ -18,6 +18,7 @@ import { notifications } from "@mantine/notifications";
 import { modals } from "@mantine/modals";
 
 import {
+    editEntityData,
     setEditEntityData,
     setFetching, setFormLoading, setInsertType,
     updateEntityData
@@ -47,6 +48,7 @@ function CustomerUpdateForm() {
     const entityEditData = useSelector((state) => state.crudSlice.entityEditData)
     const formLoading = useSelector((state) => state.crudSlice.formLoading)
     const locationDropdown = getLocationDropdownData();
+
     // const executiveDropdown = getExecutiveDropdownData();
 
     const { customerId } = useParams();
@@ -57,6 +59,8 @@ function CustomerUpdateForm() {
         }
     }, [customerId, dispatch]);
     const navigate = useNavigate();
+
+
 
     const form = useForm({
         initialValues: {
@@ -90,6 +94,9 @@ function CustomerUpdateForm() {
                 return null;
             },
             alternative_mobile: (value) => {
+                if (value === '+880') {
+                    return null;
+                }
                 if (value && value.trim()) {
                     const isDigitsOnly = /^\d+$/.test(value);
                     if (!isDigitsOnly) {
@@ -97,7 +104,7 @@ function CustomerUpdateForm() {
                     }
                 }
                 return null;
-            },
+            }
         }
     });
     useEffect(() => {
@@ -125,7 +132,7 @@ function CustomerUpdateForm() {
                 setFormDataForUpdate(false)
             }, 500)
         }
-    }, [entityEditData, dispatch])
+    }, [entityEditData, dispatch, customerId])
 
 
     useHotkeys([['alt+n', () => {
@@ -149,15 +156,13 @@ function CustomerUpdateForm() {
 
         <Box>
             <form onSubmit={form.onSubmit((values) => {
-                // In the submit handler of both forms
                 dispatch(updateEntityData(values))
                     .then(() => {
-                        // other success handling code
                         navigate('/core/customer', { replace: true });
-                        dispatch(setInsertType('create')); // Reset to create mode
+                        dispatch(setInsertType('create'));
                     })
                     .catch((error) => {
-                        // error handling
+                        //error handling
                     });
                 modals.openConfirmModal({
                     title: (
@@ -440,7 +445,7 @@ function CustomerUpdateForm() {
                     </Grid.Col>
                 </Grid>
             </form>
-        </Box>
+        </Box >
     )
 }
 

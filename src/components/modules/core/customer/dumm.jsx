@@ -1,53 +1,72 @@
 import React, { useEffect, useState } from "react";
-import { useOutletContext } from "react-router-dom";
+import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 import {
     Button,
-    rem, Flex,
-    Grid, Box, ScrollArea, Text, Title, Alert, List, Stack, Tooltip, ActionIcon,
+    rem,
+    Grid, Box, ScrollArea, Group, Text, LoadingOverlay, Title, Flex, Stack, Alert, List, Tooltip, ActionIcon,
 } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
 import {
     IconCheck,
-    IconDeviceFloppy, IconUsersGroup
+    IconDeviceFloppy, IconPlus, IconUsersGroup,
 } from "@tabler/icons-react";
 import { useDisclosure, useHotkeys } from "@mantine/hooks";
+import InputForm from "../../../form-builders/InputForm";
 import { useDispatch, useSelector } from "react-redux";
 import { hasLength, useForm } from "@mantine/form";
-import { modals } from "@mantine/modals";
 import { notifications } from "@mantine/notifications";
+import { modals } from "@mantine/modals";
 
-import { setEntityNewData, setFetching, setValidationData, storeEntityData } from "../../../../store/core/crudSlice.js";
+import {
+    setEditEntityData,
+    setFetching, setFormLoading, setInsertType,
+    updateEntityData
+} from "../../../../store/inventory/crudSlice.js";
 
-import Shortcut from "../../shortcut/Shortcut";
-import InputForm from "../../../form-builders/InputForm";
-import SelectForm from "../../../form-builders/SelectForm";
-import TextAreaForm from "../../../form-builders/TextAreaForm";
-import CustomerGroupModel from "./CustomerGroupModal.jsx";
+import Shortcut from "../../shortcut/Shortcut.jsx";
+import SelectForm from "../../../form-builders/SelectForm.jsx";
+import TextAreaForm from "../../../form-builders/TextAreaForm.jsx";
 import getLocationDropdownData from "../../../global-hook/dropdown/getLocationDropdownData.js";
-import getExecutiveDropdownData from "../../../global-hook/dropdown/getExecutiveDropdownData.js";
-import getCoreSettingCustomerGroupDropdownData
-    from "../../../global-hook/dropdown/getCoreSettingCustomerGroupDropdownData.js";
+// import getExecutiveDropdownData from "../../../global-hook/dropdown/getExecutiveDropdownData.js";
+import CustomerGroupModel from "./CustomerGroupModal";
 import PhoneNumber from "../../../form-builders/PhoneNumberInput.jsx";
+import { editData } from "../../../../services/inventoryApiService.js";
 
-
-function CustomerForm() {
+function CustomerUpdateForm() {
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
     const height = mainAreaHeight - 100; //TabList height 104
-    const [opened, { open, close }] = useDisclosure(false);
-
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
+    const [setFormData, setFormDataForUpdate] = useState(false);
+    const [formLoad, setFormLoad] = useState(true);
     const [customerGroupData, setCustomerGroupData] = useState(null);
     const [locationData, setLocationData] = useState(null);
     const [marketingExeData, setMarketingExeData] = useState(null);
+    const [opened, { open, close }] = useDisclosure(false);
 
-    const validationMessage = useSelector((state) => state.crudSlice.validationMessage)
-    const validation = useSelector((state) => state.crudSlice.validation)
-    const entityNewData = useSelector((state) => state.crudSlice.entityNewData)
-
+    const entityEditData = useSelector((state) => state.crudSlice.entityEditData)
+    const formLoading = useSelector((state) => state.crudSlice.formLoading)
     const locationDropdown = getLocationDropdownData();
-    const executiveDropdown = getExecutiveDropdownData();
+    // const executiveDropdown = getExecutiveDropdownData();
+
+    const { customerId } = useParams();
+    useEffect(() => {
+        if (customerId) {
+            dispatch(setEditEntityData(`core/customer/${customerId}`));
+            dispatch(setFormLoading(true));
+        }
+    }, [customerId, dispatch, entityEditData]);
+    const navigate = useNavigate();
+
+    const data = editData;
+
+    const coreCustomers = JSON.parse(localStorage.getItem('core-customers') || '[]');
+    const foundCustomer = coreCustomers.find(type => type.id == Number(customerId));
+
+
+
+
 
     const form = useForm({
         initialValues: {
@@ -55,8 +74,8 @@ function CustomerForm() {
             customer_group: '',
             credit_limit: '',
             reference_id: '',
-            mobile: '+880',
-            alternative_mobile: '+880',
+            mobile: '',
+            alternative_mobile: '',
             email: '',
             location_id: '',
             marketing_id: '',
@@ -64,15 +83,7 @@ function CustomerForm() {
         },
         validate: {
             name: hasLength({ min: 2, max: 20 }),
-            mobile: (value) => {
-                if (value === '+880') {
-                    return true; // Error if only default value is present
-                }
-                if (!value || !/^\d+$/.test(value)) {
-                    return true; // Error if empty or not all digits
-                }
-                return null;
-            },
+            mobile: (value) => (!/^\d+$/.test(value)),
             email: (value) => {
                 if (value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
                     return true;
@@ -89,9 +100,6 @@ function CustomerForm() {
                 return null;
             },
             alternative_mobile: (value) => {
-                if (value === '+880') {
-                    return null;
-                }
                 if (value && value.trim()) {
                     const isDigitsOnly = /^\d+$/.test(value);
                     if (!isDigitsOnly) {
@@ -99,41 +107,36 @@ function CustomerForm() {
                     }
                 }
                 return null;
-            }
+            },
         }
     });
-
-
     useEffect(() => {
-        if (validation) {
-            validationMessage.name && (form.setFieldError('name', true));
-            validationMessage.mobile && (form.setFieldError('mobile', true));
-            validationMessage.email && (form.setFieldError('email', true));
-            validationMessage.credit_limit && (form.setFieldError('credit_limit', true));
-            validationMessage.alternative_mobile && (form.setFieldError('alternative_mobile', true));
-            dispatch(setValidationData(false))
-        }
+        setFormLoad(true)
+        setFormDataForUpdate(true)
+    }, [dispatch, formLoading])
+    useEffect(() => {
+        if (entityEditData && Object.keys(entityEditData).length > 0) {
+            form.setValues({
+                name: entityEditData.name ? entityEditData.name : foundCustomer.name ? foundCustomer.name : '',
+                customer_group: entityEditData.customer_group ? entityEditData.customer_group : foundCustomer.customer_group ? foundCustomer.customer_group : '',
+                credit_limit: entityEditData.credit_limit ? entityEditData.credit_limit : foundCustomer.credit_limit ? foundCustomer.credit_limit : 0,
+                reference_id: entityEditData.reference_id ? entityEditData.reference_id : foundCustomer.reference_id ? foundCustomer.reference_id : '',
+                mobile: entityEditData.mobile ? entityEditData.mobile : foundCustomer.mobile ? foundCustomer.mobile : '+880',
+                alternative_mobile: entityEditData.alternative_mobile ? entityEditData.alternative_mobile : foundCustomer.alternative_mobile ? foundCustomer.alternative_mobile : '+880',
+                email: entityEditData.email ? entityEditData.email : foundCustomer.email ? foundCustomer.email : '',
+                location_id: entityEditData.location_id ? entityEditData.location_id : foundCustomer.location_id ? foundCustomer.location_id : '',
+                marketing_id: entityEditData.marketing_id ? entityEditData.marketing_id : foundCustomer.marketing_id ? foundCustomer.marketing_id : '',
+                address: entityEditData.address ? entityEditData.address : foundCustomer.address ? foundCustomer.address : '',
+            })
 
-        if (entityNewData.message === 'success') {
-            notifications.show({
-                color: 'teal',
-                title: t('CreateSuccessfully'),
-                icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
-                loading: false,
-                autoClose: 700,
-                style: { backgroundColor: 'lightgray' },
-            });
-
+            dispatch(setFormLoading(false))
             setTimeout(() => {
-                form.reset()
-                setMarketingExeData(null)
-                setCustomerGroupData(null)
-                setLocationData(null)
-                dispatch(setEntityNewData([]))
-                dispatch(setFetching(true))
-            }, 700)
+                setFormLoad(false)
+                setFormDataForUpdate(false)
+            }, 500)
         }
-    }, [validation, validationMessage, form]);
+    }, [entityEditData, dispatch])
+
 
     useHotkeys([['alt+n', () => {
         document.getElementById('customer_group').click()
@@ -147,15 +150,25 @@ function CustomerForm() {
         document.getElementById('EntityFormSubmit').click()
     }]], []);
 
+
     const marKValues = [
         'test', 'test2'
     ]
 
     return (
+
         <Box>
             <form onSubmit={form.onSubmit((values) => {
-
-                dispatch(setValidationData(false))
+                // In the submit handler of both forms
+                dispatch(updateEntityData(values))
+                    .then(() => {
+                        // other success handling code
+                        navigate('/core/customer', { replace: true });
+                        dispatch(setInsertType('create')); // Reset to create mode
+                    })
+                    .catch((error) => {
+                        // error handling
+                    });
                 modals.openConfirmModal({
                     title: (
                         <Text size="md"> {t("FormConfirmationTitle")}</Text>
@@ -163,17 +176,37 @@ function CustomerForm() {
                     children: (
                         <Text size="sm"> {t("FormConfirmationMessage")}</Text>
                     ),
-                    labels: { confirm: t('Submit'), cancel: t('Cancel') }, confirmProps: { color: 'red' },
+                    labels: { confirm: t('Submit'), cancel: t('Cancel') }, confirmProps: { color: 'red.6' },
                     onCancel: () => console.log('Cancel'),
                     onConfirm: () => {
+                        setSaveCreateLoading(true)
                         const value = {
-                            url: 'core/customer',
+                            url: 'core/customer/' + entityEditData.id,
                             data: values
                         }
-                        dispatch(storeEntityData(value))
+                        dispatch(updateEntityData(value))
+                        notifications.show({
+                            color: 'teal',
+                            title: t('UpdateSuccessfully'),
+                            icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
+                            loading: false,
+                            autoClose: 700,
+                            style: { backgroundColor: 'lightgray' },
+                        });
+
+                        setTimeout(() => {
+                            form.reset()
+                            dispatch(setInsertType('create'))
+                            dispatch(setEditEntityData([]))
+                            dispatch(setFetching(true))
+                            setSaveCreateLoading(false)
+                            navigate('/core/customer', { replace: true })
+                        }, 700)
                     },
                 });
             })}>
+
+
                 <Grid columns={9} gutter={{ base: 8 }}>
                     <Grid.Col span={8} >
                         <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
@@ -181,7 +214,7 @@ function CustomerForm() {
                                 <Box pl={`xs`} pr={8} pt={'6'} pb={'6'} mb={'4'} className={'boxBackground borderRadiusAll'} >
                                     <Grid>
                                         <Grid.Col span={6}>
-                                            <Title order={6} pt={'6'}>{t('CreateCustomer')}</Title>
+                                            <Title order={6} pt={'6'}>{t('UpdateCustomer')}</Title>
                                         </Grid.Col>
                                         <Grid.Col span={6}>
                                             <Stack right align="flex-end">
@@ -193,29 +226,24 @@ function CustomerForm() {
                                                             color={`green.8`}
                                                             type="submit"
                                                             id="EntityFormSubmit"
-                                                            leftSection={<IconDeviceFloppy size={16} />}>
+                                                            leftSection={<IconDeviceFloppy size={16} />}
+                                                        >
+
                                                             <Flex direction={`column`} gap={0}>
-                                                                <Text fz={14} fw={400}> {t("CreateAndSave")}</Text>
+                                                                <Text fz={14} fw={400}>
+                                                                    {t("UpdateAndSave")}
+                                                                </Text>
                                                             </Flex>
                                                         </Button>
                                                     }
-                                                </>
-                                            </Stack>
+                                                </></Stack>
                                         </Grid.Col>
                                     </Grid>
                                 </Box>
                                 <Box pl={`xs`} pr={'xs'} className={'borderRadiusAll'}>
                                     <ScrollArea h={height} scrollbarSize={2} scrollbars="y" type="never">
                                         <Box>
-                                            {
-                                                Object.keys(form.errors).length > 0 && validationMessage != 0 &&
-                                                <Alert variant="light" color="red" radius="md" title={
-                                                    <List withPadding size="sm">
-                                                        {validationMessage.name && <List.Item>{t('NameValidateMessage')}</List.Item>}
-                                                        {validationMessage.mobile && <List.Item>{t('MobileValidateMessage')}</List.Item>}
-                                                    </List>
-                                                }></Alert>
-                                            }
+                                            <LoadingOverlay visible={formLoad} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} loaderProps={{ color: 'red.6' }} />
                                             <Box>
                                                 <Grid gutter={{ base: 6 }}>
                                                     <Grid.Col span={11} >
@@ -228,11 +256,11 @@ function CustomerForm() {
                                                                 nextField={'name'}
                                                                 name={'customer_group'}
                                                                 form={form}
-                                                                dropdownValue={getCoreSettingCustomerGroupDropdownData()}
+                                                                dropdownValue={['local', 'family']}
                                                                 mt={8}
                                                                 id={'customer_group'}
                                                                 searchable={false}
-                                                                value={customerGroupData}
+                                                                value={customerGroupData ? String(customerGroupData) : (entityEditData.customer_group ? String(entityEditData.customer_group) : null)}
                                                                 changeValue={setCustomerGroupData}
                                                             />
                                                         </Box>
@@ -363,12 +391,12 @@ function CustomerForm() {
                                                     required={false}
                                                     nextField={'marketing_id'}
                                                     name={'location_id'}
-                                                    id={'location_id'}
                                                     form={form}
                                                     dropdownValue={locationDropdown}
                                                     mt={8}
+                                                    id={'location_id'}
                                                     searchable={true}
-                                                    value={locationData}
+                                                    value={locationData ? String(locationData) : (entityEditData.location_id ? String(entityEditData.location_id) : null)}
                                                     changeValue={setLocationData}
                                                 />
                                             </Box>
@@ -386,7 +414,7 @@ function CustomerForm() {
                                                     mt={8}
                                                     id={'marketing_id'}
                                                     searchable={true}
-                                                    value={marketingExeData}
+                                                    value={marketingExeData ? String(marketingExeData) : (entityEditData.marketing_id ? String(entityEditData.marketing_id) : null)}
                                                     changeValue={setMarketingExeData}
                                                 />
 
@@ -421,10 +449,9 @@ function CustomerForm() {
                         </Box>
                     </Grid.Col>
                 </Grid>
-
             </form>
         </Box>
-    );
+    )
 }
 
-export default CustomerForm;
+export default CustomerUpdateForm;
