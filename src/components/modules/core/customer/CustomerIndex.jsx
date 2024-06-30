@@ -32,15 +32,14 @@ function CustomerIndex() {
 
     const progress = getLoadingProgress()
 
-    const [customerJustSaved, setCustomerJustSaved] = useState(false);
 
 
     useEffect(() => {
-        if (customerId && !customerJustSaved) {
+        if (customerId) {
             dispatch(setInsertType('update'));
             dispatch(editEntityData(`core/customer/${customerId}`));
             dispatch(setFormLoading(true));
-        } else if (!customerId && !customerJustSaved) {
+        } else if (!customerId) {
             dispatch(setInsertType('create'));
             dispatch(setSearchKeyword(''));
             dispatch(setEntityNewData([]));
@@ -51,7 +50,7 @@ function CustomerIndex() {
             }));
             navigate('/core/customer', { replace: true });
         }
-    }, [customerId, customerJustSaved, dispatch, navigate, customerFilterData]);
+    }, [customerId, dispatch, navigate, customerFilterData]);
 
     useEffect(() => {
         return () => {
@@ -64,20 +63,7 @@ function CustomerIndex() {
             }));
         };
     }, [dispatch]);
-    useEffect(() => {
-        if (customerJustSaved) {
-            navigate('/core/customer', { replace: true });
-            dispatch(setInsertType('create'));
-            dispatch(setSearchKeyword(''));
-            dispatch(setEntityNewData([]));
-            dispatch(setCustomerFilterData({
-                ...customerFilterData,
-                ['name']: '',
-                ['mobile']: ''
-            }));
-            setCustomerJustSaved(false);
-        }
-    }, [customerJustSaved, dispatch, navigate, customerFilterData]);
+
 
     return (
         <>
@@ -101,7 +87,7 @@ function CustomerIndex() {
                                 {
                                     insertType === 'create'
                                         ? <CustomerForm />
-                                        : <CustomerUpdateForm setCustomerJustSaved={setCustomerJustSaved} />
+                                        : <CustomerUpdateForm />
                                 }
                             </Grid.Col>
                         </Grid>

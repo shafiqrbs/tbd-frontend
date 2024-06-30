@@ -95,6 +95,9 @@ function CustomerTable() {
                                         <Menu.Dropdown>
                                             <Menu.Item
                                                 onClick={() => {
+                                                    dispatch(setInsertType('update'))
+                                                    dispatch(editEntityData('core/customer/' + data.id))
+                                                    dispatch(setFormLoading(true))
                                                     navigate(`/core/customer/${data.id}`);
                                                 }}
                                                 target="_blank"
