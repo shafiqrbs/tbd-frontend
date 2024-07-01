@@ -72,7 +72,7 @@ function CustomerUpdateForm() {
             address: '',
         },
         validate: {
-            name: hasLength({ min: 2, max: 20 }),
+            name: hasLength({ min: 2, max: 50 }),
             mobile: (value) => (!/^\d+$/.test(value)),
             email: (value) => {
                 if (value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
@@ -100,10 +100,12 @@ function CustomerUpdateForm() {
             },
         }
     });
+
     useEffect(() => {
         setFormLoad(true)
         setFormDataForUpdate(true)
     }, [dispatch, formLoading])
+
     useEffect(() => {
         if (entityEditData && Object.keys(entityEditData).length > 0) {
             form.setValues({
@@ -155,7 +157,6 @@ function CustomerUpdateForm() {
                 address: entityEditData.address || '',
             };
             form.setValues(originalValues);
-            setLocalFormData(originalValues);
         }
     };
 

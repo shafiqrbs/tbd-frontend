@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useOutletContext } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import {
     Group,
     Box,
@@ -43,6 +43,7 @@ function UserTable() {
 
     const perPage = 50;
     const [page, setPage] = useState(1);
+    const navigate = useNavigate()
 
     useEffect(() => {
         const value = {
@@ -104,6 +105,7 @@ function UserTable() {
                                                     dispatch(setInsertType('update'))
                                                     dispatch(editEntityData('core/user/' + data.id))
                                                     dispatch(setFormLoading(true))
+                                                    navigate(`/core/user/${data.id}`);
                                                 }}
                                                 target="_blank"
                                                 component="a"

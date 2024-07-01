@@ -151,7 +151,6 @@ function CustomerForm() {
             address: '',
         };
         form.setValues(originalValues);
-        setLocalFormData(originalValues);
     }
 
 

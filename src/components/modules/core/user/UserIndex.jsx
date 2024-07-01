@@ -6,12 +6,17 @@ import UserForm from "./UserForm.jsx";
 import UserUpdateForm from "./UserUpdateForm.jsx";
 import { useTranslation } from 'react-i18next';
 import {
+    editEntityData,
+    setCustomerFilterData,
+    setEntityNewData,
+    setFormLoading,
     setInsertType,
     setSearchKeyword,
     setUserFilterData,
 } from "../../../../store/core/crudSlice.js";
 import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress.js";
 import CoreHeaderNavbar from "../CoreHeaderNavbar";
+import { useNavigate, useParams } from "react-router-dom";
 
 
 function UserIndex() {
@@ -19,17 +24,43 @@ function UserIndex() {
     const dispatch = useDispatch();
     const insertType = useSelector((state) => state.crudSlice.insertType)
     const userFilterData = useSelector((state) => state.crudSlice.userFilterData)
+
+    const { userId } = useParams();
+    const navigate = useNavigate();
     const progress = getLoadingProgress()
+
     useEffect(() => {
-        dispatch(setInsertType('create'))
-        dispatch(setSearchKeyword(''))
-        dispatch(setUserFilterData({
-            ...userFilterData,
-            ['name']: '',
-            ['mobile']: '',
-            ['email']: ''
-        }))
-    }, [])
+        userId ? (
+            (
+                dispatch(setInsertType('update')),
+                dispatch(editEntityData(`core/user/${userId}`)),
+                dispatch(setFormLoading(true)))
+        ) : (
+            (
+                dispatch(setInsertType('create')),
+                dispatch(setSearchKeyword('')),
+                dispatch(setEntityNewData({
+                    ...userFilterData,
+                    name: '',
+                    mobile: '',
+                    email: ''
+                })),
+                navigate('/core/user', { replace: true }))
+        );
+    }, [userId, dispatch, navigate, userFilterData]);
+
+    useEffect(() => {
+        return () => {
+            dispatch(setInsertType('create'));
+            dispatch(setSearchKeyword(''));
+            dispatch(setEntityNewData([]));
+            dispatch(setUserFilterData({
+                name: '',
+                mobile: '',
+                email: ''
+            }));
+        };
+    }, [dispatch])
 
     return (
         <>
@@ -52,7 +83,9 @@ function UserIndex() {
                             </Grid.Col>
                             <Grid.Col span={9}>
                                 {
-                                    insertType === 'create' ? <UserForm /> : <UserUpdateForm />
+                                    insertType === 'create'
+                                        ? <UserForm />
+                                        : <UserUpdateForm />
                                 }
                             </Grid.Col>
                         </Grid>

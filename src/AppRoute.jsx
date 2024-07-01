@@ -51,6 +51,7 @@ function AppRoute() {
                     <Route path="customer" element={<CustomerIndex />} />
                     <Route path="customer/:customerId" element={<CustomerIndex />} />
                     <Route path="user" element={<UserIndex />} />
+                    <Route path="user/:userId" element={<UserIndex />} />
                     <Route path="vendor" element={<VendorIndex />} />
                 </Route>
                 <Route path="/inventory/">

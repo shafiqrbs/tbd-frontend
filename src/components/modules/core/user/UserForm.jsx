@@ -22,10 +22,11 @@ import {
     storeEntityData,
 } from "../../../../store/core/crudSlice.js";
 import { notifications } from "@mantine/notifications";
-import Shortcut from "../../shortcut/Shortcut.jsx";
+import _ShortcutUser from "../../shortcut/_ShortcutUser.jsx";
 import SelectForm from "../../../form-builders/SelectForm";
 import TextAreaForm from "../../../form-builders/TextAreaForm";
 import SwitchForm from "../../../form-builders/SwitchForm";
+import PhoneNumber from "../../../form-builders/PhoneNumberInput.jsx";
 
 function UserForm() {
     const { t, i18n } = useTranslation();
@@ -122,7 +123,6 @@ function UserForm() {
                                                             id="EntityFormSubmit"
                                                             leftSection={<IconDeviceFloppy size={16} />}
                                                         >
-
                                                             <Flex direction={`column`} gap={0}>
                                                                 <Text fz={14} fw={400}>
                                                                     {t("CreateAndSave")}
@@ -137,7 +137,7 @@ function UserForm() {
                                 <Box pl={`xs`} pr={'xs'} className={'borderRadiusAll'}>
                                     <ScrollArea h={height} scrollbarSize={2} scrollbars="y" type="never">
                                         <Box>
-                                            <LoadingOverlay visible={formLoading} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />
+
                                             <Box mt={'xs'}>
                                                 <InputForm
                                                     tooltip={t('NameValidateMessage')}
@@ -178,7 +178,7 @@ function UserForm() {
                                                 />
                                             </Box>
                                             <Box mt={'xs'}>
-                                                <InputForm
+                                                <PhoneNumber
                                                     tooltip={t('MobileValidateMessage')}
                                                     label={t('Mobile')}
                                                     placeholder={t('Mobile')}
@@ -227,7 +227,7 @@ function UserForm() {
                     </Grid.Col>
                     <Grid.Col span={1} >
                         <Box bg={'white'} className={'borderRadiusAll'} pt={'16'}>
-                            <Shortcut
+                            <_ShortcutUser
                                 form={form}
                                 FormSubmit={'EntityFormSubmit'}
                                 Name={'name'}
