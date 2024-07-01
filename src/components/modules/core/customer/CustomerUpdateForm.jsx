@@ -23,7 +23,7 @@ import {
     updateEntityData
 } from "../../../../store/inventory/crudSlice.js";
 
-import Shortcut from "../../shortcut/Shortcut.jsx";
+import _ShortcutCustomer from "../../shortcut/_ShortcutCustomer.jsx";
 import SelectForm from "../../../form-builders/SelectForm.jsx";
 import TextAreaForm from "../../../form-builders/TextAreaForm.jsx";
 import getLocationDropdownData from "../../../global-hook/dropdown/getLocationDropdownData.js";
@@ -449,7 +449,8 @@ function CustomerUpdateForm() {
                     </Grid.Col>
                     <Grid.Col span={1} >
                         <Box bg={'white'} className={'borderRadiusAll'} pt={'16'}>
-                            <Shortcut
+                            <_ShortcutCustomer
+                                entityEditData={entityEditData}
                                 form={form}
                                 FormSubmit={'EntityFormSubmit'}
                                 Name={'customer_group'}

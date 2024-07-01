@@ -70,7 +70,19 @@ function _ShortcutCustomer(props) {
                                 color={`red`}
                                 radius="xl"
                                 onClick={(e) => {
-                                    props.form.setValues({
+                                    // console.log(props.entityEditData)
+                                    (props.entityEditData) ? props.form.setValues({
+                                        name: props.entityEditData.name || '',
+                                        customer_group: props.entityEditData.customer_group || '',
+                                        credit_limit: props.entityEditData.credit_limit || '',
+                                        reference_id: props.entityEditData.reference_id || '',
+                                        mobile: props.entityEditData.mobile || '+880',
+                                        alternative_mobile: props.entityEditData.alternative_mobile || '+880',
+                                        email: props.entityEditData.email || '',
+                                        location_id: props.entityEditData.location_id || '',
+                                        marketing_id: props.entityEditData.marketing_id || '',
+                                        address: props.entityEditData.address || '',
+                                    }) : props.form.setValues({
                                         name: '',
                                         customer_group: '',
                                         credit_limit: '',
