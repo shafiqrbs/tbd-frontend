@@ -18,7 +18,7 @@ import { notifications } from "@mantine/notifications";
 
 import { setEntityNewData, setFetching, setValidationData, storeEntityData } from "../../../../store/core/crudSlice.js";
 
-import Shortcut from "../../shortcut/Shortcut";
+import _ShortcutCustomer from "../../shortcut/_ShortcutCustomer";
 import InputForm from "../../../form-builders/InputForm";
 import SelectForm from "../../../form-builders/SelectForm";
 import TextAreaForm from "../../../form-builders/TextAreaForm";
@@ -55,8 +55,8 @@ function CustomerForm() {
             customer_group: '',
             credit_limit: '',
             reference_id: '',
-            mobile: '+880',
-            alternative_mobile: '+880',
+            mobile: '',
+            alternative_mobile: '',
             email: '',
             location_id: '',
             marketing_id: '',
@@ -64,15 +64,7 @@ function CustomerForm() {
         },
         validate: {
             name: hasLength({ min: 2, max: 20 }),
-            mobile: (value) => {
-                if (value === '+880') {
-                    return true; // Error if only default value is present
-                }
-                if (!value || !/^\d+$/.test(value)) {
-                    return true; // Error if empty or not all digits
-                }
-                return null;
-            },
+            mobile: (value) => (!/^\+?\d+$/.test(value)),
             email: (value) => {
                 if (value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
                     return true;
@@ -89,9 +81,6 @@ function CustomerForm() {
                 return null;
             },
             alternative_mobile: (value) => {
-                if (value === '+880') {
-                    return null;
-                }
                 if (value && value.trim()) {
                     const isDigitsOnly = /^\d+$/.test(value);
                     if (!isDigitsOnly) {
@@ -99,7 +88,7 @@ function CustomerForm() {
                     }
                 }
                 return null;
-            }
+            },
         }
     });
 
@@ -140,12 +129,31 @@ function CustomerForm() {
     }]], []);
 
     useHotkeys([['alt+r', () => {
-        form.reset()
+        handleFormReset()
     }]], []);
 
     useHotkeys([['alt+s', () => {
         document.getElementById('EntityFormSubmit').click()
     }]], []);
+
+    const handleFormReset = () => {
+
+        const originalValues = {
+            name: '',
+            customer_group: '',
+            credit_limit: '',
+            reference_id: '',
+            mobile: '+880',
+            alternative_mobile: '+880',
+            email: '',
+            location_id: '',
+            marketing_id: '',
+            address: '',
+        };
+        form.setValues(originalValues);
+        setLocalFormData(originalValues);
+    }
+
 
     const marKValues = [
         'test', 'test2'
@@ -154,7 +162,7 @@ function CustomerForm() {
     return (
         <Box>
             <form onSubmit={form.onSubmit((values) => {
-
+                console.log(values)
                 dispatch(setValidationData(false))
                 modals.openConfirmModal({
                     title: (
@@ -296,7 +304,7 @@ function CustomerForm() {
                                                                 tooltip={t('MobileValidateMessage')}
                                                                 label={t('AlternativeMobile')}
                                                                 placeholder={t('AlternativeMobile')}
-                                                                required={false}
+                                                                required={true}
                                                                 nextField={'email'}
                                                                 name={'alternative_mobile'}
                                                                 form={form}
@@ -412,7 +420,7 @@ function CustomerForm() {
                     </Grid.Col>
                     <Grid.Col span={1} >
                         <Box bg={'white'} className={'borderRadiusAll'} pt={'16'}>
-                            <Shortcut
+                            <_ShortcutCustomer
                                 form={form}
                                 FormSubmit={'EntityFormSubmit'}
                                 Name={'customer_group'}

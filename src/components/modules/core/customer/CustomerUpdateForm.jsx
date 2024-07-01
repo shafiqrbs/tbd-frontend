@@ -10,7 +10,7 @@ import {
     IconCheck,
     IconDeviceFloppy, IconPlus, IconUsersGroup,
 } from "@tabler/icons-react";
-import { useDisclosure, useHotkeys, useLocalStorage } from "@mantine/hooks";
+import { useDisclosure, useHotkeys } from "@mantine/hooks";
 import InputForm from "../../../form-builders/InputForm";
 import { useDispatch, useSelector } from "react-redux";
 import { hasLength, useForm } from "@mantine/form";
@@ -18,7 +18,6 @@ import { notifications } from "@mantine/notifications";
 import { modals } from "@mantine/modals";
 
 import {
-    editEntityData,
     setEditEntityData,
     setFetching, setFormLoading, setInsertType,
     updateEntityData
@@ -48,16 +47,9 @@ function CustomerUpdateForm() {
     const entityEditData = useSelector((state) => state.crudSlice.entityEditData)
     const formLoading = useSelector((state) => state.crudSlice.formLoading)
     const locationDropdown = getLocationDropdownData();
-    const { customerId } = useParams();
-
-
     // const executiveDropdown = getExecutiveDropdownData();
 
-
-
-
-
-
+    const { customerId } = useParams();
     useEffect(() => {
         if (customerId) {
             dispatch(setEditEntityData(`core/customer/${customerId}`));
@@ -66,16 +58,14 @@ function CustomerUpdateForm() {
     }, [customerId, dispatch]);
     const navigate = useNavigate();
 
-
-
     const form = useForm({
         initialValues: {
             name: '',
             customer_group: '',
             credit_limit: '',
             reference_id: '',
-            mobile: '+880',
-            alternative_mobile: '+880',
+            mobile: '',
+            alternative_mobile: '',
             email: '',
             location_id: '',
             marketing_id: '',
@@ -100,9 +90,6 @@ function CustomerUpdateForm() {
                 return null;
             },
             alternative_mobile: (value) => {
-                if (value === '+880') {
-                    return false;
-                }
                 if (value && value.trim()) {
                     const isDigitsOnly = /^\d+$/.test(value);
                     if (!isDigitsOnly) {
@@ -110,48 +97,52 @@ function CustomerUpdateForm() {
                     }
                 }
                 return null;
-            }
+            },
         }
     });
     useEffect(() => {
         setFormLoad(true)
         setFormDataForUpdate(true)
     }, [dispatch, formLoading])
-
-
-    const [localStorageData, setLocalStorageData] = useLocalStorage({
-        key: `customer_${customerId}`,
-        defaultValue: {
-            name: entityEditData?.name || '',
-            customer_group: entityEditData?.customer_group || '',
-            credit_limit: entityEditData?.credit_limit || '',
-            reference_id: entityEditData?.reference_id || '',
-            mobile: entityEditData?.mobile || '+880',
-            alternative_mobile: entityEditData?.alternative_mobile || '+880',
-            email: entityEditData?.email || '',
-            location_id: entityEditData?.location_id || '',
-            marketing_id: entityEditData?.marketing_id || '',
-            address: entityEditData?.address || '',
-        }
-    });
-
     useEffect(() => {
-        if (localStorageData) {
+        if (entityEditData && Object.keys(entityEditData).length > 0) {
             form.setValues({
-                name: localStorageData.name || '',
-                customer_group: localStorageData.customer_group || '',
-                credit_limit: localStorageData.credit_limit || '',
-                reference_id: localStorageData.reference_id || '',
-                mobile: localStorageData.mobile || '+880',
-                alternative_mobile: localStorageData.alternative_mobile || '+880',
-                email: localStorageData.email || '',
-                marketing_id: localStorageData.marketing_id || '',
-                address: localStorageData.address || '',
-            });
-            setLocalStorageData(null)
+                name: entityEditData.name ? entityEditData.name : '',
+                customer_group: entityEditData.customer_group ? entityEditData.customer_group : '',
+                credit_limit: entityEditData.credit_limit ? entityEditData.credit_limit : '',
+                reference_id: entityEditData.reference_id ? entityEditData.reference_id : '',
+                mobile: entityEditData.mobile ? entityEditData.mobile : '',
+                alternative_mobile: entityEditData.alternative_mobile ? entityEditData.alternative_mobile : '',
+                email: entityEditData.email ? entityEditData.email : '',
+                location_id: entityEditData.location_id ? entityEditData.location_id : '',
+                marketing_id: entityEditData.marketing_id ? entityEditData.marketing_id : '',
+                address: entityEditData.address ? entityEditData.address : '',
+            })
+
+            dispatch(setFormLoading(false))
+            setTimeout(() => {
+                setFormLoad(false)
+                setFormDataForUpdate(false)
+            }, 500)
         }
-        else if (entityEditData && Object.keys(entityEditData).length > 0) {
-            form.setValues({
+    }, [entityEditData, dispatch, customerId])
+
+
+    useHotkeys([['alt+n', () => {
+        document.getElementById('customer_group').click()
+    }]], []);
+
+    useHotkeys([['alt+r', () => {
+        handleFormReset();
+    }]], []);
+
+    useHotkeys([['alt+s', () => {
+        document.getElementById('EntityFormSubmit').click()
+    }]], []);
+
+    const handleFormReset = () => {
+        if (entityEditData && Object.keys(entityEditData).length > 0) {
+            const originalValues = {
                 name: entityEditData.name || '',
                 customer_group: entityEditData.customer_group || '',
                 credit_limit: entityEditData.credit_limit || '',
@@ -162,28 +153,11 @@ function CustomerUpdateForm() {
                 location_id: entityEditData.location_id || '',
                 marketing_id: entityEditData.marketing_id || '',
                 address: entityEditData.address || '',
-            });
+            };
+            form.setValues(originalValues);
+            setLocalFormData(originalValues);
         }
-
-        dispatch(setFormLoading(false));
-        setTimeout(() => {
-            setFormLoad(false);
-            setFormDataForUpdate(false);
-        }, 500);
-    }, [entityEditData, customerId, dispatch]);
-
-
-    useHotkeys([['alt+n', () => {
-        document.getElementById('customer_group').click()
-    }]], []);
-
-    useHotkeys([['alt+r', () => {
-        form.reset()
-    }]], []);
-
-    useHotkeys([['alt+s', () => {
-        document.getElementById('EntityFormSubmit').click()
-    }]], []);
+    };
 
 
     const marKValues = [
@@ -194,13 +168,15 @@ function CustomerUpdateForm() {
 
         <Box>
             <form onSubmit={form.onSubmit((values) => {
+                // In the submit handler of both forms
                 dispatch(updateEntityData(values))
                     .then(() => {
+                        // other success handling code
                         navigate('/core/customer', { replace: true });
-                        dispatch(setInsertType('create'));
+                        dispatch(setInsertType('create')); // Reset to create mode
                     })
                     .catch((error) => {
-                        //error handling
+                        // error handling
                     });
                 modals.openConfirmModal({
                     title: (
@@ -483,7 +459,7 @@ function CustomerUpdateForm() {
                     </Grid.Col>
                 </Grid>
             </form>
-        </Box >
+        </Box>
     )
 }
 
