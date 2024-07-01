@@ -209,7 +209,7 @@ function UserUpdateForm() {
                                                         form={form}
                                                         name={'name'}
                                                         mt={0}
-                                                        id={'Name'}
+                                                        id={'name'}
                                                     />
                                                 </Box>
                                                 <Box mt={'xs'}>
@@ -220,7 +220,7 @@ function UserUpdateForm() {
                                                         placeholder={t('UserName')}
                                                         required={true}
                                                         name={'username'}
-                                                        id={'UserName'}
+                                                        id={'username'}
                                                         nextField={'Email'}
                                                         mt={8}
                                                     />
@@ -233,7 +233,7 @@ function UserUpdateForm() {
                                                         placeholder={t('Email')}
                                                         required={true}
                                                         name={'email'}
-                                                        id={'Email'}
+                                                        id={'email'}
                                                         nextField={'Mobile'}
                                                         mt={8}
                                                     />
@@ -248,7 +248,7 @@ function UserUpdateForm() {
                                                         name={'mobile'}
                                                         form={form}
                                                         mt={8}
-                                                        id={'Mobile'}
+                                                        id={'mobile'}
                                                     />
                                                 </Box>
                                                 <Box mt={'xs'}>
@@ -259,7 +259,7 @@ function UserUpdateForm() {
                                                         placeholder={t('Password')}
                                                         required={false}
                                                         name={'password'}
-                                                        id={'Password'}
+                                                        id={'password'}
                                                         nextField={'ConfirmPassword'}
                                                         mt={8}
                                                     />
@@ -272,7 +272,7 @@ function UserUpdateForm() {
                                                         placeholder={t('ConfirmPassword')}
                                                         required={false}
                                                         name={'confirm_password'}
-                                                        id={'ConfirmPassword'}
+                                                        id={'confirm_password'}
                                                         nextField={'UserFormSubmit'}
                                                         mt={8}
                                                     />
