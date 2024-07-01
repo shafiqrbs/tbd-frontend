@@ -7,7 +7,7 @@ import {
 // import SampleModal from './SampleModal';
 
 import { useTranslation } from 'react-i18next';
-import { useEffect, } from 'react';
+import React, { useEffect, } from 'react';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -23,6 +23,7 @@ import { getIndexEntityData, setFetching, setSalesFilterData } from "../../../..
 import InvoiceBatchModalTable from './InvoiceBatchModalTable.jsx';
 import InvoiceBatchModalTransaction from './InvoiceBatchModalTransaction.jsx';
 import InvoiceBatchModalInvoice from './InvoiceBatchModalInvoice.jsx';
+import _AddTransaction from "./drawer/_AddTransaction";
 
 function InvoiceBatchModal(props) {
     const theme = useMantineTheme();
@@ -43,6 +44,8 @@ function InvoiceBatchModal(props) {
 
 
     const [isShowSMSPackageModel, setIsShowSMSPackageModel] = useState(false)
+    const [addTransactionDrawer, setAddTransactionDrawer] = useState(false);
+
 
 
 
@@ -246,6 +249,13 @@ function InvoiceBatchModal(props) {
                                                 <Box h={110} bg={'white'} pl={`xs`} pr={8} pt={'xs'} className={' borderRadiusAll'} >
                                                     <Flex spacing={0} direction={'column'} >
                                                         <Text fw={900} pl={'6'} fz={'md'}>{t('BatchDetails')}</Text>
+                                                        <Button
+                                                            variant="filled"
+                                                            onClick={(e) => {
+                                                                e.preventDefault();
+                                                                setAddTransactionDrawer(true)
+                                                            }}
+                                                        >Button</Button>
                                                         <Stack
                                                             h={60}
                                                             bg="var(--mantine-color-body)"
@@ -357,6 +367,7 @@ function InvoiceBatchModal(props) {
                     </Modal.Body>
                 </Modal.Content>
             </Modal.Root >
+            {addTransactionDrawer && <_AddTransaction addTransactionDrawer={addTransactionDrawer} setAddTransactionDrawer={setAddTransactionDrawer} />}
         </>
     );
 }

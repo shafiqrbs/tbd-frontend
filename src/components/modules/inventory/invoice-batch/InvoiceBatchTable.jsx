@@ -42,6 +42,7 @@ import { setSearchKeyword } from "../../../../store/core/crudSlice.js";
 import InvoiceBatchModal from "./InvoiceBatchModal.jsx";
 import _InvoiceBatchSearch from "./_InvoiceBatchSearch.jsx";
 import _AddTransactionModel from "./modal/_AddTransactionModel.jsx";
+import _AddTransaction from "./drawer/_AddTransaction";
 // import { DataTable } from 'mantine-datatable';
 
 function InvoiceBatchTable() {
@@ -53,7 +54,7 @@ function InvoiceBatchTable() {
     const tableHeight = mainAreaHeight - 116; //TabList height 104
     const height = mainAreaHeight - 314; //TabList height 104
     const [batchViewModal, setBatchViewModal] = useState(false);
-    const [addTransactionModal, setAddTransactionModal] = useState(false);
+    const [addTransactionDrawer, setAddTransactionDrawer] = useState(false);
 
     const perPage = 50;
     const [page, setPage] = useState(1);
@@ -247,7 +248,7 @@ function InvoiceBatchTable() {
                                                             <Menu.Item
                                                                 onClick={(e) => {
                                                                     e.preventDefault();
-                                                                    setAddTransactionModal(true)
+                                                                    setAddTransactionDrawer(true)
                                                                 }}
                                                                 target=""
                                                                 component="a"
@@ -469,7 +470,7 @@ function InvoiceBatchTable() {
                 </Grid>
             </Box>
             {batchViewModal && <InvoiceBatchModal batchViewModal={batchViewModal} setBatchViewModal={setBatchViewModal} />}
-            {addTransactionModal && <_AddTransactionModel addTransactionModal={addTransactionModal} setAddTransactionModal={setAddTransactionModal} />}
+            {addTransactionDrawer && <_AddTransaction addTransactionDrawer={addTransactionDrawer} setAddTransactionDrawer={setAddTransactionDrawer} />}
         </>
     );
 }
