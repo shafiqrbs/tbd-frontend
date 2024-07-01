@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { useWindowScroll } from '@mantine/hooks';
 import { useOutletContext } from "react-router-dom";
 
-function _ShortcutUser(props) {
+function _ShortcutVendor(props) {
     const { t, i18n } = useTranslation();
     const { isOnline, mainAreaHeight } = useOutletContext();
     const formHeight = mainAreaHeight - 46; //TabList height 104
@@ -70,17 +70,19 @@ function _ShortcutUser(props) {
                                 color={`red`}
                                 radius="xl"
                                 onClick={(e) => {
-                                    // console.log(props.entityEditData)
                                     (props.entityEditData) ? props.form.setValues({
+                                        company_name: props.entityEditData.company_name ? props.entityEditData.company_name : '',
                                         name: props.entityEditData.name ? props.entityEditData.name : '',
-                                        username: props.entityEditData.username ? props.entityEditData.username : '',
+                                        mobile: props.entityEditData.mobile ? props.entityEditData.mobile : '+880',
+                                        tp_percent: props.entityEditData.tp_percent ? props.entityEditData.tp_percent : '',
                                         email: props.entityEditData.email ? props.entityEditData.email : '',
-                                        mobile: props.entityEditData.mobile ? props.entityEditData.mobile : '+880'
+
                                     }) : props.form.setValues({
+                                        company_name: '',
                                         name: '',
-                                        username: '',
-                                        email: '',
-                                        mobile: '+880'
+                                        mobile: '+880',
+                                        tp_percent: '',
+                                        email: ''
                                     })
                                 }}
                             >
@@ -129,4 +131,4 @@ function _ShortcutUser(props) {
     )
 }
 
-export default _ShortcutUser
+export default _ShortcutVendor

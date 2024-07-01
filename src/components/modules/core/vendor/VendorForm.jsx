@@ -22,7 +22,7 @@ import {
 } from "../../../../store/core/utilitySlice";
 import { setFetching, storeEntityData } from "../../../../store/core/crudSlice.js";
 
-import Shortcut from "../../shortcut/Shortcut";
+import _ShortcutVendor from "../../shortcut/_ShortcutVendor";
 import InputForm from "../../../form-builders/InputForm";
 import SelectForm from "../../../form-builders/SelectForm";
 import TextAreaForm from "../../../form-builders/TextAreaForm";
@@ -146,7 +146,7 @@ function VendorForm() {
                                                     label={t('CompanyName')}
                                                     placeholder={t('CompanyName')}
                                                     required={true}
-                                                    nextField={'VendorName'}
+                                                    nextField={'name'}
                                                     form={form}
                                                     name={'company_name'}
                                                     mt={0}
@@ -162,7 +162,7 @@ function VendorForm() {
                                                     required={true}
                                                     name={'name'}
                                                     id={'name'}
-                                                    nextField={'VendorMobile'}
+                                                    nextField={'mobile'}
                                                     mt={8}
                                                 />
                                             </Box>
@@ -175,8 +175,8 @@ function VendorForm() {
                                                     placeholder={t('VendorMobile')}
                                                     required={true}
                                                     name={'mobile'}
-                                                    id={'VendorMobile'}
-                                                    nextField={'TPPercent'}
+                                                    id={'mobile'}
+                                                    nextField={'tp_percent'}
                                                     mt={8}
                                                 />
 
@@ -187,11 +187,11 @@ function VendorForm() {
                                                     label={t('TPPercent')}
                                                     placeholder={t('TPPercent')}
                                                     required={false}
-                                                    nextField={'Email'}
+                                                    nextField={'email'}
                                                     name={'tp_percent'}
                                                     form={form}
                                                     mt={8}
-                                                    id={'TPPercent'}
+                                                    id={'tp_percent'}
                                                 />
                                             </Box>
                                             <Box mt={'xs'}>
@@ -202,8 +202,8 @@ function VendorForm() {
                                                     placeholder={t('Email')}
                                                     required={false}
                                                     name={'email'}
-                                                    id={'Email'}
-                                                    nextField={'ChooseCustomer'}
+                                                    id={'email'}
+                                                    nextField={'customer_id'}
                                                     mt={8}
                                                 />
                                             </Box>
@@ -213,12 +213,12 @@ function VendorForm() {
                                                     label={t('ChooseCustomer')}
                                                     placeholder={t('ChooseCustomer')}
                                                     required={false}
-                                                    nextField={'Address'}
+                                                    nextField={'address'}
                                                     name={'customer_id'}
                                                     form={form}
                                                     dropdownValue={getCustomerDropdownData()}
                                                     mt={8}
-                                                    id={'ChooseCustomer'}
+                                                    id={'customer_id'}
                                                     searchable={true}
                                                     value={customerData}
                                                     changeValue={setCustomerData}
@@ -228,13 +228,13 @@ function VendorForm() {
                                                 <TextAreaForm
                                                     tooltip={t('Address')}
                                                     label={t('Address')}
-                                                    placeholder={t('Address')}
+                                                    placeholder={t('EntityFormSubmit')}
                                                     required={false}
                                                     nextField={'Status'}
                                                     name={'address'}
                                                     form={form}
                                                     mt={8}
-                                                    id={'Address'}
+                                                    id={'address'}
                                                 />
                                             </Box>
                                         </Box>
@@ -246,7 +246,7 @@ function VendorForm() {
                     </Grid.Col>
                     <Grid.Col span={1} >
                         <Box bg={'white'} className={'borderRadiusAll'} pt={'16'}>
-                            <Shortcut
+                            <_ShortcutVendor
                                 form={form}
                                 FormSubmit={'EntityFormSubmit'}
                                 Name={'name'}

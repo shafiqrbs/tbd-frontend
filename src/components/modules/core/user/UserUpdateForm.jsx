@@ -11,7 +11,7 @@ import {
     IconDeviceFloppy, IconPencilBolt,
     IconRestore,
 } from "@tabler/icons-react";
-import { useHotkeys } from "@mantine/hooks";
+import { useDisclosure, useHotkeys } from "@mantine/hooks";
 import InputForm from "../../../form-builders/InputForm";
 import { useDispatch, useSelector } from "react-redux";
 import { hasLength, isEmail, isNotEmpty, useForm } from "@mantine/form";
@@ -35,6 +35,7 @@ function UserUpdateForm() {
     const [formLoad, setFormLoad] = useState(true);
     const entityEditData = useSelector((state) => state.crudSlice.entityEditData)
     const formLoading = useSelector((state) => state.crudSlice.formLoading)
+    const [visible, { toggle }] = useDisclosure(true);
 
     const { userId } = useParams();
     const navigate = useNavigate();
@@ -98,7 +99,7 @@ function UserUpdateForm() {
 
 
     useHotkeys([['alt+n', () => {
-        document.getElementById('Name').focus()
+        document.getElementById('name').focus()
     }]], []);
 
     useHotkeys([['alt+r', () => {
@@ -106,7 +107,7 @@ function UserUpdateForm() {
     }]], []);
 
     useHotkeys([['alt+s', () => {
-        document.getElementById('UserFormSubmit').click()
+        document.getElementById('EntityFormSubmit').click()
     }]], []);
 
 
@@ -205,7 +206,7 @@ function UserUpdateForm() {
                                                         label={t('Name')}
                                                         placeholder={t('Name')}
                                                         required={true}
-                                                        nextField={'UserName'}
+                                                        nextField={'username'}
                                                         form={form}
                                                         name={'name'}
                                                         mt={0}
@@ -221,7 +222,7 @@ function UserUpdateForm() {
                                                         required={true}
                                                         name={'username'}
                                                         id={'username'}
-                                                        nextField={'Email'}
+                                                        nextField={'email'}
                                                         mt={8}
                                                     />
                                                 </Box>
@@ -234,7 +235,7 @@ function UserUpdateForm() {
                                                         required={true}
                                                         name={'email'}
                                                         id={'email'}
-                                                        nextField={'Mobile'}
+                                                        nextField={'mobile'}
                                                         mt={8}
                                                     />
                                                 </Box>
@@ -244,7 +245,7 @@ function UserUpdateForm() {
                                                         label={t('Mobile')}
                                                         placeholder={t('Mobile')}
                                                         required={true}
-                                                        nextField={'Password'}
+                                                        nextField={'password'}
                                                         name={'mobile'}
                                                         form={form}
                                                         mt={8}
@@ -260,7 +261,9 @@ function UserUpdateForm() {
                                                         required={false}
                                                         name={'password'}
                                                         id={'password'}
-                                                        nextField={'ConfirmPassword'}
+                                                        visible={visible}
+
+                                                        nextField={'confirm_password'}
                                                         mt={8}
                                                     />
                                                 </Box>
@@ -271,9 +274,11 @@ function UserUpdateForm() {
                                                         label={t('ConfirmPassword')}
                                                         placeholder={t('ConfirmPassword')}
                                                         required={false}
+                                                        visible={visible}
+
                                                         name={'confirm_password'}
                                                         id={'confirm_password'}
-                                                        nextField={'UserFormSubmit'}
+                                                        nextField={'EntityFormSubmit'}
                                                         mt={8}
                                                     />
                                                 </Box>

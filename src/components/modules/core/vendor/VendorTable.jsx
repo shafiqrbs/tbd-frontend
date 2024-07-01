@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useOutletContext } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import {
     Group,
     Box,
@@ -37,7 +37,8 @@ function VendorTable() {
     const indexData = useSelector((state) => state.crudSlice.indexEntityData)
     const vendorFilterData = useSelector((state) => state.crudSlice.vendorFilterData)
 
-    const [vendorObject, setVendorObject] = useState({})
+    const [vendorObject, setVendorObject] = useState({});
+    const navigate = useNavigate();
 
 
 
@@ -100,6 +101,7 @@ function VendorTable() {
                                                     dispatch(setInsertType('update'))
                                                     dispatch(editEntityData('core/vendor/' + data.id))
                                                     dispatch(setFormLoading(true))
+                                                    navigate(`/core/vendor/${data.id}`)
                                                 }}
 
                                                 target="_blank"
@@ -126,7 +128,6 @@ function VendorTable() {
                                                 {t('Show')}
                                             </Menu.Item>
                                             <Menu.Item
-                                                href={``}
                                                 target="_blank"
                                                 component="a"
                                                 w={'200'}
@@ -142,6 +143,7 @@ function VendorTable() {
                                                             <Text size="sm"> {t("FormConfirmationMessage")}</Text>
                                                         ),
                                                         labels: { confirm: 'Confirm', cancel: 'Cancel' },
+                                                        confirmProps: { color: 'red.6' },
                                                         onCancel: () => console.log('Cancel'),
                                                         onConfirm: () => {
                                                             dispatch(deleteEntityData('core/vendor/' + data.id))

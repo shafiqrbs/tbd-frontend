@@ -144,6 +144,7 @@ function UserTable() {
                                                             <Text size="sm"> {t("FormConfirmationMessage")}</Text>
                                                         ),
                                                         labels: { confirm: 'Confirm', cancel: 'Cancel' },
+                                                        confirmProps: { color: 'red.6' },
                                                         onCancel: () => console.log('Cancel'),
                                                         onConfirm: () => {
                                                             dispatch(deleteEntityData('core/user/' + data.id))

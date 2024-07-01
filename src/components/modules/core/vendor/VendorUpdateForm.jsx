@@ -1,41 +1,41 @@
-import React, {useEffect, useState} from "react";
-import {useOutletContext} from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 import {
     Button,
     rem,
     Grid, Box, ScrollArea, Tooltip, Group, Text, LoadingOverlay, Title, Flex, Stack,
 } from "@mantine/core";
-import {useTranslation} from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import {
     IconCheck,
     IconDeviceFloppy,
-    IconRestore,IconPencilBolt
+    IconRestore, IconPencilBolt
 } from "@tabler/icons-react";
-import {useHotkeys} from "@mantine/hooks";
+import { useHotkeys } from "@mantine/hooks";
 import InputForm from "../../../form-builders/InputForm";
-import {useDispatch, useSelector} from "react-redux";
-import {hasLength, useForm} from "@mantine/form";
-import {notifications} from "@mantine/notifications";
-import {modals} from "@mantine/modals";
+import { useDispatch, useSelector } from "react-redux";
+import { hasLength, useForm } from "@mantine/form";
+import { notifications } from "@mantine/notifications";
+import { modals } from "@mantine/modals";
 
 import {
     setEditEntityData,
     setFetching, setFormLoading, setInsertType,
     updateEntityData
 } from "../../../../store/core/crudSlice.js";
-import {getCustomerDropdown} from "../../../../store/core/utilitySlice.js";
+import { getCustomerDropdown } from "../../../../store/core/utilitySlice.js";
 
-import Shortcut from "../../shortcut/Shortcut.jsx";
+import _ShortcutVendor from "../../shortcut/_ShortcutVendor.jsx";
 import SelectForm from "../../../form-builders/SelectForm.jsx";
 import TextAreaForm from "../../../form-builders/TextAreaForm.jsx";
 import getCustomerDropdownData from "../../../global-hook/dropdown/getCustomerDropdownData";
 import InputNumberForm from "../../../form-builders/InputNumberForm";
 
 function VendorUpdateForm() {
-    const {t, i18n} = useTranslation();
+    const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
-    const {isOnline, mainAreaHeight} = useOutletContext();
-    const height = mainAreaHeight - 130; //TabList height 104
+    const { isOnline, mainAreaHeight } = useOutletContext();
+    const height = mainAreaHeight - 100; //TabList height 104
 
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
     const [setFormData, setFormDataForUpdate] = useState(false);
@@ -46,10 +46,20 @@ function VendorUpdateForm() {
     const entityEditData = useSelector((state) => state.crudSlice.entityEditData)
     const formLoading = useSelector((state) => state.crudSlice.formLoading)
 
+    const { vendorId } = useParams();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (vendorId) {
+            dispatch(setEditEntityData(`core/vendor/${vendorId}`));
+            dispatch(setFormLoading);
+        }
+    }, [vendorId, dispatch])
+
 
     let customerDropdown = customerDropdownData && customerDropdownData.length > 0 ?
         customerDropdownData.map((type, index) => {
-            return ({'label': type.name, 'value': String(type.id)})
+            return ({ 'label': type.name, 'value': String(type.id) })
         }) : []
 
     useEffect(() => {
@@ -62,8 +72,8 @@ function VendorUpdateForm() {
             company_name: '', name: '', mobile: '', tp_percent: '', email: ''
         },
         validate: {
-            company_name: hasLength({min: 2, max: 20}),
-            name: hasLength({min: 2, max: 20}),
+            company_name: hasLength({ min: 2, max: 20 }),
+            name: hasLength({ min: 2, max: 20 }),
             mobile: (value) => (!/^\d+$/.test(value)),
             // tp_percent: (value) => (value && !/^\d*\.?\d*$/.test(value)),
             // email: (value) => (value && !/^\S+@\S+$/.test(value)),
@@ -77,30 +87,45 @@ function VendorUpdateForm() {
 
     useEffect(() => {
 
-        form.setValues({
-            company_name: entityEditData.company_name?entityEditData.company_name:'',
-            name: entityEditData.name?entityEditData.name:'',
-            mobile: entityEditData.mobile?entityEditData.mobile:'',
-            customer_id: entityEditData.customer_id?entityEditData.customer_id:'',
-            address: entityEditData.address?entityEditData.address:'',
-            email: entityEditData.email?entityEditData.email:''
-        })
-
+        if (entityEditData) {
+            form.setValues({
+                company_name: entityEditData.company_name ? entityEditData.company_name : '',
+                name: entityEditData.name ? entityEditData.name : '',
+                mobile: entityEditData.mobile ? entityEditData.mobile : '',
+                customer_id: entityEditData.customer_id ? entityEditData.customer_id : '',
+                address: entityEditData.address ? entityEditData.address : '',
+                email: entityEditData.email ? entityEditData.email : ''
+            })
+        }
         dispatch(setFormLoading(false))
         setTimeout(() => {
             setFormLoad(false)
             setFormDataForUpdate(false)
         }, 500)
 
-    }, [dispatch, setFormData])
+    }, [dispatch, entityEditData, vendorId])
+
+    const handelFormReset = () => {
+        if (entityEditData) {
+            const originalValues = {
+                company_name: entityEditData.company_name ? entityEditData.company_name : '',
+                name: entityEditData.name ? entityEditData.name : '',
+                mobile: entityEditData.mobile ? entityEditData.mobile : '',
+                customer_id: entityEditData.customer_id ? entityEditData.customer_id : '',
+                address: entityEditData.address ? entityEditData.address : '',
+                email: entityEditData.email ? entityEditData.email : ''
+            }
+            form.setValues(originalValues)
+        }
+    }
 
 
     useHotkeys([['alt+n', () => {
-        document.getElementById('Name').focus()
+        document.getElementById('company_name').focus()
     }]], []);
 
     useHotkeys([['alt+r', () => {
-        form.reset()
+        handelFormReset();
     }]], []);
 
     useHotkeys([['alt+s', () => {
@@ -118,7 +143,7 @@ function VendorUpdateForm() {
                     children: (
                         <Text size="sm"> {t("FormConfirmationMessage")}</Text>
                     ),
-                    labels: {confirm: t('Submit'), cancel: t('Cancel')}, confirmProps: { color: 'red' },
+                    labels: { confirm: t('Submit'), cancel: t('Cancel') }, confirmProps: { color: 'red' },
                     onCancel: () => console.log('Cancel'),
                     onConfirm: () => {
                         setSaveCreateLoading(true)
@@ -132,10 +157,10 @@ function VendorUpdateForm() {
                         notifications.show({
                             color: 'teal',
                             title: t('UpdateSuccessfully'),
-                            icon: <IconCheck style={{width: rem(18), height: rem(18)}}/>,
+                            icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
                             loading: false,
                             autoClose: 700,
-                            style: {backgroundColor: 'lightgray'},
+                            style: { backgroundColor: 'lightgray' },
                         });
 
                         setTimeout(() => {
@@ -149,31 +174,30 @@ function VendorUpdateForm() {
                 });
             })}>
 
-                <Grid columns={9} gutter={{base:8}}>
+                <Grid columns={9} gutter={{ base: 8 }}>
                     <Grid.Col span={8} >
                         <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
                             <Box bg={"white"} >
-                                <Box pl={`xs`} pb={'xs'} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'} >
+                                <Box pl={`xs`} pb={'6'} pr={8} pt={'6'} mb={'4'} className={'boxBackground borderRadiusAll'} >
                                     <Grid>
-                                        <Grid.Col span={6} h={54}>
-                                            <Title order={6} mt={'xs'} pl={'6'}>{t('UpdateVendor')}</Title>
+                                        <Grid.Col span={6} >
+                                            <Title order={6} pt={'6'}>{t('UpdateVendor')}</Title>
                                         </Grid.Col>
                                         <Grid.Col span={6}>
-                                            <Stack right  align="flex-end">
+                                            <Stack right align="flex-end">
                                                 <>
                                                     {
                                                         !saveCreateLoading && isOnline &&
                                                         <Button
                                                             size="xs"
-                                                            color={`red.6`}
+                                                            color={`green.8`}
                                                             type="submit"
-                                                            mt={4}
                                                             id="EntityFormSubmit"
-                                                            leftSection={<IconDeviceFloppy size={16}/>}
+                                                            leftSection={<IconDeviceFloppy size={16} />}
                                                         >
 
                                                             <Flex direction={`column`} gap={0}>
-                                                                <Text fz={12} fw={400}>
+                                                                <Text fz={14} fw={400}>
                                                                     {t("UpdateAndSave")}
                                                                 </Text>
                                                             </Flex>
@@ -183,21 +207,21 @@ function VendorUpdateForm() {
                                         </Grid.Col>
                                     </Grid>
                                 </Box>
-                                <Box pl={`xs`} pr={'xs'} mt={'xs'}  className={'borderRadiusAll'}>
+                                <Box pl={`xs`} pr={'xs'} mt={'xs'} className={'borderRadiusAll'}>
                                     <ScrollArea h={height} scrollbarSize={2} scrollbars="y" type="never">
                                         <Box>
-                                            <LoadingOverlay visible={formLoad} zIndex={1000} overlayProps={{radius: "sm", blur: 2}}/>
+                                            <LoadingOverlay visible={formLoad} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />
                                             <Box mt={'xs'}>
                                                 <InputForm
                                                     tooltip={t('CompanyNameValidateMessage')}
                                                     label={t('CompanyName')}
                                                     placeholder={t('CompanyName')}
                                                     required={true}
-                                                    nextField={'VendorName'}
+                                                    nextField={'name'}
                                                     form={form}
                                                     name={'company_name'}
                                                     mt={0}
-                                                    id={'CompanyName'}
+                                                    id={'company_name'}
                                                 />
                                             </Box>
                                             <Box mt={'xs'}>
@@ -208,8 +232,8 @@ function VendorUpdateForm() {
                                                     placeholder={t('VendorName')}
                                                     required={true}
                                                     name={'name'}
-                                                    id={'VendorName'}
-                                                    nextField={'VendorMobile'}
+                                                    id={'name'}
+                                                    nextField={'mobile'}
                                                     mt={8}
                                                 />
                                             </Box>
@@ -221,8 +245,8 @@ function VendorUpdateForm() {
                                                     placeholder={t('VendorMobile')}
                                                     required={true}
                                                     name={'mobile'}
-                                                    id={'VendorMobile'}
-                                                    nextField={'TPPercent'}
+                                                    id={'mobile'}
+                                                    nextField={'tp_percent'}
                                                     mt={8}
                                                 />
                                             </Box>
@@ -232,11 +256,11 @@ function VendorUpdateForm() {
                                                     label={t('TPPercent')}
                                                     placeholder={t('TPPercent')}
                                                     required={false}
-                                                    nextField={'Email'}
+                                                    nextField={'email'}
                                                     name={'tp_percent'}
                                                     form={form}
                                                     mt={8}
-                                                    id={'TPPercent'}
+                                                    id={'tp_percent'}
                                                 />
                                             </Box>
                                             <Box mt={'xs'}>
@@ -247,8 +271,8 @@ function VendorUpdateForm() {
                                                     placeholder={t('Email')}
                                                     required={false}
                                                     name={'email'}
-                                                    id={'Email'}
-                                                    nextField={'ChooseCustomer'}
+                                                    id={'email'}
+                                                    nextField={'customer_id'}
                                                     mt={8}
                                                 />
                                             </Box>
@@ -258,12 +282,12 @@ function VendorUpdateForm() {
                                                     label={t('ChooseCustomer')}
                                                     placeholder={t('ChooseCustomer')}
                                                     required={false}
-                                                    nextField={'Address'}
+                                                    nextField={'address'}
                                                     name={'customer_id'}
                                                     form={form}
                                                     dropdownValue={getCustomerDropdownData()}
                                                     mt={8}
-                                                    id={'ChooseCustomer'}
+                                                    id={'customer_id'}
                                                     searchable={true}
                                                     value={customerData}
                                                     changeValue={setCustomerData}
@@ -275,11 +299,11 @@ function VendorUpdateForm() {
                                                     label={t('Address')}
                                                     placeholder={t('Address')}
                                                     required={false}
-                                                    nextField={'Status'}
+                                                    nextField={'EntityFormSubmit'}
                                                     name={'address'}
                                                     form={form}
                                                     mt={8}
-                                                    id={'Address'}
+                                                    id={'address'}
                                                 />
                                             </Box>
                                         </Box>
@@ -291,7 +315,8 @@ function VendorUpdateForm() {
                     </Grid.Col>
                     <Grid.Col span={1} >
                         <Box bg={'white'} className={'borderRadiusAll'} pt={'16'}>
-                            <Shortcut
+                            <_ShortcutVendor
+                                entityEditData={entityEditData}
                                 form={form}
                                 FormSubmit={'EntityFormSubmit'}
                                 Name={'name'}

@@ -10,17 +10,23 @@ import VendorTable from "./VendorTable";
 import VendorForm from "./VendorForm";
 import VendorUpdateForm from "./VendorUpdateForm.jsx";
 import {
+    editEntityData,
     setCustomerFilterData,
+    setEntityNewData,
+    setFormLoading,
     setInsertType,
     setSearchKeyword,
     setVendorFilterData
 } from "../../../../store/core/crudSlice.js";
 import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress.js";
 import CoreHeaderNavbar from "../CoreHeaderNavbar";
+import { useNavigate, useParams } from "react-router-dom";
 
 function VendorIndex() {
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
+    const { vendorId } = useParams();
+    const navigate = useNavigate();
 
     const insertType = useSelector((state) => state.crudSlice.insertType)
     const vendorFilterData = useSelector((state) => state.crudSlice.vendorFilterData)
@@ -28,15 +34,24 @@ function VendorIndex() {
     const progress = getLoadingProgress()
 
     useEffect(() => {
-        dispatch(setInsertType('create'))
-        dispatch(setSearchKeyword(''))
-        dispatch(setVendorFilterData({
-            ...vendorFilterData,
-            ['name']: '',
-            ['mobile']: '',
-            ['company_name']: ''
-        }))
-    }, [])
+        vendorId ? ((
+            dispatch(setInsertType('update')),
+            dispatch(editEntityData(`core/vendor/${vendorId}`)),
+            dispatch(setFormLoading(true))
+        )) : ((
+            dispatch(setInsertType('create')),
+            dispatch(setSearchKeyword('')),
+            dispatch(setEntityNewData([])),
+            dispatch(setVendorFilterData({
+                ...vendorFilterData,
+                ['name']: '',
+                ['mobile']: '',
+                ['company']: ''
+            })),
+            navigate('/core/vendor', { replace: true })
+        ))
+    }, [vendorId, dispatch, navigate, vendorFilterData])
+
 
     return (
         <>
@@ -59,7 +74,9 @@ function VendorIndex() {
                             </Grid.Col>
                             <Grid.Col span={9}>
                                 {
-                                    insertType === 'create' ? <VendorForm /> : <VendorUpdateForm />
+                                    insertType === 'create'
+                                        ? <VendorForm />
+                                        : <VendorUpdateForm />
                                 }
                             </Grid.Col>
                         </Grid>

@@ -11,7 +11,7 @@ import {
     IconDeviceFloppy,
     IconRestore,
 } from "@tabler/icons-react";
-import { useHotkeys } from "@mantine/hooks";
+import { useDisclosure, useHotkeys } from "@mantine/hooks";
 import InputForm from "../../../form-builders/InputForm";
 import { useDispatch, useSelector } from "react-redux";
 import PasswordInputForm from "../../../form-builders/PasswordInputForm";
@@ -35,6 +35,7 @@ function UserForm() {
     const height = mainAreaHeight - 100; //TabList height 104
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
     const formLoading = useSelector((state) => state.crudSlice.formLoading)
+    const [visible, { toggle }] = useDisclosure(true);
 
     const form = useForm({
         initialValues: {
@@ -52,7 +53,7 @@ function UserForm() {
     });
 
     useHotkeys([['alt+n', () => {
-        document.getElementById('Name').focus()
+        document.getElementById('name').focus()
     }]], []);
 
     useHotkeys([['alt+r', () => {
@@ -144,7 +145,7 @@ function UserForm() {
                                                     label={t('Name')}
                                                     placeholder={t('Name')}
                                                     required={true}
-                                                    nextField={'UserName'}
+                                                    nextField={'username'}
                                                     form={form}
                                                     name={'name'}
                                                     mt={0}
@@ -160,7 +161,7 @@ function UserForm() {
                                                     required={true}
                                                     name={'username'}
                                                     id={'username'}
-                                                    nextField={'Email'}
+                                                    nextField={'email'}
                                                     mt={8}
                                                 />
                                             </Box>
@@ -173,7 +174,7 @@ function UserForm() {
                                                     required={true}
                                                     name={'email'}
                                                     id={'email'}
-                                                    nextField={'Mobile'}
+                                                    nextField={'mobile'}
                                                     mt={8}
                                                 />
                                             </Box>
@@ -183,7 +184,7 @@ function UserForm() {
                                                     label={t('Mobile')}
                                                     placeholder={t('Mobile')}
                                                     required={true}
-                                                    nextField={'Password'}
+                                                    nextField={'password'}
                                                     name={'mobile'}
                                                     form={form}
                                                     mt={8}
@@ -200,7 +201,8 @@ function UserForm() {
                                                     required={true}
                                                     name={'password'}
                                                     id={'password'}
-                                                    nextField={'ConfirmPassword'}
+                                                    nextField={'confirm_password'}
+                                                    visible={visible}
                                                     mt={8}
                                                 />
                                             </Box>
@@ -212,9 +214,10 @@ function UserForm() {
                                                     label={t('ConfirmPassword')}
                                                     placeholder={t('ConfirmPassword')}
                                                     required={true}
+                                                    visible={visible}
                                                     name={'confirm_password'}
                                                     id={'confirm_password'}
-                                                    nextField={'UserFormSubmit'}
+                                                    nextField={'EntityFormSubmit'}
                                                     mt={8}
                                                 />
                                             </Box>

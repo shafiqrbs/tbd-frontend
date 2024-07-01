@@ -53,6 +53,7 @@ function AppRoute() {
                     <Route path="user" element={<UserIndex />} />
                     <Route path="user/:userId" element={<UserIndex />} />
                     <Route path="vendor" element={<VendorIndex />} />
+                    <Route path="vendor/:vendorId" element={<VendorIndex />} />
                 </Route>
                 <Route path="/inventory/">
                     <Route path="sales/edit/:id" element={<SalesEdit />} />
