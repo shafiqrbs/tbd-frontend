@@ -241,35 +241,10 @@ function LegderModal(props) {
                                                 <Box h={110} bg={'white'} pl={`xs`} pr={8} pt={'4'} className={' borderRadiusAll'} >
                                                     <Flex spacing={0} direction={'column'} >
                                                         <Grid >
-                                                            <Grid.Col span={8}>
-                                                                <Text fw={900} pt={'xs'} pl={'6'} fz={'md'}>{t('BatchDetails')}</Text>
+                                                            <Grid.Col span={9}>
+                                                                <Text fw={900} pt={'xs'} fz={'md'}>{t('BatchDetails')}</Text>
                                                             </Grid.Col>
-                                                            <Grid.Col span={4} pt={'sm'}>
-                                                                <Grid span={12} gutter={0}>
-                                                                    <Grid.Col span={6}>
-                                                                        <Button
-                                                                            color={'green.8'}
-                                                                            size='xs'
-                                                                            variant="filled"
-                                                                            onClick={(e) => {
-                                                                                e.preventDefault();
-                                                                                setAddReceive(true)
-                                                                            }}
-                                                                        >{t('Receive')}</Button>
-                                                                    </Grid.Col>
-                                                                    <Grid.Col span={6}>
-                                                                        <Button
-                                                                            color={'green.8'}
-                                                                            size='xs'
-                                                                            variant="filled"
-                                                                            onClick={(e) => {
-                                                                                e.preventDefault();
-                                                                                setAddBill(true)
-                                                                            }}
-                                                                        >{t('AddBill')}</Button>
-                                                                    </Grid.Col>
-                                                                </Grid>
-                                                            </Grid.Col>
+
                                                         </Grid>
                                                         <Stack
                                                             h={40}
@@ -279,33 +254,33 @@ function LegderModal(props) {
                                                             gap="2"
                                                             pt={'sm'}
                                                         >
-                                                            <Grid columns={12} gutter={0}>
-                                                                <Grid.Col span={6}>
-                                                                    <Grid columns={12} gutter={{ base: 0 }} pl={6}>
-                                                                        <Grid.Col span={3}>
+                                                            <Grid columns={24} gutter={0} >
+                                                                <Grid.Col span={10} pt={'sm'}>
+                                                                    <Grid columns={12} gutter={{ base: 0 }} >
+                                                                        <Grid.Col span={4}>
                                                                             <Text fz="xs" fw={600} >{t('TotalAmount')}</Text>
                                                                         </Grid.Col>
                                                                         <Grid.Col span={1}>
                                                                             <Text fz={'xs'} fw={700}>:</Text>
                                                                         </Grid.Col>
-                                                                        <Grid.Col span={8}>
+                                                                        <Grid.Col span={7}>
                                                                             <Text fz="xs" fw={300} >18654651654654656546</Text>
                                                                         </Grid.Col>
                                                                     </Grid>
-                                                                    <Grid columns={12} gutter={{ base: 0 }} pl={6}>
-                                                                        <Grid.Col span={3}>
+                                                                    <Grid columns={12} gutter={{ base: 0 }} >
+                                                                        <Grid.Col span={4}>
                                                                             <Text fz="xs" fw={600} >{t('Discount')}</Text>
                                                                         </Grid.Col>
                                                                         <Grid.Col span={1}>
                                                                             <Text fz={'xs'} fw={700}>:</Text>
                                                                         </Grid.Col>
-                                                                        <Grid.Col span={8}>
+                                                                        <Grid.Col span={7}>
                                                                             <Text fz="xs" fw={300} >100%</Text>
                                                                         </Grid.Col>
                                                                     </Grid>
                                                                 </Grid.Col>
-                                                                <Grid.Col span={6}>
-                                                                    <Grid gutter={{ base: 0 }} pl={6}>
+                                                                <Grid.Col span={10} pt={'sm'}>
+                                                                    <Grid gutter={{ base: 0 }} >
                                                                         <Grid.Col span={3}>
                                                                             <Text fz="xs" fw={600} >{t('Receive')}</Text>
                                                                         </Grid.Col>
@@ -316,7 +291,7 @@ function LegderModal(props) {
                                                                             <Text fz="xs" fw={300} >946546546</Text>
                                                                         </Grid.Col>
                                                                     </Grid>
-                                                                    <Grid gutter={{ base: 0 }} pl={6}>
+                                                                    <Grid gutter={{ base: 0 }} >
                                                                         <Grid.Col span={3}>
                                                                             <Text fz="xs" fw={600} >{t('Balance')}</Text>
                                                                         </Grid.Col>
@@ -325,6 +300,36 @@ function LegderModal(props) {
                                                                         </Grid.Col>
                                                                         <Grid.Col span={8}>
                                                                             <Text fz="xs" fw={300} >465486465465654655</Text>
+                                                                        </Grid.Col>
+                                                                    </Grid>
+                                                                </Grid.Col>
+                                                                <Grid.Col span={4} >
+                                                                    <Stack justify='center' direction='column' gap={'xs'}>
+                                                                        <Button
+                                                                            color={'green.8'}
+                                                                            size='compact-xs'
+                                                                            variant="filled"
+                                                                            onClick={(e) => {
+                                                                                e.preventDefault();
+                                                                                setAddReceive(true)
+                                                                            }}
+                                                                        ><Text fz={14} fw={400}> {t("Receive")}</Text></Button>
+                                                                        <Button
+                                                                            color={'green.8'}
+                                                                            size='compact-xs'
+                                                                            variant="filled"
+                                                                            onClick={(e) => {
+                                                                                e.preventDefault();
+                                                                                setAddBill(true)
+                                                                            }}
+                                                                        ><Text fz={14} fw={400}> {t("AddBill")}</Text></Button>
+                                                                    </Stack>
+                                                                    <Grid span={12} gutter={{ base: 6 }}>
+                                                                        <Grid.Col span={6}>
+
+                                                                        </Grid.Col>
+                                                                        <Grid.Col span={6}>
+
                                                                         </Grid.Col>
                                                                     </Grid>
                                                                 </Grid.Col>
