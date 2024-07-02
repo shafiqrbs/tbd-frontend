@@ -43,6 +43,7 @@ import InvoiceBatchModal from "./InvoiceBatchModal.jsx";
 import _InvoiceBatchSearch from "./_InvoiceBatchSearch.jsx";
 import _AddTransactionModel from "./modal/_AddTransactionModel.jsx";
 import _AddTransaction from "./drawer/_AddTransaction";
+import KeywordSearch from "../../filter/KeywordSearch";
 // import { DataTable } from 'mantine-datatable';
 
 function InvoiceBatchTable() {
@@ -51,8 +52,8 @@ function InvoiceBatchTable() {
     const dispatch = useDispatch();
     const { t, i18n } = useTranslation();
     const { isOnline, mainAreaHeight } = useOutletContext();
-    const tableHeight = mainAreaHeight - 116; //TabList height 104
-    const height = mainAreaHeight - 314; //TabList height 104
+    const tableHeight = mainAreaHeight - 106; //TabList height 104
+    const height = mainAreaHeight - 282; //TabList height 104
     const [batchViewModal, setBatchViewModal] = useState(false);
     const [addTransactionDrawer, setAddTransactionDrawer] = useState(false);
 
@@ -150,7 +151,11 @@ function InvoiceBatchTable() {
                 <Grid columns={24} gutter={{ base: 8 }}>
                     <Grid.Col span={15} >
                         <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
-                            <Box className={'borderRadiusAll'}>
+                            <Box pl={`xs`} pr={8} pt={'6'} pb={'4'} className={'boxBackground borderRadiusAll border-bottom-none'} >
+                                <_InvoiceBatchSearch checkList={[]} />
+                            </Box>
+                            <Box className={'borderRadiusAll border-top-none'}>
+
                                 <DataTable
                                     classNames={{
                                         root: tableCss.root,
@@ -176,7 +181,7 @@ function InvoiceBatchTable() {
                                                     component="a"
                                                     size="sm"
                                                     variant="subtle"
-                                                    c="red.6"
+                                                    c="red.4"
                                                     onClick={(e) => {
                                                         e.preventDefault();
                                                         setLoading(true)
@@ -210,7 +215,7 @@ function InvoiceBatchTable() {
                                                 </>
                                             )
                                         },
-                                         {
+                                        {
                                             accessor: 'discount',
                                             title: t("Discount"),
                                             textAlign: "right",
@@ -237,14 +242,19 @@ function InvoiceBatchTable() {
                                             render: (item) => (
 
                                                 <Group gap={4} justify="right" wrap="nowrap">
+                                                    <Button size="compact-xs" radius="xs" variant="filled" fw={'100'} fz={'12'}  color="red.3" mr={'4'}
+                                                            onClick={(e) => {
+                                                                e.preventDefault();
+                                                                setAddTransactionDrawer(true)
+                                                            }}
+                                                    >  {t('AddBill')}</Button>
                                                     <Menu position="bottom-end" offset={3} withArrow trigger="hover" openDelay={100} closeDelay={400}>
                                                         <Menu.Target>
-                                                            <ActionIcon variant="outline" color="gray.6" radius="xl" aria-label="Settings">
-                                                                <IconDotsVertical height={'18'} width={'18'} stroke={1.5} />
+                                                            <ActionIcon size="sm"  variant="outline" color="red" radius="xl" aria-label="Settings">
+                                                                <IconDotsVertical height={'16'} width={'16'} stroke={1.5} />
                                                             </ActionIcon>
                                                         </Menu.Target>
                                                         <Menu.Dropdown>
-
                                                             <Menu.Item
                                                                 onClick={(e) => {
                                                                     e.preventDefault();
@@ -314,12 +324,12 @@ function InvoiceBatchTable() {
 
                         <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} ref={printRef} pos="relative">
                             {loading &&
-                                <LoadingOverlay
-                                    visible={loading}
-                                    zIndex={1000}
-                                    overlayProps={{ radius: "sm", blur: 2 }}
-                                    loaderProps={{ color: 'red' }}
-                                />
+                            <LoadingOverlay
+                                visible={loading}
+                                zIndex={1000}
+                                overlayProps={{ radius: "sm", blur: 2 }}
+                                loaderProps={{ color: 'red' }}
+                            />
                             }
                             <Box h={'36'} pl={`xs`} fz={'sm'} fw={'600'} pr={8} pt={'6'} mb={'4'} className={'boxBackground textColor borderRadiusAll'} >
                                 {t('Invoice')}: {invoiceBatchData && invoiceBatchData.invoice && invoiceBatchData.invoice}
