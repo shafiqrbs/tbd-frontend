@@ -18,6 +18,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setSearchKeyword } from "../../../../../store/core/crudSlice.js";
 import FilterModel from "../../../filter/FilterModel.jsx";
 import { setFetching, setInvoiceBatchFilterData, storeEntityData } from "../../../../../store/inventory/crudSlice.js";
+import _FilterSearch from '../drawer/_FilterSearch.jsx'
 
 function SearchActionMenu(props) {
     const { t, i18n } = useTranslation();
@@ -199,7 +200,7 @@ function SearchActionMenu(props) {
 
             {
                 filterModel &&
-                <FilterModel filterModel={filterModel} setFilterModel={setFilterModel} module={props.module} />
+                <_FilterSearch filterModel={filterModel} setFilterModel={setFilterModel} module={props.module} />
             }
         </>
     );
