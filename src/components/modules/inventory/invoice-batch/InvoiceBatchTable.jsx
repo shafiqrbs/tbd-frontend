@@ -92,6 +92,7 @@ function InvoiceBatchTable() {
 
     useEffect(() => {
         setInvoiceBatchData(indexData.data && indexData.data[0] && indexData.data[0])
+        setSelectedRow(indexData.data && indexData.data[0] && indexData.data[0].invoice)
     }, [indexData.data])
     useHotkeys([['alt+n', () => {
         navigate('/inventory/sales-invoice');
@@ -171,7 +172,7 @@ function InvoiceBatchTable() {
                                                     onClick={(e) => {
                                                         e.preventDefault();
                                                         setLoading(true)
-                                                        setInvoiceBatchData(item.invoice)
+                                                        setInvoiceBatchData(item)
                                                         setSelectedRow(item.invoice)
                                                     }}
                                                     style={{ cursor: "pointer" }}
@@ -184,6 +185,26 @@ function InvoiceBatchTable() {
                                         },
                                         { accessor: 'customer_name', title: t("Customer") },
                                         {
+                                            accessor: 'sub_total',
+                                            title: t("SubTotal"),
+                                            textAlign: "right",
+                                            render: (data) => (
+                                                <>
+                                                    {data.sub_total ? Number(data.sub_total).toFixed(2) : "0.00"}
+                                                </>
+                                            )
+                                        },
+                                        {
+                                            accessor: 'discount',
+                                            title: t("Discount"),
+                                            textAlign: "right",
+                                            render: (data) => (
+                                                <>
+                                                    {data.discount ? Number(data.discount).toFixed(2) : "0.00"}
+                                                </>
+                                            )
+                                        },
+                                        {
                                             accessor: 'total',
                                             title: t("Total"),
                                             textAlign: "right",
@@ -194,32 +215,23 @@ function InvoiceBatchTable() {
                                             )
                                         },
                                         {
-                                            accessor: 'payment',
+                                            accessor: 'received',
                                             title: t("Receive"),
                                             textAlign: "right",
                                             render: (data) => (
                                                 <>
-                                                    {data.payment ? Number(data.payment).toFixed(2) : "0.00"}
+                                                    {data.received ? Number(data.received).toFixed(2) : "0.00"}
                                                 </>
                                             )
                                         },
-                                        {
-                                            accessor: 'discount',
-                                            title: t("Discount"),
-                                            textAlign: "right",
-                                            render: (data) => (
-                                                <>
-                                                    {data.payment ? Number(data.payment).toFixed(2) : "0.00"}
-                                                </>
-                                            )
-                                        },
+
                                         {
                                             accessor: 'due',
                                             title: t("Due"),
                                             textAlign: "right",
                                             render: (data) => (
                                                 <>
-                                                    {data.total ? (Number(data.total) - Number(data.payment)).toFixed(2) : "0.00"}
+                                                    {data.due ? (Number(data.due)).toFixed(2) : "0.00"}
                                                 </>
                                             )
                                         },
@@ -234,6 +246,8 @@ function InvoiceBatchTable() {
                                                         onClick={(e) => {
                                                             e.preventDefault();
                                                             setAddTransactionDrawer(true)
+                                                            setInvoiceBatchData(item)
+                                                            setSelectedRow(item.invoice)
                                                         }}
                                                     >  {t('AddBill')}</Button>
                                                     <Menu position="bottom-end" offset={3} withArrow trigger="hover" openDelay={100} closeDelay={400}>
@@ -472,7 +486,7 @@ function InvoiceBatchTable() {
                 </Grid>
             </Box>
             {batchViewModal && <InvoiceBatchModal batchViewModal={batchViewModal} setBatchViewModal={setBatchViewModal} />}
-            {addTransactionDrawer && <_AddTransaction addTransactionDrawer={addTransactionDrawer} setAddTransactionDrawer={setAddTransactionDrawer} />}
+            {addTransactionDrawer && <_AddTransaction invoiceBatchData={invoiceBatchData} addTransactionDrawer={addTransactionDrawer} setAddTransactionDrawer={setAddTransactionDrawer} />}
             {batchLedgerModal && <LegderModal batchLedgerModal={batchLedgerModal} setBatchLedgerModal={setBatchLedgerModal} />}
         </>
     );

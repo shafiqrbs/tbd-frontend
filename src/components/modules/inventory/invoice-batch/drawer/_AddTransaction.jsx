@@ -40,7 +40,7 @@ function _AddTransaction(props) {
     const domainId = configData?.domain_id;
     const isSMSActive = configData?.is_active_sms;
     const isZeroReceiveAllow = configData?.is_zero_receive_allow;
-    const {addTransactionDrawer,setAddTransactionDrawer} = props
+    const {addTransactionDrawer,setAddTransactionDrawer,invoiceBatchData} = props
     const { isOnline, mainAreaHeight } = useOutletContext();
     const { t, i18n } = useTranslation();
     const height = mainAreaHeight - 30; //TabList height 104
@@ -66,6 +66,7 @@ function _AddTransaction(props) {
     const [tempCardProducts, setTempCardProducts] = useState([])
     const [loadCardProducts, setLoadCardProducts] = useState(false)
     const [discountType, setDiscountType] = useToggle(['Flat', 'Percent']);
+    const [provisionMode, setProvisionMode] = useToggle(['Item', 'Invoice']);
     const [invoicePrintData, setInvoicePrintData] = useState(null)
     const [invoicePrintForSave, setInvoicePrintForSave] = useState(false)
 
@@ -88,16 +89,19 @@ function _AddTransaction(props) {
 
     const form = useForm({
         initialValues: {
-            customer_id: '',
-            transaction_mode_id: '',
-            sales_by: '',
-            order_process: '',
-            narration: '',
-            discount: '',
-            receive_amount: ''
+            invoice_batch_id : invoiceBatchData.id,
+            created_by_id : JSON.parse(localStorage.getItem('user')).id,
+            sales_by_id : JSON.parse(localStorage.getItem('user')).id,
+            customer_id: invoiceBatchData.customer_id,
+            provision_discount: '',
+            provision_mode: '',
+            discount_calculation: '',
+            discount_type: '',
+            comment: '',
+            invoice_date: ''
         },
         validate: {
-            transaction_mode_id: isNotEmpty(),
+            discount_calculation: isNotEmpty(),
         }
     });
 
@@ -182,7 +186,7 @@ function _AddTransaction(props) {
     /*END GET SALES BY / USERS DROPDOWN FROM LOCAL STORAGE*/
 
     /*START FOR TRANSACTION MODE DEFAULT SELECT*/
-    useEffect(() => {
+    /*useEffect(() => {
         if (transactionModeData && transactionModeData.length > 0) {
             for (let mode of transactionModeData) {
                 if (mode.is_selected) {
@@ -191,7 +195,7 @@ function _AddTransaction(props) {
                 }
             }
         }
-    }, [transactionModeData, form]);
+    }, [transactionModeData, form]);*/
     /*END FOR TRANSACTION MODE DEFAULT SELECT*/
 
     /*START FOR SUBMIT Disabled*/
@@ -272,7 +276,52 @@ function _AddTransaction(props) {
                             <Drawer.CloseButton />
                         </Drawer.Header>
                         <form onSubmit={form.onSubmit((values) => {
-                            const tempProducts = localStorage.getItem('temp-sales-products');
+
+                            const options = {
+                                year: 'numeric',
+                                month: '2-digit',
+                                day: '2-digit'
+                            };
+                            const formValue = {}
+                            formValue['invoice_batch_id'] = form.values.invoice_batch_id ? form.values.invoice_batch_id : null;
+                            formValue['created_by_id'] = Number(form.values.created_by_id);
+                            formValue['sales_by_id'] = form.values.sales_by_id;
+                            formValue['customer_id'] = form.values.customer_id ? form.values.customer_id : null;
+                            formValue['provision_discount'] = form.values.provision_discount ? form.values.provision_discount : null;
+                            formValue['provision_mode'] = provisionMode;
+                            formValue['discount_calculation'] = form.values.discount_calculation ? form.values.discount_calculation : null;
+                            formValue['discount_type'] = discountType;
+                            formValue['comment'] = form.values.comment;
+                            formValue['invoice_date'] = form.values.invoice_date && new Date(form.values.invoice_date).toLocaleDateString("en-CA", options)
+
+                            console.log(formValue)
+
+
+                            // console.log(form.values)
+                            /*const options = {
+                                year: 'numeric',
+                                month: '2-digit',
+                                day: '2-digit'
+                            };
+
+                            if (values.invoice_date) {
+                                let date = new Date(values.invoice_date);
+                                form.values.invoice_date = date.toLocaleDateString("en-CA", options);
+                            }
+
+                            console.log(form.values)*/
+
+                            /*const options = {
+                                year: 'numeric',
+                                month: '2-digit',
+                                day: '2-digit'
+                            };
+                            form.values['invoice_date'] = form.values.invoice_date && new Date(form.values.invoice_date).toLocaleDateString("en-CA", options)
+
+                            console.log(form.values)*/
+
+
+                            /*const tempProducts = localStorage.getItem('temp-sales-products');
                             let items = tempProducts ? JSON.parse(tempProducts) : [];
                             let createdBy = JSON.parse(localStorage.getItem('user'));
 
@@ -305,7 +354,6 @@ function _AddTransaction(props) {
                             formValue['discount_calculation'] = discountType === 'Percent' ? form.values.discount : 0;
                             formValue['vat'] = 0;
                             formValue['total'] = salesTotalAmount;
-                            /*formValue['payment'] = form.values.receive_amount ? (customerData && customerData !=defaultCustomerId ? form.values.receive_amount:isZeroReceiveAllow ? salesTotalAmount:form.values.receive_amount) :(isZeroReceiveAllow && (!form.values.customer_id || form.values.customer_id == defaultCustomerId) ?salesTotalAmount:0);*/
                             formValue['sales_by_id'] = form.values.sales_by;
                             formValue['created_by_id'] = Number(createdBy['id']);
                             formValue['process'] = form.values.order_process;
@@ -359,30 +407,92 @@ function _AddTransaction(props) {
                                     autoClose: 700,
                                     style: { backgroundColor: 'lightgray' },
                                 });
-                            }
+                            }*/
 
                         })}>
                         <ScrollArea  p={'md'} h={height}  scrollbarSize={2} type="never" bg={'gray.1'}>
                             <Box>
                                 <Grid columns={48}>
                                     <Box className={'borderRadiusAll'} w={'100%'}>
+                                        <Box h={'42'} pl={`xs`} fz={'sm'} fw={'600'} pr={8} pt={'xs'}  className={'boxBackground textColor borderRadiusAll'} >
+                                            {t('Invoice')}: {invoiceBatchData && invoiceBatchData.invoice && invoiceBatchData.invoice}
+                                        </Box>
+                                        <Box className={'borderRadiusAll border-top-none'} fz={'sm'}  >
+                                            <Box pl={`xs`} fz={'sm'} fw={'600'} pr={'xs'} pt={'6'} pb={'xs'} className={'boxBackground textColor'} >
+                                                <Grid gutter={{ base: 4 }}>
+                                                    <Grid.Col span={'6'}>
+                                                        <Grid columns={15} gutter={{ base: 4 }}>
+                                                            <Grid.Col span={6} ><Text fz="sm" lh="xs">{t('Customer')}</Text></Grid.Col>
+                                                            <Grid.Col span={9} >
+                                                                <Text fz="sm" lh="xs">
+                                                                    {invoiceBatchData && invoiceBatchData.customer_name && invoiceBatchData.customer_name}
+                                                                </Text>
+                                                            </Grid.Col>
+                                                        </Grid>
+                                                        <Grid columns={15} gutter={{ base: 4 }}>
+                                                            <Grid.Col span={6} ><Text fz="sm" lh="xs">{t('Mobile')}</Text></Grid.Col>
+                                                            <Grid.Col span={9} >
+                                                                <Text fz="sm" lh="xs">
+                                                                    {invoiceBatchData && invoiceBatchData.customer_mobile && invoiceBatchData.customer_mobile}
+                                                                </Text>
+                                                            </Grid.Col>
+                                                        </Grid>
+                                                        <Grid columns={15} gutter={{ base: 4 }}>
+                                                            <Grid.Col span={6} ><Text fz="sm" lh="xs">{t('Address')}</Text></Grid.Col>
+                                                            <Grid.Col span={9} >
+                                                                <Text fz="sm" lh="xs">
+                                                                    {invoiceBatchData && invoiceBatchData.customer_address && invoiceBatchData.customer_address}
+                                                                </Text>
+                                                            </Grid.Col>
+                                                        </Grid>
+                                                        <Grid columns={15} gutter={{ base: 4 }}>
+                                                            <Grid.Col span={6} ><Text fz="sm" lh="xs">{t('Balance')}</Text></Grid.Col>
+                                                            <Grid.Col span={9} >
+                                                                <Text fz="sm" lh="xs">
+                                                                    {invoiceBatchData && invoiceBatchData.balance ? Number(invoiceBatchData.balance).toFixed(2) : 0.00}
+                                                                </Text>
+                                                            </Grid.Col>
+                                                        </Grid>
+                                                    </Grid.Col>
+                                                    <Grid.Col span={'6'}>
+                                                        <Grid columns={15} gutter={{ base: 4 }}>
+                                                            <Grid.Col span={6} ><Text fz="sm" lh="xs">{t('Created')}</Text></Grid.Col>
+                                                            <Grid.Col span={9} >
+                                                                <Text fz="sm" lh="xs">
+                                                                    {invoiceBatchData && invoiceBatchData.created && invoiceBatchData.created}
+                                                                </Text>
+                                                            </Grid.Col>
+                                                        </Grid>
+                                                        <Grid columns={15} gutter={{ base: 4 }}>
+                                                            <Grid.Col span={6} ><Text fz="sm" lh="xs">{t('CreatedBy')}</Text></Grid.Col>
+                                                            <Grid.Col span={9} >
+                                                                <Text fz="sm" lh="xs">
+                                                                    {invoiceBatchData && invoiceBatchData.created_by_name && invoiceBatchData.created_by_name}
+                                                                </Text>
+                                                            </Grid.Col>
+                                                        </Grid>
+                                                    </Grid.Col>
+                                                </Grid>
+                                            </Box>
+                                        </Box>
+
                                         <Box p={'xs'} bg={'orange.1'}>
                                             <Grid gutter={{ base: 4 }}>
                                                 <Grid.Col span={3}>
                                                     <Center fz={'md'}
-                                                            fw={'800'}>{currencySymbol} {salesSubTotalAmount.toFixed(2)}</Center>
+                                                            fw={'800'}>{currencySymbol} {Number(props?.invoiceBatchData?.sub_total).toFixed(2)}</Center>
                                                 </Grid.Col>
                                                 <Grid.Col span={3}>
                                                     <Center fz={'md'}
-                                                            fw={'800'}> {currencySymbol} {salesDiscountAmount && Number(salesDiscountAmount).toFixed(2)}</Center>
+                                                            fw={'800'}> {currencySymbol} {Number(props?.invoiceBatchData?.discount).toFixed(2)}</Center>
                                                 </Grid.Col>
                                                 <Grid.Col span={3}>
                                                     <Center fz={'md'}
-                                                            fw={'800'}>  {currencySymbol} {salesVatAmount.toFixed(2)}</Center>
+                                                            fw={'800'}>  {currencySymbol} {Number(props?.invoiceBatchData?.total).toFixed(2)}</Center>
                                                 </Grid.Col>
                                                 <Grid.Col span={3}>
                                                     <Center fz={'md'}
-                                                            fw={'800'}>{currencySymbol} {salesTotalAmount.toFixed(2)}</Center>
+                                                            fw={'800'}>{currencySymbol} {Number(props?.invoiceBatchData?.received).toFixed(2)}</Center>
                                                 </Grid.Col>
                                             </Grid>
                                             <Grid gutter={{ base: 4 }}>
@@ -407,10 +517,10 @@ function _AddTransaction(props) {
                                                     <Center fz={'xs'} c="dimmed" >{t('Discount')}</Center>
                                                 </Grid.Col>
                                                 <Grid.Col span={3}>
-                                                    <Center fz={'xs'} c="dimmed">{t('VAT')}</Center>
+                                                    <Center fz={'xs'} c="dimmed">{t('Total')}</Center>
                                                 </Grid.Col>
                                                 <Grid.Col span={3}>
-                                                    <Center fz={'xs'} c="dimmed">{t('Total')}</Center>
+                                                    <Center fz={'xs'} c="dimmed">{t('Received')}</Center>
                                                 </Grid.Col>
                                             </Grid>
                                         </Box>
@@ -418,44 +528,44 @@ function _AddTransaction(props) {
                                             <Box p={'xs'} className={'boxBackground'} mt={'4'} pt={'xs'} mb={'xs'} pb={'xs'} >
                                                 <Grid gutter={{ base: 2 }}>
                                                     <Grid.Col span={4}>
-                                                        <DatePickerForm
-                                                            tooltip={t('InvoiceDateValidateMessage')}
-                                                            label=''
-                                                            placeholder={t('InvoiceDate')}
-                                                            required={false}
-                                                            nextField={'discount'}
-                                                            form={form}
-                                                            name={'invoice_date'}
-                                                            id={'invoice_date'}
-                                                            leftSection={<IconCalendar size={16} opacity={0.5} />}
-                                                            rightSection={<IconCalendar size={16} opacity={0.5} />}
-                                                            rightSectionWidth={30}
-                                                            closeIcon={true}
-                                                        />
+
                                                     </Grid.Col>
                                                     <Grid.Col span={4}>&nbsp;</Grid.Col>
                                                     <Grid.Col span={4}>
                                                         <Box fz={'xl'} pr={'8'} mt={'4'} c={'red'} style={{ textAlign: 'right', float: 'right' }} fw={'800'}>
-                                                            {returnOrDueText} {currencySymbol} {salesDueAmount.toFixed(2)}
+                                                            <DatePickerForm
+                                                                tooltip={t('InvoiceDateValidateMessage')}
+                                                                label=''
+                                                                placeholder={t('InvoiceDate')}
+                                                                required={false}
+                                                                nextField={'provision_discount'}
+                                                                form={form}
+                                                                name={'invoice_date'}
+                                                                id={'invoice_date'}
+                                                                leftSection={<IconCalendar size={16} opacity={0.5} />}
+                                                                rightSection={<IconCalendar size={16} opacity={0.5} />}
+                                                                rightSectionWidth={30}
+                                                                closeIcon={true}
+                                                            />
                                                         </Box>
                                                     </Grid.Col>
                                                 </Grid>
                                                 <Box mt={'xs'} h={1} bg={`red.3`}>&nbsp;</Box>
                                                 <Grid gutter={{ base: 2 }} mt={'xs'}>
                                                     <Grid.Col span={8}>
-                                                        {t('ProvisionAmount')}
+                                                        {t('ProvisionDiscount')}
                                                     </Grid.Col>
                                                     <Grid.Col span={4}>
                                                         <InputNumberForm
                                                             type="number"
-                                                            tooltip={t('ReceiveAmountValidateMessage')}
+                                                            tooltip={t('ProvisionDiscountValidateMessage')}
                                                             label=''
                                                             placeholder={t('Amount')}
                                                             required={false}
-                                                            nextField={'sales_by'}
+                                                            nextField={'discount_calculation'}
                                                             form={form}
-                                                            name={'receive_amount'}
-                                                            id={'receive_amount'}
+                                                            name={'provision_discount'}
+                                                            id={'provision_discount'}
                                                             rightIcon={<IconCurrency size={16} opacity={0.5} />}
                                                             leftSection={<IconPlusMinus size={16} opacity={0.5} />}
                                                             closeIcon={true}
@@ -463,6 +573,16 @@ function _AddTransaction(props) {
                                                     </Grid.Col>
                                                 </Grid>
                                                 <Grid gutter={{ base: 2 }} mt={'xs'}>
+                                                    <Grid.Col span={4}>
+                                                        <Button
+                                                            fullWidth
+                                                            onClick={() => setProvisionMode()}
+                                                            variant="filled"
+                                                            fz={'xs'}
+                                                            color="green.8">
+                                                            {provisionMode}
+                                                        </Button>
+                                                    </Grid.Col>
                                                     <Grid.Col span={4}>
                                                         <Button
                                                             fullWidth
@@ -476,17 +596,16 @@ function _AddTransaction(props) {
                                                             {discountType}
                                                         </Button>
                                                     </Grid.Col>
-                                                    <Grid.Col span={4}>&nbsp; </Grid.Col>
                                                     <Grid.Col span={4}>
                                                         <InputButtonForm
                                                             tooltip={t('DiscountValidateMessage')}
                                                             label=''
                                                             placeholder={t('Discount')}
                                                             required={false}
-                                                            nextField={'receive_amount'}
+                                                            nextField={'narration'}
                                                             form={form}
-                                                            name={'discount'}
-                                                            id={'discount'}
+                                                            name={'discount_calculation'}
+                                                            id={'discount_calculation'}
                                                             leftSection={<IconDiscountOff size={16} opacity={0.5} />}
                                                             rightSection={inputGroupCurrency}
                                                             rightSectionWidth={30}
@@ -496,46 +615,15 @@ function _AddTransaction(props) {
                                                 </Grid>
                                             </Box>
                                             <Box>
-                                                <Box p={'xs'} pb={'0'} pt={'0'}>
-                                                    <SelectForm
-                                                        tooltip={t('ChooseSalesBy')}
-                                                        label=''
-                                                        placeholder={t('SalesBy')}
-                                                        required={false}
-                                                        name={'sales_by'}
-                                                        form={form}
-                                                        dropdownValue={salesByDropdownData}
-                                                        id={'sales_by'}
-                                                        nextField={'order_process'}
-                                                        searchable={false}
-                                                        value={salesByUser}
-                                                        changeValue={setSalesByUser}
-                                                    />
-                                                </Box>
-                                                <Box p={'xs'} >
-                                                    <SelectForm
-                                                        tooltip={t('ChooseOrderProcess')}
-                                                        label=''
-                                                        placeholder={t('OrderProcess')}
-                                                        required={false}
-                                                        name={'order_process'}
-                                                        form={form}
-                                                        dropdownValue={localStorage.getItem('order-process') ? JSON.parse(localStorage.getItem('order-process')) : []}
-                                                        id={'order_process'}
-                                                        nextField={'narration'}
-                                                        searchable={false}
-                                                        value={orderProcess}
-                                                        changeValue={setOrderProcess}
-                                                    />
-                                                </Box>
+
                                                 <Box p={'xs'} pt={'0'}>
                                                     <TextAreaForm
                                                         tooltip={t('Narration')}
                                                         label=''
                                                         placeholder={t('Narration')}
                                                         required={false}
-                                                        nextField={'Status'}
-                                                        name={'narration'}
+                                                        nextField={'entityDataSubmit'}
+                                                        name={'comment'}
                                                         form={form}
                                                         mt={8}
                                                         id={'narration'}
@@ -576,11 +664,12 @@ function _AddTransaction(props) {
                                         variant="filled"
                                         leftSection={<IconDeviceFloppy size={14} />}
                                         color="green"
-                                        disabled={isDisabled}
-                                        style={{
+                                        id="entityDataSubmit"
+                                        // disabled={isDisabled}
+                                        /*style={{
                                             transition: "all 0.3s ease",
                                             backgroundColor: isDisabled ? "#f1f3f500" : ""
-                                        }}
+                                        }}*/
                                     >
                                         Save
                                     </Button>
