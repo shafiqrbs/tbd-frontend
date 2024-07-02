@@ -17,8 +17,8 @@ import { useState } from 'react';
 import _AddTransaction from "./_AddTransactionModel.jsx";
 import _ModalTable from './_ModalTable.jsx';
 import _ModalInvoice from './_ModalInvoice.jsx';
-import _AddBill from './_AddBill.jsx';
-import _AddReceive from './_AddReceive.jsx';
+import _AddBill from '../drawer/_AddBill.jsx';
+import _AddReceive from '../drawer/_AddReceive.jsx';
 
 
 function LegderModal(props) {

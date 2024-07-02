@@ -22,21 +22,21 @@ import { getSalesDetails, storeEntityData, } from "../../../../../store/inventor
 import { notifications } from "@mantine/notifications";
 import customerDataStoreIntoLocalStorage from "../../../../global-hook/local-storage/customerDataStoreIntoLocalStorage.js";
 import _addCustomer from "../../../popover-form/_addCustomer.jsx";
-import _GenericInvoiceForm from "../../sales/_GenericInvoiceForm";
+import _GenericInvoiceForm from "../../sales/_GenericInvoiceForm.jsx";
 
-function _AddBill(props) {
+function _AddReceive(props) {
     const configData = localStorage.getItem('config-data');
 
     const currencySymbol = configData?.currency?.symbol;
     const domainId = configData?.domain_id;
     const isSMSActive = configData?.is_active_sms;
     const isZeroReceiveAllow = configData?.is_zero_receive_allow;
-    const { addBill, setAddBill } = props
+    const { addReceive, setAddReceive } = props
     const { isOnline, mainAreaHeight } = useOutletContext();
     const { t, i18n } = useTranslation();
     const height = mainAreaHeight - 30; //TabList height 104
     const closeModel = () => {
-        setAddBill(false)
+        setAddReceive(false)
     }
     const dispatch = useDispatch();
     const entityNewData = useSelector((state) => state.inventoryCrudSlice.entityNewData);
@@ -131,7 +131,7 @@ function _AddBill(props) {
 
     return (
         <>
-            <Drawer.Root title={t('AddTransaction')} opened={addBill} position="right" onClose={closeModel} size={'30%'} >
+            <Drawer.Root title={t('AddTransaction')} opened={addReceive} position="right" onClose={closeModel} size={'30%'} >
                 <Drawer.Overlay />
                 <Drawer.Content>
                     <Drawer.Header>
@@ -294,4 +294,4 @@ function _AddBill(props) {
     );
 }
 
-export default _AddBill;
+export default _AddReceive;
