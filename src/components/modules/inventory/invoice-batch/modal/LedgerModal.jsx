@@ -348,7 +348,7 @@ function LegderModal(props) {
                             <Box >
                                 <Box pl={'xs'} pr={'xs'}>
                                     <Grid columns={24} gutter={{ base: 8 }}>
-                                        <Grid.Col span={12} >
+                                        <Grid.Col span={15} >
                                             <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
                                                 <Box h={40} pl={`xs`} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'} >
                                                     <Title order={6} pl={'6'}>{t('Invoices')}</Title>
@@ -359,7 +359,7 @@ function LegderModal(props) {
                                             </Box>
 
                                         </Grid.Col>
-                                        <Grid.Col span={12} >
+                                        <Grid.Col span={9} >
                                             <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
                                                 <Box h={40} pl={`xs`} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'} >
                                                     <Title order={6} pl={'6'}>{t('BatchItems')}</Title>
