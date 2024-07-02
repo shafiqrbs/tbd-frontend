@@ -195,3 +195,12 @@ input[type=radio]:checked + label>img {
     background-color: '#f0f1f9';
     padding : 2px;
 } */
+
+.ModalTabelDetails {
+    font-size: var(--mantine-font-size-sm);
+    background: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6));
+  }
+  
+.ModalTableLabel {
+    width: rem(130px);
+  }

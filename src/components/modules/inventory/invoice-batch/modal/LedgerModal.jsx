@@ -15,11 +15,13 @@ import {
 } from '@tabler/icons-react';
 import { useState } from 'react';
 import _AddTransaction from "./_AddTransactionModel.jsx";
-import InvoiceBatchModalInvoice from '../InvoiceBatchModalInvoice.jsx';
-import InvoiceBatchModalTable from '../InvoiceBatchModalTable.jsx';
-import InvoiceBatchModalTransaction from '../InvoiceBatchModalTransaction.jsx';
+import _ModalTable from './_ModalTable.jsx';
+import _ModalInvoice from './_ModalInvoice.jsx';
+import _AddBill from './_AddBill.jsx';
+import _AddReceive from './_AddReceive.jsx';
 
-function Legder(props) {
+
+function LegderModal(props) {
     const theme = useMantineTheme();
 
     const closeModel = () => {
@@ -35,6 +37,9 @@ function Legder(props) {
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
     const height = mainAreaHeight - 120; //TabList height 104
+
+    const [addBill, setAddBill] = useState(false);
+    const [addReceive, setAddReceive] = useState(false);
 
     return (
         <>
@@ -248,7 +253,7 @@ function Legder(props) {
                                                                             variant="filled"
                                                                             onClick={(e) => {
                                                                                 e.preventDefault();
-                                                                                setAddTransactionDrawer(true)
+                                                                                setAddReceive(true)
                                                                             }}
                                                                         >{t('Receive')}</Button>
                                                                     </Grid.Col>
@@ -259,7 +264,7 @@ function Legder(props) {
                                                                             variant="filled"
                                                                             onClick={(e) => {
                                                                                 e.preventDefault();
-                                                                                setAddTransactionDrawer(true)
+                                                                                setAddBill(true)
                                                                             }}
                                                                         >{t('AddBill')}</Button>
                                                                     </Grid.Col>
@@ -344,7 +349,7 @@ function Legder(props) {
                                                     <Title order={6} pl={'6'}>{t('Invoices')}</Title>
                                                 </Box>
                                                 <Box className={'borderRadiusAll'} h={height - 75}>
-                                                    <InvoiceBatchModalInvoice />
+                                                    <_ModalTable />
                                                 </Box>
                                             </Box>
 
@@ -355,7 +360,7 @@ function Legder(props) {
                                                     <Title order={6} pl={'6'}>{t('BatchItems')}</Title>
                                                 </Box>
                                                 <Box bg={'white'} h={height - 75} >
-                                                    <InvoiceBatchModalTable />
+                                                    <_ModalInvoice />
                                                 </Box>
 
                                             </Box>
@@ -368,9 +373,12 @@ function Legder(props) {
                     </Modal.Body>
                 </Modal.Content>
             </Modal.Root >
-            {/* {addTransactionDrawer && <_AddTransaction addTransactionDrawer={addTransactionDrawer} setAddTransactionDrawer={setAddTransactionDrawer} />} */}
+            {addBill && <_AddBill addBill={addBill} setAddBill={setAddBill} />}
+            {addReceive && <_AddReceive addReceive={addReceive} setAddReceive={setAddReceive} />}
+
+
         </>
     );
 }
 
-export default Legder;
+export default LegderModal;

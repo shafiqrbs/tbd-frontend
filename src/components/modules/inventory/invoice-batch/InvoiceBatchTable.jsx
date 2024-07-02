@@ -41,7 +41,8 @@ import InvoiceBatchModal from "./InvoiceBatchModal.jsx";
 import _InvoiceBatchSearch from "./_InvoiceBatchSearch.jsx";
 import _AddTransactionModel from "./modal/_AddTransactionModel.jsx";
 import _AddTransaction from "./drawer/_AddTransaction";
-import Legder from "./modal/Ledger.jsx";
+import LegderModal from "./modal/LedgerModal.jsx";
+
 // import { DataTable } from 'mantine-datatable';
 
 function InvoiceBatchTable() {
@@ -487,7 +488,7 @@ function InvoiceBatchTable() {
             </Box>
             {batchViewModal && <InvoiceBatchModal batchViewModal={batchViewModal} setBatchViewModal={setBatchViewModal} />}
             {addTransactionDrawer && <_AddTransaction addTransactionDrawer={addTransactionDrawer} setAddTransactionDrawer={setAddTransactionDrawer} />}
-            {batchLedgerModal && <Legder batchLedgerModal={batchLedgerModal} setBatchLedgerModal={setBatchLedgerModal} />}
+            {batchLedgerModal && <LegderModal batchLedgerModal={batchLedgerModal} setBatchLedgerModal={setBatchLedgerModal} />}
         </>
     );
 }
