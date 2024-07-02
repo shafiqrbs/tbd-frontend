@@ -25,7 +25,7 @@ import InvoiceBatchModalTransaction from './InvoiceBatchModalTransaction.jsx';
 import InvoiceBatchModalInvoice from './InvoiceBatchModalInvoice.jsx';
 import _AddTransaction from "./drawer/_AddTransaction";
 
-function InvoiceBatchModal(props) {
+function BatchLedgerModal(props) {
     const theme = useMantineTheme();
     const closeModel = () => {
         props.setBatchViewModal(false)
@@ -141,7 +141,7 @@ function InvoiceBatchModal(props) {
                                                             mt={4}
                                                         >
                                                             <Grid columns={12}>
-                                                                <Grid.Col span={8}>
+                                                                <Grid.Col span={10}>
                                                                     <Grid gutter={{ base: 0 }} pl={6}>
                                                                         <Grid.Col span={3}>
                                                                             <Text fz="xs" fw={600} >{t('TotalBalance')}</Text>
@@ -176,7 +176,7 @@ function InvoiceBatchModal(props) {
                                                                         </Grid.Col>
                                                                     </Grid>
                                                                 </Grid.Col>
-                                                                <Grid.Col span={4}>
+                                                                <Grid.Col span={2}>
                                                                     <Box mt={'8'} mr={6} style={{ textAlign: 'right', float: 'right' }}>
                                                                         <Group>
                                                                             <Tooltip
@@ -395,4 +395,4 @@ function InvoiceBatchModal(props) {
     );
 }
 
-export default InvoiceBatchModal;
+export default BatchLedgerModal;
