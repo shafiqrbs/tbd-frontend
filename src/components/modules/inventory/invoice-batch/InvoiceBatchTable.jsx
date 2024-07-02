@@ -41,6 +41,7 @@ import InvoiceBatchModal from "./InvoiceBatchModal.jsx";
 import _InvoiceBatchSearch from "./_InvoiceBatchSearch.jsx";
 import _AddTransactionModel from "./modal/_AddTransactionModel.jsx";
 import _AddTransaction from "./drawer/_AddTransaction";
+import Legder from "./modal/Ledger.jsx";
 // import { DataTable } from 'mantine-datatable';
 
 function InvoiceBatchTable() {
@@ -79,6 +80,7 @@ function InvoiceBatchTable() {
     }, [])
 
     const [selectedRow, setSelectedRow] = useState('');
+    const [batchLedgerModal, setBatchLedgerModal] = useState(false);
 
     const [loading, setLoading] = useState(true);
     useEffect(() => {
@@ -161,7 +163,7 @@ function InvoiceBatchTable() {
                                         header: tableCss.header,
                                         footer: tableCss.footer,
                                         pagination: tableCss.pagination,
-                                    }}  
+                                    }}
                                     records={indexData.data}
                                     columns={[
                                         {
@@ -255,6 +257,18 @@ function InvoiceBatchTable() {
                                                             </ActionIcon>
                                                         </Menu.Target>
                                                         <Menu.Dropdown>
+                                                            <Menu.Item
+                                                                onClick={(e) => {
+                                                                    e.preventDefault();
+                                                                    setBatchLedgerModal(true)
+                                                                    // dispatch(editEntityData('core/user/' + data.id))
+                                                                }}
+                                                                target=""
+                                                                component="a"
+                                                                w={'200'}
+                                                            >
+                                                                {t('Test')}
+                                                            </Menu.Item>
                                                             <Menu.Item
                                                                 onClick={(e) => {
                                                                     e.preventDefault();
@@ -473,6 +487,7 @@ function InvoiceBatchTable() {
             </Box>
             {batchViewModal && <InvoiceBatchModal batchViewModal={batchViewModal} setBatchViewModal={setBatchViewModal} />}
             {addTransactionDrawer && <_AddTransaction addTransactionDrawer={addTransactionDrawer} setAddTransactionDrawer={setAddTransactionDrawer} />}
+            {batchLedgerModal && <Legder batchLedgerModal={batchLedgerModal} setBatchLedgerModal={setBatchLedgerModal} />}
         </>
     );
 }

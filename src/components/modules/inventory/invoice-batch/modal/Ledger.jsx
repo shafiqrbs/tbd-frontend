@@ -11,47 +11,34 @@ import React, { useEffect, } from 'react';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-    IconInfoCircle,
-    IconDotsVertical,
-    IconTrashX, IconEyeEdit, IconMessage, IconTallymark1
+    IconEyeEdit, IconMessage, IconTallymark1
 } from '@tabler/icons-react';
 import { useState } from 'react';
-import { useForm } from '@mantine/form';
-import { DataTable } from 'mantine-datatable';
-import tableCss from '../../../../assets/css/Table.module.css';
-import { getIndexEntityData, setFetching, setSalesFilterData } from "../../../../store/inventory/crudSlice.js";
-import InvoiceBatchModalTable from './InvoiceBatchModalTable.jsx';
-import InvoiceBatchModalTransaction from './InvoiceBatchModalTransaction.jsx';
-import InvoiceBatchModalInvoice from './InvoiceBatchModalInvoice.jsx';
-import _AddTransaction from "./drawer/_AddTransaction";
+import _AddTransaction from "./_AddTransactionModel.jsx";
+import InvoiceBatchModalInvoice from '../InvoiceBatchModalInvoice.jsx';
+import InvoiceBatchModalTable from '../InvoiceBatchModalTable.jsx';
+import InvoiceBatchModalTransaction from '../InvoiceBatchModalTransaction.jsx';
 
-function BatchLedgerModal(props) {
+function Legder(props) {
     const theme = useMantineTheme();
+
     const closeModel = () => {
-        props.setBatchViewModal(false)
+        props.setBatchLedgerModal(false)
     }
 
     useEffect(() => {
-        console.log(props.batchViewModal);
+        console.log(props.batchLedgerModal);
+        console.log('hola')
     }, []);
-    const { currancySymbol, allowZeroPercentage } = props
+
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
-    const height = mainAreaHeight - 100; //TabList height 104
-    const tableHeight = mainAreaHeight - 150; //TabList height 104
-    const navigate = useNavigate();
-
-
-    const [isShowSMSPackageModel, setIsShowSMSPackageModel] = useState(false)
-    const [addTransactionDrawer, setAddTransactionDrawer] = useState(false);
-
-
-
+    const height = mainAreaHeight - 120; //TabList height 104
 
     return (
         <>
-            <Modal.Root bg={'black'} opened={props.batchViewModal} onClose={closeModel}
+            <Modal.Root bg={'black'} opened={props.batchLedgerModal} onClose={closeModel}
                 styles={{
                     body: {
                         backgroundColor: '#f0f1f9',
@@ -351,38 +338,29 @@ function BatchLedgerModal(props) {
                             <Box >
                                 <Box pl={'xs'} pr={'xs'}>
                                     <Grid columns={24} gutter={{ base: 8 }}>
-                                        <Grid.Col span={7} >
+                                        <Grid.Col span={12} >
                                             <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
                                                 <Box h={40} pl={`xs`} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'} >
                                                     <Title order={6} pl={'6'}>{t('Invoices')}</Title>
                                                 </Box>
-                                                <Box className={'borderRadiusAll'} h={height - 90}>
+                                                <Box className={'borderRadiusAll'} h={height - 75}>
                                                     <InvoiceBatchModalInvoice />
                                                 </Box>
                                             </Box>
 
                                         </Grid.Col>
-                                        <Grid.Col span={8} >
+                                        <Grid.Col span={12} >
                                             <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
                                                 <Box h={40} pl={`xs`} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'} >
                                                     <Title order={6} pl={'6'}>{t('BatchItems')}</Title>
                                                 </Box>
-                                                <Box bg={'white'} h={height - 90} >
+                                                <Box bg={'white'} h={height - 75} >
                                                     <InvoiceBatchModalTable />
                                                 </Box>
 
                                             </Box>
                                         </Grid.Col>
-                                        <Grid.Col span={9} >
-                                            <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
-                                                <Box h={40} pl={`xs`} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'} >
-                                                    <Title order={6} pl={'6'}>{t('Transactions')}</Title>
-                                                </Box>
-                                                <Box className={'borderRadiusAll'} h={height - 90}>
-                                                    <InvoiceBatchModalTransaction />
-                                                </Box>
-                                            </Box>
-                                        </Grid.Col>
+
                                     </Grid>
                                 </Box>
                             </Box>
@@ -390,9 +368,9 @@ function BatchLedgerModal(props) {
                     </Modal.Body>
                 </Modal.Content>
             </Modal.Root >
-            {addTransactionDrawer && <_AddTransaction addTransactionDrawer={addTransactionDrawer} setAddTransactionDrawer={setAddTransactionDrawer} />}
+            {/* {addTransactionDrawer && <_AddTransaction addTransactionDrawer={addTransactionDrawer} setAddTransactionDrawer={setAddTransactionDrawer} />} */}
         </>
     );
 }
 
-export default BatchLedgerModal;
+export default Legder;
