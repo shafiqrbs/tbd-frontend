@@ -5,10 +5,10 @@ import { useTranslation } from "react-i18next";
 import { useWindowScroll } from '@mantine/hooks';
 import { useOutletContext } from "react-router-dom";
 
-function ShortcutInvoice(props) {
+function ShortcutTable(props) {
     const { t, i18n } = useTranslation();
     const { isOnline, mainAreaHeight } = useOutletContext();
-    const formHeight = mainAreaHeight - 100; //TabList height 104
+    const formHeight = mainAreaHeight - 46; //TabList height 104
     return (
         <>
             <Stack h={formHeight} bg="var(--mantine-color-body)" align="center">
@@ -112,4 +112,4 @@ function ShortcutInvoice(props) {
     )
 }
 
-export default ShortcutInvoice
+export default ShortcutTable

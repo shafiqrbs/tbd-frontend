@@ -51,11 +51,10 @@ function InvoiceBatchTable() {
     const dispatch = useDispatch();
     const { t, i18n } = useTranslation();
     const { isOnline, mainAreaHeight } = useOutletContext();
-    const tableHeight = mainAreaHeight - 106; //TabList height 104
-    const height = mainAreaHeight - 282; //TabList height 104
+    const tableHeight = mainAreaHeight - 96; //TabList height 104
+    const height = mainAreaHeight - 230; //TabList height 104
     const [batchViewModal, setBatchViewModal] = useState(false);
     const [addTransactionDrawer, setAddTransactionDrawer] = useState(false);
-
     const perPage = 50;
     const [page, setPage] = useState(1);
 
@@ -133,21 +132,7 @@ function InvoiceBatchTable() {
 
     return (
         <>
-            <Box>
-                <Grid columns={24} gutter={{ base: 8 }}>
-                    <Grid.Col span={24} >
-                        <Box pl={`xs`} pb={'4'} pr={'xs'} pt={'4'} mb={'4'} className={'boxBackground borderRadiusAll'} >
-                            <Grid>
-                                <Grid.Col>
-                                    <Stack >
-                                        <_InvoiceBatchSearch checkList={[]} />
-                                    </Stack>
-                                </Grid.Col>
-                            </Grid>
-                        </Box>
-                    </Grid.Col>
-                </Grid>
-            </Box>
+
             <Box>
                 <Grid columns={24} gutter={{ base: 8 }}>
                     <Grid.Col span={15} >
@@ -338,10 +323,10 @@ function InvoiceBatchTable() {
                                     loaderProps={{ color: 'red' }}
                                 />
                             }
-                            <Box h={'36'} pl={`xs`} fz={'sm'} fw={'600'} pr={8} pt={'6'} mb={'4'} className={'boxBackground textColor borderRadiusAll'} >
+                            <Box h={'42'} pl={`xs`} fz={'sm'} fw={'600'} pr={8} pt={'xs'}  className={'boxBackground textColor borderRadiusAll'} >
                                 {t('Invoice')}: {invoiceBatchData && invoiceBatchData.invoice && invoiceBatchData.invoice}
                             </Box>
-                            <Box className={'borderRadiusAll'} fz={'sm'}  >
+                            <Box className={'borderRadiusAll border-top-none'} fz={'sm'}  >
                                 <Box pl={`xs`} fz={'sm'} fw={'600'} pr={'xs'} pt={'6'} pb={'xs'} className={'boxBackground textColor'} >
                                     <Grid gutter={{ base: 4 }}>
                                         <Grid.Col span={'6'}>

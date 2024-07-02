@@ -37,7 +37,7 @@ function _InvoiceBatchSearch(props) {
 
     return (
         <>
-            <Grid columns={40} justify="flex-start" align="flex-end" gutter={'4'}>
+            <Grid columns={40} justify="flex-start" align="flex-end" >
                 <Grid.Col span={32}>
                     <Grid gutter={'2'}>
                         <Grid.Col span={3}>
@@ -63,8 +63,11 @@ function _InvoiceBatchSearch(props) {
                     </Grid>
                 </Grid.Col>
                 <Grid.Col span="auto">
-                    <Flex justify="flex-end"
-                        align="center">
+                    <Flex  gap="xs"
+                           justify="center"
+                           fullWidth
+                           align="center"
+                           direction="row">
                         <SearchActionMenu />
                     </Flex>
                 </Grid.Col>
