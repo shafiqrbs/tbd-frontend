@@ -22,13 +22,11 @@ import {
 } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import {
-    IconEdit,
-    IconPrinter,
-    IconReceipt, IconDotsVertical, IconPencil, IconEyeEdit, IconTrashX,
+    IconDotsVertical, IconTrashX,
 } from "@tabler/icons-react";
 import { DataTable } from 'mantine-datatable';
 import { useDispatch, useSelector } from "react-redux";
-import { useHotkeys, useToggle } from "@mantine/hooks";
+import { useHotkeys, } from "@mantine/hooks";
 import {
     getIndexEntityData,
     setFetching,
@@ -43,7 +41,6 @@ import InvoiceBatchModal from "./InvoiceBatchModal.jsx";
 import _InvoiceBatchSearch from "./_InvoiceBatchSearch.jsx";
 import _AddTransactionModel from "./modal/_AddTransactionModel.jsx";
 import _AddTransaction from "./drawer/_AddTransaction";
-import KeywordSearch from "../../filter/KeywordSearch";
 // import { DataTable } from 'mantine-datatable';
 
 function InvoiceBatchTable() {
@@ -81,6 +78,7 @@ function InvoiceBatchTable() {
         dispatch(setFetching(true))
     }, [])
 
+    const [selectedRow, setSelectedRow] = useState('');
 
     const [loading, setLoading] = useState(true);
     useEffect(() => {
@@ -163,7 +161,7 @@ function InvoiceBatchTable() {
                                         header: tableCss.header,
                                         footer: tableCss.footer,
                                         pagination: tableCss.pagination,
-                                    }}
+                                    }}  
                                     records={indexData.data}
                                     columns={[
                                         {
@@ -185,9 +183,11 @@ function InvoiceBatchTable() {
                                                     onClick={(e) => {
                                                         e.preventDefault();
                                                         setLoading(true)
-                                                        setInvoiceBatchData(item)
+                                                        setInvoiceBatchData(item.invoice)
+                                                        setSelectedRow(item.invoice)
                                                     }}
                                                     style={{ cursor: "pointer" }}
+
                                                 >
                                                     {item.invoice}
                                                 </Text>
@@ -242,15 +242,15 @@ function InvoiceBatchTable() {
                                             render: (item) => (
 
                                                 <Group gap={4} justify="right" wrap="nowrap">
-                                                    <Button size="compact-xs" radius="xs" variant="filled" fw={'100'} fz={'12'}  color="red.3" mr={'4'}
-                                                            onClick={(e) => {
-                                                                e.preventDefault();
-                                                                setAddTransactionDrawer(true)
-                                                            }}
+                                                    <Button size="compact-xs" radius="xs" variant="filled" fw={'100'} fz={'12'} color="red.3" mr={'4'}
+                                                        onClick={(e) => {
+                                                            e.preventDefault();
+                                                            setAddTransactionDrawer(true)
+                                                        }}
                                                     >  {t('AddBill')}</Button>
                                                     <Menu position="bottom-end" offset={3} withArrow trigger="hover" openDelay={100} closeDelay={400}>
                                                         <Menu.Target>
-                                                            <ActionIcon size="sm"  variant="outline" color="red" radius="xl" aria-label="Settings">
+                                                            <ActionIcon size="sm" variant="outline" color="red" radius="xl" aria-label="Settings">
                                                                 <IconDotsVertical height={'16'} width={'16'} stroke={1.5} />
                                                             </ActionIcon>
                                                         </Menu.Target>
@@ -258,24 +258,10 @@ function InvoiceBatchTable() {
                                                             <Menu.Item
                                                                 onClick={(e) => {
                                                                     e.preventDefault();
-                                                                    setAddTransactionDrawer(true)
-                                                                }}
-                                                                target=""
-                                                                component="a"
-                                                                w={'200'}
-                                                            >
-                                                                {t('AddTransaction')}
-                                                            </Menu.Item>
-
-                                                            <Menu.Item
-                                                                // href={`/inventory/sales/edit/${data.id}`}
-                                                                onClick={(e) => {
-                                                                    e.preventDefault();
                                                                     setLoading(true)
                                                                     setInvoiceBatchData(item)
                                                                     setBatchViewModal(true)
                                                                     // dispatch(editEntityData('core/user/' + data.id))
-
                                                                 }}
                                                                 target=""
                                                                 component="a"
@@ -314,6 +300,12 @@ function InvoiceBatchTable() {
                                     loaderColor="grape"
                                     height={tableHeight}
                                     scrollAreaProps={{ type: 'never' }}
+                                    rowBackgroundColor={(item) => {
+                                        if (item.invoice === selectedRow) return '#e2c2c263';
+                                    }}
+                                    rowColor={(item) => {
+                                        if (item.invoice === selectedRow) return 'red.6';
+                                    }}
                                 />
                             </Box>
                         </Box>
@@ -324,12 +316,12 @@ function InvoiceBatchTable() {
 
                         <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} ref={printRef} pos="relative">
                             {loading &&
-                            <LoadingOverlay
-                                visible={loading}
-                                zIndex={1000}
-                                overlayProps={{ radius: "sm", blur: 2 }}
-                                loaderProps={{ color: 'red' }}
-                            />
+                                <LoadingOverlay
+                                    visible={loading}
+                                    zIndex={1000}
+                                    overlayProps={{ radius: "sm", blur: 2 }}
+                                    loaderProps={{ color: 'red' }}
+                                />
                             }
                             <Box h={'36'} pl={`xs`} fz={'sm'} fw={'600'} pr={8} pt={'6'} mb={'4'} className={'boxBackground textColor borderRadiusAll'} >
                                 {t('Invoice')}: {invoiceBatchData && invoiceBatchData.invoice && invoiceBatchData.invoice}
