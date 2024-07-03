@@ -47,7 +47,7 @@ function SearchChooseCustomer(props) {
                 return ({ 'label': type.mobile + ' -- ' + type.name, 'value': String(type.id) })
             });
             setCustomersDropdownData(transformedData);
-            setRefreshCustomerDropdown(false)``
+            setRefreshCustomerDropdown(false)
         }
     }, [refreshCustomerDropdown])
     /*END GET CUSTOMER DROPDOWN FROM LOCAL STORAGE*/
