@@ -151,6 +151,7 @@ function CategoryTable() {
                                                             <Text size="sm"> {t("FormConfirmationMessage")}</Text>
                                                         ),
                                                         labels: { confirm: 'Confirm', cancel: 'Cancel' },
+                                                        confirmProps: { color: 'red.6' },
                                                         onCancel: () => console.log('Cancel'),
                                                         onConfirm: () => {
                                                             dispatch(deleteEntityData('inventory/category-group/' + data.id))
