@@ -1,52 +1,42 @@
-import { useDisclosure, useHotkeys } from '@mantine/hooks';
 import {
-    Modal, Button, Flex, Progress, Box, Grid, useMantineTheme, Text,
-    Title, Tooltip, Checkbox, Group, Menu, ActionIcon, rem, Table, Stack,
-    SimpleGrid,
+    Modal, Button, Flex, Box, Grid, useMantineTheme, Text,
+    Title, Tooltip, Group, ActionIcon, Stack
 } from '@mantine/core';
-// import SampleModal from './SampleModal';
 
 import { useTranslation } from 'react-i18next';
 import React, { useEffect, } from 'react';
-import { useNavigate, useOutletContext } from 'react-router-dom';
+import { useOutletContext } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-    IconInfoCircle,
-    IconDotsVertical,
-    IconTrashX, IconEyeEdit, IconMessage, IconTallymark1
+import {IconEyeEdit, IconMessage, IconTallymark1
 } from '@tabler/icons-react';
 import { useState } from 'react';
-import { useForm } from '@mantine/form';
-import { DataTable } from 'mantine-datatable';
-import tableCss from '../../../../assets/css/Table.module.css';
-import { getIndexEntityData, setFetching, setSalesFilterData } from "../../../../store/inventory/crudSlice.js";
+import { getShowEntityData} from "../../../../store/inventory/crudSlice.js";
 import InvoiceBatchModalTable from './InvoiceBatchModalTable.jsx';
 import InvoiceBatchModalTransaction from './InvoiceBatchModalTransaction.jsx';
 import InvoiceBatchModalInvoice from './InvoiceBatchModalInvoice.jsx';
 import _AddTransaction from "./drawer/_AddTransaction";
+import {notifications} from "@mantine/notifications";
 
 function InvoiceBatchModal(props) {
     const theme = useMantineTheme();
     const closeModel = () => {
         props.setBatchViewModal(false)
+        props?.setAddTransactionDrawer(false)
     }
 
-    useEffect(() => {
-        console.log(props.batchViewModal);
-    }, []);
-    const { currancySymbol, allowZeroPercentage } = props
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
     const height = mainAreaHeight - 100; //TabList height 104
-    const tableHeight = mainAreaHeight - 150; //TabList height 104
-    const navigate = useNavigate();
-
 
     const [isShowSMSPackageModel, setIsShowSMSPackageModel] = useState(false)
     const [addTransactionDrawer, setAddTransactionDrawer] = useState(false);
 
+    const showEntityData = useSelector((state) => state.inventoryCrudSlice.showEntityData);
 
+    useEffect(() => {
+        dispatch(getShowEntityData('inventory/invoice-batch/'+props.invoiceId))
+    }, []);
 
 
     return (
@@ -57,10 +47,6 @@ function InvoiceBatchModal(props) {
                         backgroundColor: '#f0f1f9',
                         padding: 2,
                     },
-                    // header: {
-                    //     backgroundColor: '#f0f1f9',
-                    // },
-
                 }}
                 fullScreen overlayProps={{
                     color: theme.colorScheme === 'dark' ? theme.colors.dark[9] : theme.colors.dark[8],
@@ -99,7 +85,7 @@ function InvoiceBatchModal(props) {
                                                                     <Text fz={'xs'} fw={700}>:</Text>
                                                                 </Grid.Col>
                                                                 <Grid.Col span={9}>
-                                                                    <Text fz="xs" fw={300} >Foysal Mahmud Hasan</Text>
+                                                                    <Text fz="xs" fw={300} >{showEntityData?.customer_name}</Text>
                                                                 </Grid.Col>
                                                             </Grid>
                                                             <Grid gutter={{ base: 0 }} pl={6}>
@@ -110,7 +96,7 @@ function InvoiceBatchModal(props) {
                                                                     <Text fz={'xs'} fw={700}>:</Text>
                                                                 </Grid.Col>
                                                                 <Grid.Col span={9}>
-                                                                    <Text fz="xs" fw={300} >+8801521334751</Text>
+                                                                    <Text fz="xs" fw={300} >{showEntityData?.customer_mobile}</Text>
                                                                 </Grid.Col>
                                                             </Grid>
                                                             <Grid gutter={{ base: 0 }} pl={6}>
@@ -121,7 +107,7 @@ function InvoiceBatchModal(props) {
                                                                     <Text fz={'xs'} fw={700}>:</Text>
                                                                 </Grid.Col>
                                                                 <Grid.Col span={9}>
-                                                                    <Text fz="xs" fw={300} >494/1/B, North Ibrahimpur, Kafrul, Mirpur, Dhaka, Bangladesh</Text>
+                                                                    <Text fz="xs" fw={300} >{showEntityData?.customer_address}</Text>
                                                                 </Grid.Col>
                                                             </Grid>
                                                         </Stack>
@@ -150,7 +136,7 @@ function InvoiceBatchModal(props) {
                                                                             <Text fz={'xs'} fw={700}>:</Text>
                                                                         </Grid.Col>
                                                                         <Grid.Col span={8}>
-                                                                            <Text fz="xs" fw={300} >100000</Text>
+                                                                            <Text fz="xs" fw={300} >{showEntityData?.total_balance}</Text>
                                                                         </Grid.Col>
                                                                     </Grid>
                                                                     <Grid gutter={{ base: 0 }} pl={6}>
@@ -161,7 +147,7 @@ function InvoiceBatchModal(props) {
                                                                             <Text fz={'xs'} fw={700}>:</Text>
                                                                         </Grid.Col>
                                                                         <Grid.Col span={8}>
-                                                                            <Text fz="xs" fw={300} >100000</Text>
+                                                                            <Text fz="xs" fw={300} >{showEntityData?.total_sales}</Text>
                                                                         </Grid.Col>
                                                                     </Grid>
                                                                     <Grid gutter={{ base: 0 }} pl={6}>
@@ -172,7 +158,7 @@ function InvoiceBatchModal(props) {
                                                                             <Text fz={'xs'} fw={700}>:</Text>
                                                                         </Grid.Col>
                                                                         <Grid.Col span={8}>
-                                                                            <Text fz="xs" fw={300} >100000</Text>
+                                                                            <Text fz="xs" fw={300} >{showEntityData?.total_received}</Text>
                                                                         </Grid.Col>
                                                                     </Grid>
                                                                 </Grid.Col>
@@ -194,7 +180,7 @@ function InvoiceBatchModal(props) {
                                                                                     color={'green'}
                                                                                     disabled={false}
                                                                                     onClick={(e) => {
-                                                                                        if (isSMSActive) {
+                                                                                        if (isShowSMSPackageModel) {
                                                                                             notifications.show({
                                                                                                 withCloseButton: true,
                                                                                                 autoClose: 1000,
@@ -227,7 +213,6 @@ function InvoiceBatchModal(props) {
                                                                                     variant="outline"
                                                                                     color={'green'}
                                                                                     disabled={false}
-                                                                                // onClick={console.log('ok')}
                                                                                 >
                                                                                     <IconEyeEdit
                                                                                         size={18}
@@ -297,7 +282,7 @@ function InvoiceBatchModal(props) {
                                                                             <Text fz={'xs'} fw={700}>:</Text>
                                                                         </Grid.Col>
                                                                         <Grid.Col span={8}>
-                                                                            <Text fz="xs" fw={300} >18654651654654656546</Text>
+                                                                            <Text fz="xs" fw={300} >{showEntityData?.total}</Text>
                                                                         </Grid.Col>
                                                                     </Grid>
                                                                     <Grid columns={12} gutter={{ base: 0 }} pl={6}>
@@ -308,7 +293,7 @@ function InvoiceBatchModal(props) {
                                                                             <Text fz={'xs'} fw={700}>:</Text>
                                                                         </Grid.Col>
                                                                         <Grid.Col span={8}>
-                                                                            <Text fz="xs" fw={300} >100%</Text>
+                                                                            <Text fz="xs" fw={300} >{showEntityData?.discount}</Text>
                                                                         </Grid.Col>
                                                                     </Grid>
                                                                 </Grid.Col>
@@ -321,7 +306,7 @@ function InvoiceBatchModal(props) {
                                                                             <Text fz={'xs'} fw={700}>:</Text>
                                                                         </Grid.Col>
                                                                         <Grid.Col span={8}>
-                                                                            <Text fz="xs" fw={300} >946546546</Text>
+                                                                            <Text fz="xs" fw={300} >{showEntityData?.received}</Text>
                                                                         </Grid.Col>
                                                                     </Grid>
                                                                     <Grid gutter={{ base: 0 }} pl={6}>
@@ -332,13 +317,11 @@ function InvoiceBatchModal(props) {
                                                                             <Text fz={'xs'} fw={700}>:</Text>
                                                                         </Grid.Col>
                                                                         <Grid.Col span={8}>
-                                                                            <Text fz="xs" fw={300} >465486465465654655</Text>
+                                                                            <Text fz="xs" fw={300} >{showEntityData?.balance}</Text>
                                                                         </Grid.Col>
                                                                     </Grid>
                                                                 </Grid.Col>
                                                             </Grid>
-
-
                                                         </Stack>
                                                     </Flex>
                                                 </Box>
@@ -357,7 +340,7 @@ function InvoiceBatchModal(props) {
                                                     <Title order={6} pl={'6'}>{t('Invoices')}</Title>
                                                 </Box>
                                                 <Box className={'borderRadiusAll'} h={height - 90}>
-                                                    <InvoiceBatchModalInvoice />
+                                                    <InvoiceBatchModalInvoice batchInvoice={showEntityData?.batch_invoices?showEntityData.batch_invoices:[]} />
                                                 </Box>
                                             </Box>
 
@@ -368,7 +351,7 @@ function InvoiceBatchModal(props) {
                                                     <Title order={6} pl={'6'}>{t('BatchItems')}</Title>
                                                 </Box>
                                                 <Box bg={'white'} h={height - 90} >
-                                                    <InvoiceBatchModalTable />
+                                                    <InvoiceBatchModalTable invoiceBatchItems={showEntityData?.invoice_batch_items?showEntityData.invoice_batch_items:[]} />
                                                 </Box>
 
                                             </Box>
@@ -379,7 +362,7 @@ function InvoiceBatchModal(props) {
                                                     <Title order={6} pl={'6'}>{t('Transactions')}</Title>
                                                 </Box>
                                                 <Box className={'borderRadiusAll'} h={height - 90}>
-                                                    <InvoiceBatchModalTransaction />
+                                                    <InvoiceBatchModalTransaction batchTransactions={showEntityData?.invoice_batch_transactions?showEntityData.invoice_batch_transactions:[]} />
                                                 </Box>
                                             </Box>
                                         </Grid.Col>

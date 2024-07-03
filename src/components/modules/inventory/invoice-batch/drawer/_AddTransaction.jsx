@@ -32,60 +32,31 @@ import customerDataStoreIntoLocalStorage from "../../../../global-hook/local-sto
 import _addCustomer from "../../../popover-form/_addCustomer.jsx";
 import DatePickerForm from "../../../../form-builders/DatePicker";
 import _GenericInvoiceForm from "../../sales/_GenericInvoiceForm";
+import InvoiceBatchModal from "../InvoiceBatchModal.jsx";
 
 function _AddTransaction(props) {
-    const configData = localStorage.getItem('config-data');
-
-    const currencySymbol = configData?.currency?.symbol;
-    const domainId = configData?.domain_id;
-    const isSMSActive = configData?.is_active_sms;
-    const isZeroReceiveAllow = configData?.is_zero_receive_allow;
     const {addTransactionDrawer,setAddTransactionDrawer,invoiceBatchData} = props
+
+    const configData = localStorage.getItem('config-data');
+    const currencySymbol = configData?.currency?.symbol;
     const { isOnline, mainAreaHeight } = useOutletContext();
+    const dispatch = useDispatch();
     const { t, i18n } = useTranslation();
     const height = mainAreaHeight - 30; //TabList height 104
     const closeModel = () => {
         setAddTransactionDrawer(false)
     }
-    const dispatch = useDispatch();
-    const entityNewData = useSelector((state) => state.inventoryCrudSlice.entityNewData);
 
-
-    const transactionModeData = JSON.parse(localStorage.getItem('accounting-transaction-mode')) ? JSON.parse(localStorage.getItem('accounting-transaction-mode')) : [];
-
-    const [salesSubTotalAmount, setSalesSubTotalAmount] = useState(0);
-    const [salesProfitAmount, setSalesProfitAmount] = useState(0);
-    const [salesVatAmount, setSalesVatAmount] = useState(0);
-    const [salesDiscountAmount, setSalesDiscountAmount] = useState(0);
-    const [salesTotalAmount, setSalesTotalAmount] = useState(0);
-    const [salesDueAmount, setSalesDueAmount] = useState(0);
-    const [hoveredModeId, setHoveredModeId] = useState(false);
-    const [isShowSMSPackageModel, setIsShowSMSPackageModel] = useState(false)
-    const [customerViewModel, setCustomerViewModel] = useState(false);
-
-    const [tempCardProducts, setTempCardProducts] = useState([])
-    const [loadCardProducts, setLoadCardProducts] = useState(false)
     const [discountType, setDiscountType] = useToggle(['Flat', 'Percent']);
     const [provisionMode, setProvisionMode] = useToggle(['Item', 'Invoice']);
-    const [invoicePrintData, setInvoicePrintData] = useState(null)
-    const [invoicePrintForSave, setInvoicePrintForSave] = useState(false)
+    const [batchViewModal, setBatchViewModal] = useState(false);
+
 
     const [lastClicked, setLastClicked] = useState(null);
 
     const handleClick = (event) => {
         setLastClicked(event.currentTarget.name);
     };
-
-
-    useEffect(() => {
-        const tempProducts = localStorage.getItem('temp-sales-products');
-        setTempCardProducts(tempProducts ? JSON.parse(tempProducts) : [])
-        setLoadCardProducts(false)
-    }, [loadCardProducts])
-
-    const [customerData, setCustomerData] = useState(null);
-    const [salesByUser, setSalesByUser] = useState(null);
-    const [orderProcess, setOrderProcess] = useState(null);
 
     const form = useForm({
         initialValues: {
@@ -104,118 +75,6 @@ function _AddTransaction(props) {
             discount_calculation: isNotEmpty(),
         }
     });
-
-    const [returnOrDueText, setReturnOrDueText] = useState('Due');
-
-    useEffect(() => {
-        setSalesSubTotalAmount(0);
-        setSalesDueAmount(0);
-    }, []);
-
-    useEffect(() => {
-        const totalAmount = salesSubTotalAmount - salesDiscountAmount;
-        setSalesTotalAmount(totalAmount);
-        setSalesDueAmount(totalAmount);
-        setSalesProfitAmount(totalAmount - 0)
-    }, [salesSubTotalAmount, salesDiscountAmount]);
-
-    useEffect(() => {
-        let discountAmount = 0;
-        if (form.values.discount && Number(form.values.discount) > 0) {
-            if (discountType === 'Flat') {
-                discountAmount = form.values.discount;
-            } else if (discountType === 'Percent') {
-                discountAmount = (salesSubTotalAmount * form.values.discount) / 100;
-            }
-        }
-        setSalesDiscountAmount(discountAmount);
-
-        let returnOrDueAmount = 0;
-        let receiveAmount = form.values.receive_amount == '' ? 0 : form.values.receive_amount
-        if (receiveAmount >= 0) {
-            const text = salesTotalAmount < receiveAmount ? 'Return' : 'Due';
-            setReturnOrDueText(text);
-            returnOrDueAmount = salesTotalAmount - receiveAmount;
-            setSalesDueAmount(returnOrDueAmount);
-        }
-    }, [form.values.discount, discountType, form.values.receive_amount, salesSubTotalAmount, salesTotalAmount]);
-
-
-    const [profitShow, setProfitShow] = useState(false);
-
-    /*START GET CUSTOMER DROPDOWN FROM LOCAL STORAGE*/
-    const [refreshCustomerDropdown, setRefreshCustomerDropdown] = useState(false)
-    const [customersDropdownData, setCustomersDropdownData] = useState([])
-    const [defaultCustomerId, setDefaultCustomerId] = useState(null)
-
-    useEffect(() => {
-        const fetchCustomers = async () => {
-            await customerDataStoreIntoLocalStorage();
-            let coreCustomers = localStorage.getItem('core-customers');
-            coreCustomers = coreCustomers ? JSON.parse(coreCustomers) : []
-            let defaultId = defaultCustomerId;
-            if (coreCustomers && coreCustomers.length > 0) {
-                const transformedData = coreCustomers.map(type => {
-                    if (type.name === 'Default') {
-                        defaultId = type.id;
-                    }
-                    return ({ 'label': type.mobile + ' -- ' + type.name, 'value': String(type.id) })
-                });
-
-                setCustomersDropdownData(transformedData);
-                setDefaultCustomerId(defaultId);
-            }
-            setRefreshCustomerDropdown(false);
-        };
-
-        fetchCustomers();
-    }, [refreshCustomerDropdown]);
-    /*END GET CUSTOMER DROPDOWN FROM LOCAL STORAGE*/
-
-    /*START GET SALES BY / USERS DROPDOWN FROM LOCAL STORAGE*/
-    const [salesByDropdownData, setSalesByDropdownData] = useState([])
-    useEffect(() => {
-        let coreUsers = localStorage.getItem('core-users') ? JSON.parse(localStorage.getItem('core-users')) : [];
-        if (coreUsers && coreUsers.length > 0) {
-            const transformedData = coreUsers.map(type => {
-                return ({ 'label': type.username + ' - ' + type.email, 'value': String(type.id) })
-            });
-            setSalesByDropdownData(transformedData);
-        }
-    }, [])
-    /*END GET SALES BY / USERS DROPDOWN FROM LOCAL STORAGE*/
-
-    /*START FOR TRANSACTION MODE DEFAULT SELECT*/
-    /*useEffect(() => {
-        if (transactionModeData && transactionModeData.length > 0) {
-            for (let mode of transactionModeData) {
-                if (mode.is_selected) {
-                    form.setFieldValue('transaction_mode_id', form.values.transaction_mode_id ? form.values.transaction_mode_id : mode.id);
-                    break;
-                }
-            }
-        }
-    }, [transactionModeData, form]);*/
-    /*END FOR TRANSACTION MODE DEFAULT SELECT*/
-
-    /*START FOR SUBMIT Disabled*/
-    const isDefaultCustomer = !customerData || customerData == defaultCustomerId;
-    const isDisabled = isDefaultCustomer && (isZeroReceiveAllow ? false : salesDueAmount > 0);
-    /*END FOR SUBMIT Disabled*/
-
-    /*START GET CUSTOMER DATA FROM LOCAL STORAGE*/
-    const [customerObject, setCustomerObject] = useState({});
-    useEffect(() => {
-        if (customerData && (customerData != defaultCustomerId)) {
-            const coreCustomers = JSON.parse(localStorage.getItem('core-customers') || '[]');
-            const foundCustomer = coreCustomers.find(type => type.id == customerData);
-
-            if (foundCustomer) {
-                setCustomerObject(foundCustomer);
-            }
-        }
-    }, [customerData]);
-    /*END GET CUSTOMER DATA FROM LOCAL STORAGE*/
 
     useHotkeys([['alt+n', () => {
         // document.getElementById('customer_id').focus()
@@ -236,35 +95,6 @@ function _AddTransaction(props) {
             {currencySymbol}
         </Text>
     );
-
-    useEffect(() => {
-        if (entityNewData?.data?.id && (lastClicked === 'print' || lastClicked==='pos')){
-            setTimeout(() => {
-                dispatch(getSalesDetails('inventory/sales/'+entityNewData?.data?.id))
-            }, 400);
-        }
-    }, [entityNewData, dispatch, lastClicked]);
-
-    useEffect(() => {
-        if (entityNewData?.data?.id && (lastClicked === 'print' || lastClicked==='pos')){
-            setTimeout(() => {
-                setInvoicePrintForSave(true)
-            }, 500);
-        }
-    }, [entityNewData, lastClicked]);
-
-    useEffect(() => {
-        setTimeout(() => {
-            if (invoicePrintForSave) {
-                let printContents = document.getElementById('printElement').innerHTML;
-                let originalContents = document.body.innerHTML;
-                document.body.innerHTML = printContents;
-                window.print();
-                document.body.innerHTML = originalContents;
-                window.location.reload()
-            }
-        },500)
-    }, [invoicePrintForSave]);
 
     return (
         <>
@@ -294,96 +124,16 @@ function _AddTransaction(props) {
                             formValue['comment'] = form.values.comment;
                             formValue['invoice_date'] = form.values.invoice_date && new Date(form.values.invoice_date).toLocaleDateString("en-CA", options)
 
-                            console.log(formValue)
-
-
-                            // console.log(form.values)
-                            /*const options = {
-                                year: 'numeric',
-                                month: '2-digit',
-                                day: '2-digit'
-                            };
-
-                            if (values.invoice_date) {
-                                let date = new Date(values.invoice_date);
-                                form.values.invoice_date = date.toLocaleDateString("en-CA", options);
-                            }
-
-                            console.log(form.values)*/
-
-                            /*const options = {
-                                year: 'numeric',
-                                month: '2-digit',
-                                day: '2-digit'
-                            };
-                            form.values['invoice_date'] = form.values.invoice_date && new Date(form.values.invoice_date).toLocaleDateString("en-CA", options)
-
-                            console.log(form.values)*/
-
-
-                            /*const tempProducts = localStorage.getItem('temp-sales-products');
-                            let items = tempProducts ? JSON.parse(tempProducts) : [];
-                            let createdBy = JSON.parse(localStorage.getItem('user'));
-
-                            let transformedArray = items.map(product => {
-                                return {
-                                    "product_id": product.product_id,
-                                    "item_name": product.display_name,
-                                    "sales_price": product.sales_price,
-                                    "price": product.price,
-                                    "percent": product.percent,
-                                    "quantity": product.quantity,
-                                    "uom": product.unit_name,
-                                    "unit_id": product.unit_id,
-                                    "purchase_price": product.purchase_price,
-                                    "sub_total": product.sub_total
-                                }
-                            });
-
-                            const options = {
-                                year: 'numeric',
-                                month: '2-digit',
-                                day: '2-digit'
-                            };
-                            const formValue = {}
-                            formValue['customer_id'] = form.values.customer_id ? form.values.customer_id : defaultCustomerId;
-                            formValue['sub_total'] = salesSubTotalAmount;
-                            formValue['transaction_mode_id'] = form.values.transaction_mode_id;
-                            formValue['discount_type'] = discountType;
-                            formValue['discount'] = salesDiscountAmount;
-                            formValue['discount_calculation'] = discountType === 'Percent' ? form.values.discount : 0;
-                            formValue['vat'] = 0;
-                            formValue['total'] = salesTotalAmount;
-                            formValue['sales_by_id'] = form.values.sales_by;
-                            formValue['created_by_id'] = Number(createdBy['id']);
-                            formValue['process'] = form.values.order_process;
-                            formValue['narration'] = form.values.narration;
-                            formValue['invoice_date'] = form.values.invoice_date && new Date(form.values.invoice_date).toLocaleDateString("en-CA", options)
-                            ;
-                            formValue['items'] = transformedArray ? transformedArray : [];
-
-                            const hasReceiveAmount = form.values.receive_amount;
-                            const isDefaultCustomer = !form.values.customer_id || form.values.customer_id == defaultCustomerId;
-                            formValue['payment'] = hasReceiveAmount
-                                ? (customerData && customerData != defaultCustomerId
-                                    ? form.values.receive_amount
-                                    : isZeroReceiveAllow
-                                        ? salesTotalAmount
-                                        : form.values.receive_amount)
-                                : (isZeroReceiveAllow && isDefaultCustomer
-                                    ? salesTotalAmount
-                                    : 0);
-
-                            if (items && items.length > 0) {
+                            if (formValue) {
                                 const data = {
-                                    url: 'inventory/sales',
+                                    url: 'inventory/invoice-batch-transaction',
                                     data: formValue
                                 }
                                 dispatch(storeEntityData(data))
 
                                 notifications.show({
                                     color: 'teal',
-                                    title: t('CreateSuccessfully'),
+                                    title: t('TransactionAddedSuccessfully'),
                                     icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
                                     loading: false,
                                     autoClose: 700,
@@ -391,23 +141,10 @@ function _AddTransaction(props) {
                                 });
 
                                 setTimeout(() => {
-                                    localStorage.removeItem('temp-sales-products');
                                     form.reset()
-                                    setCustomerData(null)
-                                    setSalesByUser(null)
-                                    setOrderProcess(null)
-                                    props.setLoadCardProducts(true)
-                                }, 500)
-                            } else {
-                                notifications.show({
-                                    color: 'red',
-                                    title: t('PleaseChooseItems'),
-                                    icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
-                                    loading: false,
-                                    autoClose: 700,
-                                    style: { backgroundColor: 'lightgray' },
-                                });
-                            }*/
+                                    setBatchViewModal(true)
+                                }, 1000)
+                            }
 
                         })}>
                         <ScrollArea  p={'md'} h={height}  scrollbarSize={2} type="never" bg={'gray.1'}>
@@ -647,11 +384,11 @@ function _AddTransaction(props) {
                                         name="print"
                                         leftSection={<IconPrinter size={14} />}
                                         color="orange.5"
-                                        disabled={isDisabled}
-                                        style={{
+                                        // disabled={isDisabled}
+                                        /*style={{
                                             transition: "all 0.3s ease",
                                             backgroundColor: isDisabled ? "#f1f3f500" : ""
-                                        }}
+                                        }}*/
                                     >
                                         Print
                                     </Button>
@@ -659,17 +396,12 @@ function _AddTransaction(props) {
                                     <Button
                                         fullWidth
                                         type={'submit'}
-                                        onClick={handleClick}
+                                        // onClick={handleClick}
                                         name="save"
                                         variant="filled"
                                         leftSection={<IconDeviceFloppy size={14} />}
                                         color="green"
                                         id="entityDataSubmit"
-                                        // disabled={isDisabled}
-                                        /*style={{
-                                            transition: "all 0.3s ease",
-                                            backgroundColor: isDisabled ? "#f1f3f500" : ""
-                                        }}*/
                                     >
                                         Save
                                     </Button>
@@ -679,6 +411,7 @@ function _AddTransaction(props) {
                         </form>
                     </Drawer.Content>
             </Drawer.Root>
+            {batchViewModal && <InvoiceBatchModal batchViewModal={batchViewModal} setBatchViewModal={setBatchViewModal} invoiceId={invoiceBatchData.id} setAddTransactionDrawer={setAddTransactionDrawer} />}
         </>
 
     );

@@ -1,51 +1,19 @@
-import { useDisclosure, useHotkeys } from '@mantine/hooks';
-import {
-    Modal, Button, Flex, Progress, Box, Grid, useMantineTheme, Text,
-    Title, Tooltip, Checkbox, Group, Menu, ActionIcon, rem, Table, Card,
+import {Flex, Box, Grid, useMantineTheme, Text, ActionIcon, Card,
     SimpleGrid,
-    ScrollArea, Stack,
-    Center
+    ScrollArea
 } from '@mantine/core';
-// import SampleModal from './SampleModal';
-
 import { useTranslation } from 'react-i18next';
-import { useEffect, } from 'react';
-import { useNavigate, useOutletContext } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import {
-    IconInfoCircle,
-    IconDotsVertical,
-    IconTrashX,
-    IconMoneybag,
-    IconDeviceFloppy,
-    IconTrash
-} from '@tabler/icons-react';
-import { useState } from 'react';
-import { useForm } from '@mantine/form';
+import { useOutletContext } from 'react-router-dom';
+import {IconTrash} from '@tabler/icons-react';
 import classes from '../../../../assets/css/FeaturesCards.module.css';
-
-const elements = [
-    { transactionNumber: '85165465', createdDate: '10/06/24', createBy: 'Foysal', approvedby: 'Foysal', discount: 20, receive: 60 },
-    { transactionNumber: '49864566', createdDate: '10/06/24', createBy: 'Mahmud', approvedby: 'Foysal', discount: 20, receive: 60 },
-    { transactionNumber: '48465465', createdDate: '10/06/24', createBy: 'Hasan', approvedby: 'Foysal', discount: 20, receive: 60 },
-    { transactionNumber: '49865153', createdDate: '10/06/24', createBy: 'Rafi', approvedby: 'Foysal', discount: 20, receive: 60 },
-    { transactionNumber: '49865153', createdDate: '10/06/24', createBy: 'Rafi', approvedby: 'Foysal', discount: 20, receive: 60 },
-]
 
 
 function InvoiceBatchModalTransaction(props) {
     const theme = useMantineTheme();
-
-    // useEffect(() => {
-    //     console.log(props.batchViewModal);
-    // }, []);
+    const {batchTransactions} = props
     const { t, i18n } = useTranslation();
-    const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
     const height = mainAreaHeight - 190; //TabList height 104
-    const tableHeight = mainAreaHeight - 150; //TabList height 104
-    const navigate = useNavigate();
-    const [saveCreateLoading, setSaveCreateLoading] = useState(false);
 
 
     return (
@@ -53,7 +21,7 @@ function InvoiceBatchModalTransaction(props) {
             <Box>
                 <ScrollArea h={height} scrollbarSize={2} scrollbars="y" type="never">
                     <Box p={0} >
-                        {elements.map((elements, index) => (
+                        {batchTransactions.map((elements, index) => (
                             <Card shadow="md" radius="md" className={classes.card} mb={'4'} p={'xs'}>
                                 <SimpleGrid spacing={4}>
                                     <Grid columns={24}>
@@ -66,7 +34,7 @@ function InvoiceBatchModalTransaction(props) {
                                                     <Text fz={'sm'} fw={700}>:</Text>
                                                 </Grid.Col>
                                                 <Grid.Col span={4}>
-                                                    <Text fz="sm" fw={300} >{elements.transactionNumber}</Text>
+                                                    <Text fz="sm" fw={300} >{elements.invoice}</Text>
                                                 </Grid.Col>
                                             </Grid>
                                             <Grid gutter={{ base: 2 }}>
@@ -88,7 +56,7 @@ function InvoiceBatchModalTransaction(props) {
                                                     <Text fz={'sm'} fw={700}>:</Text>
                                                 </Grid.Col>
                                                 <Grid.Col span={4} >
-                                                    <Text fz="sm" fw={300}  >{elements.receive}</Text>
+                                                    <Text fz="sm" fw={300}  >{elements.received}</Text>
                                                 </Grid.Col>
                                             </Grid>
                                         </Grid.Col>
@@ -101,7 +69,7 @@ function InvoiceBatchModalTransaction(props) {
                                                     <Text fz={'sm'} fw={700}>:</Text>
                                                 </Grid.Col>
                                                 <Grid.Col span={4}>
-                                                    <Text fz="sm" fw={300}  >{elements.createdDate}</Text>
+                                                    <Text fz="sm" fw={300}  >{elements.created_at}</Text>
                                                 </Grid.Col>
                                             </Grid>
                                             <Grid gutter={{ base: 2 }}>
@@ -112,7 +80,7 @@ function InvoiceBatchModalTransaction(props) {
                                                     <Text fz={'sm'} fw={700}>:</Text>
                                                 </Grid.Col>
                                                 <Grid.Col span={4}>
-                                                    <Text fz="sm" fw={300}  >{elements.createBy}</Text>
+                                                    <Text fz="sm" fw={300}  >{elements.created_by_id}</Text>
                                                 </Grid.Col>
                                             </Grid>
                                             <Grid gutter={{ base: 2 }}>
@@ -123,7 +91,7 @@ function InvoiceBatchModalTransaction(props) {
                                                     <Text fz={'sm'} fw={700}>:</Text>
                                                 </Grid.Col>
                                                 <Grid.Col span={4}>
-                                                    <Text fz="sm" fw={300}  >{elements.approvedby}</Text>
+                                                    <Text fz="sm" fw={300}  >{elements.approved_by_id}</Text>
                                                 </Grid.Col>
                                             </Grid>
                                         </Grid.Col>

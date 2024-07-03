@@ -17,6 +17,19 @@ function InputButtonForm(props) {
         <>
             {
                 form &&
+                <Tooltip
+                    label={tooltip}
+                    opened={(name in form.errors) && !!form.errors[name]}
+                    px={16}
+                    py={2}
+                    position="top-end"
+                    bg={`red.4`}
+                    c={'white'}
+                    withArrow
+                    offset={2}
+                    zIndex={999}
+                    transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
+                >
                     <TextInput
                         type={props.type}
                         id={id}
@@ -38,7 +51,7 @@ function InputButtonForm(props) {
                         leftSection={props.leftSection}
                         withAsterisk={required}
                     />
-
+                </Tooltip>
             }
         </>
     );

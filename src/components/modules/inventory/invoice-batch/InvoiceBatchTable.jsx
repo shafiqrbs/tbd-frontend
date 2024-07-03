@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Navigate, Outlet, useLocation, useNavigate, useOutletContext } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import tableCss from '../../../../assets/css/Table.module.css';
 import {
     Group,
@@ -7,17 +7,11 @@ import {
     ActionIcon,
     Text,
     Grid,
-    Stack,
     Button,
     ScrollArea,
     Table,
-    Loader,
     Menu,
     rem,
-    Anchor,
-    Checkbox,
-    Tooltip,
-    Overlay,
     LoadingOverlay
 } from "@mantine/core";
 import { useTranslation } from "react-i18next";
@@ -34,16 +28,11 @@ import {
     setSalesFilterData
 } from "../../../../store/inventory/crudSlice.js";
 import _ShortcutTable from "../../shortcut/_ShortcutTable";
-import { ReactToPrint } from "react-to-print";
-import _SalesSearch from "../sales/_SalesSearch.jsx";
 import { setSearchKeyword } from "../../../../store/core/crudSlice.js";
 import InvoiceBatchModal from "./InvoiceBatchModal.jsx";
 import _InvoiceBatchSearch from "./_InvoiceBatchSearch.jsx";
-import _AddTransactionModel from "./modal/_AddTransactionModel.jsx";
 import _AddTransaction from "./drawer/_AddTransaction";
 import LegderModal from "./modal/LedgerModal.jsx";
-
-// import { DataTable } from 'mantine-datatable';
 
 function InvoiceBatchTable() {
     const navigate = useNavigate();
@@ -261,7 +250,6 @@ function InvoiceBatchTable() {
                                                                 onClick={(e) => {
                                                                     e.preventDefault();
                                                                     setBatchLedgerModal(true)
-                                                                    // dispatch(editEntityData('core/user/' + data.id))
                                                                 }}
                                                                 target=""
                                                                 component="a"
@@ -275,7 +263,6 @@ function InvoiceBatchTable() {
                                                                     setLoading(true)
                                                                     setInvoiceBatchData(item)
                                                                     setBatchViewModal(true)
-                                                                    // dispatch(editEntityData('core/user/' + data.id))
                                                                 }}
                                                                 target=""
                                                                 component="a"
@@ -394,30 +381,6 @@ function InvoiceBatchTable() {
                                                     </Text>
                                                 </Grid.Col>
                                             </Grid>
-                                            {/*<Grid columns={15} gutter={{ base: 4 }}>
-                                                <Grid.Col span={6} ><Text fz="sm" lh="xs">{t('SalesBy')}</Text></Grid.Col>
-                                                <Grid.Col span={9} >
-                                                    <Text fz="sm" lh="xs">
-                                                        {invoiceBatchData && invoiceBatchData.salesByUser && invoiceBatchData.salesByUser}
-                                                    </Text>
-                                                </Grid.Col>
-                                            </Grid>*/}
-                                            {/*<Grid columns={15} gutter={{ base: 4 }}>
-                                                <Grid.Col span={6} ><Text fz="sm" lh="xs">{t('Mode')}</Text></Grid.Col>
-                                                <Grid.Col span={9} >
-                                                    <Text fz="sm" lh="xs">
-                                                        {invoiceBatchData && invoiceBatchData.mode_name && invoiceBatchData.mode_name}
-                                                    </Text>
-                                                </Grid.Col>
-                                            </Grid>*/}
-                                            {/*<Grid columns={15} gutter={{ base: 4 }}>
-                                                <Grid.Col span={6} ><Text fz="sm" lh="xs">{t('Process')}</Text></Grid.Col>
-                                                <Grid.Col span={9} >
-                                                    <Text fz="sm" lh="xs">
-                                                        {invoiceBatchData && invoiceBatchData.process && invoiceBatchData.process}
-                                                    </Text>
-                                                </Grid.Col>
-                                            </Grid>*/}
                                         </Grid.Col>
                                     </Grid>
                                 </Box>
@@ -485,7 +448,7 @@ function InvoiceBatchTable() {
                     </Grid.Col>
                 </Grid>
             </Box>
-            {batchViewModal && <InvoiceBatchModal batchViewModal={batchViewModal} setBatchViewModal={setBatchViewModal} />}
+            {batchViewModal && <InvoiceBatchModal batchViewModal={batchViewModal} setBatchViewModal={setBatchViewModal} invoiceId={invoiceBatchData.id} />}
             {addTransactionDrawer && <_AddTransaction invoiceBatchData={invoiceBatchData} addTransactionDrawer={addTransactionDrawer} setAddTransactionDrawer={setAddTransactionDrawer} />}
             {batchLedgerModal && <LegderModal batchLedgerModal={batchLedgerModal} setBatchLedgerModal={setBatchLedgerModal} />}
         </>

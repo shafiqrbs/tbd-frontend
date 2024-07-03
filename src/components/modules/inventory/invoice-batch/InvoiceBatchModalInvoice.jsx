@@ -1,54 +1,21 @@
-import { useDisclosure, useHotkeys } from '@mantine/hooks';
-import {
-    Modal, Button, Flex, Progress, Box, Grid, useMantineTheme, Text,
-    Title, Tooltip, Checkbox, Group, Menu, ActionIcon, rem, Table, Stack
-} from '@mantine/core';
-// import SampleModal from './SampleModal';
-
+import {Table,Box} from '@mantine/core';
 import { useTranslation } from 'react-i18next';
-import { useEffect } from 'react';
-import { useNavigate, useOutletContext } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import {
-    IconInfoCircle,
-    IconDotsVertical,
-    IconTrashX
-} from '@tabler/icons-react';
+import { useOutletContext } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import { useState } from 'react';
-import { useForm } from '@mantine/form';
 import { DataTable } from 'mantine-datatable';
 import tableCss from '../../../../assets/css/Table.module.css';
 import classes from './RowExpansion.module.css';
 
 function InvoiceBatchModalInvoice(props) {
-    const theme = useMantineTheme();
-
-    // useEffect(() => {
-    //     console.log(props.batchViewModal);
-    // }, []);
+    const {batchInvoice} = props
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
-    const height = mainAreaHeight - 100; //TabList height 104
     const tableHeight = mainAreaHeight - 212; //TabList height 104
-    const navigate = useNavigate();
 
     const perPage = 50;
     const [page, setPage] = useState(1);
-
-    const [expnadedInvoice, setExpandedInvoice] = useState([]);
-
-    const element = [
-        { invoiceNumber: '7984564654', createdDate: '10/5/15', amount: 100 },
-        { invoiceNumber: '7984564655', createdDate: '10/5/15', amount: 100 },
-        { invoiceNumber: '7984564656', createdDate: '10/5/15', amount: 100 },
-    ];
-
-    const element1 = [
-        { invoiceNumber: '7984564654', item_name: 'Joggers', quantity: 10, price: 100, sales_price: 110, sub_total: '1110' },
-        { invoiceNumber: '7984564655', item_name: 'Jeans', quantity: 10, price: 100, sales_price: 110, sub_total: '1110' },
-        { invoiceNumber: '7984564656', item_name: 'T-Shirt', quantity: 10, price: 100, sales_price: 110, sub_total: '1110' }
-    ];
 
     return (
         <>
@@ -61,8 +28,7 @@ function InvoiceBatchModalInvoice(props) {
                         footer: tableCss.footer,
                         pagination: tableCss.pagination,
                     }}
-                    records={element}
-                    idAccessor="invoiceNumber"
+                    records={batchInvoice}
                     columns={[
                         {
                             accessor: 'index',
@@ -73,30 +39,30 @@ function InvoiceBatchModalInvoice(props) {
                             )
                         },
                         {
-                            accessor: 'invoiceNumber',
+                            accessor: 'invoice',
                             title: 'Invoice Number',
 
                             render: (rowData) => (
                                 <Box component="a" size="sm" variant="subtle" c={'red.6'} style={{ cursor: "pointer" }}>
-                                    {rowData.invoiceNumber}
+                                    {rowData.invoice}
                                 </Box>
                             )
                         },
                         {
-                            accessor: 'createdDate',
+                            accessor: 'created_at',
                             title: 'Created Date',
                             render: (rowData) => (
                                 <Box component="a" size="sm" variant="subtle">
-                                    {rowData.createdDate}
+                                    {rowData.created_at}
                                 </Box>
                             )
                         },
                         {
-                            accessor: 'amount',
+                            accessor: 'total',
                             title: 'Amount',
                             render: (rowData) => (
                                 <Box component="a" size="sm" variant="subtle">
-                                    {rowData.amount}
+                                    {rowData.total}
                                 </Box>
                             )
                         },
@@ -116,8 +82,7 @@ function InvoiceBatchModalInvoice(props) {
                                         </Table.Tr>
                                     </Table.Thead>
                                     <Table.Tbody>
-                                        {element1
-                                            .filter((data) => data.invoiceNumber === record.invoiceNumber)
+                                        {(record.sales_items)
                                             .map((data, index) => (
                                                 <Table.Tr key={index}>
                                                     <Table.Td>{index + 1}</Table.Td>
@@ -133,31 +98,31 @@ function InvoiceBatchModalInvoice(props) {
                                         <Table.Tr>
                                             <Table.Th colSpan={'5'} ta="right" fz="xs" w={'100'}>{t('SubTotal')}</Table.Th>
                                             <Table.Th ta="right" fz="xs" w={'100'}>
-
+                                                {record.sub_total}
                                             </Table.Th>
                                         </Table.Tr>
                                         <Table.Tr>
                                             <Table.Th colSpan={'5'} ta="right" fz="xs" w={'100'}>{t('Discount')}</Table.Th>
                                             <Table.Th ta="right" fz="xs" w={'100'}>
-
+                                                {record.discount}
                                             </Table.Th>
                                         </Table.Tr>
                                         <Table.Tr>
                                             <Table.Th colSpan={'5'} ta="right" fz="xs" w={'100'}>{t('Total')}</Table.Th>
                                             <Table.Th ta="right" fz="xs" w={'100'}>
-
+                                                {record.total}
                                             </Table.Th>
                                         </Table.Tr>
                                         <Table.Tr>
                                             <Table.Th colSpan={'5'} ta="right" fz="xs" w={'100'}>{t('Receive')}</Table.Th>
                                             <Table.Th ta="right" fz="xs" w={'100'}>
-
+                                                {record.received}
                                             </Table.Th>
                                         </Table.Tr>
                                         <Table.Tr>
                                             <Table.Th colSpan={'5'} ta="right" fz="xs" w={'100'}>{t('Due')}</Table.Th>
                                             <Table.Th ta="right" fz="xs" w={'100'}>
-
+                                                {record.due}
                                             </Table.Th>
                                         </Table.Tr>
                                     </Table.Tfoot>
@@ -166,7 +131,7 @@ function InvoiceBatchModalInvoice(props) {
                             </Box>
                         ),
                     }}
-                    totalRecords={element.length}
+                    totalRecords={batchInvoice.length}
                     recordsPerPage={perPage}
                     onPageChange={(p) => {
                         setPage(p);
