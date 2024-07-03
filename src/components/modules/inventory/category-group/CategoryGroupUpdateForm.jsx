@@ -28,7 +28,7 @@ function CategoryGroupUpdateForm() {
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
-    const height = mainAreaHeight - 100 ; //TabList height 104
+    const height = mainAreaHeight - 100; //TabList height 104
 
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
     const [setFormData, setFormDataForUpdate] = useState(false);
@@ -96,7 +96,7 @@ function CategoryGroupUpdateForm() {
                 <form onSubmit={form.onSubmit((values) => {
                     dispatch(updateEntityData(values))
                         .then(() => {
-                            navigate('inventory/category-group', { replace: true });
+                            navigate('/inventory/category-group', { replace: true });
                             dispatch(setInsertType('create'));
                         })
                         .catch((error) => {

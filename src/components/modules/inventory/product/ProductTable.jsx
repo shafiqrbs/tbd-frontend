@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useOutletContext } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import {
     Group,
     Box,
@@ -33,7 +33,7 @@ function ProductTable() {
     const dispatch = useDispatch();
     const { t, i18n } = useTranslation();
     const { isOnline, mainAreaHeight } = useOutletContext();
-    const height = mainAreaHeight - 128; //TabList height 104
+    const height = mainAreaHeight - 98; //TabList height 104
 
     const perPage = 50;
     const [page, setPage] = useState(1);
@@ -43,6 +43,9 @@ function ProductTable() {
     const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword)
     const indexData = useSelector((state) => state.crudSlice.indexEntityData)
     const productFilterData = useSelector((state) => state.inventoryCrudSlice.productFilterData)
+
+    const navigate = useNavigate()
+
 
     useEffect(() => {
         const value = {
@@ -63,10 +66,10 @@ function ProductTable() {
     return (
         <>
 
-            <Box pl={`xs`} pb={'xs'} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'} >
+            <Box pl={`xs`} pr={8} pt={'6'} pb={'4'} className={'boxBackground borderRadiusAll border-bottom-none'} >
                 <KeywordSearch module={'product'} />
             </Box>
-            <Box className={'borderRadiusAll'}>
+            <Box className={'borderRadiusAll border-top-none'}>
                 <DataTable
                     classNames={{
                         root: tableCss.root,
@@ -108,13 +111,13 @@ function ProductTable() {
                                                     dispatch(setInsertType('update'))
                                                     dispatch(editEntityData('inventory/product/' + data.id))
                                                     dispatch(setFormLoading(true))
+                                                    navigate(`/inventory/product/${data.id}`)
                                                 }}
                                             >
                                                 {t('Edit')}
                                             </Menu.Item>
 
                                             <Menu.Item
-                                                href={``}
                                                 onClick={() => {
                                                     setProductViewModel(true)
                                                     dispatch(showEntityData('inventory/product/' + data.id))
@@ -142,6 +145,7 @@ function ProductTable() {
                                                             <Text size="sm"> {t("FormConfirmationMessage")}</Text>
                                                         ),
                                                         labels: { confirm: 'Confirm', cancel: 'Cancel' },
+                                                        confirmProps: { color: 'red.6' },
                                                         onCancel: () => console.log('Cancel'),
                                                         onConfirm: () => {
                                                             dispatch(deleteEntityData('inventory/product/' + data.id))

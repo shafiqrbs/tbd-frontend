@@ -65,6 +65,7 @@ function AppRoute() {
                     <Route path="opening-stock" element={<OpeningStockIndex />} />
                     <Route path="opening-approve-stock" element={<OpeningApproveIndex />} />
                     <Route path="product" element={<ProductIndex />} />
+                    <Route path="product/:productId" element={<ProductIndex />} />
                     <Route path="category" element={<CategoryIndex />} />
                     <Route path="category/:categoryId" element={<CategoryIndex />} />
                     <Route path="category-group" element={<CategoryGroupIndex />} />

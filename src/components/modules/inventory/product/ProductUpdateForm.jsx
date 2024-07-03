@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useOutletContext } from "react-router-dom";
+import { useOutletContext, useParams } from "react-router-dom";
 import {
     Button,
     rem,
@@ -35,7 +35,7 @@ function ProductUpdateForm() {
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
-    const height = mainAreaHeight - 130; //TabList height 104
+    const height = mainAreaHeight - 100; //TabList height 104
 
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
     const [setFormData, setFormDataForUpdate] = useState(false);
@@ -62,6 +62,15 @@ function ProductUpdateForm() {
         }
         dispatch(getCategoryDropdown(value))
     }, [dropdownLoad]);
+
+    const { productId } = useParams();
+
+    useEffect(() => {
+        if (productId) {
+            dispatch(setEditEntityData(`inventory/product/${productId}`))
+            dispatch(setFormLoading(true));
+        }
+    }, [productId, dispatch]);
 
     const [brandData, setBrandData] = useState(null);
     const brandDropdownData = useSelector((state) => state.inventoryUtilitySlice.brandDropdownData)
@@ -124,7 +133,7 @@ function ProductUpdateForm() {
         setFormLoad(true)
         setFormDataForUpdate(true)
     }, [dispatch, formLoading])
-    console.log(entityEditData);
+    // console.log(entityEditData);
     useEffect(() => {
 
         form.setValues({
@@ -150,7 +159,7 @@ function ProductUpdateForm() {
             setFormDataForUpdate(false)
         }, 500)
 
-    }, [dispatch, setFormData])
+    }, [entityEditData, dispatch, setFormData])
 
 
     useHotkeys([['alt+n', () => {
@@ -169,6 +178,14 @@ function ProductUpdateForm() {
     return (
         <Box>
             <form onSubmit={form.onSubmit((values) => {
+                dispatch(updateEntityData(values))
+                    .then(() => {
+                        navigate('/inventory/product', { replace: true });
+                        dispatch(setInsertType('create'));
+                    })
+                    .catch((error) => {
+
+                    })
                 modals.openConfirmModal({
                     title: (
                         <Text size="md"> {t("FormConfirmationTitle")}</Text>
@@ -225,10 +242,10 @@ function ProductUpdateForm() {
                     <Grid.Col span={8} >
                         <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
                             <Box bg={"white"} >
-                                <Box pl={`xs`} pb={'xs'} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'} >
+                                <Box pl={`xs`} pb={'6'} pr={8} pt={'6'} mb={'4'} className={'boxBackground borderRadiusAll'} >
                                     <Grid>
-                                        <Grid.Col span={6} h={54}>
-                                            <Title order={6} mt={'xs'} pl={'6'}>{t('CreateProduct')}</Title>
+                                        <Grid.Col span={6} >
+                                            <Title order={6} pt={'6'}>{t('UpdateProduct')}</Title>
                                         </Grid.Col>
                                         <Grid.Col span={6}>
                                             <Stack right align="flex-end">
@@ -237,15 +254,13 @@ function ProductUpdateForm() {
                                                         !saveCreateLoading && isOnline &&
                                                         <Button
                                                             size="xs"
-                                                            color={`red.6`}
+                                                            color={`green.8`}
                                                             type="submit"
-                                                            mt={4}
                                                             id="EntityFormSubmit"
                                                             leftSection={<IconDeviceFloppy size={16} />}
                                                         >
-
                                                             <Flex direction={`column`} gap={0}>
-                                                                <Text fz={12} fw={400}>
+                                                                <Text fz={14} fw={400}>
                                                                     {t("CreateAndSave")}
                                                                 </Text>
                                                             </Flex>
@@ -255,7 +270,7 @@ function ProductUpdateForm() {
                                         </Grid.Col>
                                     </Grid>
                                 </Box>
-                                <Box pl={`xs`} pr={'xs'} mt={'xs'} className={'borderRadiusAll'}>
+                                <Box pl={`xs`} pr={'xs'} className={'borderRadiusAll'}>
                                     <ScrollArea h={height} scrollbarSize={2} scrollbars="y" type="never">
                                         <Box>
                                             <LoadingOverlay visible={formLoad} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />
@@ -276,7 +291,7 @@ function ProductUpdateForm() {
                                                     changeValue={setProductTypeData}
                                                 />
                                             </Box>
-                                            <Box mt={'xs'}>
+                                            <Box >
                                                 <Grid gutter={{ base: 6 }}>
                                                     <Grid.Col span={11}>
                                                         <SelectForm

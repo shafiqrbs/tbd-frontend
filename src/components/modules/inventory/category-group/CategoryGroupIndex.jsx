@@ -33,6 +33,7 @@ function CategoryGroupIndex() {
         categoryGroupId ? ((
             dispatch(setInsertType('update')),
             dispatch(editEntityData(`inventory/category-group/${categoryGroupId}`))
+            
         )) : ((
             dispatch(setInsertType('create')),
             dispatch(setSearchKeyword('')),

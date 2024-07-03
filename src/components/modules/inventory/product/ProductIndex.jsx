@@ -14,6 +14,8 @@ import InventoryHeaderNavbar from "../configuraton/InventoryHeaderNavbar";
 import CategoryTable from "../category/CategoryTable";
 import CategoryForm from "../category/CategoryForm";
 import CategoryUpdateForm from "../category/CategoryUpdateForm";
+import { useNavigate, useParams } from "react-router-dom";
+import { editEntityData, setEntityNewData, setFormLoading, setInsertType, setSearchKeyword } from "../../../../store/inventory/crudSlice.js";
 
 function ProductIndex() {
     const { t, i18n } = useTranslation();
@@ -21,6 +23,23 @@ function ProductIndex() {
 
     const progress = getLoadingProgress()
     const configData = getConfigData()
+    const dispatch = useDispatch()
+
+    const navigate = useNavigate();
+    const { productId } = useParams()
+
+    useEffect(() => {
+        productId ? ((
+            dispatch(setInsertType('update')),
+            dispatch(editEntityData(`inventory/product/${productId}`)),
+            dispatch(setFormLoading(true))
+        )) : ((
+            dispatch(setInsertType('create')),
+            dispatch(setSearchKeyword('')),
+            dispatch(setEntityNewData([])),
+            navigate('/inventory/product', { replace: true })
+        ))
+    }, [productId, dispatch, navigate])
 
 
     return (
@@ -46,7 +65,9 @@ function ProductIndex() {
                                     </Grid.Col>
                                     <Grid.Col span={9}>
                                         {
-                                            insertType === 'create' ? <ProductForm /> : <ProductUpdateForm />
+                                            insertType === 'create'
+                                                ? <ProductForm />
+                                                : <ProductUpdateForm />
                                         }
                                     </Grid.Col>
                                 </Grid>
