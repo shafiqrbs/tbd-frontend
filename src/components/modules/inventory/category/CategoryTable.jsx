@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useOutletContext } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import {
     Group,
     Box,
@@ -21,13 +21,15 @@ import { modals } from "@mantine/modals";
 import { deleteEntityData } from "../../../../store/core/crudSlice";
 import { notifications } from "@mantine/notifications";
 import tableCss from "../../../../assets/css/Table.module.css";
+import _CategoryViewModal from "./_CategoryViewModal.jsx";
+
 
 function CategoryTable() {
 
     const dispatch = useDispatch();
     const { t, i18n } = useTranslation();
     const { isOnline, mainAreaHeight } = useOutletContext();
-    const height = mainAreaHeight - 128; //TabList height 104
+    const height = mainAreaHeight - 98; //TabList height 104
     const perPage = 50;
     const [page, setPage] = useState(1);
 
@@ -35,7 +37,11 @@ function CategoryTable() {
     const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword)
     const indexData = useSelector((state) => state.inventoryCrudSlice.indexEntityData)
     const entityDataDelete = useSelector((state) => state.inventoryCrudSlice.entityDataDelete)
+    const productCategoryFilterData = useSelector((state) => state.inventoryCrudSlice.productCategoryFilterData)
 
+    const [categoryViewModal, setCategoryViewModal] = useState(false)
+
+    const navigate = useNavigate()
 
     useEffect(() => {
         dispatch(setDeleteMessage(''))
@@ -71,10 +77,10 @@ function CategoryTable() {
 
     return (
         <>
-            <Box pl={`xs`} pb={'xs'} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'} >
+            <Box pl={`xs`} pr={8} pt={'6'} pb={'4'} className={'boxBackground borderRadiusAll border-bottom-none'} >
                 <KeywordSearch module={'category'} />
             </Box>
-            <Box className={'borderRadiusAll'}>
+            <Box className={'borderRadiusAll border-top-none'}>
                 <DataTable
                     classNames={{
                         root: tableCss.root,
@@ -107,23 +113,21 @@ function CategoryTable() {
                                         </Menu.Target>
                                         <Menu.Dropdown>
                                             <Menu.Item
-                                                // href={`/inventory/sales/edit/${data.id}`}
                                                 onClick={() => {
                                                     dispatch(setInsertType('update'))
                                                     dispatch(editEntityData('inventory/category-group/' + data.id))
                                                     dispatch(setFormLoading(true))
+                                                    navigate(`/inventory/category/${data.id}`)
                                                 }}
                                             >
                                                 {t('Edit')}
                                             </Menu.Item>
 
                                             <Menu.Item
-                                                href={``}
-                                                // onClick={() => {
-                                                //     dispatch(setInsertType('update'))
-                                                //     dispatch(editEntityData('core/user/' + data.id))
-                                                //     dispatch(setFormLoading(true))
-                                                // }}
+                                                onClick={() => {
+                                                    setCategoryViewModal(true)
+                                                    dispatch(editEntityData('inventory/category-group/' + data.id))
+                                                }}
                                                 target="_blank"
                                                 component="a"
                                                 w={'200'}
@@ -178,7 +182,7 @@ function CategoryTable() {
                     scrollAreaProps={{ type: 'never' }}
                 />
             </Box>
-
+            {categoryViewModal && <_CategoryViewModal categoryViewModal={categoryViewModal} setCategoryViewModal={setCategoryViewModal} />}
         </>
     );
 }

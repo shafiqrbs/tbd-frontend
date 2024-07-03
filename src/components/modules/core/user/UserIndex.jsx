@@ -49,18 +49,6 @@ function UserIndex() {
         );
     }, [userId, dispatch, navigate, userFilterData]);
 
-    useEffect(() => {
-        return () => {
-            dispatch(setInsertType('create'));
-            dispatch(setSearchKeyword(''));
-            dispatch(setEntityNewData([]));
-            dispatch(setUserFilterData({
-                name: '',
-                mobile: '',
-                email: ''
-            }));
-        };
-    }, [dispatch])
 
     return (
         <>

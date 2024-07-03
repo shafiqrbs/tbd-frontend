@@ -6,12 +6,14 @@ import { useTranslation } from 'react-i18next';
 import {
     IconCircleCheck
 } from "@tabler/icons-react";
+import { showEntityData } from "../../../../store/core/crudSlice"
 
 import { useSelector } from "react-redux";
 
 function CustomerViewModel(props) {
     const { t, i18n } = useTranslation();
     const showEntityData = useSelector((state) => state.crudSlice.showEntityData)
+    const entityEditData = useSelector((state => state.crudSlice.entityEditData))
     const theme = useMantineTheme();
 
     const closeModel = () => {
@@ -28,41 +30,41 @@ function CustomerViewModel(props) {
                 <Grid columns={24}>
                     <Grid.Col span={'6'} align={'left'} fw={'600'} fz={'14'}>{t('CustomerId')}</Grid.Col>
                     <Grid.Col span={'1'}>:</Grid.Col>
-                    <Grid.Col span={'auto'}>{showEntityData && showEntityData.customerId && showEntityData.customerId}</Grid.Col>
+                    <Grid.Col span={'auto'}>{entityEditData && entityEditData.customerId && entityEditData.customerId}</Grid.Col>
                 </Grid>
                 <Grid columns={24}>
                     <Grid.Col span={'6'} align={'left'} fw={'600'} fz={'14'}>{t('Name')}</Grid.Col>
                     <Grid.Col span={'1'}>:</Grid.Col>
-                    <Grid.Col span={'auto'}>{showEntityData && showEntityData.name && showEntityData.name}</Grid.Col>
+                    <Grid.Col span={'auto'}>{entityEditData && entityEditData.name && entityEditData.name}</Grid.Col>
                 </Grid>
                 <Grid columns={24}>
                     <Grid.Col span={'6'} align={'left'} fw={'600'} fz={'14'}>{t('Mobile')}</Grid.Col>
                     <Grid.Col span={'1'}>:</Grid.Col>
-                    <Grid.Col span={'auto'}>{showEntityData && showEntityData.mobile && showEntityData.mobile}</Grid.Col>
+                    <Grid.Col span={'auto'}>{entityEditData && entityEditData.mobile && entityEditData.mobile}</Grid.Col>
                 </Grid>
 
                 <Grid columns={24}>
                     <Grid.Col span={'6'} align={'left'} fw={'600'} fz={'14'}>{t('AlternativeMobile')}</Grid.Col>
                     <Grid.Col span={'1'}>:</Grid.Col>
-                    <Grid.Col span={'auto'}>{showEntityData && showEntityData.alternative_mobile && showEntityData.alternative_mobile}</Grid.Col>
+                    <Grid.Col span={'auto'}>{entityEditData && entityEditData.alternative_mobile && entityEditData.alternative_mobile}</Grid.Col>
                 </Grid>
 
                 <Grid columns={24}>
                     <Grid.Col span={'6'} align={'left'} fw={'600'} fz={'14'}>{t('Email')}</Grid.Col>
                     <Grid.Col span={'1'}>:</Grid.Col>
-                    <Grid.Col span={'auto'}>{showEntityData && showEntityData.email && showEntityData.email}</Grid.Col>
+                    <Grid.Col span={'auto'}>{entityEditData && entityEditData.email && entityEditData.email}</Grid.Col>
                 </Grid>
 
                 <Grid columns={24}>
                     <Grid.Col span={'6'} align={'left'} fw={'600'} fz={'14'}>{t('ReferenceId')}</Grid.Col>
                     <Grid.Col span={'1'}>:</Grid.Col>
-                    <Grid.Col span={'auto'}>{showEntityData && showEntityData.reference_id && showEntityData.reference_id}</Grid.Col>
+                    <Grid.Col span={'auto'}>{entityEditData && entityEditData.reference_id && entityEditData.reference_id}</Grid.Col>
                 </Grid>
 
                 <Grid columns={24}>
                     <Grid.Col span={'6'} align={'left'} fw={'600'} fz={'14'}>{t('Created')}</Grid.Col>
                     <Grid.Col span={'1'}>:</Grid.Col>
-                    <Grid.Col span={'auto'}>{showEntityData && showEntityData.created && showEntityData.created}</Grid.Col>
+                    <Grid.Col span={'auto'}>{entityEditData && entityEditData.created && entityEditData.created}</Grid.Col>
                 </Grid>
 
             </Box>

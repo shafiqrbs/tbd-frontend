@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useOutletContext } from "react-router-dom";
+import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 import {
     Button, rem, Grid, Box, ScrollArea, Group, Text, Title, Flex, Stack, Tooltip, ActionIcon, LoadingOverlay,
 } from "@mantine/core";
@@ -32,7 +32,7 @@ function CategoryUpdateForm() {
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
-    const height = mainAreaHeight - 116; //TabList height 104
+    const height = mainAreaHeight - 100; //TabList height 104
 
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
     const [setFormData, setFormDataForUpdate] = useState(false);
@@ -41,6 +41,8 @@ function CategoryUpdateForm() {
 
     const entityEditData = useSelector((state) => state.inventoryCrudSlice.entityEditData)
     const formLoading = useSelector((state) => state.crudSlice.formLoading)
+    const [formLoad, setFormLoad] = useState('');
+    const navigate = useNavigate();
 
     const groupCategoryDropdownData = useSelector((state) => state.inventoryUtilitySlice.groupCategoryDropdown)
     const dropdownLoad = useSelector((state) => state.inventoryCrudSlice.dropdownLoad)
@@ -48,6 +50,16 @@ function CategoryUpdateForm() {
         groupCategoryDropdownData.map((type, index) => {
             return ({ 'label': type.name, 'value': String(type.id) })
         }) : []
+
+
+    const { categoryId } = useParams();
+
+    useEffect(() => {
+        if (categoryId) {
+            dispatch(setEditEntityData(`inventory/category-group/${categoryId}`))
+            dispatch(setFormLoading(true));
+        }
+    }, [categoryId, dispatch]);
 
     useEffect(() => {
 
@@ -61,7 +73,7 @@ function CategoryUpdateForm() {
 
     const form = useForm({
         initialValues: {
-            parent: '', name: '', status: true
+            parent: '', name: '', status: ''
         },
         validate: {
             parent: isNotEmpty(),
@@ -70,6 +82,7 @@ function CategoryUpdateForm() {
     });
 
     useEffect(() => {
+        setFormLoad(true)
         setFormDataForUpdate(true)
     }, [dispatch, formLoading])
 
@@ -83,10 +96,11 @@ function CategoryUpdateForm() {
 
         dispatch(setFormLoading(false))
         setTimeout(() => {
+            setFormLoad(false)
             setFormDataForUpdate(false)
         }, 500)
 
-    }, [dispatch, setFormData])
+    }, [entityEditData, dispatch, setFormData])
 
 
     useHotkeys([['alt+n', () => {
@@ -106,6 +120,14 @@ function CategoryUpdateForm() {
         <>
             <Box>
                 <form onSubmit={form.onSubmit((values) => {
+                    dispatch(updateEntityData(values))
+                        .then(() => {
+                            navigate('inventory/category', { replace: true });
+                            dispatch(setInsertType('create'));
+                        })
+                        .catch((error) => {
+
+                        })
                     modals.openConfirmModal({
                         title: (
                             <Text size="md"> {t("FormConfirmationTitle")}</Text>
@@ -146,10 +168,10 @@ function CategoryUpdateForm() {
                         <Grid.Col span={8} >
                             <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
                                 <Box bg={"white"} >
-                                    <Box pl={`xs`} pb={'xs'} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'} >
+                                    <Box pl={`xs`} pr={8} pt={'6'} pb={'6'} mb={'4'} className={'boxBackground borderRadiusAll'} >
                                         <Grid>
-                                            <Grid.Col span={6} h={54}>
-                                                <Title order={6} mt={'xs'} pl={'6'}>{t('CreateCategoryGroup')}</Title>
+                                            <Grid.Col span={6}>
+                                                <Title order={6} pt={'6'}>{t('CreateCategoryGroup')}</Title>
                                             </Grid.Col>
                                             <Grid.Col span={6}>
                                                 <Stack right align="flex-end">
@@ -158,15 +180,13 @@ function CategoryUpdateForm() {
                                                             !saveCreateLoading && isOnline &&
                                                             <Button
                                                                 size="xs"
-                                                                color={`red.6`}
+                                                                color={`green.8`}
                                                                 type="submit"
-                                                                mt={4}
                                                                 id="EntityFormSubmit"
                                                                 leftSection={<IconDeviceFloppy size={16} />}
                                                             >
-
                                                                 <Flex direction={`column`} gap={0}>
-                                                                    <Text fz={12} fw={400}>
+                                                                    <Text fz={14} fw={400}>
                                                                         {t("UpdateAndSave")}
                                                                     </Text>
                                                                 </Flex>
@@ -176,11 +196,11 @@ function CategoryUpdateForm() {
                                             </Grid.Col>
                                         </Grid>
                                     </Box>
-                                    <Box pl={`xs`} pr={'xs'} mt={'xs'} className={'borderRadiusAll'}>
+                                    <Box pl={`xs`} pr={'xs'} className={'borderRadiusAll'}>
                                         <ScrollArea h={height} scrollbarSize={2} scrollbars="y" type="never">
                                             <Box>
                                                 <LoadingOverlay visible={formLoad} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />
-                                                <Box mt={'xs'}>
+                                                <Box>
                                                     <Grid gutter={{ base: 6 }}>
                                                         <Grid.Col span={11} >
                                                             <Box mt={'8'}>
@@ -193,8 +213,7 @@ function CategoryUpdateForm() {
                                                                     name={'parent'}
                                                                     form={form}
                                                                     dropdownValue={groupCategoryDropdown}
-                                                                    mt={8}
-                                                                    id={'category_group'}
+                                                                    id={'parent'}
                                                                     searchable={false}
                                                                     value={categoryGroupData ? String(categoryGroupData) : (entityEditData.parent ? String(entityEditData.parent) : null)}
                                                                     changeValue={setCategoryGroupData}
@@ -231,11 +250,10 @@ function CategoryUpdateForm() {
                                                         nextField={'status'}
                                                         form={form}
                                                         name={'name'}
-                                                        mt={50}
                                                         id={'name'}
                                                     />
                                                 </Box>
-                                                <Box mt={'md'}>
+                                                <Box mt={'xs'}>
                                                     <Grid gutter={{ base: 1 }}>
                                                         <Grid.Col span={2}>
                                                             <SwitchForm
@@ -250,7 +268,7 @@ function CategoryUpdateForm() {
                                                                 defaultChecked={1}
                                                             />
                                                         </Grid.Col>
-                                                        <Grid.Col span={6} fz={'sm'} pt={'6'}>Status</Grid.Col>
+                                                        <Grid.Col span={6} fz={'sm'} pt={'1'}>Status</Grid.Col>
                                                     </Grid>
                                                 </Box>
                                             </Box>

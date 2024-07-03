@@ -8,28 +8,38 @@ import { useDispatch, useSelector } from "react-redux";
 import CategoryTable from "./CategoryTable";
 import CategoryForm from "./CategoryForm";
 import CategoryUpdateForm from "./CategoryUpdateForm.jsx";
-import { setSearchKeyword } from "../../../../store/core/crudSlice.js";
-import { setInsertType } from "../../../../store/inventory/crudSlice.js";
+import { editEntityData, setFormLoading, setSearchKeyword } from "../../../../store/core/crudSlice.js";
+import { setEntityNewData, setInsertType } from "../../../../store/inventory/crudSlice.js";
 import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress.js";
 import getConfigData from "../../../global-hook/config-data/getConfigData.js";
 import InventoryHeaderNavbar from "../configuraton/InventoryHeaderNavbar";
-import CategoryGroupTable from "../category-group/CategoryGroupTable";
-import CategoryGroupForm from "../category-group/CategoryGroupForm";
-import CategoryGroupUpdateForm from "../category-group/CategoryGroupUpdateForm";
+import { useNavigate, useParams } from "react-router-dom";
 
 function CategoryIndex() {
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
 
     const insertType = useSelector((state) => state.inventoryCrudSlice.insertType)
+    const productCategoryFilterData = useSelector((state) => state.inventoryCrudSlice.productCategoryFilterData)
 
     const progress = getLoadingProgress()
     const configData = getConfigData()
+    const navigate = useNavigate()
+
+    const { categoryId } = useParams();
 
     useEffect(() => {
-        dispatch(setInsertType('create'))
-        dispatch(setSearchKeyword(''))
-    }, [])
+        categoryId ? ((
+            dispatch(setInsertType('update')),
+            dispatch(editEntityData(`inventory/category-group/${categoryId}`))
+        )) : ((
+            dispatch(setInsertType('create')),
+            dispatch(setSearchKeyword('')),
+            dispatch(setEntityNewData([])),
+            navigate('/inventory/category', { replace: true })
+        ))
+    }, [categoryId, dispatch, navigate, productCategoryFilterData])
+
 
     return (
         <>
@@ -54,7 +64,9 @@ function CategoryIndex() {
                                     </Grid.Col>
                                     <Grid.Col span={9}>
                                         {
-                                            insertType === 'create' ? <CategoryForm /> : <CategoryUpdateForm />
+                                            insertType === 'create'
+                                                ? <CategoryForm />
+                                                : <CategoryUpdateForm />
                                         }
                                     </Grid.Col>
                                 </Grid>

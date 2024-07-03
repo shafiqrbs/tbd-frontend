@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import {
-    Button, Group, Text, ScrollArea, Modal, rem,
+    Button, Group, Text, ScrollArea, Modal, rem, Box, Grid,
+    useMantineTheme
 } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 
@@ -20,12 +21,13 @@ import { useDispatch, useSelector } from "react-redux";
 import {
     storeEntityData,
     setEntityNewData,
-    setDropdownLoad
+    setDropdownLoad,
+    showEntityData
 } from "../../../../store/inventory/crudSlice.js";
 import { notifications } from "@mantine/notifications";
 
-function CategoryGroupModal(props) {
-    const { openedModel, open, close } = props
+function _CategoryViewModal(props) {
+    // const { openedModel, open, close } = props
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
@@ -34,60 +36,66 @@ function CategoryGroupModal(props) {
     const validationMessage = useSelector((state) => state.inventoryCrudSlice.validationMessage)
     const validation = useSelector((state) => state.inventoryCrudSlice.validation)
     const entityNewData = useSelector((state) => state.inventoryCrudSlice.entityNewData)
+    const entityEditData = useSelector((state) => state.inventoryCrudSlice.entityEditData)
 
-    const formModal = useForm({
-        initialValues: {
-            name: '', status: true
-        },
-        validate: {
-            name: hasLength({ min: 2, max: 20 }),
-            status: hasLength({ min: 11, max: 11 }),
-        },
-    });
+    const theme = useMantineTheme();
 
-    useEffect(() => {
-        if (validation) {
-            validationMessage.name && (formModal.setFieldError('name', true));
-            dispatch(setValidationData(false))
-        }
+    // const formModal = useForm({
+    //     initialValues: {
+    //         name: '', status: true
+    //     },
+    //     validate: {
+    //         name: hasLength({ min: 2, max: 20 }),
+    //         status: hasLength({ min: 11, max: 11 }),
+    //     },
+    // });
 
-        if (entityNewData.message === 'success') {
-            notifications.show({
-                color: 'teal',
-                title: t('CreateSuccessfully'),
-                icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
-                loading: false,
-                autoClose: 700,
-                style: { backgroundColor: 'lightgray' },
-            });
+    // useEffect(() => {
+    //     if (validation) {
+    //         validationMessage.name && (formModal.setFieldError('name', true));
+    //         dispatch(setValidationData(false))
+    //     }
 
-            setTimeout(() => {
-                formModal.reset()
-                dispatch(setEntityNewData([]))
-                close(false)
-                dispatch(setDropdownLoad(true))
-            }, 700)
-        }
-    }, [validation, validationMessage, formModal]);
+    //     if (entityNewData.message === 'success') {
+    //         notifications.show({
+    //             color: 'teal',
+    //             title: t('CreateSuccessfully'),
+    //             icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
+    //             loading: false,
+    //             autoClose: 700,
+    //             style: { backgroundColor: 'lightgray' },
+    //         });
+
+    //         setTimeout(() => {
+    //             formModal.reset()
+    //             dispatch(setEntityNewData([]))
+    //             close(false)
+    //             dispatch(setDropdownLoad(true))
+    //         }, 700)
+    //     }
+    // }, [validation, validationMessage, formModal]);
+    const CloseModal = () => {
+        props.setCategoryViewModal(false);
+    }
 
     return (
         <>
             <Modal
-                opened={openedModel}
-                onClose={close}
+                opened={props.categoryViewModal}
+                onClose={CloseModal}
                 title={t('CategoryGroupModel')}
-                centered
-                overlayProps={{
-                    backgroundOpacity: 0.55,
+                size="75%" overlayProps={{
+                    color: theme.colorScheme === 'dark' ? theme.colors.dark[9] : theme.colors.dark[8],
+                    opacity: 0.9,
                     blur: 3,
                 }}
-                scrollAreaComponent={ScrollArea.Autosize}
-                closeButtonProps={{
-                    icon: <IconXboxX size={20} stroke={1.5} />,
-                }}
+            // scrollAreaComponent={ScrollArea.Autosize}
+            // closeButtonProps={{
+            //     icon: <IconXboxX size={20} stroke={1.5} />,
+            // }}
             >
 
-                <InputForm
+                {/* <InputForm
                     tooltip={t('CategoryGroupValidateMessage')}
                     label={t('CategoryGroup')}
                     placeholder={t('CategoryGroup')}
@@ -112,7 +120,7 @@ function CategoryGroupModal(props) {
                 />
 
                 <Group justify="flex-end" mt="md">
-                    <Button color="green.8" disabled={!isOnline || modelSubmit}
+                    <Button disabled={!isOnline || modelSubmit}
                         onClick={() => {
 
                             if (!formModal.values.name) {
@@ -125,7 +133,6 @@ function CategoryGroupModal(props) {
                                 children: (<Text size="sm">{t('CategoryGroupFormSubmitConfirmDetails')}</Text>),
                                 labels: { confirm: 'Confirm', cancel: 'Cancel' },
                                 onCancel: () => console.log('Cancel'),
-                                confirmProps: { color: 'red.6' },
                                 onConfirm: () => {
                                     setModelSubmit(true)
                                     const value = {
@@ -140,12 +147,32 @@ function CategoryGroupModal(props) {
                             });
                         }}
                     >
-                        <Text fz={14} fw={400}> {t("Submit")}</Text>
+                        Submit
                     </Button>
-                </Group>
+                </Group> */}
+                <Box m={'md'}>
+                    <Grid columns={24}>
+                        <Grid.Col span={'6'} align={'left'} fw={'600'} fz={'14'}>{t('CategoryGroup')}</Grid.Col>
+                        <Grid.Col span={'1'}>:</Grid.Col>
+                        <Grid.Col span={'auto'}>{entityEditData && entityEditData.category_group && entityEditData.category_group}</Grid.Col>
+                    </Grid>
+                    <Grid columns={24}>
+                        <Grid.Col span={'6'} align={'left'} fw={'600'} fz={'14'}>{t('CategoryName')}</Grid.Col>
+                        <Grid.Col span={'1'}>:</Grid.Col>
+                        <Grid.Col span={'auto'}>{entityEditData && entityEditData.name && entityEditData.name}</Grid.Col>
+                    </Grid>
+                    <Grid columns={24}>
+                        <Grid.Col span={'6'} align={'left'} fw={'600'} fz={'14'}>{t('Status')}</Grid.Col>
+                        <Grid.Col span={'1'}>:</Grid.Col>
+                        <Grid.Col span={'auto'}>{entityEditData && entityEditData.status && entityEditData.status}</Grid.Col>
+                    </Grid>
+
+
+                </Box>
+
             </Modal>
         </>
     );
 }
 
-export default CategoryGroupModal;
+export default _CategoryViewModal;

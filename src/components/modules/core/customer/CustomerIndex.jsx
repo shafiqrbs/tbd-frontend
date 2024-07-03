@@ -52,17 +52,6 @@ function CustomerIndex() {
         }
     }, [customerId, dispatch, navigate, customerFilterData]);
 
-    useEffect(() => {
-        return () => {
-            dispatch(setInsertType('create'));
-            dispatch(setSearchKeyword(''));
-            dispatch(setEntityNewData([]));
-            dispatch(setCustomerFilterData({
-                name: '',
-                mobile: ''
-            }));
-        };
-    }, [dispatch]);
 
 
     return (

@@ -2,15 +2,15 @@ import React from "react";
 import {
     rem, Modal, List, ThemeIcon, Grid, Box, useMantineTheme,
 } from "@mantine/core";
-import {useTranslation} from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import {
     IconCircleCheck
 } from "@tabler/icons-react";
 
-import {useDispatch, useSelector} from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 function UserViewModel(props) {
-    const {t, i18n} = useTranslation();
+    const { t, i18n } = useTranslation();
     const entityEditData = useSelector((state) => state.crudSlice.entityEditData)
     const theme = useMantineTheme();
     const closeModel = () => {
@@ -44,11 +44,11 @@ function UserViewModel(props) {
                     <Grid.Col span={'1'}>:</Grid.Col>
                     <Grid.Col span={'auto'}>{entityEditData && entityEditData.email && entityEditData.email}</Grid.Col>
                 </Grid>
-                <Grid columns={24}>
+                {/* <Grid columns={24}>
                     <Grid.Col span={'6'} align={'left'} fw={'600'} fz={'14'}>{t('Address')}</Grid.Col>
                     <Grid.Col span={'1'}>:</Grid.Col>
                     <Grid.Col span={'auto'}>{entityEditData && entityEditData.address && entityEditData.address}</Grid.Col>
-                </Grid>
+                </Grid> */}
 
             </Box>
         </Modal>
