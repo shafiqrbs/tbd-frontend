@@ -35,6 +35,7 @@ function SearchChooseCustomer(props) {
     const invoiceBatchFilterData = useSelector((state) => state.inventoryCrudSlice.invoiceBatchFilterData)
 
     /*START GET CUSTOMER DROPDOWN FROM LOCAL STORAGE*/
+
     const [customersDropdownData, setCustomersDropdownData] = useState([])
     const [refreshCustomerDropdown, setRefreshCustomerDropdown] = useState(false)
 
@@ -46,7 +47,7 @@ function SearchChooseCustomer(props) {
                 return ({ 'label': type.mobile + ' -- ' + type.name, 'value': String(type.id) })
             });
             setCustomersDropdownData(transformedData);
-            setRefreshCustomerDropdown(false)
+            setRefreshCustomerDropdown(false)``
         }
     }, [refreshCustomerDropdown])
     /*END GET CUSTOMER DROPDOWN FROM LOCAL STORAGE*/
