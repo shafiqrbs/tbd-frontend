@@ -68,6 +68,7 @@ function AppRoute() {
                     <Route path="category" element={<CategoryIndex />} />
                     <Route path="category/:categoryId" element={<CategoryIndex />} />
                     <Route path="category-group" element={<CategoryGroupIndex />} />
+                    <Route path="category-group/:categoryGroupId" element={<CategoryGroupIndex />} />
                     <Route path="config" element={<ConfigurationIndex />} />
                     <Route path="production" element={<ProductionIndex />} />
                     <Route path="production-inhouse" element={<InhouseIndex />} />

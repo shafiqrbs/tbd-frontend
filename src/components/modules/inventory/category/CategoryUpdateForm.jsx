@@ -171,7 +171,7 @@ function CategoryUpdateForm() {
                                     <Box pl={`xs`} pr={8} pt={'6'} pb={'6'} mb={'4'} className={'boxBackground borderRadiusAll'} >
                                         <Grid>
                                             <Grid.Col span={6}>
-                                                <Title order={6} pt={'6'}>{t('CreateCategoryGroup')}</Title>
+                                                <Title order={6} pt={'6'}>{t('UpdateCategory')}</Title>
                                             </Grid.Col>
                                             <Grid.Col span={6}>
                                                 <Stack right align="flex-end">
@@ -268,7 +268,7 @@ function CategoryUpdateForm() {
                                                                 defaultChecked={1}
                                                             />
                                                         </Grid.Col>
-                                                        <Grid.Col span={6} fz={'sm'} pt={'1'}>Status</Grid.Col>
+                                                        <Grid.Col span={6} fz={'sm'} pt={'1'}>{t('Status')}</Grid.Col>
                                                     </Grid>
                                                 </Box>
                                             </Box>

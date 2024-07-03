@@ -484,5 +484,6 @@
   "ChooseCurrency": "Choose Currency",
   "Currency": "Currency",
   "ProvisionDiscount": "Provision Discount",
-  "" : ""
+  "UpdateCategory": "Update Category",
+  "": ""
 }

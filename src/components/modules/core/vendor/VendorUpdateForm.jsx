@@ -52,7 +52,7 @@ function VendorUpdateForm() {
     useEffect(() => {
         if (vendorId) {
             dispatch(setEditEntityData(`core/vendor/${vendorId}`));
-            dispatch(setFormLoading);
+            dispatch(setFormLoading(true));
         }
     }, [vendorId, dispatch])
 

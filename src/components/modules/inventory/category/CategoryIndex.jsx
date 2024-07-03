@@ -20,7 +20,6 @@ function CategoryIndex() {
     const dispatch = useDispatch();
 
     const insertType = useSelector((state) => state.inventoryCrudSlice.insertType)
-    const productCategoryFilterData = useSelector((state) => state.inventoryCrudSlice.productCategoryFilterData)
 
     const progress = getLoadingProgress()
     const configData = getConfigData()
@@ -38,7 +37,7 @@ function CategoryIndex() {
             dispatch(setEntityNewData([])),
             navigate('/inventory/category', { replace: true })
         ))
-    }, [categoryId, dispatch, navigate, productCategoryFilterData])
+    }, [categoryId, dispatch, navigate])
 
 
     return (

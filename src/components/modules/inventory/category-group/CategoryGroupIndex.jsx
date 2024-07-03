@@ -9,25 +9,37 @@ import CategoryGroupTable from "./CategoryGroupTable.jsx";
 import CategoryGroupForm from "./CategoryGroupForm.jsx";
 import CategoryGroupUpdateForm from "./CategoryGroupUpdateForm.jsx";
 import { setSearchKeyword } from "../../../../store/core/crudSlice.js";
-import { setInsertType } from "../../../../store/inventory/crudSlice.js";
+import { editEntityData, setEntityNewData, setInsertType } from "../../../../store/inventory/crudSlice.js";
 import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress.js";
 import getConfigData from "../../../global-hook/config-data/getConfigData.js";
 import InventoryHeaderNavbar from "../configuraton/InventoryHeaderNavbar";
+import { useNavigate, useParams } from "react-router-dom";
 
 
 
 function CategoryGroupIndex() {
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
+
     const insertType = useSelector((state) => state.inventoryCrudSlice.insertType)
 
     const progress = getLoadingProgress()
     const configData = getConfigData()
 
+    const navigate = useNavigate()
+    const { categoryGroupId } = useParams()
+
     useEffect(() => {
-        dispatch(setInsertType('create'))
-        dispatch(setSearchKeyword(''))
-    }, [])
+        categoryGroupId ? ((
+            dispatch(setInsertType('update')),
+            dispatch(editEntityData(`inventory/category-group/${categoryGroupId}`))
+        )) : ((
+            dispatch(setInsertType('create')),
+            dispatch(setSearchKeyword('')),
+            dispatch(setEntityNewData([])),
+            navigate('/inventory/category-group', { replace: true })
+        ))
+    }, [categoryGroupId, dispatch, navigate])
 
     return (
         <>
@@ -52,7 +64,9 @@ function CategoryGroupIndex() {
                                     </Grid.Col>
                                     <Grid.Col span={9}>
                                         {
-                                            insertType === 'create' ? <CategoryGroupForm /> : <CategoryGroupUpdateForm />
+                                            insertType === 'create'
+                                                ? <CategoryGroupForm />
+                                                : <CategoryGroupUpdateForm />
                                         }
                                     </Grid.Col>
                                 </Grid>

@@ -25,7 +25,7 @@ function CategoryGroupForm() {
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
-    const height = mainAreaHeight - 130; //TabList height 104
+    const height = mainAreaHeight - 100; //TabList height 104
     const [saveCreateLoading, setSaveCreateLoading] = useState(false)
     const theme = useMantineTheme();
     const [checked, setChecked] = useState(false);
@@ -93,10 +93,10 @@ function CategoryGroupForm() {
                         <Grid.Col span={8} >
                             <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
                                 <Box bg={"white"} >
-                                    <Box pl={`xs`} pb={'xs'} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'} >
+                                    <Box pl={`xs`} pr={8} pt={'6'} pb={'6'} mb={'4'} className={'boxBackground borderRadiusAll'} >
                                         <Grid>
-                                            <Grid.Col span={8} h={54}>
-                                                <Title order={6} mt={'xs'} pl={'6'}>{t('CreateProductCategoryGroup')}</Title>
+                                            <Grid.Col span={8} >
+                                                <Title order={6} pt={'6'}>{t('CreateProductCategoryGroup')}</Title>
                                             </Grid.Col>
                                             <Grid.Col span={4}>
                                                 <Stack right align="flex-end">
@@ -105,15 +105,14 @@ function CategoryGroupForm() {
                                                             !saveCreateLoading && isOnline &&
                                                             <Button
                                                                 size="xs"
-                                                                color={`red.6`}
+                                                                color={`green.8`}
                                                                 type="submit"
-                                                                mt={4}
                                                                 id="EntityFormSubmit"
                                                                 leftSection={<IconDeviceFloppy size={16} />}
                                                             >
 
                                                                 <Flex direction={`column`} gap={0}>
-                                                                    <Text fz={12} fw={400}>
+                                                                    <Text fz={14} fw={400}>
                                                                         {t("CreateAndSave")}
                                                                     </Text>
                                                                 </Flex>
@@ -123,7 +122,7 @@ function CategoryGroupForm() {
                                             </Grid.Col>
                                         </Grid>
                                     </Box>
-                                    <Box pl={`sm`} pr={'sm'} mt={'xs'} className={'borderRadiusAll'}>
+                                    <Box pl={`xs`} pr={'xs'} className={'borderRadiusAll'}>
                                         <ScrollArea h={height} scrollbarSize={2} scrollbars="y" type="never">
                                             <Box mt={'xs'}>
                                                 <InputForm
@@ -140,7 +139,7 @@ function CategoryGroupForm() {
                                             </Box>
                                             <Box mt={'xs'}>
                                                 <Grid gutter={{ base: 1 }}>
-                                                    <Grid.Col span={2} pl={'2'}>
+                                                    <Grid.Col span={2} >
                                                         <SwitchForm
                                                             tooltip={t('Status')}
                                                             label=''
@@ -153,7 +152,7 @@ function CategoryGroupForm() {
                                                             defaultChecked={1}
                                                         />
                                                     </Grid.Col>
-                                                    <Grid.Col span={6} fz={'sm'} pt={'6'}>Status</Grid.Col>
+                                                    <Grid.Col span={6} fz={'sm'} pt={'1'}>{t('Status')}</Grid.Col>
                                                 </Grid>
 
                                             </Box>

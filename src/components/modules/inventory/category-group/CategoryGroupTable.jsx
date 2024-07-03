@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useOutletContext } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import {
     Group,
     Box,
@@ -17,13 +17,14 @@ import { modals } from "@mantine/modals";
 import { deleteEntityData } from "../../../../store/core/crudSlice";
 import { notifications } from "@mantine/notifications";
 import tableCss from "../../../../assets/css/Table.module.css";
+import CategoryGroupViewModal from "./CategoryGroupViewModal.jsx";
 
 function CategoryGroupTable() {
 
     const dispatch = useDispatch();
     const { t, i18n } = useTranslation();
     const { isOnline, mainAreaHeight } = useOutletContext();
-    const height = mainAreaHeight - 128; //TabList height 104
+    const height = mainAreaHeight - 98; //TabList height 104
     const perPage = 50;
     const [page, setPage] = useState(1);
 
@@ -32,6 +33,9 @@ function CategoryGroupTable() {
     const indexData = useSelector((state) => state.inventoryCrudSlice.indexEntityData)
     const entityDataDelete = useSelector((state) => state.inventoryCrudSlice.entityDataDelete)
     const categoryGroupFilterData = useSelector((state) => state.crudSlice.categoryGroupFilterData)
+
+    const [categroyGroupViewModal, setCategoryGroupViewModal] = useState(false)
+    const navigate = useNavigate()
 
     useEffect(() => {
         dispatch(setDeleteMessage(''))
@@ -79,10 +83,10 @@ function CategoryGroupTable() {
 
     return (
         <>
-            <Box pl={`xs`} pb={'xs'} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'} >
+            <Box pl={`xs`} pr={8} pt={'6'} pb={'4'} className={'boxBackground borderRadiusAll border-bottom-none'} >
                 <KeywordSearch module={'category-group'} />
             </Box>
-            <Box className={'borderRadiusAll'}>
+            <Box className={'borderRadiusAll border-top-none'}>
                 <DataTable
                     classNames={{
                         root: tableCss.root,
@@ -114,22 +118,21 @@ function CategoryGroupTable() {
                                         </Menu.Target>
                                         <Menu.Dropdown>
                                             <Menu.Item
-                                                // href={`/inventory/sales/edit/${data.id}`}
                                                 onClick={() => {
                                                     dispatch(setInsertType('update'))
                                                     dispatch(editEntityData('inventory/category-group/' + data.id))
                                                     dispatch(setFormLoading(true))
+                                                    navigate(`/inventory/category-group/${data.id}`)
                                                 }}
                                             >
                                                 {t('Edit')}
                                             </Menu.Item>
 
                                             <Menu.Item
-                                                href={``}
-                                                // onClick={() => {
-                                                //     setProductViewModel(true)
-                                                //     dispatch(showEntityData('inventory/product/' + data.id))
-                                                // }}
+                                                onClick={() => {
+                                                    setCategoryGroupViewModal(true)
+                                                    dispatch(editEntityData('inventory/category-group/' + data.id))
+                                                }}
                                                 target="_blank"
                                                 component="a"
                                                 w={'200'}
@@ -152,6 +155,7 @@ function CategoryGroupTable() {
                                                         children: (
                                                             <Text size="sm"> {t("FormConfirmationMessage")}</Text>
                                                         ),
+                                                        confirmProps: { color: 'red.6' },
                                                         labels: { confirm: 'Confirm', cancel: 'Cancel' },
                                                         onCancel: () => console.log('Cancel'),
                                                         onConfirm: () => {
@@ -183,7 +187,9 @@ function CategoryGroupTable() {
                     height={height}
                     scrollAreaProps={{ type: 'never' }}
                 />
-            </Box>
+            </Box >
+            {categroyGroupViewModal && <CategoryGroupViewModal categroyGroupViewModal={categroyGroupViewModal} setCategoryGroupViewModal={setCategoryGroupViewModal} />
+            }
 
         </>
     );
