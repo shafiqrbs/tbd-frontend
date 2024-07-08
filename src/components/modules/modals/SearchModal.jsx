@@ -88,6 +88,7 @@ function SearchModal({ onClose }) {
             }
         }
     };
+    const [hoveredIndex, setHoveredIndex] = useState(null);
 
     return (
         <>
@@ -189,12 +190,20 @@ function SearchModal({ onClose }) {
                                                     onClose();
                                                 }}
                                                 style={{ textDecoration: 'none', color: 'inherit' }}
+                                                onMouseEnter={() => {
+                                                    setHoveredIndex(action.index);
+                                                    setSelectedIndex(-1);
+                                                }}
+                                                onMouseLeave={() => setHoveredIndex(null)}
                                             >
                                                 <Stack
                                                     bg={'grey.2'}
                                                     ml={'sm'}
                                                     id={`item-${action.index}`}
-                                                    className={filteredItems.indexOf(action) === selectedIndex ? 'highlightedItem' : ''}
+                                                    className={`
+                                                        ${filteredItems.indexOf(action) === selectedIndex ? 'highlightedItem' : ''}
+                                                        ${hoveredIndex === action.index ? 'hoveredItem' : ''}
+                                                    `}
                                                     style={{
                                                         cursor: 'pointer',
                                                         padding: '8px'
