@@ -15,12 +15,12 @@ import {
 } from "@tabler/icons-react";
 import { useHotkeys } from "@mantine/hooks";
 import { useDispatch, useSelector } from "react-redux";
-import { setSearchKeyword } from "../../../../../store/core/crudSlice.js";
-import FilterModel from "../../../filter/FilterModel.jsx";
-import { setFetching, setInvoiceBatchFilterData, storeEntityData } from "../../../../../store/inventory/crudSlice.js";
+import { setSearchKeyword } from "../../store/core/crudSlice.js";
+import FilterModel from "../modules/filter/FilterModel.jsx";
+import { setFetching, setInvoiceBatchFilterData, storeEntityData } from "../../store/inventory/crudSlice.js";
 
 
-function SearchChooseCustomer(props) {
+function SearchKeyword(props) {
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const navigate = useNavigate()
@@ -35,7 +35,6 @@ function SearchChooseCustomer(props) {
     const invoiceBatchFilterData = useSelector((state) => state.inventoryCrudSlice.invoiceBatchFilterData)
 
     /*START GET CUSTOMER DROPDOWN FROM LOCAL STORAGE*/
-
     const [customersDropdownData, setCustomersDropdownData] = useState([])
     const [refreshCustomerDropdown, setRefreshCustomerDropdown] = useState(false)
 
@@ -52,9 +51,6 @@ function SearchChooseCustomer(props) {
     }, [refreshCustomerDropdown])
     /*END GET CUSTOMER DROPDOWN FROM LOCAL STORAGE*/
 
-    let [resetKey, setResetKey] = useState(0);
-
-    const resetDropDownState = () => setResetKey(prevKey => prevKey + 1);
 
     useHotkeys(
         [['alt+F', () => {
@@ -68,8 +64,8 @@ function SearchChooseCustomer(props) {
         <>
             <Box>
                 <Tooltip
-                    label={t('ChooseCustomer')}
-                    opened={customerTooltip}
+                    label={t('EnterSearchAnyKeyword')}
+                    opened={searchKeywordTooltip}
                     px={16}
                     py={2}
                     position="top-end"
@@ -79,31 +75,50 @@ function SearchChooseCustomer(props) {
                     zIndex={100}
                     transitionProps={{ transition: "pop-bottom-left", duration: 5000 }}
                 >
-                    <Select
-                        key={resetKey}
-                        id={"Customer"}
-                        placeholder={t('ChooseCustomer')}
+                    <TextInput
+                        leftSection={<IconSearch size={16} opacity={0.5} />}
                         size="sm"
-                        data={customersDropdownData}
-                        autoComplete="off"
-                        clearable
-                        searchable
-                        value={invoiceBatchFilterData.customer_id}
+                        placeholder={t('EnterSearchAnyKeyword')}
                         onChange={(e) => {
-                            dispatch(setInvoiceBatchFilterData({ ...invoiceBatchFilterData, ['customer_id']: e }))
-                            e !== '' ?
-                                setCustomerTooltip(false) :
-                                (setCustomerTooltip(true),
+                            dispatch(setInvoiceBatchFilterData({ ...invoiceBatchFilterData, ['searchKeyword']: e.currentTarget.value }))
+                            e.target.value !== '' ?
+                                setSearchKeywordTooltip(false) :
+                                (setSearchKeywordTooltip(true),
                                     setTimeout(() => {
-                                        setCustomerTooltip(false)
+                                        setSearchKeywordTooltip(false)
                                     }, 1000))
                         }}
-                        comboboxProps={true}
+                        value={invoiceBatchFilterData.searchKeyword}
+                        id={'SearchKeyword'}
+                        rightSection={
+                            invoiceBatchFilterData.searchKeyword ?
+                                <Tooltip
+                                    label={t("Close")}
+                                    withArrow
+                                    bg={`red.5`}
+                                >
+                                    <IconX color={`red`} size={16} opacity={0.5} onClick={() => {
+                                        dispatch(setInvoiceBatchFilterData({ ...invoiceBatchFilterData, ['searchKeyword']: '' }))
+                                    }} />
+                                </Tooltip>
+                                :
+                                <Tooltip
+                                    label={t("FieldIsRequired")}
+                                    withArrow
+                                    position={"bottom"}
+                                    c={'red'}
+                                    bg={`red.1`}
+                                >
+                                    <IconInfoCircle size={16} opacity={0.5} />
+                                </Tooltip>
+                        }
                     />
                 </Tooltip>
             </Box>
+
+
         </>
     );
 }
 
-export default SearchChooseCustomer;
+export default SearchKeyword;

@@ -26,10 +26,10 @@ import {
     setVendorFilterData
 } from "../../../../store/core/crudSlice";
 import { setProductFilterData } from "../../../../store/inventory/crudSlice";
-import SearchKeyword from "./advance-search/SearchKeyword.jsx";
-import SearchChooseCustomer from "./advance-search/SearchChooseCustomer.jsx";
-import SearchStartDate from "./advance-search/SearchStartDate.jsx";
-import SearchEndDate from "./advance-search/SearchEndDate.jsx";
+import SearchKeyword from "../../../advance-search/SearchKeyword.jsx";
+import SearchChooseCustomer from "../../../../components/advance-search/SearchChooseCustomer.jsx";
+import SearchStartDate from "../../../advance-search/SearchStartDate.jsx";
+import SearchEndDate from "../../../advance-search/SearchEndDate.jsx";
 import SearchActionMenu from "../../../advance-search/SearchActionMenu.jsx";
 
 function _InvoiceBatchSearch(props) {

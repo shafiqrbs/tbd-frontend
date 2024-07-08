@@ -178,18 +178,18 @@ input[type=radio]:checked + label>img {
 }
 
 .highlightedItem {  
-    background-color: #FF6B6B; 
-    border: 1px solid #E74C3C;
+    background-color: #f8d4d4 !important; 
+    border: 1px solid #f8bab4;
     border-radius: 4px;
 }
 
 .highlightedItem .title {
     font-weight: bold !important;
-    color: #FFFFFF !important; /* White for the title */
+    color: #eb0f0f !important; 
 }
 
 .highlightedItem .description {
-    color: #F0F0F0 !important; /* Very light grey for the description */
+    color: #e61d1d !important; 
 }
 /* .invoiceBatchModal .mantine-Modal-body{
     background-color: '#f0f1f9';
@@ -212,9 +212,9 @@ input[type=radio]:checked + label>img {
 
 .hoveredItem .title {
     font-weight: bold !important;
-    color: #eb0f0f !important; /* White for the title */
+    color: #eb0f0f !important; 
 }
 
 .hoveredItem .description {
-    color: #e61d1d !important; /* Very light grey for the description */
+    color: #e61d1d !important; 
 }

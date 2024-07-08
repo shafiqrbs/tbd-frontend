@@ -15,13 +15,13 @@ import {
 } from "@tabler/icons-react";
 import { useHotkeys } from "@mantine/hooks";
 import { useDispatch, useSelector } from "react-redux";
-import { setSearchKeyword } from "../../../../../store/core/crudSlice.js";
-import FilterModel from "../../../filter/FilterModel.jsx";
-import { setFetching, setInvoiceBatchFilterData, storeEntityData } from "../../../../../store/inventory/crudSlice.js";
+import { setSearchKeyword } from "../../store/core/crudSlice.js";
+import FilterModel from "../modules/filter/FilterModel.jsx";
+import { setFetching, setInvoiceBatchFilterData, storeEntityData } from "../../store/inventory/crudSlice.js";
 import { DateInput } from "@mantine/dates";
 
 
-function SearchStartDate(props) {
+function SearchEndDate(props) {
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const navigate = useNavigate()
@@ -68,8 +68,8 @@ function SearchStartDate(props) {
         <>
             <Box>
                 <Tooltip
-                    label={t('StartDate')}
-                    opened={startDateTooltip}
+                    label={t('EndDate')}
+                    opened={endDateTooltip}
                     px={16}
                     py={2}
                     position="top-end"
@@ -82,16 +82,15 @@ function SearchStartDate(props) {
                     <DateInput
                         clearable
                         onChange={(e) => {
-                            dispatch(setInvoiceBatchFilterData({ ...invoiceBatchFilterData, ['start_date']: e }))
+                            dispatch(setInvoiceBatchFilterData({ ...invoiceBatchFilterData, ['end_date']: e }))
                             e !== '' ?
-                                setStartDateTooltip(false) :
-                                (setStartDateTooltip(true),
+                                setEndDateTooltip(false) :
+                                (setEndDateTooltip(true),
                                     setTimeout(() => {
-                                        setStartDateTooltip(false)
+                                        setEndDateTooltip(false)
                                     }, 1000))
                         }}
-                        value={invoiceBatchFilterData.start_date}
-                        placeholder={t('StartDate')}
+                        placeholder={t('EndDate')}
                     />
                 </Tooltip>
             </Box>
@@ -99,4 +98,4 @@ function SearchStartDate(props) {
     );
 }
 
-export default SearchStartDate;
+export default SearchEndDate;
