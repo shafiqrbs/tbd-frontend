@@ -23,6 +23,12 @@ const getSpotlightDropdownData = (t) => {
                     description: t('WhereWePresentTheVendorInformationN'),
 
                 },
+                {
+                    id: 'master-data',
+                    label: t('MasterData'),
+                    description: t('WhereWePresentTheVendorInformationN'),
+
+                },
             ],
         },
 

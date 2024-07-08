@@ -41,7 +41,7 @@ function FilterModel(props) {
                     closeModel()
                 }}
             >
-                Submit
+                {t('Submit')}
             </Button>
         </Drawer>
     );

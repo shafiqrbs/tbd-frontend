@@ -53,10 +53,15 @@ function CoreHeaderNavbar(props) {
                                 </ActionIcon>
                             </Menu.Target>
                             <Menu.Dropdown>
-                                <Menu.Item href="/inventory/config"
-                                    component="button" onClick={(e) => { navigate('/inventory/config') }} leftSection={<IconSettings style={{ width: rem(14), height: rem(14) }} />}>
+                                <Menu.Item href="/core/master-data"
+                                    component="button" onClick={(e) => { navigate('/core/master-data') }} leftSection={<IconSettings style={{ width: rem(14), height: rem(14) }} />}>
                                     {t('Settings')}
                                 </Menu.Item>
+                                <Menu.Item href="/inventory/config"
+                                    component="button" onClick={(e) => { navigate('/inventory/config') }} leftSection={<IconSettings style={{ width: rem(14), height: rem(14) }} />}>
+                                    {t('Configuration')}
+                                </Menu.Item>
+
                             </Menu.Dropdown>
                         </Menu>
                     </Group>

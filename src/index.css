@@ -179,13 +179,14 @@ input[type=radio]:checked + label>img {
 
 .highlightedItem {  
     background-color: #f8d4d4 !important; 
-    border: 1px solid #f8bab4;
+    /* border: 1px solid #f8bab4; */
     border-radius: 4px;
 }
 
 .highlightedItem .title {
     font-weight: bold !important;
     color: #eb0f0f !important; 
+    
 }
 
 .highlightedItem .description {
@@ -206,7 +207,7 @@ input[type=radio]:checked + label>img {
   }
 .hoveredItem {  
     background-color: #f8d4d4 !important; 
-    border: 1px solid #f8bab4;
+    /* border: 1px solid #f8bab4; */
     border-radius: 4px;
 }
 

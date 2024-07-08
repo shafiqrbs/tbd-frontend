@@ -28,6 +28,7 @@ import getExecutiveDropdownData from "../../../global-hook/dropdown/getExecutive
 import getCoreSettingCustomerGroupDropdownData
     from "../../../global-hook/dropdown/getCoreSettingCustomerGroupDropdownData.js";
 import PhoneNumber from "../../../form-builders/PhoneNumberInput.jsx";
+import CustomerGroupDrawer from "./CustomerGroupDrawer.jsx";
 
 
 function CustomerForm() {
@@ -35,7 +36,6 @@ function CustomerForm() {
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
     const height = mainAreaHeight - 100; //TabList height 104
-    const [opened, { open, close }] = useDisclosure(false);
 
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
     const [customerGroupData, setCustomerGroupData] = useState(null);
@@ -152,7 +152,7 @@ function CustomerForm() {
         };
         form.setValues(originalValues);
     }
-
+    const [groupDrawer, setGroupDrawer] = useState(false)
 
     const marKValues = [
         'test', 'test2'
@@ -255,14 +255,16 @@ function CustomerForm() {
                                                                 transitionProps={{ duration: 200 }}
                                                                 label={t('QuickCustomerGroup')}
                                                             >
-                                                                <ActionIcon fullWidth variant="outline" bg={'white'} size={'lg'} color="red.5" mt={'1'} aria-label="Settings" onClick={open}>
+                                                                <ActionIcon fullWidth variant="outline" bg={'white'} size={'lg'} color="red.5" mt={'1'} aria-label="Settings" onClick={() => {
+                                                                    setGroupDrawer(true)
+                                                                }}>
                                                                     <IconUsersGroup style={{ width: '100%', height: '70%' }} stroke={1.5} />
                                                                 </ActionIcon>
                                                             </Tooltip>
                                                         </Box>
                                                     </Grid.Col>
-                                                    {opened &&
-                                                        <CustomerGroupModel openedModel={opened} open={open} close={close} />
+                                                    {groupDrawer &&
+                                                        <CustomerGroupDrawer groupDrawer={groupDrawer} setGroupDrawer={setGroupDrawer} />
                                                     }
                                                 </Grid>
                                             </Box>

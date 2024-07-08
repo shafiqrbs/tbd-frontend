@@ -3,50 +3,71 @@ import { useNavigate, useOutletContext } from "react-router-dom";
 import {
     Group,
     Box,
-    ActionIcon, Text, Menu, rem, Anchor
+    ActionIcon, Text, rem, Menu
 } from "@mantine/core";
 import { useTranslation } from "react-i18next";
-import { IconEye, IconEdit, IconTrash, IconInfoCircle, IconSettings, IconEyeEdit, IconTrashX, IconPencil, IconDotsVertical } from "@tabler/icons-react";
+import {
+    IconEdit, IconTrash, IconCheck,
+    IconDotsVertical,
+    IconTrashX
+} from "@tabler/icons-react";
 import { DataTable } from 'mantine-datatable';
 import { useDispatch, useSelector } from "react-redux";
 import {
-    editEntityData,
-    getIndexEntityData,
-    setFetching, setFormLoading,
-    setInsertType,
-    showEntityData
-} from "../../../../store/core/crudSlice.js";
+    editEntityData, getIndexEntityData, setDeleteMessage, setFetching, setFormLoading, setInsertType
+} from "../../../../store/inventory/crudSlice.js";
 import KeywordSearch from "../../filter/KeywordSearch";
 import { modals } from "@mantine/modals";
 import { deleteEntityData } from "../../../../store/core/crudSlice";
-import CustomerViewModel from "./CustomerViewModel.jsx";
+import { notifications } from "@mantine/notifications";
 import tableCss from "../../../../assets/css/Table.module.css";
+import MasterDataEntryViewModal from "./MasterDataViewModal.jsx";
 
-function CustomerTable() {
+
+function MasterDataEntryTable() {
 
     const dispatch = useDispatch();
     const { t, i18n } = useTranslation();
     const { isOnline, mainAreaHeight } = useOutletContext();
     const height = mainAreaHeight - 98; //TabList height 104
-
     const perPage = 50;
     const [page, setPage] = useState(1);
-    const [customerViewModel, setCustomerViewModel] = useState(false)
 
-    const fetching = useSelector((state) => state.crudSlice.fetching)
+    const fetching = useSelector((state) => state.inventoryCrudSlice.fetching)
     const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword)
-    const indexData = useSelector((state) => state.crudSlice.indexEntityData)
-    const customerFilterData = useSelector((state) => state.crudSlice.customerFilterData)
+    const indexData = useSelector((state) => state.inventoryCrudSlice.indexEntityData)
+    const entityDataDelete = useSelector((state) => state.inventoryCrudSlice.entityDataDelete)
+    const productCategoryFilterData = useSelector((state) => state.inventoryCrudSlice.productCategoryFilterData)
 
-    const navigate = useNavigate();
+    const [categoryViewModal, setCategoryViewModal] = useState(false)
+
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        dispatch(setDeleteMessage(''))
+        if (entityDataDelete === 'delete') {
+            notifications.show({
+                color: 'red',
+                title: t('DeleteSuccessfully'),
+                icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
+                loading: false,
+                autoClose: 700,
+                style: { backgroundColor: 'lightgray' },
+            });
+
+            setTimeout(() => {
+                dispatch(setFetching(true))
+            }, 700)
+        }
+    }, [entityDataDelete]);
+
 
     useEffect(() => {
         const value = {
-            url: 'core/customer',
+            url: 'inventory/category-group',
             param: {
                 term: searchKeyword,
-                name: customerFilterData.name,
-                mobile: customerFilterData.mobile,
+                type: 'category',
                 page: page,
                 offset: perPage
             }
@@ -56,9 +77,8 @@ function CustomerTable() {
 
     return (
         <>
-
             <Box pl={`xs`} pr={8} pt={'6'} pb={'4'} className={'boxBackground borderRadiusAll border-bottom-none'} >
-                <KeywordSearch module={'customer'} />
+                <KeywordSearch module={'category'} />
             </Box>
             <Box className={'borderRadiusAll border-top-none'}>
                 <DataTable
@@ -77,11 +97,8 @@ function CustomerTable() {
                             textAlignment: 'right',
                             render: (item) => (indexData.data.indexOf(item) + 1)
                         },
-                        { accessor: 'id', title: t("ID"), width: 100 },
-                        { accessor: 'name', title: t("Name"), width: 200 },
-                        { accessor: 'mobile', title: t("Mobile"), width: 200 },
-                        { accessor: 'customer_group', title: t("CustomerGroup") },
-                        { accessor: 'credit_limit', title: t("CreditLimit") },
+                        { accessor: 'parent_name', title: t("SettingName") },
+                        { accessor: 'name', title: t("SettingType") },
                         {
                             accessor: "action",
                             title: t("Action"),
@@ -90,28 +107,26 @@ function CustomerTable() {
                                 <Group gap={4} justify="right" wrap="nowrap">
                                     <Menu position="bottom-end" offset={3} withArrow trigger="hover" openDelay={100} closeDelay={400}>
                                         <Menu.Target>
-                                            <ActionIcon size="sm" variant="outline" color="red" radius="xl" aria-label="Settings">
-                                                <IconDotsVertical height={'16'} width={'16'} stroke={1.5} />
+                                            <ActionIcon variant="outline" color="gray.6" radius="xl" aria-label="Settings">
+                                                <IconDotsVertical height={'18'} width={'18'} stroke={1.5} />
                                             </ActionIcon>
                                         </Menu.Target>
                                         <Menu.Dropdown>
                                             <Menu.Item
                                                 onClick={() => {
                                                     dispatch(setInsertType('update'))
-                                                    dispatch(editEntityData('core/customer/' + data.id))
+                                                    dispatch(editEntityData('inventory/category-group/' + data.id))
                                                     dispatch(setFormLoading(true))
-                                                    navigate(`/core/customer/${data.id}`);
+                                                    navigate(`/inventory/category/${data.id}`)
                                                 }}
-                                                target="_blank"
-                                                component="a"
-                                                w={'200'}
                                             >
                                                 {t('Edit')}
                                             </Menu.Item>
+
                                             <Menu.Item
                                                 onClick={() => {
-                                                    setCustomerViewModel(true)
-                                                    dispatch(editEntityData('core/customer/' + data.id))
+                                                    setCategoryViewModal(true)
+                                                    dispatch(editEntityData('inventory/category-group/' + data.id))
                                                 }}
                                                 target="_blank"
                                                 component="a"
@@ -120,6 +135,7 @@ function CustomerTable() {
                                                 {t('Show')}
                                             </Menu.Item>
                                             <Menu.Item
+                                                // href={``}
                                                 target="_blank"
                                                 component="a"
                                                 w={'200'}
@@ -134,12 +150,11 @@ function CustomerTable() {
                                                         children: (
                                                             <Text size="sm"> {t("FormConfirmationMessage")}</Text>
                                                         ),
-                                                        confirmProps: { color: 'red.6' },
                                                         labels: { confirm: 'Confirm', cancel: 'Cancel' },
+                                                        confirmProps: { color: 'red.6' },
                                                         onCancel: () => console.log('Cancel'),
                                                         onConfirm: () => {
-                                                            dispatch(deleteEntityData('core/customer/' + data.id))
-                                                            dispatch(setFetching(true))
+                                                            dispatch(deleteEntityData('inventory/category-group/' + data.id))
                                                         },
                                                     });
                                                 }}
@@ -149,7 +164,6 @@ function CustomerTable() {
                                             </Menu.Item>
                                         </Menu.Dropdown>
                                     </Menu>
-
                                 </Group>
                             ),
                         },
@@ -169,12 +183,9 @@ function CustomerTable() {
                     scrollAreaProps={{ type: 'never' }}
                 />
             </Box>
-            {
-                customerViewModel &&
-                <CustomerViewModel customerViewModel={customerViewModel} setCustomerViewModel={setCustomerViewModel} />
-            }
+            {categoryViewModal && <MasterDataEntryViewModal categoryViewModal={categoryViewModal} setCategoryViewModal={setCategoryViewModal} />}
         </>
     );
 }
 
-export default CustomerTable;
+export default MasterDataEntryTable;
