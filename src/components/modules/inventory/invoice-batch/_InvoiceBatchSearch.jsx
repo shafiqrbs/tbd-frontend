@@ -30,7 +30,7 @@ import SearchKeyword from "./advance-search/SearchKeyword.jsx";
 import SearchChooseCustomer from "./advance-search/SearchChooseCustomer.jsx";
 import SearchStartDate from "./advance-search/SearchStartDate.jsx";
 import SearchEndDate from "./advance-search/SearchEndDate.jsx";
-import SearchActionMenu from "./advance-search/SearchActionMenu.jsx";
+import SearchActionMenu from "../../../advance-search/SearchActionMenu.jsx";
 
 function _InvoiceBatchSearch(props) {
 
@@ -63,11 +63,11 @@ function _InvoiceBatchSearch(props) {
                     </Grid>
                 </Grid.Col>
                 <Grid.Col span="auto">
-                    <Flex  gap="xs"
-                           justify="center"
-                           fullWidth
-                           align="center"
-                           direction="row">
+                    <Flex gap="xs"
+                        justify="center"
+                        fullWidth
+                        align="center"
+                        direction="row">
                         <SearchActionMenu />
                     </Flex>
                 </Grid.Col>

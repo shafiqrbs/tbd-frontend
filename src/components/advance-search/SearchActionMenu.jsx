@@ -15,10 +15,10 @@ import {
 } from "@tabler/icons-react";
 import { useHotkeys } from "@mantine/hooks";
 import { useDispatch, useSelector } from "react-redux";
-import { setSearchKeyword } from "../../../../../store/core/crudSlice.js";
-import FilterModel from "../../../filter/FilterModel.jsx";
-import { setFetching, setInvoiceBatchFilterData, storeEntityData } from "../../../../../store/inventory/crudSlice.js";
-import _FilterSearch from '../drawer/_FilterSearch.jsx'
+import { setSearchKeyword } from "../../store/core/crudSlice.js";
+import FilterModel from "../../components/modules/filter/FilterModel.jsx";
+import { setFetching, setInvoiceBatchFilterData, storeEntityData } from "../../store/inventory/crudSlice.js";
+import _FilterSearch from '../../components/modules/inventory/invoice-batch/drawer/_FilterSearch.jsx'
 
 function SearchActionMenu(props) {
     const { t, i18n } = useTranslation();

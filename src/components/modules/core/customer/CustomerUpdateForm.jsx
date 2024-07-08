@@ -27,7 +27,9 @@ import _ShortcutCustomer from "../../shortcut/_ShortcutCustomer.jsx";
 import SelectForm from "../../../form-builders/SelectForm.jsx";
 import TextAreaForm from "../../../form-builders/TextAreaForm.jsx";
 import getLocationDropdownData from "../../../global-hook/dropdown/getLocationDropdownData.js";
-// import getExecutiveDropdownData from "../../../global-hook/dropdown/getExecutiveDropdownData.js";
+import getExecutiveDropdownData from "../../../global-hook/dropdown/getExecutiveDropdownData.js";
+import getCoreSettingCustomerGroupDropdownData
+    from "../../../global-hook/dropdown/getCoreSettingCustomerGroupDropdownData.js";
 import CustomerGroupModel from "./CustomerGroupModal";
 import PhoneNumber from "../../../form-builders/PhoneNumberInput.jsx";
 
@@ -47,7 +49,8 @@ function CustomerUpdateForm() {
     const entityEditData = useSelector((state) => state.crudSlice.entityEditData)
     const formLoading = useSelector((state) => state.crudSlice.formLoading)
     const locationDropdown = getLocationDropdownData();
-    // const executiveDropdown = getExecutiveDropdownData();
+    const customerGroupDropdownData = getCoreSettingCustomerGroupDropdownData();
+    const executiveDropdown = getExecutiveDropdownData();
 
     const { customerId } = useParams();
     useEffect(() => {
@@ -161,9 +164,6 @@ function CustomerUpdateForm() {
     };
 
 
-    const marKValues = [
-        'test', 'test2'
-    ]
 
     return (
 
@@ -266,7 +266,7 @@ function CustomerUpdateForm() {
                                                                 nextField={'name'}
                                                                 name={'customer_group'}
                                                                 form={form}
-                                                                dropdownValue={['local', 'family']}
+                                                                dropdownValue={customerGroupDropdownData}
                                                                 mt={8}
                                                                 id={'customer_group'}
                                                                 searchable={false}
@@ -419,8 +419,7 @@ function CustomerUpdateForm() {
                                                     nextField={'address'}
                                                     name={'marketing_id'}
                                                     form={form}
-                                                    // dropdownValue={executiveDropdown}
-                                                    dropdownValue={marKValues}
+                                                    dropdownValue={executiveDropdown}
                                                     mt={8}
                                                     id={'marketing_id'}
                                                     searchable={true}

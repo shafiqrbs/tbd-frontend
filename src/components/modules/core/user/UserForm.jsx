@@ -46,7 +46,7 @@ function UserForm() {
             username: hasLength({ min: 2, max: 20 }),
             email: isEmail(),
             mobile: isNotEmpty(),
-            password: isNotEmpty(),
+            password: hasLength({ min: 6 }),
             confirm_password: (value, values) =>
                 value !== values.password
         }

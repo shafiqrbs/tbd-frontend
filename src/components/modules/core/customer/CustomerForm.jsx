@@ -260,7 +260,6 @@ function CustomerForm() {
                                                                 </ActionIcon>
                                                             </Tooltip>
                                                         </Box>
-
                                                     </Grid.Col>
                                                     {opened &&
                                                         <CustomerGroupModel openedModel={opened} open={open} close={close} />
