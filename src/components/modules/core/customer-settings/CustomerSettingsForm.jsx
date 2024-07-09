@@ -23,7 +23,7 @@ import SelectForm from "../../../form-builders/SelectForm.jsx";
 import SwitchForm from "../../../form-builders/SwitchForm.jsx";
 
 
-function MasterDataEntryForm(props) {
+function CustomerSettingsForm(props) {
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
@@ -207,4 +207,4 @@ function MasterDataEntryForm(props) {
     );
 }
 
-export default MasterDataEntryForm;
+export default CustomerSettingsForm;

@@ -15,7 +15,7 @@ import {
 import { useHotkeys, useToggle } from "@mantine/hooks";
 import { useDispatch, useSelector } from "react-redux";
 import { isNotEmpty, useForm } from "@mantine/form";
-import MasterDataEntryForm from "../master-data-entry/MasterDataEntryForm";
+import CustomerSettingsForm from "../customer-settings/CustomerSettingsForm.jsx";
 
 
 function CustomerGroupDrawer(props) {
@@ -44,7 +44,7 @@ function CustomerGroupDrawer(props) {
                             <Drawer.CloseButton />
                         </Drawer.Header>
                         <Box m={8} mb={0}>
-                            <MasterDataEntryForm adjustment={adjustment} />
+                            <CustomerSettingsForm adjustment={adjustment} />
                         </Box>
                     </ScrollArea>
 

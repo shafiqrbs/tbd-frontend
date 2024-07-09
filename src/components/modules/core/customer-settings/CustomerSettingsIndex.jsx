@@ -17,11 +17,11 @@ import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoa
 import getConfigData from "../../../global-hook/config-data/getConfigData.js";
 import { useNavigate, useParams } from "react-router-dom";
 import CoreHeaderNavbar from "../CoreHeaderNavbar.jsx";
-import MasterDataEntryTable from "./MasterDataEntryTable.jsx";
-import MasterDataEntryForm from "./MasterDataEntryForm.jsx";
-import MasterDataEntryUpdateForm from "./MasterDataEntryUpdateForm.jsx";
+import CustomerSettingsTable from "./CustomerSettingsTable.jsx";
+import CustomerSettingsForm from "./CustomerSettingsForm.jsx";
+import CustomerSettingsUpdateForm from "./CustomerSettingsUpdateForm.jsx";
 
-function MasterDataEntryIndex() {
+function CustomerSettingsIndex() {
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const adjustment = 0;
@@ -72,14 +72,14 @@ function MasterDataEntryIndex() {
                                 <Grid columns={24} gutter={{ base: 8 }}>
                                     <Grid.Col span={15} >
                                         <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
-                                            <MasterDataEntryTable />
+                                            <CustomerSettingsTable />
                                         </Box>
                                     </Grid.Col>
                                     <Grid.Col span={9}>
                                         {
                                             insertType === 'create'
-                                                ? <MasterDataEntryForm />
-                                                : <MasterDataEntryUpdateForm />
+                                                ? <CustomerSettingsForm />
+                                                : <CustomerSettingsUpdateForm />
                                         }
                                     </Grid.Col>
                                 </Grid>
@@ -93,4 +93,4 @@ function MasterDataEntryIndex() {
     );
 }
 
-export default MasterDataEntryIndex;
+export default CustomerSettingsIndex;

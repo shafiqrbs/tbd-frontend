@@ -26,7 +26,7 @@ import InputForm from "../../../form-builders/InputForm.jsx";
 import SelectForm from "../../../form-builders/SelectForm.jsx";
 import SwitchForm from "../../../form-builders/SwitchForm.jsx";
 
-function MasterDataEntryUpdateForm() {
+function CustomerSettingsUpdateForm() {
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
@@ -44,14 +44,14 @@ function MasterDataEntryUpdateForm() {
 
 
 
-    const { masterDataFormId } = useParams();
+    const { settingsId } = useParams();
 
     useEffect(() => {
-        if (masterDataFormId) {
-            dispatch(setEditEntityData(`core/master-data/${masterDataFormId}`))
+        if (settingsId) {
+            dispatch(setEditEntityData(`core/customer-settings/${settingsId}`))
             dispatch(setFormLoading(true));
         }
-    }, [masterDataFormId, dispatch]);
+    }, [settingsId, dispatch]);
 
     // useEffect(() => {
 
@@ -114,7 +114,7 @@ function MasterDataEntryUpdateForm() {
                 <form onSubmit={form.onSubmit((values) => {
                     dispatch(updateEntityData(values))
                         .then(() => {
-                            navigate('core/master-data', { replace: true });
+                            navigate('core/customer-settings', { replace: true });
                             dispatch(setInsertType('create'));
                         })
                         .catch((error) => {
@@ -163,7 +163,7 @@ function MasterDataEntryUpdateForm() {
                                     <Box pl={`xs`} pr={8} pt={'6'} pb={'6'} mb={'4'} className={'boxBackground borderRadiusAll'} >
                                         <Grid>
                                             <Grid.Col span={6}>
-                                                <Title order={6} pt={'6'}>{t('UpdateCategory')}</Title>
+                                                <Title order={6} pt={'6'}>{t('UpdateSetting')}</Title>
                                             </Grid.Col>
                                             <Grid.Col span={6}>
                                                 <Stack right align="flex-end">
@@ -194,9 +194,9 @@ function MasterDataEntryUpdateForm() {
                                                 <LoadingOverlay visible={formLoad} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />
                                                 <Box mt={'8'}>
                                                     <SelectForm
-                                                        tooltip={t('ParticularType')}
-                                                        label={t('ParticularType')}
-                                                        placeholder={t('ParticularType')}
+                                                        tooltip={t('SettingType')}
+                                                        label={t('SettingType')}
+                                                        placeholder={t('SettingType')}
                                                         required={true}
                                                         nextField={'particular_name'}
                                                         name={'particular_type'}
@@ -210,9 +210,9 @@ function MasterDataEntryUpdateForm() {
                                                 </Box>
                                                 <Box mt={'xs'}>
                                                     <InputForm
-                                                        tooltip={t('ParticularName')}
-                                                        label={t('ParticularName')}
-                                                        placeholder={t('ParticularName')}
+                                                        tooltip={t('SettingName')}
+                                                        label={t('SettingName')}
+                                                        placeholder={t('SettingName')}
                                                         required={true}
                                                         nextField={'status'}
                                                         form={form}
@@ -262,4 +262,4 @@ function MasterDataEntryUpdateForm() {
     )
 }
 
-export default MasterDataEntryUpdateForm;
+export default CustomerSettingsUpdateForm;

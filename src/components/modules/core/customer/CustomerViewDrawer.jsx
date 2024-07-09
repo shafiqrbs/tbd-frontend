@@ -16,7 +16,7 @@ import {
 import { useHotkeys, useToggle } from "@mantine/hooks";
 import { useDispatch, useSelector } from "react-redux";
 import { isNotEmpty, useForm } from "@mantine/form";
-import MasterDataEntryForm from "../master-data-entry/MasterDataEntryForm";
+import CustomerSettingsForm from "../customer-settings/CustomerSettingsForm.jsx";
 
 
 

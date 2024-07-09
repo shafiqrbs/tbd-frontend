@@ -21,10 +21,10 @@ import { modals } from "@mantine/modals";
 import { deleteEntityData } from "../../../../store/core/crudSlice";
 import { notifications } from "@mantine/notifications";
 import tableCss from "../../../../assets/css/Table.module.css";
-import MasterDataEntryViewModal from "./MasterDataViewModal.jsx";
+import MasterDataEntryViewModal from "./CustomerSettingsViewModal.jsx";
 
 
-function MasterDataEntryTable() {
+function CustomerSettingsTable() {
 
     const dispatch = useDispatch();
     const { t, i18n } = useTranslation();
@@ -188,4 +188,4 @@ function MasterDataEntryTable() {
     );
 }
 
-export default MasterDataEntryTable;
+export default CustomerSettingsTable;

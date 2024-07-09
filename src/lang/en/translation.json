@@ -489,5 +489,6 @@
   "": "",
   "CreateSetting": "Create Setting",
   "SettingName": "Setting Name",
-  "SettingType": "Setting Type"
+  "SettingType": "Setting Type",
+  "UpdateSetting": "Update Setting"
 }

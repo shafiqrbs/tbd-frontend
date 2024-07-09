@@ -34,7 +34,7 @@ import SampleModalIndex from './components/modules/sample3Grid/SampleModalIndex.
 import OpeningApproveIndex from "./components/modules/inventory/opening-stock/OpeningApproveIndex";
 import OpeningStockIndex from "./components/modules/inventory/opening-stock/OpeningStockIndex";
 import InvoiceBatchIndex from './components/modules/inventory/invoice-batch/InvoiceBatchIndex.jsx';
-import MasterDataEntryIndex from './components/modules/core/master-data-entry/MasterDataEntryIndex.jsx';
+import CustomerSettingsIndex from './components/modules/core/customer-settings/CustomerSettingsIndex.jsx';
 
 function AppRoute() {
 
@@ -55,8 +55,8 @@ function AppRoute() {
                     <Route path="user/:userId" element={<UserIndex />} />
                     <Route path="vendor" element={<VendorIndex />} />
                     <Route path="vendor/:vendorId" element={<VendorIndex />} />
-                    <Route path="master-data" element={<MasterDataEntryIndex />} />
-                    <Route path="master-data/:masterDataId" element={<MasterDataEntryIndex />} />
+                    <Route path="customer-settings" element={<CustomerSettingsIndex />} />
+                    <Route path="customer-settings/:settingsId" element={<CustomerSettingsIndex />} />
                 </Route>
                 <Route path="/inventory/">
                     <Route path="sales/edit/:id" element={<SalesEdit />} />
