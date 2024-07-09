@@ -64,7 +64,7 @@ function CustomerUpdateForm() {
     const form = useForm({
         initialValues: {
             name: '',
-            customer_group: '',
+            customer_group_id: '',
             credit_limit: '',
             reference_id: '',
             mobile: '',
@@ -113,7 +113,7 @@ function CustomerUpdateForm() {
         if (entityEditData && Object.keys(entityEditData).length > 0) {
             form.setValues({
                 name: entityEditData.name ? entityEditData.name : '',
-                customer_group: entityEditData.customer_group ? entityEditData.customer_group : '',
+                customer_group_id: entityEditData.customer_group_id ? entityEditData.customer_group_id : '',
                 credit_limit: entityEditData.credit_limit ? entityEditData.credit_limit : '',
                 reference_id: entityEditData.reference_id ? entityEditData.reference_id : '',
                 mobile: entityEditData.mobile ? entityEditData.mobile : '',
@@ -134,7 +134,7 @@ function CustomerUpdateForm() {
 
 
     useHotkeys([['alt+n', () => {
-        document.getElementById('customer_group').click()
+        document.getElementById('customer_group_id').click()
     }]], []);
 
     useHotkeys([['alt+r', () => {
@@ -149,7 +149,7 @@ function CustomerUpdateForm() {
         if (entityEditData && Object.keys(entityEditData).length > 0) {
             const originalValues = {
                 name: entityEditData.name || '',
-                customer_group: entityEditData.customer_group || '',
+                customer_group_id: entityEditData.customer_group_id || '',
                 credit_limit: entityEditData.credit_limit || '',
                 reference_id: entityEditData.reference_id || '',
                 mobile: entityEditData.mobile || '+880',
@@ -159,6 +159,7 @@ function CustomerUpdateForm() {
                 marketing_id: entityEditData.marketing_id || '',
                 address: entityEditData.address || '',
             };
+            console.log(originalValues);
             form.setValues(originalValues);
         }
     };
@@ -264,13 +265,13 @@ function CustomerUpdateForm() {
                                                                 placeholder={t('ChooseCustomerGroup')}
                                                                 required={false}
                                                                 nextField={'name'}
-                                                                name={'customer_group'}
+                                                                name={'customer_group_id'}
                                                                 form={form}
                                                                 dropdownValue={customerGroupDropdownData}
                                                                 mt={8}
-                                                                id={'customer_group'}
+                                                                id={'customer_group_id'}
                                                                 searchable={false}
-                                                                value={customerGroupData ? String(customerGroupData) : (entityEditData.customer_group ? String(entityEditData.customer_group) : null)}
+                                                                value={customerGroupData ? String(customerGroupData) : (entityEditData.customer_group_id ? String(entityEditData.customer_group_id) : null)}
                                                                 changeValue={setCustomerGroupData}
                                                             />
                                                         </Box>
@@ -453,7 +454,7 @@ function CustomerUpdateForm() {
                                 entityEditData={entityEditData}
                                 form={form}
                                 FormSubmit={'EntityFormSubmit'}
-                                Name={'customer_group'}
+                                Name={'customer_group_id'}
                                 inputType="select"
                             />
                         </Box>

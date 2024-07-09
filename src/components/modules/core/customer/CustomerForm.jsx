@@ -52,7 +52,7 @@ function CustomerForm() {
     const form = useForm({
         initialValues: {
             name: '',
-            customer_group: '',
+            customer_group_id: '',
             credit_limit: '',
             reference_id: '',
             mobile: '',
@@ -125,7 +125,7 @@ function CustomerForm() {
     }, [validation, validationMessage, form]);
 
     useHotkeys([['alt+n', () => {
-        document.getElementById('customer_group').click()
+        document.getElementById('customer_group_id').click()
     }]], []);
 
     useHotkeys([['alt+r', () => {
@@ -140,7 +140,7 @@ function CustomerForm() {
 
         const originalValues = {
             name: '',
-            customer_group: '',
+            customer_group_id: '',
             credit_limit: '',
             reference_id: '',
             mobile: '+880',
@@ -233,11 +233,11 @@ function CustomerForm() {
                                                                 placeholder={t('ChooseCustomerGroup')}
                                                                 required={false}
                                                                 nextField={'name'}
-                                                                name={'customer_group'}
+                                                                name={'customer_group_id'}
                                                                 form={form}
                                                                 dropdownValue={getCoreSettingCustomerGroupDropdownData()}
                                                                 mt={8}
-                                                                id={'customer_group'}
+                                                                id={'customer_group_id'}
                                                                 searchable={false}
                                                                 value={customerGroupData}
                                                                 changeValue={setCustomerGroupData}
@@ -389,9 +389,7 @@ function CustomerForm() {
                                                     nextField={'address'}
                                                     name={'marketing_id'}
                                                     form={form}
-                                                    // dropdownValue={executiveDropdown}
-                                                    dropdownValue={marKValues}
-                                                    mt={8}
+                                                    dropdownValue={executiveDropdown}
                                                     id={'marketing_id'}
                                                     searchable={true}
                                                     value={marketingExeData}
@@ -423,7 +421,7 @@ function CustomerForm() {
                             <_ShortcutCustomer
                                 form={form}
                                 FormSubmit={'EntityFormSubmit'}
-                                Name={'customer_group'}
+                                Name={'customer_group_id'}
                                 inputType="select"
                             />
                         </Box>
