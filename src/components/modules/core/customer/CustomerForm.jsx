@@ -124,9 +124,13 @@ function CustomerForm() {
         }
     }, [validation, validationMessage, form]);
 
+    const [groupDrawer, setGroupDrawer] = useState(false)
+
+
     useHotkeys([['alt+n', () => {
-        document.getElementById('customer_group_id').click()
+        !groupDrawer && document.getElementById('customer_group_id').click()
     }]], []);
+
 
     useHotkeys([['alt+r', () => {
         handleFormReset()
@@ -152,7 +156,6 @@ function CustomerForm() {
         };
         form.setValues(originalValues);
     }
-    const [groupDrawer, setGroupDrawer] = useState(false)
 
     const marKValues = [
         'test', 'test2'

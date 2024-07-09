@@ -32,6 +32,7 @@ import getCoreSettingCustomerGroupDropdownData
     from "../../../global-hook/dropdown/getCoreSettingCustomerGroupDropdownData.js";
 import CustomerGroupModel from "./CustomerGroupModal";
 import PhoneNumber from "../../../form-builders/PhoneNumberInput.jsx";
+import CustomerGroupDrawer from "./CustomerGroupDrawer.jsx";
 
 function CustomerUpdateForm() {
     const { t, i18n } = useTranslation();
@@ -133,8 +134,11 @@ function CustomerUpdateForm() {
     }, [entityEditData, dispatch, customerId])
 
 
+    const [groupDrawer, setGroupDrawer] = useState(false)
+
+
     useHotkeys([['alt+n', () => {
-        document.getElementById('customer_group_id').click()
+        !groupDrawer && document.getElementById('customer_group_id').click()
     }]], []);
 
     useHotkeys([['alt+r', () => {
@@ -287,15 +291,15 @@ function CustomerUpdateForm() {
                                                                 transitionProps={{ duration: 200 }}
                                                                 label={t('QuickCustomerGroup')}
                                                             >
-                                                                <ActionIcon fullWidth variant="outline" bg={'white'} size={'lg'} color="red.5" mt={'1'} aria-label="Settings" onClick={open}>
+                                                                <ActionIcon fullWidth variant="outline" bg={'white'} size={'lg'} color="red.5" mt={'1'} aria-label="Settings" onClick={() => { setGroupDrawer(true) }}>
                                                                     <IconUsersGroup style={{ width: '100%', height: '70%' }} stroke={1.5} />
                                                                 </ActionIcon>
                                                             </Tooltip>
                                                         </Box>
 
                                                     </Grid.Col>
-                                                    {opened &&
-                                                        <CustomerGroupModel openedModel={opened} open={open} close={close} />
+                                                    {groupDrawer &&
+                                                        <CustomerGroupDrawer groupDrawer={groupDrawer} setGroupDrawer={setGroupDrawer} />
                                                     }
                                                 </Grid>
                                             </Box>
