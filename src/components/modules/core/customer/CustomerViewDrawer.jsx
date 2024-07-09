@@ -50,7 +50,7 @@ function CustomerViewDrawer(props) {
                     </Drawer.Header>
                     <Box mb={0} bg={'gray.1'} h={height}>
                         <Box m={'md'} p={'md'} className="boxBackground borderRadiusAll" h={height - 10}>
-                            <Box pt={'xs'}>
+                            <Box>
                                 <Grid columns={24}>
                                     <Grid.Col span={'8'} align={'left'} fw={'600'} fz={'14'}>{t('CustomerId')}</Grid.Col>
                                     <Grid.Col span={'1'}>:</Grid.Col>
