@@ -15,7 +15,7 @@ import '@mantine/dates/styles.css';
 import 'mantine-react-table/styles.css';
 import { useDispatch, useSelector } from "react-redux";
 
-function MasterDataEntryViewModal(props) {
+function CustomerSettingsViewModal(props) {
     // const { openedModel, open, close } = props
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
@@ -66,4 +66,4 @@ function MasterDataEntryViewModal(props) {
     );
 }
 
-export default MasterDataEntryViewModal;
+export default CustomerSettingsViewModal;

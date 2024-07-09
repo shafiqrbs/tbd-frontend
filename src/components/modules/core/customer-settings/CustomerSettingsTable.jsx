@@ -21,7 +21,7 @@ import { modals } from "@mantine/modals";
 import { deleteEntityData } from "../../../../store/core/crudSlice";
 import { notifications } from "@mantine/notifications";
 import tableCss from "../../../../assets/css/Table.module.css";
-import MasterDataEntryViewModal from "./CustomerSettingsViewModal.jsx";
+import CustomerSettingsViewModal from "./CustomerSettingsViewModal.jsx";
 
 
 function CustomerSettingsTable() {
@@ -183,7 +183,7 @@ function CustomerSettingsTable() {
                     scrollAreaProps={{ type: 'never' }}
                 />
             </Box>
-            {categoryViewModal && <MasterDataEntryViewModal categoryViewModal={categoryViewModal} setCategoryViewModal={setCategoryViewModal} />}
+            {categoryViewModal && <CustomerSettingsViewModal categoryViewModal={categoryViewModal} setCategoryViewModal={setCategoryViewModal} />}
         </>
     );
 }
