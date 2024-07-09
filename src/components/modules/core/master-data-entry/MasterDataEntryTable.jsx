@@ -97,8 +97,8 @@ function MasterDataEntryTable() {
                             textAlignment: 'right',
                             render: (item) => (indexData.data.indexOf(item) + 1)
                         },
-                        { accessor: 'parent_name', title: t("SettingName") },
                         { accessor: 'name', title: t("SettingType") },
+                        { accessor: 'parent_name', title: t("SettingName") },
                         {
                             accessor: "action",
                             title: t("Action"),
@@ -115,9 +115,9 @@ function MasterDataEntryTable() {
                                             <Menu.Item
                                                 onClick={() => {
                                                     dispatch(setInsertType('update'))
-                                                    dispatch(editEntityData('inventory/category-group/' + data.id))
+                                                    dispatch(editEntityData('core/master-data/' + data.id))
                                                     dispatch(setFormLoading(true))
-                                                    navigate(`/inventory/category/${data.id}`)
+                                                    navigate(`/core/master-data/${data.id}`)
                                                 }}
                                             >
                                                 {t('Edit')}
@@ -126,7 +126,7 @@ function MasterDataEntryTable() {
                                             <Menu.Item
                                                 onClick={() => {
                                                     setCategoryViewModal(true)
-                                                    dispatch(editEntityData('inventory/category-group/' + data.id))
+                                                    // dispatch(editEntityData('inventory/category-group/' + data.id))
                                                 }}
                                                 target="_blank"
                                                 component="a"

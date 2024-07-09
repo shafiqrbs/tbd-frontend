@@ -486,5 +486,8 @@
   "ProvisionDiscount": "Provision Discount",
   "UpdateCategory": "Update Category",
   "UpdateProduct": "Update Product",
-  "": ""
+  "": "",
+  "CreateSetting": "Create Setting",
+  "SettingName": "Setting Name",
+  "SettingType": "Setting Type"
 }

@@ -324,7 +324,7 @@ function InvoiceBatchTable() {
                                     loaderProps={{ color: 'red' }}
                                 />
                             }
-                            <Box h={'42'} pl={`xs`} fz={'sm'} fw={'600'} pr={8} pt={'xs'}  className={'boxBackground textColor borderRadiusAll'} >
+                            <Box h={'42'} pl={`xs`} fz={'sm'} fw={'600'} pr={8} pt={'xs'} className={'boxBackground textColor borderRadiusAll'} >
                                 {t('Invoice')}: {invoiceBatchData && invoiceBatchData.invoice && invoiceBatchData.invoice}
                             </Box>
                             <Box className={'borderRadiusAll border-top-none'} fz={'sm'}  >
@@ -448,7 +448,7 @@ function InvoiceBatchTable() {
                     </Grid.Col>
                 </Grid>
             </Box>
-            {batchViewModal && <InvoiceBatchModal batchViewModal={batchViewModal} setBatchViewModal={setBatchViewModal} invoiceId={invoiceBatchData.id} />}
+            {batchViewModal && <InvoiceBatchModal batchViewModal={batchViewModal} setBatchViewModal={setBatchViewModal} invoiceId={invoiceBatchData.id} setAddTransactionDrawer={setAddTransactionDrawer} />}
             {addTransactionDrawer && <_AddTransaction invoiceBatchData={invoiceBatchData} addTransactionDrawer={addTransactionDrawer} setAddTransactionDrawer={setAddTransactionDrawer} />}
             {batchLedgerModal && <LegderModal batchLedgerModal={batchLedgerModal} setBatchLedgerModal={setBatchLedgerModal} />}
         </>

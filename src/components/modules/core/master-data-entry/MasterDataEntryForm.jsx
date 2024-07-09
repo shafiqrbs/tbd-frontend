@@ -8,6 +8,7 @@ import {
     IconCheck,
     IconDeviceFloppy, IconInfoCircle, IconPlus, IconUserCog, IconCategoryPlus,
     IconCategory,
+    IconFirstAidKit,
 } from "@tabler/icons-react";
 import { useDisclosure, useHotkeys } from "@mantine/hooks";
 import { useDispatch, useSelector } from "react-redux";
@@ -16,7 +17,7 @@ import { modals } from "@mantine/modals";
 import { notifications } from "@mantine/notifications";
 import { setFetching, storeEntityData } from "../../../../store/core/crudSlice.js";
 
-import Shortcut from "../../shortcut/Shortcut.jsx";
+import _ShortcutMasterData from "../../shortcut/_ShortcutMasterData.jsx";
 import InputForm from "../../../form-builders/InputForm.jsx";
 import SelectForm from "../../../form-builders/SelectForm.jsx";
 import SwitchForm from "../../../form-builders/SwitchForm.jsx";
@@ -33,7 +34,6 @@ function MasterDataEntryForm(props) {
     const [createCategoryGroupModal, setCategoryGroupModal] = useState(false)
 
     const { adjustment } = props
-    console.log(adjustment)
 
     const form = useForm({
         initialValues: {
@@ -98,8 +98,7 @@ function MasterDataEntryForm(props) {
                         },
                     });
                 })}>
-                    <Box m={8} mb={0}>
-
+                    <Box mb={0}>
 
                         <Grid columns={9} gutter={{ base: 6 }} >
                             <Grid.Col span={8} >
@@ -108,7 +107,7 @@ function MasterDataEntryForm(props) {
                                         <Box pl={`xs`} pr={8} pt={'6'} pb={'6'} mb={'4'} className={'boxBackground borderRadiusAll'} >
                                             <Grid>
                                                 <Grid.Col span={8} >
-                                                    <Title order={6} pt={'6'}>{t('CreateProductCategory')}</Title>
+                                                    <Title order={6} pt={'6'}>{t('CreateSetting')}</Title>
                                                 </Grid.Col>
                                                 <Grid.Col span={4}>
                                                     <Stack right align="flex-end">
@@ -135,17 +134,17 @@ function MasterDataEntryForm(props) {
                                             </Grid>
                                         </Box>
                                         <Box pl={`xs`} pr={'xs'} className={'borderRadiusAll'}>
-                                            <ScrollArea h={height - adjustment} scrollbarSize={2} scrollbars="y" type="never">
+                                            <ScrollArea h={height - (adjustment ? adjustment : 0)} scrollbarSize={2} scrollbars="y" type="never">
                                                 <Box mt={'8'}>
                                                     <SelectForm
-                                                        tooltip={t('ParticularType')}
-                                                        label={t('ParticularType')}
-                                                        placeholder={t('ParticularType')}
+                                                        tooltip={t('SettingType')}
+                                                        label={t('SettingType')}
+                                                        placeholder={t('SettingType')}
                                                         required={true}
                                                         nextField={'particular_name'}
                                                         name={'particular_type'}
                                                         form={form}
-                                                        dropdownValue={''}
+                                                        dropdownValue={['test1', 'test2']}
                                                         id={'particular_type'}
                                                         searchable={false}
                                                         value={categoryGroupData}
@@ -155,9 +154,9 @@ function MasterDataEntryForm(props) {
 
                                                 <Box mt={'xs'}>
                                                     <InputForm
-                                                        tooltip={t('ParticularName')}
-                                                        label={t('ParticularName')}
-                                                        placeholder={t('ParticularName')}
+                                                        tooltip={t('SettingName')}
+                                                        label={t('SettingName')}
+                                                        placeholder={t('SettingName')}
                                                         required={true}
                                                         nextField={'status'}
                                                         form={form}
@@ -190,7 +189,8 @@ function MasterDataEntryForm(props) {
                             </Grid.Col>
                             <Grid.Col span={1} >
                                 <Box bg={'white'} className={'borderRadiusAll'} pt={'16'}>
-                                    <Shortcut
+                                    <_ShortcutMasterData
+                                        adjustment={adjustment}
                                         form={form}
                                         FormSubmit={'EntityFormSubmit'}
                                         Name={'name'}

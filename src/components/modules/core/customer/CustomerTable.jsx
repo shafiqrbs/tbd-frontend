@@ -19,8 +19,8 @@ import {
 import KeywordSearch from "../../filter/KeywordSearch";
 import { modals } from "@mantine/modals";
 import { deleteEntityData } from "../../../../store/core/crudSlice";
-import CustomerViewModel from "./CustomerViewModel.jsx";
 import tableCss from "../../../../assets/css/Table.module.css";
+import CustomerViewDrawer from "./CustomerViewDrawer.jsx";
 
 function CustomerTable() {
 
@@ -31,12 +31,13 @@ function CustomerTable() {
 
     const perPage = 50;
     const [page, setPage] = useState(1);
-    const [customerViewModel, setCustomerViewModel] = useState(false)
 
     const fetching = useSelector((state) => state.crudSlice.fetching)
     const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword)
     const indexData = useSelector((state) => state.crudSlice.indexEntityData)
     const customerFilterData = useSelector((state) => state.crudSlice.customerFilterData)
+
+    const [viewDrawer, setViewDrawer] = useState(false)
 
     const navigate = useNavigate();
 
@@ -110,7 +111,7 @@ function CustomerTable() {
                                             </Menu.Item>
                                             <Menu.Item
                                                 onClick={() => {
-                                                    setCustomerViewModel(true)
+                                                    setViewDrawer(true)
                                                     dispatch(editEntityData('core/customer/' + data.id))
                                                 }}
                                                 target="_blank"
@@ -170,8 +171,8 @@ function CustomerTable() {
                 />
             </Box>
             {
-                customerViewModel &&
-                <CustomerViewModel customerViewModel={customerViewModel} setCustomerViewModel={setCustomerViewModel} />
+                viewDrawer &&
+                <CustomerViewDrawer viewDrawer={viewDrawer} setViewDrawer={setViewDrawer} />
             }
         </>
     );

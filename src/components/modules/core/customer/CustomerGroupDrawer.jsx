@@ -35,7 +35,7 @@ function CustomerGroupDrawer(props) {
 
     return (
         <>
-            <Drawer.Root title={t('AddTransaction')} opened={groupDrawer} position="right" onClose={closeModel} size={'30%'} >
+            <Drawer.Root opened={groupDrawer} position="right" onClose={closeModel} size={'30%'} >
                 <Drawer.Overlay />
                 <Drawer.Content>
                     <ScrollArea h={height + 76} scrollbarSize={2} type="never" bg={'gray.1'}>
@@ -43,7 +43,9 @@ function CustomerGroupDrawer(props) {
                             <Drawer.Title>{t('AddCustomerGroup')}</Drawer.Title>
                             <Drawer.CloseButton />
                         </Drawer.Header>
-                        <MasterDataEntryForm adjustment={adjustment} />
+                        <Box m={8} mb={0}>
+                            <MasterDataEntryForm adjustment={adjustment} />
+                        </Box>
                     </ScrollArea>
 
                 </Drawer.Content>

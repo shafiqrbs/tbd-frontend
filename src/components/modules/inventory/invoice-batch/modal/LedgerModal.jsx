@@ -28,10 +28,6 @@ function LegderModal(props) {
         props.setBatchLedgerModal(false)
     }
 
-    useEffect(() => {
-        console.log(props.batchLedgerModal);
-        console.log('hola')
-    }, []);
 
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();

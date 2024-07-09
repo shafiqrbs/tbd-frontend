@@ -78,7 +78,7 @@ function MasterDataEntryIndex() {
                                     <Grid.Col span={9}>
                                         {
                                             insertType === 'create'
-                                                ? <MasterDataEntryForm adjustment={adjustment} />
+                                                ? <MasterDataEntryForm  />
                                                 : <MasterDataEntryUpdateForm />
                                         }
                                     </Grid.Col>

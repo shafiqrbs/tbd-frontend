@@ -43,12 +43,12 @@ function MasterDataEntryViewModal(props) {
             >
                 <Box m={'md'}>
                     <Grid columns={24}>
-                        <Grid.Col span={'6'} align={'left'} fw={'600'} fz={'14'}>{t('CategoryGroup')}</Grid.Col>
+                        <Grid.Col span={'6'} align={'left'} fw={'600'} fz={'14'}>{t('SettingName')}</Grid.Col>
                         <Grid.Col span={'1'}>:</Grid.Col>
                         <Grid.Col span={'auto'}>{entityEditData && entityEditData.category_group && entityEditData.category_group}</Grid.Col>
                     </Grid>
                     <Grid columns={24}>
-                        <Grid.Col span={'6'} align={'left'} fw={'600'} fz={'14'}>{t('CategoryName')}</Grid.Col>
+                        <Grid.Col span={'6'} align={'left'} fw={'600'} fz={'14'}>{t('SettingType')}</Grid.Col>
                         <Grid.Col span={'1'}>:</Grid.Col>
                         <Grid.Col span={'auto'}>{entityEditData && entityEditData.name && entityEditData.name}</Grid.Col>
                     </Grid>
