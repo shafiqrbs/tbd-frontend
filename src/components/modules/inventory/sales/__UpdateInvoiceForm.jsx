@@ -17,7 +17,7 @@ import {
 
 } from "@tabler/icons-react";
 import { useHotkeys } from "@mantine/hooks";
-import { useDispatch } from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import { isNotEmpty, useForm } from "@mantine/form";
 
 import SelectForm from "../../../form-builders/SelectForm";
@@ -30,11 +30,11 @@ import {
 import InputNumberForm from "../../../form-builders/InputNumberForm";
 import InputButtonForm from "../../../form-builders/InputButtonForm";
 import { notifications } from "@mantine/notifications";
-import _InvoiceForDomain359 from "./print-component/_InvoiceForDomain359.jsx";
 import _SmsPurchaseModel from "./modal/_SmsPurchaseModel.jsx";
 import _CustomerViewModel from "./modal/_CustomerViewModel.jsx";
 import customerDataStoreIntoLocalStorage from "../../../global-hook/local-storage/customerDataStoreIntoLocalStorage.js";
 import _addCustomer from "../../popover-form/_addCustomer.jsx";
+import _InvoiceDrawerForPrint from "./print-drawer/_InvoiceDrawerForPrint.jsx";
 
 function __UpdateInvoiceForm(props) {
     let { id } = useParams();
@@ -43,7 +43,7 @@ function __UpdateInvoiceForm(props) {
     const dispatch = useDispatch();
     const navigate = useNavigate()
     const { isOnline, mainAreaHeight } = useOutletContext();
-
+    const entityUpdateData = useSelector((state) => state.inventoryCrudSlice.entityUpdateData);
     const transactionModeData = JSON.parse(localStorage.getItem('accounting-transaction-mode')) ? JSON.parse(localStorage.getItem('accounting-transaction-mode')) : [];
 
     const [lastClicked, setLastClicked] = useState(null);
@@ -217,24 +217,26 @@ function __UpdateInvoiceForm(props) {
         </Text>
     );
 
+    const [openInvoiceDrawerForPrint,setOpenInvoiceDrawerForPrint] = useState(false)
 
     useEffect(() => {
-        if (invoicePrintForSave) {
-            let printContents = document.getElementById('printElement').innerHTML;
-            let originalContents = document.body.innerHTML;
-            document.body.innerHTML = printContents;
-            window.print();
-            document.body.innerHTML = originalContents;
-            window.location.reload()
+        if (entityUpdateData?.data?.id && (lastClicked === 'print' || lastClicked==='pos')){
+            setTimeout(() => {
+                setOpenInvoiceDrawerForPrint(true)
+            }, 400);
         }
-    }, [invoicePrintForSave]);
+    }, [entityUpdateData, dispatch, lastClicked]);
 
     return (
         <>
+
             {
-                domainId == '359' && invoicePrintForSave &&
-                <_InvoiceForDomain359
-                    setInvoicePrintForSave={setInvoicePrintForSave}
+                openInvoiceDrawerForPrint &&
+                <_InvoiceDrawerForPrint
+                    setOpenInvoiceDrawerForPrint={setOpenInvoiceDrawerForPrint}
+                    openInvoiceDrawerForPrint={openInvoiceDrawerForPrint}
+                    printType={lastClicked}
+                    mode="update"
                 />
             }
 
@@ -302,22 +304,6 @@ function __UpdateInvoiceForm(props) {
 
                     if (lastClicked === 'save'){
                         navigate('/inventory/sales')
-                    }
-                    if (lastClicked === 'print'){
-                        setTimeout(() => {
-                            dispatch(getSalesDetails('inventory/sales/'+id))
-                        }, 200);
-                    }
-                    if (lastClicked === 'pos'){
-                        setTimeout(() => {
-                            dispatch(getSalesDetails('inventory/sales/'+id))
-                        }, 200);
-                    }
-
-                    if (lastClicked === 'print' || lastClicked==='pos'){
-                        setTimeout(() => {
-                            setInvoicePrintForSave(true)
-                        }, 500);
                     }
                 } else {
                     notifications.show({

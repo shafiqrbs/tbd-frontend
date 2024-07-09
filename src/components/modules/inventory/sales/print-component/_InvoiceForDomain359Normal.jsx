@@ -1,17 +1,30 @@
-import React, { useRef,} from "react";
-import { Box,Grid, Table, Text} from "@mantine/core";
+import React, {useEffect, useRef,} from "react";
+import {Box, Button, Grid, Table, Text} from "@mantine/core";
 import { useTranslation } from 'react-i18next';
 import { useSelector } from "react-redux";
+import {IconReceipt} from "@tabler/icons-react";
+import {ReactToPrint} from "react-to-print";
 
-function _InvoiceForDomain359(props) {
-    const {setInvoicePrintForSave} = props
-    const invoicePrintData = useSelector((state) => state.inventoryCrudSlice.salesDetails);
+function _InvoiceForDomain359Normal(props) {
+    let invoicePrintData;
+    if (props.mode==='insert'){
+        invoicePrintData = useSelector((state) => state.inventoryCrudSlice.entityNewData.data);
+    } else {
+        invoicePrintData = useSelector((state) => state.inventoryCrudSlice.entityUpdateData.data);
+    }
     const { t, i18n } = useTranslation();
     const printRef = useRef()
+    const printButtonRef = useRef(null);  // Add this line
 
-    window.onafterprint = () => {
-        setInvoicePrintForSave(false)
-    };
+    useEffect(() => {
+        if (printButtonRef.current) {
+            printButtonRef.current.click();
+        }
+    }, []);
+
+    window.addEventListener('focus', () => {
+        console.log('Print dialog closed');
+    });
 
     const rows = invoicePrintData && invoicePrintData.sales_items && invoicePrintData.sales_items.map((element, index) => (
         <Table.Tr key={element.name}>
@@ -27,7 +40,7 @@ function _InvoiceForDomain359(props) {
 
     return (
         <>
-            <Box style={{ display: "none" }}>
+            <Box>
                 <Grid columns={8} gutter={{ base: 8 }}>
                     <Grid.Col span={8} >
                         <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} id={"printElement"} ref={printRef}>
@@ -115,49 +128,64 @@ function _InvoiceForDomain359(props) {
                                         </Grid.Col>
                                     </Grid>
                                 </Box>
-                                    <Box>
-                                        <Table stickyHeader >
-                                            <Table.Thead>
-                                                <Table.Tr>
-                                                    <Table.Th fz="xs" w={'20'}>{t('S/N')}</Table.Th>
-                                                    <Table.Th fz="xs" ta="left" w={'300'}>{t('Name')}</Table.Th>
-                                                    <Table.Th fz="xs" ta="center" w={'60'}>{t('QTY')}</Table.Th>
-                                                    <Table.Th ta="right" fz="xs" w={'80'}>{t('Price')}</Table.Th>
-                                                    <Table.Th ta="right" fz="xs" w={'100'}>{t('SalesPrice')}</Table.Th>
-                                                    <Table.Th ta="right" fz="xs" w={'100'}>{t('SubTotal')}</Table.Th>
-                                                </Table.Tr>
-                                            </Table.Thead>
-                                            <Table.Tbody>{rows}</Table.Tbody>
-                                            <Table.Tfoot>
-                                                <Table.Tr>
-                                                    <Table.Th colspan={'5'} ta="right" fz="xs" w={'100'}>{t('SubTotal')}</Table.Th>
-                                                    <Table.Th ta="right" fz="xs" w={'100'}>
-                                                        {invoicePrintData && invoicePrintData.sub_total && Number(invoicePrintData.sub_total).toFixed(2)}
-                                                    </Table.Th>
-                                                </Table.Tr>
-                                                <Table.Tr>
-                                                    <Table.Th colspan={'5'} ta="right" fz="xs" w={'100'}>{t('Discount')}</Table.Th>
-                                                    <Table.Th ta="right" fz="xs" w={'100'}>
-                                                        {invoicePrintData && invoicePrintData.discount && Number(invoicePrintData.discount).toFixed(2)}
-                                                    </Table.Th>
-                                                </Table.Tr>
-                                                <Table.Tr>
-                                                    <Table.Th colspan={'5'} ta="right" fz="xs" w={'100'}>{t('Total')}</Table.Th>
-                                                    <Table.Th ta="right" fz="xs" w={'100'}>
-                                                        {invoicePrintData && invoicePrintData.total && Number(invoicePrintData.total).toFixed(2)}
-                                                    </Table.Th>
-                                                </Table.Tr>
-                                                <Table.Tr>
-                                                    <Table.Th colspan={'5'} ta="right" fz="xs" w={'100'}>{t('Receive')}</Table.Th>
-                                                    <Table.Th ta="right" fz="xs" w={'100'}>
-                                                        {invoicePrintData && invoicePrintData.payment && Number(invoicePrintData.payment).toFixed(2)}
-                                                    </Table.Th>
-                                                </Table.Tr>
-                                            </Table.Tfoot>
-                                        </Table>
-                                    </Box>
+                                <Box>
+                                    <Table stickyHeader >
+                                        <Table.Thead>
+                                            <Table.Tr>
+                                                <Table.Th fz="xs" w={'20'}>{t('S/N')}</Table.Th>
+                                                <Table.Th fz="xs" ta="left" w={'300'}>{t('Name')}</Table.Th>
+                                                <Table.Th fz="xs" ta="center" w={'60'}>{t('QTY')}</Table.Th>
+                                                <Table.Th ta="right" fz="xs" w={'80'}>{t('Price')}</Table.Th>
+                                                <Table.Th ta="right" fz="xs" w={'100'}>{t('SalesPrice')}</Table.Th>
+                                                <Table.Th ta="right" fz="xs" w={'100'}>{t('SubTotal')}</Table.Th>
+                                            </Table.Tr>
+                                        </Table.Thead>
+                                        <Table.Tbody>{rows}</Table.Tbody>
+                                        <Table.Tfoot>
+                                            <Table.Tr>
+                                                <Table.Th colspan={'5'} ta="right" fz="xs" w={'100'}>{t('SubTotal')}</Table.Th>
+                                                <Table.Th ta="right" fz="xs" w={'100'}>
+                                                    {invoicePrintData && invoicePrintData.sub_total && Number(invoicePrintData.sub_total).toFixed(2)}
+                                                </Table.Th>
+                                            </Table.Tr>
+                                            <Table.Tr>
+                                                <Table.Th colspan={'5'} ta="right" fz="xs" w={'100'}>{t('Discount')}</Table.Th>
+                                                <Table.Th ta="right" fz="xs" w={'100'}>
+                                                    {invoicePrintData && invoicePrintData.discount && Number(invoicePrintData.discount).toFixed(2)}
+                                                </Table.Th>
+                                            </Table.Tr>
+                                            <Table.Tr>
+                                                <Table.Th colspan={'5'} ta="right" fz="xs" w={'100'}>{t('Total')}</Table.Th>
+                                                <Table.Th ta="right" fz="xs" w={'100'}>
+                                                    {invoicePrintData && invoicePrintData.total && Number(invoicePrintData.total).toFixed(2)}
+                                                </Table.Th>
+                                            </Table.Tr>
+                                            <Table.Tr>
+                                                <Table.Th colspan={'5'} ta="right" fz="xs" w={'100'}>{t('Receive')}</Table.Th>
+                                                <Table.Th ta="right" fz="xs" w={'100'}>
+                                                    {invoicePrintData && invoicePrintData.payment && Number(invoicePrintData.payment).toFixed(2)}
+                                                </Table.Th>
+                                            </Table.Tr>
+                                        </Table.Tfoot>
+                                    </Table>
+                                </Box>
                             </Box>
                         </Box>
+
+                        <Button
+                            fullWidth
+                            variant="filled"
+                            leftSection={<IconReceipt size={14} />}
+                            color="red.5"
+                        >
+                            <ReactToPrint
+                                trigger={() => {
+                                    return <a href="#" ref={printButtonRef}>{t('Pos')}</a>;  // Add ref to the <a> tag
+                                }}
+                                content={() => printRef.current}
+                            />
+                        </Button>
+
                     </Grid.Col>
                 </Grid>
             </Box>
@@ -165,4 +193,4 @@ function _InvoiceForDomain359(props) {
     );
 }
 
-export default _InvoiceForDomain359;
+export default _InvoiceForDomain359Normal;
