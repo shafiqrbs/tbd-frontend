@@ -490,5 +490,14 @@
   "CreateSetting": "Create Setting",
   "SettingName": "Setting Name",
   "SettingType": "Setting Type",
-  "UpdateSetting": "Update Setting"
+  "UpdateSetting": "Update Setting",
+  "CreateLocation": "Create Location",
+  "UpdateLocation": "Update Location",
+  "LocationName": "Location Name",
+  "LocationType": "Location Type",
+  "LocationDetails": "Location Details",
+  "CreateExecutive": "Create Mareketing Executive",
+  "UpdateExecutive": "Update Marketing Executive",
+  "CoreSetting": "Core Setting",
+  "CoreLocation": "Core Location"
 }

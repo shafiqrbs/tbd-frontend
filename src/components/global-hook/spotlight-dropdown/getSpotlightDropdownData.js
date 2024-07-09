@@ -25,7 +25,19 @@ const getSpotlightDropdownData = (t) => {
                 },
                 {
                     id: 'customer-settings',
-                    label: t('MasterData'),
+                    label: t('CoreSetting'),
+                    description: t('WhereWePresentTheVendorInformationN'),
+
+                },
+                {
+                    id: 'location',
+                    label: t('CoreLocation'),
+                    description: t('WhereWePresentTheVendorInformationN'),
+
+                },
+                {
+                    id: 'marketing-executive',
+                    label: t('MarketingExecutive'),
                     description: t('WhereWePresentTheVendorInformationN'),
 
                 },

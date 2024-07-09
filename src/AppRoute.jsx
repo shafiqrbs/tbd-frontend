@@ -35,6 +35,8 @@ import OpeningApproveIndex from "./components/modules/inventory/opening-stock/Op
 import OpeningStockIndex from "./components/modules/inventory/opening-stock/OpeningStockIndex";
 import InvoiceBatchIndex from './components/modules/inventory/invoice-batch/InvoiceBatchIndex.jsx';
 import CustomerSettingsIndex from './components/modules/core/customer-settings/CustomerSettingsIndex.jsx';
+import LocationIndex from './components/modules/core/location/LocationIndex.jsx';
+import MarketingExecutiveIndex from './components/modules/core/marketing-executive/MarketingExecutiveIndex.jsx';
 
 function AppRoute() {
 
@@ -57,6 +59,11 @@ function AppRoute() {
                     <Route path="vendor/:vendorId" element={<VendorIndex />} />
                     <Route path="customer-settings" element={<CustomerSettingsIndex />} />
                     <Route path="customer-settings/:settingsId" element={<CustomerSettingsIndex />} />
+                    <Route path="location" element={<LocationIndex />} />
+                    <Route path="location/:locationId" element={<LocationIndex />} />
+                    <Route path="marketing-executive" element={<MarketingExecutiveIndex />} />
+                    <Route path="marketing-executive/:executiveId" element={<MarketingExecutiveIndex />} />
+
                 </Route>
                 <Route path="/inventory/">
                     <Route path="sales/edit/:id" element={<SalesEdit />} />

@@ -8,7 +8,11 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from "react-redux";
 import classes from '../../../assets/css/HeaderSearch.module.css';
 import {
-    IconInfoCircle, IconTrash, IconSearch, IconSettings
+    IconInfoCircle, IconTrash, IconSearch, IconSettings,
+    IconAdjustments,
+    IconMap2,
+    IconLetterM,
+    IconLetterMSmall
 } from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
 
@@ -53,14 +57,23 @@ function CoreHeaderNavbar(props) {
                                 </ActionIcon>
                             </Menu.Target>
                             <Menu.Dropdown>
-                                <Menu.Item href="/core/customer-settings"
-                                    component="button" onClick={(e) => { navigate('/core/customer-settings') }} leftSection={<IconSettings style={{ width: rem(14), height: rem(14) }} />}>
+                                <Menu.Item
+                                    component="button" onClick={(e) => { navigate('/core/customer-settings') }} leftSection={<IconAdjustments style={{ width: rem(14), height: rem(14) }} />}>
                                     {t('Settings')}
+                                </Menu.Item>
+                                <Menu.Item
+                                    component="button" onClick={(e) => { navigate('/core/location') }} leftSection={<IconMap2 style={{ width: rem(14), height: rem(14) }} />}>
+                                    {t('Location')}
+                                </Menu.Item>
+                                <Menu.Item
+                                    component="button" onClick={(e) => { navigate('/core/marketing-executive') }} leftSection={<IconLetterMSmall style={{ width: rem(14), height: rem(14) }} />}>
+                                    {t('MarketingExecutive')}
                                 </Menu.Item>
                                 <Menu.Item href="/inventory/config"
                                     component="button" onClick={(e) => { navigate('/inventory/config') }} leftSection={<IconSettings style={{ width: rem(14), height: rem(14) }} />}>
                                     {t('Configuration')}
                                 </Menu.Item>
+
 
                             </Menu.Dropdown>
                         </Menu>

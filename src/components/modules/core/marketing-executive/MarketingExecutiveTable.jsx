@@ -21,10 +21,10 @@ import { modals } from "@mantine/modals";
 import { deleteEntityData } from "../../../../store/core/crudSlice";
 import { notifications } from "@mantine/notifications";
 import tableCss from "../../../../assets/css/Table.module.css";
-import CustomerSettingsViewModal from "./CustomerSettingsViewModal.jsx";
+import MarketingExecutiveViewModal from "./MarketingExecutiveViewModal.jsx";
 
 
-function CustomerSettingsTable() {
+function MarketingExecutiveTable() {
 
     const dispatch = useDispatch();
     const { t, i18n } = useTranslation();
@@ -39,7 +39,7 @@ function CustomerSettingsTable() {
     const entityDataDelete = useSelector((state) => state.inventoryCrudSlice.entityDataDelete)
     const productCategoryFilterData = useSelector((state) => state.inventoryCrudSlice.productCategoryFilterData)
 
-    const [categoryViewModal, setCategoryViewModal] = useState(false)
+    const [executiveViewModal, setExecutiveViewModal] = useState(false)
 
     const navigate = useNavigate()
 
@@ -97,8 +97,10 @@ function CustomerSettingsTable() {
                             textAlignment: 'right',
                             render: (item) => (indexData.data.indexOf(item) + 1)
                         },
-                        { accessor: 'name', title: t("SettingType") },
-                        { accessor: 'parent_name', title: t("SettingName") },
+                        { accessor: 'name', title: t("Name") },
+                        { accessor: 'parent_name', title: t("Mobile") },
+                        { accessor: 'parent_name', title: t("Email") },
+                        { accessor: 'parent_name', title: t("Designation") },
                         {
                             accessor: "action",
                             title: t("Action"),
@@ -115,9 +117,9 @@ function CustomerSettingsTable() {
                                             <Menu.Item
                                                 onClick={() => {
                                                     dispatch(setInsertType('update'))
-                                                    dispatch(editEntityData('core/customer-settings/' + data.id))
+                                                    dispatch(editEntityData('core/marketing-executive/' + data.id))
                                                     dispatch(setFormLoading(true))
-                                                    navigate(`/core/customer-settings/${data.id}`)
+                                                    navigate(`/core/marketing-executive/${data.id}`)
                                                 }}
                                             >
                                                 {t('Edit')}
@@ -125,7 +127,7 @@ function CustomerSettingsTable() {
 
                                             <Menu.Item
                                                 onClick={() => {
-                                                    setCategoryViewModal(true)
+                                                    setExecutiveViewModal(true)
                                                     // dispatch(editEntityData('inventory/category-group/' + data.id))
                                                 }}
                                                 target="_blank"
@@ -183,9 +185,9 @@ function CustomerSettingsTable() {
                     scrollAreaProps={{ type: 'never' }}
                 />
             </Box>
-            {categoryViewModal && <CustomerSettingsViewModal categoryViewModal={categoryViewModal} setCategoryViewModal={setCategoryViewModal} />}
+            {executiveViewModal && <MarketingExecutiveViewModal executiveViewModal={executiveViewModal} setExecutiveViewModal={setExecutiveViewModal} />}
         </>
     );
 }
 
-export default CustomerSettingsTable;
+export default MarketingExecutiveTable;

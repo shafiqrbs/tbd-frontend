@@ -43,13 +43,14 @@ function CustomerViewDrawer(props) {
             <Drawer.Root title={t('CustomerDetailsData')} opened={viewDrawer} position="right" onClose={closeDrawer} size={'30%'} >
                 <Drawer.Overlay />
                 <Drawer.Content>
-                    <ScrollArea h={height + 76} scrollbarSize={2} type="never" bg={'gray.1'} >
-                        <Drawer.Header>
-                            <Drawer.Title>{t('CustomerDetailsData')}</Drawer.Title>
-                            <Drawer.CloseButton />
-                        </Drawer.Header>
-                        <Box mb={0} >
-                            <Box m={'md'} p={'md'} className="boxBackground borderRadiusAll">
+
+                    <Drawer.Header>
+                        <Drawer.Title>{t('CustomerDetailsData')}</Drawer.Title>
+                        <Drawer.CloseButton />
+                    </Drawer.Header>
+                    <Box mb={0} bg={'gray.1'} h={height}>
+                        <Box m={'md'} p={'md'} className="boxBackground borderRadiusAll" h={height - 10}>
+                            <Box pt={'xs'}>
                                 <Grid columns={24}>
                                     <Grid.Col span={'8'} align={'left'} fw={'600'} fz={'14'}>{t('CustomerId')}</Grid.Col>
                                     <Grid.Col span={'1'}>:</Grid.Col>
@@ -89,12 +90,10 @@ function CustomerViewDrawer(props) {
                                     <Grid.Col span={'1'}>:</Grid.Col>
                                     <Grid.Col span={'auto'}>{entityEditData && entityEditData.created && entityEditData.created}</Grid.Col>
                                 </Grid>
-
                             </Box>
+
                         </Box>
-
-                    </ScrollArea>
-
+                    </Box>
                 </Drawer.Content>
             </Drawer.Root >
         </>

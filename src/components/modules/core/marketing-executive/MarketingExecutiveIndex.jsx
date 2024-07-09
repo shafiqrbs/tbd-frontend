@@ -17,11 +17,11 @@ import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoa
 import getConfigData from "../../../global-hook/config-data/getConfigData.js";
 import { useNavigate, useParams } from "react-router-dom";
 import CoreHeaderNavbar from "../CoreHeaderNavbar.jsx";
-import CustomerSettingsTable from "./CustomerSettingsTable.jsx";
-import CustomerSettingsForm from "./CustomerSettingsForm.jsx";
-import CustomerSettingsUpdateForm from "./CustomerSettingsUpdateForm.jsx";
+import MarketingExecutiveTable from "./MarketingExecutiveTable.jsx";
+import MarketingExecutiveForm from "./MarketingExecutiveForm.jsx";
+import MarketingExecutiveUpdateForm from "./MarketingExecutiveUpdateForm.jsx";
 
-function CustomerSettingsIndex() {
+function MarketingExecutiveIndex() {
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const adjustment = 0;
@@ -32,15 +32,15 @@ function CustomerSettingsIndex() {
     const configData = getConfigData()
     const navigate = useNavigate()
 
-    const { settingsId } = useParams();
+    const { executiveId } = useParams();
 
 
     useEffect(() => {
-        if (settingsId) {
+        if (executiveId) {
             dispatch(setInsertType('update'));
-            dispatch(editEntityData(`/core/customer-settings/${settingsId}`));
+            dispatch(editEntityData(`/core/marketing-executive/${executiveId}`));
             dispatch(setFormLoading(true));
-        } else if (!settingsId) {
+        } else if (!executiveId) {
             dispatch(setInsertType('create'));
             dispatch(setSearchKeyword(''));
             dispatch(setEntityNewData([]));
@@ -49,9 +49,9 @@ function CustomerSettingsIndex() {
             //     ['name']: '',
             //     ['mobile']: ''
             // }));
-            navigate('/core/customer-settings', { replace: true });
+            navigate('/core/marketing-executive', { replace: true });
         }
-    }, [settingsId, dispatch, navigate]);
+    }, [executiveId, dispatch, navigate]);
 
 
     return (
@@ -63,8 +63,7 @@ function CustomerSettingsIndex() {
                     {configData &&
                         <>
                             <CoreHeaderNavbar
-
-                                pageTitle={t('CoreSetting')}
+                                pageTitle={t('MarketingExecutive')}
                                 roles={t('Roles')}
                                 allowZeroPercentage=''
                                 currencySymbol=''
@@ -73,14 +72,14 @@ function CustomerSettingsIndex() {
                                 <Grid columns={24} gutter={{ base: 8 }}>
                                     <Grid.Col span={15} >
                                         <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
-                                            <CustomerSettingsTable />
+                                            <MarketingExecutiveTable />
                                         </Box>
                                     </Grid.Col>
                                     <Grid.Col span={9}>
                                         {
                                             insertType === 'create'
-                                                ? <CustomerSettingsForm />
-                                                : <CustomerSettingsUpdateForm />
+                                                ? <MarketingExecutiveForm />
+                                                : <MarketingExecutiveUpdateForm />
                                         }
                                     </Grid.Col>
                                 </Grid>
@@ -94,4 +93,4 @@ function CustomerSettingsIndex() {
     );
 }
 
-export default CustomerSettingsIndex;
+export default MarketingExecutiveIndex;
