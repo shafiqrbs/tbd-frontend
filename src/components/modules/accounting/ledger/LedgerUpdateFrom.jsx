@@ -74,7 +74,6 @@ function LedgerUpdateFrom(props) {
         }
     }, [ledgerId, dispatch]);
     useEffect(() => {
-
         form.setValues({
             parent_name: entityEditData.parent_name ? entityEditData.parent_name : '',
             name: entityEditData.name ? entityEditData.name : '',

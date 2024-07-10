@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useOutletContext } from "react-router-dom";
+import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 import {
     Button,
     rem, Flex,
@@ -20,11 +20,13 @@ import {
     getExecutiveDropdown, getLocationDropdown,
 } from "../../../../store/core/utilitySlice";
 import {
+    setEditEntityData,
     setEntityNewData,
     setFetching,
     setFormLoading,
     setValidationData,
-    storeEntityData
+    storeEntityData,
+    updateEntityData
 } from "../../../../store/accounting/crudSlice.js";
 
 import Shortcut from "../../shortcut/Shortcut";
@@ -38,6 +40,7 @@ import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
 import getSettingAuthorizedTypeDropdownData
     from "../../../global-hook/dropdown/getSettingAuthorizedTypeDropdownData.js";
 import getSettingAccountTypeDropdownData from "../../../global-hook/dropdown/getSettingAccountTypeDropdownData.js";
+import SwitchForm from "../../../form-builders/SwitchForm.jsx";
 
 function HeadSubGroupUpdateFrom(props) {
     const { t, i18n } = useTranslation();
@@ -47,15 +50,7 @@ function HeadSubGroupUpdateFrom(props) {
     const [opened, { open, close }] = useDisclosure(false);
 
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
-    const [customerGroupData, setCustomerGroupData] = useState(null);
-    const [locationData, setLocationData] = useState(null);
-    const [marketingExeData, setMarketingExeData] = useState(null);
 
-    const locationDropdownData = useSelector((state) => state.utilitySlice.locationDropdownData)
-    const executiveDropdownData = useSelector((state) => state.utilitySlice.executiveDropdownData)
-    const validationMessage = useSelector((state) => state.crudSlice.validationMessage)
-    const validation = useSelector((state) => state.crudSlice.validation)
-    const entityNewData = useSelector((state) => state.crudSlice.entityNewData)
 
     const entityEditData = useSelector((state) => state.crudSlice.entityEditData)
     const formLoading = useSelector((state) => state.crudSlice.formLoading)
@@ -64,48 +59,20 @@ function HeadSubGroupUpdateFrom(props) {
     const [formLoad, setFormLoad] = useState(true);
     const [authorisedData, setAuthorisedData] = useState(null);
     const [methodData, setMethodData] = useState(null);
-    const [accountTypeData, setAccountTypeData] = useState(null);
-
-    const authorizedDropdown = getSettingAuthorizedTypeDropdownData()
-    const accountDropdown = getSettingAccountTypeDropdownData()
-
-    const [files, setFiles] = useState([]);
-
-    const previews = files.map((file, index) => {
-        const imageUrl = URL.createObjectURL(file);
-        return <Image key={index} src={imageUrl} onLoad={() => URL.revokeObjectURL(imageUrl)} />;
-    });
-
+    const [accountTypeData, setAccountTypeData] = useState(null)
+    const { headSubGroupId } = useParams()
+    const navigate = useNavigate()
 
     const form = useForm({
         initialValues: {
-            method_id: '',
-            name: '',
-            short_name: '',
-            authorised_mode_id: '',
-            account_mode_id: '',
-            service_charge: '',
-            account_owner: '',
-            path: ''
+            parent_name: '', name: '', code: '', status: true
         },
         validate: {
-            method_id: isNotEmpty(),
-            name: hasLength({ min: 2, max: 20 }),
-            short_name: hasLength({ min: 2, max: 20 }),
-            authorised_mode_id: isNotEmpty(),
-            account_mode_id: isNotEmpty(),
-            path: isNotEmpty(),
-            service_charge: (value, values) => {
-                if (value) {
-                    const isNumberOrFractional = /^-?\d+(\.\d+)?$/.test(value);
-                    if (!isNumberOrFractional) {
-                        return true;
-                    }
-                }
-                return null;
-            },
+            parent_name: isNotEmpty(),
+            name: hasLength({ min: 2, max: 20 })
         }
     });
+
 
     useEffect(() => {
         setFormLoad(true)
@@ -113,30 +80,24 @@ function HeadSubGroupUpdateFrom(props) {
     }, [dispatch, formLoading])
 
     useEffect(() => {
-
         form.setValues({
-            method_id: entityEditData.method_id ? entityEditData.method_id : '',
+            parent_name: entityEditData.parent_name ? entityEditData.parent_name : '',
             name: entityEditData.name ? entityEditData.name : '',
-            short_name: entityEditData.short_name ? entityEditData.short_name : '',
-            authorised_mode_id: entityEditData.authorised_mode_id ? entityEditData.authorised_mode_id : '',
-            account_mode_id: entityEditData.account_mode_id ? entityEditData.account_mode_id : '',
-            service_charge: entityEditData.service_charge ? entityEditData.service_charge : '',
-            account_owner: entityEditData.account_owner ? entityEditData.account_owner : '',
-            path: entityEditData.path ? entityEditData.path : '',
+            code: entityEditData.code ? entityEditData.code : '',
+            status: entityEditData.status ? entityEditData.status : true,
         })
-
         dispatch(setFormLoading(false))
         setTimeout(() => {
             setFormLoad(false)
             setFormDataForUpdate(false)
         }, 500)
 
-    }, [dispatch, setFormData])
+    }, [dispatch, setFormData, entityEditData])
 
 
 
     useHotkeys([['alt+n', () => {
-        document.getElementById('method_id').click()
+        document.getElementById('parent_name').click()
     }]], []);
 
     useHotkeys([['alt+r', () => {
@@ -150,32 +111,60 @@ function HeadSubGroupUpdateFrom(props) {
 
     return (
         <Box>
-            <Grid columns={9} gutter={{ base: 8 }}>
-                <Grid.Col span={8} >
-                    <form onSubmit={form.onSubmit((values) => {
-                        dispatch(setValidationData(false))
-                        modals.openConfirmModal({
-                            title: (
-                                <Text size="md"> {t("FormConfirmationTitle")}</Text>
-                            ),
-                            children: (
-                                <Text size="sm"> {t("FormConfirmationMessage")}</Text>
-                            ),
-                            labels: { confirm: 'Submit', cancel: 'Cancel' }, confirmProps: { color: 'red.5' },
-                            onCancel: () => console.log('Cancel'),
-                            onConfirm: () => {
-                                const formValue = { ...form.values };
-                                formValue['path'] = files[0];
-                                //console.log(formValue)
-                            },
+            <form onSubmit={form.onSubmit((values) => {
+                console.log(values)
+                dispatch(updateEntityData(values))
+                    .then(() => {
+                        navigate('/accounting/head-subgroup', { replace: true });
+                        dispatch(setInsertType('create'));
+                    })
+                    .catch((error) => {
+
+                    })
+                modals.openConfirmModal({
+                    title: (
+                        <Text size="md"> {t("FormConfirmationTitle")}</Text>
+                    ),
+                    children: (
+                        <Text size="sm"> {t("FormConfirmationMessage")}</Text>
+                    ),
+                    labels: { confirm: 'Submit', cancel: 'Cancel' }, confirmProps: { color: 'red' },
+                    onCancel: () => console.log('Cancel'),
+                    onConfirm: () => {
+                        setSaveCreateLoading(true)
+                        const value = {
+                            url: 'inventory/category-group/' + entityEditData.id,
+                            data: values
+                        }
+                        dispatch(updateEntityData(value))
+                        notifications.show({
+                            color: 'teal',
+                            title: t('UpdateSuccessfully'),
+                            icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
+                            loading: false,
+                            autoClose: 700,
+                            style: { backgroundColor: 'lightgray' },
                         });
-                    })}>
+
+                        setTimeout(() => {
+                            form.reset()
+                            dispatch(setInsertType('create'))
+                            dispatch(setEditEntityData([]))
+                            dispatch(setFetching(true))
+                            setSaveCreateLoading(false)
+                        }, 700)
+                    },
+                });
+            })}>
+
+                <Grid columns={9} gutter={{ base: 8 }}>
+                    <Grid.Col span={8} >
                         <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
-                            <Box bg={"white"} >
-                                <Box pl={`xs`} pb={'xs'} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'} >
+                            <Box bg={'white'}>
+                                <Box pl={`xs`} pr={8} pt={'6'} pb={'6'} mb={'4'} className={'boxBackground borderRadiusAll'}>
                                     <Grid>
-                                        <Grid.Col span={6} h={54}>
-                                            <Title order={6} mt={'xs'} pl={'6'}>{t('UpdateAccountSubGroup')}</Title>
+                                        <Grid.Col span={6} >
+                                            <Title order={6} pt={'6'}>{t('UpdateLedger')}</Title>
                                         </Grid.Col>
                                         <Grid.Col span={6}>
                                             <Stack right align="flex-end">
@@ -184,16 +173,13 @@ function HeadSubGroupUpdateFrom(props) {
                                                         !saveCreateLoading && isOnline &&
                                                         <Button
                                                             size="xs"
-                                                            color={`red.6`}
+                                                            color={`green.8`}
                                                             type="submit"
-                                                            mt={4}
                                                             id="EntityFormSubmit"
-                                                            leftSection={<IconDeviceFloppy size={16} />}
-                                                        >
-
+                                                            leftSection={<IconDeviceFloppy size={16} />}>
                                                             <Flex direction={`column`} gap={0}>
-                                                                <Text fz={12} fw={400}>
-                                                                    {t("UpdateAndSave")}
+                                                                <Text fz={14} fw={400}>
+                                                                    {t("CreateAndSave")}
                                                                 </Text>
                                                             </Flex>
                                                         </Button>
@@ -202,35 +188,36 @@ function HeadSubGroupUpdateFrom(props) {
                                         </Grid.Col>
                                     </Grid>
                                 </Box>
-                                <Box pl={`xs`} pr={'xs'} mt={'xs'} className={'borderRadiusAll'}>
+                                <Box pl={`xs`} pr={'xs'} className={'borderRadiusAll'}>
                                     <Grid columns={24}>
                                         <Grid.Col span={'auto'} >
                                             <ScrollArea h={height} scrollbarSize={2} scrollbars="y" type="never">
-                                                <Box>
-                                                    <Box mt={'xs'}>
+                                                <Box >
+                                                    <Box mt={'8'}>
                                                         <SelectForm
-                                                            tooltip={t('ChooseMethod')}
-                                                            label={t('Method')}
-                                                            placeholder={t('ChooseMethod')}
+                                                            tooltip={t('ChooseHeadGroup')}
+                                                            label={t('HeadGroup')}
+                                                            placeholder={t('ChooseHeadGroup')}
                                                             required={true}
                                                             nextField={'name'}
-                                                            name={'method_id'}
+                                                            name={'parent_name'}
                                                             form={form}
-                                                            dropdownValue={getTransactionMethodDropdownData()}
+                                                            // dropdownValue={getTransactionMethodDropdownData()}
+                                                            dropdownValue={['test1', 'test2']}
                                                             mt={8}
-                                                            id={'method_id'}
+                                                            id={'parent_name'}
                                                             searchable={false}
-                                                            value={methodData ? String(methodData) : (entityEditData.method_id ? String(entityEditData.method_id) : null)}
+                                                            value={methodData}
                                                             changeValue={setMethodData}
                                                         />
                                                     </Box>
                                                     <Box mt={'xs'}>
                                                         <InputForm
-                                                            tooltip={t('TransactionModeNameValidateMessage')}
+                                                            tooltip={t('SubGroupNameValidateMessage')}
                                                             label={t('Name')}
                                                             placeholder={t('Name')}
                                                             required={true}
-                                                            nextField={'short_name'}
+                                                            nextField={'code'}
                                                             name={'name'}
                                                             form={form}
                                                             mt={0}
@@ -239,136 +226,57 @@ function HeadSubGroupUpdateFrom(props) {
                                                     </Box>
                                                     <Box mt={'xs'}>
                                                         <InputForm
-                                                            tooltip={t('ShortNameValidateMessage')}
-                                                            label={t('ShortName')}
-                                                            placeholder={t('ShortName')}
+                                                            tooltip={t('AccountCodeValidateMessage')}
+                                                            label={t('AccountCode')}
+                                                            placeholder={t('AccountCode')}
                                                             required={true}
-                                                            nextField={'authorised_mode_id'}
-                                                            name={'short_name'}
+                                                            name={'code'}
                                                             form={form}
-                                                            mt={0}
-                                                            id={'short_name'}
+                                                            id={'code'}
+                                                            nextField={'status'}
                                                         />
                                                     </Box>
-                                                    <Box mt={'xs'}>
-                                                        <SelectForm
-                                                            tooltip={t('ChooseAuthorised')}
-                                                            label={t('Authorised')}
-                                                            placeholder={t('ChooseAuthorised')}
-                                                            required={true}
-                                                            nextField={'account_mode_id'}
-                                                            name={'authorised_mode_id'}
-                                                            form={form}
-                                                            dropdownValue={authorizedDropdown}
-                                                            mt={8}
-                                                            id={'authorised_mode_id'}
-                                                            searchable={false}
-                                                            value={authorisedData ? String(authorisedData) : (entityEditData.authorised_mode_id ? String(entityEditData.authorised_mode_id) : null)}
-                                                            changeValue={setAuthorisedData}
-                                                        />
-                                                    </Box>
-                                                    <Box mt={'xs'}>
-                                                        <SelectForm
-                                                            tooltip={t('ChooseAccountType')}
-                                                            label={t('AccountType')}
-                                                            placeholder={t('ChooseAccountType')}
-                                                            required={true}
-                                                            nextField={'service_charge'}
-                                                            name={'account_mode_id'}
-                                                            form={form}
-                                                            dropdownValue={accountDropdown}
-                                                            mt={8}
-                                                            id={'account_mode_id'}
-                                                            searchable={false}
-                                                            value={accountTypeData ? String(accountTypeData) : (entityEditData.account_mode_id ? String(entityEditData.account_mode_id) : null)}
-                                                            changeValue={setAccountTypeData}
-                                                        />
-                                                    </Box>
-                                                    <Box mt={'xs'}>
-                                                        <InputNumberForm
-                                                            tooltip={t('ServiceChargeValidationMessage')}
-                                                            label={t('ServiceCharge')}
-                                                            placeholder={t('ServiceCharge')}
-                                                            required={false}
-                                                            nextField={'account_owner'}
-                                                            name={'service_charge'}
-                                                            form={form}
-                                                            mt={'md'}
-                                                            id={'service_charge'}
-                                                        />
-                                                    </Box>
-                                                    <Box mt={'xs'}>
-                                                        <InputForm
-                                                            tooltip={t('AccountOwnerValidateMessage')}
-                                                            label={t('AccountOwner')}
-                                                            placeholder={t('AccountOwner')}
-                                                            required={false}
-                                                            nextField={'service_name'}
-                                                            name={'account_owner'}
-                                                            form={form}
-                                                            mt={8}
-                                                            id={'account_owner'}
-                                                        />
-                                                    </Box>
-                                                    <Box mt={'xs'}>
-                                                        <Tooltip
-                                                            label={t('ChooseImage')}
-                                                            opened={('path' in form.errors) && !!form.errors['path']}
-                                                            px={16}
-                                                            py={2}
-                                                            position="top-end"
-                                                            color="red"
-                                                            withArrow
-                                                            offset={2}
-                                                            zIndex={999}
-                                                            transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
-                                                        >
-                                                            <Dropzone
-                                                                label={t('ChooseImage')}
-                                                                accept={IMAGE_MIME_TYPE}
-                                                                onDrop={(e) => {
-                                                                    setFiles(e)
-                                                                    form.setFieldError('path', false);
-                                                                    form.setFieldValue('path', true)
-                                                                }}
-                                                            >
-                                                                <Text ta="center">
-                                                                    {
-                                                                        files && files.length > 0 && files[0].path ?
-                                                                            files[0].path
-                                                                            :
-                                                                            <span>Drop images here <span style={{ color: 'red' }}>*</span></span>
-                                                                    }
-                                                                </Text>
-                                                            </Dropzone>
-                                                        </Tooltip>
-
-                                                        <SimpleGrid cols={{ base: 1, sm: 4 }} mt={previews.length > 0 ? 'xl' : 0}>
-                                                            {previews}
-                                                            <Image src={'http://www.tbd.local/image/accounting/transaction-mode/' + entityEditData.path} />
-                                                        </SimpleGrid>
+                                                    <Box mt={'xs'} >
+                                                        <Grid gutter={{ base: 1 }}>
+                                                            <Grid.Col span={2}>
+                                                                <SwitchForm
+                                                                    tooltip={t('Status')}
+                                                                    label=''
+                                                                    nextField={'EntityFormSubmit'}
+                                                                    name={'status'}
+                                                                    form={form}
+                                                                    color="red"
+                                                                    id={'status'}
+                                                                    position={'left'}
+                                                                    defaultChecked={1}
+                                                                />
+                                                            </Grid.Col>
+                                                            <Grid.Col span={6} fz={'sm'} pt={'1'}>{t('Status')}</Grid.Col>
+                                                        </Grid>
                                                     </Box>
                                                 </Box>
                                             </ScrollArea>
                                         </Grid.Col>
                                     </Grid>
                                 </Box>
-
                             </Box>
+
                         </Box>
-                    </form>
-                </Grid.Col>
-                <Grid.Col span={1} >
-                    <Box bg={'white'} className={'borderRadiusAll'} pt={'16'}>
-                        <Shortcut
-                            form={form}
-                            FormSubmit={'EntityFormSubmit'}
-                            Name={'method_id'}
-                            inputType="select"
-                        />
-                    </Box>
-                </Grid.Col>
-            </Grid>
+
+
+                    </Grid.Col>
+                    <Grid.Col span={1} >
+                        <Box bg={'white'} className={'borderRadiusAll'} pt={'16'}>
+                            <Shortcut
+                                form={form}
+                                FormSubmit={'EntityFormSubmit'}
+                                Name={'method_id'}
+                                inputType="select"
+                            />
+                        </Box>
+                    </Grid.Col>
+                </Grid>
+            </form>
         </Box>
 
     );

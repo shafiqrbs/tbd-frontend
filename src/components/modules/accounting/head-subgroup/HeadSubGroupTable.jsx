@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useOutletContext } from "react-router-dom";
+import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 import {
     Group,
     Box, Grid,
@@ -20,6 +20,7 @@ import {
 import KeywordSearch from "../../filter/KeywordSearch";
 import { modals } from "@mantine/modals";
 import tableCss from "../../../../assets/css/Table.module.css";
+import HeadSubViewDrawer from "./HeadSubViewDrawer.jsx";
 function HeadSubGroupTable(props) {
 
     const dispatch = useDispatch();
@@ -34,6 +35,11 @@ function HeadSubGroupTable(props) {
     const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword)
     const indexData = useSelector((state) => state.crudSlice.indexEntityData)
 
+    const { headSubGroupId } = useParams()
+    const navigate = useNavigate()
+    const [viewDrawer, setViewDrawer] = useState(false)
+
+
 
     useEffect(() => {
         const value = {
@@ -46,6 +52,8 @@ function HeadSubGroupTable(props) {
         }
         dispatch(getIndexEntityData(value))
     }, [fetching]);
+
+
 
     return (
 
@@ -92,17 +100,15 @@ function HeadSubGroupTable(props) {
                                                     dispatch(setInsertType('update'))
                                                     dispatch(editEntityData('accounting/transaction-mode/' + data.id))
                                                     dispatch(setFormLoading(true))
+                                                    navigate(`/accounting/head-subgroup/${data.id}`)
                                                 }}
                                             >
                                                 {t('Edit')}
                                             </Menu.Item>
 
                                             <Menu.Item
-                                                href={``}
                                                 onClick={() => {
-                                                    console.log('ok')
-                                                    // setCustomerViewModel(true)
-                                                    // dispatch(showEntityData('core/customer/' + data.id))
+                                                    setViewDrawer(true)
                                                 }}
                                                 target="_blank"
                                                 component="a"
@@ -126,7 +132,11 @@ function HeadSubGroupTable(props) {
                                                         children: (
                                                             <Text size="sm"> {t("FormConfirmationMessage")}</Text>
                                                         ),
-                                                        labels: { confirm: 'Confirm', cancel: 'Cancel' },
+                                                        labels: {
+                                                            confirm: 'Confirm',
+                                                            cancel: 'Cancel'
+                                                        },
+                                                        confirmProps: { color: 'red.6' },
                                                         onCancel: () => console.log('Cancel'),
                                                         onConfirm: () => {
                                                             dispatch(deleteEntityData('accounting/account-head/' + data.id))
@@ -158,9 +168,8 @@ function HeadSubGroupTable(props) {
                     height={height}
                     scrollAreaProps={{ type: 'never' }}
                 />
-
-
             </Box>
+            {viewDrawer && <HeadSubViewDrawer viewDrawer={viewDrawer} setViewDrawer={setViewDrawer} />}
         </>
 
     );
