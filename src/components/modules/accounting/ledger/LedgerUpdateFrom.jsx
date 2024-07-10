@@ -38,6 +38,7 @@ function LedgerUpdateFrom(props) {
     const height = mainAreaHeight - 100; //TabList height 104
     const [opened, { open, close }] = useDisclosure(false);
     const [formLoad, setFormLoad] = useState('')
+    const [methodData, setMethodData] = useState(null);
 
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
 
@@ -201,8 +202,8 @@ function LedgerUpdateFrom(props) {
                                                             mt={8}
                                                             id={'parent_name'}
                                                             searchable={false}
-                                                        // value={methodData}
-                                                        // changeValue={setMethodData}
+                                                            value={methodData}
+                                                            changeValue={setMethodData}
                                                         />
                                                     </Box>
                                                     <Box mt={'xs'}>

@@ -88,14 +88,12 @@ function LedgerForm(props) {
                     labels: { confirm: 'Confirm', cancel: 'Cancel' }, confirmProps: { color: 'red' },
                     onCancel: () => console.log('Cancel'),
                     onConfirm: () => {
-                        const formValue = { ...form.values };
-                        formValue['path'] = files[0];
-
-                        const data = {
+                        setSaveCreateLoading(true)
+                        const value = {
                             url: 'accounting/account-head',
-                            data: formValue
+                            data: form.values
                         }
-                        dispatch(storeEntityDataWithFile(data))
+                        dispatch(storeEntityDataWithFile(value))
 
                         notifications.show({
                             color: 'teal',

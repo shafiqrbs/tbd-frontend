@@ -94,7 +94,9 @@ function AppRoute() {
                     <Route path="ledger" element={<LedgerIndex />} />
                     <Route path="ledger/:ledgerId" element={<LedgerIndex />} />
                     <Route path="head-group" element={<HeadGroupIndex />} />
+                    <Route path="head-group/:headGroupId" element={<HeadGroupIndex />} />
                     <Route path="head-subgroup" element={<HeadSubGroupIndex />} />
+                    <Route path="head-subgroup/:headSubGroupId" element={<HeadSubGroupIndex />} />
                     <Route path="transaction-mode" element={<TransactionModeIndex />} />
                     <Route path="modalIndex" element={<SampleModalIndex />} />
                 </Route>
