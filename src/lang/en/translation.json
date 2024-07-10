@@ -499,5 +499,8 @@
   "CreateExecutive": "Create Mareketing Executive",
   "UpdateExecutive": "Update Marketing Executive",
   "CoreSetting": "Core Setting",
-  "CoreLocation": "Core Location"
+  "CoreLocation": "Core Location",
+  "UpdateLedger": "Update Ledger",
+  "ParentHead": "Parent Head",
+  "ManageLedger": "Manage Ledger"
 }

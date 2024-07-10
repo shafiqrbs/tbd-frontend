@@ -92,6 +92,7 @@ function AppRoute() {
                 <Route path="/accounting/">
                     <Route path="voucher-entry" element={<VoucherIndex />} />
                     <Route path="ledger" element={<LedgerIndex />} />
+                    <Route path="ledger/:ledgerId" element={<LedgerIndex />} />
                     <Route path="head-group" element={<HeadGroupIndex />} />
                     <Route path="head-subgroup" element={<HeadSubGroupIndex />} />
                     <Route path="transaction-mode" element={<TransactionModeIndex />} />

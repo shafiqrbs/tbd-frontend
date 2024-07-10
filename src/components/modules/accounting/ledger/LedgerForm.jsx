@@ -46,40 +46,23 @@ function LedgerForm(props) {
     const [methodData, setMethodData] = useState(null);
     const [accountTypeData, setAccountTypeData] = useState(null);
 
-    const validationMessage = useSelector((state) => state.crudSlice.validationMessage)
-    const validation = useSelector((state) => state.crudSlice.validation)
-    const entityNewData = useSelector((state) => state.crudSlice.entityNewData)
-    const authorisedTypeDropdownData = useSelector((state) => state.utilityUtilitySlice.settingDropdown);
-    const accountTypeDropdownData = useSelector((state) => state.utilityUtilitySlice.settingDropdown);
-
-
-    const authorizedDropdown = getSettingAuthorizedTypeDropdownData()
-    const accountDropdown = getSettingAccountTypeDropdownData()
-
     const value = [
         'head', 'headsub', 'headGroup'
     ]
 
 
-    const [files, setFiles] = useState([]);
-
-    const previews = files.map((file, index) => {
-        const imageUrl = URL.createObjectURL(file);
-        return <Image key={index} src={imageUrl} onLoad={() => URL.revokeObjectURL(imageUrl)} />;
-    });
-
     const form = useForm({
         initialValues: {
-            parent_id: '', name: '', code: '', status: ''
+            parent_name: '', name: '', code: '', status: true
         },
         validate: {
-            parent_id: isNotEmpty(),
+            parent_name: isNotEmpty(),
             name: hasLength({ min: 2, max: 20 })
         }
     });
 
     useHotkeys([['alt+n', () => {
-        document.getElementById('parent_id').click()
+        document.getElementById('parent_name').click()
     }]], []);
 
     useHotkeys([['alt+r', () => {
@@ -141,7 +124,7 @@ function LedgerForm(props) {
                                 <Box pl={`xs`} pr={8} pt={'6'} pb={'6'} mb={'4'} className={'boxBackground borderRadiusAll'}>
                                     <Grid>
                                         <Grid.Col span={6} >
-                                            <Title order={6} pt={'6'}>{t('CreateNewLedger')}</Title>
+                                            <Title order={6} pt={'6'}>{t('CreateLedger')}</Title>
                                         </Grid.Col>
                                         <Grid.Col span={6}>
                                             <Stack right align="flex-end">
@@ -172,17 +155,17 @@ function LedgerForm(props) {
                                                 <Box >
                                                     <Box mt={'8'}>
                                                         <SelectForm
-                                                            tooltip={t('ChooseMethod')}
-                                                            label={t('HeadOfGroup')}
+                                                            tooltip={t('ChooseHeadGroup')}
+                                                            label={t('HeadGroup')}
                                                             placeholder={t('ChooseHeadGroup')}
                                                             required={true}
                                                             nextField={'name'}
-                                                            name={'parent_id'}
+                                                            name={'parent_name'}
                                                             form={form}
                                                             // dropdownValue={getTransactionMethodDropdownData()}
                                                             dropdownValue={value}
                                                             mt={8}
-                                                            id={'parent_id'}
+                                                            id={'parent_name'}
                                                             searchable={false}
                                                             value={methodData}
                                                             changeValue={setMethodData}
@@ -213,7 +196,7 @@ function LedgerForm(props) {
                                                             nextField={'status'}
                                                         />
                                                     </Box>
-                                                    <Box mt={'xs'} ml={'xs'}>
+                                                    <Box mt={'xs'} >
                                                         <Grid gutter={{ base: 1 }}>
                                                             <Grid.Col span={2}>
                                                                 <SwitchForm
@@ -231,7 +214,6 @@ function LedgerForm(props) {
                                                             <Grid.Col span={6} fz={'sm'} pt={'1'}>{t('Status')}</Grid.Col>
                                                         </Grid>
                                                     </Box>
-
                                                 </Box>
                                             </ScrollArea>
                                         </Grid.Col>
@@ -256,7 +238,6 @@ function LedgerForm(props) {
                 </Grid>
             </form>
         </Box >
-
     );
 }
 export default LedgerForm;

@@ -98,7 +98,7 @@ function VoucherTableNew() {
                                         <Group gap={4} justify="right" wrap="nowrap">
                                             <Menu position="bottom-end" offset={3} withArrow trigger="hover" openDelay={100} closeDelay={400}>
                                                 <Menu.Target>
-                                                    <ActionIcon variant="outline" color="gray.6" radius="xl" aria-label="Settings">
+                                                    <ActionIcon size="sm" variant="outline" color="red" radius="xl" aria-label="Settings">
                                                         <IconDotsVertical height={'18'} width={'18'} stroke={1.5} />
                                                     </ActionIcon>
                                                 </Menu.Target>

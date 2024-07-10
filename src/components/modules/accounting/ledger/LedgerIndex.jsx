@@ -5,27 +5,47 @@ import {
 } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from "react-redux";
-import { setSearchKeyword } from "../../../../store/core/crudSlice";
+import { setFormLoading, setSearchKeyword } from "../../../../store/core/crudSlice";
 import { setInsertType } from "../../../../store/generic/crudSlice";
 import getConfigData from "../../../global-hook/config-data/getConfigData.js";
 import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress.js";
-import HeadGroupForm from "./LedgerForm";
-import HeadGroupUpdateFrom from "./LedgerUpdateFrom";
-import HeadGroupTable from "./LedgerTable";
 import AccountingHeaderNavbar from "../AccountingHeaderNavbar";
 import LedgerForm from "./LedgerForm";
 import LedgerTable from "./LedgerTable";
-function HeadGroupIndex() {
+import { useNavigate, useParams } from "react-router-dom";
+import { editEntityData, setEntityNewData } from "../../../../store/accounting/crudSlice.js";
+import LedgerUpdateFrom from "./LedgerUpdateFrom";
+
+
+function LedgerIndex() {
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const insertType = useSelector((state) => state.crudSlice.insertType)
     const configData = getConfigData()
     const progress = getLoadingProgress()
 
+    const { ledgerId } = useParams();
+    const navigate = useNavigate()
+
     useEffect(() => {
-        dispatch(setInsertType('create'))
-        dispatch(setSearchKeyword(''))
-    }, [])
+        ledgerId ? (
+            dispatch(setInsertType('update')),
+            dispatch(editEntityData(`core/ledger/${ledgerId}`)),
+            dispatch(setFormLoading(true))
+        ) : (
+            dispatch(setInsertType('create')),
+            dispatch(setSearchKeyword('')),
+            dispatch(setEntityNewData({
+                ['parent_name']: '',
+                ['name']: '',
+                ['code']: ''
+            })),
+            navigate('/accounting/ledger', { replace: true })
+        );
+    }, [ledgerId, dispatch, navigate])
+
+
+
 
     return (
         <>
@@ -49,7 +69,7 @@ function HeadGroupIndex() {
                                 </Grid.Col>
                                 <Grid.Col span={9}>
                                     {
-                                        insertType === 'create' ? <LedgerForm /> : <LedgerForm />
+                                        insertType === 'create' ? <LedgerForm /> : <LedgerUpdateFrom />
                                     }
                                 </Grid.Col>
                             </Grid>
@@ -61,4 +81,4 @@ function HeadGroupIndex() {
     );
 }
 
-export default HeadGroupIndex;
+export default LedgerIndex;
