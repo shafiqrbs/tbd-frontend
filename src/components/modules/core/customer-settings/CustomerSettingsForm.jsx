@@ -37,16 +37,16 @@ function CustomerSettingsForm(props) {
 
     const form = useForm({
         initialValues: {
-            particular_type: '', particular_name: '', status: true
+            setting_type: '', setting_name: '', status: true
         },
         validate: {
-            particular_type: isNotEmpty(),
-            particular_name: hasLength({ min: 2, max: 20 }),
+            setting_type: isNotEmpty(),
+            setting_name: hasLength({ min: 2, max: 20 }),
         }
     });
 
     useHotkeys([['alt+n', () => {
-        document.getElementById('particular_type').click()
+        document.getElementById('setting_type').click()
     }]], []);
 
     useHotkeys([['alt+r', () => {
@@ -141,11 +141,11 @@ function CustomerSettingsForm(props) {
                                                         label={t('SettingType')}
                                                         placeholder={t('SettingType')}
                                                         required={true}
-                                                        nextField={'particular_name'}
-                                                        name={'particular_type'}
+                                                        nextField={'setting_name'}
+                                                        name={'setting_type'}
                                                         form={form}
                                                         dropdownValue={['test1', 'test2']}
-                                                        id={'particular_type'}
+                                                        id={'setting_type'}
                                                         searchable={false}
                                                         value={categoryGroupData}
                                                         changeValue={setCategoryGroupData}
@@ -160,8 +160,8 @@ function CustomerSettingsForm(props) {
                                                         required={true}
                                                         nextField={'status'}
                                                         form={form}
-                                                        name={'particular_name'}
-                                                        id={'particular_name'}
+                                                        name={'setting_name'}
+                                                        id={'setting_name'}
                                                     />
                                                 </Box>
                                                 <Box mt={'xs'}>
