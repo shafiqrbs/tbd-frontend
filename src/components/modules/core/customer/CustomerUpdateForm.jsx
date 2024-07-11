@@ -30,7 +30,6 @@ import getLocationDropdownData from "../../../global-hook/dropdown/getLocationDr
 import getExecutiveDropdownData from "../../../global-hook/dropdown/getExecutiveDropdownData.js";
 import getCoreSettingCustomerGroupDropdownData
     from "../../../global-hook/dropdown/getCoreSettingCustomerGroupDropdownData.js";
-import CustomerGroupModel from "./CustomerGroupModal";
 import PhoneNumber from "../../../form-builders/PhoneNumberInput.jsx";
 import CustomerGroupDrawer from "./CustomerGroupDrawer.jsx";
 
@@ -45,22 +44,12 @@ function CustomerUpdateForm() {
     const [customerGroupData, setCustomerGroupData] = useState(null);
     const [locationData, setLocationData] = useState(null);
     const [marketingExeData, setMarketingExeData] = useState(null);
-    const [opened, { open, close }] = useDisclosure(false);
 
     const entityEditData = useSelector((state) => state.crudSlice.entityEditData)
     const formLoading = useSelector((state) => state.crudSlice.formLoading)
     const locationDropdown = getLocationDropdownData();
     const customerGroupDropdownData = getCoreSettingCustomerGroupDropdownData();
     const executiveDropdown = getExecutiveDropdownData();
-
-    const { customerId } = useParams();
-    useEffect(() => {
-        if (customerId) {
-            dispatch(setEditEntityData(`core/customer/${customerId}`));
-            dispatch(setFormLoading(true));
-        }
-    }, [customerId, dispatch]);
-    const navigate = useNavigate();
 
     const form = useForm({
         initialValues: {
@@ -111,27 +100,28 @@ function CustomerUpdateForm() {
     }, [dispatch, formLoading])
 
     useEffect(() => {
-        if (entityEditData && Object.keys(entityEditData).length > 0) {
+        console.log(entityEditData.mobile)
+        if (entityEditData) {
             form.setValues({
-                name: entityEditData.name ? entityEditData.name : '',
-                customer_group_id: entityEditData.customer_group_id ? entityEditData.customer_group_id : '',
-                credit_limit: entityEditData.credit_limit ? entityEditData.credit_limit : '',
-                reference_id: entityEditData.reference_id ? entityEditData.reference_id : '',
-                mobile: entityEditData.mobile ? entityEditData.mobile : '',
-                alternative_mobile: entityEditData.alternative_mobile ? entityEditData.alternative_mobile : '',
-                email: entityEditData.email ? entityEditData.email : '',
-                location_id: entityEditData.location_id ? entityEditData.location_id : '',
-                marketing_id: entityEditData.marketing_id ? entityEditData.marketing_id : '',
-                address: entityEditData.address ? entityEditData.address : '',
+                name: entityEditData.name,
+                customer_group_id: entityEditData.customer_group_id,
+                credit_limit: entityEditData.credit_limit,
+                reference_id: entityEditData.reference_id,
+                mobile: entityEditData.mobile,
+                alternative_mobile: entityEditData.alternative_mobile,
+                email: entityEditData.email,
+                location_id: entityEditData.location_id,
+                marketing_id: entityEditData.marketing_id,
+                address: entityEditData.address,
             })
-
-            dispatch(setFormLoading(false))
-            setTimeout(() => {
-                setFormLoad(false)
-                setFormDataForUpdate(false)
-            }, 500)
         }
-    }, [entityEditData, dispatch, customerId])
+        dispatch(setFormLoading(false))
+        setTimeout(() => {
+            setFormLoad(false)
+            setFormDataForUpdate(false)
+        }, 500)
+
+    }, [entityEditData, dispatch])
 
 
     const [groupDrawer, setGroupDrawer] = useState(false)
@@ -156,14 +146,13 @@ function CustomerUpdateForm() {
                 customer_group_id: entityEditData.customer_group_id || '',
                 credit_limit: entityEditData.credit_limit || '',
                 reference_id: entityEditData.reference_id || '',
-                mobile: entityEditData.mobile || '+880',
-                alternative_mobile: entityEditData.alternative_mobile || '+880',
+                mobile: entityEditData.mobile || '',
+                alternative_mobile: entityEditData.alternative_mobile || '',
                 email: entityEditData.email || '',
                 location_id: entityEditData.location_id || '',
                 marketing_id: entityEditData.marketing_id || '',
                 address: entityEditData.address || '',
             };
-            console.log(originalValues);
             form.setValues(originalValues);
         }
     };

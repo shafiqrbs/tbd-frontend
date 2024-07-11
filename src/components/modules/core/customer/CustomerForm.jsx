@@ -29,6 +29,7 @@ import getCoreSettingCustomerGroupDropdownData
     from "../../../global-hook/dropdown/getCoreSettingCustomerGroupDropdownData.js";
 import PhoneNumber from "../../../form-builders/PhoneNumberInput.jsx";
 import CustomerGroupDrawer from "./CustomerGroupDrawer.jsx";
+import Shortcut from "../../shortcut/Shortcut.jsx";
 
 
 function CustomerForm() {
@@ -147,8 +148,8 @@ function CustomerForm() {
             customer_group_id: '',
             credit_limit: '',
             reference_id: '',
-            mobile: '+880',
-            alternative_mobile: '+880',
+            mobile: '',
+            alternative_mobile: '',
             email: '',
             location_id: '',
             marketing_id: '',
@@ -421,7 +422,7 @@ function CustomerForm() {
                     </Grid.Col>
                     <Grid.Col span={1} >
                         <Box bg={'white'} className={'borderRadiusAll'} pt={'16'}>
-                            <_ShortcutCustomer
+                            <Shortcut
                                 form={form}
                                 FormSubmit={'EntityFormSubmit'}
                                 Name={'customer_group_id'}
