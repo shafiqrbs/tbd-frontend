@@ -18,7 +18,6 @@ import { notifications } from "@mantine/notifications";
 
 import { setEntityNewData, setFetching, setValidationData, storeEntityData } from "../../../../store/core/crudSlice.js";
 
-import _ShortcutCustomer from "../../shortcut/_ShortcutCustomer";
 import InputForm from "../../../form-builders/InputForm";
 import SelectForm from "../../../form-builders/SelectForm";
 import TextAreaForm from "../../../form-builders/TextAreaForm";
