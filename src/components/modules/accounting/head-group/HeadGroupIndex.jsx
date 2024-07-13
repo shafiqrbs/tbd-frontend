@@ -13,6 +13,8 @@ import HeadGroupForm from "./HeadGroupForm";
 import HeadGroupUpdateFrom from "./HeadGroupUpdateFrom";
 import HeadGroupTable from "./HeadGroupTable";
 import AccountingHeaderNavbar from "../AccountingHeaderNavbar";
+import { useNavigate, useParams } from "react-router-dom";
+import { editEntityData, setEntityNewData, setFormLoading } from "../../../../store/accounting/crudSlice.js";
 function HeadGroupIndex() {
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
@@ -20,10 +22,22 @@ function HeadGroupIndex() {
     const configData = getConfigData()
     const progress = getLoadingProgress()
 
+    const { headGroupId } = useParams()
+    const navigate = useNavigate()
+
     useEffect(() => {
-        dispatch(setInsertType('create'))
-        dispatch(setSearchKeyword(''))
-    }, [])
+        headGroupId ? (
+            dispatch(setInsertType('update')),
+            dispatch(editEntityData(`/accounting/head-group/${headGroupId}`)),
+            dispatch(setFormLoading(true))
+        ) : (
+            dispatch(setInsertType('create')),
+            dispatch(setSearchKeyword('')),
+            dispatch(setEntityNewData([])),
+            navigate('/accounting/head-group', { replace: true })
+        );
+    }, [headGroupId, dispatch, navigate])
+
 
     return (
         <>

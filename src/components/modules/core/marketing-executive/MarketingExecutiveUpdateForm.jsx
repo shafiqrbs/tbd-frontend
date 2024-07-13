@@ -120,6 +120,7 @@ function MarketingExecutiveUpdateForm() {
         <>
             <Box>
                 <form onSubmit={form.onSubmit((values) => {
+                    console.log(values)
                     dispatch(updateEntityData(values))
                         .then(() => {
                             navigate('core/marketing-executive', { replace: true });

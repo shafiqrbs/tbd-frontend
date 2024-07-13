@@ -112,6 +112,7 @@ function LocationUpdateForm() {
         <>
             <Box>
                 <form onSubmit={form.onSubmit((values) => {
+                    console.log(values)
                     dispatch(updateEntityData(values))
                         .then(() => {
                             navigate('core/location', { replace: true });

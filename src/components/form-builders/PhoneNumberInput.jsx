@@ -64,7 +64,7 @@ export default function PhoneNumber(props) {
                 <div style={{ position: 'relative' }}>
                     <PhoneInput
                         country={'bd'}
-                        value={form.values[name]}
+                        value={form.values[name] || `+880`}
                         onChange={handleChange}
                         inputProps={{
                             required: required,

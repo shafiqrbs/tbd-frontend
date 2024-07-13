@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useOutletContext } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import {
     Group,
     Box, Grid,
@@ -20,6 +20,7 @@ import {
 import KeywordSearch from "../../filter/KeywordSearch";
 import { modals } from "@mantine/modals";
 import tableCss from "../../../../assets/css/Table.module.css";
+import HeadGroupViewDrawer from "./HeadGroupViewDrawer.jsx";
 function HeadGroupTable(props) {
 
     const dispatch = useDispatch();
@@ -28,11 +29,13 @@ function HeadGroupTable(props) {
     const height = mainAreaHeight - 98; //TabList height 104
     const perPage = 50;
     const [page, setPage] = useState(1);
+    const [headGroupDrawer, setHeadGroupDrawer] = useState(false)
 
 
     const fetching = useSelector((state) => state.crudSlice.fetching)
     const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword)
     const indexData = useSelector((state) => state.crudSlice.indexEntityData)
+    const navigate = useNavigate()
 
 
     useEffect(() => {
@@ -71,7 +74,7 @@ function HeadGroupTable(props) {
                             render: (item) => (indexData.data.indexOf(item) + 1)
                         },
                         { accessor: 'name', title: t('Name') },
-                        { accessor: 'mother_account', title: t('NatureOfGroup') },
+                        { accessor: 'parent_name', title: t('NatureOfGroup') },
                         { accessor: 'code', title: t('AccountCode') },
                         {
                             accessor: "action",
@@ -81,7 +84,7 @@ function HeadGroupTable(props) {
                                 <Group gap={4} justify="right" wrap="nowrap">
                                     <Menu position="bottom-end" offset={3} withArrow trigger="hover" openDelay={100} closeDelay={400}>
                                         <Menu.Target>
-                                            <ActionIcon variant="outline" color="gray.6" radius="xl" aria-label="Settings">
+                                            <ActionIcon size="sm" variant="outline" color="red" radius="xl" aria-label="Settings">
                                                 <IconDotsVertical height={'18'} width={'18'} stroke={1.5} />
                                             </ActionIcon>
                                         </Menu.Target>
@@ -92,16 +95,15 @@ function HeadGroupTable(props) {
                                                     dispatch(setInsertType('update'))
                                                     dispatch(editEntityData('accounting/transaction-mode/' + data.id))
                                                     dispatch(setFormLoading(true))
+                                                    navigate(`/accounting/head-group/${data.id}`)
                                                 }}
                                             >
                                                 {t('Edit')}
                                             </Menu.Item>
-
                                             <Menu.Item
-                                                href={``}
                                                 onClick={() => {
                                                     console.log('ok')
-                                                    // setCustomerViewModel(true)
+                                                    setHeadGroupDrawer(true)
                                                     // dispatch(showEntityData('core/customer/' + data.id))
                                                 }}
                                                 target="_blank"
@@ -127,6 +129,7 @@ function HeadGroupTable(props) {
                                                             <Text size="sm"> {t("FormConfirmationMessage")}</Text>
                                                         ),
                                                         labels: { confirm: 'Confirm', cancel: 'Cancel' },
+                                                        confirmProps: { color: 'red.6' },
                                                         onCancel: () => console.log('Cancel'),
                                                         onConfirm: () => {
                                                             dispatch(deleteEntityData('accounting/account-head/' + data.id))
@@ -158,9 +161,9 @@ function HeadGroupTable(props) {
                     height={height}
                     scrollAreaProps={{ type: 'never' }}
                 />
-
-
             </Box>
+            {headGroupDrawer && <HeadGroupViewDrawer headGroupDrawer={headGroupDrawer}
+                setHeadGroupDrawer={setHeadGroupDrawer} />}
         </>
 
     );

@@ -17,20 +17,15 @@ import { hasLength, useForm } from "@mantine/form";
 import { modals } from "@mantine/modals";
 import { notifications } from "@mantine/notifications";
 
-import {
-    getCustomerDropdown,
-} from "../../../../store/core/utilitySlice";
 import { setFetching, storeEntityData } from "../../../../store/core/crudSlice.js";
 
-import _ShortcutVendor from "../../shortcut/_ShortcutVendor";
 import InputForm from "../../../form-builders/InputForm";
 import SelectForm from "../../../form-builders/SelectForm";
 import TextAreaForm from "../../../form-builders/TextAreaForm";
 import getCustomerDropdownData from "../../../global-hook/dropdown/getCustomerDropdownData.js";
-import CategoryGroupModal from "../../inventory/category/CategoryGroupModal";
-import SwitchForm from "../../../form-builders/SwitchForm";
 import InputNumberForm from "../../../form-builders/InputNumberForm";
 import PhoneNumber from "../../../form-builders/PhoneNumberInput.jsx";
+import Shortcut from "../../shortcut/Shortcut.jsx";
 
 function VendorForm() {
     const { t, i18n } = useTranslation();
@@ -41,7 +36,7 @@ function VendorForm() {
     const [customerData, setCustomerData] = useState(null);
     const form = useForm({
         initialValues: {
-            company_name: '', name: '', mobile: '', tp_percent: '', email: ''
+            company_name: '', name: '', mobile: '', tp_percent: '', email: '', customer_id: '', address: ''
         },
         validate: {
             company_name: hasLength({ min: 2, max: 20 }),
@@ -246,7 +241,7 @@ function VendorForm() {
                     </Grid.Col>
                     <Grid.Col span={1} >
                         <Box bg={'white'} className={'borderRadiusAll'} pt={'16'}>
-                            <_ShortcutVendor
+                            <Shortcut
                                 form={form}
                                 FormSubmit={'EntityFormSubmit'}
                                 Name={'name'}

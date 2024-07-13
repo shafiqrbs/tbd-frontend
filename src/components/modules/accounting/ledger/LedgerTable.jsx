@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useOutletContext } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import {
     Group,
     Box, Grid,
@@ -20,6 +20,9 @@ import {
 import KeywordSearch from "../../filter/KeywordSearch";
 import { modals } from "@mantine/modals";
 import tableCss from "../../../../assets/css/Table.module.css";
+import LedgerViewDrawer from "./LedgerViewDrawer.jsx";
+
+
 function LedgerTable(props) {
 
     const dispatch = useDispatch();
@@ -47,6 +50,9 @@ function LedgerTable(props) {
         dispatch(getIndexEntityData(value))
     }, [fetching]);
 
+    const navigate = useNavigate()
+    const [ledgerViewDrawer, setLedgerViewDrawer] = useState(false)
+
     return (
 
         <>
@@ -70,8 +76,8 @@ function LedgerTable(props) {
                             textAlignment: 'right',
                             render: (item) => (indexData.data.indexOf(item) + 1)
                         },
-                        { accessor: 'name', title: t('Name') },
                         { accessor: 'parent_name', title: t('ParentHead') },
+                        { accessor: 'name', title: t('Name') },
                         { accessor: 'code', title: t('AccountCode') },
                         {
                             accessor: "action",
@@ -81,7 +87,7 @@ function LedgerTable(props) {
                                 <Group gap={4} justify="right" wrap="nowrap">
                                     <Menu position="bottom-end" offset={3} withArrow trigger="hover" openDelay={100} closeDelay={400}>
                                         <Menu.Target>
-                                            <ActionIcon variant="outline" color="gray.6" radius="xl" aria-label="Settings">
+                                            <ActionIcon size="sm" variant="outline" color="red" radius="xl" aria-label="Settings">
                                                 <IconDotsVertical height={'18'} width={'18'} stroke={1.5} />
                                             </ActionIcon>
                                         </Menu.Target>
@@ -92,15 +98,16 @@ function LedgerTable(props) {
                                                     dispatch(setInsertType('update'))
                                                     dispatch(editEntityData('accounting/transaction-mode/' + data.id))
                                                     dispatch(setFormLoading(true))
+                                                    navigate(`/accounting/ledger/${data.id}`)
                                                 }}
                                             >
                                                 {t('Edit')}
                                             </Menu.Item>
 
                                             <Menu.Item
-                                                href={``}
                                                 onClick={() => {
-                                                    console.log('ok')
+                                                    // console.log("ok")
+                                                    setLedgerViewDrawer(true)
                                                     // setCustomerViewModel(true)
                                                     // dispatch(showEntityData('core/customer/' + data.id))
                                                 }}
@@ -128,6 +135,7 @@ function LedgerTable(props) {
                                                         ),
                                                         labels: { confirm: 'Confirm', cancel: 'Cancel' },
                                                         onCancel: () => console.log('Cancel'),
+                                                        confirmProps: { color: 'red.6' },
                                                         onConfirm: () => {
                                                             dispatch(deleteEntityData('accounting/account-head/' + data.id))
                                                             dispatch(setFetching(true))
@@ -158,9 +166,10 @@ function LedgerTable(props) {
                     height={height}
                     scrollAreaProps={{ type: 'never' }}
                 />
-
-
             </Box>
+            {ledgerViewDrawer &&
+                <LedgerViewDrawer ledgerViewDrawer={ledgerViewDrawer} setLedgerViewDrawer={setLedgerViewDrawer} />
+            }
         </>
 
     );

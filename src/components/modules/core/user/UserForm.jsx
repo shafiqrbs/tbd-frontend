@@ -22,11 +22,8 @@ import {
     storeEntityData,
 } from "../../../../store/core/crudSlice.js";
 import { notifications } from "@mantine/notifications";
-import _ShortcutUser from "../../shortcut/_ShortcutUser.jsx";
-import SelectForm from "../../../form-builders/SelectForm";
-import TextAreaForm from "../../../form-builders/TextAreaForm";
-import SwitchForm from "../../../form-builders/SwitchForm";
 import PhoneNumber from "../../../form-builders/PhoneNumberInput.jsx";
+import Shortcut from "../../shortcut/Shortcut.jsx";
 
 function UserForm() {
     const { t, i18n } = useTranslation();
@@ -35,7 +32,7 @@ function UserForm() {
     const height = mainAreaHeight - 100; //TabList height 104
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
     const formLoading = useSelector((state) => state.crudSlice.formLoading)
-    const [visible, { toggle }] = useDisclosure(true);
+
 
     const form = useForm({
         initialValues: {
@@ -202,7 +199,6 @@ function UserForm() {
                                                     name={'password'}
                                                     id={'password'}
                                                     nextField={'confirm_password'}
-                                                    visible={visible}
                                                     mt={8}
                                                 />
                                             </Box>
@@ -214,7 +210,6 @@ function UserForm() {
                                                     label={t('ConfirmPassword')}
                                                     placeholder={t('ConfirmPassword')}
                                                     required={true}
-                                                    visible={visible}
                                                     name={'confirm_password'}
                                                     id={'confirm_password'}
                                                     nextField={'EntityFormSubmit'}
@@ -230,7 +225,7 @@ function UserForm() {
                     </Grid.Col>
                     <Grid.Col span={1} >
                         <Box bg={'white'} className={'borderRadiusAll'} pt={'16'}>
-                            <_ShortcutUser
+                            <Shortcut
                                 form={form}
                                 FormSubmit={'EntityFormSubmit'}
                                 Name={'name'}

@@ -17,15 +17,9 @@ import {
 import { useHotkeys, useToggle } from "@mantine/hooks";
 import { useDispatch, useSelector } from "react-redux";
 import { isNotEmpty, useForm } from "@mantine/form";
-import CustomerSettingsForm from "../customer-settings/CustomerSettingsForm.jsx";
 
-
-
-
-function CustomerViewDrawer(props) {
+function HeadSubViewDrawer(props) {
     const configData = localStorage.getItem('config-data');
-
-    const adjustment = -28;
 
     const entityEditData = useSelector((state => state.crudSlice.entityEditData))
 
@@ -41,12 +35,12 @@ function CustomerViewDrawer(props) {
 
     return (
         <>
-            <Drawer.Root title={t('CustomerDetailsData')} opened={viewDrawer} position="right" onClose={closeDrawer} size={'30%'} >
+            <Drawer.Root title={t('HeadSubGroupDetails')} opened={viewDrawer} position="right" onClose={closeDrawer} size={'30%'} >
                 <Drawer.Overlay />
                 <Drawer.Content>
 
-                    <Drawer.Header>
-                        <Drawer.Title>{t('CustomerDetailsData')}</Drawer.Title>
+                    <Drawer.Header h={5}>
+                        <Drawer.Title>{t('HeadSubGroupDetails')}</Drawer.Title>
                         <ActionIcon
                             className="ActionIconCustom"
                             radius="xl"
@@ -60,7 +54,7 @@ function CustomerViewDrawer(props) {
                         <Box m={'md'} p={'md'} className="boxBackground borderRadiusAll" h={height - 10}>
                             <Box >
                                 <Grid columns={24}>
-                                    <Grid.Col span={'8'} align={'left'} fw={'600'} fz={'14'}>{t('CustomerId')}</Grid.Col>
+                                    <Grid.Col span={'8'} align={'left'} fw={'600'} fz={'14'}>{t('HeadGroup')}</Grid.Col>
                                     <Grid.Col span={'1'}>:</Grid.Col>
                                     <Grid.Col span={'auto'}>{entityEditData && entityEditData.customerId && entityEditData.customerId}</Grid.Col>
                                 </Grid>
@@ -70,34 +64,11 @@ function CustomerViewDrawer(props) {
                                     <Grid.Col span={'auto'}>{entityEditData && entityEditData.name && entityEditData.name}</Grid.Col>
                                 </Grid>
                                 <Grid columns={24}>
-                                    <Grid.Col span={'8'} align={'left'} fw={'600'} fz={'14'}>{t('Mobile')}</Grid.Col>
+                                    <Grid.Col span={'8'} align={'left'} fw={'600'} fz={'14'}>{t('AccountCode')}</Grid.Col>
                                     <Grid.Col span={'1'}>:</Grid.Col>
                                     <Grid.Col span={'auto'}>{entityEditData && entityEditData.mobile && entityEditData.mobile}</Grid.Col>
                                 </Grid>
 
-                                <Grid columns={24}>
-                                    <Grid.Col span={'8'} align={'left'} fw={'600'} fz={'14'}>{t('AlternativeMobile')}</Grid.Col>
-                                    <Grid.Col span={'1'}>:</Grid.Col>
-                                    <Grid.Col span={'auto'}>{entityEditData && entityEditData.alternative_mobile && entityEditData.alternative_mobile}</Grid.Col>
-                                </Grid>
-
-                                <Grid columns={24}>
-                                    <Grid.Col span={'8'} align={'left'} fw={'600'} fz={'14'}>{t('Email')}</Grid.Col>
-                                    <Grid.Col span={'1'}>:</Grid.Col>
-                                    <Grid.Col span={'auto'}>{entityEditData && entityEditData.email && entityEditData.email}</Grid.Col>
-                                </Grid>
-
-                                <Grid columns={24}>
-                                    <Grid.Col span={'8'} align={'left'} fw={'600'} fz={'14'}>{t('ReferenceId')}</Grid.Col>
-                                    <Grid.Col span={'1'}>:</Grid.Col>
-                                    <Grid.Col span={'auto'}>{entityEditData && entityEditData.reference_id && entityEditData.reference_id}</Grid.Col>
-                                </Grid>
-
-                                <Grid columns={24}>
-                                    <Grid.Col span={'8'} align={'left'} fw={'600'} fz={'14'}>{t('Created')}</Grid.Col>
-                                    <Grid.Col span={'1'}>:</Grid.Col>
-                                    <Grid.Col span={'auto'}>{entityEditData && entityEditData.created && entityEditData.created}</Grid.Col>
-                                </Grid>
                             </Box>
 
                         </Box>
@@ -109,4 +80,4 @@ function CustomerViewDrawer(props) {
     );
 }
 
-export default CustomerViewDrawer;
+export default HeadSubViewDrawer;

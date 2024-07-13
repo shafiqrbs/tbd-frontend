@@ -336,8 +336,8 @@
   "AccountCode": "Account Code",
   "OpeningBalanceValidateMessage": "Please provide Opening balance",
   "OpeningBalance": "Opening Balance",
-  "UpdateAccountHeadGroup": "Update Account Head-Group",
-  "ManageAccountHeadGroup": "Manage Account Head-Group",
+  "UpdateAccountHeadGroup": "Update Account Head Group",
+  "ManageAccountHeadGroup": "Manage Account Head Group",
   "CreateNewAccountGroup": "Create New Account Group",
   "HeadGroup": "Head Group",
   "HeadSubGroup": "Head Sub Group",
@@ -499,5 +499,9 @@
   "CreateExecutive": "Create Mareketing Executive",
   "UpdateExecutive": "Update Marketing Executive",
   "CoreSetting": "Core Setting",
-  "CoreLocation": "Core Location"
+  "CoreLocation": "Core Location",
+  "UpdateLedger": "Update Ledger",
+  "ParentHead": "Parent Head",
+  "ManageLedger": "Manage Ledger",
+  "CreateHeadGroup": "Create Head Group"
 }

@@ -219,3 +219,8 @@ input[type=radio]:checked + label>img {
 .hoveredItem .description {
     color: #e61d1d !important; 
 }
+.ActionIconCustom{
+    position: absolute;
+    right: 8px;
+    z-index: 1000;
+}
