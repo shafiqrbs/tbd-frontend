@@ -79,8 +79,8 @@ function CustomerSettingsIndex() {
                                     <Grid.Col span={9}>
                                         {
                                             insertType === 'create'
-                                                ? <CustomerSettingsForm />
-                                                : <CustomerSettingsUpdateForm />
+                                                ? <CustomerSettingsForm saveId={'EntityFormSubmit'} />
+                                                : <CustomerSettingsUpdateForm saveId={'EntityFormSubmit'}/>
                                         }
                                     </Grid.Col>
                                 </Grid>

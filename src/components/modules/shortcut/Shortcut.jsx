@@ -9,6 +9,7 @@ function Shortcut(props) {
     const { t, i18n } = useTranslation();
     const { isOnline, mainAreaHeight } = useOutletContext();
     const formHeight = mainAreaHeight - 46; //TabList height 104
+    const { inputType, Name } = props
     return (
         <>
             <Stack
@@ -37,9 +38,11 @@ function Shortcut(props) {
                                 color={`red.5`}
                                 radius="xl"
                                 onClick={(e) => {
-                                    props.inputType === 'select' ?
-                                        document.getElementById(props.Name).click() :
-                                        document.getElementById(props.Name).focus()
+                                    console.log(inputType)
+                                    console.log(Name)
+                                    inputType === 'select' ?
+                                        document.getElementById(Name).click() :
+                                        document.getElementById(Name).focus()
                                 }}
                             >
                                 <Flex direction={`column`} align={'center'}>

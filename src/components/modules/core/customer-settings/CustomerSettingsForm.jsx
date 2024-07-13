@@ -31,7 +31,7 @@ function CustomerSettingsForm(props) {
     const [categoryGroupData, setCategoryGroupData] = useState(null);
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
 
-    const { adjustment } = props
+    const { adjustment, saveId } = props
 
     const form = useForm({
         initialValues: {
@@ -52,7 +52,7 @@ function CustomerSettingsForm(props) {
     }]], []);
 
     useHotkeys([['alt+s', () => {
-        document.getElementById('EntityFormSubmit').click()
+        document.getElementById(`${saveId}`).click()
     }]], []);
 
 
@@ -116,7 +116,7 @@ function CustomerSettingsForm(props) {
                                                                     size="xs"
                                                                     color={`green.8`}
                                                                     type="submit"
-                                                                    id="EntityFormSubmit"
+                                                                    id={`${saveId}`}
                                                                     leftSection={<IconDeviceFloppy size={16} />}
                                                                 >
 
@@ -168,7 +168,7 @@ function CustomerSettingsForm(props) {
                                                             <SwitchForm
                                                                 tooltip={t('Status')}
                                                                 label=''
-                                                                nextField={'CategoryFormSubmit'}
+                                                                nextField={`${saveId}`}
                                                                 name={'status'}
                                                                 form={form}
                                                                 color="red"
@@ -190,7 +190,7 @@ function CustomerSettingsForm(props) {
                                     <_ShortcutMasterData
                                         adjustment={adjustment}
                                         form={form}
-                                        FormSubmit={'EntityFormSubmit'}
+                                        FormSubmit={`${saveId}`}
                                         Name={'name'}
                                         inputType="select"
                                     />

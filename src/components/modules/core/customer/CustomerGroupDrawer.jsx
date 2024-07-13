@@ -81,7 +81,7 @@ function CustomerGroupDrawer(props) {
                             </ActionIcon>
                         </Drawer.Header>
                         <Box m={8} mb={0}>
-                            <CustomerSettingsForm adjustment={adjustment} />
+                            <CustomerSettingsForm adjustment={adjustment} saveId={'EntityDrawerSubmit'} />
                         </Box>
                     </ScrollArea>
 

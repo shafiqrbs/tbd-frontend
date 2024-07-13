@@ -26,7 +26,7 @@ import InputForm from "../../../form-builders/InputForm.jsx";
 import SelectForm from "../../../form-builders/SelectForm.jsx";
 import SwitchForm from "../../../form-builders/SwitchForm.jsx";
 
-function CustomerSettingsUpdateForm() {
+function CustomerSettingsUpdateForm(props) {
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
@@ -41,6 +41,8 @@ function CustomerSettingsUpdateForm() {
     const formLoading = useSelector((state) => state.crudSlice.formLoading)
     const [formLoad, setFormLoad] = useState('');
     const navigate = useNavigate();
+
+    const { saveId } = props
 
 
 
@@ -104,7 +106,7 @@ function CustomerSettingsUpdateForm() {
     }]], []);
 
     useHotkeys([['alt+s', () => {
-        document.getElementById('CategoryFormSubmit').click()
+        document.getElementById(`${saveId}`).click()
     }]], []);
 
 
@@ -175,7 +177,7 @@ function CustomerSettingsUpdateForm() {
                                                                 size="xs"
                                                                 color={`green.8`}
                                                                 type="submit"
-                                                                id="EntityFormSubmit"
+                                                                id={`${saveId}`}
                                                                 leftSection={<IconDeviceFloppy size={16} />}
                                                             >
                                                                 <Flex direction={`column`} gap={0}>
@@ -227,7 +229,7 @@ function CustomerSettingsUpdateForm() {
                                                             <SwitchForm
                                                                 tooltip={t('Status')}
                                                                 label=''
-                                                                nextField={'CategoryFormSubmit'}
+                                                                nextField={`${saveId}`}
                                                                 name={'status'}
                                                                 form={form}
                                                                 color="red"
@@ -249,8 +251,8 @@ function CustomerSettingsUpdateForm() {
                             <Box bg={'white'} className={'borderRadiusAll'} pt={'16'}>
                                 <Shortcut
                                     form={form}
-                                    FormSubmit={'EntityFormSubmit'}
-                                    Name={'name'}
+                                    FormSubmit={`${saveId}`}
+                                    Name={'setting_type'}
                                     inputType="select"
                                 />
                             </Box>
