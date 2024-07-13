@@ -175,15 +175,6 @@ function CustomerUpdateForm() {
         <Box>
             <form onSubmit={form.onSubmit((values) => {
                 // In the submit handler of both forms
-                dispatch(updateEntityData(values))
-                    .then(() => {
-                        // other success handling code
-                        navigate('/core/customer', { replace: true });
-                        dispatch(setInsertType('create')); // Reset to create mode
-                    })
-                    .catch((error) => {
-                        // error handling
-                    });
                 modals.openConfirmModal({
                     title: (
                         <Text size="md"> {t("FormConfirmationTitle")}</Text>
