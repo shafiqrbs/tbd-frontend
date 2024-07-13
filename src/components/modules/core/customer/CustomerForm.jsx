@@ -164,7 +164,6 @@ function CustomerForm() {
     return (
         <Box>
             <form onSubmit={form.onSubmit((values) => {
-                console.log(values)
                 dispatch(setValidationData(false))
                 modals.openConfirmModal({
                     title: (
