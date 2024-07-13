@@ -26,7 +26,7 @@ import InputForm from "../../../form-builders/InputForm.jsx";
 import SelectForm from "../../../form-builders/SelectForm.jsx";
 import SwitchForm from "../../../form-builders/SwitchForm.jsx";
 
-function CustomerSettingsUpdateForm(props) {
+function ProductSettingsUpdateForm(props) {
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
@@ -45,26 +45,6 @@ function CustomerSettingsUpdateForm(props) {
     const { saveId } = props
 
 
-
-    const { settingsId } = useParams();
-
-    useEffect(() => {
-        if (settingsId) {
-            dispatch(setEditEntityData(`core/customer-settings/${settingsId}`))
-            dispatch(setFormLoading(true));
-        }
-    }, [settingsId, dispatch]);
-
-    // useEffect(() => {
-
-    //     const value = {
-    //         url: 'inventory/select/group-category',
-    //     }
-
-    //     dispatch(getCategoryDropdown(value))
-    //     dispatch(setDropdownLoad(false))
-    // }, [dropdownLoad]);
-
     const settingsForm = useForm({
         initialValues: {
             setting_type: '', setting_name: '', status: ''
@@ -82,7 +62,7 @@ function CustomerSettingsUpdateForm(props) {
 
     useEffect(() => {
 
-        form.setValues({
+        settingsForm.setValues({
             setting_type: entityEditData.setting_type ? entityEditData.setting_type : '',
             setting_name: entityEditData.setting_name ? entityEditData.setting_name : '',
             status: entityEditData.status ? entityEditData.status : ''
@@ -94,7 +74,7 @@ function CustomerSettingsUpdateForm(props) {
             setFormDataForUpdate(false)
         }, 500)
 
-    }, [entityEditData, dispatch, setFormData])
+    }, [entityEditData, dispatch])
 
 
     useHotkeys([['alt+n', () => {
@@ -117,7 +97,7 @@ function CustomerSettingsUpdateForm(props) {
                     console.log(values)
                     dispatch(updateEntityData(values))
                         .then(() => {
-                            navigate('core/customer-settings', { replace: true });
+                            navigate('inventory/product-settings', { replace: true });
                             dispatch(setInsertType('create'));
                         })
                         .catch((error) => {
@@ -149,7 +129,7 @@ function CustomerSettingsUpdateForm(props) {
                             });
 
                             setTimeout(() => {
-                                settingsForm.reset()
+                                form.reset()
                                 dispatch(setInsertType('create'))
                                 dispatch(setEditEntityData([]))
                                 dispatch(setFetching(true))
@@ -265,4 +245,4 @@ function CustomerSettingsUpdateForm(props) {
     )
 }
 
-export default CustomerSettingsUpdateForm;
+export default ProductSettingsUpdateForm;
