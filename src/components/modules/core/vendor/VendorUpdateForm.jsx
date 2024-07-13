@@ -25,11 +25,11 @@ import {
 } from "../../../../store/core/crudSlice.js";
 import { getCustomerDropdown } from "../../../../store/core/utilitySlice.js";
 
-import _ShortcutVendor from "../../shortcut/_ShortcutVendor.jsx";
 import SelectForm from "../../../form-builders/SelectForm.jsx";
 import TextAreaForm from "../../../form-builders/TextAreaForm.jsx";
 import getCustomerDropdownData from "../../../global-hook/dropdown/getCustomerDropdownData";
 import InputNumberForm from "../../../form-builders/InputNumberForm";
+import Shortcut from "../../shortcut/Shortcut.jsx";
 
 function VendorUpdateForm() {
     const { t, i18n } = useTranslation();
@@ -45,22 +45,14 @@ function VendorUpdateForm() {
     const customerDropdownData = useSelector((state) => state.utilitySlice.customerDropdownData)
     const entityEditData = useSelector((state) => state.crudSlice.entityEditData)
     const formLoading = useSelector((state) => state.crudSlice.formLoading)
-
-    const { vendorId } = useParams();
     const navigate = useNavigate();
 
-    useEffect(() => {
-        if (vendorId) {
-            dispatch(setEditEntityData(`core/vendor/${vendorId}`));
-            dispatch(setFormLoading(true));
-        }
-    }, [vendorId, dispatch])
 
 
-    let customerDropdown = customerDropdownData && customerDropdownData.length > 0 ?
-        customerDropdownData.map((type, index) => {
-            return ({ 'label': type.name, 'value': String(type.id) })
-        }) : []
+    // let customerDropdown = customerDropdownData && customerDropdownData.length > 0 ?
+    //     customerDropdownData.map((type, index) => {
+    //         return ({ 'label': type.name, 'value': String(type.id) })
+    //     }) : []
 
     useEffect(() => {
         dispatch(getCustomerDropdown('core/select/customer'))
@@ -69,7 +61,7 @@ function VendorUpdateForm() {
 
     const form = useForm({
         initialValues: {
-            company_name: '', name: '', mobile: '', tp_percent: '', email: ''
+            company_name: '', name: '', mobile: '', tp_percent: '', email: '', customer_id: '', address: ''
         },
         validate: {
             company_name: hasLength({ min: 2, max: 20 }),
@@ -94,7 +86,8 @@ function VendorUpdateForm() {
                 mobile: entityEditData.mobile ? entityEditData.mobile : '',
                 customer_id: entityEditData.customer_id ? entityEditData.customer_id : '',
                 address: entityEditData.address ? entityEditData.address : '',
-                email: entityEditData.email ? entityEditData.email : ''
+                email: entityEditData.email ? entityEditData.email : '',
+                tp_percent: entityEditData.tp_percent ? entityEditData.tp_percent : '',
             })
         }
         dispatch(setFormLoading(false))
@@ -103,7 +96,7 @@ function VendorUpdateForm() {
             setFormDataForUpdate(false)
         }, 500)
 
-    }, [dispatch, entityEditData, vendorId])
+    }, [dispatch, entityEditData])
 
     const handelFormReset = () => {
         if (entityEditData) {
@@ -113,7 +106,8 @@ function VendorUpdateForm() {
                 mobile: entityEditData.mobile ? entityEditData.mobile : '',
                 customer_id: entityEditData.customer_id ? entityEditData.customer_id : '',
                 address: entityEditData.address ? entityEditData.address : '',
-                email: entityEditData.email ? entityEditData.email : ''
+                email: entityEditData.email ? entityEditData.email : '',
+                tp_percent: entityEditData.tp_percent ? entityEditData.tp_percent : '',
             }
             form.setValues(originalValues)
         }
@@ -315,7 +309,7 @@ function VendorUpdateForm() {
                     </Grid.Col>
                     <Grid.Col span={1} >
                         <Box bg={'white'} className={'borderRadiusAll'} pt={'16'}>
-                            <_ShortcutVendor
+                            <Shortcut
                                 entityEditData={entityEditData}
                                 form={form}
                                 FormSubmit={'EntityFormSubmit'}

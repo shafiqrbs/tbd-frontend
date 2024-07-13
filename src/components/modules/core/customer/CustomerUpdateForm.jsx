@@ -100,7 +100,6 @@ function CustomerUpdateForm() {
     }, [dispatch, formLoading])
 
     useEffect(() => {
-        console.log(entityEditData.mobile)
         if (entityEditData) {
             form.setValues({
                 name: entityEditData.name,

@@ -22,9 +22,9 @@ import {
     updateEntityData
 } from "../../../../store/core/crudSlice.js";
 import { notifications } from "@mantine/notifications";
-import _ShortcutUser from "../../shortcut/_ShortcutUser.jsx";
 import PasswordInputForm from "../../../form-builders/PasswordInputForm";
 import PhoneNumber from "../../../form-builders/PhoneNumberInput.jsx";
+import Shortcut from "../../shortcut/Shortcut.jsx";
 function UserUpdateForm() {
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
@@ -37,16 +37,8 @@ function UserUpdateForm() {
     const formLoading = useSelector((state) => state.crudSlice.formLoading)
     const [visible, { toggle }] = useDisclosure(true);
 
-    const { userId } = useParams();
     const navigate = useNavigate();
 
-    useEffect(() => {
-        if (userId) {
-            dispatch(setEditEntityData(`core/user/${userId}`));
-            dispatch(setFormLoading(true));
-
-        }
-    }, [userId, dispatch]);
 
     const form = useForm({
         initialValues: {
@@ -86,7 +78,7 @@ function UserUpdateForm() {
                 name: entityEditData.name ? entityEditData.name : '',
                 username: entityEditData.username ? entityEditData.username : '',
                 email: entityEditData.email ? entityEditData.email : '',
-                mobile: entityEditData.mobile ? entityEditData.mobile : '+880'
+                mobile: entityEditData.mobile ? entityEditData.mobile : ''
             })
         }
         dispatch(setFormLoading(false))
@@ -95,7 +87,7 @@ function UserUpdateForm() {
             setFormDataForUpdate(false)
         }, 500)
 
-    }, [dispatch, entityEditData, userId])
+    }, [dispatch, entityEditData])
 
 
     useHotkeys([['alt+n', () => {
@@ -290,7 +282,7 @@ function UserUpdateForm() {
                         </Grid.Col>
                         <Grid.Col span={1} >
                             <Box bg={'white'} className={'borderRadiusAll'} pt={'16'}>
-                                <_ShortcutUser
+                                <Shortcut
                                     entityEditData={entityEditData}
                                     form={form}
                                     FormSubmit={'EntityFormSubmit'}
