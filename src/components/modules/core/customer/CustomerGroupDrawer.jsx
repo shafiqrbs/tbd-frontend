@@ -23,6 +23,8 @@ function CustomerGroupDrawer(props) {
 
     const adjustment = -28;
 
+    const { saveId } = props
+
     const { groupDrawer, setGroupDrawer } = props
     const { isOnline, mainAreaHeight } = useOutletContext();
     const { t, i18n } = useTranslation();
@@ -81,7 +83,7 @@ function CustomerGroupDrawer(props) {
                             </ActionIcon>
                         </Drawer.Header>
                         <Box m={8} mb={0}>
-                            <CustomerSettingsForm adjustment={adjustment} saveId={'EntityDrawerSubmit'} />
+                            <CustomerSettingsForm adjustment={adjustment} saveId={saveId} />
                         </Box>
                     </ScrollArea>
 

@@ -33,7 +33,7 @@ function CustomerSettingsForm(props) {
 
     const { adjustment, saveId } = props
 
-    const form = useForm({
+    const settingsForm = useForm({
         initialValues: {
             setting_type: '', setting_name: '', status: true
         },
@@ -48,7 +48,7 @@ function CustomerSettingsForm(props) {
     }]], []);
 
     useHotkeys([['alt+r', () => {
-        form.reset()
+        settingsForm.reset()
     }]], []);
 
     useHotkeys([['alt+s', () => {
@@ -59,7 +59,7 @@ function CustomerSettingsForm(props) {
     return (
         <>
             <Box>
-                <form onSubmit={form.onSubmit((values) => {
+                <form onSubmit={settingsForm.onSubmit((values) => {
                     console.log(values)
                     modals.openConfirmModal({
                         title: (
@@ -74,7 +74,7 @@ function CustomerSettingsForm(props) {
                             setSaveCreateLoading(true)
                             const value = {
                                 url: 'inventory/category-group',
-                                data: form.values
+                                data: settingsForm.values
                             }
                             dispatch(storeEntityData(value))
 
@@ -88,7 +88,7 @@ function CustomerSettingsForm(props) {
                             });
 
                             setTimeout(() => {
-                                form.reset()
+                                settingsForm.reset()
                                 setCategoryGroupData(null)
                                 setSaveCreateLoading(false)
                                 dispatch(setFetching(true))
@@ -141,7 +141,7 @@ function CustomerSettingsForm(props) {
                                                         required={true}
                                                         nextField={'setting_name'}
                                                         name={'setting_type'}
-                                                        form={form}
+                                                        form={settingsForm}
                                                         dropdownValue={['test1', 'test2']}
                                                         id={'setting_type'}
                                                         searchable={false}
@@ -157,7 +157,7 @@ function CustomerSettingsForm(props) {
                                                         placeholder={t('SettingName')}
                                                         required={true}
                                                         nextField={'status'}
-                                                        form={form}
+                                                        form={settingsForm}
                                                         name={'setting_name'}
                                                         id={'setting_name'}
                                                     />
@@ -170,7 +170,7 @@ function CustomerSettingsForm(props) {
                                                                 label=''
                                                                 nextField={`${saveId}`}
                                                                 name={'status'}
-                                                                form={form}
+                                                                form={settingsForm}
                                                                 color="red"
                                                                 id={'status'}
                                                                 position={'left'}
@@ -189,7 +189,7 @@ function CustomerSettingsForm(props) {
                                 <Box bg={'white'} className={'borderRadiusAll'} pt={'16'}>
                                     <_ShortcutMasterData
                                         adjustment={adjustment}
-                                        form={form}
+                                        form={settingsForm}
                                         FormSubmit={`${saveId}`}
                                         Name={'setting_type'}
                                         inputType="select"

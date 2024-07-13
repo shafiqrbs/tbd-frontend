@@ -229,7 +229,7 @@ function CustomerSettingsUpdateForm(props) {
                                                             <SwitchForm
                                                                 tooltip={t('Status')}
                                                                 label=''
-                                                                nextField={`${saveId}`}
+                                                                nextField={'CategoryFormSubmit'}
                                                                 name={'status'}
                                                                 form={form}
                                                                 color="red"
@@ -252,7 +252,7 @@ function CustomerSettingsUpdateForm(props) {
                                 <Shortcut
                                     form={form}
                                     FormSubmit={`${saveId}`}
-                                    Name={'setting_type'}
+                                    Name={'name'}
                                     inputType="select"
                                 />
                             </Box>
