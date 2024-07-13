@@ -16,12 +16,12 @@ import {
 import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress.js";
 import getConfigData from "../../../global-hook/config-data/getConfigData.js";
 import { useNavigate, useParams } from "react-router-dom";
-import CoreHeaderNavbar from "../CoreHeaderNavbar.jsx";
-import CustomerSettingsTable from "./CustomerSettingsTable.jsx";
-import CustomerSettingsForm from "./CustomerSettingsForm.jsx";
-import CustomerSettingsUpdateForm from "./CustomerSettingsUpdateForm.jsx";
+import ProductSettingsTable from "./ProductSettingsTable.jsx";
+import ProductSettingsForm from "./ProductSettingsForm.jsx";
+import ProductSettingsUpdateForm from "./ProductSettingsUpdateForm.jsx";
+import InventoryHeaderNavbar from "../configuraton/InventoryHeaderNavbar.jsx";
 
-function CustomerSettingsIndex() {
+function ProductSettingsIndex() {
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const adjustment = 0;
@@ -38,7 +38,7 @@ function CustomerSettingsIndex() {
     useEffect(() => {
         if (settingsId) {
             dispatch(setInsertType('update'));
-            dispatch(editEntityData(`/core/customer-settings/${settingsId}`));
+            dispatch(editEntityData(`/inventory/product-settings/${settingsId}`));
             dispatch(setFormLoading(true));
         } else if (!settingsId) {
             dispatch(setInsertType('create'));
@@ -49,7 +49,7 @@ function CustomerSettingsIndex() {
             //     ['name']: '',
             //     ['mobile']: ''
             // }));
-            navigate('/core/customer-settings', { replace: true });
+            navigate('/inventory/product-settings', { replace: true });
         }
     }, [settingsId, dispatch, navigate]);
 
@@ -62,9 +62,9 @@ function CustomerSettingsIndex() {
                 <Box>
                     {configData &&
                         <>
-                            <CoreHeaderNavbar
+                            <InventoryHeaderNavbar
 
-                                pageTitle={t('CoreSetting')}
+                                pageTitle={t('inventorySetting')}
                                 roles={t('Roles')}
                                 allowZeroPercentage=''
                                 currencySymbol=''
@@ -73,14 +73,14 @@ function CustomerSettingsIndex() {
                                 <Grid columns={24} gutter={{ base: 8 }}>
                                     <Grid.Col span={15} >
                                         <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
-                                            <CustomerSettingsTable />
+                                            <ProductSettingsTable />
                                         </Box>
                                     </Grid.Col>
                                     <Grid.Col span={9}>
                                         {
                                             insertType === 'create'
-                                                ? <CustomerSettingsForm saveId={'EntityFormSubmit'} />
-                                                : <CustomerSettingsUpdateForm saveId={'EntityFormSubmit'} />
+                                                ? <ProductSettingsForm saveId={'EntityFormSubmit'} />
+                                                : <ProductSettingsUpdateForm saveId={'EntityFormSubmit'} />
                                         }
                                     </Grid.Col>
                                 </Grid>
@@ -94,4 +94,4 @@ function CustomerSettingsIndex() {
     );
 }
 
-export default CustomerSettingsIndex;
+export default ProductSettingsIndex;

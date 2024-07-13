@@ -26,7 +26,7 @@ import InputForm from "../../../form-builders/InputForm.jsx";
 import SelectForm from "../../../form-builders/SelectForm.jsx";
 import SwitchForm from "../../../form-builders/SwitchForm.jsx";
 
-function CustomerSettingsUpdateForm() {
+function CustomerSettingsUpdateForm(props) {
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
@@ -41,6 +41,8 @@ function CustomerSettingsUpdateForm() {
     const formLoading = useSelector((state) => state.crudSlice.formLoading)
     const [formLoad, setFormLoad] = useState('');
     const navigate = useNavigate();
+
+    const { saveId } = props
 
 
 
@@ -63,7 +65,7 @@ function CustomerSettingsUpdateForm() {
     //     dispatch(setDropdownLoad(false))
     // }, [dropdownLoad]);
 
-    const form = useForm({
+    const settingsForm = useForm({
         initialValues: {
             setting_type: '', setting_name: '', status: ''
         },
@@ -100,18 +102,18 @@ function CustomerSettingsUpdateForm() {
     }]], []);
 
     useHotkeys([['alt+r', () => {
-        form.reset()
+        settingsForm.reset()
     }]], []);
 
     useHotkeys([['alt+s', () => {
-        document.getElementById('CategoryFormSubmit').click()
+        document.getElementById(`${saveId}`).click()
     }]], []);
 
 
     return (
         <>
             <Box>
-                <form onSubmit={form.onSubmit((values) => {
+                <form onSubmit={settingsForm.onSubmit((values) => {
                     console.log(values)
                     dispatch(updateEntityData(values))
                         .then(() => {
@@ -147,7 +149,7 @@ function CustomerSettingsUpdateForm() {
                             });
 
                             setTimeout(() => {
-                                form.reset()
+                                settingsForm.reset()
                                 dispatch(setInsertType('create'))
                                 dispatch(setEditEntityData([]))
                                 dispatch(setFetching(true))
@@ -175,7 +177,7 @@ function CustomerSettingsUpdateForm() {
                                                                 size="xs"
                                                                 color={`green.8`}
                                                                 type="submit"
-                                                                id="EntityFormSubmit"
+                                                                id={`${saveId}`}
                                                                 leftSection={<IconDeviceFloppy size={16} />}
                                                             >
                                                                 <Flex direction={`column`} gap={0}>
@@ -201,7 +203,7 @@ function CustomerSettingsUpdateForm() {
                                                         required={true}
                                                         nextField={'setting_name'}
                                                         name={'setting_type'}
-                                                        form={form}
+                                                        form={settingsForm}
                                                         dropdownValue={['test1', 'test2']}
                                                         id={'setting_type'}
                                                         searchable={false}
@@ -216,7 +218,7 @@ function CustomerSettingsUpdateForm() {
                                                         placeholder={t('SettingName')}
                                                         required={true}
                                                         nextField={'status'}
-                                                        form={form}
+                                                        form={settingsForm}
                                                         name={'setting_name'}
                                                         id={'setting_name'}
                                                     />
@@ -227,9 +229,9 @@ function CustomerSettingsUpdateForm() {
                                                             <SwitchForm
                                                                 tooltip={t('Status')}
                                                                 label=''
-                                                                nextField={'CategoryFormSubmit'}
+                                                                nextField={`${saveId}`}
                                                                 name={'status'}
-                                                                form={form}
+                                                                form={settingsForm}
                                                                 color="red"
                                                                 id={'status'}
                                                                 position={'left'}
@@ -248,8 +250,8 @@ function CustomerSettingsUpdateForm() {
                         <Grid.Col span={1} >
                             <Box bg={'white'} className={'borderRadiusAll'} pt={'16'}>
                                 <Shortcut
-                                    form={form}
-                                    FormSubmit={'EntityFormSubmit'}
+                                    form={settingsForm}
+                                    FormSubmit={`${saveId}`}
                                     Name={'name'}
                                     inputType="select"
                                 />

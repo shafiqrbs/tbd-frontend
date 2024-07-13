@@ -37,6 +37,7 @@ import InvoiceBatchIndex from './components/modules/inventory/invoice-batch/Invo
 import CustomerSettingsIndex from './components/modules/core/customer-settings/CustomerSettingsIndex.jsx';
 import LocationIndex from './components/modules/core/location/LocationIndex.jsx';
 import MarketingExecutiveIndex from './components/modules/core/marketing-executive/MarketingExecutiveIndex.jsx';
+import ProductSettingsIndex from './components/modules/inventory/product-settings/ProductSettingsIndex.jsx';
 
 function AppRoute() {
 
@@ -85,6 +86,8 @@ function AppRoute() {
                     <Route path="production-inhouse" element={<InhouseIndex />} />
                     <Route path="production-receipe" element={<ReceipeIndex />} />
                     <Route path="invoice-batch" element={<InvoiceBatchIndex />} />
+                    <Route path="product-settings" element={<ProductSettingsIndex />} />
+                    <Route path="product-settings/:settingsId" element={<ProductSettingsIndex />} />
                 </Route>
                 <Route path="/domain/">
                     <Route path="" element={<DomainIndex />} />

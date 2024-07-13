@@ -135,7 +135,7 @@ function CustomerUpdateForm() {
     }]], []);
 
     useHotkeys([['alt+s', () => {
-        document.getElementById('EntityFormSubmit').click()
+        !groupDrawer && document.getElementById('EntityFormSubmit').click()
     }]], []);
 
     const handleFormReset = () => {
@@ -277,9 +277,7 @@ function CustomerUpdateForm() {
                                                         </Box>
 
                                                     </Grid.Col>
-                                                    {groupDrawer &&
-                                                        <CustomerGroupDrawer groupDrawer={groupDrawer} setGroupDrawer={setGroupDrawer} />
-                                                    }
+
                                                 </Grid>
                                             </Box>
                                             <Box mt={'xs'}>
@@ -444,6 +442,9 @@ function CustomerUpdateForm() {
                     </Grid.Col>
                 </Grid>
             </form>
+            {groupDrawer &&
+                <CustomerGroupDrawer groupDrawer={groupDrawer} setGroupDrawer={setGroupDrawer} />
+            }
         </Box>
     )
 }
