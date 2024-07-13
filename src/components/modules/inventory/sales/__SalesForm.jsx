@@ -27,12 +27,12 @@ import {getSalesDetails, storeEntityData,} from "../../../../store/inventory/cru
 import InputNumberForm from "../../../form-builders/InputNumberForm";
 import InputButtonForm from "../../../form-builders/InputButtonForm";
 import { notifications } from "@mantine/notifications";
-import _InvoiceForDomain359 from "./print-component/_InvoiceForDomain359.jsx";
 import _SmsPurchaseModel from "./modal/_SmsPurchaseModel.jsx";
 import _CustomerViewModel from "./modal/_CustomerViewModel.jsx";
 import customerDataStoreIntoLocalStorage from "../../../global-hook/local-storage/customerDataStoreIntoLocalStorage.js";
 import _addCustomer from "../../popover-form/_addCustomer.jsx";
 import DatePickerForm from "../../../form-builders/DatePicker";
+import _InvoiceDrawerForPrint from "./print-drawer/_InvoiceDrawerForPrint.jsx";
 
 function __SalesForm(props) {
 
@@ -228,41 +228,25 @@ function __SalesForm(props) {
         </Text>
     );
 
+    const [openInvoiceDrawerForPrint,setOpenInvoiceDrawerForPrint] = useState(false)
+
     useEffect(() => {
         if (entityNewData?.data?.id && (lastClicked === 'print' || lastClicked==='pos')){
             setTimeout(() => {
-                dispatch(getSalesDetails('inventory/sales/'+entityNewData?.data?.id))
+                 setOpenInvoiceDrawerForPrint(true)
             }, 400);
         }
     }, [entityNewData, dispatch, lastClicked]);
 
-    useEffect(() => {
-        if (entityNewData?.data?.id && (lastClicked === 'print' || lastClicked==='pos')){
-            setTimeout(() => {
-                setInvoicePrintForSave(true)
-            }, 500);
-        }
-    }, [entityNewData, lastClicked]);
-
-    useEffect(() => {
-        setTimeout(() => {
-            if (invoicePrintForSave) {
-                let printContents = document.getElementById('printElement').innerHTML;
-                let originalContents = document.body.innerHTML;
-                document.body.innerHTML = printContents;
-                window.print();
-                document.body.innerHTML = originalContents;
-                window.location.reload()
-            }
-        },500)
-    }, [invoicePrintForSave]);
-
     return (
         <>
             {
-                domainId == '359' && invoicePrintForSave &&
-                <_InvoiceForDomain359
-                    setInvoicePrintForSave={setInvoicePrintForSave}
+                openInvoiceDrawerForPrint &&
+                <_InvoiceDrawerForPrint
+                    setOpenInvoiceDrawerForPrint={setOpenInvoiceDrawerForPrint}
+                    openInvoiceDrawerForPrint={openInvoiceDrawerForPrint}
+                    printType={lastClicked}
+                    mode="insert"
                 />
             }
 

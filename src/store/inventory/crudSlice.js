@@ -111,6 +111,7 @@ const crudSlice = createSlice({
         searchKeyword: '',
         indexEntityData: [],
         entityEditData: [],
+        entityUpdateData: [],
         salesDetails: [],
         insertType: 'create',
         entityDataDelete: null,
@@ -199,9 +200,12 @@ const crudSlice = createSlice({
         builder.addCase(storeEntityData.fulfilled, (state, action) => {
             if ('success' === action.payload.data.message) {
                 state.entityNewData = action.payload.data
+                state.validationMessage = []
+                state.validation = false
             } else {
                 state.validationMessage = action.payload.data.data
                 state.validation = true
+                state.entityNewData = []
             }
         })
 
@@ -226,6 +230,7 @@ const crudSlice = createSlice({
         builder.addCase(updateEntityData.fulfilled, (state, action) => {
             if ('success' === action.payload.data.message) {
                 state.validationMessage = action.payload.data
+                state.entityUpdateData = action.payload.data
             } else {
                 state.validationMessage = action.payload.data.data
                 state.validation = true
