@@ -191,7 +191,7 @@ function CustomerSettingsForm(props) {
                                         adjustment={adjustment}
                                         form={form}
                                         FormSubmit={`${saveId}`}
-                                        Name={'name'}
+                                        Name={'setting_type'}
                                         inputType="select"
                                     />
                                 </Box>
