@@ -1,18 +1,18 @@
-import React, {useEffect, useState} from "react";
-import {useOutletContext} from "react-router-dom";
-import {Button, rem, Flex, Grid, Box, ScrollArea, Text, Title, Stack} from "@mantine/core";
-import {useTranslation} from 'react-i18next';
-import {IconCheck, IconDeviceFloppy} from "@tabler/icons-react";
-import {useHotkeys} from "@mantine/hooks";
-import {useDispatch, useSelector} from "react-redux";
-import {isNotEmpty, useForm} from "@mantine/form";
-import {modals} from "@mantine/modals";
-import {notifications} from "@mantine/notifications";
+import React, { useEffect, useState } from "react";
+import { useOutletContext } from "react-router-dom";
+import { Button, rem, Flex, Grid, Box, ScrollArea, Text, Title, Stack } from "@mantine/core";
+import { useTranslation } from 'react-i18next';
+import { IconCheck, IconDeviceFloppy } from "@tabler/icons-react";
+import { useHotkeys } from "@mantine/hooks";
+import { useDispatch, useSelector } from "react-redux";
+import { isNotEmpty, useForm } from "@mantine/form";
+import { modals } from "@mantine/modals";
+import { notifications } from "@mantine/notifications";
 import Shortcut from "../../shortcut/Shortcut";
 import InputForm from "../../../form-builders/InputForm";
 import SelectForm from "../../../form-builders/SelectForm";
 import TextAreaForm from "../../../form-builders/TextAreaForm";
-import {setValidationData, updateEntityData} from "../../../../store/inventory/crudSlice.js";
+import { setValidationData, updateEntityData } from "../../../../store/inventory/crudSlice.js";
 import getSettingBusinessModelDropdownData from "../../../global-hook/dropdown/getSettingBusinessModelDropdownData.js";
 import SwitchForm from "../../../form-builders/SwitchForm.jsx";
 import ImageUploadDropzone from "../../../form-builders/ImageUploadDropzone.jsx";
@@ -22,10 +22,10 @@ import getCountryDropdownData from "../../../global-hook/dropdown/getCountryDrop
 import getCurrencyDropdownData from "../../../global-hook/dropdown/getCurrencyDropdownData.js";
 
 function ConfigurationForm() {
-    const {t, i18n} = useTranslation();
+    const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
-    const {isOnline, mainAreaHeight} = useOutletContext();
-    const height = mainAreaHeight - 130; //TabList height 104
+    const { isOnline, mainAreaHeight } = useOutletContext();
+    const height = mainAreaHeight - 100; //TabList height 104
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
 
     const validationMessage = useSelector((state) => state.inventoryCrudSlice.validationMessage)
@@ -113,10 +113,10 @@ function ConfigurationForm() {
             notifications.show({
                 color: 'teal',
                 title: t('UpdateSuccessfully'),
-                icon: <IconCheck style={{width: rem(18), height: rem(18)}}/>,
+                icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
                 loading: false,
                 autoClose: 700,
-                style: {backgroundColor: 'lightgray'},
+                style: { backgroundColor: 'lightgray' },
             });
 
             setTimeout(() => {
@@ -190,7 +190,7 @@ function ConfigurationForm() {
                     children: (
                         <Text size="sm"> {t("FormConfirmationMessage")}</Text>
                     ),
-                    labels: {confirm: t('Submit'), cancel: t('Cancel')}, confirmProps: {color: 'red'},
+                    labels: { confirm: t('Submit'), cancel: t('Cancel') }, confirmProps: { color: 'red' },
                     onCancel: () => console.log('Cancel'),
                     onConfirm: () => {
                         const value = {
@@ -201,19 +201,18 @@ function ConfigurationForm() {
                     },
                 });
             })}>
-                <Grid columns={24} gutter={{base: 8}}>
+                <Grid columns={24} gutter={{ base: 8 }}>
                     <Grid.Col span={7}>
                         <Box bg={'white'} p={'xs'} className={'borderRadiusAll'}>
                             <Box bg={"white"}>
-                                <Box pl={`xs`} pb={'xs'} pr={8} pt={'xs'} mb={'xs'}
-                                     className={'boxBackground borderRadiusAll'}>
+                                <Box pl={`xs`} pr={8} pt={'8'} pb={'10'} mb={'4'} className={'boxBackground borderRadiusAll'}>
                                     <Grid>
-                                        <Grid.Col h={54}>
-                                            <Title order={6} mt={'xs'} pl={'6'}>{t('Core')}</Title>
+                                        <Grid.Col >
+                                            <Title order={6} pt={'4'}>{t('Core')}</Title>
                                         </Grid.Col>
                                     </Grid>
                                 </Box>
-                                <Box pl={`xs`} pr={'xs'} mt={'xs'} className={'borderRadiusAll'}>
+                                <Box pl={`xs`} pr={'xs'} className={'borderRadiusAll'}>
                                     <ScrollArea h={height} scrollbarSize={2} scrollbars="y" type="never">
                                         <Box>
                                             <Box mt={'xs'}>
@@ -293,7 +292,7 @@ function ConfigurationForm() {
                                                 <Text fz="sm">{t("StockFormat")}</Text>
                                             </Box>
                                             <Box mt={'xs'}>
-                                                <Grid gutter={{base: 1}}>
+                                                <Grid gutter={{ base: 1 }}>
                                                     <Grid.Col span={2}>
                                                         <SwitchForm
                                                             tooltip={t('Warehouse')}
@@ -311,7 +310,7 @@ function ConfigurationForm() {
                                                 </Grid>
                                             </Box>
                                             <Box mt={'xs'}>
-                                                <Grid gutter={{base: 1}}>
+                                                <Grid gutter={{ base: 1 }}>
                                                     <Grid.Col span={2}>
                                                         <SwitchForm
                                                             tooltip={t('Category')}
@@ -329,7 +328,7 @@ function ConfigurationForm() {
                                                 </Grid>
                                             </Box>
                                             <Box mt={'md'} mb={'md'}>
-                                                <Grid gutter={{base: 6}}>
+                                                <Grid gutter={{ base: 6 }}>
                                                     <Grid.Col span={6}>
                                                         <InputForm
                                                             tooltip={t('VatPercent')}
@@ -345,7 +344,7 @@ function ConfigurationForm() {
                                                     </Grid.Col>
                                                     <Grid.Col span={6} mt={'lg'}>
                                                         <Box mt={'xs'}>
-                                                            <Grid columns={6} gutter={{base: 1}}>
+                                                            <Grid columns={6} gutter={{ base: 1 }}>
                                                                 <Grid.Col span={2}>
                                                                     <SwitchForm
                                                                         tooltip={t('VatEnabled')}
@@ -367,7 +366,7 @@ function ConfigurationForm() {
                                                 </Grid>
                                             </Box>
                                             <Box mt={'md'} mb={'md'}>
-                                                <Grid gutter={{base: 6}}>
+                                                <Grid gutter={{ base: 6 }}>
                                                     <Grid.Col span={6}>
                                                         <InputForm
                                                             tooltip={t('AITPercent')}
@@ -383,7 +382,7 @@ function ConfigurationForm() {
                                                     </Grid.Col>
                                                     <Grid.Col span={6} mt={'lg'}>
                                                         <Box mt={'xs'}>
-                                                            <Grid columns={6} gutter={{base: 1}}>
+                                                            <Grid columns={6} gutter={{ base: 1 }}>
                                                                 <Grid.Col span={2}>
                                                                     <SwitchForm
                                                                         tooltip={t('AitEnabled')}
@@ -405,7 +404,7 @@ function ConfigurationForm() {
                                                 </Grid>
                                             </Box>
                                             <Box mt={'md'} mb={'md'}>
-                                                <Grid gutter={{base: 6}}>
+                                                <Grid gutter={{ base: 6 }}>
                                                     <Grid.Col span={6}>
                                                         <InputForm
                                                             tooltip={t('ZakatPercent')}
@@ -421,7 +420,7 @@ function ConfigurationForm() {
                                                     </Grid.Col>
                                                     <Grid.Col span={6} mt={'lg'}>
                                                         <Box mt={'xs'}>
-                                                            <Grid columns={6} gutter={{base: 1}}>
+                                                            <Grid columns={6} gutter={{ base: 1 }}>
                                                                 <Grid.Col span={2}>
                                                                     <SwitchForm
                                                                         tooltip={t('ZakatEnabled')}
@@ -436,7 +435,7 @@ function ConfigurationForm() {
                                                                     />
                                                                 </Grid.Col>
                                                                 <Grid.Col span={4} fz={'sm'}
-                                                                          pt={'1'}>{t('ZakatEnabled')}</Grid.Col>
+                                                                    pt={'1'}>{t('ZakatEnabled')}</Grid.Col>
                                                             </Grid>
                                                         </Box>
                                                     </Grid.Col>
@@ -471,7 +470,7 @@ function ConfigurationForm() {
                                                 />
                                             </Box>
                                             <Box mt={'xs'} mb={'xs'}>
-                                                <Grid gutter={{base: 1}}>
+                                                <Grid gutter={{ base: 1 }}>
                                                     <Grid.Col span={2}>
                                                         <SwitchForm
                                                             tooltip={t('RemoveImage')}
@@ -497,20 +496,20 @@ function ConfigurationForm() {
                     <Grid.Col span={8}>
                         <Box bg={'white'} p={'xs'} className={'borderRadiusAll'}>
                             <Box bg={"white"}>
-                                <Box pl={`xs`} pb={'xs'} pr={8} pt={'xs'} mb={'xs'}
-                                     className={'boxBackground borderRadiusAll'}>
+                                <Box pl={`xs`} pr={8} pt={'8'} pb={'10'} mb={'4'}
+                                    className={'boxBackground borderRadiusAll'}>
                                     <Grid>
-                                        <Grid.Col h={54}>
-                                            <Title order={6} mt={'xs'} pl={'6'}>{t('Print')}</Title>
+                                        <Grid.Col >
+                                            <Title order={6} pt={'4'} >{t('Print')}</Title>
                                         </Grid.Col>
 
                                     </Grid>
                                 </Box>
-                                <Box pl={`xs`} pr={'xs'} mt={'xs'} className={'borderRadiusAll'}>
+                                <Box pl={`xs`} pr={'xs'} className={'borderRadiusAll'}>
                                     <ScrollArea h={height} scrollbarSize={2} scrollbars="y" type="never">
                                         <Box pl={'xs'} pt={'xs'}>
                                             <Box mt={'xs'}>
-                                                <Grid gutter={{base: 1}}>
+                                                <Grid gutter={{ base: 1 }}>
                                                     <Grid.Col span={2}>
                                                         <SwitchForm
                                                             tooltip={t('PrintLogo')}
@@ -528,7 +527,7 @@ function ConfigurationForm() {
                                                 </Grid>
                                             </Box>
                                             <Box mt={'xs'}>
-                                                <Grid gutter={{base: 1}}>
+                                                <Grid gutter={{ base: 1 }}>
                                                     <Grid.Col span={2}>
                                                         <SwitchForm
                                                             tooltip={t('PrintWithOutstanding')}
@@ -543,11 +542,11 @@ function ConfigurationForm() {
                                                         />
                                                     </Grid.Col>
                                                     <Grid.Col span={6} fz={'sm'}
-                                                              pt={'1'}>{t('PrintWithOutstanding')}</Grid.Col>
+                                                        pt={'1'}>{t('PrintWithOutstanding')}</Grid.Col>
                                                 </Grid>
                                             </Box>
                                             <Box mt={'xs'}>
-                                                <Grid gutter={{base: 1}}>
+                                                <Grid gutter={{ base: 1 }}>
                                                     <Grid.Col span={2}>
                                                         <SwitchForm
                                                             tooltip={t('PosPrint')}
@@ -565,7 +564,7 @@ function ConfigurationForm() {
                                                 </Grid>
                                             </Box>
                                             <Box mt={'xs'}>
-                                                <Grid gutter={{base: 1}}>
+                                                <Grid gutter={{ base: 1 }}>
                                                     <Grid.Col span={2}>
                                                         <SwitchForm
                                                             tooltip={t('PrintHeader')}
@@ -583,7 +582,7 @@ function ConfigurationForm() {
                                                 </Grid>
                                             </Box>
                                             <Box mt={'xs'}>
-                                                <Grid gutter={{base: 1}}>
+                                                <Grid gutter={{ base: 1 }}>
                                                     <Grid.Col span={2}>
                                                         <SwitchForm
                                                             tooltip={t('PrintInvoiceTitle')}
@@ -598,11 +597,11 @@ function ConfigurationForm() {
                                                         />
                                                     </Grid.Col>
                                                     <Grid.Col span={6} fz={'sm'}
-                                                              pt={'1'}>{t('PrintInvoiceTitle')}</Grid.Col>
+                                                        pt={'1'}>{t('PrintInvoiceTitle')}</Grid.Col>
                                                 </Grid>
                                             </Box>
                                             <Box mt={'xs'}>
-                                                <Grid gutter={{base: 1}}>
+                                                <Grid gutter={{ base: 1 }}>
                                                     <Grid.Col span={2}>
                                                         <SwitchForm
                                                             tooltip={t('PrintFooter')}
@@ -620,7 +619,7 @@ function ConfigurationForm() {
                                                 </Grid>
                                             </Box>
                                             <Box mt={'xs'}>
-                                                <Grid gutter={{base: 4}}>
+                                                <Grid gutter={{ base: 4 }}>
                                                     <Grid.Col span={2}>
                                                         <SwitchForm
                                                             tooltip={t('PrintPowered')}
@@ -650,7 +649,7 @@ function ConfigurationForm() {
                                                     id={'print_footer_text'}
                                                 />
                                             </Box>
-                                            <Grid columns={12} gutter={{base: 8}}>
+                                            <Grid columns={12} gutter={{ base: 8 }}>
                                                 <Grid.Col span={6}>
                                                     <Box mt={'xs'}>
                                                         <InputNumberForm
@@ -682,7 +681,7 @@ function ConfigurationForm() {
                                                     </Box>
                                                 </Grid.Col>
                                             </Grid>
-                                            <Grid columns={12} gutter={{base: 8}}>
+                                            <Grid columns={12} gutter={{ base: 8 }}>
                                                 <Grid.Col span={6}>
                                                     <Box mt={'xs'}>
                                                         <InputNumberForm
@@ -714,7 +713,7 @@ function ConfigurationForm() {
                                                     </Box>
                                                 </Grid.Col>
                                             </Grid>
-                                            <Grid columns={12} gutter={{base: 8}}>
+                                            <Grid columns={12} gutter={{ base: 8 }}>
                                                 <Grid.Col span={6}>
                                                     <Box mt={'xs'}>
                                                         <InputNumberForm
@@ -746,7 +745,7 @@ function ConfigurationForm() {
                                                     </Box>
                                                 </Grid.Col>
                                             </Grid>
-                                            <Grid columns={12} gutter={{base: 8}} mb={'xs'}>
+                                            <Grid columns={12} gutter={{ base: 8 }} mb={'xs'}>
                                                 <Grid.Col span={6}>
                                                     <Box mt={'xs'}>
                                                         <InputNumberForm
@@ -773,11 +772,10 @@ function ConfigurationForm() {
                     <Grid.Col span={8}>
                         <Box bg={'white'} p={'xs'} className={'borderRadiusAll'}>
                             <Box bg={"white"}>
-                                <Box pl={`xs`} pb={'xs'} pr={8} pt={'xs'} mb={'xs'}
-                                     className={'boxBackground borderRadiusAll'}>
+                                <Box pl={`xs`} pr={8} pt={'6'} pb={'6'} mb={'4'} className={'boxBackground borderRadiusAll'}>
                                     <Grid>
-                                        <Grid.Col span={6} h={54}>
-                                            <Title order={6} mt={'xs'} pl={'6'}>{t('Configuration')}</Title>
+                                        <Grid.Col span={6}>
+                                            <Title order={6} pt={'6'}>{t('Configuration')}</Title>
                                         </Grid.Col>
                                         <Grid.Col span={6}>
                                             <Stack right align="flex-end">
@@ -786,15 +784,14 @@ function ConfigurationForm() {
                                                         !saveCreateLoading && isOnline &&
                                                         <Button
                                                             size="xs"
-                                                            color={`red.6`}
+                                                            color={`green.8`}
                                                             type="submit"
-                                                            mt={4}
                                                             id="EntityFormSubmit"
-                                                            leftSection={<IconDeviceFloppy size={16}/>}
+                                                            leftSection={<IconDeviceFloppy size={16} />}
                                                         >
 
                                                             <Flex direction={`column`} gap={0}>
-                                                                <Text fz={12} fw={400}>
+                                                                <Text fz={14} fw={400}>
                                                                     {t("UpdateAndSave")}
                                                                 </Text>
                                                             </Flex>
@@ -805,11 +802,11 @@ function ConfigurationForm() {
                                         </Grid.Col>
                                     </Grid>
                                 </Box>
-                                <Box pl={`xs`} pr={'xs'} mt={'xs'} className={'borderRadiusAll'}>
+                                <Box pl={`xs`} pr={'xs'} className={'borderRadiusAll'}>
                                     <ScrollArea h={height} scrollbarSize={2} scrollbars="y" type="never">
                                         <Box pt={'xs'} pl={'xs'}>
                                             <Box mt={'xs'}>
-                                                <Grid gutter={{base: 1}}>
+                                                <Grid gutter={{ base: 1 }}>
                                                     <Grid.Col span={2}>
                                                         <SwitchForm
                                                             tooltip={t('CustomInvoice')}
@@ -824,11 +821,11 @@ function ConfigurationForm() {
                                                         />
                                                     </Grid.Col>
                                                     <Grid.Col span={6} fz={'sm'}
-                                                              pt={'1'}>{t('CustomInvoice')}</Grid.Col>
+                                                        pt={'1'}>{t('CustomInvoice')}</Grid.Col>
                                                 </Grid>
                                             </Box>
                                             <Box mt={'xs'}>
-                                                <Grid gutter={{base: 1}}>
+                                                <Grid gutter={{ base: 1 }}>
                                                     <Grid.Col span={2}>
                                                         <SwitchForm
                                                             tooltip={t('BonusFromStock')}
@@ -843,11 +840,11 @@ function ConfigurationForm() {
                                                         />
                                                     </Grid.Col>
                                                     <Grid.Col span={6} fz={'sm'}
-                                                              pt={'1'}>{t('BonusFromStock')}</Grid.Col>
+                                                        pt={'1'}>{t('BonusFromStock')}</Grid.Col>
                                                 </Grid>
                                             </Box>
                                             <Box mt={'xs'}>
-                                                <Grid gutter={{base: 1}}>
+                                                <Grid gutter={{ base: 1 }}>
                                                     <Grid.Col span={2}>
                                                         <SwitchForm
                                                             tooltip={t('IsUnitPrice')}
@@ -865,7 +862,7 @@ function ConfigurationForm() {
                                                 </Grid>
                                             </Box>
                                             <Box mt={'xs'}>
-                                                <Grid gutter={{base: 1}}>
+                                                <Grid gutter={{ base: 1 }}>
                                                     <Grid.Col span={2}>
                                                         <SwitchForm
                                                             tooltip={t('IsDescription')}
@@ -880,11 +877,11 @@ function ConfigurationForm() {
                                                         />
                                                     </Grid.Col>
                                                     <Grid.Col span={6} fz={'sm'}
-                                                              pt={'1'}>{t('IsDescription')}</Grid.Col>
+                                                        pt={'1'}>{t('IsDescription')}</Grid.Col>
                                                 </Grid>
                                             </Box>
                                             <Box mt={'xs'}>
-                                                <Grid gutter={{base: 1}}>
+                                                <Grid gutter={{ base: 1 }}>
                                                     <Grid.Col span={2}>
                                                         <SwitchForm
                                                             tooltip={t('ZeroStockAllowed')}
@@ -899,11 +896,11 @@ function ConfigurationForm() {
                                                         />
                                                     </Grid.Col>
                                                     <Grid.Col span={6} fz={'sm'}
-                                                              pt={'1'}>{t('ZeroStockAllowed')}</Grid.Col>
+                                                        pt={'1'}>{t('ZeroStockAllowed')}</Grid.Col>
                                                 </Grid>
                                             </Box>
                                             <Box mt={'xs'}>
-                                                <Grid gutter={{base: 1}}>
+                                                <Grid gutter={{ base: 1 }}>
                                                     <Grid.Col span={2}>
                                                         <SwitchForm
                                                             tooltip={t('StockItem')}
@@ -921,7 +918,7 @@ function ConfigurationForm() {
                                                 </Grid>
                                             </Box>
                                             <Box mt={'xs'}>
-                                                <Grid gutter={{base: 1}}>
+                                                <Grid gutter={{ base: 1 }}>
                                                     <Grid.Col span={2}>
                                                         <SwitchForm
                                                             tooltip={t('CustomInvoicePrint')}
@@ -936,11 +933,11 @@ function ConfigurationForm() {
                                                         />
                                                     </Grid.Col>
                                                     <Grid.Col span={6} fz={'sm'}
-                                                              pt={'1'}>{t('CustomInvoicePrint')}</Grid.Col>
+                                                        pt={'1'}>{t('CustomInvoicePrint')}</Grid.Col>
                                                 </Grid>
                                             </Box>
                                             <Box mt={'xs'}>
-                                                <Grid gutter={{base: 1}}>
+                                                <Grid gutter={{ base: 1 }}>
                                                     <Grid.Col span={2}>
                                                         <SwitchForm
                                                             tooltip={t('StockHistory')}
@@ -958,7 +955,7 @@ function ConfigurationForm() {
                                                 </Grid>
                                             </Box>
                                             <Box mt={'xs'}>
-                                                <Grid gutter={{base: 1}}>
+                                                <Grid gutter={{ base: 1 }}>
                                                     <Grid.Col span={2}>
                                                         <SwitchForm
                                                             tooltip={t('ConditionSales')}
@@ -973,11 +970,11 @@ function ConfigurationForm() {
                                                         />
                                                     </Grid.Col>
                                                     <Grid.Col span={6} fz={'sm'}
-                                                              pt={'1'}>{t('ConditionSales')}</Grid.Col>
+                                                        pt={'1'}>{t('ConditionSales')}</Grid.Col>
                                                 </Grid>
                                             </Box>
                                             <Box mt={'xs'}>
-                                                <Grid gutter={{base: 1}}>
+                                                <Grid gutter={{ base: 1 }}>
                                                     <Grid.Col span={2}>
                                                         <SwitchForm
                                                             tooltip={t('StoreLedger')}
@@ -995,7 +992,7 @@ function ConfigurationForm() {
                                                 </Grid>
                                             </Box>
                                             <Box mt={'xs'}>
-                                                <Grid gutter={{base: 1}}>
+                                                <Grid gutter={{ base: 1 }}>
                                                     <Grid.Col span={2}>
                                                         <SwitchForm
                                                             tooltip={t('MarketingExecutive')}
@@ -1010,12 +1007,12 @@ function ConfigurationForm() {
                                                         />
                                                     </Grid.Col>
                                                     <Grid.Col span={6} fz={'sm'}
-                                                              pt={'1'}>{t('MarketingExecutive')}</Grid.Col>
+                                                        pt={'1'}>{t('MarketingExecutive')}</Grid.Col>
                                                 </Grid>
                                             </Box>
 
                                             <Box mt={'xs'}>
-                                                <Grid gutter={{base: 1}}>
+                                                <Grid gutter={{ base: 1 }}>
                                                     <Grid.Col span={2}>
                                                         <SwitchForm
                                                             tooltip={t('TloCommision')}
@@ -1033,7 +1030,7 @@ function ConfigurationForm() {
                                                 </Grid>
                                             </Box>
                                             <Box mt={'xs'}>
-                                                <Grid gutter={{base: 1}}>
+                                                <Grid gutter={{ base: 1 }}>
                                                     <Grid.Col span={2}>
                                                         <SwitchForm
                                                             tooltip={t('SalesReturn')}
@@ -1051,7 +1048,7 @@ function ConfigurationForm() {
                                                 </Grid>
                                             </Box>
                                             <Box mt={'xs'}>
-                                                <Grid gutter={{base: 1}}>
+                                                <Grid gutter={{ base: 1 }}>
                                                     <Grid.Col span={2}>
                                                         <SwitchForm
                                                             tooltip={t('SRCommision')}
@@ -1069,7 +1066,7 @@ function ConfigurationForm() {
                                                 </Grid>
                                             </Box>
                                             <Box mt={'xs'} mb={'xs'}>
-                                                <Grid gutter={{base: 1}}>
+                                                <Grid gutter={{ base: 1 }}>
                                                     <Grid.Col span={2}>
                                                         <SwitchForm
                                                             tooltip={t('DueSalesWithoutCustomer')}
@@ -1084,11 +1081,11 @@ function ConfigurationForm() {
                                                         />
                                                     </Grid.Col>
                                                     <Grid.Col span={6} fz={'sm'}
-                                                              pt={'1'}>{t('DueSalesWithoutCustomer')}</Grid.Col>
+                                                        pt={'1'}>{t('DueSalesWithoutCustomer')}</Grid.Col>
                                                 </Grid>
                                             </Box>
                                             <Box mt={'xs'} mb={'xs'}>
-                                                <Grid gutter={{base: 1}}>
+                                                <Grid gutter={{ base: 1 }}>
                                                     <Grid.Col span={2}>
                                                         <SwitchForm
                                                             tooltip={t('ZeroReceiveAllow')}
@@ -1103,11 +1100,11 @@ function ConfigurationForm() {
                                                         />
                                                     </Grid.Col>
                                                     <Grid.Col span={6} fz={'sm'}
-                                                              pt={'1'}>{t('ZeroReceiveAllow')}</Grid.Col>
+                                                        pt={'1'}>{t('ZeroReceiveAllow')}</Grid.Col>
                                                 </Grid>
                                             </Box>
                                             <Box mt={'xs'} mb={'xs'}>
-                                                <Grid gutter={{base: 1}}>
+                                                <Grid gutter={{ base: 1 }}>
                                                     <Grid.Col span={2}>
                                                         <SwitchForm
                                                             tooltip={t('PurchaseByPurchasePrice')}
@@ -1122,12 +1119,12 @@ function ConfigurationForm() {
                                                         />
                                                     </Grid.Col>
                                                     <Grid.Col span={6} fz={'sm'}
-                                                              pt={'1'}>{t('PurchaseByPurchasePrice')}</Grid.Col>
+                                                        pt={'1'}>{t('PurchaseByPurchasePrice')}</Grid.Col>
                                                 </Grid>
                                             </Box>
 
                                             <Box mt={'xs'} mb={'xs'}>
-                                                <Grid gutter={{base: 1}}>
+                                                <Grid gutter={{ base: 1 }}>
                                                     <Grid.Col span={2}>
                                                         <SwitchForm
                                                             tooltip={t('isActiveSms')}
