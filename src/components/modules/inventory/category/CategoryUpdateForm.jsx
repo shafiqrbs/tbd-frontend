@@ -51,16 +51,6 @@ function CategoryUpdateForm() {
             return ({ 'label': type.name, 'value': String(type.id) })
         }) : []
 
-
-    const { categoryId } = useParams();
-
-    useEffect(() => {
-        if (categoryId) {
-            dispatch(setEditEntityData(`inventory/category-group/${categoryId}`))
-            dispatch(setFormLoading(true));
-        }
-    }, [categoryId, dispatch]);
-
     useEffect(() => {
 
         const value = {
@@ -73,7 +63,7 @@ function CategoryUpdateForm() {
 
     const form = useForm({
         initialValues: {
-            parent: '', name: '', status: ''
+            parent: '', name: '', status: true
         },
         validate: {
             parent: isNotEmpty(),
@@ -224,10 +214,12 @@ function CategoryUpdateForm() {
                                                             <Box pt={'xl'}>
                                                                 <Tooltip
                                                                     multiline
-                                                                    w={420}
+                                                                    ta={'center'}
+                                                                    bg={'orange.8'}
+                                                                    offset={{ crossAxis: '-95', mainAxis: '5' }}
                                                                     withArrow
                                                                     transitionProps={{ duration: 200 }}
-                                                                    label={t('QuickCategoryGroup')}
+                                                                    label={t('CreateCategoryGroup')}
                                                                 >
                                                                     <ActionIcon fullWidth variant="outline" bg={'white'} size={'lg'} color="red.5" mt={'1'} aria-label="Settings" onClick={open}>
                                                                         <IconCategoryPlus style={{ width: '100%', height: '70%' }} stroke={1.5} />
@@ -265,7 +257,7 @@ function CategoryUpdateForm() {
                                                                 color="red"
                                                                 id={'status'}
                                                                 position={'left'}
-                                                                defaultChecked={1}
+                                                                checked={form.values.status}
                                                             />
                                                         </Grid.Col>
                                                         <Grid.Col span={6} fz={'sm'} pt={'1'}>{t('Status')}</Grid.Col>
