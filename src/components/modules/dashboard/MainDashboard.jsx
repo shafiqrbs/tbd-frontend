@@ -267,10 +267,10 @@ function MainDashboard(props) {
                                     <NavLink pl={'md'} href="accounting/purchase" label={t('ManagePurchase')} component="button" onClick={(e)=>{navigate('inventory/sales')}}  />
                                 </List.Item>*/}
                                     <List.Item pl={'xs'} icon={<ThemeIcon color="blue.6" size={20} radius="xl" variant="outline" ><IconCurrencyMonero /></ThemeIcon>}>
-                                        <NavLink pl={'md'} href="/domain" label={t('ManageDomain')} component="button" onClick={(e) => { navigate('domain') }} onAuxClick={(e) => {
+                                        <NavLink pl={'md'} href="/domain/domain-index" label={t('ManageDomain')} component="button" onClick={(e) => { navigate('/domain/domain-index') }} onAuxClick={(e) => {
                                             // Handle middle mouse button click for browsers that support it
                                             if (e.button === 1) {
-                                                window.open('/domain', '_blank');
+                                                window.open('/domain/domain-index', '_blank');
                                             }
                                         }} />
                                     </List.Item>

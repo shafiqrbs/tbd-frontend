@@ -37,7 +37,7 @@ function ProductionTable() {
     const dispatch = useDispatch();
     const { t, i18n } = useTranslation();
     const { isOnline, mainAreaHeight } = useOutletContext();
-    const height = mainAreaHeight - 128; //TabList height 104
+    const height = mainAreaHeight - 120; //TabList height 104
 
     const perPage = 50;
     const [page, setPage] = useState(1);

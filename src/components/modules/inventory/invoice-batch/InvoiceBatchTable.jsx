@@ -40,7 +40,7 @@ function InvoiceBatchTable() {
     const dispatch = useDispatch();
     const { t, i18n } = useTranslation();
     const { isOnline, mainAreaHeight } = useOutletContext();
-    const tableHeight = mainAreaHeight - 96; //TabList height 104
+    const tableHeight = mainAreaHeight - 98; //TabList height 104
     const height = mainAreaHeight - 230; //TabList height 104
     const [batchViewModal, setBatchViewModal] = useState(false);
     const [addTransactionDrawer, setAddTransactionDrawer] = useState(false);
@@ -384,7 +384,7 @@ function InvoiceBatchTable() {
                                         </Grid.Col>
                                     </Grid>
                                 </Box>
-                                <ScrollArea h={height + 36} scrollbarSize={2} type="never" >
+                                <ScrollArea h={height + 37} scrollbarSize={2} type="never" >
                                     <Box>
                                         <Table stickyHeader >
                                             <Table.Thead>

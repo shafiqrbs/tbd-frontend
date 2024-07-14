@@ -31,7 +31,7 @@ function ReceipeForm() {
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
-    const height = mainAreaHeight - 130; //TabList height 104
+    const height = mainAreaHeight - 100; //TabList height 104
     const [opened, { open, close }] = useDisclosure(false);
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
 
@@ -120,10 +120,10 @@ function ReceipeForm() {
                     <Grid.Col span={8} >
                         <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
                             <Box bg={"white"} >
-                                <Box pl={`xs`} pb={'xs'} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'} >
+                                <Box pl={`xs`} pr={8} pt={'6'} pb={'6'} mb={'4'} className={'boxBackground borderRadiusAll'}  >
                                     <Grid>
-                                        <Grid.Col span={6} h={54}>
-                                            <Title order={6} mt={'xs'} pl={'6'}>{t('ManageProductionMeasurement')}</Title>
+                                        <Grid.Col span={6} >
+                                            <Title order={6} pt={'6'}>{t('ManageProductionMeasurement')}</Title>
                                             {/*  SHOULD BE LOAD THE PRODUCT NAME FOR MEASUREMENT .KINDY CHECK THE CSS FOR HEIGHT */}
                                         </Grid.Col>
                                         <Grid.Col span={6}>
@@ -133,15 +133,14 @@ function ReceipeForm() {
                                                         !saveCreateLoading && isOnline &&
                                                         <Button
                                                             size="xs"
-                                                            color={`red.6`}
+                                                            color={`green.8`}
                                                             type="submit"
-                                                            mt={4}
                                                             id="EntityFormSubmit"
                                                             leftSection={<IconDeviceFloppy size={16} />}
                                                         >
 
                                                             <Flex direction={`column`} gap={0}>
-                                                                <Text fz={12} fw={400}>
+                                                                <Text fz={14} fw={400}>
                                                                     {t("CreateAndSave")}
                                                                 </Text>
                                                             </Flex>
@@ -151,7 +150,7 @@ function ReceipeForm() {
                                         </Grid.Col>
                                     </Grid>
                                 </Box>
-                                <Box pl={`xs`} pr={'xs'} mt={'xs'} className={'borderRadiusAll'}>
+                                <Box pl={`xs`} pr={'xs'} className={'borderRadiusAll'}>
                                     <ScrollArea h={height} scrollbarSize={2} scrollbars="y" type="never">
                                         <Box mt={'xs'}>
                                             <Grid gutter={{ base: 6 }}>

@@ -17,9 +17,6 @@ import { modals } from "@mantine/modals";
 import { notifications } from "@mantine/notifications";
 
 import {
-    getExecutiveDropdown, getLocationDropdown,
-} from "../../../../store/core/utilitySlice";
-import {
     setEntityNewData,
     setFetching,
     setFormLoading,
@@ -30,8 +27,6 @@ import {
 import Shortcut from "../../shortcut/Shortcut";
 import InputForm from "../../../form-builders/InputForm";
 import SelectForm from "../../../form-builders/SelectForm";
-import TextAreaForm from "../../../form-builders/TextAreaForm";
-import TransactionModeTable from "./TransactionModeTable.jsx";
 import InputNumberForm from "../../../form-builders/InputNumberForm";
 import { storeEntityDataWithFile } from "../../../../store/accounting/crudSlice.js";
 import getTransactionMethodDropdownData from "../../../global-hook/dropdown/getTransactionMethodDropdownData.js";
@@ -44,20 +39,10 @@ function TransactionModeUpdateFrom(props) {
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
-    const height = mainAreaHeight - 130; //TabList height 104
+    const height = mainAreaHeight - 100; //TabList height 104
     const [opened, { open, close }] = useDisclosure(false);
 
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
-    const [customerGroupData, setCustomerGroupData] = useState(null);
-    const [locationData, setLocationData] = useState(null);
-    const [marketingExeData, setMarketingExeData] = useState(null);
-
-    const locationDropdownData = useSelector((state) => state.utilitySlice.locationDropdownData)
-    const executiveDropdownData = useSelector((state) => state.utilitySlice.executiveDropdownData)
-    const validationMessage = useSelector((state) => state.crudSlice.validationMessage)
-    const validation = useSelector((state) => state.crudSlice.validation)
-    const entityNewData = useSelector((state) => state.crudSlice.entityNewData)
-
     const entityEditData = useSelector((state) => state.crudSlice.entityEditData)
     const formLoading = useSelector((state) => state.crudSlice.formLoading)
 
@@ -174,10 +159,10 @@ function TransactionModeUpdateFrom(props) {
                         <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
                             <Box bg={"white"} >
 
-                                <Box pl={`xs`} pb={'xs'} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'} >
+                                <Box pl={`xs`} pr={8} pt={'6'} pb={'6'} mb={'4'} className={'boxBackground borderRadiusAll'}>
                                     <Grid>
-                                        <Grid.Col span={6} h={54}>
-                                            <Title order={6} mt={'xs'} pl={'6'}>{t('UpdateTransactionMode')}</Title>
+                                        <Grid.Col span={6} >
+                                            <Title order={6} pt={'6'}>{t('UpdateTransactionMode')}</Title>
                                         </Grid.Col>
                                         <Grid.Col span={6}>
                                             <Stack right align="flex-end">
@@ -186,15 +171,14 @@ function TransactionModeUpdateFrom(props) {
                                                         !saveCreateLoading && isOnline &&
                                                         <Button
                                                             size="xs"
-                                                            color={`red.6`}
+                                                            color={`green.8`}
                                                             type="submit"
-                                                            mt={4}
                                                             id="EntityFormSubmit"
                                                             leftSection={<IconDeviceFloppy size={16} />}
                                                         >
 
                                                             <Flex direction={`column`} gap={0}>
-                                                                <Text fz={12} fw={400}>
+                                                                <Text fz={14} fw={400}>
                                                                     {t("UpdateAndSave")}
                                                                 </Text>
                                                             </Flex>
@@ -204,7 +188,7 @@ function TransactionModeUpdateFrom(props) {
                                         </Grid.Col>
                                     </Grid>
                                 </Box>
-                                <Box pl={`xs`} pr={'xs'} mt={'xs'} className={'borderRadiusAll'}>
+                                <Box pl={`xs`} pr={'xs'} className={'borderRadiusAll'}>
                                     <Grid columns={24}>
                                         <Grid.Col span={'auto'} >
                                             <ScrollArea h={height} scrollbarSize={2} scrollbars="y" type="never">

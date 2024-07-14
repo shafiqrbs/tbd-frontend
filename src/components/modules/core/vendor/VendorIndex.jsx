@@ -11,7 +11,6 @@ import VendorForm from "./VendorForm";
 import VendorUpdateForm from "./VendorUpdateForm.jsx";
 import {
     editEntityData,
-    setCustomerFilterData,
     setEntityNewData,
     setFormLoading,
     setInsertType,

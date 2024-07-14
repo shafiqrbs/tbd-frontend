@@ -21,7 +21,6 @@ import { setEntityNewData, setFetching, setValidationData, storeEntityData } fro
 import InputForm from "../../../form-builders/InputForm";
 import SelectForm from "../../../form-builders/SelectForm";
 import TextAreaForm from "../../../form-builders/TextAreaForm";
-import CustomerGroupModel from "./CustomerGroupModal.jsx";
 import getLocationDropdownData from "../../../global-hook/dropdown/getLocationDropdownData.js";
 import getExecutiveDropdownData from "../../../global-hook/dropdown/getExecutiveDropdownData.js";
 import getCoreSettingCustomerGroupDropdownData

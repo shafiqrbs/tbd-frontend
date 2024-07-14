@@ -7,12 +7,10 @@ import UserUpdateForm from "./UserUpdateForm.jsx";
 import { useTranslation } from 'react-i18next';
 import {
     editEntityData,
-    setCustomerFilterData,
     setEntityNewData,
     setFormLoading,
     setInsertType,
     setSearchKeyword,
-    setUserFilterData,
 } from "../../../../store/core/crudSlice.js";
 import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress.js";
 import CoreHeaderNavbar from "../CoreHeaderNavbar";

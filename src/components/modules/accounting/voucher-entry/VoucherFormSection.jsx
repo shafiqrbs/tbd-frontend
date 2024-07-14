@@ -29,7 +29,7 @@ export default function VoucherFormSection(props) {
     const { t } = useTranslation();
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
-    const height = mainAreaHeight - 200;
+    const height = mainAreaHeight - 174;
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
     const [paymentMode, setPaymentMode] = useState("");
     const [ledgerHead, setLedgerHead] = useState("");
@@ -127,7 +127,7 @@ export default function VoucherFormSection(props) {
                 })}
             >
                 <Box p={"xs"} pt={'0'} className={"borderRadiusAll"}>
-                    <Box pl={"xs"} pb={"8"} pr={8} pt={"8"} mb={'xs'} mt={'xs'} className={"boxBackground borderRadiusAll"}>
+                    <Box pl={`xs`} pr={8} pt={'6'} pb={'6'} mb={'4'} mt={'xs'} className={'boxBackground borderRadiusAll'} >
                         <Grid>
                             <Grid.Col span={9}>
                                 <Title order={6} pl={"6"}>
@@ -284,9 +284,9 @@ export default function VoucherFormSection(props) {
                             </Grid>
                         </Box>
                     </Box>
-                    <Box pl={"xs"} pb={"xs"} pr={8} pt={"xs"} mt={'xs'} className={"boxBackground borderRadiusAll"}>
+                    <Box mt={4} pl={`xs`} pr={8} pt={'xs'} pb={'6'} mb={'4'} className={'boxBackground borderRadiusAll'} >
                         <Grid>
-                            <Grid.Col span={8} h={54}>
+                            <Grid.Col span={8} >
                                 <InputNumberForm
                                     tooltip={t('Amount')}
                                     label={t('')}
@@ -295,24 +295,22 @@ export default function VoucherFormSection(props) {
                                     nextField={'EntityFormSubmit'}
                                     name={'amount'}
                                     form={form}
-
                                     id={'amount'}
                                     ref={amountInputRef}
                                 />
                             </Grid.Col>
-                            <Grid.Col span={4}>
+                            <Grid.Col span={4}  >
                                 <Stack right align="flex-end">
                                     {!saveCreateLoading && isOnline && (
                                         <Button
                                             size="xs"
-                                            color={"red.6"}
+                                            color={"green.8"}
                                             type="submit"
-                                            mt={4}
                                             id="EntityFormSubmit"
                                             leftSection={<IconDeviceFloppy size={16} />}
                                         >
                                             <Flex direction={'column'} gap={0}>
-                                                <Text fz={12} fw={400}>
+                                                <Text fz={14} fw={400}>
                                                     {t("AddVoucher")}
                                                 </Text>
                                             </Flex>

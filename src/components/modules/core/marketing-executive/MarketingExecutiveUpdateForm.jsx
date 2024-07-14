@@ -17,7 +17,7 @@ import { modals } from "@mantine/modals";
 import {
     setEditEntityData,
     setFormLoading, setInsertType,
-    updateEntityData, setFetching, storeEntityData
+    updateEntityData, setFetching,
 } from "../../../../store/core/crudSlice.js";
 
 
@@ -43,16 +43,6 @@ function MarketingExecutiveUpdateForm() {
     const [formLoad, setFormLoad] = useState('');
     const navigate = useNavigate();
 
-
-
-    const { executiveId } = useParams();
-
-    useEffect(() => {
-        if (executiveId) {
-            dispatch(setEditEntityData(`core/marketing-executive/${executiveId}`))
-            dispatch(setFormLoading(true));
-        }
-    }, [executiveId, dispatch]);
 
     // useEffect(() => {
 
@@ -100,7 +90,7 @@ function MarketingExecutiveUpdateForm() {
             setFormDataForUpdate(false)
         }, 500)
 
-    }, [entityEditData, dispatch, setFormData, executiveId])
+    }, [entityEditData, dispatch, setFormData])
 
 
     useHotkeys([['alt+n', () => {

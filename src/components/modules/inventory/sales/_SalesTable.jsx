@@ -38,11 +38,12 @@ function _SalesTable() {
     const dispatch = useDispatch();
     const { t, i18n } = useTranslation();
     const { isOnline, mainAreaHeight } = useOutletContext();
-    const tableHeight = mainAreaHeight - 116; //TabList height 104
-    const height = mainAreaHeight - 314; //TabList height 104
+    const tableHeight = mainAreaHeight - 106; //TabList height 104
+    const height = mainAreaHeight - 304; //TabList height 104
 
     const perPage = 50;
     const [page, setPage] = useState(1);
+    const [selectedRow, setSelectedRow] = useState('');
 
     useEffect(() => {
         dispatch(setSearchKeyword(''))
@@ -62,6 +63,7 @@ function _SalesTable() {
 
     useEffect(() => {
         setSalesViewData(indexData.data && indexData.data[0] && indexData.data[0])
+        setSelectedRow(indexData.data && indexData.data[0] && indexData.data[0].invoice)
     }, [indexData.data])
     useHotkeys([['alt+n', () => {
         navigate('/inventory/sales-invoice');
@@ -189,6 +191,7 @@ function _SalesTable() {
                                                         e.preventDefault();
                                                         setLoading(true)
                                                         setSalesViewData(item)
+                                                        setSelectedRow(item.invoice)
                                                     }}
                                                     style={{ cursor: "pointer" }}
                                                 >
@@ -301,6 +304,12 @@ function _SalesTable() {
                                     loaderColor="grape"
                                     height={tableHeight}
                                     scrollAreaProps={{ type: 'never' }}
+                                    rowBackgroundColor={(item) => {
+                                        if (item.invoice === selectedRow) return '#e2c2c263';
+                                    }}
+                                    rowColor={(item) => {
+                                        if (item.invoice === selectedRow) return 'red.6';
+                                    }}
                                 />
                             </Box>
                         </Box>
@@ -452,10 +461,7 @@ function _SalesTable() {
                                     </Box>
                                 </ScrollArea>
                             </Box>
-                        </Box>
-                        <Box>
                             <Button.Group fullWidth>
-
                                 <Button
                                     fullWidth
                                     variant="filled"
@@ -492,6 +498,9 @@ function _SalesTable() {
                                     color="cyan.5"
                                 >{t('Edit')}</Button>
                             </Button.Group>
+                        </Box>
+                        <Box>
+
                         </Box>
                     </Grid.Col>
                     <Grid.Col span={1} >

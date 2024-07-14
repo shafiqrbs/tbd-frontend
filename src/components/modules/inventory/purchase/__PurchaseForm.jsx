@@ -45,7 +45,7 @@ function __PurchaseForm(props) {
     const [purchaseDueAmount, setPurchaseDueAmount] = useState(props.purchaseSubTotalAmount);
     const [hoveredModeId, setHoveredModeId] = useState(false);
 
-    const formHeight = mainAreaHeight - 268; //TabList height 104
+    const formHeight = mainAreaHeight - 260; //TabList height 104
     const [viewVendorModel, setVendorViewModel] = useState(false);
 
     /*START GET VENDOR DATA BY ID FROM LOCAL STORAGE*/
@@ -89,7 +89,7 @@ function __PurchaseForm(props) {
 
             if (coreVendors && coreVendors.length > 0) {
                 const transformedData = coreVendors.map(type => {
-                    return ({'label': type.mobile + ' -- ' + type.name, 'value': String(type.id)})
+                    return ({ 'label': type.mobile + ' -- ' + type.name, 'value': String(type.id) })
                 });
                 setVendorsDropdownData(transformedData);
             }

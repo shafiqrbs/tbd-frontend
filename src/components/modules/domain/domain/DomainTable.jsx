@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { useOutletContext, Link, } from "react-router-dom";
+import { useOutletContext, Link, useNavigate, } from "react-router-dom";
 import {
     Group,
     Box, Grid,
     ActionIcon, Text, Title, Stack, Menu, rem
 } from "@mantine/core";
 import { useTranslation } from "react-i18next";
-import { IconEye, IconEdit, IconTrash, IconTrashX, IconDotsVertical } from "@tabler/icons-react";
+import { IconTrashX, IconDotsVertical } from "@tabler/icons-react";
 import { DataTable } from 'mantine-datatable';
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -28,7 +28,7 @@ function DomainTable(props) {
     const dispatch = useDispatch();
     const { t, i18n } = useTranslation();
     const { isOnline, mainAreaHeight } = useOutletContext();
-    const height = mainAreaHeight - 128; //TabList height 104
+    const height = mainAreaHeight - 98; //TabList height 104
 
     const perPage = 50;
     const [page, setPage] = useState(1);
@@ -37,7 +37,7 @@ function DomainTable(props) {
     const fetching = useSelector((state) => state.crudSlice.fetching)
     const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword)
     const indexData = useSelector((state) => state.crudSlice.indexEntityData)
-    const customerFilterData = useSelector((state) => state.crudSlice.customerFilterData)
+    const navigate = useNavigate();
 
     useEffect(() => {
         const value = {
@@ -56,10 +56,10 @@ function DomainTable(props) {
     return (
 
         <>
-            <Box pl={`xs`} pb={'xs'} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'} >
+            <Box pl={`xs`} pr={8} pt={'6'} pb={'4'} className={'boxBackground borderRadiusAll border-bottom-none'} >
                 <KeywordSearch module={'customer'} />
             </Box>
-            <Box className={'borderRadiusAll'}>
+            <Box className={'borderRadiusAll border-top-none'}>
                 <DataTable
                     classNames={{
                         root: tableCss.root,
@@ -94,18 +94,17 @@ function DomainTable(props) {
                                         </Menu.Target>
                                         <Menu.Dropdown>
                                             <Menu.Item
-                                                // href={`/inventory/sales/edit/${data.id}`}
                                                 onClick={() => {
                                                     dispatch(setInsertType('update'))
                                                     dispatch(editEntityData('core/customer/' + data.id))
                                                     dispatch(setFormLoading(true))
+                                                    navigate(`/domain/domain-index/${data.id}`);
                                                 }}
                                             >
                                                 {t('Edit')}
                                             </Menu.Item>
 
                                             <Menu.Item
-                                                href={``}
                                                 onClick={() => {
                                                     setCustomerViewModel(true)
                                                     dispatch(showEntityData('core/customer/' + data.id))

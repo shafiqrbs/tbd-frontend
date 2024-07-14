@@ -90,7 +90,8 @@ function AppRoute() {
                     <Route path="product-settings/:settingsId" element={<ProductSettingsIndex />} />
                 </Route>
                 <Route path="/domain/">
-                    <Route path="" element={<DomainIndex />} />
+                    <Route path="domain-index" element={<DomainIndex />} />
+                    <Route path="domain-index/:domainId" element={<DomainIndex />} />
                 </Route>
                 <Route path="/accounting/">
                     <Route path="voucher-entry" element={<VoucherIndex />} />
@@ -101,6 +102,7 @@ function AppRoute() {
                     <Route path="head-subgroup" element={<HeadSubGroupIndex />} />
                     <Route path="head-subgroup/:headSubGroupId" element={<HeadSubGroupIndex />} />
                     <Route path="transaction-mode" element={<TransactionModeIndex />} />
+                    <Route path="transaction-mode/:transactionModeId" element={<TransactionModeIndex />} />
                     <Route path="modalIndex" element={<SampleModalIndex />} />
                 </Route>
                 <Route path="sitemap" element={<Sitemap />} />

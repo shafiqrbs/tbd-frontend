@@ -35,8 +35,8 @@ function _PurchaseTable() {
     const dispatch = useDispatch();
     const { t, i18n } = useTranslation();
     const { isOnline, mainAreaHeight } = useOutletContext();
-    const tableHeight = mainAreaHeight - 116; //TabList height 104
-    const height = mainAreaHeight - 314; //TabList height 104
+    const tableHeight = mainAreaHeight - 106; //TabList height 104
+    const height = mainAreaHeight - 282; //TabList height 104
 
     const perPage = 50;
     const [page, setPage] = useState(1);
@@ -354,8 +354,6 @@ function _PurchaseTable() {
                                     </Box>
                                 </ScrollArea>
                             </Box>
-                        </Box>
-                        <Box>
                             <Button.Group fullWidth>
 
                                 <Button
@@ -388,6 +386,9 @@ function _PurchaseTable() {
                                     Edit
                                 </Button>
                             </Button.Group>
+                        </Box>
+                        <Box>
+
                         </Box>
                     </Grid.Col>
                     <Grid.Col span={1} >

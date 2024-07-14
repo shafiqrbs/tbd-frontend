@@ -28,7 +28,8 @@ import SelectForm from "../../../form-builders/SelectForm.jsx";
 import CategoryGroupModal from "./CategoryGroupModal.jsx";
 import SwitchForm from "../../../form-builders/SwitchForm.jsx";
 
-function CategoryUpdateForm() {
+function CategoryUpdateForm(props) {
+    const {groupCategoryDropdown} = props
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
@@ -44,36 +45,9 @@ function CategoryUpdateForm() {
     const [formLoad, setFormLoad] = useState('');
     const navigate = useNavigate();
 
-    const groupCategoryDropdownData = useSelector((state) => state.inventoryUtilitySlice.groupCategoryDropdown)
-    const dropdownLoad = useSelector((state) => state.inventoryCrudSlice.dropdownLoad)
-    let groupCategoryDropdown = groupCategoryDropdownData && groupCategoryDropdownData.length > 0 ?
-        groupCategoryDropdownData.map((type, index) => {
-            return ({ 'label': type.name, 'value': String(type.id) })
-        }) : []
-
-
-    const { categoryId } = useParams();
-
-    useEffect(() => {
-        if (categoryId) {
-            dispatch(setEditEntityData(`inventory/category-group/${categoryId}`))
-            dispatch(setFormLoading(true));
-        }
-    }, [categoryId, dispatch]);
-
-    useEffect(() => {
-
-        const value = {
-            url: 'inventory/select/group-category',
-        }
-
-        dispatch(getCategoryDropdown(value))
-        dispatch(setDropdownLoad(false))
-    }, [dropdownLoad]);
-
     const form = useForm({
         initialValues: {
-            parent: '', name: '', status: ''
+            parent: '', name: '', status: true
         },
         validate: {
             parent: isNotEmpty(),
@@ -224,10 +198,12 @@ function CategoryUpdateForm() {
                                                             <Box pt={'xl'}>
                                                                 <Tooltip
                                                                     multiline
-                                                                    w={420}
+                                                                    ta={'center'}
+                                                                    bg={'orange.8'}
+                                                                    offset={{ crossAxis: '-95', mainAxis: '5' }}
                                                                     withArrow
                                                                     transitionProps={{ duration: 200 }}
-                                                                    label={t('QuickCategoryGroup')}
+                                                                    label={t('CreateCategoryGroup')}
                                                                 >
                                                                     <ActionIcon fullWidth variant="outline" bg={'white'} size={'lg'} color="red.5" mt={'1'} aria-label="Settings" onClick={open}>
                                                                         <IconCategoryPlus style={{ width: '100%', height: '70%' }} stroke={1.5} />
@@ -265,7 +241,7 @@ function CategoryUpdateForm() {
                                                                 color="red"
                                                                 id={'status'}
                                                                 position={'left'}
-                                                                defaultChecked={1}
+                                                                checked={form.values.status}
                                                             />
                                                         </Grid.Col>
                                                         <Grid.Col span={6} fz={'sm'} pt={'1'}>{t('Status')}</Grid.Col>

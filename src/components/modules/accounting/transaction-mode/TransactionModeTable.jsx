@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useOutletContext } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import {
     Group,
     Box, Grid,
@@ -31,7 +31,7 @@ function TransactionModeTable(props) {
     const dispatch = useDispatch();
     const { t, i18n } = useTranslation();
     const { isOnline, mainAreaHeight } = useOutletContext();
-    const height = mainAreaHeight - 128; //TabList height 104
+    const height = mainAreaHeight - 98; //TabList height 104
     const perPage = 50;
     const [page, setPage] = useState(1);
     const [customerViewModel, setCustomerViewModel] = useState(false)
@@ -40,6 +40,7 @@ function TransactionModeTable(props) {
     const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword)
     const indexData = useSelector((state) => state.crudSlice.indexEntityData)
     const customerFilterData = useSelector((state) => state.crudSlice.customerFilterData)
+    const navigate = useNavigate()
 
     useEffect(() => {
         const value = {
@@ -58,10 +59,10 @@ function TransactionModeTable(props) {
     return (
 
         <>
-            <Box pl={`xs`} pb={'xs'} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'} >
+            <Box pl={`xs`} pr={8} pt={'6'} pb={'4'} className={'boxBackground borderRadiusAll border-bottom-none'}  >
                 <KeywordSearch module={'customer'} />
             </Box>
-            <Box className={'borderRadiusAll'}>
+            <Box className={'borderRadiusAll border-top-none'}>
                 <DataTable
                     classNames={{
                         root: tableCss.root,
@@ -100,18 +101,17 @@ function TransactionModeTable(props) {
                                         </Menu.Target>
                                         <Menu.Dropdown>
                                             <Menu.Item
-                                                // href={`/inventory/sales/edit/${data.id}`}
                                                 onClick={() => {
                                                     dispatch(setInsertType('update'))
                                                     dispatch(editEntityData('accounting/transaction-mode/' + data.id))
                                                     dispatch(setFormLoading(true))
+                                                    navigate(`/accounting/transaction-mode/${data.id}`);
                                                 }}
                                             >
                                                 {t('Edit')}
                                             </Menu.Item>
 
                                             <Menu.Item
-                                                href={``}
                                                 onClick={() => {
                                                     console.log('ok')
                                                     // setCustomerViewModel(true)
@@ -124,7 +124,6 @@ function TransactionModeTable(props) {
                                                 {t('Show')}
                                             </Menu.Item>
                                             <Menu.Item
-                                                // href={``}
                                                 target="_blank"
                                                 component="a"
                                                 w={'200'}
