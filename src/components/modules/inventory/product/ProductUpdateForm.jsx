@@ -63,14 +63,6 @@ function ProductUpdateForm() {
         dispatch(getCategoryDropdown(value))
     }, [dropdownLoad]);
 
-    const { productId } = useParams();
-
-    useEffect(() => {
-        if (productId) {
-            dispatch(setEditEntityData(`inventory/product/${productId}`))
-            dispatch(setFormLoading(true));
-        }
-    }, [productId, dispatch]);
 
     const [brandData, setBrandData] = useState(null);
     const brandDropdownData = useSelector((state) => state.inventoryUtilitySlice.brandDropdownData)
