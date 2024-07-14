@@ -34,7 +34,6 @@ function LocationUpdateForm() {
 
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
     const [setFormData, setFormDataForUpdate] = useState(false);
-    const [opened, { open, close }] = useDisclosure(false);
     const [categoryGroupData, setCategoryGroupData] = useState(null);
 
     const entityEditData = useSelector((state) => state.inventoryCrudSlice.entityEditData)
@@ -42,16 +41,6 @@ function LocationUpdateForm() {
     const [formLoad, setFormLoad] = useState('');
     const navigate = useNavigate();
 
-
-
-    const { locationId } = useParams();
-
-    useEffect(() => {
-        if (locationId) {
-            dispatch(setEditEntityData(`core/location/${locationId}`))
-            dispatch(setFormLoading(true));
-        }
-    }, [locationId, dispatch]);
 
     // useEffect(() => {
 
@@ -92,7 +81,7 @@ function LocationUpdateForm() {
             setFormDataForUpdate(false)
         }, 500)
 
-    }, [entityEditData, dispatch, setFormData, locationId])
+    }, [entityEditData, dispatch, setFormData])
 
 
     useHotkeys([['alt+n', () => {

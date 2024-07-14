@@ -6,7 +6,6 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from "react-redux";
 
 import {
-    setCustomerFilterData,
     setEntityNewData,
     setInsertType,
     setSearchKeyword,
@@ -24,7 +23,6 @@ import MarketingExecutiveUpdateForm from "./MarketingExecutiveUpdateForm.jsx";
 function MarketingExecutiveIndex() {
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
-    const adjustment = 0;
 
     const insertType = useSelector((state) => state.inventoryCrudSlice.insertType)
 

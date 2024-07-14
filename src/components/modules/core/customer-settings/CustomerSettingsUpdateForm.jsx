@@ -34,7 +34,6 @@ function CustomerSettingsUpdateForm(props) {
 
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
     const [setFormData, setFormDataForUpdate] = useState(false);
-    const [opened, { open, close }] = useDisclosure(false);
     const [categoryGroupData, setCategoryGroupData] = useState(null);
 
     const entityEditData = useSelector((state) => state.inventoryCrudSlice.entityEditData)
@@ -44,16 +43,6 @@ function CustomerSettingsUpdateForm(props) {
 
     const { saveId } = props
 
-
-
-    const { settingsId } = useParams();
-
-    useEffect(() => {
-        if (settingsId) {
-            dispatch(setEditEntityData(`core/customer-settings/${settingsId}`))
-            dispatch(setFormLoading(true));
-        }
-    }, [settingsId, dispatch]);
 
     // useEffect(() => {
 
@@ -82,7 +71,7 @@ function CustomerSettingsUpdateForm(props) {
 
     useEffect(() => {
 
-        form.setValues({
+        settingsForm.setValues({
             setting_type: entityEditData.setting_type ? entityEditData.setting_type : '',
             setting_name: entityEditData.setting_name ? entityEditData.setting_name : '',
             status: entityEditData.status ? entityEditData.status : ''

@@ -11,9 +11,6 @@ import ProductUpdateForm from "./ProductUpdateForm.jsx";
 import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress.js";
 import getConfigData from "../../../global-hook/config-data/getConfigData.js";
 import InventoryHeaderNavbar from "../configuraton/InventoryHeaderNavbar";
-import CategoryTable from "../category/CategoryTable";
-import CategoryForm from "../category/CategoryForm";
-import CategoryUpdateForm from "../category/CategoryUpdateForm";
 import { useNavigate, useParams } from "react-router-dom";
 import { editEntityData, setEntityNewData, setFormLoading, setInsertType, setSearchKeyword } from "../../../../store/inventory/crudSlice.js";
 
