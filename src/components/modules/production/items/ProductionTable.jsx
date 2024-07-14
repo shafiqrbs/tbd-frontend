@@ -1,86 +1,126 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useOutletContext } from "react-router-dom";
+import { useOutletContext } from "react-router-dom";
 import {
     Group,
     Box,
-    ActionIcon, Text, rem, Menu
+    ActionIcon,
+    Text,
+    Table,
+    Menu,
+    rem
 } from "@mantine/core";
-import { useTranslation } from "react-i18next";
 import {
-    IconEdit, IconTrash, IconCheck,
+    IconEye,
+    IconEdit,
+    IconTrash,
     IconDotsVertical,
     IconTrashX
 } from "@tabler/icons-react";
 import { DataTable } from 'mantine-datatable';
 import { useDispatch, useSelector } from "react-redux";
+import { useTranslation } from 'react-i18next';
 import {
-    editEntityData, getIndexEntityData, setDeleteMessage, setFetching, setFormLoading, setInsertType
-} from "../../../../store/inventory/crudSlice.js";
-import KeywordSearch from "../../filter/KeywordSearch.jsx";
+    editEntityData,
+    getIndexEntityData,
+    setFetching,
+    setFormLoading,
+    setInsertType,
+    showEntityData,
+    deleteEntityData
+} from "../../../../store/core/crudSlice.js";
+import KeywordSearch from "../../filter/KeywordSearch";
 import { modals } from "@mantine/modals";
-import { deleteEntityData } from "../../../../store/core/crudSlice.js";
-import { notifications } from "@mantine/notifications";
+
 import tableCss from "../../../../assets/css/Table.module.css";
-import ProductSettingsViewModal from "./ProductSettingsViewModal.jsx";
 
-
-function ProductSettingsTable() {
-
+function ProductionTable() {
     const dispatch = useDispatch();
     const { t, i18n } = useTranslation();
     const { isOnline, mainAreaHeight } = useOutletContext();
-    const height = mainAreaHeight - 98; //TabList height 104
+    const height = mainAreaHeight - 120; //TabList height 104
+
     const perPage = 50;
     const [page, setPage] = useState(1);
+    const [productViewModel, setProductViewModel] = useState(false)
 
-    const fetching = useSelector((state) => state.inventoryCrudSlice.fetching)
+    const fetching = useSelector((state) => state.crudSlice.fetching)
     const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword)
-    const indexData = useSelector((state) => state.inventoryCrudSlice.indexEntityData)
-    const entityDataDelete = useSelector((state) => state.inventoryCrudSlice.entityDataDelete)
-    const productCategoryFilterData = useSelector((state) => state.inventoryCrudSlice.productCategoryFilterData)
+    const indexData = useSelector((state) => state.crudSlice.indexEntityData)
+    const productFilterData = useSelector((state) => state.inventoryCrudSlice.productFilterData)
 
-    const [categoryViewModal, setCategoryViewModal] = useState(false)
 
-    const navigate = useNavigate()
 
-    useEffect(() => {
-        dispatch(setDeleteMessage(''))
-        if (entityDataDelete === 'delete') {
-            notifications.show({
-                color: 'red',
-                title: t('DeleteSuccessfully'),
-                icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
-                loading: false,
-                autoClose: 700,
-                style: { backgroundColor: 'lightgray' },
-            });
-
-            setTimeout(() => {
-                dispatch(setFetching(true))
-            }, 700)
-        }
-    }, [entityDataDelete]);
 
 
     useEffect(() => {
         const value = {
-            url: 'inventory/category-group',
+            url: 'inventory/product',
             param: {
                 term: searchKeyword,
-                type: 'category',
+                name: productFilterData.name,
+                alternative_name: productFilterData.alternative_name,
+                sku: productFilterData.sku,
+                sales_price: productFilterData.sales_price,
                 page: page,
                 offset: perPage
             }
         }
         dispatch(getIndexEntityData(value))
     }, [fetching]);
-
+    const data = [
+        {
+            'item_index': 0,
+            'item_name': 'Printed Aluminium Blister Foil (20 Micron)',
+            'item_uom': 'kg',
+            'item_license_date': '01-01-2022',
+            'item_initiate_date': '01-01-2022',
+            'item_wastage': '0%',
+            'item_quantity': '1.12',
+            'item_wastage_quantity': '0.02',
+            'item_wastage_amount': '9.00',
+            'item_material_value': '611.75',
+            'item_value_added': '239.25',
+            'item_total': '860',
+            'item_status': 'Amendment',
+        },
+        {
+            'item_index': 1,
+            'item_name': 'Printed Aluminium Blister Foil (25 Micron)',
+            'item_uom': 'kg',
+            'item_license_date': '01-01-2022',
+            'item_initiate_date': '01-01-2022',
+            'item_wastage': '0%',
+            'item_quantity': '1.12',
+            'item_wastage_quantity': '0.02',
+            'item_wastage_amount': '9.00',
+            'item_material_value': '611.75',
+            'item_value_added': '239.25',
+            'item_total': '860',
+            'item_status': 'Amendment',
+        },
+        {
+            'item_index': 2,
+            'item_name': 'Printed Aluminium Blister Foil (30 Micron)',
+            'item_uom': 'kg',
+            'item_license_date': '01-01-2022',
+            'item_initiate_date': '01-01-2022',
+            'item_wastage': '0%',
+            'item_quantity': '1.12',
+            'item_wastage_quantity': '0.02',
+            'item_wastage_amount': '9.00',
+            'item_material_value': '611.75',
+            'item_value_added': '239.25',
+            'item_total': '860',
+            'item_status': 'Amendment',
+        }
+    ]
     return (
         <>
-            <Box pl={`xs`} pr={8} pt={'6'} pb={'4'} className={'boxBackground borderRadiusAll border-bottom-none'} >
-                <KeywordSearch module={'category'} />
+
+            <Box pl={`xs`} pb={'xs'} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'} >
+                <KeywordSearch module={'product'} />
             </Box>
-            <Box className={'borderRadiusAll border-top-none'}>
+            <Box className={'borderRadiusAll'}>
                 <DataTable
                     classNames={{
                         root: tableCss.root,
@@ -89,21 +129,31 @@ function ProductSettingsTable() {
                         footer: tableCss.footer,
                         pagination: tableCss.pagination,
                     }}
-                    records={indexData.data}
+                    records={data}
                     columns={[
                         {
-                            accessor: 'index',
+                            accessor: 'item_index',
                             title: t('S/N'),
                             textAlignment: 'right',
-                            render: (item) => (indexData.data.indexOf(item) + 1)
+                            render: index => (index.item_index + 1)
                         },
-                        { accessor: 'name', title: t("SettingType") },
-                        { accessor: 'parent_name', title: t("SettingName") },
+                        { accessor: 'item_name', title: t("Item") },
+                        { accessor: 'item_uom', title: t("Uom") },
+                        { accessor: 'item_license_date', title: t("LicenseDate") },
+                        { accessor: 'item_initiate_date', title: t("InitiateDate") },
+                        { accessor: 'item_wastage', title: t("Wastage") },
+                        { accessor: 'item_quantity', title: t("Quantity") },
+                        { accessor: 'item_wastage_quantity', title: t("WastageQuantity") },
+                        { accessor: 'item_wastage_amount', title: t("WastageAmount") },
+                        { accessor: 'item_material_value', title: t("MaterialValue") },
+                        { accessor: 'item_value_added', title: t("ValueAdded") },
+                        { accessor: 'item_total', title: t("Total") },
+                        { accessor: 'item_status', title: t("Status") },
                         {
                             accessor: "action",
                             title: t("Action"),
                             textAlign: "right",
-                            render: (data) => (
+                            render: (datas) => (
                                 <Group gap={4} justify="right" wrap="nowrap">
                                     <Menu position="bottom-end" offset={3} withArrow trigger="hover" openDelay={100} closeDelay={400}>
                                         <Menu.Target>
@@ -113,20 +163,21 @@ function ProductSettingsTable() {
                                         </Menu.Target>
                                         <Menu.Dropdown>
                                             <Menu.Item
+                                                // href={`/inventory/sales/edit/${data.id}`}
                                                 onClick={() => {
                                                     dispatch(setInsertType('update'))
-                                                    dispatch(editEntityData('inventory/settings/' + data.id))
+                                                    dispatch(editEntityData('inventory/product/' + data.id))
                                                     dispatch(setFormLoading(true))
-                                                    navigate(`/inventory/product-settings/${data.id}`)
                                                 }}
                                             >
                                                 {t('Edit')}
                                             </Menu.Item>
 
                                             <Menu.Item
+                                                href={``}
                                                 onClick={() => {
-                                                    setCategoryViewModal(true)
-                                                    // dispatch(editEntityData('inventory/category-group/' + data.id))
+                                                    setProductViewModel(true)
+                                                    dispatch(showEntityData('inventory/product/' + data.id))
                                                 }}
                                                 target="_blank"
                                                 component="a"
@@ -151,10 +202,10 @@ function ProductSettingsTable() {
                                                             <Text size="sm"> {t("FormConfirmationMessage")}</Text>
                                                         ),
                                                         labels: { confirm: 'Confirm', cancel: 'Cancel' },
-                                                        confirmProps: { color: 'red.6' },
                                                         onCancel: () => console.log('Cancel'),
                                                         onConfirm: () => {
-                                                            dispatch(deleteEntityData('inventory/category-group/' + data.id))
+                                                            dispatch(deleteEntityData('inventory/product/' + data.id))
+                                                            dispatch(setFetching(true))
                                                         },
                                                     });
                                                 }}
@@ -183,9 +234,12 @@ function ProductSettingsTable() {
                     scrollAreaProps={{ type: 'never' }}
                 />
             </Box>
-            {categoryViewModal && <ProductSettingsViewModal categoryViewModal={categoryViewModal} setCategoryViewModal={setCategoryViewModal} />}
+            {/* {
+                productViewModel &&
+                <ProductViewModel productViewModel={productViewModel} setProductViewModel={setProductViewModel} />
+            } */}
         </>
     );
 }
 
-export default ProductSettingsTable;
+export default ProductionTable;

@@ -74,7 +74,7 @@ function SearchModal({ onClose }) {
             const selectedAction = filteredItems[selectedIndex];
             if (selectedAction) {
                 const path = (selectedAction.group === 'Production' || selectedAction.group === 'প্রোডাকশন')
-                    ? `inventory/${selectedAction.id}`
+                    ? `production/${selectedAction.id}`
                     : (selectedAction.group === 'Core' || selectedAction.group === 'কেন্দ্র') ? `core/${selectedAction.id}`
                         : (selectedAction.group === 'Inventory' || selectedAction.group === 'ইনভেন্টরি')
                             ? `inventory/${selectedAction.id}`
@@ -165,7 +165,7 @@ function SearchModal({ onClose }) {
                                                 // `${action.group.toLowerCase()}/${action.id}` 
                                                 to={
                                                     (action.group === 'Production' || action.group === 'প্রোডাকশন')
-                                                        ? `inventory/${action.id}`
+                                                        ? `production/${action.id}`
                                                         : (action.group === 'Core' || action.group === 'কেন্দ্র') ? `core/${action.id}`
                                                             : (action.group === 'Inventory' || action.group === 'ইনভেন্টরি')
                                                                 ? `inventory/${action.id}`
@@ -178,7 +178,7 @@ function SearchModal({ onClose }) {
                                                 onClick={(e) => {
                                                     e.preventDefault();
                                                     navigate((action.group === 'Production' || action.group === 'প্রোডাকশন')
-                                                        ? `inventory/${action.id}`
+                                                        ? `production/${action.id}`
                                                         : (action.group === 'Core' || action.group === 'কেন্দ্র') ? `core/${action.id}`
                                                             : (action.group === 'Inventory' || action.group === 'ইনভেন্টরি')
                                                                 ? `inventory/${action.id}`

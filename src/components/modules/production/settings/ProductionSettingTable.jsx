@@ -21,10 +21,10 @@ import { modals } from "@mantine/modals";
 import { deleteEntityData } from "../../../../store/core/crudSlice.js";
 import { notifications } from "@mantine/notifications";
 import tableCss from "../../../../assets/css/Table.module.css";
-import ProductSettingsViewModal from "./ProductSettingsViewModal.jsx";
+import ProductionSettingViewModal from "./ProductionSettingViewModal.jsx";
 
 
-function ProductSettingsTable() {
+function ProductionSettingTable() {
 
     const dispatch = useDispatch();
     const { t, i18n } = useTranslation();
@@ -183,9 +183,9 @@ function ProductSettingsTable() {
                     scrollAreaProps={{ type: 'never' }}
                 />
             </Box>
-            {categoryViewModal && <ProductSettingsViewModal categoryViewModal={categoryViewModal} setCategoryViewModal={setCategoryViewModal} />}
+            {categoryViewModal && <ProductionSettingViewModal categoryViewModal={categoryViewModal} setCategoryViewModal={setCategoryViewModal} />}
         </>
     );
 }
 
-export default ProductSettingsTable;
+export default ProductionSettingTable;
