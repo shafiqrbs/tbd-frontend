@@ -90,7 +90,8 @@ function AppRoute() {
                     <Route path="product-settings/:settingsId" element={<ProductSettingsIndex />} />
                 </Route>
                 <Route path="/domain/">
-                    <Route path="" element={<DomainIndex />} />
+                    <Route path="domain-index" element={<DomainIndex />} />
+                    <Route path="domain-index/:domainId" element={<DomainIndex />} />
                 </Route>
                 <Route path="/accounting/">
                     <Route path="voucher-entry" element={<VoucherIndex />} />
