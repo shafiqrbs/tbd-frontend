@@ -37,7 +37,6 @@ function CategoryGroupUpdateForm() {
     const formLoading = useSelector((state) => state.crudSlice.formLoading)
     const [formLoad, setFormLoad] = useState('');
     const navigate = useNavigate();
-    const { categoryGroupId } = useParams()
 
     const form = useForm({
         initialValues: {
@@ -48,14 +47,6 @@ function CategoryGroupUpdateForm() {
         }
     });
 
-
-
-    useEffect(() => {
-        if (categoryGroupId) {
-            dispatch(setEditEntityData(`inventory/category-group/${categoryGroupId}`))
-            dispatch(setFormLoading(true))
-        }
-    }, [categoryGroupId, dispatch])
 
     useEffect(() => {
         setFormLoad(true)
@@ -200,7 +191,7 @@ function CategoryGroupUpdateForm() {
                                                                 color="red"
                                                                 id={'status'}
                                                                 position={'left'}
-                                                                defaultChecked={1}
+                                                                checked={form.values.status}
                                                             />
                                                         </Grid.Col>
                                                         <Grid.Col span={6} fz={'sm'} pt={'1'}>{t('Status')}</Grid.Col>

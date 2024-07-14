@@ -27,8 +27,8 @@ function CategoryGroupForm() {
     const { isOnline, mainAreaHeight } = useOutletContext();
     const height = mainAreaHeight - 100; //TabList height 104
     const [saveCreateLoading, setSaveCreateLoading] = useState(false)
-    const theme = useMantineTheme();
-    const [checked, setChecked] = useState(false);
+
+
     const form = useForm({
         initialValues: {
             name: '', status: true
