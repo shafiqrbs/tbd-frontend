@@ -9,11 +9,12 @@ import CategoryTable from "./CategoryTable";
 import CategoryForm from "./CategoryForm";
 import CategoryUpdateForm from "./CategoryUpdateForm.jsx";
 import { editEntityData, setFormLoading, setSearchKeyword } from "../../../../store/core/crudSlice.js";
-import { setEntityNewData, setInsertType } from "../../../../store/inventory/crudSlice.js";
+import {setDropdownLoad, setEntityNewData, setInsertType} from "../../../../store/inventory/crudSlice.js";
 import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress.js";
 import getConfigData from "../../../global-hook/config-data/getConfigData.js";
 import InventoryHeaderNavbar from "../configuraton/InventoryHeaderNavbar";
 import { useNavigate, useParams } from "react-router-dom";
+import {getGroupCategoryDropdown} from "../../../../store/inventory/utilitySlice.js";
 
 function CategoryIndex() {
     const { t, i18n } = useTranslation();
@@ -40,6 +41,19 @@ function CategoryIndex() {
     }, [categoryId, dispatch, navigate])
 
 
+    const groupCategoryDropdownData = useSelector((state) => state.inventoryUtilitySlice.groupCategoryDropdown)
+    let groupCategoryDropdown = groupCategoryDropdownData && groupCategoryDropdownData.length > 0 ?
+        groupCategoryDropdownData.map((type, index) => {
+            return ({ 'label': type.name, 'value': String(type.id) })
+        }) : []
+    useEffect(() => {
+        const value = {
+            url: 'inventory/select/group-category',
+        }
+        dispatch(getGroupCategoryDropdown(value))
+    }, []);
+
+
     return (
         <>
             {progress !== 100 &&
@@ -64,8 +78,8 @@ function CategoryIndex() {
                                     <Grid.Col span={9}>
                                         {
                                             insertType === 'create'
-                                                ? <CategoryForm />
-                                                : <CategoryUpdateForm />
+                                                ? <CategoryForm  groupCategoryDropdown={groupCategoryDropdown} />
+                                                : <CategoryUpdateForm groupCategoryDropdown={groupCategoryDropdown} />
                                         }
                                     </Grid.Col>
                                 </Grid>

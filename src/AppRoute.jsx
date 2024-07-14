@@ -102,6 +102,7 @@ function AppRoute() {
                     <Route path="head-subgroup" element={<HeadSubGroupIndex />} />
                     <Route path="head-subgroup/:headSubGroupId" element={<HeadSubGroupIndex />} />
                     <Route path="transaction-mode" element={<TransactionModeIndex />} />
+                    <Route path="transaction-mode/:transactionModeId" element={<TransactionModeIndex />} />
                     <Route path="modalIndex" element={<SampleModalIndex />} />
                 </Route>
                 <Route path="sitemap" element={<Sitemap />} />

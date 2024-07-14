@@ -36,23 +36,10 @@ function DomainUpdateFormView(props) {
     const [opened, { open, close }] = useDisclosure(false);
 
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
-    const [customerGroupData, setCustomerGroupData] = useState(null);
-    const [locationData, setLocationData] = useState(null);
-    const [marketingExeData, setMarketingExeData] = useState(null);
 
-    const locationDropdownData = useSelector((state) => state.utilitySlice.locationDropdownData)
-    const executiveDropdownData = useSelector((state) => state.utilitySlice.executiveDropdownData)
     const validationMessage = useSelector((state) => state.crudSlice.validationMessage)
     const validation = useSelector((state) => state.crudSlice.validation)
     const entityNewData = useSelector((state) => state.crudSlice.entityNewData)
-
-
-    let locationDropdown = locationDropdownData && locationDropdownData.length > 0 ? locationDropdownData.map((type, index) => {
-        return ({ 'label': type.name, 'value': String(type.id) })
-    }) : []
-    let executiveDropdown = executiveDropdownData && executiveDropdownData.length > 0 ? executiveDropdownData.map((type, index) => {
-        return ({ 'label': type.name, 'value': String(type.id) })
-    }) : []
 
     useEffect(() => {
         const valueForLocation = {
@@ -138,9 +125,6 @@ function DomainUpdateFormView(props) {
 
             setTimeout(() => {
                 form.reset()
-                setMarketingExeData(null)
-                setCustomerGroupData(null)
-                setLocationData(null)
                 dispatch(setEntityNewData([]))
                 dispatch(setFetching(true))
             }, 700)
@@ -232,77 +216,98 @@ function DomainUpdateFormView(props) {
                                                         }></Alert>
                                                     }
 
-                                                    <InputForm
-                                                        tooltip={t('NameValidateMessage')}
-                                                        label={t('CompanyStoreName')}
-                                                        placeholder={t('CustomerName')}
-                                                        required={true}
-                                                        nextField={'CustomerGroup'}
-                                                        name={'name'}
-                                                        form={form}
-                                                        mt={0}
-                                                        id={'CustomerName'}
-                                                    />
+                                                    <Box mt={'xs'}>
+                                                        <InputForm
+                                                            tooltip={t('CompanyStoreNameValidateMessage')}
+                                                            label={t('CompanyStoreName')}
+                                                            placeholder={t('CompanyStoreName')}
+                                                            required={true}
+                                                            nextField={'mobile'}
+                                                            name={'company_name'}
+                                                            form={form}
+                                                            mt={0}
+                                                            id={'company_name'}
+                                                        />
+                                                    </Box>
+                                                    <Box mt={'xs'}>
+                                                        <InputNumberForm
+                                                            tooltip={t('MobileValidateMessage')}
+                                                            label={t('Mobile')}
+                                                            placeholder={t('Mobile')}
+                                                            required={true}
+                                                            nextField={'alternative_mobile'}
+                                                            name={'mobile'}
+                                                            form={form}
+                                                            mt={16}
+                                                            id={'mobile'}
+                                                        />
+                                                    </Box>
+                                                    <Box mt={'xs'}>
+                                                        <InputNumberForm
+                                                            tooltip={t('AlternativeMobileValidateMessage')}
+                                                            label={t('AlternativeMobile')}
+                                                            placeholder={t('AlternativeMobile')}
+                                                            required={false}
+                                                            nextField={'email'}
+                                                            name={'alternative_mobile'}
+                                                            form={form}
+                                                            mt={'md'}
+                                                            id={'alternative_mobile'}
+                                                        />
+                                                    </Box>
+                                                    <Box mt={'xs'}>
+                                                        <InputForm
+                                                            tooltip={t('InvalidEmail')}
+                                                            label={t('Email')}
+                                                            placeholder={t('Email')}
+                                                            required={false}
+                                                            nextField={'name'}
+                                                            name={'email'}
+                                                            form={form}
+                                                            mt={'md'}
+                                                            id={'email'}
+                                                        />
+                                                    </Box>
+                                                    <Box mt={'xs'}>
+                                                        <InputForm
+                                                            tooltip={t('ClientNameValidateMessage')}
+                                                            label={t('ClientName')}
+                                                            placeholder={t('ClientName')}
+                                                            required={true}
+                                                            nextField={'username'}
+                                                            name={'name'}
+                                                            form={form}
+                                                            mt={8}
+                                                            id={'name'}
+                                                        />
+                                                    </Box>
+                                                    <Box mt={'xs'}>
 
-                                                    <InputNumberForm
-                                                        tooltip={t('MobileValidateMessage')}
-                                                        label={t('Mobile')}
-                                                        placeholder={t('Mobile')}
-                                                        required={true}
-                                                        nextField={'AlternativeMobile'}
-                                                        name={'mobile'}
-                                                        form={form}
-                                                        mt={8}
-                                                        id={'Mobile'}
-                                                    />
-
-                                                    <InputForm
-                                                        tooltip={t('MobileValidateMessage')}
-                                                        label={t('AlternativeMobile')}
-                                                        placeholder={t('AlternativeMobile')}
-                                                        required={false}
-                                                        nextField={'Email'}
-                                                        name={'alternative_mobile'}
-                                                        form={form}
-                                                        mt={8}
-                                                        id={'AlternativeMobile'}
-                                                    />
-
-                                                    <InputForm
-                                                        tooltip={t('InvalidEmail')}
-                                                        label={t('Email')}
-                                                        placeholder={t('Email')}
-                                                        required={false}
-                                                        nextField={'Location'}
-                                                        name={'email'}
-                                                        form={form}
-                                                        mt={8}
-                                                        id={'Email'}
-                                                    />
-
-                                                    <InputForm
-                                                        tooltip={t('InvalidEmail')}
-                                                        label={t('DomainUser')}
-                                                        placeholder={t('Email')}
-                                                        required={false}
-                                                        nextField={'Location'}
-                                                        name={'email'}
-                                                        form={form}
-                                                        mt={8}
-                                                        id={'Email'}
-                                                    />
-
-                                                    <TextAreaForm
-                                                        tooltip={t('Address')}
-                                                        label={t('Address')}
-                                                        placeholder={t('Address')}
-                                                        required={false}
-                                                        nextField={'Status'}
-                                                        name={'address'}
-                                                        form={form}
-                                                        mt={8}
-                                                        id={'Address'}
-                                                    />
+                                                        <InputForm
+                                                            tooltip={t('DomainUserValidateMessage')}
+                                                            label={t('DomainUser')}
+                                                            placeholder={t('DomainUser')}
+                                                            required={true}
+                                                            nextField={'address'}
+                                                            name={'username'}
+                                                            form={form}
+                                                            mt={8}
+                                                            id={'username'}
+                                                        />
+                                                    </Box>
+                                                    <Box mt={'xs'}>
+                                                        <TextAreaForm
+                                                            tooltip={t('Address')}
+                                                            label={t('Address')}
+                                                            placeholder={t('Address')}
+                                                            required={false}
+                                                            nextField={'Status'}
+                                                            name={'address'}
+                                                            form={form}
+                                                            mt={8}
+                                                            id={'address'}
+                                                        />
+                                                    </Box>
 
                                                 </Box>
                                             </ScrollArea>

@@ -28,7 +28,8 @@ import SelectForm from "../../../form-builders/SelectForm.jsx";
 import CategoryGroupModal from "./CategoryGroupModal.jsx";
 import SwitchForm from "../../../form-builders/SwitchForm.jsx";
 
-function CategoryUpdateForm() {
+function CategoryUpdateForm(props) {
+    const {groupCategoryDropdown} = props
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
@@ -43,23 +44,6 @@ function CategoryUpdateForm() {
     const formLoading = useSelector((state) => state.crudSlice.formLoading)
     const [formLoad, setFormLoad] = useState('');
     const navigate = useNavigate();
-
-    const groupCategoryDropdownData = useSelector((state) => state.inventoryUtilitySlice.groupCategoryDropdown)
-    const dropdownLoad = useSelector((state) => state.inventoryCrudSlice.dropdownLoad)
-    let groupCategoryDropdown = groupCategoryDropdownData && groupCategoryDropdownData.length > 0 ?
-        groupCategoryDropdownData.map((type, index) => {
-            return ({ 'label': type.name, 'value': String(type.id) })
-        }) : []
-
-    useEffect(() => {
-
-        const value = {
-            url: 'inventory/select/group-category',
-        }
-
-        dispatch(getCategoryDropdown(value))
-        dispatch(setDropdownLoad(false))
-    }, [dropdownLoad]);
 
     const form = useForm({
         initialValues: {

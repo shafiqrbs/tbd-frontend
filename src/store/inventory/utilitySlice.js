@@ -59,6 +59,8 @@ const utilitySlice = createSlice({
         })
 
         builder.addCase(getGroupCategoryDropdown.fulfilled, (state, action) => {
+            console.log(action.payload.data)
+
             state.groupCategoryDropdown = action.payload.data
         })
 

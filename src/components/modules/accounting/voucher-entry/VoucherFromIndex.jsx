@@ -50,7 +50,7 @@ function VoucherFormIndex(props) {
     const { t } = useTranslation();
     const dispatch = useDispatch();
     const { mainAreaHeight, isOnline } = useOutletContext();
-    const height = mainAreaHeight - 215;
+    const height = mainAreaHeight - 196;
     const [opened, { open, close }] = useDisclosure(false);
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
 
@@ -416,12 +416,12 @@ function VoucherFormIndex(props) {
 
                                         </Grid.Col>
                                     </Grid>
-                                    <Box mt={'xs'} bg={'white'}>
+                                    <Box mt={'4'} bg={'white'}>
                                         <Box
-                                            pl={"xs"} pb={"xs"} pr={8} pt={"xs"} className={"boxBackground borderRadiusAll"}
+                                            mt={4} pl={`xs`} pr={8} pt={'xs'} pb={'xs'} mb={'4'} className={'boxBackground borderRadiusAll'}
                                         >
                                             <Grid>
-                                                <Grid.Col span={9} h={54}>
+                                                <Grid.Col span={9} >
 
                                                 </Grid.Col>
                                                 <Grid.Col span={3}>
@@ -429,14 +429,13 @@ function VoucherFormIndex(props) {
                                                         {!saveCreateLoading && isOnline && (
                                                             <Button
                                                                 size="xs"
-                                                                color={"red.6"}
+                                                                color={"green.8"}
                                                                 type="submit"
-                                                                mt={4}
                                                                 id="EntityFormSubmits"
                                                                 leftSection={<IconDeviceFloppy size={16} />}
                                                             >
                                                                 <Flex direction={'column'} gap={0}>
-                                                                    <Text fz={12} fw={400}>
+                                                                    <Text fz={14} fw={400}>
                                                                         {t("AddVoucher")}
                                                                     </Text>
                                                                 </Flex>

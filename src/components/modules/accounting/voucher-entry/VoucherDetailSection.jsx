@@ -9,12 +9,12 @@ export default function VoucherDetailSection(props) {
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
-    const height = mainAreaHeight - 200;
+    const height = mainAreaHeight - 184;
 
     return (
         <Box >
             <Box p={"xs"} pt={'0'} className={"borderRadiusAll"}>
-                <Box pl={"xs"} pb={"8"} pr={8} pt={"8"} mb={'xs'} mt={'xs'} className={"boxBackground borderRadiusAll"}>
+                <Box pl={`xs`} pr={8} pt={'6'} pb={'6'} mb={'4'} mt={'xs'} className={'boxBackground borderRadiusAll'} >
                     <Grid>
                         <Grid.Col span={9}>
                             <Title order={6} pl={"6"}>
@@ -24,7 +24,7 @@ export default function VoucherDetailSection(props) {
                     </Grid>
                 </Box>
                 <Stack
-                    mt={'xs'}
+
                     className="borderRadiusAll"
                     h={height + 56}
                     bg="var(--mantine-color-body)"
