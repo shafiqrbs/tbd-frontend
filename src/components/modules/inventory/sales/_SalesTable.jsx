@@ -38,8 +38,8 @@ function _SalesTable() {
     const dispatch = useDispatch();
     const { t, i18n } = useTranslation();
     const { isOnline, mainAreaHeight } = useOutletContext();
-    const tableHeight = mainAreaHeight - 116; //TabList height 104
-    const height = mainAreaHeight - 314; //TabList height 104
+    const tableHeight = mainAreaHeight - 106; //TabList height 104
+    const height = mainAreaHeight - 310; //TabList height 104
 
     const perPage = 50;
     const [page, setPage] = useState(1);
