@@ -54,7 +54,7 @@ function __SalesForm(props) {
     const [hoveredModeId, setHoveredModeId] = useState(false);
     const [isShowSMSPackageModel, setIsShowSMSPackageModel] = useState(false)
 
-    const formHeight = mainAreaHeight - 260; //TabList height 104
+    const formHeight = mainAreaHeight - 262; //TabList height 104
     const [customerViewModel, setCustomerViewModel] = useState(false);
 
 

@@ -27,7 +27,7 @@ function _GenericInvoiceForm(props) {
     const { currencySymbol, allowZeroPercentage, isPurchaseByPurchasePrice } = props
     const { t, i18n } = useTranslation();
     const { isOnline, mainAreaHeight } = useOutletContext();
-    const height = mainAreaHeight - 130; //TabList height 104
+    const height = mainAreaHeight - 150; //TabList height 104
     const [fetching, setFetching] = useState(false);
 
     const [searchValue, setSearchValue] = useState('');
@@ -598,7 +598,7 @@ function _GenericInvoiceForm(props) {
                                 recordsPerPage={10}
                                 loaderSize="xs"
                                 loaderColor="grape"
-                                height={height}
+                                height={height + 29}
                                 scrollAreaProps={{ type: 'never' }}
                             />
                         </Box>

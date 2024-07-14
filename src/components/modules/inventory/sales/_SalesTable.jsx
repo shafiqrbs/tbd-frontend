@@ -39,7 +39,7 @@ function _SalesTable() {
     const { t, i18n } = useTranslation();
     const { isOnline, mainAreaHeight } = useOutletContext();
     const tableHeight = mainAreaHeight - 106; //TabList height 104
-    const height = mainAreaHeight - 310; //TabList height 104
+    const height = mainAreaHeight - 304; //TabList height 104
 
     const perPage = 50;
     const [page, setPage] = useState(1);
@@ -461,10 +461,7 @@ function _SalesTable() {
                                     </Box>
                                 </ScrollArea>
                             </Box>
-                        </Box>
-                        <Box>
                             <Button.Group fullWidth>
-
                                 <Button
                                     fullWidth
                                     variant="filled"
@@ -501,6 +498,9 @@ function _SalesTable() {
                                     color="cyan.5"
                                 >{t('Edit')}</Button>
                             </Button.Group>
+                        </Box>
+                        <Box>
+
                         </Box>
                     </Grid.Col>
                     <Grid.Col span={1} >
