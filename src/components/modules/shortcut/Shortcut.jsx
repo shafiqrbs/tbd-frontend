@@ -29,7 +29,6 @@ function Shortcut(props) {
                             bg={`red.5`}
                             transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
                         >
-
                             <Button
                                 size="md"
                                 pl={'12'}

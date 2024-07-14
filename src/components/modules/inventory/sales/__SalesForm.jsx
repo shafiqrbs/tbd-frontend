@@ -13,17 +13,17 @@ import {
     IconPercentage,
     IconCurrencyTaka,
     IconMessage,
-    IconEyeEdit, IconDiscountOff, IconCurrency, IconPlusMinus, IconCheck, IconTallymark1,IconCalendar
+    IconEyeEdit, IconDiscountOff, IconCurrency, IconPlusMinus, IconCheck, IconTallymark1, IconCalendar
 
 } from "@tabler/icons-react";
 import { useHotkeys, useToggle } from "@mantine/hooks";
-import {useDispatch, useSelector} from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { isNotEmpty, useForm } from "@mantine/form";
 
 import SelectForm from "../../../form-builders/SelectForm";
 import TextAreaForm from "../../../form-builders/TextAreaForm";
 
-import {getSalesDetails, storeEntityData,} from "../../../../store/inventory/crudSlice.js";
+import { getSalesDetails, storeEntityData, } from "../../../../store/inventory/crudSlice.js";
 import InputNumberForm from "../../../form-builders/InputNumberForm";
 import InputButtonForm from "../../../form-builders/InputButtonForm";
 import { notifications } from "@mantine/notifications";
@@ -54,7 +54,7 @@ function __SalesForm(props) {
     const [hoveredModeId, setHoveredModeId] = useState(false);
     const [isShowSMSPackageModel, setIsShowSMSPackageModel] = useState(false)
 
-    const formHeight = mainAreaHeight - 268; //TabList height 104
+    const formHeight = mainAreaHeight - 260; //TabList height 104
     const [customerViewModel, setCustomerViewModel] = useState(false);
 
 
@@ -228,12 +228,12 @@ function __SalesForm(props) {
         </Text>
     );
 
-    const [openInvoiceDrawerForPrint,setOpenInvoiceDrawerForPrint] = useState(false)
+    const [openInvoiceDrawerForPrint, setOpenInvoiceDrawerForPrint] = useState(false)
 
     useEffect(() => {
-        if (entityNewData?.data?.id && (lastClicked === 'print' || lastClicked==='pos')){
+        if (entityNewData?.data?.id && (lastClicked === 'print' || lastClicked === 'pos')) {
             setTimeout(() => {
-                 setOpenInvoiceDrawerForPrint(true)
+                setOpenInvoiceDrawerForPrint(true)
             }, 400);
         }
     }, [entityNewData, dispatch, lastClicked]);
@@ -290,7 +290,7 @@ function __SalesForm(props) {
                 formValue['process'] = form.values.order_process;
                 formValue['narration'] = form.values.narration;
                 formValue['invoice_date'] = form.values.invoice_date && new Date(form.values.invoice_date).toLocaleDateString("en-CA", options)
-                ;
+                    ;
                 formValue['items'] = transformedArray ? transformedArray : [];
 
                 const hasReceiveAmount = form.values.receive_amount;

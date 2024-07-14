@@ -6,7 +6,7 @@ import {
 } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
 import {
-    IconDeviceFloppy, IconPercentage,IconSum, IconCurrency, IconX, IconBarcode, IconCoinMonero, IconSortAscendingNumbers, IconPlusMinus
+    IconDeviceFloppy, IconPercentage, IconSum, IconCurrency, IconX, IconBarcode, IconCoinMonero, IconSortAscendingNumbers, IconPlusMinus
 } from "@tabler/icons-react";
 import { getHotkeyHandler, useHotkeys } from "@mantine/hooks";
 import { useForm } from "@mantine/form";
@@ -25,7 +25,7 @@ function _GenericInvoiceForm(props) {
     const { currencySymbol, allowZeroPercentage, domainId, isSMSActive, isZeroReceiveAllow, focusFrom } = props
     const { t, i18n } = useTranslation();
     const { isOnline, mainAreaHeight } = useOutletContext();
-    const height = mainAreaHeight - 176; //TabList height 104
+    const height = mainAreaHeight - 170; //TabList height 104
     const [fetching, setFetching] = useState(false);
 
     const [searchValue, setSearchValue] = useState('');
