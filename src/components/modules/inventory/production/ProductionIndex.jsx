@@ -44,8 +44,7 @@ function ProductionIndex() {
                                 <Grid columns={24} gutter={{ base: 8 }}>
                                     <Grid.Col span={24}>
                                         <Box bg={'white'} p={'xs'} className={'borderRadiusAll'}>
-                                            {/* <ScrollArea scrollbars='x'>
-                                            </ScrollArea> */}
+                                            
                                             <ProductionTable />
 
                                         </Box>

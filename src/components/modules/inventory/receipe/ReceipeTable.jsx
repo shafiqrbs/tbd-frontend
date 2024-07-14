@@ -35,7 +35,7 @@ function ReceipeTable() {
     const dispatch = useDispatch();
     const { t, i18n } = useTranslation();
     const { isOnline, mainAreaHeight } = useOutletContext();
-    const tableHeight = mainAreaHeight - 128; //TabList height 104
+    const tableHeight = mainAreaHeight - 120; //TabList height 104
     const height = mainAreaHeight - 314; //TabList height 104
 
     const perPage = 50;
