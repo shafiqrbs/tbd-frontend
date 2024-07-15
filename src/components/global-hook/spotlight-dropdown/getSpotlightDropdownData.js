@@ -113,7 +113,7 @@ const getSpotlightDropdownData = (t) => {
             group: 'Production',
             actions: [
                 {
-                    id: 'items',
+                    id: 'production',
                     label: t('ProductionN'),
                     description: t('WhereWePresentTheProductionInformationN'),
 
@@ -126,7 +126,7 @@ const getSpotlightDropdownData = (t) => {
 
                 },
                 {
-                    id: 'items-receipe',
+                    id: 'items',
                     label: t('ProductionReceipeN'),
                     description: t('WhereWePresentTheProductionReceipeInformationN'),
 

@@ -7,15 +7,14 @@ import {
 } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import {
-    IconEdit, IconTrash, IconCheck,
+    IconCheck,
     IconDotsVertical,
     IconTrashX
 } from "@tabler/icons-react";
 import { DataTable } from 'mantine-datatable';
 import { useDispatch, useSelector } from "react-redux";
-import {
-    editEntityData, getIndexEntityData, setDeleteMessage, setFetching, setFormLoading, setInsertType
-} from "../../../../store/inventory/crudSlice.js";
+import { setFetching} from "../../../../store/core/crudSlice.js";
+import {editEntityData, getIndexEntityData, setDeleteMessage, setFormLoading, setInsertType} from "../../../../store/production/crudSlice.js";
 import KeywordSearch from "../../filter/KeywordSearch.jsx";
 import { modals } from "@mantine/modals";
 import { deleteEntityData } from "../../../../store/core/crudSlice.js";
@@ -33,11 +32,11 @@ function ProductionSettingTable() {
     const perPage = 50;
     const [page, setPage] = useState(1);
 
-    const fetching = useSelector((state) => state.inventoryCrudSlice.fetching)
+    const fetching = useSelector((state) => state.crudSlice.fetching)
     const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword)
-    const indexData = useSelector((state) => state.inventoryCrudSlice.indexEntityData)
-    const entityDataDelete = useSelector((state) => state.inventoryCrudSlice.entityDataDelete)
-    const productCategoryFilterData = useSelector((state) => state.inventoryCrudSlice.productCategoryFilterData)
+    const indexData = useSelector((state) => state.productionCrudSlice.indexEntityData)
+    const indexRefresh = useSelector((state) => state.productionCrudSlice.fetching)
+    const entityDataDelete = useSelector((state) => state.productionCrudSlice.entityDataDelete)
 
     const [categoryViewModal, setCategoryViewModal] = useState(false)
 
@@ -64,21 +63,20 @@ function ProductionSettingTable() {
 
     useEffect(() => {
         const value = {
-            url: 'inventory/category-group',
+            url: 'production/setting',
             param: {
                 term: searchKeyword,
-                type: 'category',
                 page: page,
                 offset: perPage
             }
         }
         dispatch(getIndexEntityData(value))
-    }, [fetching]);
+    }, [fetching,indexRefresh]);
 
     return (
         <>
             <Box pl={`xs`} pr={8} pt={'6'} pb={'4'} className={'boxBackground borderRadiusAll border-bottom-none'} >
-                <KeywordSearch module={'category'} />
+                <KeywordSearch module={'production-setting'} />
             </Box>
             <Box className={'borderRadiusAll border-top-none'}>
                 <DataTable
@@ -97,8 +95,16 @@ function ProductionSettingTable() {
                             textAlignment: 'right',
                             render: (item) => (indexData.data.indexOf(item) + 1)
                         },
-                        { accessor: 'name', title: t("SettingType") },
-                        { accessor: 'parent_name', title: t("SettingName") },
+                        { accessor: 'setting_type_name', title: t("SettingType") },
+                        { accessor: 'name', title: t("SettingName") },
+                        { accessor: 'created', title: t("CreatedDate") },
+                        {
+                            accessor: 'status',
+                            title: t("Status") ,
+                            render : (data) => (
+                                data.status==1?'Active':'Inactive'
+                            )
+                        },
                         {
                             accessor: "action",
                             title: t("Action"),
@@ -115,9 +121,9 @@ function ProductionSettingTable() {
                                             <Menu.Item
                                                 onClick={() => {
                                                     dispatch(setInsertType('update'))
-                                                    dispatch(editEntityData('inventory/settings/' + data.id))
+                                                    dispatch(editEntityData('production/setting/' + data.id))
                                                     dispatch(setFormLoading(true))
-                                                    navigate(`/inventory/product-settings/${data.id}`)
+                                                    navigate(`/production/setting/${data.id}`)
                                                 }}
                                             >
                                                 {t('Edit')}
@@ -126,7 +132,6 @@ function ProductionSettingTable() {
                                             <Menu.Item
                                                 onClick={() => {
                                                     setCategoryViewModal(true)
-                                                    // dispatch(editEntityData('inventory/category-group/' + data.id))
                                                 }}
                                                 target="_blank"
                                                 component="a"

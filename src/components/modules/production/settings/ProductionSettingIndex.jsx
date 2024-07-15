@@ -1,57 +1,51 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import {
-    Box, Grid, Progress, Title
+    Box, Grid, Progress
 } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from "react-redux";
 
 import {
-    setCustomerFilterData,
     setEntityNewData,
     setInsertType,
     setSearchKeyword,
     editEntityData,
     setFormLoading
-} from "../../../../store/core/crudSlice.js";
+} from "../../../../store/production/crudSlice.js";
 import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress.js";
-import getConfigData from "../../../global-hook/config-data/getConfigData.js";
 import { useNavigate, useParams } from "react-router-dom";
 import ProductionSettingTable from "./ProductionSettingTable.jsx";
 import ProductionSettingForm from "./ProductionSettingForm.jsx";
 import ProductionSettingUpdateForm from "./ProductionSettingUpdateForm.jsx";
 import ProductionHeaderNavbar from "../common/ProductionHeaderNavbar.jsx";
+import getProSettingTypeDropdownData from "../../../global-hook/dropdown/getProSettingTypeDropdownData.js";
 
 function ProductionSettingIndex() {
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
-    const adjustment = 0;
-
-    const insertType = useSelector((state) => state.inventoryCrudSlice.insertType)
-
     const progress = getLoadingProgress()
-    const configData = getConfigData()
     const navigate = useNavigate()
+    const { id } = useParams();
 
-    const { settingsId } = useParams();
+    const insertType = useSelector((state) => state.productionCrudSlice.insertType)
+
+    const settingTypeDropdown = getProSettingTypeDropdownData()
+    const configData = localStorage.getItem('config-data') ? JSON.parse(localStorage.getItem('config-data')) : []
+    const adjustment = 0;
 
 
     useEffect(() => {
-        if (settingsId) {
+        if (id) {
             dispatch(setInsertType('update'));
-            dispatch(editEntityData(`/production/setting/${settingsId}`));
+            dispatch(editEntityData(`production/setting/${id}`));
             dispatch(setFormLoading(true));
-        } else if (!settingsId) {
+        } else if (!id) {
             dispatch(setInsertType('create'));
             dispatch(setSearchKeyword(''));
             dispatch(setEntityNewData([]));
-            // dispatch(setCustomerFilterData({
-            //     ...masterDataFilterData,
-            //     ['name']: '',
-            //     ['mobile']: ''
-            // }));
             navigate('/production/setting', { replace: true });
         }
-    }, [settingsId, dispatch, navigate]);
+    }, [id, dispatch, navigate]);
 
 
     return (
@@ -64,7 +58,7 @@ function ProductionSettingIndex() {
                         <>
                             <ProductionHeaderNavbar
 
-                                pageTitle={t('inventorySetting')}
+                                pageTitle={t('productionSetting')}
                                 roles={t('Roles')}
                                 allowZeroPercentage=''
                                 currencySymbol=''
@@ -79,8 +73,8 @@ function ProductionSettingIndex() {
                                     <Grid.Col span={9}>
                                         {
                                             insertType === 'create'
-                                                ? <ProductionSettingForm saveId={'EntityFormSubmit'} />
-                                                : <ProductionSettingUpdateForm saveId={'EntityFormSubmit'} />
+                                                ? <ProductionSettingForm settingTypeDropdown={settingTypeDropdown} adjustment={adjustment} formSubmitId={'EntityFormSubmit'}/>
+                                                : <ProductionSettingUpdateForm settingTypeDropdown={settingTypeDropdown} adjustment={adjustment} formSubmitId={'EntityFormSubmit'}/>
                                         }
                                     </Grid.Col>
                                 </Grid>

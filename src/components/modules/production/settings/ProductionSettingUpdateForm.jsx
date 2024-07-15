@@ -18,7 +18,7 @@ import {
     setEditEntityData,
     setFormLoading, setInsertType,
     updateEntityData, setFetching, storeEntityData
-} from "../../../../store/core/crudSlice.js";
+} from "../../../../store/production/crudSlice.js";
 
 
 import Shortcut from "../../shortcut/Shortcut.jsx";
@@ -35,23 +35,26 @@ function ProductionSettingUpdateForm(props) {
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
     const [setFormData, setFormDataForUpdate] = useState(false);
     const [opened, { open, close }] = useDisclosure(false);
-    const [categoryGroupData, setCategoryGroupData] = useState(null);
+    const [settingTypeData, setSettingTypeData] = useState(null);
 
-    const entityEditData = useSelector((state) => state.inventoryCrudSlice.entityEditData)
+    const entityEditData = useSelector((state) => state.productionCrudSlice.entityEditData)
+
     const formLoading = useSelector((state) => state.crudSlice.formLoading)
     const [formLoad, setFormLoad] = useState('');
     const navigate = useNavigate();
 
-    const { saveId } = props
+    const { settingTypeDropdown,formSubmitId,adjustment } = props
 
 
     const settingsForm = useForm({
         initialValues: {
-            setting_type: '', setting_name: '', status: ''
+            setting_type_id: entityEditData.setting_type_id,
+            name: entityEditData.name,
+            status: entityEditData.status
         },
         validate: {
-            setting_type: isNotEmpty(),
-            setting_name: hasLength({ min: 2, max: 20 }),
+            setting_type_id: isNotEmpty(),
+            name: hasLength({ min: 2, max: 30 }),
         }
     });
 
@@ -63,9 +66,9 @@ function ProductionSettingUpdateForm(props) {
     useEffect(() => {
 
         settingsForm.setValues({
-            setting_type: entityEditData.setting_type ? entityEditData.setting_type : '',
-            setting_name: entityEditData.setting_name ? entityEditData.setting_name : '',
-            status: entityEditData.status ? entityEditData.status : ''
+            setting_type_id: entityEditData.setting_type_id ? entityEditData.setting_type_id : '',
+            name: entityEditData.name ? entityEditData.name : '',
+            status: entityEditData.status
         })
 
         dispatch(setFormLoading(false))
@@ -77,6 +80,7 @@ function ProductionSettingUpdateForm(props) {
     }, [entityEditData, dispatch])
 
 
+
     useHotkeys([['alt+n', () => {
         document.getElementById('setting_type').click()
     }]], []);
@@ -86,7 +90,7 @@ function ProductionSettingUpdateForm(props) {
     }]], []);
 
     useHotkeys([['alt+s', () => {
-        document.getElementById(`${saveId}`).click()
+        document.getElementById(formSubmitId).click()
     }]], []);
 
 
@@ -94,15 +98,6 @@ function ProductionSettingUpdateForm(props) {
         <>
             <Box>
                 <form onSubmit={settingsForm.onSubmit((values) => {
-                    console.log(values)
-                    dispatch(updateEntityData(values))
-                        .then(() => {
-                            navigate('inventory/product-settings', { replace: true });
-                            dispatch(setInsertType('create'));
-                        })
-                        .catch((error) => {
-
-                        })
                     modals.openConfirmModal({
                         title: (
                             <Text size="md"> {t("FormConfirmationTitle")}</Text>
@@ -115,7 +110,7 @@ function ProductionSettingUpdateForm(props) {
                         onConfirm: () => {
                             setSaveCreateLoading(true)
                             const value = {
-                                url: 'inventory/category-group/' + entityEditData.id,
+                                url: 'production/setting/' + entityEditData.id,
                                 data: values
                             }
                             dispatch(updateEntityData(value))
@@ -129,11 +124,12 @@ function ProductionSettingUpdateForm(props) {
                             });
 
                             setTimeout(() => {
-                                form.reset()
+                                settingsForm.reset()
                                 dispatch(setInsertType('create'))
                                 dispatch(setEditEntityData([]))
                                 dispatch(setFetching(true))
                                 setSaveCreateLoading(false)
+                                navigate('/production/setting');
                             }, 700)
                         },
                     });
@@ -157,7 +153,7 @@ function ProductionSettingUpdateForm(props) {
                                                                 size="xs"
                                                                 color={`green.8`}
                                                                 type="submit"
-                                                                id={`${saveId}`}
+                                                                id={formSubmitId}
                                                                 leftSection={<IconDeviceFloppy size={16} />}
                                                             >
                                                                 <Flex direction={`column`} gap={0}>
@@ -182,13 +178,13 @@ function ProductionSettingUpdateForm(props) {
                                                         placeholder={t('SettingType')}
                                                         required={true}
                                                         nextField={'setting_name'}
-                                                        name={'setting_type'}
+                                                        name={'setting_type_id'}
                                                         form={settingsForm}
-                                                        dropdownValue={['test1', 'test2']}
+                                                        dropdownValue={settingTypeDropdown}
                                                         id={'setting_type'}
                                                         searchable={false}
-                                                        value={categoryGroupData}
-                                                        changeValue={setCategoryGroupData}
+                                                        value={settingTypeData ? String(settingTypeData) : (entityEditData.setting_type_id ? String(entityEditData.setting_type_id) : null)}
+                                                        changeValue={setSettingTypeData}
                                                     />
                                                 </Box>
                                                 <Box mt={'xs'}>
@@ -199,7 +195,7 @@ function ProductionSettingUpdateForm(props) {
                                                         required={true}
                                                         nextField={'status'}
                                                         form={settingsForm}
-                                                        name={'setting_name'}
+                                                        name={'name'}
                                                         id={'setting_name'}
                                                     />
                                                 </Box>
@@ -209,13 +205,13 @@ function ProductionSettingUpdateForm(props) {
                                                             <SwitchForm
                                                                 tooltip={t('Status')}
                                                                 label=''
-                                                                nextField={`${saveId}`}
+                                                                nextField={formSubmitId}
                                                                 name={'status'}
                                                                 form={settingsForm}
                                                                 color="red"
                                                                 id={'status'}
                                                                 position={'left'}
-                                                                defaultChecked={1}
+                                                                checked={settingsForm.values.status ==1 ?true:false}
                                                             />
                                                         </Grid.Col>
                                                         <Grid.Col span={6} fz={'sm'} pt={'1'}>{t('Status')}</Grid.Col>
@@ -231,7 +227,7 @@ function ProductionSettingUpdateForm(props) {
                             <Box bg={'white'} className={'borderRadiusAll'} pt={'16'}>
                                 <Shortcut
                                     form={settingsForm}
-                                    FormSubmit={`${saveId}`}
+                                    FormSubmit={formSubmitId}
                                     Name={'name'}
                                     inputType="select"
                                 />

@@ -15,7 +15,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { hasLength, isNotEmpty, useForm } from "@mantine/form";
 import { modals } from "@mantine/modals";
 import { notifications } from "@mantine/notifications";
-import { setFetching, storeEntityData } from "../../../../store/core/crudSlice.js";
+import { setFetching, storeEntityData } from "../../../../store/production/crudSlice.js";
 
 import _ShortcutMasterData from "../../shortcut/_ShortcutMasterData.jsx";
 import InputForm from "../../../form-builders/InputForm.jsx";
@@ -24,22 +24,21 @@ import SwitchForm from "../../../form-builders/SwitchForm.jsx";
 
 
 function ProductionSettingForm(props) {
+    const {settingTypeDropdown,adjustment,formSubmitId} = props
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
     const height = mainAreaHeight - 100; //TabList height 104
-    const [categoryGroupData, setCategoryGroupData] = useState(null);
+    const [settingTypeData, setSettingTypeData] = useState(null);
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
-
-    const { adjustment, saveId } = props
 
     const settingsForm = useForm({
         initialValues: {
-            setting_type: '', setting_name: '', status: true
+            setting_type_id: '', name: '', status: true
         },
         validate: {
-            setting_type: isNotEmpty(),
-            setting_name: hasLength({ min: 2, max: 20 }),
+            setting_type_id: isNotEmpty(),
+            name: hasLength({ min: 2, max: 30 }),
         }
     });
 
@@ -52,7 +51,7 @@ function ProductionSettingForm(props) {
     }]], []);
 
     useHotkeys([['alt+s', () => {
-        document.getElementById(`${saveId}`).click()
+        document.getElementById(formSubmitId).click()
     }]], []);
 
 
@@ -60,7 +59,6 @@ function ProductionSettingForm(props) {
         <>
             <Box>
                 <form onSubmit={settingsForm.onSubmit((values) => {
-                    console.log(values)
                     modals.openConfirmModal({
                         title: (
                             <Text size="md"> {t("FormConfirmationTitle")}</Text>
@@ -73,7 +71,7 @@ function ProductionSettingForm(props) {
                         onConfirm: () => {
                             setSaveCreateLoading(true)
                             const value = {
-                                url: 'inventory/category-group',
+                                url: 'production/setting',
                                 data: settingsForm.values
                             }
                             dispatch(storeEntityData(value))
@@ -89,7 +87,7 @@ function ProductionSettingForm(props) {
 
                             setTimeout(() => {
                                 settingsForm.reset()
-                                setCategoryGroupData(null)
+                                setSettingTypeData(null)
                                 setSaveCreateLoading(false)
                                 dispatch(setFetching(true))
                             }, 700)
@@ -116,7 +114,7 @@ function ProductionSettingForm(props) {
                                                                     size="xs"
                                                                     color={`green.8`}
                                                                     type="submit"
-                                                                    id={`${saveId}`}
+                                                                    id={formSubmitId}
                                                                     leftSection={<IconDeviceFloppy size={16} />}
                                                                 >
 
@@ -140,13 +138,13 @@ function ProductionSettingForm(props) {
                                                         placeholder={t('SettingType')}
                                                         required={true}
                                                         nextField={'setting_name'}
-                                                        name={'setting_type'}
+                                                        name={'setting_type_id'}
                                                         form={settingsForm}
-                                                        dropdownValue={['test1', 'test2']}
+                                                        dropdownValue={settingTypeDropdown}
                                                         id={'setting_type'}
                                                         searchable={false}
-                                                        value={categoryGroupData}
-                                                        changeValue={setCategoryGroupData}
+                                                        value={settingTypeData}
+                                                        changeValue={setSettingTypeData}
                                                     />
                                                 </Box>
 
@@ -158,7 +156,7 @@ function ProductionSettingForm(props) {
                                                         required={true}
                                                         nextField={'status'}
                                                         form={settingsForm}
-                                                        name={'setting_name'}
+                                                        name={'name'}
                                                         id={'setting_name'}
                                                     />
                                                 </Box>
@@ -168,7 +166,7 @@ function ProductionSettingForm(props) {
                                                             <SwitchForm
                                                                 tooltip={t('Status')}
                                                                 label=''
-                                                                nextField={`${saveId}`}
+                                                                nextField={formSubmitId}
                                                                 name={'status'}
                                                                 form={settingsForm}
                                                                 color="red"
@@ -190,7 +188,7 @@ function ProductionSettingForm(props) {
                                     <_ShortcutMasterData
                                         adjustment={adjustment}
                                         form={settingsForm}
-                                        FormSubmit={`${saveId}`}
+                                        FormSubmit={formSubmitId}
                                         Name={'setting_type'}
                                         inputType="select"
                                     />
