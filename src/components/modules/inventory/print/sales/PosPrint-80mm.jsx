@@ -1,9 +1,9 @@
 import React, { useRef } from 'react';
 import { Button, Center, ScrollArea } from '@mantine/core';
 import { useReactToPrint } from 'react-to-print';
-import logo from '../../../../../../assets/images/logo.png';
+import logo from '../../../../../assets/images/logo.png';
 
-export function SalesDomainOne(props) {
+export function PosPrint80mm(props) {
     const componentRef = useRef();
 
     const handlePrint = useReactToPrint({
