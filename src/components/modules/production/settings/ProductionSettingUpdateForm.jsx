@@ -1,25 +1,23 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate, useOutletContext, useParams } from "react-router-dom";
+import React, {useEffect, useState} from "react";
+import {useNavigate, useOutletContext} from "react-router-dom";
 import {
-    Button, rem, Grid, Box, ScrollArea, Group, Text, Title, Flex, Stack, Tooltip, ActionIcon, LoadingOverlay,
+    Button, rem, Grid, Box, ScrollArea, Text, Title, Flex, Stack, LoadingOverlay,
 } from "@mantine/core";
-import { useTranslation } from 'react-i18next';
+import {useTranslation} from 'react-i18next';
 import {
-    IconCategoryPlus,
-    IconCheck, IconDeviceFloppy, IconPencilBolt, IconPlus
+    IconCheck, IconDeviceFloppy
 } from "@tabler/icons-react";
-import { useDisclosure, useHotkeys } from "@mantine/hooks";
-import { useDispatch, useSelector } from "react-redux";
-import { hasLength, isNotEmpty, useForm } from "@mantine/form";
-import { notifications } from "@mantine/notifications";
-import { modals } from "@mantine/modals";
+import {useDisclosure, useHotkeys} from "@mantine/hooks";
+import {useDispatch, useSelector} from "react-redux";
+import {hasLength, isNotEmpty, useForm} from "@mantine/form";
+import {notifications} from "@mantine/notifications";
+import {modals} from "@mantine/modals";
 
 import {
     setEditEntityData,
     setFormLoading, setInsertType,
-    updateEntityData, setFetching, storeEntityData
+    updateEntityData, setFetching
 } from "../../../../store/production/crudSlice.js";
-
 
 import Shortcut from "../../shortcut/Shortcut.jsx";
 import InputForm from "../../../form-builders/InputForm.jsx";
@@ -27,24 +25,20 @@ import SelectForm from "../../../form-builders/SelectForm.jsx";
 import SwitchForm from "../../../form-builders/SwitchForm.jsx";
 
 function ProductionSettingUpdateForm(props) {
-    const { t, i18n } = useTranslation();
+    const {settingTypeDropdown, formSubmitId} = props
+    const {t, i18n} = useTranslation();
     const dispatch = useDispatch();
-    const { isOnline, mainAreaHeight } = useOutletContext();
+    const {isOnline, mainAreaHeight} = useOutletContext();
+    const navigate = useNavigate();
     const height = mainAreaHeight - 100; //TabList height 104
 
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
     const [setFormData, setFormDataForUpdate] = useState(false);
-    const [opened, { open, close }] = useDisclosure(false);
     const [settingTypeData, setSettingTypeData] = useState(null);
 
     const entityEditData = useSelector((state) => state.productionCrudSlice.entityEditData)
-
     const formLoading = useSelector((state) => state.crudSlice.formLoading)
     const [formLoad, setFormLoad] = useState('');
-    const navigate = useNavigate();
-
-    const { settingTypeDropdown,formSubmitId,adjustment } = props
-
 
     const settingsForm = useForm({
         initialValues: {
@@ -54,7 +48,7 @@ function ProductionSettingUpdateForm(props) {
         },
         validate: {
             setting_type_id: isNotEmpty(),
-            name: hasLength({ min: 2, max: 30 }),
+            name: hasLength({min: 2, max: 30}),
         }
     });
 
@@ -78,7 +72,6 @@ function ProductionSettingUpdateForm(props) {
         }, 500)
 
     }, [entityEditData, dispatch])
-
 
 
     useHotkeys([['alt+n', () => {
@@ -105,7 +98,7 @@ function ProductionSettingUpdateForm(props) {
                         children: (
                             <Text size="sm"> {t("FormConfirmationMessage")}</Text>
                         ),
-                        labels: { confirm: 'Submit', cancel: 'Cancel' }, confirmProps: { color: 'red' },
+                        labels: {confirm: 'Submit', cancel: 'Cancel'}, confirmProps: {color: 'red'},
                         onCancel: () => console.log('Cancel'),
                         onConfirm: () => {
                             setSaveCreateLoading(true)
@@ -117,10 +110,10 @@ function ProductionSettingUpdateForm(props) {
                             notifications.show({
                                 color: 'teal',
                                 title: t('UpdateSuccessfully'),
-                                icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
+                                icon: <IconCheck style={{width: rem(18), height: rem(18)}}/>,
                                 loading: false,
                                 autoClose: 700,
-                                style: { backgroundColor: 'lightgray' },
+                                style: {backgroundColor: 'lightgray'},
                             });
 
                             setTimeout(() => {
@@ -135,11 +128,12 @@ function ProductionSettingUpdateForm(props) {
                     });
                 })}>
 
-                    <Grid columns={9} gutter={{ base: 8 }}>
-                        <Grid.Col span={8} >
-                            <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
-                                <Box bg={"white"} >
-                                    <Box pl={`xs`} pr={8} pt={'6'} pb={'6'} mb={'4'} className={'boxBackground borderRadiusAll'} >
+                    <Grid columns={9} gutter={{base: 8}}>
+                        <Grid.Col span={8}>
+                            <Box bg={'white'} p={'xs'} className={'borderRadiusAll'}>
+                                <Box bg={"white"}>
+                                    <Box pl={`xs`} pr={8} pt={'6'} pb={'6'} mb={'4'}
+                                         className={'boxBackground borderRadiusAll'}>
                                         <Grid>
                                             <Grid.Col span={6}>
                                                 <Title order={6} pt={'6'}>{t('UpdateSetting')}</Title>
@@ -154,7 +148,7 @@ function ProductionSettingUpdateForm(props) {
                                                                 color={`green.8`}
                                                                 type="submit"
                                                                 id={formSubmitId}
-                                                                leftSection={<IconDeviceFloppy size={16} />}
+                                                                leftSection={<IconDeviceFloppy size={16}/>}
                                                             >
                                                                 <Flex direction={`column`} gap={0}>
                                                                     <Text fz={14} fw={400}>
@@ -163,14 +157,16 @@ function ProductionSettingUpdateForm(props) {
                                                                 </Flex>
                                                             </Button>
                                                         }
-                                                    </></Stack>
+                                                    </>
+                                                </Stack>
                                             </Grid.Col>
                                         </Grid>
                                     </Box>
                                     <Box pl={`xs`} pr={'xs'} className={'borderRadiusAll'}>
                                         <ScrollArea h={height} scrollbarSize={2} scrollbars="y" type="never">
                                             <Box>
-                                                <LoadingOverlay visible={formLoad} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />
+                                                <LoadingOverlay visible={formLoad} zIndex={1000}
+                                                                overlayProps={{radius: "sm", blur: 2}}/>
                                                 <Box mt={'8'}>
                                                     <SelectForm
                                                         tooltip={t('SettingType')}
@@ -200,7 +196,7 @@ function ProductionSettingUpdateForm(props) {
                                                     />
                                                 </Box>
                                                 <Box mt={'xs'}>
-                                                    <Grid gutter={{ base: 1 }}>
+                                                    <Grid gutter={{base: 1}}>
                                                         <Grid.Col span={2}>
                                                             <SwitchForm
                                                                 tooltip={t('Status')}
@@ -211,7 +207,7 @@ function ProductionSettingUpdateForm(props) {
                                                                 color="red"
                                                                 id={'status'}
                                                                 position={'left'}
-                                                                checked={settingsForm.values.status ==1 ?true:false}
+                                                                checked={settingsForm.values.status == 1 ? true : false}
                                                             />
                                                         </Grid.Col>
                                                         <Grid.Col span={6} fz={'sm'} pt={'1'}>{t('Status')}</Grid.Col>
@@ -223,7 +219,7 @@ function ProductionSettingUpdateForm(props) {
                                 </Box>
                             </Box>
                         </Grid.Col>
-                        <Grid.Col span={1} >
+                        <Grid.Col span={1}>
                             <Box bg={'white'} className={'borderRadiusAll'} pt={'16'}>
                                 <Shortcut
                                     form={settingsForm}
@@ -236,7 +232,6 @@ function ProductionSettingUpdateForm(props) {
                     </Grid>
                 </form>
             </Box>
-
         </>
     )
 }

@@ -1,9 +1,9 @@
-import React, { useEffect } from "react";
+import React, {useEffect} from "react";
 import {
     Box, Grid, Progress
 } from "@mantine/core";
-import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from "react-redux";
+import {useTranslation} from 'react-i18next';
+import {useDispatch, useSelector} from "react-redux";
 
 import {
     setEntityNewData,
@@ -12,8 +12,8 @@ import {
     editEntityData,
     setFormLoading
 } from "../../../../store/production/crudSlice.js";
-import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress.js";
-import { useNavigate, useParams } from "react-router-dom";
+import {getLoadingProgress} from "../../../global-hook/loading-progress/getLoadingProgress.js";
+import {useNavigate, useParams} from "react-router-dom";
 import ProductionSettingTable from "./ProductionSettingTable.jsx";
 import ProductionSettingForm from "./ProductionSettingForm.jsx";
 import ProductionSettingUpdateForm from "./ProductionSettingUpdateForm.jsx";
@@ -21,18 +21,15 @@ import ProductionHeaderNavbar from "../common/ProductionHeaderNavbar.jsx";
 import getProSettingTypeDropdownData from "../../../global-hook/dropdown/getProSettingTypeDropdownData.js";
 
 function ProductionSettingIndex() {
-    const { t, i18n } = useTranslation();
+    const {t, i18n} = useTranslation();
     const dispatch = useDispatch();
     const progress = getLoadingProgress()
     const navigate = useNavigate()
-    const { id } = useParams();
+    const {id} = useParams();
 
     const insertType = useSelector((state) => state.productionCrudSlice.insertType)
-
     const settingTypeDropdown = getProSettingTypeDropdownData()
     const configData = localStorage.getItem('config-data') ? JSON.parse(localStorage.getItem('config-data')) : []
-    const adjustment = 0;
-
 
     useEffect(() => {
         if (id) {
@@ -43,7 +40,7 @@ function ProductionSettingIndex() {
             dispatch(setInsertType('create'));
             dispatch(setSearchKeyword(''));
             dispatch(setEntityNewData([]));
-            navigate('/production/setting', { replace: true });
+            navigate('/production/setting', {replace: true});
         }
     }, [id, dispatch, navigate]);
 
@@ -51,7 +48,7 @@ function ProductionSettingIndex() {
     return (
         <>
             {progress !== 100 &&
-                <Progress color="red" size={"xs"} striped animated value={progress} transitionDuration={200} />}
+                <Progress color="red" size={"xs"} striped animated value={progress} transitionDuration={200}/>}
             {progress === 100 &&
                 <Box>
                     {configData &&
@@ -64,17 +61,19 @@ function ProductionSettingIndex() {
                                 currencySymbol=''
                             />
                             <Box p={'8'}>
-                                <Grid columns={24} gutter={{ base: 8 }}>
-                                    <Grid.Col span={15} >
-                                        <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
-                                            <ProductionSettingTable />
+                                <Grid columns={24} gutter={{base: 8}}>
+                                    <Grid.Col span={15}>
+                                        <Box bg={'white'} p={'xs'} className={'borderRadiusAll'}>
+                                            <ProductionSettingTable/>
                                         </Box>
                                     </Grid.Col>
                                     <Grid.Col span={9}>
                                         {
                                             insertType === 'create'
-                                                ? <ProductionSettingForm settingTypeDropdown={settingTypeDropdown} adjustment={adjustment} formSubmitId={'EntityFormSubmit'}/>
-                                                : <ProductionSettingUpdateForm settingTypeDropdown={settingTypeDropdown} adjustment={adjustment} formSubmitId={'EntityFormSubmit'}/>
+                                                ? <ProductionSettingForm settingTypeDropdown={settingTypeDropdown}
+                                                                         formSubmitId={'EntityFormSubmit'}/>
+                                                : <ProductionSettingUpdateForm settingTypeDropdown={settingTypeDropdown}
+                                                                               formSubmitId={'EntityFormSubmit'}/>
                                         }
                                     </Grid.Col>
                                 </Grid>

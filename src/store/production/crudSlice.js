@@ -116,7 +116,7 @@ const crudSlice = createSlice({
         insertType: 'create',
         entityDataDelete: null,
         openingInlineUpdateStatus: null,
-        productionSettingFilterData: { term: '',name:''},
+        productionSettingFilterData: { setting_type_id: '',name:''},
     },
     reducers: {
         setFetching: (state, action) => {
@@ -150,7 +150,7 @@ const crudSlice = createSlice({
             state.validationMessage = action.payload
         },
         setProductionSettingFilterData: (state, action) => {
-            state.productionSettingFilterData.term = action.payload.term
+            state.productionSettingFilterData.setting_type_id = action.payload.setting_type_id
             state.productionSettingFilterData.name = action.payload.name
         },
     },
@@ -213,6 +213,7 @@ const crudSlice = createSlice({
 
         builder.addCase(deleteEntityData.fulfilled, (state, action) => {
             state.entityDataDelete = action.payload.data.message
+            state.fetching = true
         })
 
     }
