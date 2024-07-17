@@ -92,10 +92,6 @@ function AppRoute() {
                     <Route path="invoice-batch" element={<InvoiceBatchIndex />} />
                     <Route path="product-settings" element={<ProductSettingsIndex />} />
                     <Route path="product-settings/:settingsId" element={<ProductSettingsIndex />} />
-                    <Route path="print80" element={<Pos80mm />} />
-                    <Route path="print50" element={<Pos50mm />} />
-                    <Route path="printA4" element={<InvoiceA4 />} />
-                    <Route path="print80Other" element={<PosPrint80mm />} />
                 </Route>
                 <Route path="/domain/">
                     <Route path="domain-index" element={<DomainIndex />} />
