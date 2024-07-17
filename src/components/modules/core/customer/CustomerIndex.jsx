@@ -50,7 +50,7 @@ function CustomerIndex() {
             }));
             navigate('/core/customer', { replace: true });
         }
-    }, [customerId, dispatch, navigate, customerFilterData]);
+    }, [customerId, dispatch, navigate]);
 
 
 
