@@ -45,7 +45,7 @@ function UserIndex() {
                 })),
                 navigate('/core/user', { replace: true }))
         );
-    }, [userId, dispatch, navigate, userFilterData]);
+    }, [userId, dispatch, navigate]);
 
 
     return (
