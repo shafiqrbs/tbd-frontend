@@ -46,17 +46,17 @@ function KeywordSearch(props) {
         ], []
     );
 
-    // const handleKeyDown = (event) => {
-    //     if (event.key === 'Enter' && searchKeyword.length > 0) {
-    //         (dispatch(setFetching(true)),
-    //             setSearchKeywordTooltip(false))
-    //     } else {
-    //         (setSearchKeywordTooltip(true),
-    //             setTimeout(() => {
-    //                 setSearchKeywordTooltip(false)
-    //             }, 1500))
-    //     }
-    // }
+    const handleKeyDown = (event) => {
+        if (event.key === 'Enter' && searchKeyword.length > 0) {
+            (dispatch(setFetching(true)),
+                setSearchKeywordTooltip(false))
+        } else {
+            (setSearchKeywordTooltip(true),
+                setTimeout(() => {
+                    setSearchKeywordTooltip(false)
+                }, 1500))
+        }
+    }
 
 
     return (
@@ -79,7 +79,7 @@ function KeywordSearch(props) {
                             leftSection={<IconSearch size={16} opacity={0.5} />}
                             size="sm"
                             placeholder={t('EnterSearchAnyKeyword')}
-                            // onKeyDown={handleKeyDown}
+                            onKeyDown={handleKeyDown}
                             onChange={(e) => {
                                 dispatch(setSearchKeyword(e.currentTarget.value))
                                 e.target.value !== '' ?
