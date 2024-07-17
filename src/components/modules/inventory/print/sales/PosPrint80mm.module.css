@@ -1,0 +1,117 @@
+@import url('https://fonts.googleapis.com/css2?family=Azeret+Mono:ital,wght@0,100..900;1,100..900&display=swap');
+.print-body{
+    font-family: "Azeret Mono", monospace;
+    margin: 0px;
+    padding: 0px;
+    background-color: white;
+    max-width: 80mm;
+    margin: auto;
+}
+/* header section */
+.pos-print-header{
+    margin: auto;
+    width: 80mm;
+    
+}
+.pos-print-logo{
+    width: 20mm;
+    height: 20mm;
+}
+.pos-print-header{
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+.pos-print-title{
+    margin-top: 10px;
+    font-size: 16px;
+    font-weight: 800;
+    margin-bottom: 10px;
+}
+.pos-print-address{
+    font-size: 12px;
+    font-weight: 300;
+    margin-bottom: 10px;
+}
+.invoice{
+    margin-top: 10px;
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 0px;
+}
+.header-details{
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+.header-description{
+    margin-top: 0px;
+}
+.description-details{
+    font-size: 10PX;
+    text-align: left;
+    margin-left: 0px;
+    padding-left: 0px;
+    font-weight: 300;
+}
+
+/* main section */
+
+.pos-print-main{
+    margin: auto;
+    width: 80mm;
+}
+.hr{
+    margin-top: 5px;
+    height: 2px;
+    width: 100%;
+    color: black;
+    background-color: black;
+    border: none;
+}
+.print-table{
+    margin-top: 5px;
+}
+.table-td{
+    font-weight: 300;
+    font-size: 10px;
+    text-align: left;
+}
+.table-th{
+    border-bottom :2px solid black;
+    margin: 0;
+    padding-bottom: 1px;
+}
+.table-tdp{
+    padding: 1px;
+}
+
+.print-footer{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 80mm;
+    margin: auto;
+    margin-bottom: 20px;
+
+}
+.footer-title{
+    margin-top: 10px;
+    font-size: 10px;
+    font-weight: 600;
+    margin-bottom: 0px;
+}
+.footer-description{
+    margin-top: 2px;
+    font-size: 8px;
+}
+.table-quantity{
+text-align: center;
+}
+.table-amount{
+text-align: right;
+}
+
