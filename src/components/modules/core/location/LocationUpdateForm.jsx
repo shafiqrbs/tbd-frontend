@@ -101,15 +101,6 @@ function LocationUpdateForm() {
         <>
             <Box>
                 <form onSubmit={form.onSubmit((values) => {
-                    console.log(values)
-                    dispatch(updateEntityData(values))
-                        .then(() => {
-                            navigate('core/location', { replace: true });
-                            dispatch(setInsertType('create'));
-                        })
-                        .catch((error) => {
-
-                        })
                     modals.openConfirmModal({
                         title: (
                             <Text size="md"> {t("FormConfirmationTitle")}</Text>
@@ -141,6 +132,7 @@ function LocationUpdateForm() {
                                 dispatch(setEditEntityData([]))
                                 dispatch(setFetching(true))
                                 setSaveCreateLoading(false)
+                                navigate('/core/location', { replace: true });
                             }, 700)
                         },
                     });
