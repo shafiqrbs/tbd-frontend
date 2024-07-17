@@ -163,6 +163,7 @@ function VendorUpdateForm() {
                             dispatch(setEditEntityData([]))
                             dispatch(setFetching(true))
                             setSaveCreateLoading(false)
+                            navigate('/core/vendor', { replace: true })
                         }, 700)
                     },
                 });
