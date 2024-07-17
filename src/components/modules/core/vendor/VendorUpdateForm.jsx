@@ -42,7 +42,7 @@ function VendorUpdateForm() {
     const [formLoad, setFormLoad] = useState(true);
     const [customerData, setCustomerData] = useState(null);
 
-    const customerDropdownData = useSelector((state) => state.utilitySlice.customerDropdownData)
+    // const customerDropdownData = useSelector((state) => state.utilitySlice.customerDropdownData)
     const entityEditData = useSelector((state) => state.crudSlice.entityEditData)
     const formLoading = useSelector((state) => state.crudSlice.formLoading)
     const navigate = useNavigate();

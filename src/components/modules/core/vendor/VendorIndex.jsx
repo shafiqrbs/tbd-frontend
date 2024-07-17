@@ -47,9 +47,9 @@ function VendorIndex() {
                 ['mobile']: '',
                 ['company']: ''
             })),
-            navigate('/core/vendor', { replace: true })
+            navigate('/core/vendor')
         ))
-    }, [vendorId, dispatch, navigate, vendorFilterData])
+    }, [vendorId, dispatch, navigate])
 
 
     return (

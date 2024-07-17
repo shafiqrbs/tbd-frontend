@@ -48,7 +48,7 @@ function CustomerIndex() {
                 ['name']: '',
                 ['mobile']: ''
             }));
-            navigate('/core/customer', { replace: true });
+            navigate('/core/customer');
         }
     }, [customerId, dispatch, navigate]);
 
