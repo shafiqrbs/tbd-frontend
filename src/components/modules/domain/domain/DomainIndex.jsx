@@ -13,7 +13,7 @@ import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoa
 import getConfigData from "../../../global-hook/config-data/getConfigData.js";
 import DomainTable from "./DomainTable";
 import DomainHeaderNavbar from "../DomainHeaderNavbar";
-import DomainUpdateFormView from "./DomainUpdateFrom";
+import DomainUpdateForm from "./DomainUpdateFrom";
 import { useNavigate, useParams } from "react-router-dom";
 import { setFormLoading } from "../../../../store/generic/crudSlice.js";
 function DomainIndex() {
@@ -35,7 +35,7 @@ function DomainIndex() {
         } else if (!domainId) {
             dispatch(setInsertType('create'));
             dispatch(setSearchKeyword(''));
-            navigate('/domain/domain-index', { replace: true });
+            navigate('/domain/domain-index');
         }
     }, [domainId, dispatch, navigate]);
 
@@ -63,7 +63,7 @@ function DomainIndex() {
                                 {
                                     insertType === 'create'
                                         ? <DomainFormView />
-                                        : <DomainUpdateFormView />
+                                        : <DomainUpdateForm />
                                 }
                             </Grid.Col>
                         </Grid>

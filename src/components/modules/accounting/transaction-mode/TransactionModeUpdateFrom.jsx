@@ -152,7 +152,6 @@ function TransactionModeUpdateFrom(props) {
                             onConfirm: () => {
                                 const formValue = { ...form.values };
                                 formValue['path'] = files[0];
-                                //console.log(formValue)
                             },
                         });
                     })}>

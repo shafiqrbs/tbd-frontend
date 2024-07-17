@@ -106,15 +106,6 @@ function LedgerUpdateFrom(props) {
     return (
         <Box>
             <form onSubmit={form.onSubmit((values) => {
-                console.log(values)
-                dispatch(updateEntityData(values))
-                    .then(() => {
-                        navigate('/accounting/ledger', { replace: true });
-                        dispatch(setInsertType('create'));
-                    })
-                    .catch((error) => {
-
-                    })
                 modals.openConfirmModal({
                     title: (
                         <Text size="md"> {t("FormConfirmationTitle")}</Text>
@@ -146,6 +137,7 @@ function LedgerUpdateFrom(props) {
                             dispatch(setEditEntityData([]))
                             dispatch(setFetching(true))
                             setSaveCreateLoading(false)
+                            navigate('/accounting/ledger', { replace: true })
                         }, 700)
                     },
                 });

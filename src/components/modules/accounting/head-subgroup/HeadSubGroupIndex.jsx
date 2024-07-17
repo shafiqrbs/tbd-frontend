@@ -32,12 +32,7 @@ function HeadGroupIndex() {
         ) : (
             dispatch(setInsertType('create')),
             dispatch(setSearchKeyword('')),
-            dispatch(setEntityNewData({
-                ['parent_name']: '',
-                ['name']: '',
-                ['code']: ''
-            })),
-            navigate('/accounting/head-subgroup', { replace: true })
+            navigate('/accounting/head-subgroup')
         );
     }, [headSubGroupId, dispatch, navigate])
 

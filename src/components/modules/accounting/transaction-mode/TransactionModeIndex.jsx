@@ -36,7 +36,7 @@ function TransactionModeIndex() {
         } else if (!transactionModeId) {
             dispatch(setInsertType('create'));
             dispatch(setSearchKeyword(''));
-            navigate('/accounting/transaction-mode', { replace: true });
+            navigate('/accounting/transaction-mode');
         }
     }, [transactionModeId, dispatch, navigate]);
 
