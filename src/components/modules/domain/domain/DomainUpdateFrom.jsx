@@ -28,7 +28,7 @@ import TextAreaForm from "../../../form-builders/TextAreaForm";
 import DomainTable from "./DomainTable";
 import InputNumberForm from "../../../form-builders/InputNumberForm";
 
-function DomainUpdateFormView(props) {
+function DomainUpdateForm(props) {
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
@@ -149,7 +149,6 @@ function DomainUpdateFormView(props) {
             <Grid columns={9} gutter={{ base: 8 }}>
                 <Grid.Col span={8} >
                     <form onSubmit={form.onSubmit((values) => {
-                        dispatch(setValidationData(false))
                         modals.openConfirmModal({
                             title: (
                                 <Text size="md"> {t("FormConfirmationTitle")}</Text>
@@ -157,14 +156,32 @@ function DomainUpdateFormView(props) {
                             children: (
                                 <Text size="sm"> {t("FormConfirmationMessage")}</Text>
                             ),
-                            labels: { confirm: 'Submit', cancel: 'Cancel' }, confirmProps: { color: 'red.5' },
+                            labels: { confirm: t('Submit'), cancel: t('Cancel') }, confirmProps: { color: 'red.6' },
                             onCancel: () => console.log('Cancel'),
                             onConfirm: () => {
+                                setSaveCreateLoading(true)
                                 const value = {
-                                    url: 'core/customer',
+                                    url: 'core/customer/' + entityEditData.id,
                                     data: values
                                 }
-                                dispatch(storeEntityData(value))
+                                dispatch(updateEntityData(value))
+                                notifications.show({
+                                    color: 'teal',
+                                    title: t('UpdateSuccessfully'),
+                                    icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
+                                    loading: false,
+                                    autoClose: 700,
+                                    style: { backgroundColor: 'lightgray' },
+                                });
+
+                                setTimeout(() => {
+                                    form.reset()
+                                    dispatch(setInsertType('create'))
+                                    dispatch(setEditEntityData([]))
+                                    dispatch(setFetching(true))
+                                    setSaveCreateLoading(false)
+                                    navigate('/domain/domain-index', { replace: true });
+                                }, 700)
                             },
                         });
                     })}>
@@ -333,4 +350,4 @@ function DomainUpdateFormView(props) {
 
     );
 }
-export default DomainUpdateFormView;
+export default DomainUpdateForm;

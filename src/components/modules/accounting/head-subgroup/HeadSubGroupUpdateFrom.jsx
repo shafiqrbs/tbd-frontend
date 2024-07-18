@@ -57,10 +57,7 @@ function HeadSubGroupUpdateFrom(props) {
 
     const [setFormData, setFormDataForUpdate] = useState(false);
     const [formLoad, setFormLoad] = useState(true);
-    const [authorisedData, setAuthorisedData] = useState(null);
     const [methodData, setMethodData] = useState(null);
-    const [accountTypeData, setAccountTypeData] = useState(null)
-    const { headSubGroupId } = useParams()
     const navigate = useNavigate()
 
     const form = useForm({
@@ -112,15 +109,6 @@ function HeadSubGroupUpdateFrom(props) {
     return (
         <Box>
             <form onSubmit={form.onSubmit((values) => {
-                console.log(values)
-                dispatch(updateEntityData(values))
-                    .then(() => {
-                        navigate('/accounting/head-subgroup', { replace: true });
-                        dispatch(setInsertType('create'));
-                    })
-                    .catch((error) => {
-
-                    })
                 modals.openConfirmModal({
                     title: (
                         <Text size="md"> {t("FormConfirmationTitle")}</Text>
@@ -152,6 +140,7 @@ function HeadSubGroupUpdateFrom(props) {
                             dispatch(setEditEntityData([]))
                             dispatch(setFetching(true))
                             setSaveCreateLoading(false)
+                            navigate('/accounting/head-subgroup', { replace: true })
                         }, 700)
                     },
                 });

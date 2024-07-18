@@ -34,7 +34,7 @@ function ProductIndex() {
             dispatch(setInsertType('create')),
             dispatch(setSearchKeyword('')),
             dispatch(setEntityNewData([])),
-            navigate('/inventory/product', { replace: true })
+            navigate('/inventory/product')
         ))
     }, [productId, dispatch, navigate])
 

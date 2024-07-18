@@ -103,15 +103,6 @@ function CustomerSettingsUpdateForm(props) {
         <>
             <Box>
                 <form onSubmit={settingsForm.onSubmit((values) => {
-                    console.log(values)
-                    dispatch(updateEntityData(values))
-                        .then(() => {
-                            navigate('core/customer-settings', { replace: true });
-                            dispatch(setInsertType('create'));
-                        })
-                        .catch((error) => {
-
-                        })
                     modals.openConfirmModal({
                         title: (
                             <Text size="md"> {t("FormConfirmationTitle")}</Text>
@@ -143,6 +134,7 @@ function CustomerSettingsUpdateForm(props) {
                                 dispatch(setEditEntityData([]))
                                 dispatch(setFetching(true))
                                 setSaveCreateLoading(false)
+                                navigate('/core/customer-settings', { replace: true });
                             }, 700)
                         },
                     });

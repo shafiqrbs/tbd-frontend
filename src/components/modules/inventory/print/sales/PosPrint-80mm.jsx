@@ -2,6 +2,7 @@ import React, { useRef } from 'react';
 import { Button, Center, ScrollArea } from '@mantine/core';
 import { useReactToPrint } from 'react-to-print';
 import logo from '../../../../../assets/images/logo.png';
+import classes from './PosPrint80mm.module.css'
 
 export function PosPrint80mm(props) {
     const componentRef = useRef();
@@ -35,85 +36,108 @@ export function PosPrint80mm(props) {
             total: 2980,
         },
     ];
+    const data2 = [
+        {
+            company_name: "Right Brain Solution Ltd.",
+            email: 'info@lazycoders.com',
+            mobile: '+8801521334751',
+            order_id: '12345678914654',
+            payment_method: 'Cash',
+            name: 'Lan Lewis',
+            address: 'Rando, Avenel, Victoria - 123123, Australia',
+            customer_email: 'alanjohnlewis88@gmail.com',
+            customer_phone: '+880152134752',
+            sales_by: 'Foysal Mahmud Hasan',
+            total: '20001',
+            shipping_cost: '1000',
+            service_fee: '100',
+            total_tax: '1000',
+            coupon_discount: '2000',
+            grand_total: '20947298',
+            date: '15-07-2024',
+            time: '12:16 PM'
+
+
+        }
+    ]
 
     return (
         <>
-            <Center >
+            <Center>
                 <Button mt={'lg'} mb={0} onClick={handlePrint}>Print</Button>
             </Center>
-            <div >
-                <div className='print-body' ref={componentRef}>
-                    <header className="pos-print-header">
-                        <div className="pos-print-header">
-                            <img src={logo} alt="" className="pos-print-logo" />
-                            <h3 className="pos-print-title">Medicine Demo</h3>
-                            <p className="pos-print-address">Right Brain Solution, Gausul Azam Avenue , Uttara , Dhaka</p>
-                            <h3 className="invoice">
-                                Invoice : 1956325879
+            <div>
+                <div className={classes['print-body']} ref={componentRef}>
+                    <header className={classes['pos-print-header']}>
+                        <div className={classes['pos-print-header']}>
+                            <img src={logo} alt="" className={classes['pos-print-logo']} />
+                            <h3 className={classes['pos-print-title']}>{data2[0].company_name}</h3>
+                            <p className={classes['pos-print-address']}>{data2[0].address}</p>
+                            <h3 className={classes['invoice']}>
+                                Invoice : {data2[0].order_id}
                             </h3>
-                            <div className="header-details">
-                                <div className="header-description">
-                                    <p className="description-details">Date : 15-07-2024 12:16 PM</p>
-                                    <p className="description-details">Sales By : RightBrain Solution</p>
+                            <div className={classes['header-details']}>
+                                <div className={classes['header-description']}>
+                                    <p className={classes['description-details']}>Date : {data2[0].date} {data2[0].time}</p>
+                                    <p className={classes['description-details']}>Sales By : {data2[0].sales_by}</p>
                                 </div>
-                                <div className="header-description">
-                                    <p className="description-details">
-                                        Pay Mode : Cash
+                                <div className={classes['header-description']}>
+                                    <p className={classes['description-details']}>
+                                        Pay Mode : {data2[0].payment_method}
                                     </p>
                                 </div>
                             </div>
                         </div>
                     </header>
-                    <main className="pos-print-main">
-                        <hr className="hr" />
-                        <table style={{ width: '80mm' }} className='print-table'>
-                            <tr className='table-tr'>
-                                <th className='table-td table-th' style={{ width: '40mm' }}>Item Name</th>
-                                <th className='table-td table-th table-amount' style={{ width: '10mm' }}>Unit</th>
-                                <th className='table-td table-th table-quantity' style={{ width: '10mm' }}>Qty</th>
-                                <th className='table-td table-th table-amount' style={{ width: '20mm' }}>Price</th>
+                    <main className={classes['pos-print-main']}>
+                        <hr className={classes['hr']} />
+                        <table style={{ width: '80mm' }} className={classes['print-table']}>
+                            <tr className={classes['table-tr']}>
+                                <th className={`${classes['table-td']} ${classes['table-th']}`} style=  {{ width: '40mm' }}>Item Name</th>
+                                <th className={`${classes['table-td']} ${classes['table-th']} ${classes['table-amount']}`} style={{ width: '10mm' }}>Unit</th>
+                                <th className={`${classes['table-td']} ${classes['table-th']} ${classes['table-quantity']}`} style={{ width: '10mm' }}>Qty</th>
+                                <th className={`${classes['table-td']} ${classes['table-th']} ${classes['table-amount']}`} style={{ width: '20mm' }}>Price</th>
                             </tr>
                             {data.map((item, index) => (
                                 <tr key={index}>
-                                    <td className='table-td table-tdp'>{item.product}</td>
-                                    <td className='table-td table-tdp table-amount'>{item.price}</td>
-                                    <td className='table-td table-tdp table-quantity'>{item.quantity}</td>
-                                    <td className='table-td table-tdp table-amount'>{item.total}</td>
+                                    <td className={`${classes['table-td']} ${classes['table-tdp']}`}>{item.product}</td>
+                                    <td className={`${classes['table-td']} ${classes['table-tdp']} ${classes['table-amount']}`}>{item.price}</td>
+                                    <td className={`${classes['table-td']} ${classes['table-tdp']} ${classes['table-quantity']}`}>{item.quantity}</td>
+                                    <td className={`${classes['table-td']} ${classes['table-tdp']} ${classes['table-amount']}`}>{item.total}</td>
                                 </tr>
                             ))}
-
                         </table>
-                        <hr className="hr" />
+                        <hr className={classes['hr']} />
                         <table style={{ width: '80mm' }}>
-                            <tr className='table-tr'>
-                                <td className='table-td table-tdp' style={{ width: '50mm' }}>Sub Total</td>
-                                <td className='table-td table-tdp table-quantity' style={{ width: '10mm' }}>TK</td>
-                                <td className='table-td table-tdp table-amount' style={{ width: '20mm' }}>2930</td>
+                            <tr className={classes['table-tr']}>
+                                <td className={`${classes['table-td']} ${classes['table-tdp']}`} style={{ width: '50mm' }}>Sub Total</td>
+                                <td className={`${classes['table-td']} ${classes['table-tdp']} ${classes['table-quantity']}`} style={{ width: '10mm' }}>TK</td>
+                                <td className={`${classes['table-td']} ${classes['table-tdp']} ${classes['table-amount']}`} style={{ width: '20mm' }}>{data2[0].total}</td>
                             </tr>
-                            <tr className='table-tr'>
-                                <td className='table-td table-tdp ' style={{ width: '50mm' }}>Discount</td>
-                                <td className='table-td table-tdp table-quantity' style={{ width: '10mm' }}>TK</td>
-                                <td className='table-td table-tdp table-amount' style={{ width: '20mm' }}>50</td>
+                            <tr className={classes['table-tr']}>
+                                <td className={`${classes['table-td']} ${classes['table-tdp']}`} style={{ width: '50mm' }}>Discount</td>
+                                <td className={`${classes['table-td']} ${classes['table-tdp']} ${classes['table-quantity']}`} style={{ width: '10mm' }}>TK</td>
+                                <td className={`${classes['table-td']} ${classes['table-tdp']} ${classes['table-amount']}`} style={{ width: '20mm' }}>{data2[0].coupon_discount}</td>
                             </tr>
                         </table>
-                        <hr className="hr" />
+                        <hr className={classes['hr']} />
                         <table style={{ width: '80mm' }}>
-                            <tr className='table-tr'>
-                                <td className='table-td table-tdp' style={{ width: '50mm' }}>NetPayable</td>
-                                <td className='table-td table-tdp table-quantity' style={{ width: '10mm' }}>TK</td>
-                                <td className='table-td table-tdp table-amount' style={{ width: '20mm' }}>2930</td>
+                            <tr className={classes['table-tr']}>
+                                <td className={`${classes['table-td']} ${classes['table-tdp']}`} style={{ width: '50mm' }}>NetPayable</td>
+                                <td className={`${classes['table-td']} ${classes['table-tdp']} ${classes['table-quantity']}`} style={{ width: '10mm' }}>TK</td>
+                                <td className={`${classes['table-td']} ${classes['table-tdp']} ${classes['table-amount']}`} style={{ width: '20mm' }}>{data2[0].grand_total}</td>
                             </tr>
-                            <tr className='table-tr'>
-                                <td className='table-td table-tdp' style={{ width: '50mm' }}>Paid</td>
-                                <td className='table-td table-tdp table-quantity' style={{ width: '10mm' }}>TK</td>
-                                <td className='table-td table-tdp table-amount' style={{ width: '20mm' }}>2930</td>
+                            <tr className={classes['table-tr']}>
+                                <td className={`${classes['table-td']} ${classes['table-tdp']}`} style={{ width: '50mm' }}>Paid</td>
+                                <td className={`${classes['table-td']} ${classes['table-tdp']} ${classes['table-quantity']}`} style={{ width: '10mm' }}>TK</td>
+                                <td className={`${classes['table-td']} ${classes['table-tdp']} ${classes['table-amount']}`} style={{ width: '20mm' }}>{data2[0].total}</td>
                             </tr>
                         </table>
                     </main>
                     <footer>
-                        <div className="print-footer">
-                            <h3 className="footer-title">*Medicines Once Sold are not taken Back*</h3>
-                            <p className="footer-description">Development by RightBrain Solution LTD.</p>
+                        <div className={classes['print-footer']}>
+                            <h3 className={classes['footer-title']}>*Medicines Once Sold are not taken Back*</h3>
+                            <p className={classes['footer-description']}>Development by RightBrain Solution LTD.</p>
                         </div>
                     </footer>
                 </div>

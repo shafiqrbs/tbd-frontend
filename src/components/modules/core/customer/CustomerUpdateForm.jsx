@@ -162,7 +162,6 @@ function CustomerUpdateForm() {
 
         <Box>
             <form onSubmit={form.onSubmit((values) => {
-                // In the submit handler of both forms
                 modals.openConfirmModal({
                     title: (
                         <Text size="md"> {t("FormConfirmationTitle")}</Text>

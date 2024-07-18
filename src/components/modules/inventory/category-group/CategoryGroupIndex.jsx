@@ -38,7 +38,7 @@ function CategoryGroupIndex() {
             dispatch(setInsertType('create')),
             dispatch(setSearchKeyword('')),
             dispatch(setEntityNewData([])),
-            navigate('/inventory/category-group', { replace: true })
+            navigate('/inventory/category-group')
         ))
     }, [categoryGroupId, dispatch, navigate])
 

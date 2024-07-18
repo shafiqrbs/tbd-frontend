@@ -85,14 +85,6 @@ function CategoryGroupUpdateForm() {
         <>
             <Box>
                 <form onSubmit={form.onSubmit((values) => {
-                    dispatch(updateEntityData(values))
-                        .then(() => {
-                            navigate('/inventory/category-group', { replace: true });
-                            dispatch(setInsertType('create'));
-                        })
-                        .catch((error) => {
-
-                        })
                     modals.openConfirmModal({
                         title: (
                             <Text size="md"> {t("FormConfirmationTitle")}</Text>
@@ -124,6 +116,7 @@ function CategoryGroupUpdateForm() {
                                 dispatch(setEditEntityData([]))
                                 dispatch(setFetching(true))
                                 setSaveCreateLoading(false)
+                                navigate('/inventory/category-group', { replace: true });
                             }, 700)
                         },
                     });

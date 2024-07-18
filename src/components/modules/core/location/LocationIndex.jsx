@@ -42,12 +42,7 @@ function LocationIndex() {
             dispatch(setInsertType('create'));
             dispatch(setSearchKeyword(''));
             dispatch(setEntityNewData([]));
-            // dispatch(setCustomerFilterData({
-            //     ...masterDataFilterData,
-            //     ['name']: '',
-            //     ['mobile']: ''
-            // }));
-            navigate('/core/location', { replace: true });
+            navigate('/core/location');
         }
     }, [locationId, dispatch, navigate]);
 

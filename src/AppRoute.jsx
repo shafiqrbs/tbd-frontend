@@ -38,8 +38,6 @@ import CustomerSettingsIndex from './components/modules/core/customer-settings/C
 import LocationIndex from './components/modules/core/location/LocationIndex.jsx';
 import MarketingExecutiveIndex from './components/modules/core/marketing-executive/MarketingExecutiveIndex.jsx';
 import ProductSettingsIndex from './components/modules/inventory/product-settings/ProductSettingsIndex.jsx';
-import { PosPrint80mm } from './components/modules/inventory/print/sales/PosPrint-80mm.jsx';
-import { Pos80mm } from './components/modules/inventory/print/sales/Pos80mm.jsx';
 
 function AppRoute() {
 
@@ -90,7 +88,6 @@ function AppRoute() {
                     <Route path="invoice-batch" element={<InvoiceBatchIndex />} />
                     <Route path="product-settings" element={<ProductSettingsIndex />} />
                     <Route path="product-settings/:settingsId" element={<ProductSettingsIndex />} />
-                    <Route path="print" element={<Pos80mm />} />
                 </Route>
                 <Route path="/domain/">
                     <Route path="domain-index" element={<DomainIndex />} />
