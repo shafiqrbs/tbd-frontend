@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useOutletContext, useParams } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import {
     Group,
     Box, Grid,
@@ -20,7 +20,7 @@ import {
 import KeywordSearch from "../../filter/KeywordSearch";
 import { modals } from "@mantine/modals";
 import tableCss from "../../../../assets/css/Table.module.css";
-import HeadSubViewDrawer from "./HeadSubViewDrawer.jsx";
+import HeadGroupViewDrawer from "./HeadSubViewDrawer.jsx";
 function HeadSubGroupTable(props) {
 
     const dispatch = useDispatch();
@@ -29,23 +29,21 @@ function HeadSubGroupTable(props) {
     const height = mainAreaHeight - 98; //TabList height 104
     const perPage = 50;
     const [page, setPage] = useState(1);
+    const [headGroupDrawer, setHeadGroupDrawer] = useState(false)
 
 
     const fetching = useSelector((state) => state.crudSlice.fetching)
     const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword)
     const indexData = useSelector((state) => state.crudSlice.indexEntityData)
-
-    const { headSubGroupId } = useParams()
     const navigate = useNavigate()
-    const [viewDrawer, setViewDrawer] = useState(false)
-
 
 
     useEffect(() => {
         const value = {
             url: 'accounting/account-head',
             param: {
-                mode: 'mother-account',
+                group: 'sub-head',
+                term: searchKeyword,
                 page: page,
                 offset: perPage
             }
@@ -53,13 +51,11 @@ function HeadSubGroupTable(props) {
         dispatch(getIndexEntityData(value))
     }, [fetching]);
 
-
-
     return (
 
         <>
             <Box pl={`xs`} pr={8} pt={'6'} pb={'4'} className={'boxBackground borderRadiusAll border-bottom-none'} >
-                <KeywordSearch module={'customer'} />
+                <KeywordSearch module={'account-head'} />
             </Box>
             <Box className={'borderRadiusAll border-top-none'}>
                 <DataTable
@@ -79,7 +75,7 @@ function HeadSubGroupTable(props) {
                             render: (item) => (indexData.data.indexOf(item) + 1)
                         },
                         { accessor: 'name', title: t('Name') },
-                        { accessor: 'parent_name', title: t('ParentHead') },
+                        { accessor: 'parent_name', title: t('NatureOfGroup') },
                         { accessor: 'code', title: t('AccountCode') },
                         {
                             accessor: "action",
@@ -95,20 +91,19 @@ function HeadSubGroupTable(props) {
                                         </Menu.Target>
                                         <Menu.Dropdown>
                                             <Menu.Item
-                                                // href={`/inventory/sales/edit/${data.id}`}
                                                 onClick={() => {
                                                     dispatch(setInsertType('update'))
-                                                    dispatch(editEntityData('accounting/transaction-mode/' + data.id))
+                                                    dispatch(editEntityData(`accounting/account-head/${data.id}`))
                                                     dispatch(setFormLoading(true))
-                                                    navigate(`/accounting/head-subgroup/${data.id}`)
+                                                    navigate(`/accounting/head-group/${data.id}`)
                                                 }}
                                             >
                                                 {t('Edit')}
                                             </Menu.Item>
-
                                             <Menu.Item
                                                 onClick={() => {
-                                                    setViewDrawer(true)
+                                                    setHeadGroupDrawer(true)
+                                                    // dispatch(showEntityData('core/customer/' + data.id))
                                                 }}
                                                 target="_blank"
                                                 component="a"
@@ -132,10 +127,7 @@ function HeadSubGroupTable(props) {
                                                         children: (
                                                             <Text size="sm"> {t("FormConfirmationMessage")}</Text>
                                                         ),
-                                                        labels: {
-                                                            confirm: 'Confirm',
-                                                            cancel: 'Cancel'
-                                                        },
+                                                        labels: { confirm: 'Confirm', cancel: 'Cancel' },
                                                         confirmProps: { color: 'red.6' },
                                                         onCancel: () => console.log('Cancel'),
                                                         onConfirm: () => {
@@ -169,7 +161,8 @@ function HeadSubGroupTable(props) {
                     scrollAreaProps={{ type: 'never' }}
                 />
             </Box>
-            {viewDrawer && <HeadSubViewDrawer viewDrawer={viewDrawer} setViewDrawer={setViewDrawer} />}
+            {headGroupDrawer && <HeadGroupViewDrawer headGroupDrawer={headGroupDrawer}
+                                                     setHeadGroupDrawer={setHeadGroupDrawer} />}
         </>
 
     );

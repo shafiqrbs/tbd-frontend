@@ -25,10 +25,9 @@ import {
 
 import Shortcut from "../../shortcut/Shortcut";
 import InputForm from "../../../form-builders/InputForm";
-import TextAreaForm from "../../../form-builders/TextAreaForm";
-import InputNumberForm from "../../../form-builders/InputNumberForm";
 import SelectForm from "../../../form-builders/SelectForm.jsx";
 import SwitchForm from "../../../form-builders/SwitchForm";
+import getSettingMotherAccountDropdownData from "../../../global-hook/dropdown/getSettingMotherAccountDropdownData";
 
 function HeadGroupForm(props) {
     const { t, i18n } = useTranslation();
@@ -38,33 +37,27 @@ function HeadGroupForm(props) {
     const [opened, { open, close }] = useDisclosure(false);
 
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
-    const [authorisedData, setAuthorisedData] = useState(null);
-    const [methodData, setMethodData] = useState(null);
-    const [accountTypeData, setAccountTypeData] = useState(null);
+    const [motherData, setMotherData] = useState(null);
 
     const validationMessage = useSelector((state) => state.crudSlice.validationMessage)
     const validation = useSelector((state) => state.crudSlice.validation)
     const entityNewData = useSelector((state) => state.crudSlice.entityNewData)
 
-
-
-    const values = [
-        'account', 'accountsub', 'accounthead'
-    ]
+    const accountDropdown = getSettingMotherAccountDropdownData()
 
 
     const form = useForm({
         initialValues: {
-            parent_name: '', name: '', code: '', status: true
+            mother_account_id: '', name: '', code: '', status: true
         },
         validate: {
-            parent_name: isNotEmpty(),
-            name: hasLength({ min: 2, max: 20 })
+            mother_account_id: isNotEmpty(),
+            name: isNotEmpty()
         }
     });
 
     useHotkeys([['alt+n', () => {
-        document.getElementById('parent_name').click()
+        document.getElementById('mother_account_id').click()
     }]], []);
 
     useHotkeys([['alt+r', () => {
@@ -80,6 +73,7 @@ function HeadGroupForm(props) {
         <Box>
             <form onSubmit={form.onSubmit((values) => {
                 console.log(values)
+                form.values['head_group'] = 'account-head'
                 dispatch(setValidationData(false))
                 modals.openConfirmModal({
                     title: (
@@ -96,10 +90,10 @@ function HeadGroupForm(props) {
                             url: 'accounting/account-head',
                             data: form.values
                         }
-                        dispatch(storeEntityDataWithFile(value))
+                        dispatch(storeEntityData(value))
 
                         notifications.show({
-                            color: 'teal',
+                            color: 'red',
                             title: t('CreateSuccessfully'),
                             icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
                             loading: false,
@@ -109,10 +103,7 @@ function HeadGroupForm(props) {
 
                         setTimeout(() => {
                             form.reset()
-                            setFiles([])
-                            setMethodData(null)
-                            setAccountTypeData(null)
-                            setAuthorisedData(null)
+                            setMotherData(null)
                             dispatch(setFetching(true))
                         }, 700)
                     },
@@ -156,25 +147,23 @@ function HeadGroupForm(props) {
                                                 <Box >
                                                     <Box mt={'8'}>
                                                         <SelectForm
-                                                            tooltip={t('ChooseHeadGroup')}
-                                                            label={t('HeadGroup')}
-                                                            placeholder={t('ChooseHeadGroup')}
+                                                            tooltip={t('ChooseMotherAccount')}
+                                                            label={t('MotherAccount')}
+                                                            placeholder={t('ChooseMotherAccount')}
                                                             required={true}
                                                             nextField={'name'}
-                                                            name={'parent_name'}
+                                                            name={'mother_account_id'}
                                                             form={form}
-                                                            // dropdownValue={getTransactionMethodDropdownData()}
-                                                            dropdownValue={['test1', 'test2']}
-                                                            mt={8}
-                                                            id={'parent_name'}
+                                                            dropdownValue={accountDropdown}
+                                                            id={'mother_account_id'}
                                                             searchable={false}
-                                                            value={methodData}
-                                                            changeValue={setMethodData}
+                                                            value={motherData}
+                                                            changeValue={setMotherData}
                                                         />
                                                     </Box>
                                                     <Box mt={'xs'}>
                                                         <InputForm
-                                                            tooltip={t('SubGroupNameValidateMessage')}
+                                                            tooltip={t('NameValidateMessage')}
                                                             label={t('Name')}
                                                             placeholder={t('Name')}
                                                             required={true}

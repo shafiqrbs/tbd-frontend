@@ -40,6 +40,8 @@ const utilitySlice = createSlice({
         fetching : true,
         productDropdownData : [],
         accountDropdownData : [],
+        motherAccountDropdownData : [],
+        accountHeadDropdownData : [],
         authorizedDropdownData : [],
         businessModelDropdownData : [],
         salesProcessTypeDropdownData : [],
@@ -55,6 +57,7 @@ const utilitySlice = createSlice({
     extraReducers : (builder) => {
 
         builder.addCase(getSettingDropdown.fulfilled, (state, action) => {
+
             if (action.payload.type === 'product-type'){
                 state.productDropdownData = action.payload.data.data
             }
@@ -63,6 +66,12 @@ const utilitySlice = createSlice({
             }
             if (action.payload.type === 'authorised-type'){
                 state.authorizedDropdownData = action.payload.data.data
+            }
+            if (action.payload.type === 'mother-account'){
+                state.motherAccountDropdownData = action.payload.data.data
+            }
+            if (action.payload.type === 'account-head'){
+                state.accountHeadDropdownData = action.payload.data.data
             }
             if (action.payload.type === 'business-model'){
                 state.businessModelDropdownData = action.payload.data.data

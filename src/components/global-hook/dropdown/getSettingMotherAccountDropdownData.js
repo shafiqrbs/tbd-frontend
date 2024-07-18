@@ -1,20 +1,20 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {getSettingDropdown,} from "../../../store/utility/utilitySlice.js";
+import {getSettingDropdown} from "../../../store/utility/utilitySlice.js";
 
-const getSettingAccountTypeDropdownData = () => {
+const getSettingMotherAccountDropdownData = () => {
     const dispatch = useDispatch();
     const [settingDropdown, setSettingDropdown] = useState([]);
 
     useEffect(() => {
         const value = {
             url: 'accounting/select/setting',
-            param: { 'dropdown-type': 'account-type' }
+            param: { 'dropdown-type': 'mother-account' }
         }
         dispatch(getSettingDropdown(value))
     }, [dispatch]);
 
-    const accountDropdownData = useSelector((state) => state.utilityUtilitySlice.accountDropdownData);
+    const accountDropdownData = useSelector((state) => state.utilityUtilitySlice.motherAccountDropdownData);
 
     useEffect(() => {
         if (accountDropdownData && accountDropdownData.length > 0) {
@@ -28,4 +28,4 @@ const getSettingAccountTypeDropdownData = () => {
     return settingDropdown;
 };
 
-export default getSettingAccountTypeDropdownData;
+export default getSettingMotherAccountDropdownData;
