@@ -1,7 +1,8 @@
 .footer {
     height: rem(42px);
   /*  margin-bottom: rem(120px);*/
-    background-color: var(--mantine-color-body);
+   /* background-color: var(--mantine-color-body);*/
+    background-color: #f9fbf1;
     padding-left: var(--mantine-spacing-md);
     padding-right: var(--mantine-spacing-md);
     padding-top: 0!important;

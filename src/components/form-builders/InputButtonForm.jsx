@@ -47,9 +47,10 @@ function InputButtonForm(props) {
                             }],
                         ])}
                         rightSection={props.rightSection}
-                        rightSectionWidth={props.rightSectionWidth}
+                        rightSectionWidth={48}
                         leftSection={props.leftSection}
                         withAsterisk={required}
+
                     />
                 </Tooltip>
             }

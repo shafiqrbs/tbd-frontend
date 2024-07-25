@@ -3,7 +3,8 @@
     border-bottom:none;
     padding-left: var(--mantine-spacing-md);
     padding-right: var(--mantine-spacing-md);
-    background-color: rgba(226, 194, 194, 0.39);
+    background-color: #d7e8cd;
+   /* background-color: rgba(226, 194, 194, 0.39);*/
     /*background-color: #ffc9c91a;*/
 }
 

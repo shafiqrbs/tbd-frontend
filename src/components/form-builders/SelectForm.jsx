@@ -38,7 +38,7 @@ function SelectForm(props) {
                     c={'white'}
                     withArrow
                     offset={2}
-                    zIndex={0}
+                    zIndex={999}
                     transitionProps={{transition: "pop-bottom-left", duration: 500}}
                 >
                     <Select

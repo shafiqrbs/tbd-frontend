@@ -22,13 +22,13 @@ function HeadGroupIndex() {
     const configData = getConfigData()
     const progress = getLoadingProgress()
 
-    const { headGroupId } = useParams()
+    const { id } = useParams()
     const navigate = useNavigate()
 
     useEffect(() => {
-        headGroupId ? (
+        id ? (
             dispatch(setInsertType('update')),
-            dispatch(editEntityData(`/accounting/head-group/${headGroupId}`)),
+            dispatch(editEntityData(`accounting/account-head/${id}`)),
             dispatch(setFormLoading(true))
         ) : (
             dispatch(setInsertType('create')),
@@ -36,9 +36,8 @@ function HeadGroupIndex() {
             dispatch(setEntityNewData([])),
             navigate('/accounting/head-group', { replace: true })
         );
-    }, [headGroupId, dispatch, navigate])
-
-
+    }, [id, dispatch, navigate])
+    
     return (
         <>
             {progress !== 100 &&

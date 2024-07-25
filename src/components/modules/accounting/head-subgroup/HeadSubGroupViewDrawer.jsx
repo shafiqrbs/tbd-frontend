@@ -18,29 +18,31 @@ import { useHotkeys, useToggle } from "@mantine/hooks";
 import { useDispatch, useSelector } from "react-redux";
 import { isNotEmpty, useForm } from "@mantine/form";
 
-function HeadSubViewDrawer(props) {
+function HeadSubGroupViewDrawer(props) {
     const configData = localStorage.getItem('config-data');
+
+    const adjustment = -28;
 
     const entityEditData = useSelector((state => state.crudSlice.entityEditData))
 
-    const { viewDrawer, setViewDrawer } = props
+    const { headGroupDrawer, setHeadGroupDrawer } = props
     const { isOnline, mainAreaHeight } = useOutletContext();
     const { t, i18n } = useTranslation();
     const height = mainAreaHeight; //TabList height 104
     const closeDrawer = () => {
-        setViewDrawer(false)
+        setHeadGroupDrawer(false)
     }
 
 
 
     return (
         <>
-            <Drawer.Root title={t('HeadSubGroupDetails')} opened={viewDrawer} position="right" onClose={closeDrawer} size={'30%'} >
+            <Drawer.Root title={t('LedgerDetails')} opened={headGroupDrawer} position="right" onClose={closeDrawer} size={'30%'} >
                 <Drawer.Overlay />
                 <Drawer.Content>
 
                     <Drawer.Header h={5}>
-                        <Drawer.Title>{t('HeadSubGroupDetails')}</Drawer.Title>
+                        <Drawer.Title>{t('AccountHeadGroupDetails')}</Drawer.Title>
                         <ActionIcon
                             className="ActionIconCustom"
                             radius="xl"
@@ -80,4 +82,4 @@ function HeadSubViewDrawer(props) {
     );
 }
 
-export default HeadSubViewDrawer;
+export default HeadSubGroupViewDrawer;

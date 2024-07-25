@@ -69,9 +69,8 @@ function CustomerGroupDrawer(props) {
                         </Box>
                     </ScrollArea> */}
 
-                    <ScrollArea h={height + 76} scrollbarSize={2} type="never" bg={'gray.1'}>
+                    <ScrollArea h={height + 100} scrollbarSize={2} type="never" bg={'gray.1'}>
                         <Drawer.Header>
-
                             <Drawer.Title>{t('AddCustomerGroup')}</Drawer.Title>
                             <ActionIcon
                                 className="ActionIconCustom"
