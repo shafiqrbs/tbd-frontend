@@ -132,11 +132,7 @@ function HeadGroupUpdateFrom(props) {
                             dispatch(setEditEntityData([]))
                             dispatch(setFetching(true))
                             setSaveCreateLoading(false)
-<<<<<<< HEAD
-                            navigate('/accounting/head-group');
-=======
                             navigate('/accounting/head-group', { replace: true })
->>>>>>> 174c4057cd5379e739f259cefc7743e9bccd0be9
                         }, 700)
                     },
                 });

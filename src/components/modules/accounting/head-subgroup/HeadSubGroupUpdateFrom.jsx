@@ -51,13 +51,9 @@ function HeadSubGroupUpdateFrom(props) {
 
     const [setFormData, setFormDataForUpdate] = useState(false);
     const [formLoad, setFormLoad] = useState(true);
-<<<<<<< HEAD
     const [motherData, setMotherData] = useState(null);
     const accountDropdown = getSettingMotherAccountDropdownData()
-=======
     const [methodData, setMethodData] = useState(null);
-    const navigate = useNavigate()
->>>>>>> 174c4057cd5379e739f259cefc7743e9bccd0be9
 
     const form = useForm({
         initialValues: {
@@ -137,11 +133,7 @@ function HeadSubGroupUpdateFrom(props) {
                             dispatch(setEditEntityData([]))
                             dispatch(setFetching(true))
                             setSaveCreateLoading(false)
-<<<<<<< HEAD
-                            navigate('/accounting/head-group');
-=======
                             navigate('/accounting/head-subgroup', { replace: true })
->>>>>>> 174c4057cd5379e739f259cefc7743e9bccd0be9
                         }, 700)
                     },
                 });
