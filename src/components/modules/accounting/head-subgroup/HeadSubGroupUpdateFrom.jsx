@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useOutletContext, useParams } from "react-router-dom";
+import {useNavigate, useOutletContext, useParams} from "react-router-dom";
 import {
     Button,
     rem, Flex,
@@ -26,53 +26,43 @@ import {
     setFormLoading,
     setValidationData,
     storeEntityData,
+    setInsertType,
     updateEntityData
 } from "../../../../store/accounting/crudSlice.js";
 
 import Shortcut from "../../shortcut/Shortcut";
 import InputForm from "../../../form-builders/InputForm";
 import SelectForm from "../../../form-builders/SelectForm";
-import TextAreaForm from "../../../form-builders/TextAreaForm";
-import InputNumberForm from "../../../form-builders/InputNumberForm";
-import { storeEntityDataWithFile } from "../../../../store/accounting/crudSlice.js";
-import getTransactionMethodDropdownData from "../../../global-hook/dropdown/getTransactionMethodDropdownData.js";
-import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
-import getSettingAuthorizedTypeDropdownData
-    from "../../../global-hook/dropdown/getSettingAuthorizedTypeDropdownData.js";
-import getSettingAccountTypeDropdownData from "../../../global-hook/dropdown/getSettingAccountTypeDropdownData.js";
 import SwitchForm from "../../../form-builders/SwitchForm.jsx";
+import getSettingMotherAccountDropdownData from "../../../global-hook/dropdown/getSettingMotherAccountDropdownData";
 
 function HeadSubGroupUpdateFrom(props) {
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const { isOnline, mainAreaHeight } = useOutletContext();
-    const height = mainAreaHeight - 130; //TabList height 104
+    const height = mainAreaHeight - 100; //TabList height 104
     const [opened, { open, close }] = useDisclosure(false);
 
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
-
 
     const entityEditData = useSelector((state) => state.crudSlice.entityEditData)
     const formLoading = useSelector((state) => state.crudSlice.formLoading)
 
     const [setFormData, setFormDataForUpdate] = useState(false);
     const [formLoad, setFormLoad] = useState(true);
-    const [authorisedData, setAuthorisedData] = useState(null);
-    const [methodData, setMethodData] = useState(null);
-    const [accountTypeData, setAccountTypeData] = useState(null)
-    const { headSubGroupId } = useParams()
-    const navigate = useNavigate()
+    const [motherData, setMotherData] = useState(null);
+    const accountDropdown = getSettingMotherAccountDropdownData()
 
     const form = useForm({
         initialValues: {
-            parent_name: '', name: '', code: '', status: true
+            mother_account_id:'', name:'', code: '', status: ''
         },
         validate: {
-            parent_name: isNotEmpty(),
-            name: hasLength({ min: 2, max: 20 })
+            mother_account_id: isNotEmpty(),
+            name: isNotEmpty()
         }
     });
-
 
     useEffect(() => {
         setFormLoad(true)
@@ -80,21 +70,21 @@ function HeadSubGroupUpdateFrom(props) {
     }, [dispatch, formLoading])
 
     useEffect(() => {
+
         form.setValues({
-            parent_name: entityEditData.parent_name ? entityEditData.parent_name : '',
+            mother_account_id: entityEditData.mother_account_id ? entityEditData.mother_account_id : '',
             name: entityEditData.name ? entityEditData.name : '',
             code: entityEditData.code ? entityEditData.code : '',
-            status: entityEditData.status ? entityEditData.status : true,
+            status: entityEditData.status ? entityEditData.status : ''
         })
+
         dispatch(setFormLoading(false))
         setTimeout(() => {
             setFormLoad(false)
             setFormDataForUpdate(false)
         }, 500)
 
-    }, [dispatch, setFormData, entityEditData])
-
-
+    }, [entityEditData, dispatch, setFormData])
 
     useHotkeys([['alt+n', () => {
         document.getElementById('parent_name').click()
@@ -108,19 +98,9 @@ function HeadSubGroupUpdateFrom(props) {
         document.getElementById('EntityFormSubmit').click()
     }]], []);
 
-
     return (
         <Box>
             <form onSubmit={form.onSubmit((values) => {
-                console.log(values)
-                dispatch(updateEntityData(values))
-                    .then(() => {
-                        navigate('/accounting/head-subgroup', { replace: true });
-                        dispatch(setInsertType('create'));
-                    })
-                    .catch((error) => {
-
-                    })
                 modals.openConfirmModal({
                     title: (
                         <Text size="md"> {t("FormConfirmationTitle")}</Text>
@@ -133,7 +113,7 @@ function HeadSubGroupUpdateFrom(props) {
                     onConfirm: () => {
                         setSaveCreateLoading(true)
                         const value = {
-                            url: 'inventory/category-group/' + entityEditData.id,
+                            url: 'accounting/account-head/' + entityEditData.id,
                             data: values
                         }
                         dispatch(updateEntityData(value))
@@ -152,6 +132,7 @@ function HeadSubGroupUpdateFrom(props) {
                             dispatch(setEditEntityData([]))
                             dispatch(setFetching(true))
                             setSaveCreateLoading(false)
+                            navigate('/accounting/head-group');
                         }, 700)
                     },
                 });
@@ -164,7 +145,7 @@ function HeadSubGroupUpdateFrom(props) {
                                 <Box pl={`xs`} pr={8} pt={'6'} pb={'6'} mb={'4'} className={'boxBackground borderRadiusAll'}>
                                     <Grid>
                                         <Grid.Col span={6} >
-                                            <Title order={6} pt={'6'}>{t('UpdateLedger')}</Title>
+                                            <Title order={6} pt={'6'}>{t('UpdateAccountHeadGroup')}</Title>
                                         </Grid.Col>
                                         <Grid.Col span={6}>
                                             <Stack right align="flex-end">
@@ -176,10 +157,11 @@ function HeadSubGroupUpdateFrom(props) {
                                                             color={`green.8`}
                                                             type="submit"
                                                             id="EntityFormSubmit"
-                                                            leftSection={<IconDeviceFloppy size={16} />}>
+                                                            leftSection={<IconDeviceFloppy size={16} />}
+                                                        >
                                                             <Flex direction={`column`} gap={0}>
                                                                 <Text fz={14} fw={400}>
-                                                                    {t("CreateAndSave")}
+                                                                    {t("UpdateAndSave")}
                                                                 </Text>
                                                             </Flex>
                                                         </Button>
@@ -200,15 +182,13 @@ function HeadSubGroupUpdateFrom(props) {
                                                             placeholder={t('ChooseHeadGroup')}
                                                             required={true}
                                                             nextField={'name'}
-                                                            name={'parent_name'}
+                                                            name={'mother_account_id'}
                                                             form={form}
-                                                            // dropdownValue={getTransactionMethodDropdownData()}
-                                                            dropdownValue={['test1', 'test2']}
-                                                            mt={8}
-                                                            id={'parent_name'}
+                                                            dropdownValue={accountDropdown}
+                                                            id={'mother_account_id'}
                                                             searchable={false}
-                                                            value={methodData}
-                                                            changeValue={setMethodData}
+                                                            value={motherData ? String(motherData) : (entityEditData.mother_account_id ? String(entityEditData.mother_account_id) : null)}
+                                                            changeValue={setMotherData}
                                                         />
                                                     </Box>
                                                     <Box mt={'xs'}>
@@ -220,7 +200,6 @@ function HeadSubGroupUpdateFrom(props) {
                                                             nextField={'code'}
                                                             name={'name'}
                                                             form={form}
-                                                            mt={0}
                                                             id={'name'}
                                                         />
                                                     </Box>
@@ -248,7 +227,7 @@ function HeadSubGroupUpdateFrom(props) {
                                                                     color="red"
                                                                     id={'status'}
                                                                     position={'left'}
-                                                                    defaultChecked={1}
+                                                                    checked={form.values.status}
                                                                 />
                                                             </Grid.Col>
                                                             <Grid.Col span={6} fz={'sm'} pt={'1'}>{t('Status')}</Grid.Col>

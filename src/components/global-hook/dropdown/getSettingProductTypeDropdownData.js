@@ -8,7 +8,7 @@ const getSettingProductTypeDropdownData = () => {
 
     useEffect(() => {
         const value = {
-            url: 'utility/select/setting',
+            url: 'inventory/select/setting',
             param: { 'dropdown-type': 'product-type' }
         }
         dispatch(getSettingDropdown(value))

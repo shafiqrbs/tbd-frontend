@@ -34,21 +34,6 @@ function ProductForm() {
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
 
     const [categoryData, setCategoryData] = useState(null);
-    const [brandData, setBrandData] = useState(null);
-
-
-    const brandDropdownData = useSelector((state) => state.inventoryUtilitySlice.brandDropdownData)
-    const dropdownBrandLoad = useSelector((state) => state.inventoryCrudSlice.dropdownLoad)
-    let brandDropdown = brandDropdownData && brandDropdownData.length > 0 ?
-        brandDropdownData.map((type, index) => {
-            return ({ 'label': type.name, 'value': String(type.id) })
-        }) : []
-    useEffect(() => {
-        const value = {
-            url: 'inventory/select/product-brand',
-        }
-        dispatch(getBrandDropdown(value))
-    }, [dropdownBrandLoad]);
 
     const [productTypeData, setProductTypeData] = useState(null);
     const [productUnitData, setProductUnitData] = useState(null);
@@ -63,12 +48,9 @@ function ProductForm() {
             alternative_name: '',
             barcode: '',
             sku: '',
-            brand_id: '',
-            opening_quantity: '',
             sales_price: '',
             purchase_price: '',
             min_quantity: '',
-            reorder_quantity: '',
             status: true
         },
         validate: {
@@ -171,7 +153,7 @@ function ProductForm() {
                                         <Box mt={'xs'}>
                                             <SelectForm
                                                 tooltip={t('ChooseProductType')}
-                                                label={t('ProductType')}
+                                                label={t('NatureOfProduct')}
                                                 placeholder={t('ChooseProductType')}
                                                 required={true}
                                                 name={'product_type_id'}
@@ -330,57 +312,15 @@ function ProductForm() {
                                                             dropdownValue={getSettingProductUnitDropdownData()}
                                                             mt={8}
                                                             id={'unit_id'}
-                                                            nextField={'brand_id'}
+                                                            nextField={'reorder_quantity'}
                                                             searchable={true}
                                                             value={productUnitData}
                                                             changeValue={setProductUnitData}
                                                         />
                                                     </Box>
                                                 </Grid.Col>
-                                                <Grid.Col span={5}>
-                                                    <Box mt={'8'}>
-                                                        <SelectForm
-                                                            tooltip={t('ChooseBrand')}
-                                                            label={t('Brand')}
-                                                            placeholder={t('ChooseBrand')}
-                                                            required={false}
-                                                            nextField={'min_quantity'}
-                                                            name={'brand_id'}
-                                                            form={form}
-                                                            dropdownValue={brandDropdown}
-                                                            mt={8}
-                                                            id={'brand_id'}
-                                                            searchable={true}
-                                                            value={brandData}
-                                                            changeValue={setBrandData}
-                                                        />
-                                                    </Box>
-                                                </Grid.Col>
-                                                <Grid.Col span={1}>
-                                                    <Box pt={'xl'} >
-                                                        <Tooltip
-                                                            multiline
-                                                            ta={'center'}
-                                                            bg={'orange.8'}
-                                                            offset={{ crossAxis: '-80', mainAxis: '5' }}
-                                                            withArrow
-                                                            transitionProps={{ duration: 200 }}
-                                                            label={t('QuickBrand')}
-                                                        >
-                                                            <ActionIcon fullWidth variant="outline" bg={'white'} size={'lg'} color="red.5" mt={'1'} aria-label="Settings" onClick={open}>
-                                                                <IconClipboardPlus style={{ width: '100%', height: '70%' }} stroke={1.5} />
-                                                            </ActionIcon>
-                                                        </Tooltip>
-                                                    </Box>
-                                                </Grid.Col>
-                                                {opened &&
-                                                    <CustomerGroupModel openedModel={opened} open={open} close={close} />
-                                                }
-                                            </Grid>
-                                        </Box>
-                                        <Box mt={'xs'}>
-                                            <Grid gutter={{ base: 6 }}>
                                                 <Grid.Col span={6}>
+                                                    <Box mt={'8'}>
                                                     <InputForm
                                                         tooltip={t('MinimumQuantityValidateMessage')}
                                                         label={t('MinimumQuantity')}
@@ -389,62 +329,33 @@ function ProductForm() {
                                                         nextField={'reorder_quantity'}
                                                         form={form}
                                                         name={'min_quantity'}
-                                                        mt={8}
                                                         id={'min_quantity'}
                                                     />
+                                                    </Box>
                                                 </Grid.Col>
-                                                <Grid.Col span={6}>
-                                                    <InputForm
-                                                        tooltip={t('ReorderQuantity')}
-                                                        label={t('ReorderQuantity')}
-                                                        placeholder={t('ReorderQuantity')}
-                                                        required={false}
-                                                        nextField={'opening_quantity'}
-                                                        form={form}
-                                                        name={'reorder_quantity'}
-                                                        mt={8}
-                                                        id={'reorder_quantity'}
-                                                    />
-                                                </Grid.Col>
+
                                             </Grid>
                                         </Box>
                                         <Box mt={'md'} mb={'md'}>
                                             <Grid gutter={{ base: 6 }}>
-                                                <Grid.Col span={6}>
-                                                    <InputForm
-                                                        tooltip={t('OpeningQuantity')}
-                                                        label={t('OpeningQuantity')}
-                                                        placeholder={t('OpeningQuantity')}
-                                                        required={false}
-                                                        nextField={'status'}
-                                                        form={form}
-                                                        name={'opening_quantity'}
-                                                        mt={8}
-                                                        id={'opening_quantity'}
-                                                    />
-                                                </Grid.Col>
-                                                <Grid.Col span={6} mt={'28'}>
-                                                    <Box mt={'xs'}>
-                                                        <Grid columns={6} gutter={{ base: 1 }}>
-                                                            <Grid.Col span={2}>
-                                                                <SwitchForm
-                                                                    tooltip={t('PrintLogo')}
-                                                                    label=''
-                                                                    nextField={'printWithOutstanding'}
-                                                                    name={'print_logo'}
-                                                                    form={form}
-                                                                    color="red"
-                                                                    id={'printLogo'}
-                                                                    position={'left'}
-                                                                    defaultChecked={1}
-                                                                />
-                                                            </Grid.Col>
-                                                            <Grid.Col span={4} fz={'sm'} pt={'1'}>{t('Status')}
-                                                            </Grid.Col>
-                                                        </Grid>
-                                                    </Box>
-                                                </Grid.Col>
-
+                                                <Box mt={'xs'}>
+                                                    <Grid  gutter={{ base: 1 }}>
+                                                        <Grid.Col span={8}>
+                                                            <SwitchForm
+                                                                tooltip={t('PrintLogo')}
+                                                                label=''
+                                                                nextField=''
+                                                                name={'sttaus'}
+                                                                form={form}
+                                                                color="red"
+                                                                id={'status'}
+                                                                position={'left'}
+                                                                defaultChecked={1}
+                                                            />
+                                                        </Grid.Col>
+                                                        <Grid.Col span={4} fz={'sm'} pt={'1'}>{t('Status')}</Grid.Col>
+                                                    </Grid>
+                                                </Box>
                                             </Grid>
                                         </Box>
                                     </ScrollArea>

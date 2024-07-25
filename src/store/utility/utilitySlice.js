@@ -61,6 +61,7 @@ const utilitySlice = createSlice({
             if (action.payload.type === 'product-type'){
                 state.productDropdownData = action.payload.data.data
             }
+
             if (action.payload.type === 'account-type'){
                 state.accountDropdownData = action.payload.data.data
             }
@@ -84,6 +85,7 @@ const utilitySlice = createSlice({
         builder.addCase(getProductUnitDropdown.fulfilled, (state, action) => {
             state.productUnitDropdown = action.payload.data
         })
+
 
         builder.addCase(getCurrencyDropdown.fulfilled, (state, action) => {
             state.currencyDropdown = action.payload.data

@@ -27,7 +27,7 @@ import Shortcut from "../../shortcut/Shortcut";
 import InputForm from "../../../form-builders/InputForm";
 import SelectForm from "../../../form-builders/SelectForm.jsx";
 import SwitchForm from "../../../form-builders/SwitchForm";
-import getAccountHeadDropdownData from "../../../global-hook/dropdown/getAccountHeadDropdownData";
+import getSettingMotherAccountDropdownData from "../../../global-hook/dropdown/getSettingMotherAccountDropdownData";
 
 function HeadSubGroupForm(props) {
     const { t, i18n } = useTranslation();
@@ -43,19 +43,21 @@ function HeadSubGroupForm(props) {
     const validation = useSelector((state) => state.crudSlice.validation)
     const entityNewData = useSelector((state) => state.crudSlice.entityNewData)
 
-    const accountDropdown = getAccountHeadDropdownData()
+    const accountDropdown = getSettingMotherAccountDropdownData()
+
+
     const form = useForm({
         initialValues: {
-            parent_id: '', name: '', code: '', status: true
+            mother_account_id: '', name: '', code: '', status: true
         },
         validate: {
-            parent_id: isNotEmpty(),
+            mother_account_id: isNotEmpty(),
             name: isNotEmpty()
         }
     });
 
     useHotkeys([['alt+n', () => {
-        document.getElementById('parent_id').click()
+        document.getElementById('mother_account_id').click()
     }]], []);
 
     useHotkeys([['alt+r', () => {
@@ -71,7 +73,7 @@ function HeadSubGroupForm(props) {
         <Box>
             <form onSubmit={form.onSubmit((values) => {
                 console.log(values)
-                form.values['head_group'] = 'head'
+                form.values['head_group'] = 'account-head'
                 dispatch(setValidationData(false))
                 modals.openConfirmModal({
                     title: (
@@ -89,6 +91,7 @@ function HeadSubGroupForm(props) {
                             data: form.values
                         }
                         dispatch(storeEntityData(value))
+
                         notifications.show({
                             color: 'red',
                             title: t('CreateSuccessfully'),
@@ -144,15 +147,15 @@ function HeadSubGroupForm(props) {
                                                 <Box >
                                                     <Box mt={'8'}>
                                                         <SelectForm
-                                                            tooltip={t('ChooseAccountHead')}
-                                                            label={t('AccountHead')}
-                                                            placeholder={t('ChooseAccountHead')}
+                                                            tooltip={t('ChooseMotherAccount')}
+                                                            label={t('MotherAccount')}
+                                                            placeholder={t('ChooseMotherAccount')}
                                                             required={true}
                                                             nextField={'name'}
-                                                            name={'parent_id'}
+                                                            name={'mother_account_id'}
                                                             form={form}
                                                             dropdownValue={accountDropdown}
-                                                            id={'parent_id'}
+                                                            id={'mother_account_id'}
                                                             searchable={false}
                                                             value={motherData}
                                                             changeValue={setMotherData}
@@ -217,7 +220,7 @@ function HeadSubGroupForm(props) {
                             <Shortcut
                                 form={form}
                                 FormSubmit={'EntityFormSubmit'}
-                                Name={'parent_id'}
+                                Name={'method_id'}
                                 inputType="select"
                             />
                         </Box>

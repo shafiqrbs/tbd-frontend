@@ -86,10 +86,10 @@ function ProductTable() {
                             textAlignment: 'right   ',
                             render: (item) => (indexData.data.indexOf(item) + 1)
                         },
-                        { accessor: 'product_name', title: t("Name") },
+                        { accessor: 'product_type', title: t("NatureOfProduct") },
                         { accessor: 'category_name', title: t("Category") },
+                        { accessor: 'product_name', title: t("Name") },
                         { accessor: 'unit_name', title: t("Unit") },
-                        { accessor: 'brand_name', title: t("Brand") },
                         { accessor: 'purchase_price', title: t("PurchasePrice") },
                         { accessor: 'sales_price', title: t("SalesPrice") },
                         {

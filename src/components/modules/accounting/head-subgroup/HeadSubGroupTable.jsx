@@ -20,7 +20,7 @@ import {
 import KeywordSearch from "../../filter/KeywordSearch";
 import { modals } from "@mantine/modals";
 import tableCss from "../../../../assets/css/Table.module.css";
-import HeadGroupViewDrawer from "./HeadSubViewDrawer.jsx";
+import HeadSubGroupViewDrawer from "./HeadSubGroupViewDrawer";
 function HeadSubGroupTable(props) {
 
     const dispatch = useDispatch();
@@ -30,7 +30,6 @@ function HeadSubGroupTable(props) {
     const perPage = 50;
     const [page, setPage] = useState(1);
     const [headGroupDrawer, setHeadGroupDrawer] = useState(false)
-
 
     const fetching = useSelector((state) => state.crudSlice.fetching)
     const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword)
@@ -42,7 +41,7 @@ function HeadSubGroupTable(props) {
         const value = {
             url: 'accounting/account-head',
             param: {
-                group: 'sub-head',
+                group: 'head',
                 term: searchKeyword,
                 page: page,
                 offset: perPage
@@ -75,7 +74,7 @@ function HeadSubGroupTable(props) {
                             render: (item) => (indexData.data.indexOf(item) + 1)
                         },
                         { accessor: 'name', title: t('Name') },
-                        { accessor: 'parent_name', title: t('NatureOfGroup') },
+                        { accessor: 'mother_name', title: t('NatureOfGroup') },
                         { accessor: 'code', title: t('AccountCode') },
                         {
                             accessor: "action",
@@ -95,7 +94,7 @@ function HeadSubGroupTable(props) {
                                                     dispatch(setInsertType('update'))
                                                     dispatch(editEntityData(`accounting/account-head/${data.id}`))
                                                     dispatch(setFormLoading(true))
-                                                    navigate(`/accounting/head-group/${data.id}`)
+                                                    navigate(`/accounting/head-subgroup/${data.id}`)
                                                 }}
                                             >
                                                 {t('Edit')}
@@ -161,8 +160,8 @@ function HeadSubGroupTable(props) {
                     scrollAreaProps={{ type: 'never' }}
                 />
             </Box>
-            {headGroupDrawer && <HeadGroupViewDrawer headGroupDrawer={headGroupDrawer}
-                                                     setHeadGroupDrawer={setHeadGroupDrawer} />}
+            {headGroupDrawer && <HeadSubGroupViewDrawer headGroupDrawer={headGroupDrawer}
+                                                        setHeadGroupDrawer={setHeadGroupDrawer} />}
         </>
 
     );
