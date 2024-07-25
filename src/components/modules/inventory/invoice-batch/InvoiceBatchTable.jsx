@@ -316,6 +316,7 @@ function InvoiceBatchTable() {
                     <Grid.Col span={8} >
 
                         <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} ref={printRef} pos="relative">
+
                             {loading &&
                                 <LoadingOverlay
                                     visible={loading}

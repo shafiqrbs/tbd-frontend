@@ -40,7 +40,7 @@ function LedgerIndex() {
                 ['name']: '',
                 ['code']: ''
             })),
-            navigate('/accounting/ledger', { replace: true })
+            navigate('/accounting/ledger')
         );
     }, [ledgerId, dispatch, navigate])
 

@@ -42,12 +42,7 @@ function CustomerSettingsIndex() {
             dispatch(setInsertType('create'));
             dispatch(setSearchKeyword(''));
             dispatch(setEntityNewData([]));
-            // dispatch(setCustomerFilterData({
-            //     ...masterDataFilterData,
-            //     ['name']: '',
-            //     ['mobile']: ''
-            // }));
-            navigate('/core/customer-settings', { replace: true });
+            navigate('/core/customer-settings');
         }
     }, [settingsId, dispatch, navigate]);
 

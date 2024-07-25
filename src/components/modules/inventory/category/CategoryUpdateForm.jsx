@@ -29,7 +29,7 @@ import CategoryGroupModal from "./CategoryGroupModal.jsx";
 import SwitchForm from "../../../form-builders/SwitchForm.jsx";
 
 function CategoryUpdateForm(props) {
-    const {groupCategoryDropdown} = props
+    const { groupCategoryDropdown } = props
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
@@ -94,14 +94,6 @@ function CategoryUpdateForm(props) {
         <>
             <Box>
                 <form onSubmit={form.onSubmit((values) => {
-                    dispatch(updateEntityData(values))
-                        .then(() => {
-                            navigate('inventory/category', { replace: true });
-                            dispatch(setInsertType('create'));
-                        })
-                        .catch((error) => {
-
-                        })
                     modals.openConfirmModal({
                         title: (
                             <Text size="md"> {t("FormConfirmationTitle")}</Text>
@@ -133,6 +125,7 @@ function CategoryUpdateForm(props) {
                                 dispatch(setEditEntityData([]))
                                 dispatch(setFetching(true))
                                 setSaveCreateLoading(false)
+                                navigate('/inventory/category', { replace: true })
                             }, 700)
                         },
                     });

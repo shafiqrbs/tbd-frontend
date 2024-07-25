@@ -107,14 +107,6 @@ function UserUpdateForm() {
 
         <Box>
             <form onSubmit={form.onSubmit((values) => {
-                dispatch(updateEntityData(values))
-                    .then(() => {
-                        navigate('/core/user', { replace: true });
-                        dispatch(setInsertType('create'));
-                    })
-                    .catch((error) => {
-
-                    })
                 modals.openConfirmModal({
                     title: (
                         <Text size="md"> {t("FormConfirmationTitle")}</Text>

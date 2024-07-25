@@ -44,12 +44,7 @@ function ProductSettingsIndex() {
             dispatch(setInsertType('create'));
             dispatch(setSearchKeyword(''));
             dispatch(setEntityNewData([]));
-            // dispatch(setCustomerFilterData({
-            //     ...masterDataFilterData,
-            //     ['name']: '',
-            //     ['mobile']: ''
-            // }));
-            navigate('/inventory/product-settings', { replace: true });
+            navigate('/inventory/product-settings');
         }
     }, [settingsId, dispatch, navigate]);
 
@@ -63,7 +58,6 @@ function ProductSettingsIndex() {
                     {configData &&
                         <>
                             <InventoryHeaderNavbar
-
                                 pageTitle={t('inventorySetting')}
                                 roles={t('Roles')}
                                 allowZeroPercentage=''

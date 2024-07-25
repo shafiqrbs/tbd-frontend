@@ -150,6 +150,7 @@ function MarketingExecutiveUpdateForm() {
                                 dispatch(setEditEntityData([]))
                                 dispatch(setFetching(true))
                                 setSaveCreateLoading(false)
+                                navigate('/core/marketing-executive', { replace: true });
                             }, 700)
                         },
                     });

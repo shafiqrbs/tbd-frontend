@@ -43,9 +43,9 @@ function UserIndex() {
                     mobile: '',
                     email: ''
                 })),
-                navigate('/core/user', { replace: true }))
+                navigate('/core/user'))
         );
-    }, [userId, dispatch, navigate, userFilterData]);
+    }, [userId, dispatch, navigate]);
 
 
     return (

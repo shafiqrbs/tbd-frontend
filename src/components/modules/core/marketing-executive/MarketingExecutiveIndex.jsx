@@ -42,12 +42,7 @@ function MarketingExecutiveIndex() {
             dispatch(setInsertType('create'));
             dispatch(setSearchKeyword(''));
             dispatch(setEntityNewData([]));
-            // dispatch(setCustomerFilterData({
-            //     ...masterDataFilterData,
-            //     ['name']: '',
-            //     ['mobile']: ''
-            // }));
-            navigate('/core/marketing-executive', { replace: true });
+            navigate('/core/marketing-executive');
         }
     }, [executiveId, dispatch, navigate]);
 

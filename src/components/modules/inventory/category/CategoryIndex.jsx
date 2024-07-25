@@ -36,7 +36,7 @@ function CategoryIndex() {
             dispatch(setInsertType('create')),
             dispatch(setSearchKeyword('')),
             dispatch(setEntityNewData([])),
-            navigate('/inventory/category', { replace: true })
+            navigate('/inventory/category')
         ))
     }, [categoryId, dispatch, navigate])
 
