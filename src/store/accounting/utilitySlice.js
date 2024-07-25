@@ -1,5 +1,6 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import {getDataWithoutParam} from "../../services/accountingApiService.js";
+import {getDataWithParamForSettingDropdown} from "../../services/utilityApiService";
 
 
 export const getTransactionModeData = createAsyncThunk("transaction-mode/data", async (value) => {

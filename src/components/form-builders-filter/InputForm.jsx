@@ -14,6 +14,7 @@ import {
 } from "../../store/core/crudSlice.js";
 import { useDispatch, useSelector } from "react-redux";
 import { setCategoryFilterData, setProductFilterData } from "../../store/inventory/crudSlice.js";
+import {setProductionSettingFilterData} from "../../store/production/crudSlice.js";
 
 function InputForm(props) {
 
@@ -27,7 +28,8 @@ function InputForm(props) {
     const userFilterData = useSelector((state) => state.crudSlice.userFilterData)
     const categoryGroupFilterData = useSelector((state) => state.crudSlice.categoryGroupFilterData)
     const productFilterData = useSelector((state) => state.inventoryCrudSlice.productFilterData)
-    const categoryFilterData = useSelector((state) => state.inventoryCrudSlice.CategoryFilterData)
+    const categoryFilterData = useSelector((state) => state.inventoryCrudSlice.categoryFilterData)
+    const productionSettingFilterData = useSelector((state) => state.productionCrudSlice.productionSettingFilterData)
 
     return (
         <>
@@ -49,14 +51,15 @@ function InputForm(props) {
                             }]
                         ,
                     ])}
-                    onChange={(e) => {
-                        if (module === 'category-group') { dispatch(setCategoryGroupFilterData({ ...categoryGroupFilterData, [name]: e.currentTarget.value })) }
-                        if (module === 'customer') { dispatch(setCustomerFilterData({ ...customerFilterData, [name]: e.currentTarget.value })) }
-                        if (module === 'vendor') { dispatch(setVendorFilterData({ ...vendorFilterData, [name]: e.currentTarget.value })) }
-                        if (module === 'user') { dispatch(setUserFilterData({ ...userFilterData, [name]: e.currentTarget.value })) }
-                        if (module === 'product') { dispatch(setProductFilterData({ ...productFilterData, [name]: e.currentTarget.value })) }
-                        if (module === 'category') { dispatch(setCategoryFilterData({ ...categoryFilterData, [name]: e.currentTarget.value })) }
-                    }}
+        onChange={(e) => {
+            if (module === 'category-group') { dispatch(setCategoryGroupFilterData({ ...categoryGroupFilterData, [name]: e.currentTarget.value })) }
+            if (module === 'customer') { dispatch(setCustomerFilterData({ ...customerFilterData, [name]: e.currentTarget.value })) }
+            if (module === 'vendor') { dispatch(setVendorFilterData({ ...vendorFilterData, [name]: e.currentTarget.value })) }
+            if (module === 'user') { dispatch(setUserFilterData({ ...userFilterData, [name]: e.currentTarget.value })) }
+            if (module === 'product') { dispatch(setProductFilterData({ ...productFilterData, [name]: e.currentTarget.value })) }
+            if (module === 'category') { dispatch(setCategoryFilterData({ ...categoryFilterData, [name]: e.currentTarget.value })) }
+            if (module === 'production-setting') { dispatch(setProductionSettingFilterData({ ...productionSettingFilterData, [name]: e.currentTarget.value })) }
+        }}
                     value={
                         module === 'category-group' ? categoryGroupFilterData[name] :
                             module === 'customer' ? customerFilterData[name] :
@@ -64,6 +67,7 @@ function InputForm(props) {
                                     module === 'user' ? userFilterData[name] :
                                         module === 'product' ? productFilterData[name] :
                                             module === 'category' ? categoryFilterData[name] :
+                                            module === 'production-setting' ? productionSettingFilterData[name] :
                                                 ''
                     }
                     id={id}
@@ -72,6 +76,7 @@ function InputForm(props) {
                             (module === 'customer' && customerFilterData[name]) ||
                             (module === 'user' && userFilterData[name]) ||
                             (module === 'product' && productFilterData[name]) ||
+                            (module === 'production-setting' && productionSettingFilterData[name]) ||
                             (module === 'vendor' && vendorFilterData[name]) ? (
                             <Tooltip label={t("Close")} withArrow bg={`red.5`}>
                                 <IconX color={`red`} size={16} opacity={0.5} onClick={() => {
@@ -98,6 +103,11 @@ function InputForm(props) {
                                     } else if (module === 'category-group') {
                                         dispatch(setCategoryGroupFilterData({
                                             ...categoryGroupFilterData,
+                                            [name]: ''
+                                        }));
+                                    } else if (module === 'production-setting') {
+                                        dispatch(setProductionSettingFilterData({
+                                            ...productionSettingFilterData,
                                             [name]: ''
                                         }));
                                     }

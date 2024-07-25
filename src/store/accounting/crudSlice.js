@@ -101,7 +101,7 @@ const crudSlice = createSlice({
         entityEditData : [],
         insertType : 'create',
         entityDataDelete : null,
-        productFilterData : {name:'',alternative_name:'',sku:'',sales_price:''},
+        accountingFilterData : {name:'',slug:''},
 
     },
     reducers : {
@@ -135,11 +135,8 @@ const crudSlice = createSlice({
         setValidationMessage : (state,action)=>{
             state.validationMessage = action.payload
         },
-        setProductFilterData : (state,action) => {
-            state.productFilterData.name = action.payload.name
-            state.productFilterData.alternative_name = action.payload.alternative_name
-            state.productFilterData.sku = action.payload.sku
-            state.productFilterData.sales_price = action.payload.sales_price
+        setAccountingFilterData : (state,action) => {
+            state.accountingFilterData.name = action.payload.name
         },
     },
 
@@ -196,6 +193,6 @@ const crudSlice = createSlice({
     }
 })
 
-export const { setFetching,setEntityNewData,setDropdownLoad,setEditEntityData,setFormLoading,setInsertType,setSearchKeyword,setDeleteMessage,setValidationData,setValidationMessage,setProductFilterData} = crudSlice.actions
+export const { setFetching,setEntityNewData,setDropdownLoad,setEditEntityData,setFormLoading,setInsertType,setSearchKeyword,setDeleteMessage,setValidationData,setValidationMessage,setAccountingFilterData} = crudSlice.actions
 
 export default crudSlice.reducer;

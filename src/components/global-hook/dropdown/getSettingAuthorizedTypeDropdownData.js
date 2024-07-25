@@ -8,7 +8,7 @@ const getSettingAuthorizedTypeDropdownData = () => {
 
     useEffect(() => {
         const value = {
-            url: 'utility/select/setting',
+            url: 'accounting/select/setting',
             param: { 'dropdown-type': 'authorised-type' }
         }
         dispatch(getSettingDropdown(value))

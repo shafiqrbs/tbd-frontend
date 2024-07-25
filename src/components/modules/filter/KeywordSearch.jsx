@@ -23,6 +23,7 @@ import {
 } from "../../../store/core/crudSlice.js";
 import FilterModel from "./FilterModel.jsx";
 import { setProductFilterData } from "../../../store/inventory/crudSlice.js";
+import { setProductionSettingFilterData } from "../../../store/production/crudSlice.js";
 
 function KeywordSearch(props) {
     const { t, i18n } = useTranslation();
@@ -38,6 +39,7 @@ function KeywordSearch(props) {
     const userFilterData = useSelector((state) => state.crudSlice.userFilterData)
     const categoryGroupFilterData = useSelector((state) => state.crudSlice.categoryGroupFilterData)
     const productFilterData = useSelector((state) => state.inventoryCrudSlice.productFilterData)
+    const productionSettingFilterData = useSelector((state) => state.productionCrudSlice.productionSettingFilterData)
 
     useHotkeys(
         [['alt+F', () => {
@@ -216,6 +218,11 @@ function KeywordSearch(props) {
                                         dispatch(setCategoryGroupFilterData({
                                             ...categoryGroupFilterData,
                                             name: ''
+                                        }));
+                                    } else if (props.module === 'production-setting') {
+                                        dispatch(setProductionSettingFilterData({
+                                            ...productionSettingFilterData,
+                                            name:''
                                         }));
                                     }
                                 }} />

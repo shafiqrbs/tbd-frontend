@@ -183,7 +183,7 @@ export const showData = async (value) => {
 export const deleteData = async (value) => {
     let data = []
     await axios({
-        method: 'delete',
+        method: 'DELETE',
         url: `${import.meta.env.VITE_API_GATEWAY_URL+value}`,
         headers: {
             "Accept": `application/json`,

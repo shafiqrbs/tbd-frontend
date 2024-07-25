@@ -54,20 +54,24 @@ function ProductIndex() {
                                 currencySymbol={configData?.currency?.symbol}
                             />
                             <Box p={'8'}>
-                                <Grid columns={24} gutter={{ base: 8 }}>
-                                    <Grid.Col span={15} >
-                                        <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
-                                            <ProductTable />
-                                        </Box>
-                                    </Grid.Col>
-                                    <Grid.Col span={9}>
-                                        {
-                                            insertType === 'create'
-                                                ? <ProductForm />
-                                                : <ProductUpdateForm />
-                                        }
-                                    </Grid.Col>
-                                </Grid>
+
+                                    {
+                                        insertType === 'create' ?
+                                            <Grid columns={24} gutter={{ base: 8 }}>
+                                                <Grid.Col span={15}>
+                                                    <Box bg={'white'} p={'xs'} className={'borderRadiusAll'}>
+                                                        <ProductTable/>
+                                                    </Box>
+                                                </Grid.Col>
+                                                <Grid.Col span={9}>
+                                                    <ProductForm/>
+                                                </Grid.Col>
+                                            </Grid>
+                                            :
+                                            <Box>
+                                                <ProductUpdateForm />
+                                            </Box>
+                                    }
                             </Box>
                         </>
                     }

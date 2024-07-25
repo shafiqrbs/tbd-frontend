@@ -115,7 +115,7 @@ function ProductSettingsTable() {
                                             <Menu.Item
                                                 onClick={() => {
                                                     dispatch(setInsertType('update'))
-                                                    dispatch(editEntityData('inventory/product-settings/' + data.id))
+                                                    dispatch(editEntityData('inventory/settings/' + data.id))
                                                     dispatch(setFormLoading(true))
                                                     navigate(`/inventory/product-settings/${data.id}`)
                                                 }}

@@ -44,7 +44,6 @@ function CustomerViewDrawer(props) {
             <Drawer.Root title={t('CustomerDetailsData')} opened={viewDrawer} position="right" onClose={closeDrawer} size={'30%'} >
                 <Drawer.Overlay />
                 <Drawer.Content>
-
                     <Drawer.Header>
                         <Drawer.Title>{t('CustomerDetailsData')}</Drawer.Title>
                         <ActionIcon

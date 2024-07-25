@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {getSettingDropdown,} from "../../../store/utility/utilitySlice.js";
 import {getCategoryDropdown} from "../../../store/inventory/utilitySlice.js";
 
 const getSettingCategoryDropdownData = () => {

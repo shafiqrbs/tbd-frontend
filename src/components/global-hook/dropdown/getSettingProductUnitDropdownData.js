@@ -8,7 +8,7 @@ const getSettingProductUnitDropdownData = () => {
 
     useEffect(() => {
         const value = {
-            url: 'utility/select/product-unit',
+            url: 'inventory/select/product-unit',
         }
         dispatch(getProductUnitDropdown(value))
     }, [dispatch]);

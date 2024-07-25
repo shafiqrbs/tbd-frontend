@@ -42,7 +42,8 @@ function HeadGroupTable(props) {
         const value = {
             url: 'accounting/account-head',
             param: {
-                mode: 'mother-account',
+                group: 'head',
+                term: searchKeyword,
                 page: page,
                 offset: perPage
             }
@@ -54,7 +55,7 @@ function HeadGroupTable(props) {
 
         <>
             <Box pl={`xs`} pr={8} pt={'6'} pb={'4'} className={'boxBackground borderRadiusAll border-bottom-none'} >
-                <KeywordSearch module={'customer'} />
+                <KeywordSearch module={'account-head'} />
             </Box>
             <Box className={'borderRadiusAll border-top-none'}>
                 <DataTable
@@ -74,7 +75,7 @@ function HeadGroupTable(props) {
                             render: (item) => (indexData.data.indexOf(item) + 1)
                         },
                         { accessor: 'name', title: t('Name') },
-                        { accessor: 'parent_name', title: t('NatureOfGroup') },
+                        { accessor: 'mother_name', title: t('NatureOfGroup') },
                         { accessor: 'code', title: t('AccountCode') },
                         {
                             accessor: "action",
@@ -90,10 +91,9 @@ function HeadGroupTable(props) {
                                         </Menu.Target>
                                         <Menu.Dropdown>
                                             <Menu.Item
-                                                // href={`/inventory/sales/edit/${data.id}`}
                                                 onClick={() => {
                                                     dispatch(setInsertType('update'))
-                                                    dispatch(editEntityData('accounting/transaction-mode/' + data.id))
+                                                    dispatch(editEntityData(`accounting/account-head/${data.id}`))
                                                     dispatch(setFormLoading(true))
                                                     navigate(`/accounting/head-group/${data.id}`)
                                                 }}
@@ -102,7 +102,6 @@ function HeadGroupTable(props) {
                                             </Menu.Item>
                                             <Menu.Item
                                                 onClick={() => {
-                                                    console.log('ok')
                                                     setHeadGroupDrawer(true)
                                                     // dispatch(showEntityData('core/customer/' + data.id))
                                                 }}

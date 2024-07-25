@@ -8,7 +8,7 @@ const getSettingAccountTypeDropdownData = () => {
 
     useEffect(() => {
         const value = {
-            url: 'utility/select/setting',
+            url: 'accounting/select/setting',
             param: { 'dropdown-type': 'account-type' }
         }
         dispatch(getSettingDropdown(value))

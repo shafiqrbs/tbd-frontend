@@ -25,7 +25,7 @@ import VoucherIndex from "./components/modules/accounting/voucher-entry/VoucherI
 import HeadGroupIndex from "./components/modules/accounting/head-group/HeadGroupIndex";
 import HeadSubGroupIndex from "./components/modules/accounting/head-subgroup/HeadSubGroupIndex";
 import LedgerIndex from "./components/modules/accounting/ledger/LedgerIndex";
-import ProductionIndex from './components/modules/inventory/production/ProductionIndex.jsx';
+import ProductionIndex from './components/modules/production/items/ProductionIndex.jsx';
 import InhouseIndex from './components/modules/inventory/production-inhouse/InhouseIndex.jsx';
 import ReceipeIndex from './components/modules/inventory/receipe/ReceipeIndex.jsx';
 import SalesEdit from "./components/modules/inventory/sales/SalesEdit.jsx";
@@ -38,6 +38,8 @@ import CustomerSettingsIndex from './components/modules/core/customer-settings/C
 import LocationIndex from './components/modules/core/location/LocationIndex.jsx';
 import MarketingExecutiveIndex from './components/modules/core/marketing-executive/MarketingExecutiveIndex.jsx';
 import ProductSettingsIndex from './components/modules/inventory/product-settings/ProductSettingsIndex.jsx';
+import ProductionSettingIndex from "./components/modules/production/settings/ProductionSettingIndex.jsx";
+import RecipeItemsIndex from "./components/modules/production/recipe-items/RecipeItemsIndex.jsx";
 
 function AppRoute() {
 
@@ -82,25 +84,33 @@ function AppRoute() {
                     <Route path="category-group" element={<CategoryGroupIndex />} />
                     <Route path="category-group/:categoryGroupId" element={<CategoryGroupIndex />} />
                     <Route path="config" element={<ConfigurationIndex />} />
-                    <Route path="production" element={<ProductionIndex />} />
-                    <Route path="production-inhouse" element={<InhouseIndex />} />
-                    <Route path="production-receipe" element={<ReceipeIndex />} />
+                    {/*<Route path="production" element={<RecipeItemsIndex />} />*/}
+                    {/*<Route path="production-inhouse" element={<InhouseIndex />} />*/}
+                    {/*<Route path="production-receipe" element={<ReceipeIndex />} />*/}
                     <Route path="invoice-batch" element={<InvoiceBatchIndex />} />
                     <Route path="product-settings" element={<ProductSettingsIndex />} />
                     <Route path="product-settings/:settingsId" element={<ProductSettingsIndex />} />
                 </Route>
+
+                <Route path="/production/">
+                    <Route path="items" element={<RecipeItemsIndex />} />
+                    <Route path="setting" element={<ProductionSettingIndex />} />
+                    <Route path="setting/:id" element={<ProductionSettingIndex />} />
+                </Route>
+
                 <Route path="/domain/">
                     <Route path="domain-index" element={<DomainIndex />} />
                     <Route path="domain-index/:domainId" element={<DomainIndex />} />
                 </Route>
+
                 <Route path="/accounting/">
                     <Route path="voucher-entry" element={<VoucherIndex />} />
                     <Route path="ledger" element={<LedgerIndex />} />
                     <Route path="ledger/:ledgerId" element={<LedgerIndex />} />
-                    <Route path="head-group" element={<HeadGroupIndex />} />
-                    <Route path="head-group/:headGroupId" element={<HeadGroupIndex />} />
                     <Route path="head-subgroup" element={<HeadSubGroupIndex />} />
                     <Route path="head-subgroup/:headSubGroupId" element={<HeadSubGroupIndex />} />
+                    <Route path="head-group" element={<HeadGroupIndex />} />
+                    <Route path="head-group/:id" element={<HeadGroupIndex />} />
                     <Route path="transaction-mode" element={<TransactionModeIndex />} />
                     <Route path="transaction-mode/:transactionModeId" element={<TransactionModeIndex />} />
                     <Route path="modalIndex" element={<SampleModalIndex />} />

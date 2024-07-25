@@ -9,38 +9,39 @@ import { setSearchKeyword } from "../../../../store/core/crudSlice";
 import { setInsertType } from "../../../../store/generic/crudSlice";
 import getConfigData from "../../../global-hook/config-data/getConfigData.js";
 import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress.js";
-import HeadGroupTable from "./HeadSubGroupTable";
-import AccountingHeaderNavbar from "../AccountingHeaderNavbar";
 import HeadSubGroupForm from "./HeadSubGroupForm";
 import HeadSubGroupUpdateFrom from "./HeadSubGroupUpdateFrom";
+import HeadSubGroupTable from "./HeadSubGroupTable";
+import AccountingHeaderNavbar from "../AccountingHeaderNavbar";
 import { useNavigate, useParams } from "react-router-dom";
 import { editEntityData, setEntityNewData, setFormLoading } from "../../../../store/accounting/crudSlice.js";
-function HeadGroupIndex() {
+function HeadSubGroupIndex() {
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const insertType = useSelector((state) => state.crudSlice.insertType)
     const configData = getConfigData()
     const progress = getLoadingProgress()
-    const { headSubGroupId } = useParams()
+
+    const { id } = useParams()
     const navigate = useNavigate()
 
     useEffect(() => {
-        headSubGroupId ? (
+        id ? (
             dispatch(setInsertType('update')),
-            dispatch(editEntityData(`accounting/head-subgroup/${headSubGroupId}`)),
+            dispatch(editEntityData(`accounting/account-head/${id}`)),
             dispatch(setFormLoading(true))
         ) : (
             dispatch(setInsertType('create')),
             dispatch(setSearchKeyword('')),
+<<<<<<< HEAD
+            dispatch(setEntityNewData([])),
+            navigate('/accounting/head-group', { replace: true })
+=======
             navigate('/accounting/head-subgroup')
+>>>>>>> 174c4057cd5379e739f259cefc7743e9bccd0be9
         );
-    }, [headSubGroupId, dispatch, navigate])
-
-    useEffect(() => {
-        dispatch(setInsertType('create'))
-        dispatch(setSearchKeyword(''))
-    }, [])
-
+    }, [id, dispatch, navigate])
+    
     return (
         <>
             {progress !== 100 &&
@@ -49,7 +50,7 @@ function HeadGroupIndex() {
                 <>
                     <Box>
                         <AccountingHeaderNavbar
-                            pageTitle={t('ManageAccountSubHeadGroup')}
+                            pageTitle={t('ManageAccountHeadGroup')}
                             roles={t('Roles')}
                             allowZeroPercentage=''
                             currencySymbol=''
@@ -58,7 +59,7 @@ function HeadGroupIndex() {
                             <Grid columns={24} gutter={{ base: 8 }}>
                                 <Grid.Col span={15} >
                                     <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
-                                        <HeadGroupTable />
+                                        <HeadSubGroupTable />
                                     </Box>
                                 </Grid.Col>
                                 <Grid.Col span={9}>
@@ -75,4 +76,4 @@ function HeadGroupIndex() {
     );
 }
 
-export default HeadGroupIndex;
+export default HeadSubGroupIndex;
