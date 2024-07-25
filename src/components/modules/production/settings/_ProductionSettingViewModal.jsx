@@ -11,7 +11,7 @@ import '@mantine/dates/styles.css';
 import 'mantine-react-table/styles.css';
 import {useDispatch, useSelector} from "react-redux";
 
-function ProductionSettingViewModal(props) {
+function _ProductionSettingViewModal(props) {
     const {
         productionSettingView,
         setProductionSettingViewModal,
@@ -72,4 +72,4 @@ function ProductionSettingViewModal(props) {
     );
 }
 
-export default ProductionSettingViewModal;
+export default _ProductionSettingViewModal;

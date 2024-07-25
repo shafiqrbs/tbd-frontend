@@ -27,10 +27,10 @@ import KeywordSearch from "../../filter/KeywordSearch";
 import { modals } from "@mantine/modals";
 import tableCss from "../../../../assets/css/Table.module.css";
 import KeywordDateRangeSearch from "../../filter/KeywordDateRangeSearch.jsx";
-import ReceipeForm from "./ReceipeForm.jsx";
-import ReceipeAddItem from "./ReceipeAddItem.jsx";
+import _RecipeForm from "./_RecipeForm.jsx";
+import __RecipeAddItem from "./__RecipeAddItem.jsx";
 
-function ReceipeTable() {
+function _RecipeTable() {
 
     const dispatch = useDispatch();
     const { t, i18n } = useTranslation();
@@ -96,7 +96,7 @@ function ReceipeTable() {
     return (
         <>
             <Box pb={'xs'} >
-                <ReceipeAddItem />
+                <__RecipeAddItem />
             </Box>
             <Box className={'borderRadiusAll'} >
                 <DataTable
@@ -212,4 +212,4 @@ function ReceipeTable() {
     );
 }
 
-export default ReceipeTable;
+export default _RecipeTable;

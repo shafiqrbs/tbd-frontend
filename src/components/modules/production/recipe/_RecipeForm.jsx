@@ -27,7 +27,7 @@ import { getBrandDropdown, getCategoryDropdown } from "../../../../store/invento
 import { setFetching, storeEntityData } from "../../../../store/inventory/crudSlice.js";
 import { DateInput, DatePicker } from "@mantine/dates";
 
-function ReceipeForm() {
+function _RecipeForm() {
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
@@ -876,4 +876,4 @@ function ReceipeForm() {
     );
 }
 
-export default ReceipeForm;
+export default _RecipeForm;

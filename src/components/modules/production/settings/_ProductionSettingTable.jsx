@@ -25,9 +25,9 @@ import KeywordSearch from "../common/KeywordSearch.jsx";
 import {modals} from "@mantine/modals";
 import {notifications} from "@mantine/notifications";
 import tableCss from "../../../../assets/css/Table.module.css";
-import ProductionSettingViewModal from "./ProductionSettingViewModal.jsx";
+import _ProductionSettingViewModal from "./_ProductionSettingViewModal.jsx";
 
-function ProductionSettingTable() {
+function _ProductionSettingTable() {
 
     const dispatch = useDispatch();
     const {t, i18n} = useTranslation();
@@ -187,7 +187,7 @@ function ProductionSettingTable() {
                 />
             </Box>
             {productionSettingView &&
-                <ProductionSettingViewModal
+                <_ProductionSettingViewModal
                     productionSettingView={productionSettingView}
                     setProductionSettingViewModal={setProductionSettingViewModal}
                     productionSettingData={productionSettingData}
@@ -197,4 +197,4 @@ function ProductionSettingTable() {
     );
 }
 
-export default ProductionSettingTable;
+export default _ProductionSettingTable;

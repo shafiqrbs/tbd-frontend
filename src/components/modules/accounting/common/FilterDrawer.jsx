@@ -5,7 +5,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import { setFetching } from "../../../../store/production/crudSlice.js";
 import { useDispatch } from "react-redux";
-import ProductionSettingFilterForm from "../settings/ProductionSettingFilterForm.jsx";
+import ProductionSettingFilterForm from "../settings/__ProductionSettingFilterForm.jsx";
 
 function FilterDrawer(props) {
     const { t, i18n } = useTranslation();

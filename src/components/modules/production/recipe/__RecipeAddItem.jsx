@@ -51,7 +51,7 @@ import tableCss from "../../../../assets/css/Table.module.css";
 // import FilterModel from "./FilterModel.jsx";
 // import { setProductFilterData } from "../../../store/inventory/crudSlice.js";
 
-function ReceipeAddItem(props) {
+function __RecipeAddItem(props) {
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const { isOnline } = useOutletContext();
@@ -240,4 +240,4 @@ function ReceipeAddItem(props) {
     );
 }
 
-export default ReceipeAddItem;
+export default __RecipeAddItem;

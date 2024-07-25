@@ -5,7 +5,8 @@ import {
 import { useTranslation } from 'react-i18next';
 import { setFetching } from "../../../../store/production/crudSlice.js";
 import { useDispatch } from "react-redux";
-import ProductionSettingFilterForm from "../settings/ProductionSettingFilterForm.jsx";
+import __ProductionSettingFilterForm from "../settings/__ProductionSettingFilterForm.jsx";
+import __RecipeItemFilterForm from "../recipe-items/__RecipeItemFilterForm.jsx";
 
 function FilterDrawer(props) {
     const { t, i18n } = useTranslation();
@@ -19,7 +20,8 @@ function FilterDrawer(props) {
     return (
 
         <Drawer opened={props.filterDrawer} position="right" onClose={closeModel} title={t('FilterData')}>
-            {props.module === 'production-setting' && <ProductionSettingFilterForm module={props.module} />}
+            {props.module === 'production-setting' && <__ProductionSettingFilterForm module={props.module} />}
+            {props.module === 'recipe-item' && <__RecipeItemFilterForm module={props.module} />}
             <Button
                 id={'submit'}
                 mt={8}
