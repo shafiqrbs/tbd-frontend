@@ -11,12 +11,23 @@ export const getSettingTypeDropdown = createAsyncThunk("setting-type-dropdown", 
     }
 });
 
+export const getMaterialProductDropdown = createAsyncThunk("material-product/select", async (value) => {
+    try {
+        const response = getDataWithoutParam(value);
+        return response;
+    } catch (error) {
+        console.log('error', error.message);
+        throw error;
+    }
+});
+
 const utilitySlice = createSlice({
     name : "utility",
     initialState : {
         isLoading : true,
         fetching : true,
         settingTypeDropdownData : [],
+        materialProductDropdownData : [],
     },
     reducers : {
         setFetching : (state,action) => {
@@ -27,6 +38,9 @@ const utilitySlice = createSlice({
     extraReducers : (builder) => {
         builder.addCase(getSettingTypeDropdown.fulfilled, (state, action) => {
             state.settingTypeDropdownData = action.payload
+        })
+        builder.addCase(getMaterialProductDropdown.fulfilled, (state, action) => {
+            state.materialProductDropdownData = action.payload
         })
 
     }

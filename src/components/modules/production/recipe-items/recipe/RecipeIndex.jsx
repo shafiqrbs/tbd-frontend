@@ -10,17 +10,12 @@ import { useDispatch, useSelector } from "react-redux";
 
 import _RecipeTable from "./_RecipeTable.jsx";
 import _RecipeForm from "./_RecipeForm.jsx";
-import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress.js";
-import getConfigData from "../../../global-hook/config-data/getConfigData.js";
-import ProductionHeaderNavbar from "../common/ProductionHeaderNavbar.jsx";
+import { getLoadingProgress } from "../../../../global-hook/loading-progress/getLoadingProgress.js";
+import ProductionHeaderNavbar from "../../common/ProductionHeaderNavbar.jsx";
 
 function RecipeIndex() {
     const { t, i18n } = useTranslation();
-    const insertType = useSelector((state) => state.crudSlice.insertType)
-
     const progress = getLoadingProgress()
-    const configData = getConfigData()
-
 
     return (
         <>
@@ -43,7 +38,7 @@ function RecipeIndex() {
                                 </Box>
                             </Grid.Col>
                             <Grid.Col span={9} >
-                                <_RecipeForm />
+                                {/*<_RecipeForm />*/}
                             </Grid.Col>
                         </Grid>
                     </Box>

@@ -5,122 +5,59 @@ import {
     Box,
     ActionIcon,
     Text,
-    Table,
     Menu,
     rem
 } from "@mantine/core";
+import { useTranslation } from "react-i18next";
 import {
-    IconEye,
-    IconEdit,
-    IconTrash,
-    IconDotsVertical,
-    IconTrashX
+    IconTrashX,
+    IconDotsVertical
 } from "@tabler/icons-react";
 import { DataTable } from 'mantine-datatable';
 import { useDispatch, useSelector } from "react-redux";
-import { useTranslation } from 'react-i18next';
 import {
     editEntityData,
     getIndexEntityData,
-    setFetching,
-    setFormLoading,
+    setFetching, setFormLoading,
     setInsertType,
-    showEntityData,
-    deleteEntityData
-} from "../../../../store/core/crudSlice.js";
-import KeywordSearch from "../../filter/KeywordSearch";
+    showEntityData, deleteEntityData
+} from "../../../../../store/production/crudSlice.js";
 import { modals } from "@mantine/modals";
+import tableCss from "../../../../../assets/css/Table.module.css";
+import __RecipeAddItem from "./__RecipeAddItem.jsx";
 
-import tableCss from "../../../../assets/css/Table.module.css";
+function _RecipeTable() {
 
-function ProductionTable() {
     const dispatch = useDispatch();
     const { t, i18n } = useTranslation();
     const { isOnline, mainAreaHeight } = useOutletContext();
-    const height = mainAreaHeight - 120; //TabList height 104
+    const tableHeight = mainAreaHeight - 120; //TabList height 104
+    const height = mainAreaHeight - 314; //TabList height 104
 
     const perPage = 50;
     const [page, setPage] = useState(1);
-    const [productViewModel, setProductViewModel] = useState(false)
 
-    const fetching = useSelector((state) => state.crudSlice.fetching)
-    const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword)
-    const indexData = useSelector((state) => state.crudSlice.indexEntityData)
-    const productFilterData = useSelector((state) => state.inventoryCrudSlice.productFilterData)
-
-
-
-
+    const fetching = useSelector((state) => state.productionCrudSlice.fetching)
+    const indexData = useSelector((state) => state.productionCrudSlice.indexEntityData)
 
     useEffect(() => {
         const value = {
-            url: 'inventory/product',
+            url: 'production/recipe',
             param: {
-                term: searchKeyword,
-                name: productFilterData.name,
-                alternative_name: productFilterData.alternative_name,
-                sku: productFilterData.sku,
-                sales_price: productFilterData.sales_price,
                 page: page,
                 offset: perPage
             }
         }
         dispatch(getIndexEntityData(value))
     }, [fetching]);
-    const data = [
-        {
-            'item_index': 0,
-            'item_name': 'Printed Aluminium Blister Foil (20 Micron)',
-            'item_uom': 'kg',
-            'item_license_date': '01-01-2022',
-            'item_initiate_date': '01-01-2022',
-            'item_wastage': '0%',
-            'item_quantity': '1.12',
-            'item_wastage_quantity': '0.02',
-            'item_wastage_amount': '9.00',
-            'item_material_value': '611.75',
-            'item_value_added': '239.25',
-            'item_total': '860',
-            'item_status': 'Amendment',
-        },
-        {
-            'item_index': 1,
-            'item_name': 'Printed Aluminium Blister Foil (25 Micron)',
-            'item_uom': 'kg',
-            'item_license_date': '01-01-2022',
-            'item_initiate_date': '01-01-2022',
-            'item_wastage': '0%',
-            'item_quantity': '1.12',
-            'item_wastage_quantity': '0.02',
-            'item_wastage_amount': '9.00',
-            'item_material_value': '611.75',
-            'item_value_added': '239.25',
-            'item_total': '860',
-            'item_status': 'Amendment',
-        },
-        {
-            'item_index': 2,
-            'item_name': 'Printed Aluminium Blister Foil (30 Micron)',
-            'item_uom': 'kg',
-            'item_license_date': '01-01-2022',
-            'item_initiate_date': '01-01-2022',
-            'item_wastage': '0%',
-            'item_quantity': '1.12',
-            'item_wastage_quantity': '0.02',
-            'item_wastage_amount': '9.00',
-            'item_material_value': '611.75',
-            'item_value_added': '239.25',
-            'item_total': '860',
-            'item_status': 'Amendment',
-        }
-    ]
+
+
     return (
         <>
-
-            <Box pl={`xs`} pb={'xs'} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'} >
-                <KeywordSearch module={'product'} />
+            <Box pb={'xs'} >
+                <__RecipeAddItem />
             </Box>
-            <Box className={'borderRadiusAll'}>
+            <Box className={'borderRadiusAll'} >
                 <DataTable
                     classNames={{
                         root: tableCss.root,
@@ -129,31 +66,36 @@ function ProductionTable() {
                         footer: tableCss.footer,
                         pagination: tableCss.pagination,
                     }}
-                    records={data}
+                    records={indexData.data}
                     columns={[
                         {
-                            accessor: 'item_index',
+                            accessor: 'index',
                             title: t('S/N'),
                             textAlignment: 'right',
-                            render: index => (index.item_index + 1)
+                            render: (item) => (indexData.data.indexOf(item) + 1)
                         },
-                        { accessor: 'item_name', title: t("Item") },
-                        { accessor: 'item_uom', title: t("Uom") },
-                        { accessor: 'item_license_date', title: t("LicenseDate") },
-                        { accessor: 'item_initiate_date', title: t("InitiateDate") },
-                        { accessor: 'item_wastage', title: t("Wastage") },
-                        { accessor: 'item_quantity', title: t("Quantity") },
-                        { accessor: 'item_wastage_quantity', title: t("WastageQuantity") },
-                        { accessor: 'item_wastage_amount', title: t("WastageAmount") },
-                        { accessor: 'item_material_value', title: t("MaterialValue") },
-                        { accessor: 'item_value_added', title: t("ValueAdded") },
-                        { accessor: 'item_total', title: t("Total") },
-                        { accessor: 'item_status', title: t("Status") },
+                        { accessor: 'product_name', title: t("Item") },
+                        { accessor: 'unit_name', title: t("Uom") },
+                        { accessor: 'quantity', title: t("Quantity"),textAlign:'center' },
+                        { accessor: 'price', title: t("Price"),textAlign:'center' },
+                        { accessor: 'sub_total', title: t("SubTotal"),textAlign:'center' },
+                        { accessor: 'wastage_percent', title: t("Wastage%"),textAlign:'center' },
+                        { accessor: 'wastage_quantity', title: t("WastageQuantity"),textAlign:'center' },
+                        { accessor: 'wastage_amount', title: t("WastageAmount"),textAlign:'center' },
+                        {
+                            accessor: 'status',
+                            title: t("Status"),
+                            render: (item) => (
+                                <>
+                                    {item.status==1?'Active':'Inactive'}
+                                </>
+                            )
+                        },
                         {
                             accessor: "action",
                             title: t("Action"),
                             textAlign: "right",
-                            render: (datas) => (
+                            render: (data) => (
                                 <Group gap={4} justify="right" wrap="nowrap">
                                     <Menu position="bottom-end" offset={3} withArrow trigger="hover" openDelay={100} closeDelay={400}>
                                         <Menu.Target>
@@ -163,10 +105,9 @@ function ProductionTable() {
                                         </Menu.Target>
                                         <Menu.Dropdown>
                                             <Menu.Item
-                                                // href={`/inventory/sales/edit/${data.id}`}
                                                 onClick={() => {
                                                     dispatch(setInsertType('update'))
-                                                    dispatch(editEntityData('inventory/product/' + data.id))
+                                                    dispatch(editEntityData('inventory/sales/' + data.id))
                                                     dispatch(setFormLoading(true))
                                                 }}
                                             >
@@ -176,8 +117,7 @@ function ProductionTable() {
                                             <Menu.Item
                                                 href={``}
                                                 onClick={() => {
-                                                    setProductViewModel(true)
-                                                    dispatch(showEntityData('inventory/product/' + data.id))
+                                                    setSalesViewData(data)
                                                 }}
                                                 target="_blank"
                                                 component="a"
@@ -204,7 +144,7 @@ function ProductionTable() {
                                                         labels: { confirm: 'Confirm', cancel: 'Cancel' },
                                                         onCancel: () => console.log('Cancel'),
                                                         onConfirm: () => {
-                                                            dispatch(deleteEntityData('inventory/product/' + data.id))
+                                                            dispatch(deleteEntityData('vendor/' + data.id))
                                                             dispatch(setFetching(true))
                                                         },
                                                     });
@@ -230,16 +170,12 @@ function ProductionTable() {
                     }}
                     loaderSize="xs"
                     loaderColor="grape"
-                    height={height}
+                    height={tableHeight}
                     scrollAreaProps={{ type: 'never' }}
                 />
             </Box>
-            {/* {
-                productViewModel &&
-                <ProductViewModel productViewModel={productViewModel} setProductViewModel={setProductViewModel} />
-            } */}
         </>
     );
 }
 
-export default ProductionTable;
+export default _RecipeTable;

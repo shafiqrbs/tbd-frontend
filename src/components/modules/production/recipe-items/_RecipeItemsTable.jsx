@@ -73,14 +73,31 @@ function _RecipeItemsTable() {
                         { accessor: 'unit_name', title: t("Uom") },
                         { accessor: 'license_date', title: t("LicenseDate") },
                         { accessor: 'initiate_date', title: t("InitiateDate") },
-                        { accessor: 'waste_amount', title: t("Wastage") },
-                        { accessor: 'quantity', title: t("Quantity") },
-                        { accessor: 'waste_percent', title: t("WastageQuantity") },
-                        { accessor: 'waste_amount', title: t("WastageAmount") },
-                        { accessor: 'material_amount', title: t("MaterialValue") },
-                        { accessor: 'value_added_amount', title: t("ValueAdded") },
-                        { accessor: 'reminig_quantity', title: t("Total") },
-                        { accessor: 'status', title: t("Status") },
+                        { accessor: 'waste_percent', title: t("Wastage%"),textAlign:"center"},
+                        { accessor: 'quantity', title: t("Quantity"),textAlign:'center' },
+                        {
+                            accessor: 'total',
+                            title: t("WastageQuantity"),
+                            textAlign:'center',
+                            render : (item) => (
+                                <>
+                                    {item.quantity && item.waste_percent ? ((Number(item.quantity)*Number(item.waste_percent))/100).toFixed(2) : "0.00"}
+                                </>
+                            )
+                        },
+                        { accessor: 'waste_amount', title: t("WastageAmount"),textAlign:'center' },
+                        { accessor: 'material_amount', title: t("MaterialValue"),textAlign:'center' },
+                        { accessor: 'value_added_amount', title: t("ValueAdded"),textAlign:'center' },
+                        { accessor: 'sub_total', title: t("Total"),textAlign:'center' },
+                        {
+                            accessor: 'status',
+                            title: t("Status"),
+                            render: (item) => (
+                                <>
+                                    {item.status==1?'Active':'Inactive'}
+                                </>
+                            )
+                        },
                         {
                             accessor: "action",
                             title: t("Action"),

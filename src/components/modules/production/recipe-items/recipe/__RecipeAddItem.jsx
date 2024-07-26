@@ -1,96 +1,55 @@
-import React, { useState } from "react";
-import { Form, useOutletContext } from "react-router-dom";
+import React, {useEffect, useState} from "react";
+import {useOutletContext, useParams} from "react-router-dom";
 import {
     rem,
     Grid,
-    Tooltip,
-    TextInput,
-    ActionIcon,
     Box,
-    NumberInput,
     Button,
-    Flex,
     Text,
-    Popover,
-    Fieldset
 } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
-import {
-    IconFilter,
-    IconInfoCircle,
-    IconRestore,
-    IconSearch,
-    IconX,
-    IconDeviceFloppy,
-    IconBarcode,
-    IconCoinMonero,
-    IconSortAscendingNumbers,
-    IconPercentage,
-    IconCurrency,
-    IconPlusMinus,
-    IconSum,
-    IconPlus,
-    IconRefreshDot
-} from "@tabler/icons-react";
 import { useHotkeys } from "@mantine/hooks";
-import { useDispatch, useSelector } from "react-redux";
-import SelectForm from "../../../form-builders/SelectForm";
-import { hasLength, isNotEmpty, useForm } from "@mantine/form";
-import InputNumberForm from "../../../form-builders/InputNumberForm.jsx";
-import SelectServerSideForm from "../../../form-builders/SelectServerSideForm.jsx";
-import InputButtonForm from "../../../form-builders/InputButtonForm.jsx";
-import InputForm from "../../../form-builders/InputForm.jsx";
-import { DataTable } from "mantine-datatable";
-import tableCss from "../../../../assets/css/Table.module.css";
-// import {
-//     setCustomerFilterData,
-//     setFetching,
-//     setSearchKeyword, setUserFilterData,
-//     setVendorFilterData
-// } from "../../../store/core/crudSlice.js";
-// import FilterModel from "./FilterModel.jsx";
-// import { setProductFilterData } from "../../../store/inventory/crudSlice.js";
+import { useDispatch } from "react-redux";
+import SelectForm from "../../../../form-builders/SelectForm.jsx";
+import { isNotEmpty, useForm } from "@mantine/form";
+import InputForm from "../../../../form-builders/InputForm.jsx";
+import getProRecipeMaterialProductDropdownData
+    from "../../../../global-hook/dropdown/getProRecipeMaterialProductDropdownData.js";
+import {storeEntityData,setFetching} from "../../../../../store/production/crudSlice.js";
+import {notifications} from "@mantine/notifications";
+import {IconCheck} from "@tabler/icons-react";
 
-function __RecipeAddItem(props) {
+function __RecipeAddItem() {
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const { isOnline } = useOutletContext();
+    const {id} = useParams();
 
-    const [searchKeywordTooltip, setSearchKeywordTooltip] = useState(false)
-    const [filterModel, setFilterModel] = useState(false)
-
-    const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword)
-    const customerFilterData = useSelector((state) => state.crudSlice.customerFilterData)
-    const vendorFilterData = useSelector((state) => state.crudSlice.vendorFilterData)
-    const userFilterData = useSelector((state) => state.crudSlice.userFilterData)
-    const productFilterData = useSelector((state) => state.inventoryCrudSlice.productFilterData)
-
-    const [productTypeData, setProductTypeData] = useState(null);
-
+    const [productData, setProductData] = useState(null);
+    const productMaterialDropdown = getProRecipeMaterialProductDropdownData()
 
     const form = useForm({
         initialValues: {
-            product_type_id: '',
-            category_id: '',
-            unit_id: '',
-            name: '',
-            alternative_name: '',
-            barcode: '',
-            sku: '',
-            brand_id: '',
-            opening_quantity: '',
-            sales_price: '',
-            purchase_price: '',
-            min_quantity: '',
-            reorder_quantity: '',
-            status: true
+            product_id: '',
+            price: '',
+            quantity: '',
+            percent: '',
         },
         validate: {
-            product_type_id: isNotEmpty(),
-            category_id: isNotEmpty(),
-            unit_id: isNotEmpty(),
-            name: hasLength({ min: 2, max: 20 }),
-            sales_price: (value) => {
+            product_id: isNotEmpty(),
+            price: (value) => {
+                const isNumberOrFractional = /^-?\d+(\.\d+)?$/.test(value);
+                if (!isNumberOrFractional) {
+                    return true;
+                }
+            },
+            quantity: (value) => {
+                const isNumberOrFractional = /^-?\d+(\.\d+)?$/.test(value);
+                if (!isNumberOrFractional) {
+                    return true;
+                }
+            },
+            percent: (value) => {
                 const isNumberOrFractional = /^-?\d+(\.\d+)?$/.test(value);
                 if (!isNumberOrFractional) {
                     return true;
@@ -99,9 +58,27 @@ function __RecipeAddItem(props) {
         }
     })
 
+
+    useEffect(() => {
+        const storedProducts = localStorage.getItem('core-products');
+        const localProducts = storedProducts ? JSON.parse(storedProducts) : [];
+
+        const filteredProducts = localProducts.filter(product => product.id === Number(form.values.product_id));
+
+        if (filteredProducts.length > 0) {
+            const selectedProduct = filteredProducts[0];
+
+            form.setFieldValue('price', selectedProduct.purchase_price);
+        } else {
+            // document.getElementById('product_id').focus()
+            form.setFieldValue('price', '');
+        }
+    }, [form.values.product_id]);
+
+
     useHotkeys(
-        [['alt+F', () => {
-            document.getElementById('SearchKeyword').focus();
+        [['alt+n', () => {
+            document.getElementById('product_id').focus()
         }]
         ], []
     );
@@ -114,38 +91,38 @@ function __RecipeAddItem(props) {
                     <Grid.Col span={24} >
                         <Box bg={'white'}  >
                             <form onSubmit={form.onSubmit((values) => {
+                                values.item_id = id
 
-                                if (!values.barcode && !values.product_id) {
-                                    form.setFieldError('barcode', true);
-                                    form.setFieldError('product_id', true);
-                                    setTimeout(() => { }, 1000)
-                                } else {
-
-                                    const cardProducts = localStorage.getItem('temp-sales-products');
-                                    const myCardProducts = cardProducts ? JSON.parse(cardProducts) : [];
-                                    const storedProducts = localStorage.getItem('user-products');
-                                    const localProducts = storedProducts ? JSON.parse(storedProducts) : [];
-
-                                    if (values.product_id && !values.barcode) {
-                                        if (!allowZeroPercentage) {
-                                            showNotification({
-                                                color: 'pink',
-                                                title: t('WeNotifyYouThat'),
-                                                message: t('ZeroQuantityNotAllow'),
-                                                autoClose: 1500,
-                                                loading: true,
-                                                withCloseButton: true,
-                                                position: 'top-center',
-                                                style: { backgroundColor: 'mistyrose' },
-                                            });
-                                        } else {
-                                            // setFocusIntoProductSearch(true)
-                                            handleAddProductByProductId(values, myCardProducts, localProducts);
-                                        }
-                                    } else if (!values.product_id && values.barcode) {
-                                        // setFocusIntoProductSearch(true)
-                                        handleAddProductByBarcode(values, myCardProducts, localProducts);
+                                if (id) {
+                                    const data = {
+                                        url: 'production/recipe',
+                                        data: values
                                     }
+                                    dispatch(storeEntityData(data))
+
+                                    notifications.show({
+                                        color: 'teal',
+                                        title: t('CreateSuccessfully'),
+                                        icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
+                                        loading: false,
+                                        autoClose: 700,
+                                        style: { backgroundColor: 'lightgray' },
+                                    });
+
+                                    setTimeout(() => {
+                                        form.reset()
+                                        setProductData(null)
+                                        dispatch(setFetching(true))
+                                    }, 500)
+                                } else {
+                                    notifications.show({
+                                        color: 'red',
+                                        title: t('ProductionItemMissing'),
+                                        icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
+                                        loading: false,
+                                        autoClose: 700,
+                                        style: { backgroundColor: 'lightgray' },
+                                    });
                                 }
 
                             })}>
@@ -156,15 +133,15 @@ function __RecipeAddItem(props) {
                                                 tooltip={t('SelectMaterialName')}
                                                 placeholder={t('SelectMaterialName')}
                                                 required={true}
-                                                name={'product_type_id'}
+                                                name={'product_id'}
                                                 form={form}
-                                                dropdownValue={''}
+                                                dropdownValue={productMaterialDropdown}
                                                 mt={0}
-                                                id={'product_type_id'}
+                                                id={'product_id'}
                                                 nextField={'price'}
                                                 searchable={true}
-                                                value={productTypeData}
-                                                changeValue={setProductTypeData}
+                                                value={productData}
+                                                changeValue={setProductData}
                                             />
                                         </Grid.Col>
                                         <Grid.Col span={3}>
@@ -217,10 +194,9 @@ function __RecipeAddItem(props) {
                                                     mr={'xs'}
                                                     w={'100%'}
                                                     id="EntityFormSubmit"
-                                                // leftSection={<IconDeviceFloppy size={16} />}
                                                 >
                                                     <Text fz={12} fw={400}>
-                                                        {t("AddItem")}
+                                                        {isOnline && t("AddItem")}
                                                     </Text>
                                                 </Button>
                                             </Box>
@@ -232,10 +208,6 @@ function __RecipeAddItem(props) {
                     </Grid.Col>
                 </Grid>
             </Box >
-
-            {
-                filterModel && <FilterModel filterModel={filterModel} setFilterModel={setFilterModel} module={props.module} />
-            }
         </>
     );
 }

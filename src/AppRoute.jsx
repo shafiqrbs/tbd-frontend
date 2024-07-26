@@ -25,9 +25,9 @@ import VoucherIndex from "./components/modules/accounting/voucher-entry/VoucherI
 import HeadGroupIndex from "./components/modules/accounting/head-group/HeadGroupIndex";
 import HeadSubGroupIndex from "./components/modules/accounting/head-subgroup/HeadSubGroupIndex";
 import LedgerIndex from "./components/modules/accounting/ledger/LedgerIndex";
-import ProductionIndex from './components/modules/production/items/ProductionIndex.jsx';
-import InhouseIndex from './components/modules/inventory/production-inhouse/InhouseIndex.jsx';
-import ReceipeIndex from './components/modules/inventory/receipe/ReceipeIndex.jsx';
+// import ProductionIndex from './components/modules/production/items/ProductionIndex.jsx';
+// import InhouseIndex from './components/modules/inventory/production-inhouse/InhouseIndex.jsx';
+// import ReceipeIndex from './components/modules/inventory/receipe/ReceipeIndex.jsx';
 import SalesEdit from "./components/modules/inventory/sales/SalesEdit.jsx";
 import PurchaseEdit from "./components/modules/inventory/purchase/PurchaseEdit.jsx";
 import SampleModalIndex from './components/modules/sample3Grid/SampleModalIndex.jsx';
@@ -40,7 +40,7 @@ import MarketingExecutiveIndex from './components/modules/core/marketing-executi
 import ProductSettingsIndex from './components/modules/inventory/product-settings/ProductSettingsIndex.jsx';
 import ProductionSettingIndex from "./components/modules/production/settings/ProductionSettingIndex.jsx";
 import RecipeItemsIndex from "./components/modules/production/recipe-items/RecipeItemsIndex.jsx";
-import RecipeIndex from "./components/modules/production/recipe/RecipeIndex.jsx";
+import RecipeIndex from "./components/modules/production/recipe-items/recipe/RecipeIndex.jsx";
 
 function AppRoute() {
 
