@@ -8,7 +8,6 @@ import { useTranslation } from 'react-i18next';
 
 export function InvoiceBatchPrintA4(props) {
 
-    console.log("lioaded")
 
     const { invoiceBatchData, setPrintA4 } = props;
     const componentRef = useRef();
@@ -19,7 +18,6 @@ export function InvoiceBatchPrintA4(props) {
     });
 
     useEffect(() => {
-        console.log("count")
         handlePrint()
         setPrintA4(false)
     })
@@ -179,7 +177,7 @@ export function InvoiceBatchPrintA4(props) {
                         <table className={classes['invoice-body-table']}>
                             <thead>
                                 <tr className={classes['invoice-body-table-tr']}>
-                                    <th className={`${classes['invoice-body-table-th']} ${classes['text-center']}`}>{t('S/N')}</th>
+                                    <th className={`${classes['invoice-body-table-th']} ${classes['text-Center']}`}>{t('S/N')}</th>
                                     <th className={`${classes['invoice-body-table-th']} ${classes['text-left']}`}>{t('Name')}</th>
                                     <th className={classes['invoice-body-table-th']}>{t('QTY')}</th>
                                     <th className={`${classes['invoice-body-table-th']} ${classes['text-right']}`}>{t('Price')}</th>
@@ -204,7 +202,7 @@ export function InvoiceBatchPrintA4(props) {
                                             </td>
                                             <td className={`${classes['invoice-body-table-td']} ${classes['text-center']}`}>{element.quantity}</td>
                                             <td className={`${classes['invoice-body-table-td']} ${classes['text-right']}`}>{element.price}</td>
-                                            <td className={`${classes['invoice-body-table-td']} ${classes['text-right']}`}>{element.sales_price}</td>
+                                            <td className={`${classes['invoice-body-table-td']} ${classes['text-center']}`}>{element.sales_price}</td>
                                             <td className={`${classes['invoice-body-table-td']} ${classes['text-right']}`}>{element.sub_total}</td>
                                         </tr>
                                     </React.Fragment>

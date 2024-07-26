@@ -509,5 +509,7 @@
   "ParentHead": "Parent Head",
   "ManageLedger": "Manage Ledger",
   "CreateHeadGroup": "Create Head Group",
-  "Sku": "Sku :"
+  "Sku": "Sku :",
+  "RetailInvoice": "Retail Invoice",
+  "BillTo" : "Bill To"
 }

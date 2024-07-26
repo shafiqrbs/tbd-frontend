@@ -35,6 +35,7 @@ import _AddTransaction from "./drawer/_AddTransaction";
 import LegderModal from "./modal/LedgerModal.jsx";
 import ReactToPrint from "react-to-print";
 import { InvoiceBatchPrintA4 } from "./invoice-batch-print/InvoiceBatchPrintA4.jsx";
+import { InvoiceBatchPrintPos } from "./invoice-batch-print/InvoiceBatchPrintPos.jsx";
 
 function InvoiceBatchTable() {
     const navigate = useNavigate();
@@ -81,6 +82,7 @@ function InvoiceBatchTable() {
     }, [loading]);
     const [invoiceBatchData, setInvoiceBatchData] = useState({})
     const [printA4, setPrintA4] = useState(false)
+    const [printPos, setPrintPos] = useState(false)
 
     useEffect(() => {
         setInvoiceBatchData(indexData.data && indexData.data[0] && indexData.data[0])
@@ -455,13 +457,11 @@ function InvoiceBatchTable() {
                                     variant="filled"
                                     leftSection={<IconReceipt size={14} />}
                                     color="red.5"
+                                    onClick={() => {
+                                        setPrintPos(true)
+                                    }}
                                 >
-                                    <ReactToPrint
-                                        trigger={() => {
-                                            return <a href="#">{t('Pos')}</a>;
-                                        }}
-                                        content={() => printRef.current}
-                                    />
+                                    {t('POS')}
                                 </Button>
 
                                 <Button
@@ -471,6 +471,9 @@ function InvoiceBatchTable() {
                                     variant="filled"
                                     leftSection={<IconEdit size={14} />}
                                     color="cyan.5"
+                                    onClick={() => {
+                                        setMmSwapEnabled(true)
+                                    }}
                                 >{t('Edit')}</Button>
                             </Button.Group>
                         </Box>
@@ -491,6 +494,7 @@ function InvoiceBatchTable() {
             {addTransactionDrawer && <_AddTransaction invoiceBatchData={invoiceBatchData} addTransactionDrawer={addTransactionDrawer} setAddTransactionDrawer={setAddTransactionDrawer} />}
             {batchLedgerModal && <LegderModal batchLedgerModal={batchLedgerModal} setBatchLedgerModal={setBatchLedgerModal} />}
             {printA4 && <InvoiceBatchPrintA4 invoiceBatchData={invoiceBatchData} setPrintA4={setPrintA4} />}
+            {printPos && <InvoiceBatchPrintPos invoiceBatchData={invoiceBatchData} setPrintPos={setPrintPos} />}
         </>
     );
 }
