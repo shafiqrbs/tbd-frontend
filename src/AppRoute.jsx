@@ -40,8 +40,6 @@ import MarketingExecutiveIndex from './components/modules/core/marketing-executi
 import ProductSettingsIndex from './components/modules/inventory/product-settings/ProductSettingsIndex.jsx';
 import ProductionSettingIndex from "./components/modules/production/settings/ProductionSettingIndex.jsx";
 import RecipeItemsIndex from "./components/modules/production/recipe-items/RecipeItemsIndex.jsx";
-import { InvoiceA4 } from './components/modules/inventory/print/sales/InvoiceA4.jsx';
-import { Pos80mm } from './components/modules/inventory/print/sales/Pos80mm.jsx';
 
 
 function AppRoute() {
@@ -94,8 +92,6 @@ function AppRoute() {
                     <Route path="product-settings" element={<ProductSettingsIndex />} />
                     <Route path="product-settings/:settingsId" element={<ProductSettingsIndex />} />
 
-                    <Route path="PrintA4" element={<InvoiceA4 />} />
-                    <Route path="Print80" element={<Pos80mm />} />
 
                 </Route>
 
