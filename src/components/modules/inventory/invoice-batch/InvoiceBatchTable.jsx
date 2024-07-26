@@ -16,7 +16,7 @@ import {
 } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import {
-    IconDotsVertical, IconTrashX,
+    IconDotsVertical, IconTrashX, IconReceipt, IconPrinter, IconEdit
 } from "@tabler/icons-react";
 import { DataTable } from 'mantine-datatable';
 import { useDispatch, useSelector } from "react-redux";
@@ -33,6 +33,8 @@ import InvoiceBatchModal from "./InvoiceBatchModal.jsx";
 import _InvoiceBatchSearch from "./_InvoiceBatchSearch.jsx";
 import _AddTransaction from "./drawer/_AddTransaction";
 import LegderModal from "./modal/LedgerModal.jsx";
+import ReactToPrint from "react-to-print";
+import { InvoiceBatchPrintA4 } from "./invoice-batch-print/InvoiceBatchPrintA4.jsx";
 
 function InvoiceBatchTable() {
     const navigate = useNavigate();
@@ -41,7 +43,7 @@ function InvoiceBatchTable() {
     const { t, i18n } = useTranslation();
     const { isOnline, mainAreaHeight } = useOutletContext();
     const tableHeight = mainAreaHeight - 98; //TabList height 104
-    const height = mainAreaHeight - 230; //TabList height 104
+    const height = mainAreaHeight - 264; //TabList height 104
     const [batchViewModal, setBatchViewModal] = useState(false);
     const [addTransactionDrawer, setAddTransactionDrawer] = useState(false);
     const perPage = 50;
@@ -78,6 +80,7 @@ function InvoiceBatchTable() {
         }, 500);
     }, [loading]);
     const [invoiceBatchData, setInvoiceBatchData] = useState({})
+    const [printA4, setPrintA4] = useState(false)
 
     useEffect(() => {
         setInvoiceBatchData(indexData.data && indexData.data[0] && indexData.data[0])
@@ -435,6 +438,41 @@ function InvoiceBatchTable() {
                                     </Box>
                                 </ScrollArea>
                             </Box>
+                            <Button.Group fullWidth>
+                                <Button
+                                    fullWidth
+                                    variant="filled"
+                                    leftSection={<IconPrinter size={14} />}
+                                    color="green.5"
+                                    onClick={() => {
+                                        setPrintA4(true)
+                                    }}
+                                >
+                                    {t('Print')}
+                                </Button>
+                                <Button
+                                    fullWidth
+                                    variant="filled"
+                                    leftSection={<IconReceipt size={14} />}
+                                    color="red.5"
+                                >
+                                    <ReactToPrint
+                                        trigger={() => {
+                                            return <a href="#">{t('Pos')}</a>;
+                                        }}
+                                        content={() => printRef.current}
+                                    />
+                                </Button>
+
+                                <Button
+                                    // href={`/inventory/sales/edit/${salesViewData?.id}`}
+                                    component="a"
+                                    fullWidth
+                                    variant="filled"
+                                    leftSection={<IconEdit size={14} />}
+                                    color="cyan.5"
+                                >{t('Edit')}</Button>
+                            </Button.Group>
                         </Box>
 
                     </Grid.Col>
@@ -452,6 +490,7 @@ function InvoiceBatchTable() {
             {batchViewModal && <InvoiceBatchModal batchViewModal={batchViewModal} setBatchViewModal={setBatchViewModal} invoiceId={invoiceBatchData.id} setAddTransactionDrawer={setAddTransactionDrawer} />}
             {addTransactionDrawer && <_AddTransaction invoiceBatchData={invoiceBatchData} addTransactionDrawer={addTransactionDrawer} setAddTransactionDrawer={setAddTransactionDrawer} />}
             {batchLedgerModal && <LegderModal batchLedgerModal={batchLedgerModal} setBatchLedgerModal={setBatchLedgerModal} />}
+            {printA4 && <InvoiceBatchPrintA4 invoiceBatchData={invoiceBatchData} setPrintA4={setPrintA4} />}
         </>
     );
 }
