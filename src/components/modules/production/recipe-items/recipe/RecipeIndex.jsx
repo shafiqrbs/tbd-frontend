@@ -1,21 +1,26 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect} from "react";
 import {
     Box,
     Grid,
     Progress,
-    Title
 } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from "react-redux";
 
 import _RecipeTable from "./_RecipeTable.jsx";
 import _RecipeForm from "./_RecipeForm.jsx";
 import { getLoadingProgress } from "../../../../global-hook/loading-progress/getLoadingProgress.js";
 import ProductionHeaderNavbar from "../../common/ProductionHeaderNavbar.jsx";
+import {getMeasurementInputData} from "../../../../../store/production/utilitySlice.js";
+import {useDispatch} from "react-redux";
 
 function RecipeIndex() {
     const { t, i18n } = useTranslation();
     const progress = getLoadingProgress()
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(getMeasurementInputData('production/measurement-input'))
+    }, []);
 
     return (
         <>
@@ -38,7 +43,7 @@ function RecipeIndex() {
                                 </Box>
                             </Grid.Col>
                             <Grid.Col span={9} >
-                                {/*<_RecipeForm />*/}
+                                <_RecipeForm />
                             </Grid.Col>
                         </Grid>
                     </Box>

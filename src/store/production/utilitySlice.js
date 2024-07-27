@@ -21,6 +21,16 @@ export const getMaterialProductDropdown = createAsyncThunk("material-product/sel
     }
 });
 
+export const getMeasurementInputData = createAsyncThunk("measurement-input", async (value) => {
+    try {
+        const response = getDataWithoutParam(value);
+        return response;
+    } catch (error) {
+        console.log('error', error.message);
+        throw error;
+    }
+});
+
 const utilitySlice = createSlice({
     name : "utility",
     initialState : {
@@ -28,6 +38,7 @@ const utilitySlice = createSlice({
         fetching : true,
         settingTypeDropdownData : [],
         materialProductDropdownData : [],
+        measurementInputData : [],
     },
     reducers : {
         setFetching : (state,action) => {
@@ -41,6 +52,9 @@ const utilitySlice = createSlice({
         })
         builder.addCase(getMaterialProductDropdown.fulfilled, (state, action) => {
             state.materialProductDropdownData = action.payload
+        })
+        builder.addCase(getMeasurementInputData.fulfilled, (state, action) => {
+            state.measurementInputData = action.payload
         })
 
     }
