@@ -44,6 +44,7 @@ function CustomerUpdateForm() {
     const [customerGroupData, setCustomerGroupData] = useState(null);
     const [locationData, setLocationData] = useState(null);
     const [marketingExeData, setMarketingExeData] = useState(null);
+    const navigate = useNavigate()
 
     const entityEditData = useSelector((state) => state.crudSlice.entityEditData)
     const formLoading = useSelector((state) => state.crudSlice.formLoading)
