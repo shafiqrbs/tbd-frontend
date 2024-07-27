@@ -7,9 +7,6 @@ import {
 } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import {
-    IconEye,
-    IconEdit,
-    IconTrash,
     IconDotsVertical,
     IconTrashX
 } from "@tabler/icons-react";
@@ -24,17 +21,14 @@ import {
 } from "../../../../store/core/crudSlice.js";
 import { modals } from "@mantine/modals";
 import KeywordSearch from "../../filter/KeywordSearch.jsx";
-import { useDisclosure } from "@mantine/hooks";
-import UserViewModel from "./UserViewModel.jsx";
 import tableCss from "../../../../assets/css/Table.module.css";
-import { showEntityData } from "../../../../store/core/crudSlice";
+import UserViewDrawer from "./UserViewDrawer.jsx";
 
 function UserTable() {
     const dispatch = useDispatch();
     const { t, i18n } = useTranslation();
     const { isOnline, mainAreaHeight } = useOutletContext();
     const height = mainAreaHeight - 98; //TabList height 104
-    const [userViewModel, setUserViewModel] = useState(false)
 
     const fetching = useSelector((state) => state.crudSlice.fetching)
     const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword)
@@ -44,6 +38,7 @@ function UserTable() {
     const perPage = 50;
     const [page, setPage] = useState(1);
     const navigate = useNavigate()
+    const [viewDrawer, setViewDrawer] = useState(false)
 
     useEffect(() => {
         const value = {
@@ -100,7 +95,6 @@ function UserTable() {
                                         </Menu.Target>
                                         <Menu.Dropdown>
                                             <Menu.Item
-                                                // href={`/inventory/sales/edit/${data.id}`}
                                                 onClick={() => {
                                                     dispatch(setInsertType('update'))
                                                     dispatch(editEntityData('core/user/' + data.id))
@@ -115,9 +109,8 @@ function UserTable() {
                                             </Menu.Item>
 
                                             <Menu.Item
-                                                // href={``}
                                                 onClick={() => {
-                                                    setUserViewModel(true)
+                                                    setViewDrawer(true)
                                                     dispatch(editEntityData('core/user/' + data.id))
                                                 }}
                                                 target="_blank"
@@ -128,7 +121,6 @@ function UserTable() {
                                                 {t('Show')}
                                             </Menu.Item>
                                             <Menu.Item
-                                                // href={``}
                                                 target="_blank"
                                                 component="a"
                                                 w={'200'}
@@ -179,7 +171,7 @@ function UserTable() {
                 />
             </Box>
             {
-                userViewModel && <UserViewModel userViewModel={userViewModel} setUserViewModel={setUserViewModel} />
+                viewDrawer && <UserViewDrawer viewDrawer={viewDrawer} setViewDrawer={setViewDrawer} />
             }
 
         </>

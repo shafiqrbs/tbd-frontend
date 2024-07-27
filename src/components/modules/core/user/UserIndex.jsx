@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Box, Grid, Progress, Title } from "@mantine/core";
+import React, { useEffect } from "react";
+import { Box, Grid, Progress } from "@mantine/core";
 import { useDispatch, useSelector } from "react-redux";
 import UserTable from "./UserTable.jsx";
 import UserForm from "./UserForm.jsx";
@@ -43,7 +43,7 @@ function UserIndex() {
                     mobile: '',
                     email: ''
                 })),
-                navigate('/core/user'))
+                navigate('/core/user', { replace: true }))
         );
     }, [userId, dispatch, navigate]);
 

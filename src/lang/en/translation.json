@@ -511,5 +511,6 @@
   "CreateHeadGroup": "Create Head Group",
   "Sku": "Sku :",
   "RetailInvoice": "Retail Invoice",
-  "BillTo" : "Bill To"
+  "BillTo": "Bill To",
+  "UserDetails": "User Details Information"
 }

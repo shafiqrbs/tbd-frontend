@@ -3,17 +3,16 @@ import { useOutletContext } from "react-router-dom";
 import {
     Button,
     rem,
-    Grid, Box, ScrollArea, Tooltip, Group, Text, LoadingOverlay, Title, Flex, Stack,
+    Grid, Box, ScrollArea, Text, Title, Flex, Stack,
 } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
 import {
     IconCheck,
     IconDeviceFloppy,
-    IconRestore,
 } from "@tabler/icons-react";
-import { useDisclosure, useHotkeys } from "@mantine/hooks";
+import { useHotkeys } from "@mantine/hooks";
 import InputForm from "../../../form-builders/InputForm";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import PasswordInputForm from "../../../form-builders/PasswordInputForm";
 import { hasLength, isEmail, isNotEmpty, useForm } from "@mantine/form";
 import { modals } from "@mantine/modals";
@@ -31,7 +30,6 @@ function UserForm() {
     const { isOnline, mainAreaHeight } = useOutletContext();
     const height = mainAreaHeight - 100; //TabList height 104
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
-    const formLoading = useSelector((state) => state.crudSlice.formLoading)
 
 
     const form = useForm({
@@ -43,6 +41,11 @@ function UserForm() {
             username: hasLength({ min: 2, max: 20 }),
             email: isEmail(),
             mobile: isNotEmpty(),
+            // mobile: (value) => {
+            //     if (!value) return t('MobileValidationRequired');
+            //     if (!/^\d{13}$/.test(value)) return t('MobileValidationDigitCount');
+            //     return null;
+            // },
             password: hasLength({ min: 6 }),
             confirm_password: (value, values) =>
                 value !== values.password
