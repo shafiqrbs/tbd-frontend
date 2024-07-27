@@ -509,5 +509,8 @@
   "UpdateLedger": "Update Ledger",
   "ParentHead": "Parent Head",
   "ManageLedger": "Manage Ledger",
-  "CreateHeadGroup": "Create Head Group"
+  "CreateHeadGroup": "Create Head Group",
+  "Sku": "Sku :",
+  "RetailInvoice": "Retail Invoice",
+  "BillTo" : "Bill To"
 }

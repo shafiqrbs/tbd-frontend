@@ -42,6 +42,7 @@ import ProductionSettingIndex from "./components/modules/production/settings/Pro
 import RecipeItemsIndex from "./components/modules/production/recipe-items/RecipeItemsIndex.jsx";
 import RecipeIndex from "./components/modules/production/recipe-items/recipe/RecipeIndex.jsx";
 
+
 function AppRoute() {
 
     return (
@@ -91,6 +92,8 @@ function AppRoute() {
                     <Route path="invoice-batch" element={<InvoiceBatchIndex />} />
                     <Route path="product-settings" element={<ProductSettingsIndex />} />
                     <Route path="product-settings/:settingsId" element={<ProductSettingsIndex />} />
+
+
                 </Route>
 
                 <Route path="/production/">
