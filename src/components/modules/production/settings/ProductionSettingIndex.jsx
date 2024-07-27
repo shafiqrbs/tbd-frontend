@@ -14,9 +14,9 @@ import {
 } from "../../../../store/production/crudSlice.js";
 import {getLoadingProgress} from "../../../global-hook/loading-progress/getLoadingProgress.js";
 import {useNavigate, useParams} from "react-router-dom";
-import ProductionSettingTable from "./ProductionSettingTable.jsx";
-import ProductionSettingForm from "./ProductionSettingForm.jsx";
-import ProductionSettingUpdateForm from "./ProductionSettingUpdateForm.jsx";
+import _ProductionSettingTable from "./_ProductionSettingTable.jsx";
+import _ProductionSettingForm from "./_ProductionSettingForm.jsx";
+import _ProductionSettingUpdateForm from "./_ProductionSettingUpdateForm.jsx";
 import ProductionHeaderNavbar from "../common/ProductionHeaderNavbar.jsx";
 import getProSettingTypeDropdownData from "../../../global-hook/dropdown/getProSettingTypeDropdownData.js";
 
@@ -64,16 +64,16 @@ function ProductionSettingIndex() {
                                 <Grid columns={24} gutter={{base: 8}}>
                                     <Grid.Col span={15}>
                                         <Box bg={'white'} p={'xs'} className={'borderRadiusAll'}>
-                                            <ProductionSettingTable/>
+                                            <_ProductionSettingTable/>
                                         </Box>
                                     </Grid.Col>
                                     <Grid.Col span={9}>
                                         {
                                             insertType === 'create'
-                                                ? <ProductionSettingForm settingTypeDropdown={settingTypeDropdown}
-                                                                         formSubmitId={'EntityFormSubmit'}/>
-                                                : <ProductionSettingUpdateForm settingTypeDropdown={settingTypeDropdown}
-                                                                               formSubmitId={'EntityFormSubmit'}/>
+                                                ? <_ProductionSettingForm settingTypeDropdown={settingTypeDropdown}
+                                                                          formSubmitId={'EntityFormSubmit'}/>
+                                                : <_ProductionSettingUpdateForm settingTypeDropdown={settingTypeDropdown}
+                                                                                formSubmitId={'EntityFormSubmit'}/>
                                         }
                                     </Grid.Col>
                                 </Grid>

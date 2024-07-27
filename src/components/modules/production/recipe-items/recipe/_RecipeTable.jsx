@@ -1,58 +1,49 @@
-import React, {useEffect, useState} from "react";
-import {useNavigate, useOutletContext} from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useOutletContext } from "react-router-dom";
 import {
     Group,
     Box,
-    ActionIcon, Text, rem, Menu
+    ActionIcon,
+    Text,
+    Menu,
+    rem
 } from "@mantine/core";
-import {useTranslation} from "react-i18next";
+import { useTranslation } from "react-i18next";
 import {
-    IconCheck,
-    IconDotsVertical,
-    IconTrashX
+    IconTrashX,
+    IconDotsVertical
 } from "@tabler/icons-react";
-import {DataTable} from 'mantine-datatable';
-import {useDispatch, useSelector} from "react-redux";
+import { DataTable } from 'mantine-datatable';
+import { useDispatch, useSelector } from "react-redux";
 import {
     editEntityData,
     getIndexEntityData,
-    setFormLoading,
+    setFetching, setFormLoading,
     setInsertType,
-    deleteEntityData,
-    setFetching
-} from "../../../../store/production/crudSlice.js";
-import KeywordSearch from "../common/KeywordSearch.jsx";
-import {modals} from "@mantine/modals";
-import {notifications} from "@mantine/notifications";
-import tableCss from "../../../../assets/css/Table.module.css";
-import ProductionSettingViewModal from "./ProductionSettingViewModal.jsx";
+    showEntityData, deleteEntityData
+} from "../../../../../store/production/crudSlice.js";
+import { modals } from "@mantine/modals";
+import tableCss from "../../../../../assets/css/Table.module.css";
+import __RecipeAddItem from "./__RecipeAddItem.jsx";
 
-function ProductionSettingTable() {
+function _RecipeTable() {
 
     const dispatch = useDispatch();
-    const {t, i18n} = useTranslation();
-    const {isOnline, mainAreaHeight} = useOutletContext();
-    const height = mainAreaHeight - 98; //TabList height 104
+    const { t, i18n } = useTranslation();
+    const { isOnline, mainAreaHeight } = useOutletContext();
+    const tableHeight = mainAreaHeight - 120; //TabList height 104
+    const height = mainAreaHeight - 314; //TabList height 104
+
     const perPage = 50;
     const [page, setPage] = useState(1);
 
-    const searchKeyword = useSelector((state) => state.productionCrudSlice.searchKeyword)
     const fetching = useSelector((state) => state.productionCrudSlice.fetching)
     const indexData = useSelector((state) => state.productionCrudSlice.indexEntityData)
-    const productionSettingFilterData = useSelector((state) => state.productionCrudSlice.productionSettingFilterData)
-
-    const [productionSettingView, setProductionSettingViewModal] = useState(false)
-    const [productionSettingData, setProductionSettingViewData] = useState([])
-
-    const navigate = useNavigate()
 
     useEffect(() => {
         const value = {
-            url: 'production/setting',
+            url: 'production/recipe',
             param: {
-                term: searchKeyword,
-                name: productionSettingFilterData.name && productionSettingFilterData.name,
-                setting_type_id: productionSettingFilterData.setting_type_id && productionSettingFilterData.setting_type_id,
                 page: page,
                 offset: perPage
             }
@@ -60,12 +51,13 @@ function ProductionSettingTable() {
         dispatch(getIndexEntityData(value))
     }, [fetching]);
 
+
     return (
         <>
-            <Box pl={`xs`} pr={8} pt={'6'} pb={'4'} className={'boxBackground borderRadiusAll border-bottom-none'}>
-                <KeywordSearch module={'production-setting'}/>
+            <Box pb={'xs'} >
+                <__RecipeAddItem />
             </Box>
-            <Box className={'borderRadiusAll border-top-none'}>
+            <Box className={'borderRadiusAll'} >
                 <DataTable
                     classNames={{
                         root: tableCss.root,
@@ -82,14 +74,21 @@ function ProductionSettingTable() {
                             textAlignment: 'right',
                             render: (item) => (indexData.data.indexOf(item) + 1)
                         },
-                        {accessor: 'setting_type_name', title: t("SettingType")},
-                        {accessor: 'name', title: t("SettingName")},
-                        {accessor: 'created', title: t("CreatedDate")},
+                        { accessor: 'product_name', title: t("Item") },
+                        { accessor: 'unit_name', title: t("Uom") },
+                        { accessor: 'quantity', title: t("Quantity"),textAlign:'center' },
+                        { accessor: 'price', title: t("Price"),textAlign:'center' },
+                        { accessor: 'sub_total', title: t("SubTotal"),textAlign:'center' },
+                        { accessor: 'wastage_percent', title: t("Wastage%"),textAlign:'center' },
+                        { accessor: 'wastage_quantity', title: t("WastageQuantity"),textAlign:'center' },
+                        { accessor: 'wastage_amount', title: t("WastageAmount"),textAlign:'center' },
                         {
                             accessor: 'status',
                             title: t("Status"),
-                            render: (data) => (
-                                data.status == 1 ? 'Active' : 'Inactive'
+                            render: (item) => (
+                                <>
+                                    {item.status==1?'Active':'Inactive'}
+                                </>
                             )
                         },
                         {
@@ -98,30 +97,27 @@ function ProductionSettingTable() {
                             textAlign: "right",
                             render: (data) => (
                                 <Group gap={4} justify="right" wrap="nowrap">
-                                    <Menu position="bottom-end" offset={3} withArrow trigger="hover" openDelay={100}
-                                          closeDelay={400}>
+                                    <Menu position="bottom-end" offset={3} withArrow trigger="hover" openDelay={100} closeDelay={400}>
                                         <Menu.Target>
-                                            <ActionIcon size="sm" variant="outline" color="red" radius="xl"
-                                                        aria-label="Settings">
-                                                <IconDotsVertical height={'18'} width={'18'} stroke={1.5}/>
+                                            <ActionIcon size="sm" variant="outline" color="red" radius="xl" aria-label="Settings">
+                                                <IconDotsVertical height={'18'} width={'18'} stroke={1.5} />
                                             </ActionIcon>
                                         </Menu.Target>
                                         <Menu.Dropdown>
                                             <Menu.Item
                                                 onClick={() => {
                                                     dispatch(setInsertType('update'))
-                                                    dispatch(editEntityData('production/setting/' + data.id))
+                                                    dispatch(editEntityData('inventory/sales/' + data.id))
                                                     dispatch(setFormLoading(true))
-                                                    navigate(`/production/setting/${data.id}`)
                                                 }}
                                             >
                                                 {t('Edit')}
                                             </Menu.Item>
 
                                             <Menu.Item
+                                                href={``}
                                                 onClick={() => {
-                                                    setProductionSettingViewData(data)
-                                                    setProductionSettingViewModal(true)
+                                                    setSalesViewData(data)
                                                 }}
                                                 target="_blank"
                                                 component="a"
@@ -130,6 +126,7 @@ function ProductionSettingTable() {
                                                 {t('Show')}
                                             </Menu.Item>
                                             <Menu.Item
+                                                // href={``}
                                                 target="_blank"
                                                 component="a"
                                                 w={'200'}
@@ -144,24 +141,15 @@ function ProductionSettingTable() {
                                                         children: (
                                                             <Text size="sm"> {t("FormConfirmationMessage")}</Text>
                                                         ),
-                                                        labels: {confirm: 'Confirm', cancel: 'Cancel'},
-                                                        confirmProps: {color: 'red.6'},
+                                                        labels: { confirm: 'Confirm', cancel: 'Cancel' },
                                                         onCancel: () => console.log('Cancel'),
                                                         onConfirm: () => {
-                                                            dispatch(deleteEntityData('production/setting/' + data.id))
-                                                            notifications.show({
-                                                                color: 'red',
-                                                                title: t('DeleteSuccessfully'),
-                                                                icon: <IconCheck
-                                                                    style={{width: rem(18), height: rem(18)}}/>,
-                                                                loading: false,
-                                                                autoClose: 700,
-                                                                style: {backgroundColor: 'lightgray'},
-                                                            });
+                                                            dispatch(deleteEntityData('vendor/' + data.id))
+                                                            dispatch(setFetching(true))
                                                         },
                                                     });
                                                 }}
-                                                rightSection={<IconTrashX style={{width: rem(14), height: rem(14)}}/>}
+                                                rightSection={<IconTrashX style={{ width: rem(14), height: rem(14) }} />}
                                             >
                                                 {t('Delete')}
                                             </Menu.Item>
@@ -182,19 +170,12 @@ function ProductionSettingTable() {
                     }}
                     loaderSize="xs"
                     loaderColor="grape"
-                    height={height}
-                    scrollAreaProps={{type: 'never'}}
+                    height={tableHeight}
+                    scrollAreaProps={{ type: 'never' }}
                 />
             </Box>
-            {productionSettingView &&
-                <ProductionSettingViewModal
-                    productionSettingView={productionSettingView}
-                    setProductionSettingViewModal={setProductionSettingViewModal}
-                    productionSettingData={productionSettingData}
-                    setProductionSettingViewData={setProductionSettingViewData}
-                />}
         </>
     );
 }
 
-export default ProductionSettingTable;
+export default _RecipeTable;

@@ -6,7 +6,7 @@ import getProSettingTypeDropdownData from "../../../global-hook/dropdown/getProS
 import SelectForm from "../../../form-builders-filter/SelectForm.jsx";
 import React from "react";
 
-function ProductionSettingFilterForm(props) {
+function __ProductionSettingFilterForm(props) {
 
     const {t, i18} = useTranslation();
     const settingTypeDropdown = getProSettingTypeDropdownData()
@@ -49,4 +49,4 @@ function ProductionSettingFilterForm(props) {
     );
 }
 
-export default ProductionSettingFilterForm;
+export default __ProductionSettingFilterForm;

@@ -25,9 +25,9 @@ import VoucherIndex from "./components/modules/accounting/voucher-entry/VoucherI
 import HeadGroupIndex from "./components/modules/accounting/head-group/HeadGroupIndex";
 import HeadSubGroupIndex from "./components/modules/accounting/head-subgroup/HeadSubGroupIndex";
 import LedgerIndex from "./components/modules/accounting/ledger/LedgerIndex";
-import ProductionIndex from './components/modules/production/items/ProductionIndex.jsx';
-import InhouseIndex from './components/modules/inventory/production-inhouse/InhouseIndex.jsx';
-import ReceipeIndex from './components/modules/inventory/receipe/ReceipeIndex.jsx';
+// import ProductionIndex from './components/modules/production/items/ProductionIndex.jsx';
+// import InhouseIndex from './components/modules/inventory/production-inhouse/InhouseIndex.jsx';
+// import ReceipeIndex from './components/modules/inventory/receipe/ReceipeIndex.jsx';
 import SalesEdit from "./components/modules/inventory/sales/SalesEdit.jsx";
 import PurchaseEdit from "./components/modules/inventory/purchase/PurchaseEdit.jsx";
 import SampleModalIndex from './components/modules/sample3Grid/SampleModalIndex.jsx';
@@ -40,6 +40,7 @@ import MarketingExecutiveIndex from './components/modules/core/marketing-executi
 import ProductSettingsIndex from './components/modules/inventory/product-settings/ProductSettingsIndex.jsx';
 import ProductionSettingIndex from "./components/modules/production/settings/ProductionSettingIndex.jsx";
 import RecipeItemsIndex from "./components/modules/production/recipe-items/RecipeItemsIndex.jsx";
+import RecipeIndex from "./components/modules/production/recipe-items/recipe/RecipeIndex.jsx";
 
 function AppRoute() {
 
@@ -86,7 +87,7 @@ function AppRoute() {
                     <Route path="config" element={<ConfigurationIndex />} />
                     {/*<Route path="production" element={<RecipeItemsIndex />} />*/}
                     {/*<Route path="production-inhouse" element={<InhouseIndex />} />*/}
-                    {/*<Route path="production-receipe" element={<ReceipeIndex />} />*/}
+                    {/*<Route path="production-recipe" element={<RecipeIndex />} />*/}
                     <Route path="invoice-batch" element={<InvoiceBatchIndex />} />
                     <Route path="product-settings" element={<ProductSettingsIndex />} />
                     <Route path="product-settings/:settingsId" element={<ProductSettingsIndex />} />
@@ -94,6 +95,7 @@ function AppRoute() {
 
                 <Route path="/production/">
                     <Route path="items" element={<RecipeItemsIndex />} />
+                    <Route path="recipe/:id" element={<RecipeIndex />} />
                     <Route path="setting" element={<ProductionSettingIndex />} />
                     <Route path="setting/:id" element={<ProductionSettingIndex />} />
                 </Route>

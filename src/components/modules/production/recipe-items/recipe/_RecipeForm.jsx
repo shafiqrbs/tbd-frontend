@@ -18,16 +18,16 @@ import { hasLength, isNotEmpty, useForm } from "@mantine/form";
 import { modals } from "@mantine/modals";
 import { notifications } from "@mantine/notifications";
 
-import Shortcut from "../../shortcut/Shortcut";
-import InputForm from "../../../form-builders/InputForm";
-import SelectForm from "../../../form-builders/SelectForm";
-import SwitchForm from "../../../form-builders/SwitchForm";
-import { getBrandDropdown, getCategoryDropdown } from "../../../../store/inventory/utilitySlice";
+import Shortcut from "../../../shortcut/Shortcut.jsx";
+import InputForm from "../../../../form-builders/InputForm.jsx";
+import SelectForm from "../../../../form-builders/SelectForm.jsx";
+import SwitchForm from "../../../../form-builders/SwitchForm.jsx";
+import { getBrandDropdown, getCategoryDropdown } from "../../../../../store/inventory/utilitySlice.js";
 
-import { setFetching, storeEntityData } from "../../../../store/inventory/crudSlice.js";
+import { setFetching, storeEntityData } from "../../../../../store/inventory/crudSlice.js";
 import { DateInput, DatePicker } from "@mantine/dates";
 
-function ReceipeForm() {
+function _RecipeForm() {
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
@@ -876,4 +876,4 @@ function ReceipeForm() {
     );
 }
 
-export default ReceipeForm;
+export default _RecipeForm;
