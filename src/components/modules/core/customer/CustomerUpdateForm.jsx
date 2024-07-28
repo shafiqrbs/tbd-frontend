@@ -25,15 +25,12 @@ import {
 
 import SelectForm from "../../../form-builders/SelectForm.jsx";
 import TextAreaForm from "../../../form-builders/TextAreaForm.jsx";
-import getLocationDropdownData from "../../../global-hook/dropdown/getLocationDropdownData.js";
-import getExecutiveDropdownData from "../../../global-hook/dropdown/getExecutiveDropdownData.js";
-import getCoreSettingCustomerGroupDropdownData
-    from "../../../global-hook/dropdown/getCoreSettingCustomerGroupDropdownData.js";
 import PhoneNumber from "../../../form-builders/PhoneNumberInput.jsx";
 import CustomerGroupDrawer from "./CustomerGroupDrawer.jsx";
 import Shortcut from "../../shortcut/Shortcut.jsx";
 
-function CustomerUpdateForm() {
+function CustomerUpdateForm(props) {
+    const {locationDropdown, customerGroupDropdownData, executiveDropdown} = props
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
@@ -48,9 +45,7 @@ function CustomerUpdateForm() {
 
     const entityEditData = useSelector((state) => state.crudSlice.entityEditData)
     const formLoading = useSelector((state) => state.crudSlice.formLoading)
-    const locationDropdown = getLocationDropdownData();
-    const customerGroupDropdownData = getCoreSettingCustomerGroupDropdownData();
-    const executiveDropdown = getExecutiveDropdownData();
+    
 
     const form = useForm({
         initialValues: {
