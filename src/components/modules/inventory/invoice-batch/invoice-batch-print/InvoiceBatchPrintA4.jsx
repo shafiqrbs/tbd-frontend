@@ -12,15 +12,19 @@ export function InvoiceBatchPrintA4(props) {
     const { invoiceBatchData, setPrintA4 } = props;
     const componentRef = useRef();
     const { t, i18n } = useTranslation();
+    const effectRan = useRef(false);
 
     const handlePrint = useReactToPrint({
         content: () => componentRef.current,
     });
 
     useEffect(() => {
-        handlePrint()
-        setPrintA4(false)
-    })
+        !effectRan.current && (
+            handlePrint(),
+            setPrintA4(false),
+            effectRan.current = true
+        )
+    }, []);
 
     const data = [
         {

@@ -1,23 +1,20 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import {
-    Button, rem, Flex, Grid, Box, ScrollArea, Group, Text, Title, Stack, Tooltip, ActionIcon, Popover
+    Button, rem, Flex, Grid, Box, ScrollArea, Text, Title, Stack, Tooltip, ActionIcon,
 } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
 import {
     IconCheck,
-    IconDeviceFloppy, IconInfoCircle, IconPlus, IconUserCog, IconCategoryPlus,
+    IconDeviceFloppy,
     IconCategory,
 } from "@tabler/icons-react";
 import { useDisclosure, useHotkeys } from "@mantine/hooks";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { hasLength, isNotEmpty, useForm } from "@mantine/form";
 import { modals } from "@mantine/modals";
 import { notifications } from "@mantine/notifications";
-
-import { getCustomerDropdown } from "../../../../store/core/utilitySlice";
-import { setDropdownLoad, setFetching, storeEntityData } from "../../../../store/inventory/crudSlice.js";
-import { getGroupCategoryDropdown } from "../../../../store/inventory/utilitySlice.js";
+import { setFetching, storeEntityData } from "../../../../store/inventory/crudSlice.js";
 
 import Shortcut from "../../shortcut/Shortcut";
 import InputForm from "../../../form-builders/InputForm";
@@ -27,7 +24,7 @@ import CategoryGroupModal from "./CategoryGroupModal.jsx";
 
 
 function CategoryForm(props) {
-    const {groupCategoryDropdown} = props
+    const { groupCategoryDropdown } = props
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
@@ -63,7 +60,7 @@ function CategoryForm(props) {
         <>
             <Box>
                 <form onSubmit={form.onSubmit((values) => {
-                    console.log(values)
+                    // console.log(values)
                     modals.openConfirmModal({
                         title: (
                             <Text size="md"> {t("FormConfirmationTitle")}</Text>

@@ -1,17 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useOutletContext, useParams } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import {
     Button,
     rem,
-    Grid, Box, ScrollArea, Tooltip, Group, Text, LoadingOverlay, Title, Flex, Stack,
+    Grid, Box, ScrollArea, Text, LoadingOverlay, Title, Flex, Stack,
 } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
 import {
     IconCheck,
-    IconDeviceFloppy, IconPencilBolt,
-    IconRestore,
+    IconDeviceFloppy
 } from "@tabler/icons-react";
-import { useDisclosure, useHotkeys } from "@mantine/hooks";
+import { useHotkeys } from "@mantine/hooks";
 import InputForm from "../../../form-builders/InputForm";
 import { useDispatch, useSelector } from "react-redux";
 import { hasLength, isEmail, isNotEmpty, useForm } from "@mantine/form";
@@ -35,7 +34,6 @@ function UserUpdateForm() {
     const [formLoad, setFormLoad] = useState(true);
     const entityEditData = useSelector((state) => state.crudSlice.entityEditData)
     const formLoading = useSelector((state) => state.crudSlice.formLoading)
-    const [visible, { toggle }] = useDisclosure(true);
 
     const navigate = useNavigate();
 
@@ -51,7 +49,11 @@ function UserUpdateForm() {
             name: hasLength({ min: 2, max: 50 }),
             username: hasLength({ min: 2, max: 20 }),
             email: isEmail(),
-            mobile: isNotEmpty()
+            mobile: (value) => {
+                if (!value) return t('MobileValidationRequired');
+                if (!/^\d{13}$/.test(value)) return t('MobileValidationDigitCount');
+                return null;
+            },
         }
     });
 
@@ -78,7 +80,8 @@ function UserUpdateForm() {
                 name: entityEditData.name ? entityEditData.name : '',
                 username: entityEditData.username ? entityEditData.username : '',
                 email: entityEditData.email ? entityEditData.email : '',
-                mobile: entityEditData.mobile ? entityEditData.mobile : ''
+                mobile: entityEditData.mobile ? entityEditData.mobile : '',
+                password: ''
             })
         }
         dispatch(setFormLoading(false))
@@ -225,7 +228,7 @@ function UserUpdateForm() {
                                                 </Box>
                                                 <Box mt={'xs'}>
                                                     <PhoneNumber
-                                                        tooltip={t('MobileValidateMessage')}
+                                                        tooltip={form.errors.mobile ? form.errors.mobile : t('MobileValidateMessage')}
                                                         label={t('Mobile')}
                                                         placeholder={t('Mobile')}
                                                         required={true}
@@ -245,8 +248,6 @@ function UserUpdateForm() {
                                                         required={false}
                                                         name={'password'}
                                                         id={'password'}
-                                                        visible={visible}
-
                                                         nextField={'confirm_password'}
                                                         mt={8}
                                                     />
@@ -258,8 +259,6 @@ function UserUpdateForm() {
                                                         label={t('ConfirmPassword')}
                                                         placeholder={t('ConfirmPassword')}
                                                         required={false}
-                                                        visible={visible}
-
                                                         name={'confirm_password'}
                                                         id={'confirm_password'}
                                                         nextField={'EntityFormSubmit'}

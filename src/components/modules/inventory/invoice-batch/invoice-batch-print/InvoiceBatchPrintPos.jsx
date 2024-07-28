@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Button, Center, ScrollArea } from '@mantine/core';
 import { useReactToPrint } from 'react-to-print';
 import logo from '../../../../../assets/images/logo.png';
@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 export function InvoiceBatchPrintPos(props) {
     const { invoiceBatchData, setPrintPos } = props;
     const componentRef = useRef();
+    const effectRan = useRef(false);
     const { t, i18n } = useTranslation();
 
     const handlePrint = useReactToPrint({
@@ -15,9 +16,12 @@ export function InvoiceBatchPrintPos(props) {
     });
 
     useEffect(() => {
-        handlePrint()
-        setPrintPos(false)
-    })
+        !effectRan.current && (
+            handlePrint(),
+            setPrintPos(false),
+            effectRan.current = true
+        )
+    }, []);
 
     const data = [
         {

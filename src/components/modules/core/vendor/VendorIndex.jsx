@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import {
-    Box, Button,
-    Grid, Progress, Title
+    Box,
+    Grid, Progress,
 } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from "react-redux";
@@ -20,6 +20,7 @@ import {
 import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress.js";
 import CoreHeaderNavbar from "../CoreHeaderNavbar";
 import { useNavigate, useParams } from "react-router-dom";
+import getCustomerDropdownData from "../../../global-hook/dropdown/getCustomerDropdownData.js";
 
 function VendorIndex() {
     const { t, i18n } = useTranslation();
@@ -29,6 +30,7 @@ function VendorIndex() {
 
     const insertType = useSelector((state) => state.crudSlice.insertType)
     const vendorFilterData = useSelector((state) => state.crudSlice.vendorFilterData)
+    const customerDropDownData = getCustomerDropdownData()
 
     const progress = getLoadingProgress()
 
@@ -47,7 +49,7 @@ function VendorIndex() {
                 ['mobile']: '',
                 ['company']: ''
             })),
-            navigate('/core/vendor')
+            navigate('/core/vendor', { replace: true })
         ))
     }, [vendorId, dispatch, navigate])
 
@@ -74,8 +76,8 @@ function VendorIndex() {
                             <Grid.Col span={9}>
                                 {
                                     insertType === 'create'
-                                        ? <VendorForm />
-                                        : <VendorUpdateForm />
+                                        ? <VendorForm customerDropDownData={customerDropDownData} />
+                                        : <VendorUpdateForm customerDropDownData={customerDropDownData} />
                                 }
                             </Grid.Col>
                         </Grid>

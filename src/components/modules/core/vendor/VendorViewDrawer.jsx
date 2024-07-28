@@ -13,18 +13,21 @@ import { useSelector } from "react-redux";
 
 
 
-function CustomerViewDrawer(props) {
+function VendorViewDrawer(props) {
 
     const entityEditData = useSelector((state => state.crudSlice.entityEditData))
 
-    const { viewDrawer, setViewDrawer } = props
+    const { viewDrawer, setViewDrawer, vendorObject } = props
     const { isOnline, mainAreaHeight } = useOutletContext();
     const { t, i18n } = useTranslation();
     const height = mainAreaHeight; //TabList height 104
     const closeDrawer = () => {
         setViewDrawer(false)
     }
-
+    let showData = {}
+    if (props.vendorObject) {
+        showData = props.vendorObject
+    }
 
 
     return (
@@ -33,7 +36,7 @@ function CustomerViewDrawer(props) {
                 <Drawer.Overlay />
                 <Drawer.Content>
                     <Drawer.Header>
-                        <Drawer.Title>{t('CustomerDetailsData')}</Drawer.Title>
+                        <Drawer.Title>{t('VendorDetailsData')}</Drawer.Title>
                         <ActionIcon
                             className="ActionIconCustom"
                             radius="xl"
@@ -47,43 +50,31 @@ function CustomerViewDrawer(props) {
                         <Box p={'md'} className="boxBackground borderRadiusAll" h={height}>
                             <Box >
                                 <Grid columns={24}>
-                                    <Grid.Col span={'8'} align={'left'} fw={'600'} fz={'14'}>{t('CustomerId')}</Grid.Col>
+                                    <Grid.Col span={'8'} align={'left'} fw={'600'} fz={'14'}>{t('CompanyName')}</Grid.Col>
                                     <Grid.Col span={'1'}>:</Grid.Col>
-                                    <Grid.Col span={'auto'}>{entityEditData && entityEditData.customerId && entityEditData.customerId}</Grid.Col>
+                                    <Grid.Col span={'auto'}>{showData && showData.company_name && showData.company_name}</Grid.Col>
                                 </Grid>
                                 <Grid columns={24}>
                                     <Grid.Col span={'8'} align={'left'} fw={'600'} fz={'14'}>{t('Name')}</Grid.Col>
                                     <Grid.Col span={'1'}>:</Grid.Col>
-                                    <Grid.Col span={'auto'}>{entityEditData && entityEditData.name && entityEditData.name}</Grid.Col>
+                                    <Grid.Col span={'auto'}>{showData && showData.name && showData.name}</Grid.Col>
                                 </Grid>
                                 <Grid columns={24}>
                                     <Grid.Col span={'8'} align={'left'} fw={'600'} fz={'14'}>{t('Mobile')}</Grid.Col>
                                     <Grid.Col span={'1'}>:</Grid.Col>
-                                    <Grid.Col span={'auto'}>{entityEditData && entityEditData.mobile && entityEditData.mobile}</Grid.Col>
-                                </Grid>
-
-                                <Grid columns={24}>
-                                    <Grid.Col span={'8'} align={'left'} fw={'600'} fz={'14'}>{t('AlternativeMobile')}</Grid.Col>
-                                    <Grid.Col span={'1'}>:</Grid.Col>
-                                    <Grid.Col span={'auto'}>{entityEditData && entityEditData.alternative_mobile && entityEditData.alternative_mobile}</Grid.Col>
+                                    <Grid.Col span={'auto'}>{showData && showData.mobile && showData.mobile}</Grid.Col>
                                 </Grid>
 
                                 <Grid columns={24}>
                                     <Grid.Col span={'8'} align={'left'} fw={'600'} fz={'14'}>{t('Email')}</Grid.Col>
                                     <Grid.Col span={'1'}>:</Grid.Col>
-                                    <Grid.Col span={'auto'}>{entityEditData && entityEditData.email && entityEditData.email}</Grid.Col>
+                                    <Grid.Col span={'auto'}>{showData && showData.email && showData.email}</Grid.Col>
                                 </Grid>
 
                                 <Grid columns={24}>
-                                    <Grid.Col span={'8'} align={'left'} fw={'600'} fz={'14'}>{t('ReferenceId')}</Grid.Col>
+                                    <Grid.Col span={'8'} align={'left'} fw={'600'} fz={'14'}>{t('Address')}</Grid.Col>
                                     <Grid.Col span={'1'}>:</Grid.Col>
-                                    <Grid.Col span={'auto'}>{entityEditData && entityEditData.reference_id && entityEditData.reference_id}</Grid.Col>
-                                </Grid>
-
-                                <Grid columns={24}>
-                                    <Grid.Col span={'8'} align={'left'} fw={'600'} fz={'14'}>{t('Created')}</Grid.Col>
-                                    <Grid.Col span={'1'}>:</Grid.Col>
-                                    <Grid.Col span={'auto'}>{entityEditData && entityEditData.created && entityEditData.created}</Grid.Col>
+                                    <Grid.Col span={'auto'}>{showData && showData.address && showData.address}</Grid.Col>
                                 </Grid>
                             </Box>
 
@@ -96,4 +87,4 @@ function CustomerViewDrawer(props) {
     );
 }
 
-export default CustomerViewDrawer;
+export default VendorViewDrawer;

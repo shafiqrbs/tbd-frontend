@@ -20,6 +20,10 @@ import {
 } from "../../../../store/core/crudSlice.js";
 import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress.js";
 import CoreHeaderNavbar from "../CoreHeaderNavbar";
+import getLocationDropdownData from "../../../global-hook/dropdown/getLocationDropdownData.js";
+import getExecutiveDropdownData from "../../../global-hook/dropdown/getExecutiveDropdownData.js";
+import getCoreSettingCustomerGroupDropdownData
+    from "../../../global-hook/dropdown/getCoreSettingCustomerGroupDropdownData.js";
 
 function CustomerIndex() {
     const { t } = useTranslation();
@@ -31,6 +35,10 @@ function CustomerIndex() {
     const customerFilterData = useSelector((state) => state.crudSlice.customerFilterData)
 
     const progress = getLoadingProgress()
+
+    const locationDropdown = getLocationDropdownData();
+    const customerGroupDropdownData = getCoreSettingCustomerGroupDropdownData();
+    const executiveDropdown = getExecutiveDropdownData();
 
 
 
@@ -48,7 +56,7 @@ function CustomerIndex() {
                 ['name']: '',
                 ['mobile']: ''
             }));
-            navigate('/core/customer');
+            navigate('/core/customer', { replace: true });
         }
     }, [customerId, dispatch, navigate]);
 
@@ -75,8 +83,8 @@ function CustomerIndex() {
                             <Grid.Col span={9}>
                                 {
                                     insertType === 'create'
-                                        ? <CustomerForm />
-                                        : <CustomerUpdateForm />
+                                        ? <CustomerForm locationDropdown={locationDropdown} customerGroupDropdownData={customerGroupDropdownData} executiveDropdown={executiveDropdown} />
+                                        : <CustomerUpdateForm locationDropdown={locationDropdown} customerGroupDropdownData={customerGroupDropdownData} executiveDropdown={executiveDropdown} />
                                 }
                             </Grid.Col>
                         </Grid>

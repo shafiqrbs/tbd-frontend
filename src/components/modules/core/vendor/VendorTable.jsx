@@ -6,21 +6,20 @@ import {
     ActionIcon, Text, Menu, rem
 } from "@mantine/core";
 import { useTranslation } from "react-i18next";
-import { IconEye, IconEdit, IconTrash, IconDotsVertical, IconTrashX } from "@tabler/icons-react";
+import { IconDotsVertical, IconTrashX } from "@tabler/icons-react";
 import { DataTable } from 'mantine-datatable';
 import { useDispatch, useSelector } from "react-redux";
 import {
     editEntityData,
-    getIndexEntityData, setEditEntityData,
+    getIndexEntityData,
     setFetching, setFormLoading,
     setInsertType,
-    showEntityData
 } from "../../../../store/core/crudSlice.js";
 import KeywordSearch from "../../filter/KeywordSearch";
 import { modals } from "@mantine/modals";
 import { deleteEntityData } from "../../../../store/core/crudSlice";
-import _VendorViewModel from "./_VendorViewModel.jsx";
 import tableCss from "../../../../assets/css/Table.module.css";
+import VendorViewDrawer from "./VendorViewDrawer.jsx";
 function VendorTable() {
 
     const dispatch = useDispatch();
@@ -30,7 +29,6 @@ function VendorTable() {
 
     const perPage = 50;
     const [page, setPage] = useState(1);
-    const [vendorViewModel, setVendorViewModel] = useState(false)
 
     const fetching = useSelector((state) => state.crudSlice.fetching)
     const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword)
@@ -39,6 +37,7 @@ function VendorTable() {
 
     const [vendorObject, setVendorObject] = useState({});
     const navigate = useNavigate();
+    const [viewDrawer, setViewDrawer] = useState(false);
 
 
 
@@ -113,7 +112,7 @@ function VendorTable() {
 
                                             <Menu.Item
                                                 onClick={() => {
-                                                    setVendorViewModel(true)
+                                                    setViewDrawer(true)
                                                     const coreVendors = JSON.parse(localStorage.getItem('core-vendors') || '[]');
                                                     const foundVendors = coreVendors.find(type => type.id == data.id);
                                                     if (foundVendors) {
@@ -177,10 +176,10 @@ function VendorTable() {
                 />
             </Box>
             {
-                vendorViewModel &&
-                <_VendorViewModel
-                    vendorViewModel={vendorViewModel}
-                    setVendorViewModel={setVendorViewModel}
+                viewDrawer &&
+                <VendorViewDrawer
+                    viewDrawer={viewDrawer}
+                    setViewDrawer={setViewDrawer}
                     vendorObject={vendorObject}
                 />
             }

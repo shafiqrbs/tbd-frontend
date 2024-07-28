@@ -21,16 +21,13 @@ import { setEntityNewData, setFetching, setValidationData, storeEntityData } fro
 import InputForm from "../../../form-builders/InputForm";
 import SelectForm from "../../../form-builders/SelectForm";
 import TextAreaForm from "../../../form-builders/TextAreaForm";
-import getLocationDropdownData from "../../../global-hook/dropdown/getLocationDropdownData.js";
-import getExecutiveDropdownData from "../../../global-hook/dropdown/getExecutiveDropdownData.js";
-import getCoreSettingCustomerGroupDropdownData
-    from "../../../global-hook/dropdown/getCoreSettingCustomerGroupDropdownData.js";
 import PhoneNumber from "../../../form-builders/PhoneNumberInput.jsx";
 import CustomerGroupDrawer from "./CustomerGroupDrawer.jsx";
 import Shortcut from "../../shortcut/Shortcut.jsx";
 
 
-function CustomerForm() {
+function CustomerForm(props) {
+    const { locationDropdown, customerGroupDropdownData, executiveDropdown } = props
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
@@ -45,8 +42,6 @@ function CustomerForm() {
     const validation = useSelector((state) => state.crudSlice.validation)
     const entityNewData = useSelector((state) => state.crudSlice.entityNewData)
 
-    const locationDropdown = getLocationDropdownData();
-    const executiveDropdown = getExecutiveDropdownData();
 
     const form = useForm({
         initialValues: {
@@ -236,7 +231,7 @@ function CustomerForm() {
                                                                 nextField={'name'}
                                                                 name={'customer_group_id'}
                                                                 form={form}
-                                                                dropdownValue={getCoreSettingCustomerGroupDropdownData()}
+                                                                dropdownValue={customerGroupDropdownData}
                                                                 mt={8}
                                                                 id={'customer_group_id'}
                                                                 searchable={false}
