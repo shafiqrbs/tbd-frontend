@@ -7,22 +7,22 @@ import {
     Button,
     Text,
 } from "@mantine/core";
-import { useTranslation } from 'react-i18next';
-import { useHotkeys } from "@mantine/hooks";
-import { useDispatch } from "react-redux";
+import {useTranslation} from 'react-i18next';
+import {useHotkeys} from "@mantine/hooks";
+import {useDispatch} from "react-redux";
 import SelectForm from "../../../../form-builders/SelectForm.jsx";
-import { isNotEmpty, useForm } from "@mantine/form";
+import {isNotEmpty, useForm} from "@mantine/form";
 import InputForm from "../../../../form-builders/InputForm.jsx";
 import getProRecipeMaterialProductDropdownData
     from "../../../../global-hook/dropdown/getProRecipeMaterialProductDropdownData.js";
-import {storeEntityData,setFetching} from "../../../../../store/production/crudSlice.js";
+import {storeEntityData, setFetching} from "../../../../../store/production/crudSlice.js";
 import {notifications} from "@mantine/notifications";
 import {IconCheck} from "@tabler/icons-react";
 
 function __RecipeAddItem() {
-    const { t, i18n } = useTranslation();
+    const {t, i18n} = useTranslation();
     const dispatch = useDispatch();
-    const { isOnline } = useOutletContext();
+    const {isOnline} = useOutletContext();
     const {id} = useParams();
 
     const [productData, setProductData] = useState(null);
@@ -70,7 +70,6 @@ function __RecipeAddItem() {
 
             form.setFieldValue('price', selectedProduct.purchase_price);
         } else {
-            // document.getElementById('product_id').focus()
             form.setFieldValue('price', '');
         }
     }, [form.values.product_id]);
@@ -86,10 +85,10 @@ function __RecipeAddItem() {
     return (
         <>
 
-            <Box >
-                <Grid columns={24} gutter={{ base: 8 }}>
-                    <Grid.Col span={24} >
-                        <Box bg={'white'}  >
+            <Box>
+                <Grid columns={24} gutter={{base: 8}}>
+                    <Grid.Col span={24}>
+                        <Box bg={'white'}>
                             <form onSubmit={form.onSubmit((values) => {
                                 values.item_id = id
 
@@ -103,10 +102,10 @@ function __RecipeAddItem() {
                                     notifications.show({
                                         color: 'teal',
                                         title: t('CreateSuccessfully'),
-                                        icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
+                                        icon: <IconCheck style={{width: rem(18), height: rem(18)}}/>,
                                         loading: false,
                                         autoClose: 700,
-                                        style: { backgroundColor: 'lightgray' },
+                                        style: {backgroundColor: 'lightgray'},
                                     });
 
                                     setTimeout(() => {
@@ -118,16 +117,16 @@ function __RecipeAddItem() {
                                     notifications.show({
                                         color: 'red',
                                         title: t('ProductionItemMissing'),
-                                        icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
+                                        icon: <IconCheck style={{width: rem(18), height: rem(18)}}/>,
                                         loading: false,
                                         autoClose: 700,
-                                        style: { backgroundColor: 'lightgray' },
+                                        style: {backgroundColor: 'lightgray'},
                                     });
                                 }
 
                             })}>
                                 <Box pl={`xs`} pr={8} pt={'xs'} pb={'xs'} className={'boxBackground borderRadiusAll'}>
-                                    <Grid columns={24} gutter={{ base: 6 }}>
+                                    <Grid columns={24} gutter={{base: 6}}>
                                         <Grid.Col span={12}>
                                             <SelectForm
                                                 tooltip={t('SelectMaterialName')}
@@ -207,7 +206,7 @@ function __RecipeAddItem() {
                         </Box>
                     </Grid.Col>
                 </Grid>
-            </Box >
+            </Box>
         </>
     );
 }

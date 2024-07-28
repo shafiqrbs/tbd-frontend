@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { useOutletContext } from "react-router-dom";
+import React, {useEffect, useState} from "react";
+import {useOutletContext} from "react-router-dom";
 import {
     Group,
     Box,
@@ -8,13 +8,13 @@ import {
     Menu,
     rem
 } from "@mantine/core";
-import { useTranslation } from "react-i18next";
+import {useTranslation} from "react-i18next";
 import {
     IconTrashX,
     IconDotsVertical
 } from "@tabler/icons-react";
-import { DataTable } from 'mantine-datatable';
-import { useDispatch, useSelector } from "react-redux";
+import {DataTable} from 'mantine-datatable';
+import {useDispatch, useSelector} from "react-redux";
 import {
     editEntityData,
     getIndexEntityData,
@@ -22,17 +22,16 @@ import {
     setInsertType,
     showEntityData, deleteEntityData
 } from "../../../../../store/production/crudSlice.js";
-import { modals } from "@mantine/modals";
+import {modals} from "@mantine/modals";
 import tableCss from "../../../../../assets/css/Table.module.css";
 import __RecipeAddItem from "./__RecipeAddItem.jsx";
 
 function _RecipeTable() {
 
     const dispatch = useDispatch();
-    const { t, i18n } = useTranslation();
-    const { isOnline, mainAreaHeight } = useOutletContext();
+    const {t, i18n} = useTranslation();
+    const {isOnline, mainAreaHeight} = useOutletContext();
     const tableHeight = mainAreaHeight - 120; //TabList height 104
-    const height = mainAreaHeight - 314; //TabList height 104
 
     const perPage = 50;
     const [page, setPage] = useState(1);
@@ -54,10 +53,10 @@ function _RecipeTable() {
 
     return (
         <>
-            <Box pb={'xs'} >
-                <__RecipeAddItem />
+            <Box pb={'xs'}>
+                <__RecipeAddItem/>
             </Box>
-            <Box className={'borderRadiusAll'} >
+            <Box className={'borderRadiusAll'}>
                 <DataTable
                     classNames={{
                         root: tableCss.root,
@@ -74,20 +73,20 @@ function _RecipeTable() {
                             textAlignment: 'right',
                             render: (item) => (indexData.data.indexOf(item) + 1)
                         },
-                        { accessor: 'product_name', title: t("Item") },
-                        { accessor: 'unit_name', title: t("Uom") },
-                        { accessor: 'quantity', title: t("Quantity"),textAlign:'center' },
-                        { accessor: 'price', title: t("Price"),textAlign:'center' },
-                        { accessor: 'sub_total', title: t("SubTotal"),textAlign:'center' },
-                        { accessor: 'wastage_percent', title: t("Wastage%"),textAlign:'center' },
-                        { accessor: 'wastage_quantity', title: t("WastageQuantity"),textAlign:'center' },
-                        { accessor: 'wastage_amount', title: t("WastageAmount"),textAlign:'center' },
+                        {accessor: 'product_name', title: t("Item")},
+                        {accessor: 'unit_name', title: t("Uom")},
+                        {accessor: 'quantity', title: t("Quantity"), textAlign: 'center'},
+                        {accessor: 'price', title: t("Price"), textAlign: 'center'},
+                        {accessor: 'sub_total', title: t("SubTotal"), textAlign: 'center'},
+                        {accessor: 'wastage_percent', title: t("Wastage%"), textAlign: 'center'},
+                        {accessor: 'wastage_quantity', title: t("WastageQuantity"), textAlign: 'center'},
+                        {accessor: 'wastage_amount', title: t("WastageAmount"), textAlign: 'center'},
                         {
                             accessor: 'status',
                             title: t("Status"),
                             render: (item) => (
                                 <>
-                                    {item.status==1?'Active':'Inactive'}
+                                    {item.status == 1 ? 'Active' : 'Inactive'}
                                 </>
                             )
                         },
@@ -97,10 +96,12 @@ function _RecipeTable() {
                             textAlign: "right",
                             render: (data) => (
                                 <Group gap={4} justify="right" wrap="nowrap">
-                                    <Menu position="bottom-end" offset={3} withArrow trigger="hover" openDelay={100} closeDelay={400}>
+                                    <Menu position="bottom-end" offset={3} withArrow trigger="hover" openDelay={100}
+                                          closeDelay={400}>
                                         <Menu.Target>
-                                            <ActionIcon size="sm" variant="outline" color="red" radius="xl" aria-label="Settings">
-                                                <IconDotsVertical height={'18'} width={'18'} stroke={1.5} />
+                                            <ActionIcon size="sm" variant="outline" color="red" radius="xl"
+                                                        aria-label="Settings">
+                                                <IconDotsVertical height={'18'} width={'18'} stroke={1.5}/>
                                             </ActionIcon>
                                         </Menu.Target>
                                         <Menu.Dropdown>
@@ -141,7 +142,7 @@ function _RecipeTable() {
                                                         children: (
                                                             <Text size="sm"> {t("FormConfirmationMessage")}</Text>
                                                         ),
-                                                        labels: { confirm: 'Confirm', cancel: 'Cancel' },
+                                                        labels: {confirm: 'Confirm', cancel: 'Cancel'},
                                                         onCancel: () => console.log('Cancel'),
                                                         onConfirm: () => {
                                                             dispatch(deleteEntityData('vendor/' + data.id))
@@ -149,7 +150,7 @@ function _RecipeTable() {
                                                         },
                                                     });
                                                 }}
-                                                rightSection={<IconTrashX style={{ width: rem(14), height: rem(14) }} />}
+                                                rightSection={<IconTrashX style={{width: rem(14), height: rem(14)}}/>}
                                             >
                                                 {t('Delete')}
                                             </Menu.Item>
@@ -171,7 +172,7 @@ function _RecipeTable() {
                     loaderSize="xs"
                     loaderColor="grape"
                     height={tableHeight}
-                    scrollAreaProps={{ type: 'never' }}
+                    scrollAreaProps={{type: 'never'}}
                 />
             </Box>
         </>
