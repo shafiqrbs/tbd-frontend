@@ -27,17 +27,15 @@ function RecipeItemsIndex() {
                             <ProductionHeaderNavbar
                                 pageTitle={t('ManageProductionItem')}
                                 roles={t('Roles')}
-                                allowedZeroPercentage={configData.zero_stock}
-                                currentSymbol={configData.currency.symbol}
+                                allowedZeroPercentage={configData?.zero_stock}
+                                currentSymbol={configData?.currency?.symbol}
                             />
                             <Box p={'8'}>
 
                                 <Grid columns={24} gutter={{ base: 8 }}>
                                     <Grid.Col span={24}>
                                         <Box bg={'white'} p={'xs'} className={'borderRadiusAll'}>
-                                            
                                             <_RecipeItemsTable />
-
                                         </Box>
                                     </Grid.Col>
                                 </Grid>

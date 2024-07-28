@@ -39,7 +39,7 @@ function FilterModel(props) {
                     {props.module === 'user' && <UserFilterForm module={props.module} />}
                     {props.module === 'product' && <ProductFilterForm module={props.module} />}
                     {props.module === 'category' && <CategoryFilterForm module={props.module} />}
-                    {props.module === 'production-setting' && <ProductionSettingFilterForm module={props.module} />}
+                    {props.module === 'production-setting' && <__ProductionSettingFilterForm module={props.module} />}
                 </Box>
                 <Box pl={`xs`} pr={8} pt={'6'} pb={'6'} mb={'4'} className={'boxBackground borderRadiusAll'} >
                     <Grid columns={4} gutter={0}>
@@ -74,26 +74,6 @@ function FilterModel(props) {
                     </Grid>
                 </Box>
             </Box>
-            {props.module === 'customer' && <CustomerFilterForm module={props.module} />}
-            {props.module === 'category-group' && <CategoryGroupFilterForm module={props.module} />}
-            {props.module === 'vendor' && <VendorFilterForm module={props.module} />}
-            {props.module === 'user' && <UserFilterForm module={props.module} />}
-            {props.module === 'product' && <ProductFilterForm module={props.module} />}
-            {props.module === 'category' && <CategoryFilterForm module={props.module} />}
-            {props.module === 'production-setting' && <__ProductionSettingFilterForm module={props.module} />}
-            <Button
-                id={'submit'}
-                mt={8}
-                p={'absolute'}
-                right
-                variant="filled"
-                onClick={() => {
-                    dispatch(setFetching(true))
-                    closeModel()
-                }}
-            >
-                {t('Submit')}
-            </Button>
         </Drawer>
     );
 }

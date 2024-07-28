@@ -8,9 +8,10 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from "react-redux";
 import classes from '../../../../assets/css/HeaderSearch.module.css';
 import {
-    IconInfoCircle, IconTrash, IconSearch, IconSettings
+    IconInfoCircle, IconTrash, IconSearch, IconSettings,IconRestore
 } from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
+import {getIndexEntityData, getRestoreData} from "../../../../store/production/crudSlice";
 
 
 function ProductionHeaderNavbar(props) {
@@ -37,6 +38,11 @@ function ProductionHeaderNavbar(props) {
             {link.label}
         </a>
     ));
+
+    const dataRestore = () => {
+        dispatch(getRestoreData('production/recipe-items'))
+    }
+
     return (
         <>
             <header className={classes.header}>
@@ -53,6 +59,9 @@ function ProductionHeaderNavbar(props) {
                                 </ActionIcon>
                             </Menu.Target>
                             <Menu.Dropdown>
+                                <Menu.Item href="javascript:"  onClick={dataRestore} leftSection={<IconRestore style={{ width: rem(14), height: rem(14) }} />}>
+                                    {t('ItemRestore')}
+                                </Menu.Item>
                                 <Menu.Item href="/production/setting"
                                     component="button" onClick={(e) => { navigate('/production/setting') }} leftSection={<IconSettings style={{ width: rem(14), height: rem(14) }} />}>
                                     {t('ProductionSetting')}

@@ -97,6 +97,16 @@ export const inlineUpdateEntityData = createAsyncThunk("inline-update", async (v
     }
 });
 
+export const getRestoreData = createAsyncThunk("data-restore", async (value) => {
+    try {
+        const response = getDataWithoutParam(value);
+        return response;
+    } catch (error) {
+        console.log('error', error.message);
+        throw error;
+    }
+});
+
 const crudSlice = createSlice({
     name: "production",
     initialState: {
@@ -165,6 +175,10 @@ const crudSlice = createSlice({
         builder.addCase(getIndexEntityData.fulfilled, (state, action) => {
             state.indexEntityData = action.payload
             state.fetching = false
+        })
+
+        builder.addCase(getRestoreData.fulfilled,(state ,action) => {
+            state.fetching = true
         })
 
         builder.addCase(storeEntityData.fulfilled, (state, action) => {
