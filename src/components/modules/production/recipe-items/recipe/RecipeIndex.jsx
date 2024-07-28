@@ -1,26 +1,26 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect} from "react";
 import {
     Box,
     Grid,
     Progress,
-    Title
 } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from "react-redux";
 
-import ReceipeTable from "./ReceipeTable.jsx";
-import ReceipeForm from "./ReceipeForm.jsx";
-import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress.js";
-import getConfigData from "../../../global-hook/config-data/getConfigData.js";
-import InventoryHeaderNavbar from "../configuraton/InventoryHeaderNavbar";
+import _RecipeTable from "./_RecipeTable.jsx";
+import _RecipeForm from "./_RecipeForm.jsx";
+import { getLoadingProgress } from "../../../../global-hook/loading-progress/getLoadingProgress.js";
+import ProductionHeaderNavbar from "../../common/ProductionHeaderNavbar.jsx";
+import {getMeasurementInputData} from "../../../../../store/production/utilitySlice.js";
+import {useDispatch} from "react-redux";
 
-function ReceipeIndex() {
+function RecipeIndex() {
     const { t, i18n } = useTranslation();
-    const insertType = useSelector((state) => state.crudSlice.insertType)
-
     const progress = getLoadingProgress()
-    const configData = getConfigData()
+    const dispatch = useDispatch();
 
+    useEffect(() => {
+        dispatch(getMeasurementInputData('production/measurement-input'))
+    }, []);
 
     return (
         <>
@@ -29,7 +29,7 @@ function ReceipeIndex() {
                 <Progress color="red" size={"xs"} striped animated value={progress} transitionDuration={200} />}
             {progress === 100 &&
                 <>
-                    <InventoryHeaderNavbar
+                    <ProductionHeaderNavbar
                         pageTitle={t('ProductionReceipe')}
                         roles={t('Roles')}
                         allowZeroPercentage={''}
@@ -39,11 +39,11 @@ function ReceipeIndex() {
                         <Grid columns={24} gutter={{ base: 8 }}>
                             <Grid.Col span={15} >
                                 <Box bg={'white'} p={'xs'} className={'borderRadiusAll'}>
-                                    <ReceipeTable />
+                                    <_RecipeTable />
                                 </Box>
                             </Grid.Col>
                             <Grid.Col span={9} >
-                                <ReceipeForm />
+                                <_RecipeForm />
                             </Grid.Col>
                         </Grid>
                     </Box>
@@ -53,4 +53,4 @@ function ReceipeIndex() {
     );
 }
 
-export default ReceipeIndex;
+export default RecipeIndex;

@@ -20,7 +20,7 @@ import InputForm from "../../../form-builders/InputForm.jsx";
 import SelectForm from "../../../form-builders/SelectForm.jsx";
 import SwitchForm from "../../../form-builders/SwitchForm.jsx";
 
-function ProductionSettingForm(props) {
+function _ProductionSettingForm(props) {
     const {settingTypeDropdown, formSubmitId} = props
     const {t, i18n} = useTranslation();
     const dispatch = useDispatch();
@@ -204,4 +204,4 @@ function ProductionSettingForm(props) {
     );
 }
 
-export default ProductionSettingForm;
+export default _ProductionSettingForm;

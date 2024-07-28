@@ -14,7 +14,12 @@ import {
 } from "@tabler/icons-react";
 import { useHotkeys } from "@mantine/hooks";
 import { useDispatch, useSelector } from "react-redux";
-import { setFetching, setSearchKeyword ,setProductionSettingFilterData} from "../../../../store/production/crudSlice.js";
+import {
+    setFetching,
+    setSearchKeyword,
+    setProductionSettingFilterData,
+    setRecipeItemFilterData
+} from "../../../../store/production/crudSlice.js";
 import FilterDrawer from "./FilterDrawer.jsx";
 
 function KeywordSearch(props) {
@@ -27,6 +32,7 @@ function KeywordSearch(props) {
 
     const searchKeyword = useSelector((state) => state.productionCrudSlice.searchKeyword)
     const productionSettingFilterData = useSelector((state) => state.productionCrudSlice.productionSettingFilterData)
+    const recipeItemFilterData = useSelector((state) => state.productionCrudSlice.recipeItemFilterData)
 
     useHotkeys(
         [['alt+F', () => {
@@ -166,6 +172,12 @@ function KeywordSearch(props) {
                                         dispatch(setProductionSettingFilterData({
                                             ...productionSettingFilterData,
                                             name:'',
+                                            setting_type_id:''
+                                        }));
+                                    }else if (props.module === 'recipe-item') {
+                                        dispatch(setRecipeItemFilterData({
+                                            ...recipeItemFilterData,
+                                            product_name:'',
                                             setting_type_id:''
                                         }));
                                     }
