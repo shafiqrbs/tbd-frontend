@@ -60,7 +60,7 @@ function CategoryForm(props) {
         <>
             <Box>
                 <form onSubmit={form.onSubmit((values) => {
-                    console.log(values)
+                    // console.log(values)
                     modals.openConfirmModal({
                         title: (
                             <Text size="md"> {t("FormConfirmationTitle")}</Text>
