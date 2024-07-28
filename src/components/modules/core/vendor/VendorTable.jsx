@@ -6,15 +6,14 @@ import {
     ActionIcon, Text, Menu, rem
 } from "@mantine/core";
 import { useTranslation } from "react-i18next";
-import { IconEye, IconEdit, IconTrash, IconDotsVertical, IconTrashX } from "@tabler/icons-react";
+import { IconDotsVertical, IconTrashX } from "@tabler/icons-react";
 import { DataTable } from 'mantine-datatable';
 import { useDispatch, useSelector } from "react-redux";
 import {
     editEntityData,
-    getIndexEntityData, setEditEntityData,
+    getIndexEntityData,
     setFetching, setFormLoading,
     setInsertType,
-    showEntityData
 } from "../../../../store/core/crudSlice.js";
 import KeywordSearch from "../../filter/KeywordSearch";
 import { modals } from "@mantine/modals";

@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useOutletContext, useParams } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import {
     Button,
     rem,
-    Grid, Box, ScrollArea, Tooltip, Group, Text, LoadingOverlay, Title, Flex, Stack,
+    Grid, Box, ScrollArea, Text, LoadingOverlay, Title, Flex, Stack,
 } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
 import {
     IconCheck,
     IconDeviceFloppy,
-    IconRestore, IconPencilBolt
 } from "@tabler/icons-react";
 import { useHotkeys } from "@mantine/hooks";
 import InputForm from "../../../form-builders/InputForm";
@@ -23,7 +22,6 @@ import {
     setFetching, setFormLoading, setInsertType,
     updateEntityData
 } from "../../../../store/core/crudSlice.js";
-import { getCustomerDropdown } from "../../../../store/core/utilitySlice.js";
 
 import SelectForm from "../../../form-builders/SelectForm.jsx";
 import TextAreaForm from "../../../form-builders/TextAreaForm.jsx";

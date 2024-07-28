@@ -3,11 +3,10 @@ import { useOutletContext } from "react-router-dom";
 import {
     Button,
     rem, Flex,
-    Grid, Box, ScrollArea, Group, Text, Title, Stack, Tooltip, ActionIcon,
+    Grid, Box, ScrollArea, Text, Title, Stack,
 } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
 import {
-    IconCategoryPlus,
     IconCheck,
     IconDeviceFloppy,
 } from "@tabler/icons-react";
