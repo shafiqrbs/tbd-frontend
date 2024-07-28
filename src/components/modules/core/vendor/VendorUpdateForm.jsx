@@ -27,11 +27,12 @@ import { getCustomerDropdown } from "../../../../store/core/utilitySlice.js";
 
 import SelectForm from "../../../form-builders/SelectForm.jsx";
 import TextAreaForm from "../../../form-builders/TextAreaForm.jsx";
-import getCustomerDropdownData from "../../../global-hook/dropdown/getCustomerDropdownData";
 import InputNumberForm from "../../../form-builders/InputNumberForm";
 import Shortcut from "../../shortcut/Shortcut.jsx";
+import PhoneNumber from "../../../form-builders/PhoneNumberInput.jsx";
 
-function VendorUpdateForm() {
+function VendorUpdateForm(props) {
+    const { customerDropDownData } = props
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
@@ -41,23 +42,9 @@ function VendorUpdateForm() {
     const [setFormData, setFormDataForUpdate] = useState(false);
     const [formLoad, setFormLoad] = useState(true);
     const [customerData, setCustomerData] = useState(null);
-
-    // const customerDropdownData = useSelector((state) => state.utilitySlice.customerDropdownData)
     const entityEditData = useSelector((state) => state.crudSlice.entityEditData)
     const formLoading = useSelector((state) => state.crudSlice.formLoading)
     const navigate = useNavigate();
-
-
-
-    // let customerDropdown = customerDropdownData && customerDropdownData.length > 0 ?
-    //     customerDropdownData.map((type, index) => {
-    //         return ({ 'label': type.name, 'value': String(type.id) })
-    //     }) : []
-
-    useEffect(() => {
-        dispatch(getCustomerDropdown('core/select/customer'))
-    }, []);
-
 
     const form = useForm({
         initialValues: {
@@ -66,7 +53,11 @@ function VendorUpdateForm() {
         validate: {
             company_name: hasLength({ min: 2, max: 20 }),
             name: hasLength({ min: 2, max: 20 }),
-            mobile: (value) => (!/^\d+$/.test(value)),
+            mobile: (value) => {
+                if (!value) return t('MobileValidationRequired');
+                if (!/^\d{13}$/.test(value)) return t('MobileValidationDigitCount');
+                return null;
+            },
             // tp_percent: (value) => (value && !/^\d*\.?\d*$/.test(value)),
             // email: (value) => (value && !/^\S+@\S+$/.test(value)),
         }
@@ -123,7 +114,7 @@ function VendorUpdateForm() {
     }]], []);
 
     useHotkeys([['alt+s', () => {
-        document.getElementById('UserFormSubmit').click()
+        document.getElementById('EntityFormSubmit').click()
     }]], []);
 
 
@@ -202,7 +193,7 @@ function VendorUpdateForm() {
                                         </Grid.Col>
                                     </Grid>
                                 </Box>
-                                <Box pl={`xs`} pr={'xs'} mt={'xs'} className={'borderRadiusAll'}>
+                                <Box pl={`xs`} pr={'xs'} className={'borderRadiusAll'}>
                                     <ScrollArea h={height} scrollbarSize={2} scrollbars="y" type="never">
                                         <Box>
                                             <LoadingOverlay visible={formLoad} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />
@@ -233,9 +224,9 @@ function VendorUpdateForm() {
                                                 />
                                             </Box>
                                             <Box mt={'xs'}>
-                                                <InputForm
+                                                <PhoneNumber
                                                     form={form}
-                                                    tooltip={t('MobileValidateMessage')}
+                                                    tooltip={form.errors.mobile ? form.errors.mobile : t('MobileValidateMessage')}
                                                     label={t('VendorMobile')}
                                                     placeholder={t('VendorMobile')}
                                                     required={true}
@@ -280,11 +271,13 @@ function VendorUpdateForm() {
                                                     nextField={'address'}
                                                     name={'customer_id'}
                                                     form={form}
-                                                    dropdownValue={getCustomerDropdownData()}
+                                                    dropdownValue={customerDropDownData}
                                                     mt={8}
                                                     id={'customer_id'}
                                                     searchable={true}
-                                                    value={customerData}
+                                                    value={customerData ? String(customerData)
+                                                        : entityEditData.customer_id ? String(entityEditData.customer_id) : null
+                                                    }
                                                     changeValue={setCustomerData}
                                                 />
                                             </Box>

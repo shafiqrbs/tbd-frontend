@@ -512,5 +512,7 @@
   "Sku": "Sku :",
   "RetailInvoice": "Retail Invoice",
   "BillTo": "Bill To",
-  "UserDetails": "User Details Information"
+  "UserDetails": "User Details Information",
+  "MobileValidationRequired": "Mobile Number is Required",
+  "MobileValidationDigitCount": "Please Enter a Valid Mobile Number"
 }

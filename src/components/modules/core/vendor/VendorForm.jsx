@@ -22,12 +22,12 @@ import { setFetching, storeEntityData } from "../../../../store/core/crudSlice.j
 import InputForm from "../../../form-builders/InputForm";
 import SelectForm from "../../../form-builders/SelectForm";
 import TextAreaForm from "../../../form-builders/TextAreaForm";
-import getCustomerDropdownData from "../../../global-hook/dropdown/getCustomerDropdownData.js";
 import InputNumberForm from "../../../form-builders/InputNumberForm";
 import PhoneNumber from "../../../form-builders/PhoneNumberInput.jsx";
 import Shortcut from "../../shortcut/Shortcut.jsx";
 
-function VendorForm() {
+function VendorForm(props) {
+    const { customerDropDownData } = props
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
@@ -41,7 +41,11 @@ function VendorForm() {
         validate: {
             company_name: hasLength({ min: 2, max: 20 }),
             name: hasLength({ min: 2, max: 20 }),
-            mobile: (value) => (!/^\d+$/.test(value)),
+            mobile: (value) => {
+                if (!value) return t('MobileValidationRequired');
+                if (!/^\d{13}$/.test(value)) return t('MobileValidationDigitCount');
+                return null;
+            },
         }
     });
 
@@ -165,7 +169,7 @@ function VendorForm() {
                                             <Box mt={'xs'}>
                                                 <PhoneNumber
                                                     form={form}
-                                                    tooltip={t('MobileValidateMessage')}
+                                                    tooltip={form.errors.mobile ? form.errors.mobile : t('MobileValidateMessage')}
                                                     label={t('VendorMobile')}
                                                     placeholder={t('VendorMobile')}
                                                     required={true}
@@ -211,7 +215,7 @@ function VendorForm() {
                                                     nextField={'address'}
                                                     name={'customer_id'}
                                                     form={form}
-                                                    dropdownValue={getCustomerDropdownData()}
+                                                    dropdownValue={customerDropDownData}
                                                     mt={8}
                                                     id={'customer_id'}
                                                     searchable={true}
@@ -223,9 +227,9 @@ function VendorForm() {
                                                 <TextAreaForm
                                                     tooltip={t('Address')}
                                                     label={t('Address')}
-                                                    placeholder={t('EntityFormSubmit')}
+                                                    placeholder={t('Address')}
                                                     required={false}
-                                                    nextField={'Status'}
+                                                    nextField={'EntityFormSubmit'}
                                                     name={'address'}
                                                     form={form}
                                                     mt={8}

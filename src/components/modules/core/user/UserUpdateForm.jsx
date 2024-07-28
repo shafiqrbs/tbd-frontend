@@ -49,7 +49,11 @@ function UserUpdateForm() {
             name: hasLength({ min: 2, max: 50 }),
             username: hasLength({ min: 2, max: 20 }),
             email: isEmail(),
-            mobile: isNotEmpty()
+            mobile: (value) => {
+                if (!value) return t('MobileValidationRequired');
+                if (!/^\d{13}$/.test(value)) return t('MobileValidationDigitCount');
+                return null;
+            },
         }
     });
 
@@ -224,7 +228,7 @@ function UserUpdateForm() {
                                                 </Box>
                                                 <Box mt={'xs'}>
                                                     <PhoneNumber
-                                                        tooltip={t('MobileValidateMessage')}
+                                                        tooltip={form.errors.mobile ? form.errors.mobile : t('MobileValidateMessage')}
                                                         label={t('Mobile')}
                                                         placeholder={t('Mobile')}
                                                         required={true}
