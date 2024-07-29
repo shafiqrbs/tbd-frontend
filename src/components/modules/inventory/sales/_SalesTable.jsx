@@ -27,10 +27,11 @@ import { DataTable } from 'mantine-datatable';
 import { useDispatch, useSelector } from "react-redux";
 import { useHotkeys } from "@mantine/hooks";
 import { getIndexEntityData, setFetching, setSalesFilterData } from "../../../../store/inventory/crudSlice.js";
-import _ShortcutTable from "../../shortcut/_ShortcutTable";
+import __ShortcutTable from "../../shortcut/__ShortcutTable";
 import { ReactToPrint } from "react-to-print";
 import _SalesSearch from "./_SalesSearch.jsx";
 import { setSearchKeyword } from "../../../../store/core/crudSlice.js";
+import { SalesPrintA4 } from "./print-component/SalesPrintA4.jsx";
 
 function _SalesTable() {
     const navigate = useNavigate();
@@ -44,6 +45,7 @@ function _SalesTable() {
     const perPage = 50;
     const [page, setPage] = useState(1);
     const [selectedRow, setSelectedRow] = useState('');
+    const [printA4, setPrintA4] = useState(false);
 
     useEffect(() => {
         dispatch(setSearchKeyword(''))
@@ -467,13 +469,11 @@ function _SalesTable() {
                                     variant="filled"
                                     leftSection={<IconPrinter size={14} />}
                                     color="green.5"
+                                    onClick={() => {
+                                        setPrintA4(true)
+                                    }}
                                 >
-                                    <ReactToPrint
-                                        trigger={() => {
-                                            return <a href="#">{t('Print')}</a>;
-                                        }}
-                                        content={() => printRef.current}
-                                    />
+                                    {t('Print')}
                                 </Button>
                                 <Button
                                     fullWidth
@@ -481,12 +481,7 @@ function _SalesTable() {
                                     leftSection={<IconReceipt size={14} />}
                                     color="red.5"
                                 >
-                                    <ReactToPrint
-                                        trigger={() => {
-                                            return <a href="#">{t('Pos')}</a>;
-                                        }}
-                                        content={() => printRef.current}
-                                    />
+                                    {t('Pos')}
                                 </Button>
 
                                 <Button
@@ -505,7 +500,7 @@ function _SalesTable() {
                     </Grid.Col>
                     <Grid.Col span={1} >
                         <Box bg={'white'} className={'borderRadiusAll'} pt={'16'}>
-                            <_ShortcutTable
+                            <__ShortcutTable
                                 form=''
                                 FormSubmit={'EntityFormSubmit'}
                                 Name={'CompanyName'}
@@ -514,6 +509,7 @@ function _SalesTable() {
                     </Grid.Col>
                 </Grid>
             </Box>
+            {printA4 && <SalesPrintA4 printA4={printA4} setPrintA4={setPrintA4} />}
         </>
     );
 }
