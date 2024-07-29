@@ -8,9 +8,9 @@ import {
 import { useTranslation } from 'react-i18next';
 import {
     IconCheck,
-    IconDeviceFloppy, IconPlus, IconUsersGroup,
+    IconDeviceFloppy, IconUsersGroup,
 } from "@tabler/icons-react";
-import { useDisclosure, useHotkeys } from "@mantine/hooks";
+import { useHotkeys } from "@mantine/hooks";
 import InputForm from "../../../form-builders/InputForm";
 import { useDispatch, useSelector } from "react-redux";
 import { hasLength, useForm } from "@mantine/form";
@@ -30,7 +30,7 @@ import CustomerGroupDrawer from "./CustomerGroupDrawer.jsx";
 import Shortcut from "../../shortcut/Shortcut.jsx";
 
 function CustomerUpdateForm(props) {
-    const {locationDropdown, customerGroupDropdownData, executiveDropdown} = props
+    const { locationDropdown, customerGroupDropdownData, executiveDropdown } = props
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
@@ -45,7 +45,7 @@ function CustomerUpdateForm(props) {
 
     const entityEditData = useSelector((state) => state.crudSlice.entityEditData)
     const formLoading = useSelector((state) => state.crudSlice.formLoading)
-    
+
 
     const form = useForm({
         initialValues: {
@@ -62,7 +62,16 @@ function CustomerUpdateForm(props) {
         },
         validate: {
             name: hasLength({ min: 2, max: 50 }),
-            mobile: (value) => (!/^\d+$/.test(value)),
+            mobile: (value) => {
+                if (!value) return t('MobileValidationRequired');
+                if (!/^\d{13}$/.test(value)) return t('MobileValidationDigitCount');
+                return null;
+            },
+            alternative_mobile: (value) => {
+                if (!value) return t('MobileValidationRequired');
+                if (!/^\d{13}$/.test(value)) return t('MobileValidationDigitCount');
+                return null;
+            },
             email: (value) => {
                 if (value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
                     return true;
@@ -78,15 +87,7 @@ function CustomerUpdateForm(props) {
                 }
                 return null;
             },
-            alternative_mobile: (value) => {
-                if (value && value.trim()) {
-                    const isDigitsOnly = /^\d+$/.test(value);
-                    if (!isDigitsOnly) {
-                        return true;
-                    }
-                }
-                return null;
-            },
+
         }
     });
 
@@ -293,7 +294,7 @@ function CustomerUpdateForm(props) {
                                                     <Grid.Col span={6} >
                                                         <Box>
                                                             <PhoneNumber
-                                                                tooltip={t('MobileValidateMessage')}
+                                                                tooltip={form.errors.mobile ? form.errors.mobile : t('MobileValidateMessage')}
                                                                 label={t('Mobile')}
                                                                 placeholder={t('Mobile')}
                                                                 required={true}
@@ -308,7 +309,7 @@ function CustomerUpdateForm(props) {
                                                     <Grid.Col span={6}>
                                                         <Box>
                                                             <PhoneNumber
-                                                                tooltip={t('MobileValidateMessage')}
+                                                                tooltip={form.errors.alternative_mobile ? form.errors.alternative_mobile : t('MobileValidateMessage')}
                                                                 label={t('AlternativeMobile')}
                                                                 placeholder={t('AlternativeMobile')}
                                                                 required={false}

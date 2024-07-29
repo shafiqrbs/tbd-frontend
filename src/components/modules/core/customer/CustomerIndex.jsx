@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import {
     Box,
-    Grid, Progress, Title
+    Grid, Progress
 } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from "react-redux";

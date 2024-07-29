@@ -10,7 +10,7 @@ import {
     IconCheck,
     IconDeviceFloppy, IconUsersGroup
 } from "@tabler/icons-react";
-import { useDisclosure, useHotkeys } from "@mantine/hooks";
+import { useHotkeys } from "@mantine/hooks";
 import { useDispatch, useSelector } from "react-redux";
 import { hasLength, useForm } from "@mantine/form";
 import { modals } from "@mantine/modals";
@@ -58,7 +58,16 @@ function CustomerForm(props) {
         },
         validate: {
             name: hasLength({ min: 2, max: 20 }),
-            mobile: (value) => (!/^\+?\d+$/.test(value)),
+            mobile: (value) => {
+                if (!value) return t('MobileValidationRequired');
+                if (!/^\d{13}$/.test(value)) return t('MobileValidationDigitCount');
+                return null;
+            },
+            alternative_mobile: (value) => {
+                if (!value) return t('MobileValidationRequired');
+                if (!/^\d{13}$/.test(value)) return t('MobileValidationDigitCount');
+                return null;
+            },
             email: (value) => {
                 if (value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
                     return true;
@@ -69,15 +78,6 @@ function CustomerForm(props) {
                 if (value) {
                     const isNumberOrFractional = /^-?\d+(\.\d+)?$/.test(value);
                     if (!isNumberOrFractional) {
-                        return true;
-                    }
-                }
-                return null;
-            },
-            alternative_mobile: (value) => {
-                if (value && value.trim()) {
-                    const isDigitsOnly = /^\d+$/.test(value);
-                    if (!isDigitsOnly) {
                         return true;
                     }
                 }
@@ -150,10 +150,6 @@ function CustomerForm(props) {
         };
         form.setValues(originalValues);
     }
-
-    const marKValues = [
-        'test', 'test2'
-    ]
 
     return (
         <Box>
@@ -280,7 +276,7 @@ function CustomerForm(props) {
                                                     <Grid.Col span={6} >
                                                         <Box>
                                                             <PhoneNumber
-                                                                tooltip={t('MobileValidateMessage')}
+                                                                tooltip={form.errors.mobile ? form.errors.mobile : t('MobileValidateMessage')}
                                                                 label={t('Mobile')}
                                                                 placeholder={t('Mobile')}
                                                                 required={true}
@@ -295,7 +291,7 @@ function CustomerForm(props) {
                                                     <Grid.Col span={6}>
                                                         <Box>
                                                             <PhoneNumber
-                                                                tooltip={t('MobileValidateMessage')}
+                                                                tooltip={form.errors.alternative_mobile ? form.errors.alternative_mobile : t('MobileValidateMessage')}
                                                                 label={t('AlternativeMobile')}
                                                                 placeholder={t('AlternativeMobile')}
                                                                 required={true}
