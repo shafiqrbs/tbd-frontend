@@ -74,6 +74,7 @@ function InputForm(props) {
                                 </Tooltip>
                         }
                         withAsterisk={required}
+                        inputWrapperOrder={['label', 'input', 'description']}
                     />
                 </Tooltip>
             }

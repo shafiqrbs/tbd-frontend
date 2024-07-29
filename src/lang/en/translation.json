@@ -516,5 +516,10 @@
   "UserDetails": "User Details Information",
   "MobileValidationRequired": "Mobile Number is Required",
   "MobileValidationDigitCount": "Please Enter a Valid Mobile Number",
-  "VendorDetailsData": "Vendor Details Information"
+  "VendorDetailsData": "Vendor Details Information",
+  "NameRequiredMessage": "Name is Required",
+  "NameLengthMessage": "Name Must be 2-20 characters long",
+  "PasswordRequiredMessage": "Password is Required",
+  "PasswordValidateMessage": "Password must be atleast 6 Characters",
+  "PasswordSimilarMessage": "Please check Input Password"
 }
