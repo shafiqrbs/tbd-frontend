@@ -522,5 +522,7 @@
   "PasswordRequiredMessage": "Password is Required",
   "PasswordValidateMessage": "Password must be atleast 6 Characters",
   "PasswordSimilarMessage": "Please check Input Password",
-  "UserNameRequiredMessage": "Username is Required"
+  "UserNameRequiredMessage": "Username is Required",
+  "ProductManagement": "Product Management",
+  "SkuManagement": "SKU Management"
 }

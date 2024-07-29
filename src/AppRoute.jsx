@@ -37,6 +37,7 @@ import ProductSettingsIndex from './components/modules/inventory/product-setting
 import ProductionSettingIndex from "./components/modules/production/settings/ProductionSettingIndex.jsx";
 import RecipeItemsIndex from "./components/modules/production/recipe-items/RecipeItemsIndex.jsx";
 import RecipeIndex from "./components/modules/production/recipe-items/recipe/RecipeIndex.jsx";
+import ProductManagementIndex from './components/modules/inventory/product-management/ProductManagementIndex.jsx';
 
 
 function AppRoute() {
@@ -88,6 +89,7 @@ function AppRoute() {
                     <Route path="invoice-batch" element={<InvoiceBatchIndex />} />
                     <Route path="product-settings" element={<ProductSettingsIndex />} />
                     <Route path="product-settings/:settingsId" element={<ProductSettingsIndex />} />
+                    <Route path="product-management" element={<ProductManagementIndex />} />
 
 
                 </Route>
