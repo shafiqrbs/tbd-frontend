@@ -52,7 +52,7 @@ function UserUpdateForm() {
                 return null;
             },
             username: (value) => {
-                if (!value) return t('NameRequiredMessage');
+                if (!value) return t('UserNameRequiredMessage');
                 if (value.length < 2 || value.length > 20) return t('NameLengthMessage');
                 return null;
             },

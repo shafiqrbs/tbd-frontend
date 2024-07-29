@@ -521,5 +521,6 @@
   "NameLengthMessage": "Name Must be 2-20 characters long",
   "PasswordRequiredMessage": "Password is Required",
   "PasswordValidateMessage": "Password must be atleast 6 Characters",
-  "PasswordSimilarMessage": "Please check Input Password"
+  "PasswordSimilarMessage": "Please check Input Password",
+  "UserNameRequiredMessage": "Username is Required"
 }
