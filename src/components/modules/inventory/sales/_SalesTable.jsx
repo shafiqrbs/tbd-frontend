@@ -32,6 +32,7 @@ import { ReactToPrint } from "react-to-print";
 import _SalesSearch from "./_SalesSearch.jsx";
 import { setSearchKeyword } from "../../../../store/core/crudSlice.js";
 import { SalesPrintA4 } from "./print-component/SalesPrintA4.jsx";
+import { SalesPrintPos } from "./print-component/SalesPrintPos.jsx";
 
 function _SalesTable() {
     const navigate = useNavigate();
@@ -46,6 +47,7 @@ function _SalesTable() {
     const [page, setPage] = useState(1);
     const [selectedRow, setSelectedRow] = useState('');
     const [printA4, setPrintA4] = useState(false);
+    const [printPos, setPrintPos] = useState(false);
 
     useEffect(() => {
         dispatch(setSearchKeyword(''))
@@ -480,6 +482,9 @@ function _SalesTable() {
                                     variant="filled"
                                     leftSection={<IconReceipt size={14} />}
                                     color="red.5"
+                                    onClick={() => {
+                                        setPrintPos(true);
+                                    }}
                                 >
                                     {t('Pos')}
                                 </Button>
@@ -509,7 +514,8 @@ function _SalesTable() {
                     </Grid.Col>
                 </Grid>
             </Box>
-            {printA4 && <SalesPrintA4 printA4={printA4} setPrintA4={setPrintA4} />}
+            {printA4 && <SalesPrintA4 salesViewData={salesViewData} setPrintA4={setPrintA4} />}
+            {printPos && <SalesPrintPos salesViewData={salesViewData} setPrintPos={setPrintPos} />}
         </>
     );
 }

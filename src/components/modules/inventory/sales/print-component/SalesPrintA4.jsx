@@ -211,7 +211,7 @@ export function SalesPrintA4(props) {
                                 </tr>
                             </thead>
                             <tbody>
-                                {salesViewData && salesViewData.invoice_batch_items && salesViewData.invoice_batch_items.map((element, index) => (
+                                {salesViewData && salesViewData.sales_items && salesViewData.sales_items.map((element, index) => (
                                     <React.Fragment key={index}>
 
                                         <tr className={classes['invoice-body-table-tr']}>
