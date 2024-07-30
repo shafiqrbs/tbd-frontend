@@ -68,8 +68,8 @@ function CustomerUpdateForm(props) {
                 return null;
             },
             alternative_mobile: (value) => {
-                if (!value) return t('MobileValidationRequired');
-                if (!/^\d{13}$/.test(value)) return t('MobileValidationDigitCount');
+                if (value && !value) return t('MobileValidationRequired');
+                if (value && !/^\d{13}$/.test(value)) return t('MobileValidationDigitCount');
                 return null;
             },
             email: (value) => {

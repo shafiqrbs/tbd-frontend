@@ -64,8 +64,8 @@ function CustomerForm(props) {
                 return null;
             },
             alternative_mobile: (value) => {
-                if (!value) return t('MobileValidationRequired');
-                if (!/^\d{13}$/.test(value)) return t('MobileValidationDigitCount');
+                if (value && !value) return t('MobileValidationRequired');
+                if (value && !/^\d{13}$/.test(value)) return t('MobileValidationDigitCount');
                 return null;
             },
             email: (value) => {
@@ -206,15 +206,15 @@ function CustomerForm(props) {
                                 <Box pl={`xs`} pr={'xs'} className={'borderRadiusAll'}>
                                     <ScrollArea h={height} scrollbarSize={2} scrollbars="y" type="never">
                                         <Box>
-                                            {
+                                            {/* {
                                                 Object.keys(form.errors).length > 0 && validationMessage != 0 &&
-                                                <Alert variant="light" color="red" radius="md" title={
+                                                <Alert variant="light" color="red" radius="md" mt={'xs'} title={
                                                     <List withPadding size="sm">
                                                         {validationMessage.name && <List.Item>{t('NameValidateMessage')}</List.Item>}
-                                                        {validationMessage.mobile && <List.Item>{t('MobileValidateMessage')}</List.Item>}
+                                                        {validationMessage.mobile && <List.Item>{t('MobileTakenValidationMessage')}</List.Item>}
                                                     </List>
                                                 }></Alert>
-                                            }
+                                            } */}
                                             <Box>
                                                 <Grid gutter={{ base: 6 }}>
                                                     <Grid.Col span={11} >
@@ -294,7 +294,7 @@ function CustomerForm(props) {
                                                                 tooltip={form.errors.alternative_mobile ? form.errors.alternative_mobile : t('MobileValidateMessage')}
                                                                 label={t('AlternativeMobile')}
                                                                 placeholder={t('AlternativeMobile')}
-                                                                required={true}
+                                                                required={false}
                                                                 nextField={'email'}
                                                                 name={'alternative_mobile'}
                                                                 form={form}

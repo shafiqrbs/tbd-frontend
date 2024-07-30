@@ -9,7 +9,6 @@ import {
 } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import {
-    IconEye, IconEdit, IconTrash,
     IconDotsVertical,
     IconTrashX
 } from "@tabler/icons-react";
@@ -24,9 +23,8 @@ import {
 } from "../../../../store/core/crudSlice.js";
 import KeywordSearch from "../../filter/KeywordSearch";
 import { modals } from "@mantine/modals";
-
-import ProductViewModel from "./ProductViewModel.jsx";
 import tableCss from "../../../../assets/css/Table.module.css";
+import ProductViewDrawer from "./ProductViewDrawer.jsx";
 
 function ProductTable() {
 
@@ -37,7 +35,7 @@ function ProductTable() {
 
     const perPage = 50;
     const [page, setPage] = useState(1);
-    const [productViewModel, setProductViewModel] = useState(false)
+    const [viewDrawer, setViewDrawer] = useState(false)
 
     const fetching = useSelector((state) => state.crudSlice.fetching)
     const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword)
@@ -119,7 +117,7 @@ function ProductTable() {
 
                                             <Menu.Item
                                                 onClick={() => {
-                                                    setProductViewModel(true)
+                                                    setViewDrawer(true)
                                                     dispatch(showEntityData('inventory/product/' + data.id))
                                                 }}
                                                 target="_blank"
@@ -179,8 +177,7 @@ function ProductTable() {
                 />
             </Box>
             {
-                productViewModel &&
-                <ProductViewModel productViewModel={productViewModel} setProductViewModel={setProductViewModel} />
+                viewDrawer && <ProductViewDrawer viewDrawer={viewDrawer} setViewDrawer={setViewDrawer} />
             }
         </>
     );
