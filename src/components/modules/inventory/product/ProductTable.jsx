@@ -87,9 +87,8 @@ function ProductTable() {
                         { accessor: 'product_type', title: t("NatureOfProduct") },
                         { accessor: 'category_name', title: t("Category") },
                         { accessor: 'product_name', title: t("Name") },
+                        { accessor: 'alternative_name', title: t("Alternative Name") },
                         { accessor: 'unit_name', title: t("Unit") },
-                        { accessor: 'purchase_price', title: t("PurchasePrice") },
-                        { accessor: 'sales_price', title: t("SalesPrice") },
                         {
                             accessor: "action",
                             title: t("Action"),

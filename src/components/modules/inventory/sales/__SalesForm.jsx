@@ -592,13 +592,12 @@ function __SalesForm(props) {
                                             />
                                         </Grid.Col>
                                         <Grid.Col span={4}>
-                                            <Box fz={'xl'} pr={'8'} mt={'4'} c={'red'} style={{ textAlign: 'right', float: 'right' }} fw={'800'}>
+                                            <Box fz={'md'} pr={'8'} mt={'4'} c={'red'} style={{ textAlign: 'right', float: 'right' }} fw={'800'}>
                                                 {returnOrDueText} {currencySymbol} {salesDueAmount.toFixed(2)}
                                             </Box>
                                         </Grid.Col>
                                     </Grid>
                                     <Box mt={'xs'} h={1} bg={`red.3`}></Box>
-
                                     <Tooltip label={t('MustBeNeedReceiveAmountWithoutCustomer')} opened={isDisabled} position="bottom-end" withArrow>
                                         <Grid gutter={{ base: 2 }} mt={'xs'}>
                                             <Grid.Col span={4}>

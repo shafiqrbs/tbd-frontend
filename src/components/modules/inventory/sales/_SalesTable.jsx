@@ -259,8 +259,6 @@ function _SalesTable() {
                                                                     {t('Edit')}
                                                                 </Menu.Item>
                                                             }
-
-
                                                             <Menu.Item
                                                                 href={``}
                                                                 onClick={(e) => {
