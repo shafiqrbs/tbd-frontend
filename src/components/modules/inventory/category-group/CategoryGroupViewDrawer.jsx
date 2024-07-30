@@ -1,30 +1,20 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useOutletContext } from "react-router-dom";
 import {
-    Button, rem, Center, Switch, ActionIcon,
-    Grid, Box, ScrollArea, Tooltip, Group, Text, Drawer,
-    Flex
+    ActionIcon,
+    Grid, Box, Drawer,
 } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
 
 import {
-    IconDeviceFloppy,
-    IconPrinter,
-    IconCheck,
     IconX,
 
 } from "@tabler/icons-react";
-import { useHotkeys, useToggle } from "@mantine/hooks";
-import { useDispatch, useSelector } from "react-redux";
-import { isNotEmpty, useForm } from "@mantine/form";
-import CustomerSettingsForm from "../customer-settings/CustomerSettingsForm.jsx";
-
+import { useSelector } from "react-redux";
 
 
 
 function CategoryGroupViewDrawer(props) {
-
-    const entityEditData = useSelector((state => state.crudSlice.entityEditData))
 
     const { viewDrawer, setViewDrawer } = props
     const { isOnline, mainAreaHeight } = useOutletContext();
@@ -33,8 +23,7 @@ function CategoryGroupViewDrawer(props) {
     const closeDrawer = () => {
         setViewDrawer(false)
     }
-
-
+    const entityEditData = useSelector((state) => state.inventoryCrudSlice.entityEditData)
 
     return (
         <>
@@ -56,25 +45,19 @@ function CategoryGroupViewDrawer(props) {
                         <Box p={'md'} className="boxBackground borderRadiusAll" h={height}>
                             <Box >
                                 <Grid columns={24}>
-                                    <Grid.Col span={'8'} align={'left'} fw={'600'} fz={'14'}>{t('Name')}</Grid.Col>
+                                    <Grid.Col span={'6'} align={'left'} fw={'600'} fz={'14'}>{t('CategoryGroup')}</Grid.Col>
+                                    <Grid.Col span={'1'}>:</Grid.Col>
+                                    <Grid.Col span={'auto'}>{entityEditData && entityEditData.category_group && entityEditData.category_group}</Grid.Col>
+                                </Grid>
+                                <Grid columns={24}>
+                                    <Grid.Col span={'6'} align={'left'} fw={'600'} fz={'14'}>{t('CategoryName')}</Grid.Col>
                                     <Grid.Col span={'1'}>:</Grid.Col>
                                     <Grid.Col span={'auto'}>{entityEditData && entityEditData.name && entityEditData.name}</Grid.Col>
                                 </Grid>
                                 <Grid columns={24}>
-                                    <Grid.Col span={'8'} align={'left'} fw={'600'} fz={'14'}>{t('UserName')}</Grid.Col>
+                                    <Grid.Col span={'6'} align={'left'} fw={'600'} fz={'14'}>{t('Status')}</Grid.Col>
                                     <Grid.Col span={'1'}>:</Grid.Col>
-                                    <Grid.Col span={'auto'}>{entityEditData && entityEditData.username && entityEditData.username}</Grid.Col>
-                                </Grid>
-                                <Grid columns={24}>
-                                    <Grid.Col span={'8'} align={'left'} fw={'600'} fz={'14'}>{t('Mobile')}</Grid.Col>
-                                    <Grid.Col span={'1'}>:</Grid.Col>
-                                    <Grid.Col span={'auto'}>{entityEditData && entityEditData.mobile && entityEditData.mobile}</Grid.Col>
-                                </Grid>
-
-                                <Grid columns={24}>
-                                    <Grid.Col span={'8'} align={'left'} fw={'600'} fz={'14'}>{t('Email')}</Grid.Col>
-                                    <Grid.Col span={'1'}>:</Grid.Col>
-                                    <Grid.Col span={'auto'}>{entityEditData && entityEditData.email && entityEditData.email}</Grid.Col>
+                                    <Grid.Col span={'auto'}>{entityEditData && entityEditData.status && entityEditData.status}</Grid.Col>
                                 </Grid>
                             </Box>
 

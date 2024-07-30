@@ -1,24 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useOutletContext } from "react-router-dom";
 import {
-    Button, rem, Center, Switch, ActionIcon,
-    Grid, Box, ScrollArea, Tooltip, Group, Text, Drawer,
-    Flex
+    ActionIcon,
+    Grid, Box, Drawer,
 } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
 
 import {
-    IconDeviceFloppy,
-    IconPrinter,
-    IconCheck,
     IconX,
 
 } from "@tabler/icons-react";
-import { useHotkeys, useToggle } from "@mantine/hooks";
-import { useDispatch, useSelector } from "react-redux";
-import { isNotEmpty, useForm } from "@mantine/form";
-import CustomerSettingsForm from "../customer-settings/CustomerSettingsForm.jsx";
-
+import { useSelector } from "react-redux";
 
 
 

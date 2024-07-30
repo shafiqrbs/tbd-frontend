@@ -524,5 +524,6 @@
   "PasswordSimilarMessage": "Please check Input Password",
   "UserNameRequiredMessage": "Username is Required",
   "ProductManagement": "Product Management",
-  "SkuManagement": "SKU Management"
+  "SkuManagement": "SKU Management",
+  "CategoryDetailsInformation" : "Category Details Information"
 }
