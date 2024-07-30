@@ -543,13 +543,13 @@ function __PurchaseForm(props) {
                             <Box>
                                 <Button.Group fullWidth>
                                     <Button fullWidth variant="filled" leftSection={<IconPrinter size={14} />}
-                                        color="green.5">Print</Button>
+                                        color="green.5">{t('Print')}</Button>
                                     <Button fullWidth variant="filled" leftSection={<IconReceipt size={14} />}
-                                        color="red.5">Pos</Button>
+                                        color="red.5">{t('Pos')}</Button>
                                     <Button type={'submit'} fullWidth variant="filled" leftSection={<IconDeviceFloppy size={14} />}
-                                        color="cyan.5">Save</Button>
+                                        color="cyan.5">{t('Save')}</Button>
                                     <Button fullWidth variant="filled" leftSection={<IconStackPush size={14} />}
-                                        color="orange.5">Hold</Button>
+                                        color="orange.5">{t('Hold')}</Button>
                                 </Button.Group>
                             </Box>
                         </Box>

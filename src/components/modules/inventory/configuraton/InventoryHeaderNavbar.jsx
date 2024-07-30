@@ -8,7 +8,9 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from "react-redux";
 import classes from '../../../../assets/css/HeaderSearch.module.css';
 import {
-    IconInfoCircle, IconTrash, IconSearch, IconSettings
+    IconInfoCircle, IconTrash, IconSearch, IconSettings,
+    IconBrandProducthunt,
+    IconBrandCodesandbox
 } from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
 
@@ -53,11 +55,15 @@ function InventoryHeaderNavbar(props) {
                                 </ActionIcon>
                             </Menu.Target>
                             <Menu.Dropdown>
-                                <Menu.Item href="/inventory/config"
-                                    component="button" onClick={(e) => { navigate('/inventory/product-settings') }} leftSection={<IconSettings style={{ width: rem(14), height: rem(14) }} />}>
+                                <Menu.Item
+                                    component="button" onClick={(e) => { navigate('/inventory/product-settings') }} leftSection={<IconBrandProducthunt style={{ width: rem(14), height: rem(14) }} />}>
                                     {t('ProductSettings')}
                                 </Menu.Item>
-                                <Menu.Item href="/inventory/config"
+                                <Menu.Item
+                                    component="button" onClick={(e) => { navigate('/inventory/product-management') }} leftSection={<IconBrandCodesandbox style={{ width: rem(14), height: rem(14) }} />}>
+                                    {t('ProductManagement')}
+                                </Menu.Item>
+                                <Menu.Item
                                     component="button" onClick={(e) => { navigate('/inventory/config') }} leftSection={<IconSettings style={{ width: rem(14), height: rem(14) }} />}>
                                     {t('Settings')}
                                 </Menu.Item>

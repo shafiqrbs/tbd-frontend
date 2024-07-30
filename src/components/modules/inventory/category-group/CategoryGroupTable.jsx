@@ -18,6 +18,8 @@ import { deleteEntityData } from "../../../../store/core/crudSlice";
 import { notifications } from "@mantine/notifications";
 import tableCss from "../../../../assets/css/Table.module.css";
 import CategoryGroupViewModal from "./CategoryGroupViewModal.jsx";
+import CategoryViewDrawer from "../category/CategoryViewDrawer.jsx";
+import CategoryGroupViewDrawer from "./CategoryGroupViewDrawer.jsx";
 
 function CategoryGroupTable() {
 
@@ -34,7 +36,7 @@ function CategoryGroupTable() {
     const entityDataDelete = useSelector((state) => state.inventoryCrudSlice.entityDataDelete)
     const categoryGroupFilterData = useSelector((state) => state.crudSlice.categoryGroupFilterData)
 
-    const [categroyGroupViewModal, setCategoryGroupViewModal] = useState(false)
+    const [viewDrawer, setViewDrawer] = useState(false)
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -101,7 +103,9 @@ function CategoryGroupTable() {
                             accessor: 'index',
                             title: t('S/N'),
                             textAlignment: 'right',
-                            render: (item) => (indexData.data.indexOf(item) + 1)
+                            render: (item) => (indexData.data.indexOf(item) + 1),
+
+                            width: 50,
                         },
                         { accessor: 'name', title: t("Name") },
                         {
@@ -130,7 +134,7 @@ function CategoryGroupTable() {
 
                                             <Menu.Item
                                                 onClick={() => {
-                                                    setCategoryGroupViewModal(true)
+                                                    setViewDrawer(true)
                                                     dispatch(editEntityData('inventory/category-group/' + data.id))
                                                 }}
                                                 target="_blank"
@@ -140,7 +144,6 @@ function CategoryGroupTable() {
                                                 {t('Show')}
                                             </Menu.Item>
                                             <Menu.Item
-                                                // href={``}
                                                 target="_blank"
                                                 component="a"
                                                 w={'200'}
@@ -188,8 +191,7 @@ function CategoryGroupTable() {
                     scrollAreaProps={{ type: 'never' }}
                 />
             </Box >
-            {categroyGroupViewModal && <CategoryGroupViewModal categroyGroupViewModal={categroyGroupViewModal} setCategoryGroupViewModal={setCategoryGroupViewModal} />
-            }
+            {viewDrawer && <CategoryGroupViewDrawer viewDrawer={viewDrawer} setViewDrawer={setViewDrawer} />}
 
         </>
     );

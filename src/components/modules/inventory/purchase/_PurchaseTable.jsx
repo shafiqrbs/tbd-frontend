@@ -364,7 +364,7 @@ function _PurchaseTable() {
                                 >
                                     <ReactToPrint
                                         trigger={() => {
-                                            return <a href="#">Print</a>;
+                                            return <>{t('Print')}</>;
                                         }}
                                         content={() => printRef.current}
                                     />
@@ -375,7 +375,7 @@ function _PurchaseTable() {
                                     leftSection={<IconReceipt size={14} />}
                                     color="red.5"
                                 >
-                                    Pos
+                                    {t('Pos')}
                                 </Button>
                                 <Button
                                     fullWidth
@@ -383,7 +383,7 @@ function _PurchaseTable() {
                                     leftSection={<IconEdit size={14} />}
                                     color="cyan.5"
                                 >
-                                    Edit
+                                    {t('Edit')}
                                 </Button>
                             </Button.Group>
                         </Box>

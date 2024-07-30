@@ -14,9 +14,7 @@ import { useSelector } from "react-redux";
 
 
 
-function UserViewDrawer(props) {
-
-    const entityEditData = useSelector((state => state.crudSlice.entityEditData))
+function CategoryGroupViewDrawer(props) {
 
     const { viewDrawer, setViewDrawer } = props
     const { isOnline, mainAreaHeight } = useOutletContext();
@@ -25,8 +23,7 @@ function UserViewDrawer(props) {
     const closeDrawer = () => {
         setViewDrawer(false)
     }
-
-
+    const entityEditData = useSelector((state) => state.inventoryCrudSlice.entityEditData)
 
     return (
         <>
@@ -48,25 +45,19 @@ function UserViewDrawer(props) {
                         <Box p={'md'} className="boxBackground borderRadiusAll" h={height}>
                             <Box >
                                 <Grid columns={24}>
-                                    <Grid.Col span={'8'} align={'left'} fw={'600'} fz={'14'}>{t('Name')}</Grid.Col>
+                                    <Grid.Col span={'6'} align={'left'} fw={'600'} fz={'14'}>{t('CategoryGroup')}</Grid.Col>
+                                    <Grid.Col span={'1'}>:</Grid.Col>
+                                    <Grid.Col span={'auto'}>{entityEditData && entityEditData.category_group && entityEditData.category_group}</Grid.Col>
+                                </Grid>
+                                <Grid columns={24}>
+                                    <Grid.Col span={'6'} align={'left'} fw={'600'} fz={'14'}>{t('CategoryName')}</Grid.Col>
                                     <Grid.Col span={'1'}>:</Grid.Col>
                                     <Grid.Col span={'auto'}>{entityEditData && entityEditData.name && entityEditData.name}</Grid.Col>
                                 </Grid>
                                 <Grid columns={24}>
-                                    <Grid.Col span={'8'} align={'left'} fw={'600'} fz={'14'}>{t('UserName')}</Grid.Col>
+                                    <Grid.Col span={'6'} align={'left'} fw={'600'} fz={'14'}>{t('Status')}</Grid.Col>
                                     <Grid.Col span={'1'}>:</Grid.Col>
-                                    <Grid.Col span={'auto'}>{entityEditData && entityEditData.username && entityEditData.username}</Grid.Col>
-                                </Grid>
-                                <Grid columns={24}>
-                                    <Grid.Col span={'8'} align={'left'} fw={'600'} fz={'14'}>{t('Mobile')}</Grid.Col>
-                                    <Grid.Col span={'1'}>:</Grid.Col>
-                                    <Grid.Col span={'auto'}>{entityEditData && entityEditData.mobile && entityEditData.mobile}</Grid.Col>
-                                </Grid>
-
-                                <Grid columns={24}>
-                                    <Grid.Col span={'8'} align={'left'} fw={'600'} fz={'14'}>{t('Email')}</Grid.Col>
-                                    <Grid.Col span={'1'}>:</Grid.Col>
-                                    <Grid.Col span={'auto'}>{entityEditData && entityEditData.email && entityEditData.email}</Grid.Col>
+                                    <Grid.Col span={'auto'}>{entityEditData && entityEditData.status && entityEditData.status}</Grid.Col>
                                 </Grid>
                             </Box>
 
@@ -79,4 +70,4 @@ function UserViewDrawer(props) {
     );
 }
 
-export default UserViewDrawer;
+export default CategoryGroupViewDrawer;

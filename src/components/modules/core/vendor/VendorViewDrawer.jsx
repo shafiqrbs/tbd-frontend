@@ -15,8 +15,6 @@ import { useSelector } from "react-redux";
 
 function VendorViewDrawer(props) {
 
-    const entityEditData = useSelector((state => state.crudSlice.entityEditData))
-
     const { viewDrawer, setViewDrawer, vendorObject } = props
     const { isOnline, mainAreaHeight } = useOutletContext();
     const { t, i18n } = useTranslation();
@@ -25,8 +23,8 @@ function VendorViewDrawer(props) {
         setViewDrawer(false)
     }
     let showData = {}
-    if (props.vendorObject) {
-        showData = props.vendorObject
+    if (vendorObject) {
+        showData = vendorObject
     }
 
 

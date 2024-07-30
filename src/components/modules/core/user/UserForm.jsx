@@ -37,18 +37,31 @@ function UserForm() {
             name: '', username: '', email: '', password: '', confirm_password: '', mobile: ''
         },
         validate: {
-            name: hasLength({ min: 2, max: 20 }),
-            username: hasLength({ min: 2, max: 20 }),
+            name: (value) => {
+                if (!value) return t('NameRequiredMessage');
+                if (value.length < 2 || value.length > 20) return t('NameLengthMessage');
+                return null;
+            },
+            username: (value) => {
+                if (!value) return t('UserNameRequiredMessage');
+                if (value.length < 2 || value.length > 20) return t('NameLengthMessage');
+                return null;
+            },
             email: isEmail(),
-            mobile: isNotEmpty(),
             mobile: (value) => {
                 if (!value) return t('MobileValidationRequired');
                 if (!/^\d{13}$/.test(value)) return t('MobileValidationDigitCount');
                 return null;
             },
-            password: hasLength({ min: 6 }),
-            confirm_password: (value, values) =>
-                value !== values.password
+            password: (value) => {
+                if (!value) return t('PasswordRequiredMessage');
+                if ((value.length < 6)) return t('PasswordValidateMessage');
+                return null;
+            },
+            confirm_password: (value, values) => {
+                if (values.password && value !== values.password) return t('PasswordSimilarMessage');
+                return null;
+            }
         }
     });
 
@@ -141,7 +154,7 @@ function UserForm() {
 
                                             <Box mt={'xs'}>
                                                 <InputForm
-                                                    tooltip={t('NameValidateMessage')}
+                                                    tooltip={form.errors.name ? form.errors.name : t('NameValidateMessage')}
                                                     label={t('Name')}
                                                     placeholder={t('Name')}
                                                     required={true}
@@ -155,7 +168,7 @@ function UserForm() {
                                             <Box mt={'xs'}>
                                                 <InputForm
                                                     form={form}
-                                                    tooltip={t('UserNameValidateMessage')}
+                                                    tooltip={form.errors.username ? form.errors.username : t('UserNameValidateMessage')}
                                                     label={t('UserName')}
                                                     placeholder={t('UserName')}
                                                     required={true}
@@ -195,7 +208,7 @@ function UserForm() {
 
                                                 <PasswordInputForm
                                                     form={form}
-                                                    tooltip={t('RequiredPassword')}
+                                                    tooltip={form.errors.password ? form.errors.password : t('RequiredPassword')}
                                                     label={t('Password')}
                                                     placeholder={t('Password')}
                                                     required={true}
@@ -209,7 +222,7 @@ function UserForm() {
 
                                                 <PasswordInputForm
                                                     form={form}
-                                                    tooltip={t('ConfirmPassword')}
+                                                    tooltip={form.errors.confirm_password ? form.errors.confirm_password : t('ConfirmPassword')}
                                                     label={t('ConfirmPassword')}
                                                     placeholder={t('ConfirmPassword')}
                                                     required={true}

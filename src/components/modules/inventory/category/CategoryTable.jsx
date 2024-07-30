@@ -22,6 +22,7 @@ import { deleteEntityData } from "../../../../store/core/crudSlice";
 import { notifications } from "@mantine/notifications";
 import tableCss from "../../../../assets/css/Table.module.css";
 import _CategoryViewModal from "./_CategoryViewModal.jsx";
+import CategoryViewDrawer from "./CategoryViewDrawer.jsx";
 
 
 function CategoryTable() {
@@ -37,9 +38,8 @@ function CategoryTable() {
     const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword)
     const indexData = useSelector((state) => state.inventoryCrudSlice.indexEntityData)
     const entityDataDelete = useSelector((state) => state.inventoryCrudSlice.entityDataDelete)
-    const productCategoryFilterData = useSelector((state) => state.inventoryCrudSlice.productCategoryFilterData)
-
-    const [categoryViewModal, setCategoryViewModal] = useState(false)
+    const [viewDrawer, setViewDrawer] = useState(false);
+    const categoryFilterData = useSelector((state) => state.inventoryCrudSlice.categoryFilterData)
 
     const navigate = useNavigate()
 
@@ -67,6 +67,8 @@ function CategoryTable() {
             url: 'inventory/category-group',
             param: {
                 term: searchKeyword,
+                name: categoryFilterData.name,
+                parent: categoryFilterData.parentName,
                 type: 'category',
                 page: page,
                 offset: perPage
@@ -125,7 +127,7 @@ function CategoryTable() {
 
                                             <Menu.Item
                                                 onClick={() => {
-                                                    setCategoryViewModal(true)
+                                                    setViewDrawer(true)
                                                     dispatch(editEntityData('inventory/category-group/' + data.id))
                                                 }}
                                                 target="_blank"
@@ -183,7 +185,7 @@ function CategoryTable() {
                     scrollAreaProps={{ type: 'never' }}
                 />
             </Box>
-            {categoryViewModal && <_CategoryViewModal categoryViewModal={categoryViewModal} setCategoryViewModal={setCategoryViewModal} />}
+            {viewDrawer && <CategoryViewDrawer viewDrawer={viewDrawer} setViewDrawer={setViewDrawer} />}
         </>
     );
 }
