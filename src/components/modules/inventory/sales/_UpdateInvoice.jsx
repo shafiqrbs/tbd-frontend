@@ -138,7 +138,7 @@ function _UpdateInvoice(props) {
             percent: '',
             stock: product.quantity,
             quantity: 1,
-            unit_name: product.unit_name,
+            unit_name: product.uom,
             purchase_price: product.purchase_price,
             sub_total: product.sales_price,
             unit_id: product.unit_id,
@@ -562,7 +562,7 @@ function _UpdateInvoice(props) {
                                         }
                                     },
                                     {
-                                        accessor: 'unit_name',
+                                        accessor: 'uom',
                                         title: t('UOM'),
                                         textAlign: "center"
                                     },
