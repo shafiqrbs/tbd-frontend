@@ -34,6 +34,8 @@ function _UpdateInvoice(props) {
     const [tempCardProducts, setTempCardProducts] = useState([])
     const [loadCardProducts, setLoadCardProducts] = useState(false)
 
+    console.log(tempCardProducts)
+
     let salesSubTotalAmount = tempCardProducts?.reduce((total, item) => total + item.sub_total, 0) || 0;
     let totalPurchaseAmount = tempCardProducts?.reduce((total, item) => total + (item.purchase_price * item.quantity), 0) || 0;
 
@@ -83,7 +85,7 @@ function _UpdateInvoice(props) {
                     unit_id: product.unit_id,
                     stock: product.quantity,
                     quantity: values.quantity,
-                    unit_name: product.unit_name,
+                    uom: product.uom,
                     purchase_price: product.purchase_price,
                     sub_total: selectProductDetails.sub_total,
                 });
@@ -138,7 +140,7 @@ function _UpdateInvoice(props) {
             percent: '',
             stock: product.quantity,
             quantity: 1,
-            unit_name: product.uom,
+            uom: product.uom,
             purchase_price: product.purchase_price,
             sub_total: product.sales_price,
             unit_id: product.unit_id,

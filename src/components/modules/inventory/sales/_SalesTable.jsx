@@ -64,6 +64,7 @@ function _SalesTable() {
         }, 500);
     }, [loading]);
     const [salesViewData, setSalesViewData] = useState({})
+    console.log(salesViewData)
 
     useEffect(() => {
         setSalesViewData(indexData.data && indexData.data[0] && indexData.data[0])
