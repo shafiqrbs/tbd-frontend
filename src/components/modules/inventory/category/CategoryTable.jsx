@@ -39,6 +39,7 @@ function CategoryTable() {
     const indexData = useSelector((state) => state.inventoryCrudSlice.indexEntityData)
     const entityDataDelete = useSelector((state) => state.inventoryCrudSlice.entityDataDelete)
     const [viewDrawer, setViewDrawer] = useState(false);
+    const categoryFilterData = useSelector((state) => state.inventoryCrudSlice.categoryFilterData)
 
     const navigate = useNavigate()
 
@@ -66,6 +67,8 @@ function CategoryTable() {
             url: 'inventory/category-group',
             param: {
                 term: searchKeyword,
+                name: categoryFilterData.name,
+                parent: categoryFilterData.parentName,
                 type: 'category',
                 page: page,
                 offset: perPage
