@@ -34,7 +34,7 @@ function ProductIndex() {
             dispatch(setInsertType('create')),
             dispatch(setSearchKeyword('')),
             dispatch(setEntityNewData([])),
-            navigate('/inventory/product')
+            navigate('/inventory/product', { replace: true })
         ))
     }, [productId, dispatch, navigate])
 
@@ -55,23 +55,23 @@ function ProductIndex() {
                             />
                             <Box p={'8'}>
 
-                                    {
-                                        insertType === 'create' ?
-                                            <Grid columns={24} gutter={{ base: 8 }}>
-                                                <Grid.Col span={15}>
-                                                    <Box bg={'white'} p={'xs'} className={'borderRadiusAll'}>
-                                                        <ProductTable/>
-                                                    </Box>
-                                                </Grid.Col>
-                                                <Grid.Col span={9}>
-                                                    <ProductForm/>
-                                                </Grid.Col>
-                                            </Grid>
-                                            :
-                                            <Box>
-                                                <ProductUpdateForm />
-                                            </Box>
-                                    }
+                                {
+                                    insertType === 'create' ?
+                                        <Grid columns={24} gutter={{ base: 8 }}>
+                                            <Grid.Col span={15}>
+                                                <Box bg={'white'} p={'xs'} className={'borderRadiusAll'}>
+                                                    <ProductTable />
+                                                </Box>
+                                            </Grid.Col>
+                                            <Grid.Col span={9}>
+                                                <ProductForm />
+                                            </Grid.Col>
+                                        </Grid>
+                                        :
+                                        <Box>
+                                            <ProductUpdateForm />
+                                        </Box>
+                                }
                             </Box>
                         </>
                     }
