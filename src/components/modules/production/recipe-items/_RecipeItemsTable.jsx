@@ -4,17 +4,17 @@ import {
     Group,
     Box,
     ActionIcon,
-    Menu,
+    Menu, Button, rem,
 } from "@mantine/core";
 import {
-    IconDotsVertical,
+    IconDotsVertical, IconTrashX,
 } from "@tabler/icons-react";
 import { DataTable } from 'mantine-datatable';
 import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from 'react-i18next';
 import {
     getIndexEntityData,
-    setFetching,
+    setFetching, storeAndUpdateProductionItem,
 } from "../../../../store/production/crudSlice.js";
 import KeywordSearch from "../common/KeywordSearch.jsx";
 import tableCss from "../../../../assets/css/Table.module.css";
@@ -104,7 +104,24 @@ function _RecipeItemsTable() {
                             textAlign: "right",
                             render: (item) => (
                                 <Group gap={4} justify="right" wrap="nowrap">
-                                    <Menu position="bottom-end" offset={3} withArrow trigger="hover" openDelay={100} closeDelay={400}>
+                                    <Button size="compact-xs" radius="xs" variant="filled" fw={'100'} fz={'12'} color="red.3" mr={'4'}
+                                            onClick={(e) => {
+                                                e.preventDefault();
+                                                // console.log(item.id)
+                                                const value = {
+                                                    url: 'production/recipe-items',
+                                                    data: {
+                                                        pro_item_id : item.id
+                                                    }
+                                                }
+                                                dispatch(storeAndUpdateProductionItem(value))
+                                                // setAddTransactionDrawer(true)
+                                                // setInvoiceBatchData(item)
+                                                // setSelectedRow(item.invoice)
+                                            }}
+                                    >  {t('Recipe')}</Button>
+
+                                    {/*<Menu position="bottom-end" offset={3} withArrow trigger="hover" openDelay={100} closeDelay={400}>
                                         <Menu.Target>
                                             <ActionIcon size="sm" variant="outline" color="red" radius="xl" aria-label="Settings">
                                                 <IconDotsVertical height={'18'} width={'18'} stroke={1.5} />
@@ -118,7 +135,7 @@ function _RecipeItemsTable() {
                                                 {t('Recipe')}
                                             </Menu.Item>
                                         </Menu.Dropdown>
-                                    </Menu>
+                                    </Menu>*/}
                                 </Group>
                             ),
                         },
