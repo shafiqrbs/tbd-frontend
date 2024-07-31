@@ -20,6 +20,7 @@ import ProductSettingsTable from "./ProductSettingsTable.jsx";
 import ProductSettingsForm from "./ProductSettingsForm.jsx";
 import ProductSettingsUpdateForm from "./ProductSettingsUpdateForm.jsx";
 import InventoryHeaderNavbar from "../configuraton/InventoryHeaderNavbar.jsx";
+import getSettingTypeDropdownData from "../../../global-hook/dropdown/inventroy/getParticularTypeDropdownData.js";
 
 function ProductSettingsIndex() {
     const { t, i18n } = useTranslation();
