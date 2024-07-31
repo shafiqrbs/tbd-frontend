@@ -32,16 +32,16 @@ function _ParticularForm(props) {
 
     const settingsForm = useForm({
         initialValues: {
-            setting_type_id: '', name: '', status: true
+            particular_type_id: '', name: '', status: true
         },
         validate: {
-            setting_type_id: isNotEmpty(),
+            particular_type_id: isNotEmpty(),
             name: hasLength({min: 2, max: 30}),
         }
     });
 
     useHotkeys([['alt+n', () => {
-        document.getElementById('setting_type').click()
+        document.getElementById('particular_type_id').click()
     }]], []);
 
     useHotkeys([['alt+r', () => {
@@ -134,12 +134,12 @@ function _ParticularForm(props) {
                                                         scrollbars="y" type="never">
                                                 <Box mt={'8'}>
                                                     <SelectForm
-                                                        tooltip={t('SettingType')}
-                                                        label={t('SettingType')}
-                                                        placeholder={t('SettingType')}
+                                                        tooltip={t('ParticularType')}
+                                                        label={t('ParticularType')}
+                                                        placeholder={t('ParticularType')}
                                                         required={true}
-                                                        nextField={'setting_name'}
-                                                        name={'setting_type_id'}
+                                                        nextField={'name'}
+                                                        name={'particular_type_id'}
                                                         form={settingsForm}
                                                         dropdownValue={settingTypeDropdown}
                                                         id={'setting_type'}
@@ -158,7 +158,7 @@ function _ParticularForm(props) {
                                                         nextField={'status'}
                                                         form={settingsForm}
                                                         name={'name'}
-                                                        id={'setting_name'}
+                                                        id={'name'}
                                                     />
                                                 </Box>
                                                 <Box mt={'xs'}>
