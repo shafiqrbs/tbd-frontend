@@ -1,0 +1,18 @@
+{
+    "title": "Welcome to react using react-i18next",
+    "shortcuts": "Shortcuts",
+    "search": "Search",
+    "fullscreen": "Full screen",
+    "normal_screen": "Normal screen",
+    "collapse_navbar": "Collapse navbar",
+    "expand_navbar": "Expand navbar",
+    "log_out": "Log out",
+    "collapse_right_sidebar": "Collapse right sidebar",
+    "expand_right_sidebar": "Expand right sidebar",
+    "dashboard": "Dashboard",
+    "name": "Name",
+    "email": "Email",
+    "phone": "Phone",
+    "address": "Address"
+
+  }
