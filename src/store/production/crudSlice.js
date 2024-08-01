@@ -140,6 +140,7 @@ const crudSlice = createSlice({
         openingInlineUpdateStatus: null,
         productionSettingFilterData: { setting_type_id: '',name:''},
         recipeItemFilterData: { setting_type_id: '',product_name:''},
+        measurementInputData:[]
     },
     reducers: {
         setFetching: (state, action) => {
@@ -248,7 +249,7 @@ const crudSlice = createSlice({
         })
 
         builder.addCase(storeAndUpdateProductionItem.fulfilled,(state,action) => {
-
+            state.measurementInputData = action.payload.data.data
         })
 
     }
