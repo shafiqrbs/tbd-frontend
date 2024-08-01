@@ -10,16 +10,24 @@ import _RecipeTable from "./_RecipeTable.jsx";
 import _RecipeForm from "./_RecipeForm.jsx";
 import { getLoadingProgress } from "../../../../global-hook/loading-progress/getLoadingProgress.js";
 import ProductionHeaderNavbar from "../../common/ProductionHeaderNavbar.jsx";
-import {getMeasurementInputData} from "../../../../../store/production/utilitySlice.js";
+import {storeAndUpdateProductionItem} from "../../../../../store/production/crudSlice.js";
 import {useDispatch} from "react-redux";
+import {useParams} from "react-router-dom";
 
 function RecipeIndex() {
     const { t, i18n } = useTranslation();
-    const progress = getLoadingProgress()
     const dispatch = useDispatch();
+    const {id} = useParams();
+    const progress = getLoadingProgress()
 
     useEffect(() => {
-        dispatch(getMeasurementInputData('production/measurement-input'))
+        const value = {
+            url: 'production/recipe-items',
+            data: {
+                pro_item_id : id
+            }
+        }
+        dispatch(storeAndUpdateProductionItem(value))
     }, []);
 
     return (

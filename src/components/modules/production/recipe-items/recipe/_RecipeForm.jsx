@@ -1,16 +1,16 @@
-import React from "react";
+import React, {useEffect} from "react";
 import {useNavigate, useOutletContext, useParams} from "react-router-dom";
 import {
-    Button, rem, Flex, Grid, Box, ScrollArea, Text, Title, Stack
+    Button, rem, Flex, Grid, Box, ScrollArea, Text, Title, Stack, Tooltip, TextInput
 } from "@mantine/core";
 import {useTranslation} from 'react-i18next';
 import {
     IconCheck,
-    IconDeviceFloppy
+    IconDeviceFloppy, IconInfoCircle, IconX
 } from "@tabler/icons-react";
-import {useHotkeys} from "@mantine/hooks";
+import {getHotkeyHandler, useHotkeys} from "@mantine/hooks";
 import {useDispatch, useSelector} from "react-redux";
-import {useForm} from "@mantine/form";
+import {hasLength, isNotEmpty, useForm} from "@mantine/form";
 import {notifications} from "@mantine/notifications";
 
 import Shortcut from "../../../shortcut/Shortcut.jsx";
@@ -27,25 +27,18 @@ function _RecipeForm() {
     const {isOnline, mainAreaHeight} = useOutletContext();
     const height = mainAreaHeight - 100; //TabList height 104
 
-    const measurementInputData = useSelector((state) => state.productionUtilitySlice.measurementInputData.field)
-    const measurementInputDataKey = useSelector((state) => state.productionUtilitySlice.measurementInputData.datakey)
-
-    let initialValues = measurementInputDataKey.reduce((acc, key) => {
-        acc[key] = '';
-        return acc;
-    }, {});
+    const measurementInputData = useSelector((state) => state.productionCrudSlice.measurementInputData)
 
     const form = useForm({
-        initialValues: initialValues,
+        initialValues: {
+            item_id: id
+        }
     });
 
     useHotkeys([['alt+n', () => {
         document.getElementById('product_type_id').focus()
     }]], []);
 
-    useHotkeys([['alt+r', () => {
-        form.reset()
-    }]], []);
 
     useHotkeys([['alt+s', () => {
         document.getElementById('EntityFormSubmit').click()
@@ -54,8 +47,8 @@ function _RecipeForm() {
     return (
         <Box>
             <form onSubmit={form.onSubmit((values) => {
-                values.item_id = id
-                if (id) {
+                console.log(values)
+                /*if (id) {
                     const data = {
                         url: 'production/recipe-measurement',
                         data: values
@@ -84,7 +77,7 @@ function _RecipeForm() {
                         autoClose: 700,
                         style: {backgroundColor: 'lightgray'},
                     });
-                }
+                }*/
             })}>
                 <Grid columns={9} gutter={{base: 8}}>
                     <Grid.Col span={8}>
@@ -129,7 +122,7 @@ function _RecipeForm() {
                                                 <Title order={6} pt={'6'} color={'red'}>{key}</Title>
 
                                                 {measurementInputData[key].map((item, j) => (
-                                                    <Box mt={'xs'}>
+                                                    <Box mt={'xs'} key={item.slug+key+j}>
                                                         <Grid gutter={{base: 6}}>
                                                             <Grid.Col span={6}>
                                                                 <Box mt={'xs'}>
@@ -148,16 +141,17 @@ function _RecipeForm() {
                                                             </Grid.Col>
                                                             <Grid.Col span={6}>
                                                                 <Box>
-                                                                    <InputNumberForm
-                                                                        tooltip={item.name}
-                                                                        placeholder={item.name}
-                                                                        required={false}
-                                                                        nextField={item.setting_type_name+j}
-                                                                        name={item.slug}
-                                                                        form={form}
-                                                                        id={key+j}
+                                                                    <TextInput
+                                                                        type='number'
+                                                                        id={item.slug}
+                                                                        size="sm"
+                                                                        placeholder={t('Amount')}
+                                                                        autoComplete="off"
+                                                                        value={item.amount}
+                                                                        onChange={(e)=>{
+                                                                            console.log(e)
+                                                                        }}
                                                                     />
-
                                                                 </Box>
                                                             </Grid.Col>
                                                         </Grid>

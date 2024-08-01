@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useOutletContext } from "react-router-dom";
+import {useNavigate, useOutletContext} from "react-router-dom";
 import {
     Group,
     Box,
@@ -21,6 +21,7 @@ import tableCss from "../../../../assets/css/Table.module.css";
 
 function _RecipeItemsTable() {
     const dispatch = useDispatch();
+    const navigate = useNavigate()
     const { t, i18n } = useTranslation();
     const { isOnline, mainAreaHeight } = useOutletContext();
     const height = mainAreaHeight - 120; //TabList height 104
@@ -104,21 +105,13 @@ function _RecipeItemsTable() {
                             textAlign: "right",
                             render: (item) => (
                                 <Group gap={4} justify="right" wrap="nowrap">
-                                    <Button size="compact-xs" radius="xs" variant="filled" fw={'100'} fz={'12'} color="red.3" mr={'4'}
-                                            onClick={(e) => {
+                                    <Button component="a" size="compact-xs" radius="xs" variant="filled" fw={'100'} fz={'12'} color="red.3" mr={'4'}
+                                            href={`/production/recipe/${item.id}`}
+                                            /*onClick={(e) => {
                                                 e.preventDefault();
-                                                // console.log(item.id)
-                                                const value = {
-                                                    url: 'production/recipe-items',
-                                                    data: {
-                                                        pro_item_id : item.id
-                                                    }
-                                                }
-                                                dispatch(storeAndUpdateProductionItem(value))
-                                                // setAddTransactionDrawer(true)
-                                                // setInvoiceBatchData(item)
-                                                // setSelectedRow(item.invoice)
-                                            }}
+
+                                                navigate('/production/recipe/'+item.id)
+                                            }}*/
                                     >  {t('Recipe')}</Button>
 
                                     {/*<Menu position="bottom-end" offset={3} withArrow trigger="hover" openDelay={100} closeDelay={400}>
