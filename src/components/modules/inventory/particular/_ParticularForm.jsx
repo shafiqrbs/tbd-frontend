@@ -151,9 +151,9 @@ function _ParticularForm(props) {
 
                                                 <Box mt={'xs'}>
                                                     <InputForm
-                                                        tooltip={t('SettingName')}
-                                                        label={t('SettingName')}
-                                                        placeholder={t('SettingName')}
+                                                        tooltip={t('ParticularName')}
+                                                        label={t('ParticularName')}
+                                                        placeholder={t('ParticularName')}
                                                         required={true}
                                                         nextField={'status'}
                                                         form={settingsForm}
