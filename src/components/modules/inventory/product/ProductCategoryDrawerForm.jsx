@@ -39,7 +39,7 @@ function ProductCategoryDrawerForm(props) {
         },
         validate: {
             category_group: isNotEmpty(),
-            name: hasLength({ min: 2, max: 20 }),
+            category_name: hasLength({ min: 2, max: 20 }),
         }
     });
 
