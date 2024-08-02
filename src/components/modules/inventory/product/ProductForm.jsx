@@ -7,10 +7,10 @@ import { useTranslation } from 'react-i18next';
 import {
     IconCategoryPlus,
     IconCheck,
-    IconDeviceFloppy, IconInfoCircle, IconPlus, IconClipboardPlus
+    IconDeviceFloppy
 } from "@tabler/icons-react";
-import { useDisclosure, useHotkeys } from "@mantine/hooks";
-import { useDispatch, useSelector } from "react-redux";
+import { useHotkeys } from "@mantine/hooks";
+import { useDispatch } from "react-redux";
 import { hasLength, isNotEmpty, useForm } from "@mantine/form";
 import { modals } from "@mantine/modals";
 import { notifications } from "@mantine/notifications";
@@ -19,24 +19,25 @@ import Shortcut from "../../shortcut/Shortcut";
 import InputForm from "../../../form-builders/InputForm";
 import SelectForm from "../../../form-builders/SelectForm";
 import SwitchForm from "../../../form-builders/SwitchForm";
-import { getBrandDropdown, getCategoryDropdown } from "../../../../store/inventory/utilitySlice";
 import { setFetching, storeEntityData } from "../../../../store/inventory/crudSlice.js";
 import getSettingProductTypeDropdownData from "../../../global-hook/dropdown/getSettingProductTypeDropdownData.js";
 import getSettingProductUnitDropdownData from "../../../global-hook/dropdown/getSettingProductUnitDropdownData.js";
 import getSettingCategoryDropdownData from "../../../global-hook/dropdown/getSettingCategoryDropdownData.js";
+import ProductCategoryDrawer from "./ProductCategoryDrawer.jsx";
 
 function ProductForm() {
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
     const height = mainAreaHeight - 100; //TabList height 104
-    const [opened, { open, close }] = useDisclosure(false);
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
 
     const [categoryData, setCategoryData] = useState(null);
 
     const [productTypeData, setProductTypeData] = useState(null);
     const [productUnitData, setProductUnitData] = useState(null);
+
+    const [groupDrawer, setGroupDrawer] = useState(false)
 
 
     const form = useForm({
@@ -68,7 +69,7 @@ function ProductForm() {
     });
 
     useHotkeys([['alt+n', () => {
-        document.getElementById('product_type_id').focus()
+        !groupDrawer && document.getElementById('product_type_id').focus()
     }]], []);
 
     useHotkeys([['alt+r', () => {
@@ -76,7 +77,7 @@ function ProductForm() {
     }]], []);
 
     useHotkeys([['alt+s', () => {
-        document.getElementById('EntityFormSubmit').click()
+        !groupDrawer && document.getElementById('EntityFormSubmit').click()
     }]], []);
     return (
         <Box>
@@ -200,15 +201,15 @@ function ProductForm() {
                                                             transitionProps={{ duration: 200 }}
                                                             label={t('QuickCategory')}
                                                         >
-                                                            <ActionIcon fullWidth variant="outline" bg={'white'} size={'lg'} color="red.5" mt={'1'} aria-label="Settings" onClick={open}>
+                                                            <ActionIcon fullWidth variant="outline" bg={'white'} size={'lg'} color="red.5" mt={'1'} aria-label="Settings" onClick={() => {
+                                                                setGroupDrawer(true)
+                                                            }}>
                                                                 <IconCategoryPlus style={{ width: '100%', height: '70%' }} stroke={1.5} />
                                                             </ActionIcon>
                                                         </Tooltip>
                                                     </Box>
                                                 </Grid.Col>
-                                                {opened &&
-                                                    <CustomerGroupModel openedModel={opened} open={open} close={close} />
-                                                }
+
                                             </Grid>
                                         </Box>
                                         <Box mt={'xs'}>
@@ -321,16 +322,16 @@ function ProductForm() {
                                                 </Grid.Col>
                                                 <Grid.Col span={6}>
                                                     <Box mt={'8'}>
-                                                    <InputForm
-                                                        tooltip={t('MinimumQuantityValidateMessage')}
-                                                        label={t('MinimumQuantity')}
-                                                        placeholder={t('MinimumQuantity')}
-                                                        required={false}
-                                                        nextField={'reorder_quantity'}
-                                                        form={form}
-                                                        name={'min_quantity'}
-                                                        id={'min_quantity'}
-                                                    />
+                                                        <InputForm
+                                                            tooltip={t('MinimumQuantityValidateMessage')}
+                                                            label={t('MinimumQuantity')}
+                                                            placeholder={t('MinimumQuantity')}
+                                                            required={false}
+                                                            nextField={'reorder_quantity'}
+                                                            form={form}
+                                                            name={'min_quantity'}
+                                                            id={'min_quantity'}
+                                                        />
                                                     </Box>
                                                 </Grid.Col>
 
@@ -339,7 +340,7 @@ function ProductForm() {
                                         <Box mt={'md'} mb={'md'}>
                                             <Grid gutter={{ base: 6 }}>
                                                 <Box mt={'xs'}>
-                                                    <Grid  gutter={{ base: 1 }}>
+                                                    <Grid gutter={{ base: 1 }}>
                                                         <Grid.Col span={8}>
                                                             <SwitchForm
                                                                 tooltip={t('PrintLogo')}
@@ -375,8 +376,8 @@ function ProductForm() {
                     </Grid.Col>
                 </Grid>
             </form>
+            {groupDrawer && <ProductCategoryDrawer groupDrawer={groupDrawer} setGroupDrawer={setGroupDrawer} saveId={'EntityDrawerSubmit'} />}
         </Box>
-
     );
 }
 
