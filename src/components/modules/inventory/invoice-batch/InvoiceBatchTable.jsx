@@ -96,10 +96,10 @@ function InvoiceBatchTable() {
     const rows = invoiceBatchData && invoiceBatchData.invoice_batch_items && invoiceBatchData.invoice_batch_items.map((element, index) => (
         <Table.Tr key={element.name}>
             <Table.Td fz="xs" width={'20'}>{index + 1}</Table.Td>
-            <Table.Td ta="left" fz="xs" width={'300'}>{element.item_name}</Table.Td>
+            <Table.Td ta="left" fz="xs" width={'300'}>{element.name}</Table.Td>
             <Table.Td ta="center" fz="xs" width={'60'}>{element.quantity}</Table.Td>
+            <Table.Td ta="center" fz="xs" width={'60'}>{element.uom}</Table.Td>
             <Table.Td ta="right" fz="xs" width={'80'}>{element.price}</Table.Td>
-            <Table.Td ta="right" fz="xs" width={'100'}>{element.sales_price}</Table.Td>
             <Table.Td ta="right" fz="xs" width={'100'}>{element.sub_total}</Table.Td>
         </Table.Tr>
     ));
@@ -398,8 +398,8 @@ function InvoiceBatchTable() {
                                                     <Table.Th fz="xs" w={'20'}>{t('S/N')}</Table.Th>
                                                     <Table.Th fz="xs" ta="left" w={'300'}>{t('Name')}</Table.Th>
                                                     <Table.Th fz="xs" ta="center" w={'60'}>{t('QTY')}</Table.Th>
+                                                    <Table.Th ta="center" fz="xs" w={'100'}>{t('UOM')}</Table.Th>
                                                     <Table.Th ta="right" fz="xs" w={'80'}>{t('Price')}</Table.Th>
-                                                    <Table.Th ta="right" fz="xs" w={'100'}>{t('SalesPrice')}</Table.Th>
                                                     <Table.Th ta="right" fz="xs" w={'100'}>{t('SubTotal')}</Table.Th>
                                                 </Table.Tr>
                                             </Table.Thead>

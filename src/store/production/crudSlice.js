@@ -107,6 +107,18 @@ export const getRestoreData = createAsyncThunk("data-restore", async (value) => 
     }
 });
 
+
+export const storeAndUpdateProductionItem = createAsyncThunk("store-and-update", async (value) => {
+    try {
+        const response = createData(value);
+        return response;
+    } catch (error) {
+        console.log('error', error.message);
+        throw error;
+    }
+});
+
+
 const crudSlice = createSlice({
     name: "production",
     initialState: {
@@ -128,6 +140,7 @@ const crudSlice = createSlice({
         openingInlineUpdateStatus: null,
         productionSettingFilterData: { setting_type_id: '',name:''},
         recipeItemFilterData: { setting_type_id: '',product_name:''},
+        measurementInputData:[]
     },
     reducers: {
         setFetching: (state, action) => {
@@ -233,6 +246,10 @@ const crudSlice = createSlice({
         builder.addCase(deleteEntityData.fulfilled, (state, action) => {
             state.entityDataDelete = action.payload.data.message
             state.fetching = true
+        })
+
+        builder.addCase(storeAndUpdateProductionItem.fulfilled,(state,action) => {
+            state.measurementInputData = action.payload.data.data
         })
 
     }

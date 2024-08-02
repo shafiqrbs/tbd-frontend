@@ -30,13 +30,13 @@ function __RecipeAddItem() {
 
     const form = useForm({
         initialValues: {
-            product_id: '',
+            inv_stock_id: '',
             price: '',
             quantity: '',
             percent: '',
         },
         validate: {
-            product_id: isNotEmpty(),
+            inv_stock_id: isNotEmpty(),
             price: (value) => {
                 const isNumberOrFractional = /^-?\d+(\.\d+)?$/.test(value);
                 if (!isNumberOrFractional) {
@@ -63,7 +63,7 @@ function __RecipeAddItem() {
         const storedProducts = localStorage.getItem('core-products');
         const localProducts = storedProducts ? JSON.parse(storedProducts) : [];
 
-        const filteredProducts = localProducts.filter(product => product.id === Number(form.values.product_id));
+        const filteredProducts = localProducts.filter(product => product.id === Number(form.values.inv_stock_id));
 
         if (filteredProducts.length > 0) {
             const selectedProduct = filteredProducts[0];
@@ -72,12 +72,12 @@ function __RecipeAddItem() {
         } else {
             form.setFieldValue('price', '');
         }
-    }, [form.values.product_id]);
+    }, [form.values.inv_stock_id]);
 
 
     useHotkeys(
         [['alt+n', () => {
-            document.getElementById('product_id').focus()
+            document.getElementById('inv_stock_id').focus()
         }]
         ], []
     );
@@ -132,11 +132,11 @@ function __RecipeAddItem() {
                                                 tooltip={t('SelectMaterialName')}
                                                 placeholder={t('SelectMaterialName')}
                                                 required={true}
-                                                name={'product_id'}
+                                                name={'inv_stock_id'}
                                                 form={form}
                                                 dropdownValue={productMaterialDropdown}
                                                 mt={0}
-                                                id={'product_id'}
+                                                id={'inv_stock_id'}
                                                 nextField={'price'}
                                                 searchable={true}
                                                 value={productData}

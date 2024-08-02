@@ -14,7 +14,6 @@ function InvoiceBatchModalTable(props) {
     const { isOnline, mainAreaHeight } = useOutletContext();
     const tableHeight = mainAreaHeight - 212; //TabList height 104
 
-
     const perPage = 50;
     const [page, setPage] = useState(1);
 
@@ -48,14 +47,30 @@ function InvoiceBatchModalTable(props) {
                                     size="sm"
                                     variant="subtle"
                                 >
-                                    {rowData.product.name}
+                                    {rowData.name}
                                 </Text>
 
                             )
                         },
                         {
                             accessor: 'quantity',
+                            textAlign: "center",
                             title: t("Quantity"),
+                            render: (rowData) => (
+                                <Text
+                                    component="a"
+                                    size="sm"
+                                    variant="subtle"
+                                >
+                                    {rowData.quantity}
+                                </Text>
+
+                            )
+                        },
+                        {
+                            accessor: 'uom',
+                            textAlign: "center",
+                            title: t("UOM"),
                             render: (rowData) => (
                                 <Text
                                     component="a"
@@ -70,6 +85,7 @@ function InvoiceBatchModalTable(props) {
                         {
                             accessor: 'price',
                             title: t("Price"),
+                            textAlign: "right",
                             render: (rowData) => (
                                 <Text
                                     component="a"
@@ -93,13 +109,7 @@ function InvoiceBatchModalTable(props) {
 
                     ]
                     }
-                    totalRecords={invoiceBatchItems.length}
-                    recordsPerPage={perPage}
-                    page={page}
-                    onPageChange={(p) => {
-                        setPage(p)
-                        dispatch(setFetching(true))
-                    }}
+
                     loaderSize="xs"
                     loaderColor="grape"
                     height={tableHeight}

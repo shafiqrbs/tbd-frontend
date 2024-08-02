@@ -1,59 +1,58 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate, useOutletContext } from "react-router-dom";
+import React, {useEffect, useState} from "react";
+import {useNavigate, useOutletContext} from "react-router-dom";
 import {
     Group,
     Box,
-    ActionIcon, Text,
-    Menu,
-    rem
+    ActionIcon, Text, rem, Menu
 } from "@mantine/core";
-import { useTranslation } from "react-i18next";
+import {useTranslation} from "react-i18next";
 import {
+    IconCheck,
     IconDotsVertical,
     IconTrashX
 } from "@tabler/icons-react";
-import { DataTable } from 'mantine-datatable';
-import { useDispatch, useSelector } from "react-redux";
+import {DataTable} from 'mantine-datatable';
+import {useDispatch, useSelector} from "react-redux";
 import {
     editEntityData,
     getIndexEntityData,
-    setFetching, setFormLoading,
+    setFormLoading,
     setInsertType,
-    showEntityData, deleteEntityData
-} from "../../../../store/core/crudSlice.js";
-import KeywordSearch from "../../filter/KeywordSearch";
-import { modals } from "@mantine/modals";
+    deleteEntityData,
+    setFetching
+} from "../../../../store/inventory/crudSlice.js";
+import {modals} from "@mantine/modals";
+import KeywordSearch from "../../filter/KeywordSearch.jsx";
+import {notifications} from "@mantine/notifications";
 import tableCss from "../../../../assets/css/Table.module.css";
-import ProductViewDrawer from "./ProductViewDrawer.jsx";
+import _ParticularViewModal from "./_ParticularViewModal.jsx";
 
-function ProductTable() {
+function _ParticularTable() {
 
     const dispatch = useDispatch();
-    const { t, i18n } = useTranslation();
-    const { isOnline, mainAreaHeight } = useOutletContext();
+    const {t, i18n} = useTranslation();
+    const {isOnline, mainAreaHeight} = useOutletContext();
     const height = mainAreaHeight - 98; //TabList height 104
-
     const perPage = 50;
     const [page, setPage] = useState(1);
-    const [viewDrawer, setViewDrawer] = useState(false)
 
-    const fetching = useSelector((state) => state.crudSlice.fetching)
-    const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword)
-    const indexData = useSelector((state) => state.crudSlice.indexEntityData)
-    const productFilterData = useSelector((state) => state.inventoryCrudSlice.productFilterData)
+    const searchKeyword = useSelector((state) => state.productionCrudSlice.searchKeyword)
+    const fetching = useSelector((state) => state.productionCrudSlice.fetching)
+    const indexData = useSelector((state) => state.productionCrudSlice.indexEntityData)
+    const productionSettingFilterData = useSelector((state) => state.productionCrudSlice.productionSettingFilterData)
+
+    const [productionSettingView, setProductionSettingViewModal] = useState(false)
+    const [productionSettingData, setProductionSettingViewData] = useState([])
 
     const navigate = useNavigate()
 
-
     useEffect(() => {
         const value = {
-            url: 'inventory/product',
+            url: 'inventory/particular',
             param: {
                 term: searchKeyword,
-                name: productFilterData.name,
-                alternative_name: productFilterData.alternative_name,
-                sku: productFilterData.sku,
-                sales_price: productFilterData.sales_price,
+                name: productionSettingFilterData.name && productionSettingFilterData.name,
+                setting_type_id: productionSettingFilterData.setting_type_id && productionSettingFilterData.setting_type_id,
                 page: page,
                 offset: perPage
             }
@@ -63,9 +62,8 @@ function ProductTable() {
 
     return (
         <>
-
-            <Box pl={`xs`} pr={8} pt={'6'} pb={'4'} className={'boxBackground borderRadiusAll border-bottom-none'} >
-                <KeywordSearch module={'product'} />
+            <Box pl={`xs`} pr={8} pt={'6'} pb={'4'} className={'boxBackground borderRadiusAll border-bottom-none'}>
+                <KeywordSearch module={'production-setting'}/>
             </Box>
             <Box className={'borderRadiusAll border-top-none'}>
                 <DataTable
@@ -81,34 +79,40 @@ function ProductTable() {
                         {
                             accessor: 'index',
                             title: t('S/N'),
-                            textAlignment: 'right   ',
+                            textAlignment: 'right',
                             render: (item) => (indexData.data.indexOf(item) + 1)
                         },
-                        { accessor: 'product_type', title: t("NatureOfProduct") },
-                        { accessor: 'category_name', title: t("Category") },
-                        { accessor: 'product_name', title: t("Name") },
-                        { accessor: 'alternative_name', title: t("Alternative Name") },
-                        { accessor: 'unit_name', title: t("Unit") },
+                        {accessor: 'setting_type_name', title: t("SettingType")},
+                        {accessor: 'name', title: t("SettingName")},
+                        {accessor: 'created', title: t("CreatedDate")},
+                        {
+                            accessor: 'status',
+                            title: t("Status"),
+                            render: (data) => (
+                                data.status == 1 ? 'Active' : 'Inactive'
+                            )
+                        },
                         {
                             accessor: "action",
                             title: t("Action"),
                             textAlign: "right",
                             render: (data) => (
                                 <Group gap={4} justify="right" wrap="nowrap">
-                                    <Menu position="bottom-end" offset={3} withArrow trigger="hover" openDelay={100} closeDelay={400}>
+                                    <Menu position="bottom-end" offset={3} withArrow trigger="hover" openDelay={100}
+                                          closeDelay={400}>
                                         <Menu.Target>
-                                            <ActionIcon size="sm" variant="outline" color="red" radius="xl" aria-label="Settings">
-                                                <IconDotsVertical height={'18'} width={'18'} stroke={1.5} />
+                                            <ActionIcon size="sm" variant="outline" color="red" radius="xl"
+                                                        aria-label="Settings">
+                                                <IconDotsVertical height={'18'} width={'18'} stroke={1.5}/>
                                             </ActionIcon>
                                         </Menu.Target>
                                         <Menu.Dropdown>
                                             <Menu.Item
-                                                // href={`/inventory/sales/edit/${data.id}`}
                                                 onClick={() => {
                                                     dispatch(setInsertType('update'))
-                                                    dispatch(editEntityData('inventory/product/' + data.id))
+                                                    dispatch(editEntityData('inventory/particular/' + data.id))
                                                     dispatch(setFormLoading(true))
-                                                    navigate(`/inventory/product/${data.id}`)
+                                                    navigate(`/inventory/particular/${data.id}`)
                                                 }}
                                             >
                                                 {t('Edit')}
@@ -116,8 +120,8 @@ function ProductTable() {
 
                                             <Menu.Item
                                                 onClick={() => {
-                                                    setViewDrawer(true)
-                                                    dispatch(showEntityData('inventory/product/' + data.id))
+                                                    setProductionSettingViewData(data)
+                                                    setProductionSettingViewModal(true)
                                                 }}
                                                 target="_blank"
                                                 component="a"
@@ -126,7 +130,6 @@ function ProductTable() {
                                                 {t('Show')}
                                             </Menu.Item>
                                             <Menu.Item
-                                                // href={``}
                                                 target="_blank"
                                                 component="a"
                                                 w={'200'}
@@ -141,16 +144,24 @@ function ProductTable() {
                                                         children: (
                                                             <Text size="sm"> {t("FormConfirmationMessage")}</Text>
                                                         ),
-                                                        labels: { confirm: 'Confirm', cancel: 'Cancel' },
-                                                        confirmProps: { color: 'red.6' },
+                                                        labels: {confirm: 'Confirm', cancel: 'Cancel'},
+                                                        confirmProps: {color: 'red.6'},
                                                         onCancel: () => console.log('Cancel'),
                                                         onConfirm: () => {
-                                                            dispatch(deleteEntityData('inventory/product/' + data.id))
-                                                            dispatch(setFetching(true))
+                                                            dispatch(deleteEntityData('inventory/particular/' + data.id))
+                                                            notifications.show({
+                                                                color: 'red',
+                                                                title: t('DeleteSuccessfully'),
+                                                                icon: <IconCheck
+                                                                    style={{width: rem(18), height: rem(18)}}/>,
+                                                                loading: false,
+                                                                autoClose: 700,
+                                                                style: {backgroundColor: 'lightgray'},
+                                                            });
                                                         },
                                                     });
                                                 }}
-                                                rightSection={<IconTrashX style={{ width: rem(14), height: rem(14) }} />}
+                                                rightSection={<IconTrashX style={{width: rem(14), height: rem(14)}}/>}
                                             >
                                                 {t('Delete')}
                                             </Menu.Item>
@@ -172,14 +183,18 @@ function ProductTable() {
                     loaderSize="xs"
                     loaderColor="grape"
                     height={height}
-                    scrollAreaProps={{ type: 'never' }}
+                    scrollAreaProps={{type: 'never'}}
                 />
             </Box>
-            {
-                viewDrawer && <ProductViewDrawer viewDrawer={viewDrawer} setViewDrawer={setViewDrawer} />
-            }
+            {productionSettingView &&
+                <_ParticularViewModal
+                    productionSettingView={productionSettingView}
+                    setProductionSettingViewModal={setProductionSettingViewModal}
+                    productionSettingData={productionSettingData}
+                    setProductionSettingViewData={setProductionSettingViewData}
+                />}
         </>
     );
 }
 
-export default ProductTable;
+export default _ParticularTable;

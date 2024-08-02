@@ -1,26 +1,27 @@
 import React, { useEffect, useState } from "react";
-import { useOutletContext } from "react-router-dom";
+import {useNavigate, useOutletContext} from "react-router-dom";
 import {
     Group,
     Box,
     ActionIcon,
-    Menu,
+    Menu, Button, rem,
 } from "@mantine/core";
 import {
-    IconDotsVertical,
+    IconDotsVertical, IconTrashX,
 } from "@tabler/icons-react";
 import { DataTable } from 'mantine-datatable';
 import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from 'react-i18next';
 import {
     getIndexEntityData,
-    setFetching,
+    setFetching, storeAndUpdateProductionItem,
 } from "../../../../store/production/crudSlice.js";
 import KeywordSearch from "../common/KeywordSearch.jsx";
 import tableCss from "../../../../assets/css/Table.module.css";
 
 function _RecipeItemsTable() {
     const dispatch = useDispatch();
+    const navigate = useNavigate()
     const { t, i18n } = useTranslation();
     const { isOnline, mainAreaHeight } = useOutletContext();
     const height = mainAreaHeight - 120; //TabList height 104
@@ -104,7 +105,16 @@ function _RecipeItemsTable() {
                             textAlign: "right",
                             render: (item) => (
                                 <Group gap={4} justify="right" wrap="nowrap">
-                                    <Menu position="bottom-end" offset={3} withArrow trigger="hover" openDelay={100} closeDelay={400}>
+                                    <Button component="a" size="compact-xs" radius="xs" variant="filled" fw={'100'} fz={'12'} color="red.3" mr={'4'}
+                                            href={`/production/recipe/${item.id}`}
+                                            /*onClick={(e) => {
+                                                e.preventDefault();
+
+                                                navigate('/production/recipe/'+item.id)
+                                            }}*/
+                                    >  {t('Recipe')}</Button>
+
+                                    {/*<Menu position="bottom-end" offset={3} withArrow trigger="hover" openDelay={100} closeDelay={400}>
                                         <Menu.Target>
                                             <ActionIcon size="sm" variant="outline" color="red" radius="xl" aria-label="Settings">
                                                 <IconDotsVertical height={'18'} width={'18'} stroke={1.5} />
@@ -118,7 +128,7 @@ function _RecipeItemsTable() {
                                                 {t('Recipe')}
                                             </Menu.Item>
                                         </Menu.Dropdown>
-                                    </Menu>
+                                    </Menu>*/}
                                 </Group>
                             ),
                         },

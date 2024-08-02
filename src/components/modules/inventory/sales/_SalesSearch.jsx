@@ -360,7 +360,7 @@ function _SalesSearch(props) {
                 <Grid.Col span={'3'}>
                     <ActionIcon.Group mt={'1'} justify="right">
                         {
-                            Object.keys(props.checkList).length > 1 &&
+                            Object.keys(props.checkList).length >= 1 &&
                             <Tooltip
                                 label={t("GenerateBatchForCustomer")}
                                 px={16}

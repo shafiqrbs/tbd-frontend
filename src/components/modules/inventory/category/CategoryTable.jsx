@@ -102,6 +102,13 @@ function CategoryTable() {
                         { accessor: 'parent_name', title: t("ParentName") },
                         { accessor: 'name', title: t("Name") },
                         {
+                            accessor: 'status',
+                            title: t("Status"),
+                            render: (data) => (
+                                data.status == 1 ? 'Active' : 'Inactive'
+                            )
+                        },
+                        {
                             accessor: "action",
                             title: t("Action"),
                             textAlign: "right",
@@ -123,18 +130,6 @@ function CategoryTable() {
                                                 }}
                                             >
                                                 {t('Edit')}
-                                            </Menu.Item>
-
-                                            <Menu.Item
-                                                onClick={() => {
-                                                    setViewDrawer(true)
-                                                    dispatch(editEntityData('inventory/category-group/' + data.id))
-                                                }}
-                                                target="_blank"
-                                                component="a"
-                                                w={'200'}
-                                            >
-                                                {t('Show')}
                                             </Menu.Item>
                                             <Menu.Item
                                                 // href={``}

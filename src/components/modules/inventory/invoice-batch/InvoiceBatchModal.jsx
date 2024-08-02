@@ -27,7 +27,7 @@ function InvoiceBatchModal(props) {
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
-    const height = mainAreaHeight - 100; //TabList height 104
+    const height = mainAreaHeight - 130; //TabList height 104
 
     const [isShowSMSPackageModel, setIsShowSMSPackageModel] = useState(false)
     const [addTransactionDrawer, setAddTransactionDrawer] = useState(false);

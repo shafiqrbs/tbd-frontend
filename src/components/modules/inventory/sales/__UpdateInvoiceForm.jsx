@@ -248,7 +248,7 @@ function __UpdateInvoiceForm(props) {
                         "sale_id": id,
                         "product_id": product.product_id,
                         "unit_id": product.unit_id,
-                        "uom": product.unit_name,
+                        "uom": product.uom,
                         "item_name": product.item_name,
                         "quantity": product.quantity,
                         "percent": product.percent,
