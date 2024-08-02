@@ -98,7 +98,7 @@ function AppRoute() {
 
                 <Route path="/production/">
                     <Route path="items" element={<RecipeItemsIndex />} />
-                    <Route path="recipe/:id" element={<RecipeIndex />} />
+                    <Route path="recipe-update/:id" element={<RecipeIndex />} />
                     <Route path="setting" element={<ProductionSettingIndex />} />
                     <Route path="setting/:id" element={<ProductionSettingIndex />} />
                 </Route>
