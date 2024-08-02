@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import {
     Button, rem, Flex, Grid, Box, ScrollArea, Group, Text, Title, Stack,
@@ -21,7 +21,7 @@ import SelectForm from "../../../form-builders/SelectForm.jsx";
 import SwitchForm from "../../../form-builders/SwitchForm.jsx";
 
 
-function CustomerSettingsForm(props) {
+function ProductCategoryDrawerForm(props) {
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
@@ -29,24 +29,26 @@ function CustomerSettingsForm(props) {
     const [categoryGroupData, setCategoryGroupData] = useState(null);
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
 
-    const { adjustment, saveId } = props
 
-    const settingsForm = useForm({
+
+    const { adjustment, saveId, groupCategoryDropdown } = props
+
+    const categoryForm = useForm({
         initialValues: {
-            setting_type: '', setting_name: '', status: true
+            category_group: '', category_name: '', category_status: true
         },
         validate: {
-            setting_type: isNotEmpty(),
-            setting_name: hasLength({ min: 2, max: 20 }),
+            category_group: isNotEmpty(),
+            name: hasLength({ min: 2, max: 20 }),
         }
     });
 
     useHotkeys([['alt+n', () => {
-        document.getElementById('setting_type').click()
+        document.getElementById('category_group').click()
     }]], []);
 
     useHotkeys([['alt+r', () => {
-        settingsForm.reset()
+        categoryForm.reset()
     }]], []);
 
     useHotkeys([['alt+s', () => {
@@ -57,7 +59,7 @@ function CustomerSettingsForm(props) {
     return (
         <>
             <Box>
-                <form onSubmit={settingsForm.onSubmit((values) => {
+                <form onSubmit={categoryForm.onSubmit((values) => {
                     // console.log(values)
                     modals.openConfirmModal({
                         title: (
@@ -72,7 +74,7 @@ function CustomerSettingsForm(props) {
                             setSaveCreateLoading(true)
                             const value = {
                                 url: 'inventory/category-group',
-                                data: settingsForm.values
+                                data: categoryForm.values
                             }
                             dispatch(storeEntityData(value))
 
@@ -86,7 +88,7 @@ function CustomerSettingsForm(props) {
                             });
 
                             setTimeout(() => {
-                                settingsForm.reset()
+                                categoryForm.reset()
                                 setCategoryGroupData(null)
                                 setSaveCreateLoading(false)
                                 dispatch(setFetching(true))
@@ -103,7 +105,7 @@ function CustomerSettingsForm(props) {
                                         <Box pl={`xs`} pr={8} pt={'6'} pb={'6'} mb={'4'} className={'boxBackground borderRadiusAll'} >
                                             <Grid>
                                                 <Grid.Col span={8} >
-                                                    <Title order={6} pt={'6'}>{t('CreateSetting')}</Title>
+                                                    <Title order={6} pt={'6'}>{t('CreateProductCategory')}</Title>
                                                 </Grid.Col>
                                                 <Grid.Col span={4}>
                                                     <Stack right align="flex-end">
@@ -133,15 +135,15 @@ function CustomerSettingsForm(props) {
                                             <ScrollArea h={height - (adjustment ? adjustment : 0)} scrollbarSize={2} scrollbars="y" type="never">
                                                 <Box mt={'8'}>
                                                     <SelectForm
-                                                        tooltip={t('SettingType')}
-                                                        label={t('SettingType')}
-                                                        placeholder={t('SettingType')}
+                                                        tooltip={t('ChooseCategoryGroup')}
+                                                        label={t('CategoryGroup')}
+                                                        placeholder={t('ChooseCategoryGroup')}
                                                         required={true}
-                                                        nextField={'setting_name'}
-                                                        name={'setting_type'}
-                                                        form={settingsForm}
-                                                        dropdownValue={['test1', 'test2']}
-                                                        id={'setting_type'}
+                                                        nextField={'category_name'}
+                                                        name={'category_group'}
+                                                        form={categoryForm}
+                                                        dropdownValue={groupCategoryDropdown}
+                                                        id={'category_group'}
                                                         searchable={false}
                                                         value={categoryGroupData}
                                                         changeValue={setCategoryGroupData}
@@ -150,14 +152,14 @@ function CustomerSettingsForm(props) {
 
                                                 <Box mt={'xs'}>
                                                     <InputForm
-                                                        tooltip={t('SettingName')}
-                                                        label={t('SettingName')}
-                                                        placeholder={t('SettingName')}
+                                                        tooltip={t('CategoryNameValidateMessage')}
+                                                        label={t('CategoryName')}
+                                                        placeholder={t('CategoryName')}
                                                         required={true}
-                                                        nextField={'status'}
-                                                        form={settingsForm}
-                                                        name={'setting_name'}
-                                                        id={'setting_name'}
+                                                        nextField={'category_status'}
+                                                        form={categoryForm}
+                                                        name={'category_name'}
+                                                        id={'category_name'}
                                                     />
                                                 </Box>
                                                 <Box mt={'xs'}>
@@ -167,15 +169,15 @@ function CustomerSettingsForm(props) {
                                                                 tooltip={t('Status')}
                                                                 label=''
                                                                 nextField={saveId}
-                                                                name={'status'}
-                                                                form={settingsForm}
+                                                                name={'category_status'}
+                                                                form={categoryForm}
                                                                 color="red"
-                                                                id={'status'}
+                                                                id={'category_status'}
                                                                 position={'left'}
                                                                 defaultChecked={1}
                                                             />
                                                         </Grid.Col>
-                                                        <Grid.Col span={6} fz={'sm'} pt={'1'}>{t('Status')}</Grid.Col>
+                                                        <Grid.Col span={6} fz={'sm'} pt={'2'} >{t('Status')}</Grid.Col>
                                                     </Grid>
                                                 </Box>
                                             </ScrollArea>
@@ -187,7 +189,7 @@ function CustomerSettingsForm(props) {
                                 <Box bg={'white'} className={'borderRadiusAll'} pt={'16'}>
                                     <_ShortcutMasterData
                                         adjustment={adjustment}
-                                        form={settingsForm}
+                                        form={categoryForm}
                                         FormSubmit={saveId}
                                         Name={'setting_type'}
                                         inputType="select"
@@ -203,4 +205,4 @@ function CustomerSettingsForm(props) {
     );
 }
 
-export default CustomerSettingsForm;
+export default ProductCategoryDrawerForm;

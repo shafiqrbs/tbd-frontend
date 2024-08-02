@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useOutletContext } from "react-router-dom";
 import {
     ActionIcon, Box, ScrollArea, Drawer
@@ -9,13 +9,16 @@ import {
     IconX,
 
 } from "@tabler/icons-react";
-import CustomerSettingsForm from "../customer-settings/CustomerSettingsForm.jsx";
+import ProductCategoryDrawerForm from "./ProductCategoryDrawerForm";
+import { getGroupCategoryDropdown } from "../../../../store/inventory/utilitySlice.js";
+import { useSelector, useDispatch } from "react-redux";
 
 
-function CustomerGroupDrawer(props) {
+function ProductCategoryDrawer(props) {
     // const configData = localStorage.getItem('config-data');
 
     const adjustment = -28;
+    const dispatch = useDispatch()
 
     const { saveId } = props
 
@@ -26,7 +29,17 @@ function CustomerGroupDrawer(props) {
     const closeModel = () => {
         setGroupDrawer(false)
     }
-
+    const groupCategoryDropdownData = useSelector((state) => state.inventoryUtilitySlice.groupCategoryDropdown)
+    let groupCategoryDropdown = groupCategoryDropdownData && groupCategoryDropdownData.length > 0 ?
+        groupCategoryDropdownData.map((type, index) => {
+            return ({ 'label': type.name, 'value': String(type.id) })
+        }) : []
+    useEffect(() => {
+        const value = {
+            url: 'inventory/select/group-category',
+        }
+        dispatch(getGroupCategoryDropdown(value))
+    }, []);
 
 
     return (
@@ -36,7 +49,7 @@ function CustomerGroupDrawer(props) {
                 <Drawer.Content>
                     <ScrollArea h={height + 100} scrollbarSize={2} type="never" bg={'gray.1'}>
                         <Drawer.Header>
-                            <Drawer.Title>{t('AddCustomerGroup')}</Drawer.Title>
+                            <Drawer.Title>{t('AddProductCategory')}</Drawer.Title>
                             <ActionIcon
                                 className="ActionIconCustom"
                                 radius="xl"
@@ -47,10 +60,9 @@ function CustomerGroupDrawer(props) {
                             </ActionIcon>
                         </Drawer.Header>
                         <Box ml={2} mr={2} mb={0}>
-                            <CustomerSettingsForm adjustment={adjustment} saveId={saveId} />
+                            <ProductCategoryDrawerForm groupCategoryDropdown={groupCategoryDropdown} adjustment={adjustment} saveId={saveId} />
                         </Box>
                     </ScrollArea>
-
                 </Drawer.Content>
             </Drawer.Root >
         </>
@@ -58,4 +70,4 @@ function CustomerGroupDrawer(props) {
     );
 }
 
-export default CustomerGroupDrawer;
+export default ProductCategoryDrawer;

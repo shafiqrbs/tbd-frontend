@@ -52,7 +52,7 @@ function CategoryForm(props) {
     }]], []);
 
     useHotkeys([['alt+s', () => {
-        document.getElementById('EntityFormSubmit').click()
+        document.getElementById('CategoryFormSubmit').click()
     }]], []);
 
 
@@ -114,7 +114,7 @@ function CategoryForm(props) {
                                                                 size="xs"
                                                                 color={`green.8`}
                                                                 type="submit"
-                                                                id="EntityFormSubmit"
+                                                                id="CategoryFormSubmit"
                                                                 leftSection={<IconDeviceFloppy size={16} />}
                                                             >
 
@@ -201,7 +201,7 @@ function CategoryForm(props) {
                                                             defaultChecked={1}
                                                         />
                                                     </Grid.Col>
-                                                    <Grid.Col span={6} fz={'sm'} pt={'1'}>{t('Status')}</Grid.Col>
+                                                    <Grid.Col span={6} fz={'sm'} pt={'2'} >{t('Status')}</Grid.Col>
                                                 </Grid>
                                             </Box>
                                         </ScrollArea>
@@ -213,7 +213,7 @@ function CategoryForm(props) {
                             <Box bg={'white'} className={'borderRadiusAll'} pt={'16'}>
                                 <Shortcut
                                     form={form}
-                                    FormSubmit={'EntityFormSubmit'}
+                                    FormSubmit={'CategoryFormSubmit'}
                                     Name={'name'}
                                     inputType="select"
                                 />

@@ -3,41 +3,38 @@ import { useOutletContext, useParams } from "react-router-dom";
 import {
     Button,
     rem,
-    Grid, Box, ScrollArea, Group, Text, Title, Flex, Stack, Tooltip, ActionIcon, LoadingOverlay, Table,
+    Grid, Box, ScrollArea, Group, Text, Title, Flex, Stack, ActionIcon, LoadingOverlay, Table,
+    Menu,
 } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
 import {
-    IconCategoryPlus,
     IconCheck,
-    IconClipboardPlus,
     IconDeviceFloppy,
     IconDotsVertical,
-    IconPencilBolt,
-    IconPlus,
     IconX,
     IconSortAscendingNumbers,
     IconTrashX,
-    IconSum
 } from "@tabler/icons-react";
 import { useDisclosure, useHotkeys } from "@mantine/hooks";
 import InputForm from "../../../form-builders/InputForm";
 import { useDispatch, useSelector } from "react-redux";
 import { hasLength, isNotEmpty, useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
-import { modals } from "@mantine/modals";
 
 import {
     setEditEntityData,
     setFetching, setFormLoading, setInsertType,
     updateEntityData
 } from "../../../../store/core/crudSlice.js";
-import Shortcut from "../../shortcut/Shortcut.jsx";
+import { DataTable } from 'mantine-datatable';
+import tableCss from "../../../../assets/css/Table.module.css";
 import SelectForm from "../../../form-builders/SelectForm.jsx";
 import SwitchForm from "../../../form-builders/SwitchForm.jsx";
 import getSettingProductTypeDropdownData from "../../../global-hook/dropdown/getSettingProductTypeDropdownData.js";
 import getSettingProductUnitDropdownData from "../../../global-hook/dropdown/getSettingProductUnitDropdownData.js";
 import getSettingCategoryDropdownData from "../../../global-hook/dropdown/getSettingCategoryDropdownData.js";
 import InputButtonForm from "../../../form-builders/InputButtonForm";
+import { deleteEntityData } from "../../../../store/inventory/crudSlice.js";
 
 function ProductUpdateForm() {
     const { t, i18n } = useTranslation();
@@ -48,7 +45,6 @@ function ProductUpdateForm() {
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
     const [setFormData, setFormDataForUpdate] = useState(false);
     const [formLoad, setFormLoad] = useState(true);
-    const [opened, { open, close }] = useDisclosure(false);
 
     const entityEditData = useSelector((state) => state.crudSlice.entityEditData)
     const formLoading = useSelector((state) => state.crudSlice.formLoading)
@@ -57,6 +53,17 @@ function ProductUpdateForm() {
     const [productTypeData, setProductTypeData] = useState(null);
     const [productUnitData, setProductUnitData] = useState(null);
     const [measurmentUnitData, setMeasurmentUnitData] = useState(null);
+
+    const indexData = useSelector((state) => state.crudSlice.indexEntityData)
+    const fetching = useSelector((state) => state.crudSlice.fetching)
+    const perPage = 50;
+    const [page, setPage] = useState(1);
+
+    // Data's that will come from product Management
+    const [colorDropdown, setColorDropdown] = useState(true);
+    const [sizeDropdown, setSizeDropdown] = useState(true);
+    const [brandDropdown, setBrandDropdown] = useState(true);
+    const [titleDropdown, setTitleDropdown] = useState(true);
 
 
     const form = useForm({
@@ -108,7 +115,7 @@ function ProductUpdateForm() {
 
 
     useHotkeys([['alt+n', () => {
-        document.getElementById('product_type_id').focus()
+        !groupDrawer && document.getElementById('product_type_id').focus()
     }]], []);
 
     useHotkeys([['alt+r', () => {
@@ -116,8 +123,19 @@ function ProductUpdateForm() {
     }]], []);
 
     useHotkeys([['alt+s', () => {
-        document.getElementById('EntityFormSubmit').click()
+        !groupDrawer && document.getElementById('EntityFormSubmit').click()
     }]], []);
+
+    const data = [
+        {
+            name: 'shoe',
+            color: 'red',
+            size: 'xl',
+            stock: '100',
+            brand: 'Apex',
+            title: 'title'
+        }
+    ]
 
 
     return (
@@ -399,7 +417,7 @@ function ProductUpdateForm() {
                         </Box>
                     </Grid.Col>
                     <Grid.Col span={8} >
-                        <Box bg={'white'}  p={'xs'} className={'borderRadiusAll'} >
+                        <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
                             <Box pl={`4`} pb={'3'} pr={8} pt={'3'} mb={'4'} className={'boxBackground borderRadiusAll'} >
                                 <Grid gutter={'4'}>
                                     <Grid.Col span={5}>
@@ -505,26 +523,255 @@ function ProductUpdateForm() {
                                             </Table.Tbody>
                                         </Table>
                                     </Box>
+                                    {/* Temporary buttons to check dropdown functionality */}
+                                    <Group justify={'space-between'} gap={'xs'} grow>
+
+                                        <Button color={colorDropdown ? "green.8" : "red.5"} onClick={
+                                            () => {
+                                                colorDropdown && setColorDropdown(false)
+                                                !colorDropdown && setColorDropdown(true)
+                                            }
+                                        }>
+                                            Color
+                                        </Button >
+                                        <Button color={brandDropdown ? "green.8" : "red.5"} onClick={
+                                            () => {
+                                                brandDropdown && setBrandDropdown(false)
+                                                !brandDropdown && setBrandDropdown(true)
+                                            }
+                                        }>
+                                            Brand
+                                        </Button>
+                                        <Button color={sizeDropdown ? "green.8" : "red.5"} onClick={
+                                            () => {
+                                                sizeDropdown && setSizeDropdown(false)
+                                                !sizeDropdown && setSizeDropdown(true)
+
+                                            }}>
+                                            Size
+                                        </Button>
+                                        <Button color={titleDropdown ? "green.8" : "red.5"} onClick={
+                                            () => {
+                                                titleDropdown && setTitleDropdown(false)
+                                                !titleDropdown && setTitleDropdown(true)
+                                            }
+                                        }>
+                                            Title
+                                        </Button>
+                                    </Group>
                                 </ScrollArea>
+
                             </Box>
                         </Box>
                     </Grid.Col>
                     <Grid.Col span={8} >
-                        <Box bg={'white'}  p={'xs'} className={'borderRadiusAll'} >
+                        <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
                             <Box pl={`xs`} pb={'6'} pr={8} pt={'6'} mb={'4'} className={'boxBackground borderRadiusAll'} >
                                 <Grid>
                                     <Grid.Col span={6} >
-                                        <Title order={6} pt={'6'}>{t('UnitMeasurment')}</Title>
+                                        <Title order={6} pt={'4'} pb={4}>{t('SkuProduct')}</Title>
                                     </Grid.Col>
                                     <Grid.Col span={6}>
 
                                     </Grid.Col>
                                 </Grid>
                             </Box>
-                            <Box pl={`xs`} pr={'xs'} className={'borderRadiusAll'}>
+                            <Box className={'borderRadiusAll'}>
                                 <ScrollArea h={height} scrollbarSize={2} scrollbars="y" type="never">
                                     <Box>
                                         <LoadingOverlay visible={formLoad} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />
+                                        <Box pl={4} pr={4} pt={'6'} pb={'4'} className={'boxBackground  border-bottom-none'} >
+                                            <Grid columns={12} gutter={{ base: 2 }}>
+                                                {colorDropdown &&
+                                                    <Grid.Col span={'auto'}>
+                                                        <SelectForm
+                                                            tooltip={t('ChooseProdcutColor')}
+                                                            label={t('Color')}
+                                                            placeholder={t('ChooseColor')}
+                                                            // required={true}
+                                                            name={'color'}
+                                                            form={form}
+                                                            dropdownValue={['red', 'green']}
+                                                            mt={0}
+                                                            id={'color'}
+                                                            nextField={'category_id'}
+                                                            searchable={true}
+                                                            value={''}
+                                                            changeValue={''}
+                                                        />
+                                                    </Grid.Col>
+                                                }
+                                                {sizeDropdown &&
+                                                    <Grid.Col span={'auto'}>
+                                                        <SelectForm
+                                                            tooltip={t('ChooseProductSize')}
+                                                            label={t('Size')}
+                                                            placeholder={t('ChooseSize')}
+                                                            // required={true}
+                                                            name={'product_type_id'}
+                                                            form={form}
+                                                            dropdownValue={['red', 'green']}
+                                                            mt={0}
+                                                            id={'product_type_id'}
+                                                            nextField={'category_id'}
+                                                            searchable={true}
+                                                            value={''}
+                                                            changeValue={''}
+                                                        />
+
+                                                    </Grid.Col>
+                                                }
+                                                {brandDropdown &&
+                                                    <Grid.Col span={'auto'}>
+                                                        < SelectForm
+                                                            tooltip={t('ChooseProductBrand')}
+                                                            label={t('Brand')}
+                                                            placeholder={t('ChooseBrand')}
+                                                            // required={true}
+                                                            name={'product_type_id'}
+                                                            form={form}
+                                                            dropdownValue={['red', 'green']}
+                                                            mt={0}
+                                                            id={'product_type_id'}
+                                                            nextField={'category_id'}
+                                                            searchable={true}
+                                                            value={''}
+                                                            changeValue={''}
+                                                        />
+
+                                                    </Grid.Col>
+                                                }
+                                                {titleDropdown &&
+                                                    <Grid.Col span={'auto'}>
+                                                        <SelectForm
+                                                            tooltip={t('ChooseProductType')}
+                                                            label={t('Title')}
+                                                            placeholder={t('ChooseProductType')}
+                                                            // required={true}
+                                                            name={'product_type_id'}
+                                                            form={form}
+                                                            dropdownValue={['red', 'green']}
+                                                            mt={0}
+                                                            id={'product_type_id'}
+                                                            nextField={'category_id'}
+                                                            searchable={true}
+                                                            value={''}
+                                                            changeValue={''}
+                                                        />
+
+                                                    </Grid.Col>
+                                                }
+                                            </Grid>
+                                        </Box>
+                                        <Box className={'border-top-none'}>
+                                            <DataTable
+                                                classNames={{
+                                                    root: tableCss.root,
+                                                    table: tableCss.table,
+                                                    header: tableCss.header,
+                                                    footer: tableCss.footer,
+                                                    pagination: tableCss.pagination,
+                                                }}
+                                                records={data}
+                                                columns={[
+                                                    {
+                                                        accessor: 'index',
+                                                        title: t('S/N'),
+                                                        textAlignment: 'right   ',
+                                                        render: (item) => (data.indexOf(item) + 1)
+                                                    },
+                                                    { accessor: 'name', title: t("Name") },
+                                                    ...(colorDropdown ? [{ accessor: 'color', title: t("Color") }] : []),
+                                                    ...(sizeDropdown ? [{ accessor: 'size', title: t("Size") }] : []),
+                                                    ...(brandDropdown ? [{ accessor: 'brand', title: t("Brand") }] : []),
+                                                    ...(titleDropdown ? [{ accessor: 'title', title: t("Title") }] : []),
+                                                    { accessor: 'stock', title: t("Stock") },
+                                                    {
+                                                        accessor: "action",
+                                                        title: t("Action"),
+                                                        textAlign: "right",
+                                                        render: (data) => (
+                                                            <Group gap={4} justify="right" wrap="nowrap">
+                                                                <Menu position="bottom-end" offset={3} withArrow trigger="hover" openDelay={100} closeDelay={400}>
+                                                                    <Menu.Target>
+                                                                        <ActionIcon size="sm" variant="outline" color="red" radius="xl" aria-label="Settings">
+                                                                            <IconDotsVertical height={'18'} width={'18'} stroke={1.5} />
+                                                                        </ActionIcon>
+                                                                    </Menu.Target>
+                                                                    <Menu.Dropdown>
+                                                                        <Menu.Item
+                                                                            // href={`/inventory/sales/edit/${data.id}`}
+                                                                            onClick={() => {
+                                                                                dispatch(setInsertType('update'))
+                                                                                dispatch(editEntityData('inventory/product/' + data.id))
+                                                                                dispatch(setFormLoading(true))
+                                                                                navigate(`/inventory/product/${data.id}`)
+                                                                            }}
+                                                                        >
+                                                                            {t('Edit')}
+                                                                        </Menu.Item>
+
+                                                                        <Menu.Item
+                                                                            onClick={() => {
+                                                                                setViewDrawer(true)
+                                                                                dispatch(showEntityData('inventory/product/' + data.id))
+                                                                            }}
+                                                                            target="_blank"
+                                                                            component="a"
+                                                                            w={'200'}
+                                                                        >
+                                                                            {t('Show')}
+                                                                        </Menu.Item>
+                                                                        <Menu.Item
+                                                                            // href={``}
+                                                                            target="_blank"
+                                                                            component="a"
+                                                                            w={'200'}
+                                                                            mt={'2'}
+                                                                            bg={'red.1'}
+                                                                            c={'red.6'}
+                                                                            onClick={() => {
+                                                                                modals.openConfirmModal({
+                                                                                    title: (
+                                                                                        <Text size="md"> {t("FormConfirmationTitle")}</Text>
+                                                                                    ),
+                                                                                    children: (
+                                                                                        <Text size="sm"> {t("FormConfirmationMessage")}</Text>
+                                                                                    ),
+                                                                                    labels: { confirm: 'Confirm', cancel: 'Cancel' },
+                                                                                    confirmProps: { color: 'red.6' },
+                                                                                    onCancel: () => console.log('Cancel'),
+                                                                                    onConfirm: () => {
+                                                                                        dispatch(deleteEntityData('inventory/product/' + data.id))
+                                                                                        dispatch(setFetching(true))
+                                                                                    },
+                                                                                });
+                                                                            }}
+                                                                            rightSection={<IconTrashX style={{ width: rem(14), height: rem(14) }} />}
+                                                                        >
+                                                                            {t('Delete')}
+                                                                        </Menu.Item>
+                                                                    </Menu.Dropdown>
+                                                                </Menu>
+                                                            </Group>
+                                                        ),
+                                                    },
+                                                ]
+                                                }
+                                                // fetching={fetching}
+                                                totalRecords={indexData.total}
+                                                recordsPerPage={perPage}
+                                                page={page}
+                                                onPageChange={(p) => {
+                                                    setPage(p)
+                                                    dispatch(setFetching(true))
+                                                }}
+                                                loaderSize="xs"
+                                                loaderColor="grape"
+                                                height={height}
+                                                scrollAreaProps={{ type: 'never' }}
+                                            />
+                                        </Box>
                                     </Box>
                                 </ScrollArea>
                             </Box>
@@ -532,7 +779,7 @@ function ProductUpdateForm() {
                     </Grid.Col>
                 </Grid>
             </form>
-        </Box>
+        </Box >
     )
 }
 
