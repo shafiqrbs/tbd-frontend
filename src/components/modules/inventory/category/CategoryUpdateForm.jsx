@@ -147,7 +147,7 @@ function CategoryUpdateForm(props) {
                                                                 size="xs"
                                                                 color={`green.8`}
                                                                 type="submit"
-                                                                id="EntityFormSubmit"
+                                                                id="CategoryFormSubmit"
                                                                 leftSection={<IconDeviceFloppy size={16} />}
                                                             >
                                                                 <Flex direction={`column`} gap={0}>
@@ -248,7 +248,7 @@ function CategoryUpdateForm(props) {
                             <Box bg={'white'} className={'borderRadiusAll'} pt={'16'}>
                                 <Shortcut
                                     form={form}
-                                    FormSubmit={'EntityFormSubmit'}
+                                    FormSubmit={'CategoryFormSubmit'}
                                     Name={'name'}
                                     inputType="select"
                                 />
