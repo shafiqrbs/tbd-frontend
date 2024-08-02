@@ -1,14 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import {
-    Button, rem, Flex, Grid, Box, ScrollArea, Group, Text, Title, Stack, Tooltip, ActionIcon, Popover
+    Button, rem, Flex, Grid, Box, ScrollArea, Group, Text, Title, Stack,
 } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
 import {
     IconCheck,
-    IconDeviceFloppy, IconInfoCircle, IconPlus, IconUserCog, IconCategoryPlus,
-    IconCategory,
-    IconFirstAidKit,
+    IconDeviceFloppy,
 } from "@tabler/icons-react";
 import { useDisclosure, useHotkeys } from "@mantine/hooks";
 import { useDispatch, useSelector } from "react-redux";
@@ -52,7 +50,7 @@ function CustomerSettingsForm(props) {
     }]], []);
 
     useHotkeys([['alt+s', () => {
-        document.getElementById(`${saveId}`).click()
+        document.getElementById(saveId).click()
     }]], []);
 
 
@@ -60,7 +58,7 @@ function CustomerSettingsForm(props) {
         <>
             <Box>
                 <form onSubmit={settingsForm.onSubmit((values) => {
-                    console.log(values)
+                    // console.log(values)
                     modals.openConfirmModal({
                         title: (
                             <Text size="md"> {t("FormConfirmationTitle")}</Text>
@@ -116,7 +114,7 @@ function CustomerSettingsForm(props) {
                                                                     size="xs"
                                                                     color={`green.8`}
                                                                     type="submit"
-                                                                    id={`${saveId}`}
+                                                                    id={saveId}
                                                                     leftSection={<IconDeviceFloppy size={16} />}
                                                                 >
 
@@ -168,7 +166,7 @@ function CustomerSettingsForm(props) {
                                                             <SwitchForm
                                                                 tooltip={t('Status')}
                                                                 label=''
-                                                                nextField={`${saveId}`}
+                                                                nextField={saveId}
                                                                 name={'status'}
                                                                 form={settingsForm}
                                                                 color="red"
@@ -190,7 +188,7 @@ function CustomerSettingsForm(props) {
                                     <_ShortcutMasterData
                                         adjustment={adjustment}
                                         form={settingsForm}
-                                        FormSubmit={`${saveId}`}
+                                        FormSubmit={saveId}
                                         Name={'setting_type'}
                                         inputType="select"
                                     />
