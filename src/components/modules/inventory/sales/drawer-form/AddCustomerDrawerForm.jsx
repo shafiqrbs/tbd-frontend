@@ -39,7 +39,6 @@ function AddCustomerDrawerForm(props) {
             }, 100),
             effectRan.current = true
         )
-        console.log(fieldPrefix + 'EntityCustomerFormSubmit')
     }, []);
 
     const customerAddedForm = useForm({
