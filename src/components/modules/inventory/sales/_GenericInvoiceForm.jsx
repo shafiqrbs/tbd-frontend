@@ -2,11 +2,13 @@ import React, { useEffect, useState, useRef } from "react";
 import { useOutletContext } from "react-router-dom";
 import {
     Button, Flex, ActionIcon, TextInput,
-    Grid, Box, Group, Text
+    Grid, Box, Group, Text,
+    Tooltip
 } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
 import {
-    IconDeviceFloppy, IconPercentage, IconSum, IconCurrency, IconX, IconBarcode, IconCoinMonero, IconSortAscendingNumbers, IconPlusMinus
+    IconDeviceFloppy, IconPercentage, IconSum, IconCurrency, IconX, IconBarcode, IconCoinMonero, IconSortAscendingNumbers, IconPlusMinus,
+    IconPlus
 } from "@tabler/icons-react";
 import { getHotkeyHandler, useHotkeys } from "@mantine/hooks";
 import { useForm } from "@mantine/form";
@@ -20,6 +22,7 @@ import _ShortcutInvoice from "../../shortcut/_ShortcutInvoice";
 import tableCss from "../../../../assets/css/Table.module.css";
 import productsDataStoreIntoLocalStorage from "../../../global-hook/local-storage/productsDataStoreIntoLocalStorage.js";
 import _addProduct from "../../popover-form/_addProduct.jsx";
+import AddProductDrawer from "./drawer-form/AddProductDrawer.jsx";
 
 function _GenericInvoiceForm(props) {
     const { currencySymbol, allowZeroPercentage, domainId, isSMSActive, isZeroReceiveAllow, focusFrom } = props
@@ -33,6 +36,8 @@ function _GenericInvoiceForm(props) {
 
     const [tempCardProducts, setTempCardProducts] = useState([])
     const [loadCardProducts, setLoadCardProducts] = useState(false)
+
+    const [productDrawer, setProductDrawer] = useState(false)
 
     let salesSubTotalAmount = tempCardProducts?.reduce((total, item) => total + item.sub_total, 0) || 0;
     let totalPurchaseAmount = tempCardProducts?.reduce((total, item) => total + (item.purchase_price * item.quantity), 0) || 0;
@@ -460,11 +465,33 @@ function _GenericInvoiceForm(props) {
                                             </Grid.Col>
 
                                             <Grid.Col span={1} bg={'white'}>
-                                                <_addProduct
+                                                {/* <_addProduct
                                                     setStockProductRestore={setStockProductRestore}
                                                     focusField={'product_id'}
                                                     fieldPrefix="sales_"
-                                                />
+                                                /> */}
+                                                <Tooltip
+                                                    multiline
+                                                    bg={'orange.8'}
+                                                    position="top"
+                                                    withArrow
+                                                    ta={'center'}
+                                                    offset={{ crossAxis: '-50', mainAxis: '5' }}
+                                                    transitionProps={{ duration: 200 }}
+                                                    label={t('InstantProductCreate')}
+                                                >
+                                                    <ActionIcon
+                                                        variant="outline"
+                                                        size={'lg'}
+                                                        color="red.5"
+                                                        mt={'1'}
+                                                        aria-label="Settings"
+                                                        onClick={() => setProductDrawer(true)}
+                                                    >
+                                                        <IconPlus style={{ width: '100%', height: '70%' }}
+                                                            stroke={1.5} />
+                                                    </ActionIcon>
+                                                </Tooltip>
                                             </Grid.Col>
                                         </Grid>
                                     </Box>
@@ -769,6 +796,7 @@ function _GenericInvoiceForm(props) {
                     </Box>
                 </Grid.Col>
             </Grid>
+            {productDrawer && <AddProductDrawer productDrawer={productDrawer} setProductDrawer={setProductDrawer} setStockProductRestore={setStockProductRestore} focusField={'product_id'} fieldPrefix="sales_" />}
         </Box>
     );
 }
