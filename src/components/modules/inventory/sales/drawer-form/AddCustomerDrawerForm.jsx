@@ -31,9 +31,10 @@ function AddCustomerDrawerForm(props) {
 
     useEffect(() => {
         !effectRan.current && (
-            document.getElementById(fieldPrefix + 'name').focus(),
+            document.getElementById(fieldPrefix + 'EntityCustomerFormSubmit').focus,
             effectRan.current = true
         )
+        console.log(fieldPrefix + 'EntityCustomerFormSubmit')
     }, []);
 
     const customerAddedForm = useForm({
@@ -137,7 +138,7 @@ function AddCustomerDrawerForm(props) {
                                                                     size="xs"
                                                                     color={`green.8`}
                                                                     type="submit"
-                                                                    id={fieldPrefix + "EntityProductFormSubmit"}
+                                                                    id={fieldPrefix + "EntityCustomerFormSubmit"}
                                                                     leftSection={<IconDeviceFloppy size={16} />}
                                                                 >
                                                                     <Flex direction={`column`} gap={0}>
