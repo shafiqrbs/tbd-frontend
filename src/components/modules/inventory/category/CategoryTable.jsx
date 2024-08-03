@@ -132,7 +132,6 @@ function CategoryTable() {
                                                 {t('Edit')}
                                             </Menu.Item>
                                             <Menu.Item
-                                                // href={``}
                                                 target="_blank"
                                                 component="a"
                                                 w={'200'}
