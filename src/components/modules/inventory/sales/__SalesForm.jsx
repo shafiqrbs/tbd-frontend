@@ -13,7 +13,8 @@ import {
     IconPercentage,
     IconCurrencyTaka,
     IconMessage,
-    IconEyeEdit, IconDiscountOff, IconCurrency, IconPlusMinus, IconCheck, IconTallymark1, IconCalendar
+    IconEyeEdit, IconDiscountOff, IconCurrency, IconPlusMinus, IconCheck, IconTallymark1, IconCalendar,
+    IconUserPlus
 
 } from "@tabler/icons-react";
 import { useHotkeys, useToggle } from "@mantine/hooks";
@@ -33,6 +34,7 @@ import customerDataStoreIntoLocalStorage from "../../../global-hook/local-storag
 import _addCustomer from "../../popover-form/_addCustomer.jsx";
 import DatePickerForm from "../../../form-builders/DatePicker";
 import _InvoiceDrawerForPrint from "./print-drawer/_InvoiceDrawerForPrint.jsx";
+import AddCustomerDrawer from "./drawer-form/AddCustomerDrawer.jsx";
 
 function __SalesForm(props) {
 
@@ -65,6 +67,8 @@ function __SalesForm(props) {
     const [invoicePrintForSave, setInvoicePrintForSave] = useState(false)
 
     const [lastClicked, setLastClicked] = useState(null);
+
+    const [customerDrawer, setCustomerDrawer] = useState(false)
 
     const handleClick = (event) => {
         setLastClicked(event.currentTarget.name);
@@ -367,11 +371,35 @@ function __SalesForm(props) {
                                             </Box>
                                         </Grid.Col>
                                         <Grid.Col span={1}>
-                                            <_addCustomer
+                                            {/* <_addCustomer
                                                 setRefreshCustomerDropdown={setRefreshCustomerDropdown}
                                                 focusField={'customer_id'}
                                                 fieldPrefix="sales_"
-                                            />
+                                            /> */}
+                                            <Box pt={'8'}>
+                                                <Tooltip
+                                                    multiline
+                                                    bg={'orange.8'}
+                                                    offset={{ crossAxis: '-52', mainAxis: '5' }}
+                                                    position="top"
+                                                    ta={'center'}
+                                                    withArrow
+                                                    transitionProps={{ duration: 200 }}
+                                                    label={t('InstantCustomerCreate')}
+                                                >
+                                                    <ActionIcon
+                                                        fullWidth
+                                                        variant="outline"
+                                                        bg={'white'}
+                                                        size={'lg'}
+                                                        color="red.5"
+                                                        aria-label="Settings"
+                                                        onClick={() => setCustomerDrawer(true)}
+                                                    >
+                                                        <IconUserPlus style={{ width: '100%', height: '70%' }} stroke={1.5} />
+                                                    </ActionIcon>
+                                                </Tooltip>
+                                            </Box>
                                         </Grid.Col>
                                     </Grid>
                                 </Box>
@@ -761,6 +789,10 @@ function __SalesForm(props) {
                     </Grid>
                 </Box>
             </form>
+
+            {customerDrawer && <AddCustomerDrawer setRefreshCustomerDropdown={setRefreshCustomerDropdown} focusField={'customer_id'}
+                fieldPrefix="sales_" customerDrawer={customerDrawer} setCustomerDrawer={setCustomerDrawer}
+            />}
 
             {isShowSMSPackageModel &&
                 <_SmsPurchaseModel

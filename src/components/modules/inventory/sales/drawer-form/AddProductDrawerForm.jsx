@@ -270,16 +270,16 @@ function AddProductDrawerForm(props) {
                                     </Box>
                                 </Box>
                             </Grid.Col>
-                            <Grid.Col span={1} >
-                                {/* <Box bg={'white'} className={'borderRadiusAll'} pt={'16'}>
+                            {/* <Grid.Col span={1} >
+                                <Box bg={'white'} className={'borderRadiusAll'} pt={'16'}>
                                     <_ShortcutMasterData
                                         form={productAddedForm}
                                         FormSubmit={fieldPrefix + "EntityProductFormSubmit"}
                                         Name={fieldPrefix + 'product_type_id'}
                                         inputType="select"
                                     />
-                                </Box> */}
-                            </Grid.Col>
+                                </Box>
+                            </Grid.Col> */}
                         </Grid>
                     </Box>
                 </form >
