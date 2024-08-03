@@ -38,7 +38,12 @@ function AddProductDrawerForm(props) {
 
     useEffect(() => {
         !effectRan.current && (
-            document.getElementById(fieldPrefix + 'product_type_id').click(),
+            setTimeout(() => {
+                const element = document.getElementById(fieldPrefix + 'product_type_id');
+                if (element) {
+                    element.focus();
+                }
+            }, 100),
             effectRan.current = true
         )
     }, []);

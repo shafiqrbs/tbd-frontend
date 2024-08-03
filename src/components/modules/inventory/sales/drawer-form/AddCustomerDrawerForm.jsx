@@ -31,7 +31,12 @@ function AddCustomerDrawerForm(props) {
 
     useEffect(() => {
         !effectRan.current && (
-            document.getElementById(fieldPrefix + 'EntityCustomerFormSubmit').focus,
+            setTimeout(() => {
+                const element = document.getElementById(fieldPrefix + 'name');
+                if (element) {
+                    element.focus();
+                }
+            }, 100),
             effectRan.current = true
         )
         console.log(fieldPrefix + 'EntityCustomerFormSubmit')
