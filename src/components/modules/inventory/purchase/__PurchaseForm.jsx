@@ -32,6 +32,7 @@ import _addVendor from "../../popover-form/_addVendor.jsx";
 import vendorDataStoreIntoLocalStorage from "../../../global-hook/local-storage/vendorDataStoreIntoLocalStorage.js";
 import DatePickerForm from "../../../form-builders/DatePicker.jsx";
 import AddVendorDrawer from "../sales/drawer-form/AddVendorDrawer.jsx";
+import VendorViewDrawer from "../../core/vendor/VendorViewDrawer.jsx";
 
 function __PurchaseForm(props) {
     const { currencySymbol } = props
@@ -48,7 +49,6 @@ function __PurchaseForm(props) {
     const [hoveredModeId, setHoveredModeId] = useState(false);
 
     const formHeight = mainAreaHeight - 260; //TabList height 104
-    const [viewVendorModel, setVendorViewModel] = useState(false);
 
     /*START GET VENDOR DATA BY ID FROM LOCAL STORAGE*/
     const [vendorData, setVendorData] = useState(null);
@@ -83,7 +83,8 @@ function __PurchaseForm(props) {
     const [vendorsDropdownData, setVendorsDropdownData] = useState([])
     const [refreshVendorDropdown, setRefreshVendorDropdown] = useState(false)
 
-    const [VendorDrawer, setVendorDrawer] = useState(false)
+    const [vendorDrawer, setVendorDrawer] = useState(false)
+    const [viewDrawer, setViewDrawer,] = useState(false)
 
     useEffect(() => {
         const fetchVendors = async () => {
@@ -333,7 +334,9 @@ function __PurchaseForm(props) {
                                                             variant="filled"
                                                             color={'red'}
                                                             disabled={!vendorData}
-                                                            onClick={setVendorViewModel}
+                                                            onClick={() => {
+                                                                setViewDrawer(true)
+                                                            }}
                                                         >
                                                             <IconEyeEdit
                                                                 size={18}
@@ -586,12 +589,13 @@ function __PurchaseForm(props) {
                     </Grid>
                 </Box>
             </form>
-            {VendorDrawer && <AddVendorDrawer setRefreshVendorDropdown={setRefreshVendorDropdown} focusField={'purchase_vendor_id'} fieldPrefix="purchase_"
-                vendorDrawer={VendorDrawer} setVendorDrawer={setVendorDrawer} />}
-            {viewVendorModel && vendorData &&
-                <_VendorViewModel
-                    vendorViewModel={viewVendorModel}
-                    setVendorViewModel={setVendorViewModel}
+            {vendorDrawer && <AddVendorDrawer setRefreshVendorDropdown={setRefreshVendorDropdown} focusField={'purchase_vendor_id'} fieldPrefix="purchase_"
+                vendorDrawer={vendorDrawer} setVendorDrawer={setVendorDrawer} />}
+
+            {viewDrawer && vendorData &&
+                <VendorViewDrawer
+                    viewDrawer={viewDrawer}
+                    setViewDrawer={setViewDrawer}
                     vendorObject={vendorObject}
                 />
             }

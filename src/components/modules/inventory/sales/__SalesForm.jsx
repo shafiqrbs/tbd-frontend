@@ -35,6 +35,7 @@ import _addCustomer from "../../popover-form/_addCustomer.jsx";
 import DatePickerForm from "../../../form-builders/DatePicker";
 import _InvoiceDrawerForPrint from "./print-drawer/_InvoiceDrawerForPrint.jsx";
 import AddCustomerDrawer from "./drawer-form/AddCustomerDrawer.jsx";
+import CustomerViewDrawer from "../../core/customer/CustomerViewDrawer.jsx";
 
 function __SalesForm(props) {
 
@@ -142,6 +143,7 @@ function __SalesForm(props) {
     const [refreshCustomerDropdown, setRefreshCustomerDropdown] = useState(false)
     const [customersDropdownData, setCustomersDropdownData] = useState([])
     const [defaultCustomerId, setDefaultCustomerId] = useState(null)
+    const [viewDrawer, setViewDrawer] = useState(false)
 
     useEffect(() => {
         const fetchCustomers = async () => {
@@ -465,7 +467,9 @@ function __SalesForm(props) {
                                                             variant="filled"
                                                             color={'red'}
                                                             disabled={!customerData || customerData == defaultCustomerId}
-                                                            onClick={setCustomerViewModel}
+                                                            onClick={() => {
+                                                                setViewDrawer(true)
+                                                            }}
                                                         >
                                                             <IconEyeEdit
                                                                 size={18}
@@ -800,10 +804,10 @@ function __SalesForm(props) {
                     setIsShowSMSPackageModel={setIsShowSMSPackageModel}
                 />
             }
-            {customerViewModel && customerData &&
-                <_CustomerViewModel
-                    customerViewModel={customerViewModel}
-                    setCustomerViewModel={setCustomerViewModel}
+            {viewDrawer && customerData &&
+                <CustomerViewDrawer
+                    viewDrawer={viewDrawer}
+                    setViewDrawer={setViewDrawer}
                     customerObject={customerObject}
                 />
             }
