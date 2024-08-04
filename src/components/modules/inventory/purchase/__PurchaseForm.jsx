@@ -13,6 +13,7 @@ import {
     IconPercentage,
     IconCurrencyTaka,
     IconEyeEdit, IconDiscountOff, IconCurrency, IconPlusMinus, IconCheck, IconCalendar,
+    IconUserPlus,
 
 } from "@tabler/icons-react";
 import { useHotkeys, useToggle } from "@mantine/hooks";
@@ -30,6 +31,7 @@ import _VendorViewModel from "../../core/vendor/_VendorViewModel.jsx";
 import _addVendor from "../../popover-form/_addVendor.jsx";
 import vendorDataStoreIntoLocalStorage from "../../../global-hook/local-storage/vendorDataStoreIntoLocalStorage.js";
 import DatePickerForm from "../../../form-builders/DatePicker.jsx";
+import AddVendorDrawer from "../sales/drawer-form/AddVendorDrawer.jsx";
 
 function __PurchaseForm(props) {
     const { currencySymbol } = props
@@ -80,6 +82,8 @@ function __PurchaseForm(props) {
     /*START GET VENDOR DROPDOWN FROM LOCAL STORAGE*/
     const [vendorsDropdownData, setVendorsDropdownData] = useState([])
     const [refreshVendorDropdown, setRefreshVendorDropdown] = useState(false)
+
+    const [VendorDrawer, setVendorDrawer] = useState(false)
 
     useEffect(() => {
         const fetchVendors = async () => {
@@ -274,11 +278,35 @@ function __PurchaseForm(props) {
                                             </Box>
                                         </Grid.Col>
                                         <Grid.Col span={1}>
-                                            <_addVendor
+                                            <Box pt={11}>
+                                                <Tooltip
+                                                    multiline
+                                                    bg={'orange.8'}
+                                                    offset={{ crossAxis: '-52', mainAxis: '5' }}
+                                                    position="top"
+                                                    ta={'center'}
+                                                    withArrow
+                                                    transitionProps={{ duration: 200 }}
+                                                    label={t('InstantCustomerCreate')}
+                                                >
+                                                    <ActionIcon
+                                                        fullWidth
+                                                        variant="outline"
+                                                        bg={'white'}
+                                                        size={'lg'}
+                                                        color="red.5"
+                                                        aria-label="Settings"
+                                                        onClick={() => setVendorDrawer(true)}
+                                                    >
+                                                        <IconUserPlus style={{ width: '100%', height: '70%' }} stroke={1.5} />
+                                                    </ActionIcon>
+                                                </Tooltip>
+                                            </Box>
+                                            {/* <_addVendor
                                                 setRefreshVendorDropdown={setRefreshVendorDropdown}
                                                 focusField={'purchase_vendor_id'}
                                                 fieldPrefix="purchase_"
-                                            />
+                                            /> */}
                                         </Grid.Col>
                                     </Grid>
                                 </Box>
@@ -558,8 +586,8 @@ function __PurchaseForm(props) {
                     </Grid>
                 </Box>
             </form>
-
-
+            {VendorDrawer && <AddVendorDrawer setRefreshVendorDropdown={setRefreshVendorDropdown} focusField={'purchase_vendor_id'} fieldPrefix="purchase_"
+                vendorDrawer={VendorDrawer} setVendorDrawer={setVendorDrawer} />}
             {viewVendorModel && vendorData &&
                 <_VendorViewModel
                     vendorViewModel={viewVendorModel}

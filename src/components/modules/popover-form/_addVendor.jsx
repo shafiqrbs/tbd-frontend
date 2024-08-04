@@ -95,8 +95,8 @@ function _addVendor(props) {
                     </Box>
                     <Box mt={'xs'}>
                         <InputForm
-                            form={vendorAddedForm}
                             tooltip={t('MobileValidateMessage')}
+                            form={vendorAddedForm}
                             label={t('VendorMobile')}
                             placeholder={t('VendorMobile')}
                             required={true}

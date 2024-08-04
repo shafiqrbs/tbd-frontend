@@ -25,16 +25,16 @@ function PurchaseInvoice() {
                             <_SalesPurchaseHeaderNavbar
                                 pageTitle={t('PurchaseInvoice')}
                                 roles={t('Roles')}
-                                allowZeroPercentage={configData.zero_stock}
-                                currencySymbol={configData.currency.symbol}
+                                allowZeroPercentage={configData?.zero_stock}
+                                currencySymbol={configData?.currency?.symbol}
                             />
                             <Box p={'8'}>
                                 {
                                     configData.business_model.slug === 'general' &&
                                     <_GenericInvoiceForm
-                                        allowZeroPercentage={configData.zero_stock}
-                                        currencySymbol={configData.currency.symbol}
-                                        isPurchaseByPurchasePrice={configData.is_purchase_by_purchase_price}
+                                        allowZeroPercentage={configData?.zero_stock}
+                                        currencySymbol={configData?.currency?.symbol}
+                                        isPurchaseByPurchasePrice={configData?.is_purchase_by_purchase_price}
                                     />
                                 }
                             </Box>
