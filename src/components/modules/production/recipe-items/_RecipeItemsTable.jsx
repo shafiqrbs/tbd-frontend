@@ -106,29 +106,8 @@ function _RecipeItemsTable() {
                             render: (item) => (
                                 <Group gap={4} justify="right" wrap="nowrap">
                                     <Button component="a" size="compact-xs" radius="xs" variant="filled" fw={'100'} fz={'12'} color="red.3" mr={'4'}
-                                            href={`/production/recipe/${item.id}`}
-                                            /*onClick={(e) => {
-                                                e.preventDefault();
-
-                                                navigate('/production/recipe/'+item.id)
-                                            }}*/
+                                            href={`/production/recipe-update/${item.id}`}
                                     >  {t('Recipe')}</Button>
-
-                                    {/*<Menu position="bottom-end" offset={3} withArrow trigger="hover" openDelay={100} closeDelay={400}>
-                                        <Menu.Target>
-                                            <ActionIcon size="sm" variant="outline" color="red" radius="xl" aria-label="Settings">
-                                                <IconDotsVertical height={'18'} width={'18'} stroke={1.5} />
-                                            </ActionIcon>
-                                        </Menu.Target>
-                                        <Menu.Dropdown>
-                                            <Menu.Item
-                                                href={`/production/recipe/${item.id}`}
-                                                component="a"
-                                            >
-                                                {t('Recipe')}
-                                            </Menu.Item>
-                                        </Menu.Dropdown>
-                                    </Menu>*/}
                                 </Group>
                             ),
                         },

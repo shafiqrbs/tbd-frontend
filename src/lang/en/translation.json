@@ -525,5 +525,6 @@
   "UserNameRequiredMessage": "Username is Required",
   "ProductManagement": "Product Management",
   "SkuManagement": "SKU Management",
-  "CategoryDetailsInformation" : "Category Details Information"
+  "CategoryDetailsInformation" : "Category Details Information",
+  "TotalAmount" : "Total Amount"
 }

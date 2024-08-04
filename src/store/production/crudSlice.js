@@ -181,6 +181,11 @@ const crudSlice = createSlice({
             state.recipeItemFilterData.setting_type_id = action.payload.setting_type_id
             state.recipeItemFilterData.product_name = action.payload.product_name
         },
+        setUpdateMeasurementData(state, action) {
+            const { key, slug, newAmount } = action.payload;
+            const itemIndex = state.measurementInputData[key].findIndex(item => item.slug === slug);
+            if(itemIndex >= 0) state.measurementInputData[key][itemIndex].amount = newAmount;
+        }
     },
 
     extraReducers: (builder) => {
@@ -255,6 +260,6 @@ const crudSlice = createSlice({
     }
 })
 
-export const { setFetching, setEntityNewData, setDropdownLoad, setEditEntityData, setFormLoading, setInsertType, setSearchKeyword, setDeleteMessage, setValidationData ,setProductFilterData,setProductionSettingFilterData,setValidationMessage,setRecipeItemFilterData} = crudSlice.actions
+export const { setFetching, setEntityNewData, setDropdownLoad, setEditEntityData, setFormLoading, setInsertType, setSearchKeyword, setDeleteMessage, setValidationData ,setProductFilterData,setProductionSettingFilterData,setValidationMessage,setRecipeItemFilterData,setUpdateMeasurementData} = crudSlice.actions
 
 export default crudSlice.reducer;

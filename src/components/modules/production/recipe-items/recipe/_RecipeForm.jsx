@@ -15,7 +15,7 @@ import {notifications} from "@mantine/notifications";
 
 import Shortcut from "../../../shortcut/Shortcut.jsx";
 
-import {storeEntityData} from "../../../../../store/production/crudSlice.js";
+import {setUpdateMeasurementData, storeEntityData} from "../../../../../store/production/crudSlice.js";
 import InputNumberForm from "../../../../form-builders/InputNumberForm.jsx";
 
 function _RecipeForm() {
@@ -28,6 +28,16 @@ function _RecipeForm() {
     const height = mainAreaHeight - 100; //TabList height 104
 
     const measurementInputData = useSelector((state) => state.productionCrudSlice.measurementInputData)
+
+    function getTotalAmount(inputData) {
+        let sum = 0;
+        Object.values(inputData).flat().forEach(item => {
+            sum += Number(item.amount || 0);
+        });
+        return sum;
+    }
+    const totalAmount = getTotalAmount(measurementInputData);
+
 
     const form = useForm({
         initialValues: {
@@ -149,7 +159,19 @@ function _RecipeForm() {
                                                                         autoComplete="off"
                                                                         value={item.amount}
                                                                         onChange={(e)=>{
-                                                                            console.log(e)
+                                                                            const newValue = e.target.value;
+                                                                            dispatch(setUpdateMeasurementData({ key, slug: item.slug, newAmount: newValue }));
+
+                                                                            const value = {
+                                                                                url: 'production/inline-update-value-added',
+                                                                                data: {
+                                                                                    value_added_id : item.id,
+                                                                                    amount : e.target.value
+                                                                                }
+                                                                            }
+                                                                            setTimeout(()=>{
+                                                                                dispatch(storeEntityData(value))
+                                                                            },1000)
                                                                         }}
                                                                     />
                                                                 </Box>
@@ -160,6 +182,30 @@ function _RecipeForm() {
                                                 ))}
                                             </div>
                                         ))}
+                                        <Box mt={'xs'} key={'111221122'}>
+                                            <Grid gutter={{base: 6}}>
+                                                <Grid.Col span={6}>
+                                                    <Box mt={'xs'}>
+                                                        <Flex
+                                                            justify="flex-start"
+                                                            align="center"
+                                                            direction="row"
+                                                        >
+                                                            <Text
+                                                                ta="center" fz="sm"
+                                                                fw={300}>
+                                                                {t('TotalAmount')}
+                                                            </Text>
+                                                        </Flex>
+                                                    </Box>
+                                                </Grid.Col>
+                                                <Grid.Col span={6}>
+                                                    <Box>
+                                                        <Text>{getTotalAmount(measurementInputData).toFixed(2)}</Text>
+                                                    </Box>
+                                                </Grid.Col>
+                                            </Grid>
+                                        </Box>
                                     </ScrollArea>
                                 </Box>
                             </Box>
