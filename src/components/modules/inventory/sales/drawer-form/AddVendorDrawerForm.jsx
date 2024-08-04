@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import {
     Button, rem, Flex, Grid, Box, ScrollArea, Text, Title, Stack,
+    Center,
 } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
 import {
@@ -106,32 +107,27 @@ function AddVendorDrawerForm(props) {
                                     <Box bg={"white"} >
                                         <Box pl={`xs`} pr={8} pt={'6'} pb={'6'} mb={'4'} className={'boxBackground borderRadiusAll'} >
                                             <Grid columns={12}>
-                                                <Grid.Col span={8} >
-                                                    <Title order={6} pt={'6'}>{t('InstantCustomerCreate')}</Title>
+                                                <Grid.Col span={6} >
+                                                    <Title order={6} pt={'6'}>{t('InstantVendorCreate')}</Title>
                                                 </Grid.Col>
-                                                <Grid.Col span={2} >
-                                                    <Flex justify="flex-end"
-                                                        direction="row">
+                                                <Grid.Col span={2} p={0}>
+                                                    <Flex justify="flex-end" align="center" h="100%">
                                                         <Button
                                                             variant="transparent"
                                                             size="xs"
-                                                            color={`red.4`}
+                                                            color="red.4"
                                                             type="reset"
-                                                            mt={0}
-                                                            fullWidth
-                                                            mb={'0'}
                                                             id=""
                                                             comboboxProps={{ withinPortal: false }}
-                                                            onClick={() => {
-                                                                vendorAddedForm.reset()
-                                                            }}
-
-                                                        >
-                                                            <IconRefreshDot style={{ width: '100%', height: '70%' }} stroke={1.5} />
+                                                            onClick={() => vendorAddedForm.reset()}
+                                                            p={0}
+                                                            rightSection={
+                                                                <IconRefreshDot style={{ width: '100%', height: '60%' }} stroke={1.5} />
+                                                            }>
                                                         </Button>
                                                     </Flex>
                                                 </Grid.Col>
-                                                <Grid.Col span={2}>
+                                                <Grid.Col span={4} >
                                                     <Stack right align="flex-end">
                                                         <>
                                                             {
@@ -145,7 +141,7 @@ function AddVendorDrawerForm(props) {
                                                                 >
                                                                     <Flex direction={`column`} gap={0}>
                                                                         <Text fz={14} fw={400}>
-                                                                            {t("Add")}
+                                                                            {t("CreateAndSave")}
                                                                         </Text>
                                                                     </Flex>
                                                                 </Button>

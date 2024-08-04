@@ -31,7 +31,7 @@ function AddVendorDrawer(props) {
                 <Drawer.Content>
                     <ScrollArea h={height + 100} scrollbarSize={2} type="never" bg={'gray.1'}>
                         <Drawer.Header>
-                            <Drawer.Title>{t('CreateInstantProduct')}</Drawer.Title>
+                            <Drawer.Title>{t('InstantVendorCreate')}</Drawer.Title>
                             <ActionIcon
                                 className="ActionIconCustom"
                                 radius="xl"

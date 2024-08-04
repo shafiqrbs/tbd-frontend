@@ -53,8 +53,8 @@ function CategoryGroupIndex() {
                             <InventoryHeaderNavbar
                                 pageTitle={t('ProductCategoryGroup')}
                                 roles={t('Roles')}
-                                allowZeroPercentage={configData.zero_stock}
-                                currencySymbol={configData.currency.symbol}
+                                allowZeroPercentage={configData?.zero_stock}
+                                currencySymbol={configData?.currency.symbol}
                             />
                             <Box p={'8'}>
                                 <Grid columns={24} gutter={{ base: 8 }}>
