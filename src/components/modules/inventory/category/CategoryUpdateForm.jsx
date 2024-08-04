@@ -34,7 +34,6 @@ function CategoryUpdateForm(props) {
 
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
     const [setFormData, setFormDataForUpdate] = useState(false);
-    const [opened, { open, close }] = useDisclosure(false);
     const [categoryGroupData, setCategoryGroupData] = useState(null);
 
     const entityEditData = useSelector((state) => state.inventoryCrudSlice.entityEditData)
