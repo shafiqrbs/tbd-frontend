@@ -4,25 +4,18 @@ import {
     Group,
     Box,
     ActionIcon,
-    Text,
-    Menu,
-    rem, TextInput, Switch
+    Text, TextInput, Switch
 } from "@mantine/core";
 import {useTranslation} from "react-i18next";
 import {
-    IconTrashX,
-    IconDotsVertical, IconX, IconPercentage
+    IconX, IconPercentage
 } from "@tabler/icons-react";
 import {DataTable} from 'mantine-datatable';
 import {useDispatch, useSelector} from "react-redux";
 import {
-    editEntityData,
     getIndexEntityData,
-    setFetching, setFormLoading,
-    setInsertType,
-    showEntityData, deleteEntityData, storeEntityData, inlineUpdateEntityData
+    setFetching, deleteEntityData, storeEntityData, inlineUpdateEntityData
 } from "../../../../../store/production/crudSlice.js";
-import {modals} from "@mantine/modals";
 import tableCss from "../../../../../assets/css/Table.module.css";
 import __RecipeAddItem from "./__RecipeAddItem.jsx";
 
@@ -66,8 +59,6 @@ function _RecipeTable() {
         }
         return total;
     }, 0) || 0;
-
-
 
     useEffect(() => {
         const value = {

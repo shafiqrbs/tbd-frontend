@@ -526,5 +526,7 @@
   "ProductManagement": "Product Management",
   "SkuManagement": "SKU Management",
   "CategoryDetailsInformation" : "Category Details Information",
-  "TotalAmount" : "Total Amount"
+  "TotalAmount" : "Total Amount",
+  "Checked" : "Checked",
+  "" : ""
 }

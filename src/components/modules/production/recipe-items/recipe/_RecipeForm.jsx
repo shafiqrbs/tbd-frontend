@@ -1,22 +1,25 @@
-import React, {useEffect} from "react";
+import React from "react";
 import {useNavigate, useOutletContext, useParams} from "react-router-dom";
 import {
-    Button, rem, Flex, Grid, Box, ScrollArea, Text, Title, Stack, Tooltip, TextInput
+    Button, rem, Flex, Grid, Box, ScrollArea, Text, Title, Stack, TextInput
 } from "@mantine/core";
 import {useTranslation} from 'react-i18next';
 import {
     IconCheck,
-    IconDeviceFloppy, IconInfoCircle, IconX
+    IconDeviceFloppy
 } from "@tabler/icons-react";
-import {getHotkeyHandler, useHotkeys} from "@mantine/hooks";
+import {useHotkeys} from "@mantine/hooks";
 import {useDispatch, useSelector} from "react-redux";
-import {hasLength, isNotEmpty, useForm} from "@mantine/form";
+import {useForm} from "@mantine/form";
 import {notifications} from "@mantine/notifications";
 
 import Shortcut from "../../../shortcut/Shortcut.jsx";
 
-import {setUpdateMeasurementData, storeEntityData} from "../../../../../store/production/crudSlice.js";
-import InputNumberForm from "../../../../form-builders/InputNumberForm.jsx";
+import {
+    proItemUpdateStatus,
+    setUpdateMeasurementData,
+    storeEntityData
+} from "../../../../../store/production/crudSlice.js";
 
 function _RecipeForm() {
     const {id} = useParams();
@@ -27,7 +30,8 @@ function _RecipeForm() {
     const {isOnline, mainAreaHeight} = useOutletContext();
     const height = mainAreaHeight - 100; //TabList height 104
 
-    const measurementInputData = useSelector((state) => state.productionCrudSlice.measurementInputData)
+    const measurementInputData = useSelector((state) => state.productionCrudSlice.measurementInputData.field)
+    const productionItem = useSelector((state) => state.productionCrudSlice.measurementInputData.item)
 
     function getTotalAmount(inputData) {
         let sum = 0;
@@ -36,8 +40,6 @@ function _RecipeForm() {
         });
         return sum;
     }
-    const totalAmount = getTotalAmount(measurementInputData);
-
 
     const form = useForm({
         initialValues: {
@@ -57,17 +59,20 @@ function _RecipeForm() {
     return (
         <Box>
             <form onSubmit={form.onSubmit((values) => {
-                console.log(values)
-                /*if (id) {
+
+                if (productionItem.process) {
                     const data = {
-                        url: 'production/recipe-measurement',
-                        data: values
+                        url: 'production/recipe-items-process',
+                        data: {
+                            pro_item_id : id,
+                            process : productionItem.process==='created'?'checked':'approved'
+                        }
                     }
-                    dispatch(storeEntityData(data))
+                    dispatch(proItemUpdateStatus(data))
 
                     notifications.show({
                         color: 'teal',
-                        title: t('CreateSuccessfully'),
+                        title: t('ProcessUpdate'),
                         icon: <IconCheck style={{width: rem(18), height: rem(18)}}/>,
                         loading: false,
                         autoClose: 700,
@@ -76,7 +81,7 @@ function _RecipeForm() {
 
                     setTimeout(() => {
                         form.reset()
-                        navigate('/production/items');
+                        productionItem.process=='checked' && navigate('/production/items');
                     }, 500)
                 } else {
                     notifications.show({
@@ -87,7 +92,7 @@ function _RecipeForm() {
                         autoClose: 700,
                         style: {backgroundColor: 'lightgray'},
                     });
-                }*/
+                }
             })}>
                 <Grid columns={9} gutter={{base: 8}}>
                     <Grid.Col span={8}>
@@ -115,7 +120,8 @@ function _RecipeForm() {
 
                                                             <Flex direction={`column`} gap={0}>
                                                                 <Text fz={14} fw={400}>
-                                                                    {t("CreateAndSave")}
+                                                                    {productionItem.process==='created' && t("Checked")}
+                                                                    {productionItem.process==='checked' && t("Approved")}
                                                                 </Text>
                                                             </Flex>
                                                         </Button>
