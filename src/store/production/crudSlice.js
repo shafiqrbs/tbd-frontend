@@ -119,6 +119,17 @@ export const storeAndUpdateProductionItem = createAsyncThunk("store-and-update",
 });
 
 
+export const proItemUpdateStatus = createAsyncThunk("pro-item-update-status", async (value) => {
+    try {
+        const response = createData(value);
+        return response;
+    } catch (error) {
+        console.log('error', error.message);
+        throw error;
+    }
+});
+
+
 const crudSlice = createSlice({
     name: "production",
     initialState: {
@@ -140,7 +151,8 @@ const crudSlice = createSlice({
         openingInlineUpdateStatus: null,
         productionSettingFilterData: { setting_type_id: '',name:''},
         recipeItemFilterData: { setting_type_id: '',product_name:''},
-        measurementInputData:[]
+        measurementInputData:[],
+        itemProcessUpdate : false
     },
     reducers: {
         setFetching: (state, action) => {
@@ -255,6 +267,11 @@ const crudSlice = createSlice({
 
         builder.addCase(storeAndUpdateProductionItem.fulfilled,(state,action) => {
             state.measurementInputData = action.payload.data.data
+            state.itemProcessUpdate = false
+        })
+
+        builder.addCase(proItemUpdateStatus.fulfilled,(state, action)=>{
+            state.itemProcessUpdate = true
         })
 
     }

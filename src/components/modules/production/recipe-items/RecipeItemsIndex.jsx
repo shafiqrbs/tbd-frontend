@@ -5,7 +5,6 @@ import {
     Progress,
 } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
 
 import { getLoadingProgress } from '../../../global-hook/loading-progress/getLoadingProgress';
 import ProductionHeaderNavbar from "../common/ProductionHeaderNavbar.jsx";

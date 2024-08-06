@@ -11,7 +11,7 @@ import _RecipeForm from "./_RecipeForm.jsx";
 import { getLoadingProgress } from "../../../../global-hook/loading-progress/getLoadingProgress.js";
 import ProductionHeaderNavbar from "../../common/ProductionHeaderNavbar.jsx";
 import {storeAndUpdateProductionItem} from "../../../../../store/production/crudSlice.js";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {useParams} from "react-router-dom";
 
 function RecipeIndex() {
@@ -19,6 +19,8 @@ function RecipeIndex() {
     const dispatch = useDispatch();
     const {id} = useParams();
     const progress = getLoadingProgress()
+
+    const itemProcessUpdate = useSelector((state) => state.productionCrudSlice.itemProcessUpdate)
 
     useEffect(() => {
         const value = {
@@ -28,7 +30,7 @@ function RecipeIndex() {
             }
         }
         dispatch(storeAndUpdateProductionItem(value))
-    }, []);
+    }, [itemProcessUpdate]);
 
     return (
         <>

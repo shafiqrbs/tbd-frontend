@@ -1,27 +1,23 @@
 import React, { useEffect, useState } from "react";
-import {useNavigate, useOutletContext} from "react-router-dom";
+import {useOutletContext} from "react-router-dom";
 import {
     Group,
     Box,
-    ActionIcon,
-    Menu, Button, rem,
+    Button,
 } from "@mantine/core";
-import {
-    IconDotsVertical, IconTrashX,
-} from "@tabler/icons-react";
+
 import { DataTable } from 'mantine-datatable';
 import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from 'react-i18next';
 import {
     getIndexEntityData,
-    setFetching, storeAndUpdateProductionItem,
+    setFetching,
 } from "../../../../store/production/crudSlice.js";
 import KeywordSearch from "../common/KeywordSearch.jsx";
 import tableCss from "../../../../assets/css/Table.module.css";
 
 function _RecipeItemsTable() {
     const dispatch = useDispatch();
-    const navigate = useNavigate()
     const { t, i18n } = useTranslation();
     const { isOnline, mainAreaHeight } = useOutletContext();
     const height = mainAreaHeight - 120; //TabList height 104
@@ -91,11 +87,13 @@ function _RecipeItemsTable() {
                         { accessor: 'value_added_amount', title: t("ValueAdded"),textAlign:'center' },
                         { accessor: 'sub_total', title: t("Total"),textAlign:'center' },
                         {
-                            accessor: 'status',
+                            accessor: 'process',
                             title: t("Status"),
                             render: (item) => (
                                 <>
-                                    {item.status==1?'Active':'Inactive'}
+                                    {item.process=='created'&&'Created'}
+                                    {item.process=='checked'&&'Checked'}
+                                    {item.process=='approved'&&'Approved'}
                                 </>
                             )
                         },
@@ -104,11 +102,18 @@ function _RecipeItemsTable() {
                             title: t("Action"),
                             textAlign: "right",
                             render: (item) => (
-                                <Group gap={4} justify="right" wrap="nowrap">
-                                    <Button component="a" size="compact-xs" radius="xs" variant="filled" fw={'100'} fz={'12'} color="red.3" mr={'4'}
-                                            href={`/production/recipe-update/${item.id}`}
-                                    >  {t('Recipe')}</Button>
-                                </Group>
+                                item.process != 'approved' ?
+                                    <Group gap={4} justify="right" wrap="nowrap">
+                                        <Button component="a" size="compact-xs" radius="xs" variant="filled" fw={'100'} fz={'12'} color="red.3" mr={'4'}
+                                                href={`/production/recipe-update/${item.id}`}
+                                        >  {t('Recipe')}</Button>
+                                    </Group>
+                                    :
+                                    <Group gap={4} justify="right" wrap="nowrap">
+                                        <Button component="a" size="compact-xs" radius="xs" variant="filled" fw={'100'} fz={'12'} color="red.3" mr={'4'}
+                                                href={''}
+                                        >  {t('Amendment')}</Button>
+                                    </Group>
                             ),
                         },
                     ]
