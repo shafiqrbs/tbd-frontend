@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Button, Center, ScrollArea } from '@mantine/core';
 import { useReactToPrint } from 'react-to-print';
-import logo from '../../../../../assets/images/logo.png';
 import classes from './InvoiceBatchPrintPos.module.css'
 import { useTranslation } from 'react-i18next';
 
@@ -10,6 +9,8 @@ export function InvoiceBatchPrintPos(props) {
     const componentRef = useRef();
     const effectRan = useRef(false);
     const { t, i18n } = useTranslation();
+    const configData = localStorage.getItem('config-data') ? JSON.parse(localStorage.getItem('config-data')) : []
+    const imageSrc = `${import.meta.env.VITE_IMAGE_GATEWAY_URL}uploads/inventory/logo/${configData.path}`;
 
     const handlePrint = useReactToPrint({
         content: () => componentRef.current,
@@ -79,7 +80,7 @@ export function InvoiceBatchPrintPos(props) {
             <div className={classes['pos-body']} ref={componentRef}>
                 <header className={classes['body-head']}>
                     <div className={classes['pos-head']}>
-                        <img src={logo} alt="logo" className={classes['head-img']} />
+                        <img src={imageSrc} alt="logo" className={classes['head-img']} />
                         <h3 className={classes['head-title']}>{data2[0].company_name}</h3>
                         <p className={classes['head-email']}>{data2[0].email}</p>
                         <p className={classes['head-phone']}>{t('Mobile')} : {data2[0].mobile}</p>

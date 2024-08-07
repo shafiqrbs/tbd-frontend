@@ -36,11 +36,11 @@ function SalesInvoice() {
                                 {
                                     insertType === 'create' && configData?.business_model?.slug === 'general' &&
                                     <_GenericInvoiceForm
-                                        allowZeroPercentage={configData.zero_stock}
-                                        currencySymbol={configData.currency.symbol}
-                                        domainId={configData.domain_id}
-                                        isSMSActive={configData.is_active_sms}
-                                        isZeroReceiveAllow={configData.is_zero_receive_allow}
+                                        allowZeroPercentage={configData?.zero_stock}
+                                        currencySymbol={configData?.currency?.symbol}
+                                        domainId={configData?.domain_id}
+                                        isSMSActive={configData?.is_active_sms}
+                                        isZeroReceiveAllow={configData?.is_zero_receive_allow}
                                     />
                                 }
                             </Box>

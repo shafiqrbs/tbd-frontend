@@ -1,6 +1,5 @@
 import React, { useEffect, useRef } from 'react';
 import { Paper, Group, Stack, Image, Text, Table, Grid, Box, Title, Space, Center, Button } from '@mantine/core';
-import logo from '../../../../../assets/images/logo.png';
 import barCode from '../../../../../assets/images/frame.png';
 import { useReactToPrint } from 'react-to-print';
 import classes from './InvoiceBatchPrintA4.module.css';
@@ -13,6 +12,8 @@ export function InvoiceBatchPrintA4(props) {
     const componentRef = useRef();
     const { t, i18n } = useTranslation();
     const effectRan = useRef(false);
+    const configData = localStorage.getItem('config-data') ? JSON.parse(localStorage.getItem('config-data')) : []
+    const imageSrc = `${import.meta.env.VITE_IMAGE_GATEWAY_URL}uploads/inventory/logo/${configData.path}`;
 
     const handlePrint = useReactToPrint({
         content: () => componentRef.current,
@@ -83,7 +84,7 @@ export function InvoiceBatchPrintA4(props) {
             <div className={classes['invoice-body']} ref={componentRef}>
                 <Grid columns={24} bg={'#E9ECEF'} p={10}>
                     <Grid.Col span={12} >
-                        <img src={logo} alt="" className={classes['invoice-header-img']} />
+                        <img src={imageSrc} alt="" className={classes['invoice-header-img']} />
                         <Box >
                             <Grid columns={24} >
                                 <Grid.Col span={'24'} mt={'md'} align={'left'} fw={'800'} fz={'19'}>{data2[0].company_name}</Grid.Col>

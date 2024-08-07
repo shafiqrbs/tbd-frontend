@@ -737,7 +737,7 @@ function __SalesForm(props) {
                                         leftSection={<IconStackPush size={14} />}
                                         color="orange.5"
                                     >
-                                        Hold
+                                        {t('Hold')}
                                     </Button>
                                     <Button
                                         fullWidth
@@ -753,7 +753,7 @@ function __SalesForm(props) {
                                             backgroundColor: isDisabled ? "#f1f3f500" : ""
                                         }}
                                     >
-                                        Print
+                                        {t('Print')}
                                     </Button>
                                     <Button
                                         fullWidth
@@ -769,7 +769,7 @@ function __SalesForm(props) {
                                             backgroundColor: isDisabled ? "#f1f3f500" : ""
                                         }}
                                     >
-                                        Pos
+                                        {t('Pos')}
                                     </Button>
                                     <Button
                                         fullWidth
@@ -785,7 +785,7 @@ function __SalesForm(props) {
                                             backgroundColor: isDisabled ? "#f1f3f500" : ""
                                         }}
                                     >
-                                        Save
+                                        {t('Save')}
                                     </Button>
                                 </Button.Group>
                             </Box>
