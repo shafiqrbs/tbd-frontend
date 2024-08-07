@@ -108,7 +108,6 @@ function ProductForm() {
                         setTimeout(() => {
                             form.reset()
                             setCategoryData(null)
-                            setBrandData(null)
                             setProductTypeData(null)
                             setProductUnitData(null)
                             dispatch(setFetching(true))
