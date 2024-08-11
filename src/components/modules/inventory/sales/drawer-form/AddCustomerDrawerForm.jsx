@@ -7,7 +7,6 @@ import { useTranslation } from 'react-i18next';
 import {
     IconCheck,
     IconDeviceFloppy,
-    IconDeviceMobile,
     IconRefreshDot,
     IconUserCircle,
 } from "@tabler/icons-react";
@@ -15,7 +14,7 @@ import { useDispatch } from "react-redux";
 import { hasLength, useForm } from "@mantine/form";
 import { modals } from "@mantine/modals";
 import { notifications } from "@mantine/notifications";
-import { setFetching, storeEntityData } from "../../../../../store/inventory/crudSlice.js";
+import { storeEntityData } from "../../../../../store/inventory/crudSlice.js";
 import InputForm from "../../../../form-builders/InputForm.jsx";
 import PhoneNumber from "../../../../form-builders/PhoneNumberInput.jsx";
 
@@ -176,7 +175,6 @@ function AddCustomerDrawerForm(props) {
                                                         form={customerAddedForm}
                                                         name={'mobile'}
                                                         id={fieldPrefix + 'mobile'}
-                                                        // leftSection={<IconDeviceMobile size={16} opacity={0.5} />}
                                                         rightIcon={''}
                                                     />
                                                 </Box>
@@ -185,16 +183,6 @@ function AddCustomerDrawerForm(props) {
                                     </Box>
                                 </Box>
                             </Grid.Col>
-                            {/* <Grid.Col span={1} >
-                                <Box bg={'white'} className={'borderRadiusAll'} pt={'16'}>
-                                    <_ShortcutMasterData
-                                        form={customerAddedForm}
-                                        FormSubmit={fieldPrefix + "EntityProductFormSubmit"}
-                                        Name={fieldPrefix + 'product_type_id'}
-                                        inputType="select"
-                                    />
-                                </Box>
-                            </Grid.Col> */}
                         </Grid>
                     </Box>
                 </form >
