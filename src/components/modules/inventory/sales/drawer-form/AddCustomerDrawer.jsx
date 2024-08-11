@@ -1,20 +1,11 @@
 import React from "react";
 import { useOutletContext } from "react-router-dom";
-import {
-    ActionIcon, Box, ScrollArea, Drawer
-} from "@mantine/core";
+import {ActionIcon, Box, ScrollArea, Drawer} from "@mantine/core";
 import { useTranslation } from 'react-i18next';
-
-import {
-    IconX,
-
-} from "@tabler/icons-react";
+import {IconX} from "@tabler/icons-react";
 import AddCustomerDrawerForm from "./AddCustomerDrawerForm";
 
-
 function AddCustomerDrawer(props) {
-    // const configData = localStorage.getItem('config-data');
-
     const { customerDrawer, setCustomerDrawer, setRefreshCustomerDropdown, focusField, fieldPrefix } = props
     const { isOnline, mainAreaHeight } = useOutletContext();
     const { t, i18n } = useTranslation();
@@ -41,7 +32,12 @@ function AddCustomerDrawer(props) {
                             </ActionIcon>
                         </Drawer.Header>
                         <Box ml={2} mr={2} mb={0}>
-                            <AddCustomerDrawerForm setCustomerDrawer={setCustomerDrawer} setRefreshCustomerDropdown={setRefreshCustomerDropdown} focusField={focusField} fieldPrefix={fieldPrefix} />
+                            <AddCustomerDrawerForm
+                                setCustomerDrawer={setCustomerDrawer}
+                                setRefreshCustomerDropdown={setRefreshCustomerDropdown}
+                                focusField={focusField}
+                                fieldPrefix={fieldPrefix}
+                            />
                         </Box>
                     </ScrollArea>
                 </Drawer.Content>

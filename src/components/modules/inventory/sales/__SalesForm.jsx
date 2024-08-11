@@ -29,9 +29,7 @@ import InputNumberForm from "../../../form-builders/InputNumberForm";
 import InputButtonForm from "../../../form-builders/InputButtonForm";
 import { notifications } from "@mantine/notifications";
 import _SmsPurchaseModel from "./modal/_SmsPurchaseModel.jsx";
-import _CustomerViewModel from "./modal/_CustomerViewModel.jsx";
 import customerDataStoreIntoLocalStorage from "../../../global-hook/local-storage/customerDataStoreIntoLocalStorage.js";
-import _addCustomer from "../../popover-form/_addCustomer.jsx";
 import DatePickerForm from "../../../form-builders/DatePicker";
 import _InvoiceDrawerForPrint from "./print-drawer/_InvoiceDrawerForPrint.jsx";
 import AddCustomerDrawer from "./drawer-form/AddCustomerDrawer.jsx";
@@ -58,17 +56,11 @@ function __SalesForm(props) {
     const [isShowSMSPackageModel, setIsShowSMSPackageModel] = useState(false)
 
     const formHeight = mainAreaHeight - 262; //TabList height 104
-    const [customerViewModel, setCustomerViewModel] = useState(false);
-
 
     const [tempCardProducts, setTempCardProducts] = useState([])
     const [loadCardProducts, setLoadCardProducts] = useState(false)
     const [discountType, setDiscountType] = useToggle(['Flat', 'Percent']);
-    const [invoicePrintData, setInvoicePrintData] = useState(null)
-    const [invoicePrintForSave, setInvoicePrintForSave] = useState(false)
-
     const [lastClicked, setLastClicked] = useState(null);
-
     const [customerDrawer, setCustomerDrawer] = useState(false)
 
     const handleClick = (event) => {
@@ -373,11 +365,6 @@ function __SalesForm(props) {
                                             </Box>
                                         </Grid.Col>
                                         <Grid.Col span={1}>
-                                            {/* <_addCustomer
-                                                setRefreshCustomerDropdown={setRefreshCustomerDropdown}
-                                                focusField={'customer_id'}
-                                                fieldPrefix="sales_"
-                                            /> */}
                                             <Box pt={'8'}>
                                                 <Tooltip
                                                     multiline
@@ -794,8 +781,13 @@ function __SalesForm(props) {
                 </Box>
             </form>
 
-            {customerDrawer && <AddCustomerDrawer setRefreshCustomerDropdown={setRefreshCustomerDropdown} focusField={'customer_id'}
-                fieldPrefix="sales_" customerDrawer={customerDrawer} setCustomerDrawer={setCustomerDrawer}
+            {customerDrawer &&
+                <AddCustomerDrawer
+                    setRefreshCustomerDropdown={setRefreshCustomerDropdown}
+                    focusField={'customer_id'}
+                    fieldPrefix="sales_"
+                    customerDrawer={customerDrawer}
+                    setCustomerDrawer={setCustomerDrawer}
             />}
 
             {isShowSMSPackageModel &&
