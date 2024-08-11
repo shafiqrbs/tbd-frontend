@@ -1,7 +1,7 @@
 
-import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
-import {getDataWithParam} from "../../services/inventoryApiService.js";
-import {getDataWithoutParam} from "../../services/productionApiService";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { getDataWithParam } from "../../services/inventoryApiService.js";
+import { getDataWithoutParam } from "../../services/productionApiService";
 
 
 export const getSettingTypeDropdown = createAsyncThunk("setting-type-dropdown", async (value) => {
@@ -46,14 +46,15 @@ export const getGroupCategoryDropdown = createAsyncThunk("group-category/select"
 
 
 const utilitySlice = createSlice({
-name: "utility",
+
+    name: "utility",
     initialState: {
         isLoading: true,
         fetching: true,
+        settingTypeDropdownData: [],
         brandDropdownData: [],
         categoryDropdownData: [],
         groupCategoryDropdown: [],
-        groupCategoryDropdownData: [],
     },
     reducers: {
         setFetching: (state, action) => {
@@ -76,8 +77,6 @@ name: "utility",
         })
 
         builder.addCase(getGroupCategoryDropdown.fulfilled, (state, action) => {
-            // console.log(action.payload.data)
-
             state.groupCategoryDropdown = action.payload.data
         })
 

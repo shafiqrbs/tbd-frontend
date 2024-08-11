@@ -26,7 +26,6 @@ import {
 import SelectForm from "../../../form-builders/SelectForm.jsx";
 import TextAreaForm from "../../../form-builders/TextAreaForm.jsx";
 import PhoneNumber from "../../../form-builders/PhoneNumberInput.jsx";
-import CustomerGroupDrawer from "./CustomerGroupDrawer.jsx";
 import Shortcut from "../../shortcut/Shortcut.jsx";
 
 function CustomerUpdateForm(props) {
@@ -236,7 +235,7 @@ function CustomerUpdateForm(props) {
                                             <LoadingOverlay visible={formLoad} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} loaderProps={{ color: 'red.6' }} />
                                             <Box>
                                                 <Grid gutter={{ base: 6 }}>
-                                                    <Grid.Col span={11} >
+                                                    <Grid.Col span={12} >
                                                         <Box mt={'8'}>
                                                             <SelectForm
                                                                 tooltip={t('CustomerGroup')}
@@ -256,22 +255,7 @@ function CustomerUpdateForm(props) {
                                                         </Box>
                                                     </Grid.Col>
                                                     <Grid.Col span={1}>
-                                                        <Box pt={'xl'}>
-                                                            <Tooltip
-                                                                ta="center"
-                                                                multiline
-                                                                bg={'orange.8'}
-                                                                offset={{ crossAxis: '-110', mainAxis: '5' }}
-                                                                withArrow
-                                                                transitionProps={{ duration: 200 }}
-                                                                label={t('QuickCustomerGroup')}
-                                                            >
-                                                                <ActionIcon fullWidth variant="outline" bg={'white'} size={'lg'} color="red.5" mt={'1'} aria-label="Settings" onClick={() => { setGroupDrawer(true) }}>
-                                                                    <IconUsersGroup style={{ width: '100%', height: '70%' }} stroke={1.5} />
-                                                                </ActionIcon>
-                                                            </Tooltip>
-                                                        </Box>
-
+                                                        
                                                     </Grid.Col>
 
                                                 </Grid>
@@ -438,9 +422,7 @@ function CustomerUpdateForm(props) {
                     </Grid.Col>
                 </Grid>
             </form>
-            {groupDrawer &&
-                <CustomerGroupDrawer groupDrawer={groupDrawer} setGroupDrawer={setGroupDrawer} />
-            }
+            
         </Box>
     )
 }

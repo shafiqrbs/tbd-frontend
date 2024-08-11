@@ -17,12 +17,18 @@ function CustomerViewDrawer(props) {
 
     const entityEditData = useSelector((state => state.crudSlice.entityEditData))
 
-    const { viewDrawer, setViewDrawer } = props
+
+    const { viewDrawer, setViewDrawer, customerObject } = props
     const { isOnline, mainAreaHeight } = useOutletContext();
     const { t, i18n } = useTranslation();
     const height = mainAreaHeight; //TabList height 104
     const closeDrawer = () => {
         setViewDrawer(false)
+    }
+
+    let showData = {}
+    if (customerObject) {
+        showData = customerObject
     }
 
 
@@ -54,36 +60,36 @@ function CustomerViewDrawer(props) {
                                 <Grid columns={24}>
                                     <Grid.Col span={'8'} align={'left'} fw={'600'} fz={'14'}>{t('Name')}</Grid.Col>
                                     <Grid.Col span={'1'}>:</Grid.Col>
-                                    <Grid.Col span={'auto'}>{entityEditData && entityEditData.name && entityEditData.name}</Grid.Col>
+                                    <Grid.Col span={'auto'}>{showData && showData.name && showData.name}</Grid.Col>
                                 </Grid>
                                 <Grid columns={24}>
                                     <Grid.Col span={'8'} align={'left'} fw={'600'} fz={'14'}>{t('Mobile')}</Grid.Col>
                                     <Grid.Col span={'1'}>:</Grid.Col>
-                                    <Grid.Col span={'auto'}>{entityEditData && entityEditData.mobile && entityEditData.mobile}</Grid.Col>
+                                    <Grid.Col span={'auto'}>{showData && showData.mobile && showData.mobile}</Grid.Col>
                                 </Grid>
 
                                 <Grid columns={24}>
                                     <Grid.Col span={'8'} align={'left'} fw={'600'} fz={'14'}>{t('AlternativeMobile')}</Grid.Col>
                                     <Grid.Col span={'1'}>:</Grid.Col>
-                                    <Grid.Col span={'auto'}>{entityEditData && entityEditData.alternative_mobile && entityEditData.alternative_mobile}</Grid.Col>
+                                    <Grid.Col span={'auto'}>{showData && showData.alternative_mobile && showData.alternative_mobile}</Grid.Col>
                                 </Grid>
 
                                 <Grid columns={24}>
                                     <Grid.Col span={'8'} align={'left'} fw={'600'} fz={'14'}>{t('Email')}</Grid.Col>
                                     <Grid.Col span={'1'}>:</Grid.Col>
-                                    <Grid.Col span={'auto'}>{entityEditData && entityEditData.email && entityEditData.email}</Grid.Col>
+                                    <Grid.Col span={'auto'}>{showData && showData.email && showData.email}</Grid.Col>
                                 </Grid>
 
                                 <Grid columns={24}>
                                     <Grid.Col span={'8'} align={'left'} fw={'600'} fz={'14'}>{t('ReferenceId')}</Grid.Col>
                                     <Grid.Col span={'1'}>:</Grid.Col>
-                                    <Grid.Col span={'auto'}>{entityEditData && entityEditData.reference_id && entityEditData.reference_id}</Grid.Col>
+                                    <Grid.Col span={'auto'}>{showData && showData.reference_id && showData.reference_id}</Grid.Col>
                                 </Grid>
 
                                 <Grid columns={24}>
                                     <Grid.Col span={'8'} align={'left'} fw={'600'} fz={'14'}>{t('Created')}</Grid.Col>
                                     <Grid.Col span={'1'}>:</Grid.Col>
-                                    <Grid.Col span={'auto'}>{entityEditData && entityEditData.created && entityEditData.created}</Grid.Col>
+                                    <Grid.Col span={'auto'}>{showData && showData.created && showData.created}</Grid.Col>
                                 </Grid>
                             </Box>
 

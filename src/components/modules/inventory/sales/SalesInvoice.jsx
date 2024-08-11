@@ -11,7 +11,7 @@ import _GenericInvoiceForm from "./_GenericInvoiceForm.jsx";
 import _SalesPurchaseHeaderNavbar from "../configuraton/_SalesPurchaseHeaderNavbar.jsx";
 
 function SalesInvoice() {
-    
+
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const insertType = useSelector((state) => state.crudSlice.insertType)
@@ -29,18 +29,18 @@ function SalesInvoice() {
                             <_SalesPurchaseHeaderNavbar
                                 pageTitle={t('SalesInvoice')}
                                 roles={t('Roles')}
-                                allowZeroPercentage={configData.zero_stock}
-                                currencySymbol={configData.currency.symbol}
+                                allowZeroPercentage={configData?.zero_stock}
+                                currencySymbol={configData?.currency?.symbol}
                             />
                             <Box p={'8'}>
                                 {
-                                    insertType === 'create' && configData.business_model.slug === 'general' &&
+                                    insertType === 'create' && configData?.business_model?.slug === 'general' &&
                                     <_GenericInvoiceForm
-                                        allowZeroPercentage={configData.zero_stock}
-                                        currencySymbol={configData.currency.symbol}
-                                        domainId={configData.domain_id}
-                                        isSMSActive={configData.is_active_sms}
-                                        isZeroReceiveAllow={configData.is_zero_receive_allow}
+                                        allowZeroPercentage={configData?.zero_stock}
+                                        currencySymbol={configData?.currency?.symbol}
+                                        domainId={configData?.domain_id}
+                                        isSMSActive={configData?.is_active_sms}
+                                        isZeroReceiveAllow={configData?.is_zero_receive_allow}
                                     />
                                 }
                             </Box>

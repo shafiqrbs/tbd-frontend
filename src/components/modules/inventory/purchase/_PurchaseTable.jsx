@@ -29,6 +29,8 @@ import ShortcutTable from "../../shortcut/ShortcutTable";
 import KeywordDateRangeSearch from "../../filter/KeywordDateRangeSearch";
 import { ReactToPrint } from "react-to-print";
 import _PurchaseSearch from "./_PurchaseSearch.jsx";
+import { PurchasePrintNormal } from "./print-component/PurchasePrintNormal.jsx";
+import { PurchasePrintPos } from "./print-component/PurchasePrintPos.jsx";
 
 function _PurchaseTable() {
     const printRef = useRef()
@@ -40,6 +42,8 @@ function _PurchaseTable() {
 
     const perPage = 50;
     const [page, setPage] = useState(1);
+    const [printA4, setPrintA4] = useState(false);
+    const [printPos, setPrintPos] = useState(false);
 
 
     const fetching = useSelector((state) => state.inventoryCrudSlice.fetching)
@@ -361,19 +365,26 @@ function _PurchaseTable() {
                                     variant="filled"
                                     leftSection={<IconPrinter size={14} />}
                                     color="green.5"
+                                    onClick={() => {
+                                        setPrintA4(true);
+                                    }}
                                 >
-                                    <ReactToPrint
+                                    {/* <ReactToPrint
                                         trigger={() => {
                                             return <>{t('Print')}</>;
                                         }}
                                         content={() => printRef.current}
-                                    />
+                                    /> */}
+                                    {t('Print')}
                                 </Button>
                                 <Button
                                     fullWidth
                                     variant="filled"
                                     leftSection={<IconReceipt size={14} />}
                                     color="red.5"
+                                    onClick={() => {
+                                        setPrintPos(true);
+                                    }}
                                 >
                                     {t('Pos')}
                                 </Button>
@@ -402,6 +413,12 @@ function _PurchaseTable() {
                     </Grid.Col>
                 </Grid>
             </Box>
+            {printA4 && <div style={{ display: "none" }}>
+                <PurchasePrintNormal setPrintA4={setPrintA4} purchaseViewData={purchaseViewData} />
+            </div>}
+            {printPos && <div style={{ display: "none" }}>
+                <PurchasePrintPos purchaseViewData={purchaseViewData} setPrintPos={setPrintPos} />
+            </div>}
         </>
     );
 }

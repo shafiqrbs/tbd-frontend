@@ -1,14 +1,14 @@
 import React, { useEffect, useRef } from 'react';
-import { Paper, Group, Stack, Image, Text, Table, Grid, Box, Title, Space, Center, Button } from '@mantine/core';
+import { Grid, Box, Space, Center } from '@mantine/core';
 import barCode from '../../../../../assets/images/frame.png';
 import { useReactToPrint } from 'react-to-print';
-import classes from './InvoiceBatchPrintA4.module.css';
+import classes from './PurchasePrintNormal.module.css';
 import { useTranslation } from 'react-i18next';
 
-export function InvoiceBatchPrintA4(props) {
+export function PurchasePrintNormal(props) {
 
 
-    const { invoiceBatchData, setPrintA4 } = props;
+    const { purchaseViewData, setPrintA4 } = props;
     const componentRef = useRef();
     const { t, i18n } = useTranslation();
     const effectRan = useRef(false);
@@ -27,35 +27,6 @@ export function InvoiceBatchPrintA4(props) {
         )
     }, []);
 
-    const data = [
-        {
-            item_name: 'Shower Room Assemble',
-            sku: 'Bhd019237493847',
-            quantity: '100',
-            qty: '1000',
-            price: '5000',
-            sales_price: '1000',
-            sub_total: '6000',
-        },
-        {
-            item_name: 'Shower Room Assemble',
-            sku: 'Bhd019237493847',
-            quantity: '100',
-            qty: '1000',
-            price: '5000',
-            sales_price: '1000',
-            sub_total: '6000',
-        },
-        {
-            item_name: 'Shower Room Assemble',
-            sku: 'Bhd019237493847',
-            quantity: '100',
-            qty: '1000',
-            price: '5000',
-            sales_price: '1000',
-            sub_total: '6000',
-        },
-    ];
     const data2 = [
         {
             company_name: "Right Brain Solution Ltd.",
@@ -112,21 +83,28 @@ export function InvoiceBatchPrintA4(props) {
                                 <Grid.Col span={'6'} align={'right'} fw={'300'} fz={'14'}>{t('Invoice')}</Grid.Col>
                                 <Grid.Col span={'1'} align={'right'} fw={'300'} fz={'14'}>:</Grid.Col>
                                 <Grid.Col span={'5'} align={'left'} fw={'300'} fz={'14'}>
-                                    {invoiceBatchData && invoiceBatchData.invoice && invoiceBatchData.invoice}
+                                    {purchaseViewData && purchaseViewData.invoice && purchaseViewData.invoice}
                                 </Grid.Col>
                             </Grid>
                             <Grid columns={12} pr={'sm'}>
                                 <Grid.Col span={'6'} align={'right'} fw={'300'} fz={'14'}>{t('Created')}</Grid.Col>
                                 <Grid.Col span={'1'} align={'right'} fw={'300'} fz={'14'}>:</Grid.Col>
                                 <Grid.Col span={'5'} align={'left'} fw={'300'} fz={'14'}>
-                                    {invoiceBatchData && invoiceBatchData.created && invoiceBatchData.created}
+                                    {purchaseViewData && purchaseViewData.created && purchaseViewData.created}
                                 </Grid.Col>
                             </Grid>
                             <Grid columns={12} pr={'sm'}>
                                 <Grid.Col span={'6'} align={'right'} fw={'300'} fz={'14'}>{t('CreatedBy')}</Grid.Col>
                                 <Grid.Col span={'1'} align={'right'} fw={'300'} fz={'14'}>:</Grid.Col>
                                 <Grid.Col span={'5'} align={'left'} fw={'300'} fz={'14'}>
-                                    {invoiceBatchData && invoiceBatchData.created_by_name && invoiceBatchData.created_by_name}
+                                    {purchaseViewData && purchaseViewData.createdByUser && purchaseViewData.createdByUser}
+                                </Grid.Col>
+                            </Grid>
+                            <Grid columns={12} pr={'sm'}>
+                                <Grid.Col span={'6'} align={'right'} fw={'300'} fz={'14'}>{t('Mode')}</Grid.Col>
+                                <Grid.Col span={'1'} align={'right'} fw={'300'} fz={'14'}>:</Grid.Col>
+                                <Grid.Col span={'5'} align={'left'} fw={'300'} fz={'14'}>
+                                    {purchaseViewData && purchaseViewData.mode_name && purchaseViewData.mode_name}
                                 </Grid.Col>
                             </Grid>
                         </Box>
@@ -141,31 +119,31 @@ export function InvoiceBatchPrintA4(props) {
 
                         <Space h={'xs'} />
                         <Grid columns={24}>
-                            <Grid.Col span={'4'} align={'left'} fw={'300'} fz={'14'}>{t('Customer')}</Grid.Col>
+                            <Grid.Col span={'4'} align={'left'} fw={'300'} fz={'14'}>{t('Vendor')}</Grid.Col>
                             <Grid.Col span={'1'} align={'left'} fw={'300'} fz={'14'}>:</Grid.Col>
                             <Grid.Col span={'auto'} align={'left'} fw={'300'} fz={'14'}>
-                                {invoiceBatchData && invoiceBatchData.customer_name && invoiceBatchData.customer_name}
+                                {purchaseViewData && purchaseViewData.customerName && purchaseViewData.customerName}
                             </Grid.Col>
                         </Grid>
                         <Grid columns={24}>
                             <Grid.Col span={'4'} align={'left'} fw={'300'} fz={'14'} >{t('Mobile')}</Grid.Col>
                             <Grid.Col span={'1'} align={'left'} fw={'300'} fz={'14'}>:</Grid.Col>
                             <Grid.Col span={'auto'} align={'left'} fw={'300'} fz={'14'}>
-                                {invoiceBatchData && invoiceBatchData.customer_mobile && invoiceBatchData.customer_mobile}
+                                {purchaseViewData && purchaseViewData.customerMobile && purchaseViewData.customerMobile}
                             </Grid.Col>
                         </Grid>
                         <Grid columns={24}>
                             <Grid.Col span={'4'} align={'left'} fw={'300'} fz={'14'}>{t('Address')}</Grid.Col>
                             <Grid.Col span={'1'} align={'left'} fw={'300'} fz={'14'}>:</Grid.Col>
                             <Grid.Col span={'auto'} align={'left'} fw={'300'} fz={'14'}>
-                                {invoiceBatchData && invoiceBatchData.customer_address && invoiceBatchData.customer_address}
+                                {purchaseViewData && purchaseViewData.customer_address && purchaseViewData.customer_address}
                             </Grid.Col>
                         </Grid>
 
                         <Grid columns={24}>
                             <Grid.Col span={'4'} align={'left'} fw={'300'} fz={'14'}>{t('Balance')}</Grid.Col>
                             <Grid.Col span={'1'} align={'left'} fw={'300'} fz={'14'}>:</Grid.Col>
-                            <Grid.Col span={'auto'} align={'left'} fw={'300'} fz={'14'}>{invoiceBatchData && invoiceBatchData.balance ? Number(invoiceBatchData.balance).toFixed(2) : 0.00}</Grid.Col>
+                            <Grid.Col span={'auto'} align={'left'} fw={'300'} fz={'14'}> {purchaseViewData && purchaseViewData.balance ? Number(purchaseViewData.balance).toFixed(2) : 0.00}</Grid.Col>
                         </Grid>
                         {/* <Space h={'lg'} />
                         <Grid columns={24}>
@@ -191,7 +169,7 @@ export function InvoiceBatchPrintA4(props) {
                                 </tr>
                             </thead>
                             <tbody>
-                                {invoiceBatchData && invoiceBatchData.invoice_batch_items && invoiceBatchData.invoice_batch_items.map((element, index) => (
+                                {purchaseViewData && purchaseViewData.purchase_items && purchaseViewData.purchase_items.map((element, index) => (
                                     <React.Fragment key={index}>
 
                                         <tr className={classes['invoice-body-table-tr']}>
@@ -236,19 +214,19 @@ export function InvoiceBatchPrintA4(props) {
                             </div>
                             <div className={classes['footer-data-section']}>
                                 <div className={classes['invoice-footer-two-right']}>
-                                    <p className={classes['invoice-footer-text-two']}>{invoiceBatchData && invoiceBatchData.sub_total && Number(invoiceBatchData.sub_total).toFixed(2)}
+                                    <p className={classes['invoice-footer-text-two']}>{purchaseViewData && purchaseViewData.sub_total && Number(purchaseViewData.sub_total).toFixed(2)}
                                     </p>
                                     <p className={classes['invoice-footer-text-two']}>
-                                        {invoiceBatchData && invoiceBatchData.discount && Number(invoiceBatchData.discount).toFixed(2)}
+                                        {purchaseViewData && purchaseViewData.discount && Number(purchaseViewData.discount).toFixed(2)}
                                     </p>
                                     <p className={classes['invoice-footer-text-two']}>
-                                        {invoiceBatchData && invoiceBatchData.total && Number(invoiceBatchData.total).toFixed(2)}
+                                        {purchaseViewData && purchaseViewData.total && Number(purchaseViewData.total).toFixed(2)}
                                     </p>
                                     <p className={`${classes['invoice-footer-text-two']} ${classes['footer-border-bottom']}`}>
-                                        {invoiceBatchData && invoiceBatchData.payment && Number(invoiceBatchData.payment).toFixed(2)}
+                                        {purchaseViewData && purchaseViewData.payment && Number(purchaseViewData.payment).toFixed(2)}
                                     </p>
                                     <p className={classes['invoice-footer-text-two']}>
-                                        {invoiceBatchData && invoiceBatchData.total && (Number(invoiceBatchData.total) - Number(invoiceBatchData.payment)).toFixed(2)}
+                                        {purchaseViewData && purchaseViewData.total && Number(purchaseViewData.total - purchaseViewData.payment).toFixed(2)}
                                     </p>
                                     {/* <p className={`${classes['invoice-footer-text-two']} ${classes['footer-border-bottom']}`}>{data2[0].coupon_discount}</p> */}
                                 </div>

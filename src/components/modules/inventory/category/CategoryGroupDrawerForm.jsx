@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import {
     Button, rem, Flex, Grid, Box, ScrollArea, Group, Text, Title, Stack,
@@ -17,38 +17,35 @@ import { setFetching, storeEntityData } from "../../../../store/core/crudSlice.j
 
 import _ShortcutMasterData from "../../shortcut/_ShortcutMasterData.jsx";
 import InputForm from "../../../form-builders/InputForm.jsx";
-import SelectForm from "../../../form-builders/SelectForm.jsx";
 import SwitchForm from "../../../form-builders/SwitchForm.jsx";
 
 
-function ProductCategoryDrawerForm(props) {
+function CategoryGroupDrawerForm(props) {
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
     const height = mainAreaHeight - 100; //TabList height 104
-    const [categoryGroupData, setCategoryGroupData] = useState(null);
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
+    const adjustment = -28;
 
+    const { saveId, setGroupDrawer } = props
 
-
-    const { adjustment, saveId, groupCategoryDropdown } = props
-
-    const categoryForm = useForm({
+    const categoryGroupForm = useForm({
         initialValues: {
-            category_group: '', category_name: '', category_status: true
+            category_group_name: '', category_group_status: true
         },
         validate: {
-            category_group: isNotEmpty(),
-            category_name: hasLength({ min: 2, max: 20 }),
+            category_group_name: hasLength({ min: 2, max: 20 }),
+            category_group_status: isNotEmpty(),
         }
     });
 
     useHotkeys([['alt+n', () => {
-        document.getElementById('category_group').click()
+        document.getElementById('category_group_name').focus()
     }]], []);
 
     useHotkeys([['alt+r', () => {
-        categoryForm.reset()
+        categoryGroupForm.reset()
     }]], []);
 
     useHotkeys([['alt+s', () => {
@@ -59,7 +56,7 @@ function ProductCategoryDrawerForm(props) {
     return (
         <>
             <Box>
-                <form onSubmit={categoryForm.onSubmit((values) => {
+                <form onSubmit={categoryGroupForm.onSubmit((values) => {
                     // console.log(values)
                     modals.openConfirmModal({
                         title: (
@@ -74,10 +71,9 @@ function ProductCategoryDrawerForm(props) {
                             setSaveCreateLoading(true)
                             const value = {
                                 url: 'inventory/category-group',
-                                data: categoryForm.values
+                                data: categoryGroupForm.values
                             }
                             dispatch(storeEntityData(value))
-
                             notifications.show({
                                 color: 'teal',
                                 title: t('CreateSuccessfully'),
@@ -88,10 +84,10 @@ function ProductCategoryDrawerForm(props) {
                             });
 
                             setTimeout(() => {
-                                categoryForm.reset()
-                                setCategoryGroupData(null)
-                                setSaveCreateLoading(false)
-                                dispatch(setFetching(true))
+                                categoryGroupForm.reset()
+                                dispatch(setEntityNewData([]))
+                                dispatch(setDropdownLoad(true))
+                                setGroupDrawer(false)
                             }, 700)
                         },
                     });
@@ -105,7 +101,7 @@ function ProductCategoryDrawerForm(props) {
                                         <Box pl={`xs`} pr={8} pt={'6'} pb={'6'} mb={'4'} className={'boxBackground borderRadiusAll'} >
                                             <Grid>
                                                 <Grid.Col span={8} >
-                                                    <Title order={6} pt={'6'}>{t('CreateProductCategory')}</Title>
+                                                    <Title order={6} pt={'6'}>{t('CreateSetting')}</Title>
                                                 </Grid.Col>
                                                 <Grid.Col span={4}>
                                                     <Stack right align="flex-end">
@@ -134,52 +130,33 @@ function ProductCategoryDrawerForm(props) {
                                         <Box pl={`xs`} pr={'xs'} className={'borderRadiusAll'}>
                                             <ScrollArea h={height - (adjustment ? adjustment : 0)} scrollbarSize={2} scrollbars="y" type="never">
                                                 <Box mt={'8'}>
-                                                    <SelectForm
-                                                        tooltip={t('ChooseCategoryGroup')}
+                                                    <InputForm
+                                                        tooltip={t('CategoryGroupValidateMessage')}
                                                         label={t('CategoryGroup')}
-                                                        placeholder={t('ChooseCategoryGroup')}
+                                                        placeholder={t('CategoryGroup')}
                                                         required={true}
-                                                        nextField={'category_name'}
-                                                        name={'category_group'}
-                                                        form={categoryForm}
-                                                        dropdownValue={groupCategoryDropdown}
-                                                        id={'category_group'}
-                                                        searchable={false}
-                                                        value={categoryGroupData}
-                                                        changeValue={setCategoryGroupData}
+                                                        nextField={'category_group_status'}
+                                                        form={categoryGroupForm}
+                                                        name={'category_group_name'}
+                                                        mt={8}
+                                                        id={'category_group_name'}
                                                     />
                                                 </Box>
 
                                                 <Box mt={'xs'}>
-                                                    <InputForm
-                                                        tooltip={t('CategoryNameValidateMessage')}
-                                                        label={t('CategoryName')}
-                                                        placeholder={t('CategoryName')}
-                                                        required={true}
-                                                        nextField={'category_status'}
-                                                        form={categoryForm}
-                                                        name={'category_name'}
-                                                        id={'category_name'}
+                                                    <SwitchForm
+                                                        tooltip={t('Status')}
+                                                        label={t('Status')}
+                                                        nextField={saveId}
+                                                        name={'category_group_status'}
+                                                        form={categoryGroupForm}
+                                                        mt={12}
+                                                        id={'category_group_status'}
+                                                        position={'left'}
+                                                        defaultChecked={1}
                                                     />
                                                 </Box>
-                                                <Box mt={'xs'}>
-                                                    <Grid gutter={{ base: 1 }}>
-                                                        <Grid.Col span={2}>
-                                                            <SwitchForm
-                                                                tooltip={t('Status')}
-                                                                label=''
-                                                                nextField={saveId}
-                                                                name={'category_status'}
-                                                                form={categoryForm}
-                                                                color="red"
-                                                                id={'category_status'}
-                                                                position={'left'}
-                                                                defaultChecked={1}
-                                                            />
-                                                        </Grid.Col>
-                                                        <Grid.Col span={6} fz={'sm'} pt={'2'} >{t('Status')}</Grid.Col>
-                                                    </Grid>
-                                                </Box>
+
                                             </ScrollArea>
                                         </Box>
                                     </Box>
@@ -189,9 +166,9 @@ function ProductCategoryDrawerForm(props) {
                                 <Box bg={'white'} className={'borderRadiusAll'} pt={'16'}>
                                     <_ShortcutMasterData
                                         adjustment={adjustment}
-                                        form={categoryForm}
+                                        form={categoryGroupForm}
                                         FormSubmit={saveId}
-                                        Name={'setting_type'}
+                                        Name={'category_group'}
                                         inputType="select"
                                     />
                                 </Box>
@@ -205,4 +182,4 @@ function ProductCategoryDrawerForm(props) {
     );
 }
 
-export default ProductCategoryDrawerForm;
+export default CategoryGroupDrawerForm;

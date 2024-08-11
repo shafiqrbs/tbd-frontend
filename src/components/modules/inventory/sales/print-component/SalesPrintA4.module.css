@@ -105,9 +105,12 @@
 }
 .footer-border-bottom{
     padding-bottom: 5px;
-    border-bottom: 1px solid #F1F3F5
-
-    ;
+    border-bottom: 1px solid #F1F3F5;
+}
+.footer-name-section{
+    display: flex;
+    text-align: left;
+    width: 200px;
 }
 .invoice-footer-text-two{
     font-weight: 300;

@@ -36,6 +36,7 @@ function CustomerTable() {
     const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword)
     const indexData = useSelector((state) => state.crudSlice.indexEntityData)
     const customerFilterData = useSelector((state) => state.crudSlice.customerFilterData)
+    const [customerObject, setCustomerObject] = useState({});
 
     const [viewDrawer, setViewDrawer] = useState(false)
 
@@ -112,7 +113,11 @@ function CustomerTable() {
                                             <Menu.Item
                                                 onClick={() => {
                                                     setViewDrawer(true)
-                                                    dispatch(editEntityData('core/customer/' + data.id))
+                                                    const coreCustomers = JSON.parse(localStorage.getItem('core-customers') || '[]');
+                                                    const foundCustomers = coreCustomers.find(type => type.id == data.id);
+                                                    if (foundCustomers) {
+                                                        setCustomerObject(foundCustomers);
+                                                    }
                                                 }}
                                                 target="_blank"
                                                 component="a"
@@ -172,7 +177,7 @@ function CustomerTable() {
             </Box>
             {
                 viewDrawer &&
-                <CustomerViewDrawer viewDrawer={viewDrawer} setViewDrawer={setViewDrawer} />
+                <CustomerViewDrawer viewDrawer={viewDrawer} setViewDrawer={setViewDrawer} customerObject={customerObject} />
             }
         </>
     );

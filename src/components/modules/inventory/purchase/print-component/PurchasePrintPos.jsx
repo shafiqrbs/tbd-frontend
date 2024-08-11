@@ -1,10 +1,10 @@
 import React, { useEffect, useRef } from 'react';
 import { useReactToPrint } from 'react-to-print';
-import classes from './SalesPrintPos.module.css'
+import classes from './PurchasePrintPos.module.css'
 import { useTranslation } from 'react-i18next';
 
-export function SalesPrintPos(props) {
-    const { salesViewData, setPrintPos } = props;
+export function PurchasePrintPos(props) {
+    const { purchaseViewData, setPrintPos } = props;
     const componentRef = useRef();
     const effectRan = useRef(false);
     const { t, i18n } = useTranslation();
@@ -64,20 +64,20 @@ export function SalesPrintPos(props) {
                     <h3 className={classes['main-title']}><span className={classes['main-title-span']}>{t('RetailInvoice')}</span></h3>
                     <div className={classes['main-invoice']}>
                         <div className={classes['invoice-details']}>
-                            <p className={`${classes['invoice-text']} ${classes['text-width']}`}>{t('Invoice')} :  {salesViewData && salesViewData.invoice && salesViewData.invoice}</p>
+                            <p className={`${classes['invoice-text']} ${classes['text-width']}`}>{t('Invoice')} :  {purchaseViewData && purchaseViewData.invoice && purchaseViewData.invoice}</p>
                             {/* <p className={`${classes['invoice-text']} ${classes['text-width']}`}>{t('PaymentMethod')} : {data2[0].payment_method}</p> */}
-                            <p className={`${classes['invoice-text']} ${classes['text-width']}`}>{t('CreatedBy')} : {salesViewData && salesViewData.createdByName && salesViewData.createdByName}</p>
+                            <p className={`${classes['invoice-text']} ${classes['text-width']}`}>{t('CreatedBy')} : {purchaseViewData && purchaseViewData.createdByName && purchaseViewData.createdByName}</p>
                         </div>
                         <div className={classes['invoice-details']}>
-                            <p className={classes['invoice-text']}>{t('Created')} : {salesViewData && salesViewData.created && salesViewData.created}</p>
+                            <p className={classes['invoice-text']}>{t('Created')} : {purchaseViewData && purchaseViewData.created && purchaseViewData.created}</p>
                         </div>
                     </div>
                     <h3 className={classes['main-title']}><span className={classes['main-title-span']}>{t('BillTo')}</span></h3>
                     <div className={classes['main-address']}>
-                        <p className={classes['invoice-text']}>{t('Customer')} : {salesViewData && salesViewData.customerName && salesViewData.customerName}</p>
-                        <p className={classes['invoice-text']}>{t('Mobile')} : {salesViewData && salesViewData.customerMobile && salesViewData.customerMobile}</p>
-                        <p className={classes['invoice-text']}>{t('Address')} : {salesViewData && salesViewData.customer_address && salesViewData.customer_address}</p>
-                        <p className={classes['invoice-text']}>{t('Balance')} : {salesViewData && salesViewData.balance ? Number(salesViewData.balance).toFixed(2) : 0.00}</p>
+                        <p className={classes['invoice-text']}>{t('Vendor')} : {purchaseViewData && purchaseViewData.customerName && purchaseViewData.customerName}</p>
+                        <p className={classes['invoice-text']}>{t('Mobile')} : {purchaseViewData && purchaseViewData.customerMobile && purchaseViewData.customerMobile}</p>
+                        <p className={classes['invoice-text']}>{t('Address')} : {purchaseViewData && purchaseViewData.customer_address && purchaseViewData.customer_address}</p>
+                        <p className={classes['invoice-text']}>{t('Balance')} : {purchaseViewData && purchaseViewData.balance ? Number(purchaseViewData.balance).toFixed(2) : 0.00}</p>
                     </div>
                     <h3 className={classes['main-title']}></h3>
                     <table style={{ width: '78mm' }}>
@@ -93,7 +93,7 @@ export function SalesPrintPos(props) {
 
                     <table style={{ width: '78mm' }}>
                         <tbody>
-                            {salesViewData && salesViewData.sales_items && salesViewData.sales_items.map((element, index) => (
+                            {purchaseViewData && purchaseViewData.purchase_items && purchaseViewData.purchase_items.map((element, index) => (
                                 <React.Fragment key={index}>
                                     <tr>
                                         <td className={`${classes['invoice-text']} ${classes['text-left']}`} style={{ width: '35mm' }}>
@@ -132,32 +132,32 @@ export function SalesPrintPos(props) {
                         <div className={`${classes['footer-items']} ${classes['margin-footer']}`}>
                             <p className={`${classes['footer-name']} ${classes['invoice-text']}`}>{t('SubTotal')}</p>
                             <p className={`${classes['footer-details']} ${classes['invoice-text']}`}>
-                                {salesViewData && salesViewData.sub_total && Number(salesViewData.sub_total).toFixed(2)}
+                                {purchaseViewData && purchaseViewData.sub_total && Number(purchaseViewData.sub_total).toFixed(2)}
                             </p>
                         </div>
                         <div className={classes['footer-items']}>
                             <p className={`${classes['footer-name']} ${classes['invoice-text']}`}>{t('Discount')}</p>
                             <p className={`${classes['footer-details']} ${classes['invoice-text']}`}>
-                                {salesViewData && salesViewData.discount && Number(salesViewData.discount).toFixed(2)}
+                                {purchaseViewData && purchaseViewData.discount && Number(purchaseViewData.discount).toFixed(2)}
                             </p>
                         </div>
                         <div className={classes['footer-items']}>
                             <p className={`${classes['footer-name']} ${classes['invoice-text']}`}>{t('Total')}</p>
                             <p className={`${classes['footer-details']} ${classes['invoice-text']}`}>
-                                {salesViewData && salesViewData.total && Number(salesViewData.total).toFixed(2)}
+                                {purchaseViewData && purchaseViewData.total && Number(purchaseViewData.total).toFixed(2)}
                             </p>
                         </div>
                         <h3 className={classes['table-title']}></h3>
                         <div className={classes['footer-items']}>
                             <p className={`${classes['footer-name']} ${classes['invoice-text']}`}>{t('Receive')}</p>
                             <p className={`${classes['footer-details']} ${classes['invoice-text']}`}>
-                                {salesViewData && salesViewData.payment && Number(salesViewData.payment).toFixed(2)}
+                                {purchaseViewData && purchaseViewData.payment && Number(purchaseViewData.payment).toFixed(2)}
                             </p>
                         </div>
                         <h3 className={classes['table-title']}></h3>
                         <div className={classes['footer-items']}>
                             <p className={`${classes['footer-name']} ${classes['invoice-text']}`}>{t('Due')}</p>
-                            <p className={`${classes['footer-details']} ${classes['invoice-text']}`}>{salesViewData && salesViewData.total && (Number(salesViewData.total) - Number(salesViewData.payment)).toFixed(2)}</p>
+                            <p className={`${classes['footer-details']} ${classes['invoice-text']}`}>{purchaseViewData && purchaseViewData.total && (Number(purchaseViewData.total) - Number(purchaseViewData.payment)).toFixed(2)}</p>
                         </div>
                         {/* <div className={`${classes['footer-items']} ${classes['margin-footer-botom']}`}>
                             <p className={`${classes['footer-name']} ${classes['invoice-text']}`}>Grand Total</p>

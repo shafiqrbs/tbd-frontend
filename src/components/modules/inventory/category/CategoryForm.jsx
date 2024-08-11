@@ -20,7 +20,8 @@ import Shortcut from "../../shortcut/Shortcut";
 import InputForm from "../../../form-builders/InputForm";
 import SelectForm from "../../../form-builders/SelectForm";
 import SwitchForm from "../../../form-builders/SwitchForm";
-import CategoryGroupModal from "./CategoryGroupModal.jsx";
+import CategoryGroupDrawer from "./CategoryGroupDrawer.jsx";
+// import CategoryGroupModal from "./CategoryGroupModal.jsx";
 
 
 function CategoryForm(props) {
@@ -29,9 +30,10 @@ function CategoryForm(props) {
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
     const height = mainAreaHeight - 100; //TabList height 104
-    const [opened, { open, close }] = useDisclosure(false);
     const [categoryGroupData, setCategoryGroupData] = useState(null);
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
+
+    const [groupDrawer, setGroupDrawer] = useState(false);
 
     const form = useForm({
         initialValues: {
@@ -44,7 +46,7 @@ function CategoryForm(props) {
     });
 
     useHotkeys([['alt+n', () => {
-        document.getElementById('category_group').click()
+        !groupDrawer && document.getElementById('category_group').click()
     }]], []);
 
     useHotkeys([['alt+r', () => {
@@ -52,7 +54,7 @@ function CategoryForm(props) {
     }]], []);
 
     useHotkeys([['alt+s', () => {
-        document.getElementById('CategoryFormSubmit').click()
+        !groupDrawer && document.getElementById('CategoryFormSubmit').click()
     }]], []);
 
 
@@ -162,15 +164,17 @@ function CategoryForm(props) {
                                                                 transitionProps={{ duration: 200 }}
                                                                 label={t('CreateCategoryGroup')}
                                                             >
-                                                                <ActionIcon fullWidth variant="outline" bg={'white'} size={'lg'} color="red.5" mt={'1'} aria-label="Settings" onClick={open}>
+                                                                <ActionIcon fullWidth variant="outline" bg={'white'} size={'lg'} color="red.5" mt={'1'} aria-label="Settings" onClick={() => {
+                                                                    setGroupDrawer(true)
+                                                                }}>
                                                                     <IconCategory style={{ width: '100%', height: '70%' }} stroke={1.5} />
                                                                 </ActionIcon>
                                                             </Tooltip>
                                                         </Box>
                                                     </Grid.Col>
-                                                    {opened &&
+                                                    {/* {opened &&
                                                         <CategoryGroupModal openedModel={opened} open={open} close={close} />
-                                                    }
+                                                    } */}
                                                 </Grid>
                                             </Box>
 
@@ -221,6 +225,7 @@ function CategoryForm(props) {
                         </Grid.Col>
                     </Grid>
                 </form>
+                {groupDrawer && <CategoryGroupDrawer saveId={'EntityDrawerSubmit'} groupDrawer={groupDrawer} setGroupDrawer={setGroupDrawer} />}
             </Box>
         </>
 

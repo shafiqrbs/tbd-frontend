@@ -22,8 +22,7 @@ import {
 } from "../../../../store/inventory/crudSlice.js";
 
 import Shortcut from "../../shortcut/Shortcut.jsx";
-import SelectForm from "../../../form-builders/SelectForm.jsx";
-import CategoryGroupModal from "./CategoryGroupModal.jsx";
+import SelectForm from "../../../form-builders/SelectForm.jsx"
 import SwitchForm from "../../../form-builders/SwitchForm.jsx";
 
 function CategoryUpdateForm(props) {
@@ -35,7 +34,6 @@ function CategoryUpdateForm(props) {
 
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
     const [setFormData, setFormDataForUpdate] = useState(false);
-    const [opened, { open, close }] = useDisclosure(false);
     const [categoryGroupData, setCategoryGroupData] = useState(null);
 
     const entityEditData = useSelector((state) => state.inventoryCrudSlice.entityEditData)
@@ -167,7 +165,7 @@ function CategoryUpdateForm(props) {
                                                 <LoadingOverlay visible={formLoad} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />
                                                 <Box>
                                                     <Grid gutter={{ base: 6 }}>
-                                                        <Grid.Col span={11} >
+                                                        <Grid.Col span={12} >
                                                             <Box mt={'8'}>
                                                                 <SelectForm
                                                                     tooltip={t('ChooseCategoryGroup')}
@@ -185,7 +183,7 @@ function CategoryUpdateForm(props) {
                                                                 />
                                                             </Box>
                                                         </Grid.Col>
-                                                        <Grid.Col span={1}>
+                                                        {/* <Grid.Col span={1}>
                                                             <Box pt={'xl'}>
                                                                 <Tooltip
                                                                     multiline
@@ -202,10 +200,8 @@ function CategoryUpdateForm(props) {
                                                                 </Tooltip>
                                                             </Box>
 
-                                                        </Grid.Col>
-                                                        {opened &&
-                                                            <CategoryGroupModal openedModel={opened} open={open} close={close} />
-                                                        }
+                                                        </Grid.Col> */}
+                                                        
                                                     </Grid>
                                                 </Box>
                                                 <Box mt={'xs'}>

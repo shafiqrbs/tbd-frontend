@@ -28,7 +28,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHotkeys } from "@mantine/hooks";
 import { getIndexEntityData, setFetching, setSalesFilterData } from "../../../../store/inventory/crudSlice.js";
 import __ShortcutTable from "../../shortcut/__ShortcutTable";
-import { ReactToPrint } from "react-to-print";
 import _SalesSearch from "./_SalesSearch.jsx";
 import { setSearchKeyword } from "../../../../store/core/crudSlice.js";
 import { SalesPrintA4 } from "./print-component/SalesPrintA4.jsx";
@@ -64,7 +63,6 @@ function _SalesTable() {
         }, 500);
     }, [loading]);
     const [salesViewData, setSalesViewData] = useState({})
-    console.log(salesViewData)
 
     useEffect(() => {
         setSalesViewData(indexData.data && indexData.data[0] && indexData.data[0])
@@ -510,8 +508,11 @@ function _SalesTable() {
                     </Grid.Col>
                 </Grid>
             </Box>
-            {printA4 && <SalesPrintA4 salesViewData={salesViewData} setPrintA4={setPrintA4} />}
-            {printPos && <SalesPrintPos salesViewData={salesViewData} setPrintPos={setPrintPos} />}
+            {printA4 && <div style={{ display: "none" }}>
+                <SalesPrintA4 salesViewData={salesViewData} setPrintA4={setPrintA4} /></div>}
+            {printPos && <div style={{ display: "none" }}>
+                <SalesPrintPos salesViewData={salesViewData} setPrintPos={setPrintPos} />
+            </div>}
         </>
     );
 }
