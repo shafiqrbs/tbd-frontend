@@ -508,8 +508,11 @@ function _SalesTable() {
                     </Grid.Col>
                 </Grid>
             </Box>
-            {printA4 && <SalesPrintA4 salesViewData={salesViewData} setPrintA4={setPrintA4} />}
-            {printPos && <SalesPrintPos salesViewData={salesViewData} setPrintPos={setPrintPos} />}
+            {printA4 && <div style={{ display: "none" }}>
+                <SalesPrintA4 salesViewData={salesViewData} setPrintA4={setPrintA4} /></div>}
+            {printPos && <div style={{ display: "none" }}>
+                <SalesPrintPos salesViewData={salesViewData} setPrintPos={setPrintPos} />
+            </div>}
         </>
     );
 }

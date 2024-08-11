@@ -493,8 +493,12 @@ function InvoiceBatchTable() {
             {batchViewModal && <InvoiceBatchModal batchViewModal={batchViewModal} setBatchViewModal={setBatchViewModal} invoiceId={invoiceBatchData.id} setAddTransactionDrawer={setAddTransactionDrawer} />}
             {addTransactionDrawer && <_AddTransaction invoiceBatchData={invoiceBatchData} addTransactionDrawer={addTransactionDrawer} setAddTransactionDrawer={setAddTransactionDrawer} />}
             {batchLedgerModal && <LegderModal batchLedgerModal={batchLedgerModal} setBatchLedgerModal={setBatchLedgerModal} />}
-            {printA4 && <InvoiceBatchPrintA4 invoiceBatchData={invoiceBatchData} setPrintA4={setPrintA4} />}
-            {printPos && <InvoiceBatchPrintPos invoiceBatchData={invoiceBatchData} setPrintPos={setPrintPos} />}
+            {printA4 && <div style={{ display: "none" }}>
+                <InvoiceBatchPrintA4 invoiceBatchData={invoiceBatchData} setPrintA4={setPrintA4} />
+            </div>}
+            {printPos && <div style={{ display: "none" }}>
+                <InvoiceBatchPrintPos invoiceBatchData={invoiceBatchData} setPrintPos={setPrintPos} />
+            </div>}
         </>
     );
 }

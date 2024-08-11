@@ -185,22 +185,6 @@ function _GenericInvoiceForm(props) {
         }
     });
 
-    const productAddedForm = useForm({
-        initialValues: {
-            name: '',
-            purchase_price: '',
-            sales_price: '',
-            unit_id: '',
-            category_id: '',
-            product_type_id: '',
-            product_name: '',
-            quantity: '',
-            status: 1
-        },
-        validate: {
-            name: isNotEmpty()
-        }
-    });
 
     /*START PRODUCT SELECTED BY PRODUCT ID*/
     const [selectProductDetails, setSelectProductDetails] = useState('')

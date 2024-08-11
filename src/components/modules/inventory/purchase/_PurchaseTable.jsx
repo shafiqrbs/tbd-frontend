@@ -413,8 +413,12 @@ function _PurchaseTable() {
                     </Grid.Col>
                 </Grid>
             </Box>
-            {printA4 && <PurchasePrintNormal setPrintA4={setPrintA4} purchaseViewData={purchaseViewData} />}
-            {printPos && <PurchasePrintPos purchaseViewData={purchaseViewData} setPrintPos={setPrintPos} />}
+            {printA4 && <div style={{ display: "none" }}>
+                <PurchasePrintNormal setPrintA4={setPrintA4} purchaseViewData={purchaseViewData} />
+            </div>}
+            {printPos && <div style={{ display: "none" }}>
+                <PurchasePrintPos purchaseViewData={purchaseViewData} setPrintPos={setPrintPos} />
+            </div>}
         </>
     );
 }
