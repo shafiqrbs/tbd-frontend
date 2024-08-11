@@ -1,9 +1,11 @@
 import React, { useEffect, useRef, } from "react";
-import { Box, Button, Grid, Table, Text } from "@mantine/core";
+import { Box, Button, Grid, Space, Center } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
 import { useSelector } from "react-redux";
 import { IconReceipt } from "@tabler/icons-react";
 import { ReactToPrint } from "react-to-print";
+import classes from './InvoiceDomain359Normal.module.css'
+import barCode from '../../../../../assets/images/frame.png';
 
 function InvoiceDomain359Normal(props) {
     let invoicePrintData;
@@ -27,6 +29,30 @@ function InvoiceDomain359Normal(props) {
     window.addEventListener('focus', () => {
         console.log('Print dialog closed');
     });
+    const data2 = [
+        {
+            company_name: "Right Brain Solution Ltd.",
+            email: 'info@lazycoders.com',
+            mobile: '+8801521334751',
+            order_id: '12345678914654',
+            payment_method: 'Cash',
+            name: 'Lan Lewis',
+            address: 'Rando, Avenel, Victoria - 123123, Australia',
+            customer_email: 'alanjohnlewis88@gmail.com',
+            customer_phone: '+880152134752',
+            sales_by: 'Foysal Mahmud Hasan',
+            total: '20001',
+            shipping_cost: '1000',
+            service_fee: '100',
+            total_tax: '1000',
+            coupon_discount: '2000',
+            grand_total: '20947298',
+            date: '15-07-2024',
+            time: '12:16 PM'
+
+        }
+    ]
+
 
 
 
@@ -224,7 +250,7 @@ function InvoiceDomain359Normal(props) {
                                                         {invoicePrintData && invoicePrintData.payment && Number(invoicePrintData.payment).toFixed(2)}
                                                     </p>
                                                     <p className={classes['invoice-footer-text-two']}>
-                                                        {salesViewData && salesViewData.total && (Number(salesViewData.total) - Number(salesViewData.payment)).toFixed(2)}
+                                                        {invoicePrintData && invoicePrintData.total && (Number(invoicePrintData.total) - Number(invoicePrintData.payment)).toFixed(2)}
                                                     </p>
                                                     {/* <p className={`${classes['invoice-footer-text-two']} ${classes['footer-border-bottom']}`}>{data2[0].coupon_discount}</p> */}
                                                 </div>

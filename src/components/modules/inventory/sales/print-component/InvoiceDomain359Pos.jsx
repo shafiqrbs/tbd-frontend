@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useSelector } from "react-redux";
 import { IconReceipt } from "@tabler/icons-react";
 import { ReactToPrint } from "react-to-print";
+import classes from './InvoiceDomain359Pos.module.css'
 
 function InvoiceDomain359Pos(props) {
     let invoicePrintData;
@@ -28,7 +29,29 @@ function InvoiceDomain359Pos(props) {
     window.addEventListener('focus', () => {
         console.log('Print dialog closed');
     });
+    const data2 = [
+        {
+            company_name: "Right Brain Solution Ltd.",
+            email: 'info@lazycoders.com',
+            mobile: '+8801521334751',
+            order_id: '12345678914654',
+            payment_method: 'Cash',
+            name: 'Lan Lewis',
+            address: 'Rando, Avenel, Victoria - 123123, Australia',
+            customer_email: 'alanjohnlewis88@gmail.com',
+            customer_phone: '+880152134752',
+            sales_by: 'Foysal Mahmud Hasan',
+            total: '20001',
+            shipping_cost: '1000',
+            service_fee: '100',
+            total_tax: '1000',
+            coupon_discount: '2000',
+            grand_total: '20947298',
+            date: '15-07-2024',
+            time: '12:16 PM'
 
+        }
+    ]
 
 
     return (
