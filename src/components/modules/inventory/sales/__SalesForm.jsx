@@ -377,7 +377,6 @@ function __SalesForm(props) {
                                                     label={t('InstantCustomerCreate')}
                                                 >
                                                     <ActionIcon
-                                                        fullWidth
                                                         variant="outline"
                                                         bg={'white'}
                                                         size={'lg'}
@@ -578,7 +577,6 @@ function __SalesForm(props) {
 
                                         <Grid.Col span={2}>
                                             <Switch
-                                                fullWidth
                                                 size="lg"
                                                 w={'100%'}
                                                 color={'red.3'}
@@ -621,7 +619,6 @@ function __SalesForm(props) {
                                         <Grid gutter={{ base: 2 }} mt={'xs'}>
                                             <Grid.Col span={4}>
                                                 <Button
-                                                    fullWidth
                                                     onClick={() => setDiscountType()}
                                                     variant="filled"
                                                     fz={'xs'}
@@ -716,10 +713,9 @@ function __SalesForm(props) {
 
                             </ScrollArea>
                             <Box>
-                                <Button.Group fullWidth>
+                                <Button.Group>
 
                                     <Button
-                                        fullWidth
                                         variant="filled"
                                         leftSection={<IconStackPush size={14} />}
                                         color="orange.5"
@@ -727,7 +723,6 @@ function __SalesForm(props) {
                                         {t('Hold')}
                                     </Button>
                                     <Button
-                                        fullWidth
                                         variant="filled"
                                         type={'submit'}
                                         onClick={handleClick}
@@ -743,7 +738,6 @@ function __SalesForm(props) {
                                         {t('Print')}
                                     </Button>
                                     <Button
-                                        fullWidth
                                         type={'submit'}
                                         onClick={handleClick}
                                         name="pos"
@@ -759,7 +753,6 @@ function __SalesForm(props) {
                                         {t('Pos')}
                                     </Button>
                                     <Button
-                                        fullWidth
                                         type={'submit'}
                                         onClick={handleClick}
                                         name="save"

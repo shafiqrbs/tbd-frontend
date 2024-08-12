@@ -57,6 +57,7 @@ function AddProductDrawerForm(props) {
             category_id: '',
             product_type_id: '',
             quantity: '',
+            status: true,
         },
         validate: {
             name: isNotEmpty(),

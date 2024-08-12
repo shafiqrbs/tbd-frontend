@@ -29,6 +29,7 @@ function InvoiceDomain359Pos(props) {
     window.addEventListener('focus', () => {
         console.log('Print dialog closed');
     });
+
     const data2 = [
         {
             company_name: "Right Brain Solution Ltd.",
@@ -188,7 +189,7 @@ function InvoiceDomain359Pos(props) {
                         >
                             <ReactToPrint
                                 trigger={() => {
-                                    return <a href="#" ref={printButtonRef}>{t('Pos')}</a>;
+                                    return <a href="" ref={printButtonRef}>{t('Pos')}</a>;
                                 }}
                                 content={() => printRef.current}
                             />

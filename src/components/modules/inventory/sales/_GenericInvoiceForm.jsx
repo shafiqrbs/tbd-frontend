@@ -21,7 +21,6 @@ import { DataTable } from "mantine-datatable";
 import _ShortcutInvoice from "../../shortcut/_ShortcutInvoice";
 import tableCss from "../../../../assets/css/Table.module.css";
 import productsDataStoreIntoLocalStorage from "../../../global-hook/local-storage/productsDataStoreIntoLocalStorage.js";
-import _addProduct from "../../popover-form/_addProduct.jsx";
 import AddProductDrawer from "./drawer-form/AddProductDrawer.jsx";
 
 function _GenericInvoiceForm(props) {
@@ -465,11 +464,6 @@ function _GenericInvoiceForm(props) {
                                             </Grid.Col>
 
                                             <Grid.Col span={1} bg={'white'}>
-                                                {/* <_addProduct
-                                                    setStockProductRestore={setStockProductRestore}
-                                                    focusField={'product_id'}
-                                                    fieldPrefix="sales_"
-                                                /> */}
                                                 <Tooltip
                                                     multiline
                                                     bg={'orange.8'}
@@ -796,7 +790,15 @@ function _GenericInvoiceForm(props) {
                     </Box>
                 </Grid.Col>
             </Grid>
-            {productDrawer && <AddProductDrawer productDrawer={productDrawer} setProductDrawer={setProductDrawer} setStockProductRestore={setStockProductRestore} focusField={'product_id'} fieldPrefix="sales_" />}
+            {productDrawer &&
+                <AddProductDrawer
+                    productDrawer={productDrawer}
+                    setProductDrawer={setProductDrawer}
+                    setStockProductRestore={setStockProductRestore}
+                    focusField={'product_id'}
+                    fieldPrefix="sales_"
+                />
+            }
         </Box>
     );
 }
