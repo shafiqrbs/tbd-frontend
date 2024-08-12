@@ -61,12 +61,10 @@ function CustomerForm(props) {
             name: hasLength({ min: 2, max: 20 }),
             mobile: (value) => {
                 if (!value) return t('MobileValidationRequired');
-                if (!/^\d{13}$/.test(value)) return t('MobileValidationDigitCount');
                 return null;
             },
             alternative_mobile: (value) => {
                 if (value && !value) return t('MobileValidationRequired');
-                if (value && !/^\d{13}$/.test(value)) return t('MobileValidationDigitCount');
                 return null;
             },
             email: (value) => {

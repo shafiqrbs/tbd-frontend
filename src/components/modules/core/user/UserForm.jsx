@@ -47,10 +47,16 @@ function UserForm() {
                 if (value.length < 2 || value.length > 20) return t('NameLengthMessage');
                 return null;
             },
-            email: isEmail(),
+            email: (value) => {
+                if (!value) return true;
+
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(value)) return t('EmailValidationInvalid');
+
+                return null;
+            },
             mobile: (value) => {
                 if (!value) return t('MobileValidationRequired');
-                if (!/^\d{13}$/.test(value)) return t('MobileValidationDigitCount');
                 return null;
             },
             password: (value) => {

@@ -42,7 +42,12 @@ function VendorForm(props) {
             name: hasLength({ min: 2, max: 20 }),
             mobile: (value) => {
                 if (!value) return t('MobileValidationRequired');
-                if (!/^\d{13}$/.test(value)) return t('MobileValidationDigitCount');
+                return null;
+            },
+            email: (value) => {
+                if (value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+                    return true;
+                }
                 return null;
             },
         }

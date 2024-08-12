@@ -54,7 +54,6 @@ function AddVendorDrawerForm(props) {
             name: hasLength({ min: 2, max: 20 }),
             mobile: (value) => {
                 if (!value) return t('MobileValidationRequired');
-                if (!/^\d{13}$/.test(value)) return t('MobileValidationDigitCount');
                 return null;
             },
         }
