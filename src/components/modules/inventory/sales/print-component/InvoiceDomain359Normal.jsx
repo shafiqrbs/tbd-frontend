@@ -269,7 +269,7 @@ function InvoiceDomain359Normal(props) {
                         >
                             <ReactToPrint
                                 trigger={() => {
-                                    return <a href="#" ref={printButtonRef}>{t('Pos')}</a>;  // Add ref to the <a> tag
+                                    return <a href="" ref={printButtonRef}>{t('Pos')}</a>;  // Add ref to the <a> tag
                                 }}
                                 content={() => printRef.current}
                             />

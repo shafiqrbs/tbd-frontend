@@ -24,6 +24,7 @@ import getSettingProductTypeDropdownData from "../../../global-hook/dropdown/get
 import getSettingProductUnitDropdownData from "../../../global-hook/dropdown/getSettingProductUnitDropdownData.js";
 import getSettingCategoryDropdownData from "../../../global-hook/dropdown/getSettingCategoryDropdownData.js";
 import ProductCategoryDrawer from "./ProductCategoryDrawer.jsx";
+import productsDataStoreIntoLocalStorage from "../../../global-hook/local-storage/productsDataStoreIntoLocalStorage.js";
 
 function ProductForm() {
     const { t, i18n } = useTranslation();
@@ -106,6 +107,7 @@ function ProductForm() {
                             style: { backgroundColor: 'lightgray' },
                         });
                         setTimeout(() => {
+                            productsDataStoreIntoLocalStorage()
                             form.reset()
                             setCategoryData(null)
                             setProductTypeData(null)
@@ -200,7 +202,7 @@ function ProductForm() {
                                                             transitionProps={{ duration: 200 }}
                                                             label={t('QuickCategory')}
                                                         >
-                                                            <ActionIcon fullWidth variant="outline" bg={'white'} size={'lg'} color="red.5" mt={'1'} aria-label="Settings" onClick={() => {
+                                                            <ActionIcon variant="outline" bg={'white'} size={'lg'} color="red.5" mt={'1'} aria-label="Settings" onClick={() => {
                                                                 setGroupDrawer(true)
                                                             }}>
                                                                 <IconCategoryPlus style={{ width: '100%', height: '70%' }} stroke={1.5} />

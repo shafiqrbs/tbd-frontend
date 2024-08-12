@@ -27,8 +27,6 @@ import { storeEntityData } from "../../../../store/inventory/crudSlice.js";
 import InputNumberForm from "../../../form-builders/InputNumberForm";
 import InputButtonForm from "../../../form-builders/InputButtonForm";
 import { notifications } from "@mantine/notifications";
-import _VendorViewModel from "../../core/vendor/_VendorViewModel.jsx";
-import _addVendor from "../../popover-form/_addVendor.jsx";
 import vendorDataStoreIntoLocalStorage from "../../../global-hook/local-storage/vendorDataStoreIntoLocalStorage.js";
 import DatePickerForm from "../../../form-builders/DatePicker.jsx";
 import AddVendorDrawer from "../sales/drawer-form/AddVendorDrawer.jsx";
@@ -303,11 +301,6 @@ function __PurchaseForm(props) {
                                                     </ActionIcon>
                                                 </Tooltip>
                                             </Box>
-                                            {/* <_addVendor
-                                                setRefreshVendorDropdown={setRefreshVendorDropdown}
-                                                focusField={'purchase_vendor_id'}
-                                                fieldPrefix="purchase_"
-                                            /> */}
                                         </Grid.Col>
                                     </Grid>
                                 </Box>
@@ -589,8 +582,15 @@ function __PurchaseForm(props) {
                     </Grid>
                 </Box>
             </form>
-            {vendorDrawer && <AddVendorDrawer setRefreshVendorDropdown={setRefreshVendorDropdown} focusField={'purchase_vendor_id'} fieldPrefix="purchase_"
-                vendorDrawer={vendorDrawer} setVendorDrawer={setVendorDrawer} />}
+            {vendorDrawer &&
+                <AddVendorDrawer
+                    setRefreshVendorDropdown={setRefreshVendorDropdown}
+                    focusField={'purchase_vendor_id'}
+                    fieldPrefix="purchase_"
+                    vendorDrawer={vendorDrawer}
+                    setVendorDrawer={setVendorDrawer}
+                />
+            }
 
             {viewDrawer && vendorData &&
                 <VendorViewDrawer

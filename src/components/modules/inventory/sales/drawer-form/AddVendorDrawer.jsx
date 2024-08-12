@@ -12,8 +12,6 @@ import {
 import AddVendorDrawerForm from "./AddVendorDrawerForm";
 
 function AddVendorDrawer(props) {
-    // const configData = localStorage.getItem('config-data');
-
     const { vendorDrawer, setRefreshVendorDropdown, focusField, fieldPrefix, setVendorDrawer } = props
     const { isOnline, mainAreaHeight } = useOutletContext();
     const { t, i18n } = useTranslation();
@@ -42,7 +40,12 @@ function AddVendorDrawer(props) {
                             </ActionIcon>
                         </Drawer.Header>
                         <Box ml={2} mr={2} mb={0}>
-                            <AddVendorDrawerForm setRefreshVendorDropdown={setRefreshVendorDropdown} focusField={focusField} fieldPrefix={fieldPrefix} setVendorDrawer={setVendorDrawer} />
+                            <AddVendorDrawerForm
+                                setRefreshVendorDropdown={setRefreshVendorDropdown}
+                                focusField={focusField}
+                                fieldPrefix={fieldPrefix}
+                                setVendorDrawer={setVendorDrawer}
+                            />
                         </Box>
                     </ScrollArea>
                 </Drawer.Content>
