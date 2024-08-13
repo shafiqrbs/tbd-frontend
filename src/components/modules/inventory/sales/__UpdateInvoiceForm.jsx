@@ -70,7 +70,7 @@ function __UpdateInvoiceForm(props) {
     const [customerData, setCustomerData] = useState(entityEditData?.customer_id.toString());
     const [salesByUser, setSalesByUser] = useState(entityEditData?.sales_by_id ? entityEditData?.sales_by_id.toString() : null);
     const [orderProcess, setOrderProcess] = useState(entityEditData?.process_id ? entityEditData?.process_id.toString() : null);
-    const [customerDrawer, setCustomerDrawer] = useState(false)
+    // const [customerDrawer, setCustomerDrawer] = useState(false)
 
     const form = useForm({
         initialValues: {
@@ -325,7 +325,7 @@ function __UpdateInvoiceForm(props) {
                             <Box>
                                 <Box pl={'xs'} pr={'xs'} pb={'xs'} className={'boxBackground'}>
                                     <Grid gutter={{ base: 6 }} pt={'3'} pb={'2'} >
-                                        <Grid.Col span={11}>
+                                        <Grid.Col span={12}>
                                             <Box pt={'6'}>
                                                 <SelectForm
                                                     tooltip={t('CustomerValidateMessage')}
@@ -344,7 +344,7 @@ function __UpdateInvoiceForm(props) {
                                                 />
                                             </Box>
                                         </Grid.Col>
-                                        <Grid.Col span={1}>
+                                        {/* <Grid.Col span={1}>
                                             <Box pt={'8'}>
                                                 <Tooltip
                                                     multiline
@@ -368,7 +368,7 @@ function __UpdateInvoiceForm(props) {
                                                     </ActionIcon>
                                                 </Tooltip>
                                             </Box>
-                                        </Grid.Col>
+                                        </Grid.Col> */}
                                     </Grid>
                                 </Box>
                                 <Box>
@@ -498,13 +498,11 @@ function __UpdateInvoiceForm(props) {
                             </Box>
                             <ScrollArea h={formHeight} scrollbarSize={2} type="never" bg={'gray.1'}>
                                 <Box pl={'xs'} pt={'xs'} pr={'xs'} bg={`white`}>
-
                                     <Grid columns={'16'} gutter="6">
-
                                         {
                                             (transactionModeData && transactionModeData.length > 0) && transactionModeData.map((mode, index) => {
                                                 return (
-                                                    <Grid.Col span={4}>
+                                                    <Grid.Col span={4} key={index}>
                                                         <Box bg={'gray.1'} h={'82'}>
                                                             <input
                                                                 type="radio"
@@ -680,7 +678,6 @@ function __UpdateInvoiceForm(props) {
                             </ScrollArea>
                             <Box>
                                 <Button.Group fullWidth>
-
                                     <Button
                                         fullWidth
                                         variant="filled"
@@ -703,7 +700,7 @@ function __UpdateInvoiceForm(props) {
                                             backgroundColor: isDisabled ? "#f1f3f500" : ""
                                         }}
                                     >
-                                        Print
+                                        {t('Print')}
                                     </Button>
                                     <Button
                                         fullWidth
@@ -719,7 +716,7 @@ function __UpdateInvoiceForm(props) {
                                             backgroundColor: isDisabled ? "#f1f3f500" : ""
                                         }}
                                     >
-                                        Pos
+                                        {t('Pos')}
                                     </Button>
                                     <Button
                                         fullWidth
@@ -735,7 +732,7 @@ function __UpdateInvoiceForm(props) {
                                             backgroundColor: isDisabled ? "#f1f3f500" : ""
                                         }}
                                     >
-                                        Save
+                                        {t('Save')}
                                     </Button>
                                 </Button.Group>
                             </Box>
@@ -743,14 +740,14 @@ function __UpdateInvoiceForm(props) {
                     </Grid>
                 </Box>
             </form>
-            {customerDrawer &&
+            {/* {customerDrawer &&
                 <AddCustomerDrawer
                     setRefreshCustomerDropdown={setRefreshCustomerDropdown}
                     focusField={'customer_id'}
                     fieldPrefix="sales_"
                     customerDrawer={customerDrawer}
                     setCustomerDrawer={setCustomerDrawer}
-                />}
+                />} */}
             {isShowSMSPackageModel &&
                 <_SmsPurchaseModel
                     isShowSMSPackageModel={isShowSMSPackageModel}
