@@ -508,11 +508,13 @@ function _GenericInvoiceForm(props) {
                                         accessor: 'index',
                                         title: t('S/N'),
                                         textAlignment: 'right',
+                                        width: '50px',
                                         render: (item) => (tempCardProducts.indexOf(item) + 1)
                                     },
                                     {
                                         accessor: 'display_name',
                                         title: t("Name"),
+                                        width: '200px',
                                         footer: (
                                             <Group spacing="xs">
                                                 <IconSum size="1.25em" />

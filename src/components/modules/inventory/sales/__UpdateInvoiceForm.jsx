@@ -62,7 +62,7 @@ function __UpdateInvoiceForm(props) {
     const [hoveredModeId, setHoveredModeId] = useState(false);
     const [isShowSMSPackageModel, setIsShowSMSPackageModel] = useState(false)
 
-    const formHeight = mainAreaHeight - 268;
+    const formHeight = mainAreaHeight - 262;
     const [customerViewModel, setCustomerViewModel] = useState(false);
     const [discountType, setDiscountType] = useState(entityEditData.discount_type);
     const [invoicePrintData, setInvoicePrintData] = useState(null)
@@ -319,14 +319,14 @@ function __UpdateInvoiceForm(props) {
                 }
 
             })}>
-                <Box>
+                <Box mb={'xs'}>
                     <Grid columns={48}>
                         <Box className={'borderRadiusAll'} >
                             <Box>
                                 <Box pl={'xs'} pr={'xs'} pb={'xs'} className={'boxBackground'}>
                                     <Grid gutter={{ base: 6 }} pt={'3'} pb={'2'} >
                                         <Grid.Col span={12}>
-                                            <Box pt={'6'}>
+                                            <Box pt={'6'} pb={1}>
                                                 <SelectForm
                                                     tooltip={t('CustomerValidateMessage')}
                                                     label=''
@@ -552,7 +552,6 @@ function __UpdateInvoiceForm(props) {
                                     <Grid gutter={{ base: 2 }}>
                                         <Grid.Col span={2}>
                                             <Switch
-                                                fullWidth
                                                 size="lg"
                                                 w={'100%'}
                                                 color={'red.3'}
@@ -574,7 +573,7 @@ function __UpdateInvoiceForm(props) {
                                             </Box>
                                         </Grid.Col>
                                     </Grid>
-                                    <Box mt={'xs'} h={1} bg={`red.3`}></Box>
+                                    <Box mt={11} h={1} bg={`red.3`}></Box>
 
                                     <Tooltip label={t('MustBeNeedReceiveAmountWithoutCustomer')} opened={isDisabled} position="bottom-end" withArrow>
                                         <Grid gutter={{ base: 2 }} mt={'xs'}>

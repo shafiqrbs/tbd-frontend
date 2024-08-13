@@ -141,7 +141,7 @@ function InvoiceDomain359Normal(props) {
                                                 <Grid.Col span={'6'} align={'right'} fw={'300'} fz={'14'}>{t('Created')}</Grid.Col>
                                                 <Grid.Col span={'1'} align={'right'} fw={'300'} fz={'14'}>:</Grid.Col>
                                                 <Grid.Col span={'5'} align={'left'} fw={'300'} fz={'14'}>
-                                                    {invoicePrintData && invoicePrintData.created_date && invoicePrintData.created_date}
+                                                    {invoicePrintData && invoicePrintData.created && invoicePrintData.created}
                                                 </Grid.Col>
                                             </Grid>
                                             <Grid columns={12} pr={'sm'}>
@@ -169,7 +169,7 @@ function InvoiceDomain359Normal(props) {
                                                 <Grid.Col span={'6'} align={'right'} fw={'300'} fz={'14'}>{t('Process')}</Grid.Col>
                                                 <Grid.Col span={'1'} align={'right'} fw={'300'} fz={'14'}>:</Grid.Col>
                                                 <Grid.Col span={'5'} align={'left'} fw={'300'} fz={'14'}>
-                                                    {invoicePrintData && invoicePrintData.process_name && invoicePrintData.process_name}
+                                                    {invoicePrintData && invoicePrintData.process_id && invoicePrintData.process_id}
                                                 </Grid.Col>
                                             </Grid>
                                         </Box>
@@ -228,8 +228,8 @@ function InvoiceDomain359Normal(props) {
                                                     <th className={`${classes['invoice-body-table-th']} ${classes['text-Center']}`}>{t('S/N')}</th>
                                                     <th className={`${classes['invoice-body-table-th']} ${classes['text-left']}`}>{t('Name')}</th>
                                                     <th className={classes['invoice-body-table-th']}>{t('QTY')}</th>
-                                                    <th className={`${classes['invoice-body-table-th']} ${classes['text-right']}`}>{t('Price')}</th>
-                                                    <th className={classes['invoice-body-table-th']}>{t('SalesPrice')}</th>
+                                                    <th className={`${classes['invoice-body-table-th']} ${classes['text-center']}`}>{t('Unit')}</th>
+                                                    <th className={classes['invoice-body-table-th']}>{t('Price')}</th>
                                                     <th className={`${classes['invoice-body-table-th']} ${classes['text-right']}`}>{t('SubTotal')}</th>
                                                 </tr>
                                             </thead>
@@ -249,7 +249,7 @@ function InvoiceDomain359Normal(props) {
                                                                 )}
                                                             </td>
                                                             <td className={`${classes['invoice-body-table-td']} ${classes['text-center']}`}>{element.quantity}</td>
-                                                            <td className={`${classes['invoice-body-table-td']} ${classes['text-right']}`}>{element.price}</td>
+                                                            <td className={`${classes['invoice-body-table-td']} ${classes['text-center']}`}>{element.uom}</td>
                                                             <td className={`${classes['invoice-body-table-td']} ${classes['text-center']}`}>{element.sales_price}</td>
                                                             <td className={`${classes['invoice-body-table-td']} ${classes['text-right']}`}>{element.sub_total}</td>
                                                         </tr>

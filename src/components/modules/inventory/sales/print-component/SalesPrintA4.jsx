@@ -177,9 +177,9 @@ export function SalesPrintA4(props) {
                                     <th className={`${classes['invoice-body-table-th']} ${classes['text-Center']}`}>{t('S/N')}</th>
                                     <th className={`${classes['invoice-body-table-th']} ${classes['text-left']}`}>{t('Name')}</th>
                                     <th className={classes['invoice-body-table-th']}>{t('QTY')}</th>
-                                    <th className={`${classes['invoice-body-table-th']} ${classes['text-right']}`}>{t('Price')}</th>
-                                    <th className={classes['invoice-body-table-th']}>{t('SalesPrice')}</th>
-                                    <th className={`${classes['invoice-body-table-th']} ${classes['text-right']}`}>{t('SubTotal')}</th>
+                                    <th className={`${classes['invoice-body-table-th']} ${classes['text-right']}`}>{t('Unit')}</th>
+                                    <th className={classes['invoice-body-table-th']}>{t('Price')}</th>
+                                    <th className={`${classes['invoice-body-table-th']} ${classes['text-right']}`}>{t('Total')}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -189,7 +189,7 @@ export function SalesPrintA4(props) {
                                         <tr className={classes['invoice-body-table-tr']}>
                                             <td className={`${classes['invoice-body-table-td']} ${classes['text-center']}`}>{index + 1}</td>
                                             <td className={classes['invoice-body-table-td']}>
-                                                {element.item_name}
+                                                {element.name}
                                                 {element.sku && (
                                                     <>
                                                         <br />
@@ -198,7 +198,7 @@ export function SalesPrintA4(props) {
                                                 )}
                                             </td>
                                             <td className={`${classes['invoice-body-table-td']} ${classes['text-center']}`}>{element.quantity}</td>
-                                            <td className={`${classes['invoice-body-table-td']} ${classes['text-right']}`}>{element.price}</td>
+                                            <td className={`${classes['invoice-body-table-td']} ${classes['text-right']}`}>{element.uom}</td>
                                             <td className={`${classes['invoice-body-table-td']} ${classes['text-center']}`}>{element.sales_price}</td>
                                             <td className={`${classes['invoice-body-table-td']} ${classes['text-right']}`}>{element.sub_total}</td>
                                         </tr>

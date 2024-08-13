@@ -27,7 +27,7 @@ function _UpdateInvoice(props) {
     const { currencySymbol, allowZeroPercentage, domainId, isSMSActive, isZeroReceiveAllow, focusFrom, entityEditData } = props
     const { t, i18n } = useTranslation();
     const { isOnline, mainAreaHeight } = useOutletContext();
-    const height = mainAreaHeight - 176; //TabList height 104
+    const height = mainAreaHeight - 170; //TabList height 104
     const [fetching, setFetching] = useState(false);
 
     const [searchValue, setSearchValue] = useState('');
@@ -330,7 +330,7 @@ function _UpdateInvoice(props) {
                                 }
 
                             })}>
-                                <Box pl={`xs`} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'}>
+                                <Box pl={`xs`} pr={8} pt={'xs'} mb={'xs'} pb={'1'} className={'boxBackground borderRadiusAll'}>
                                     <Grid columns={24} gutter={{ base: 6 }}>
                                         <Grid.Col span={4}>
                                             <InputNumberForm
@@ -457,9 +457,7 @@ function _UpdateInvoice(props) {
                                                         id="EntityFormSubmit"
                                                         leftSection={<IconDeviceFloppy size={14} />}
                                                     >
-                                                        <Flex direction={`column`} gap={0}>
-                                                            {t("Add")}
-                                                        </Flex>
+                                                        {t("Add")}
                                                     </Button>
                                                 </>
                                             </Grid.Col>
@@ -509,11 +507,13 @@ function _UpdateInvoice(props) {
                                         accessor: 'index',
                                         title: t('S/N'),
                                         textAlignment: 'right',
+                                        width: '50px',
                                         render: (item) => (tempCardProducts.indexOf(item) + 1)
                                     },
                                     {
                                         accessor: 'item_name',
                                         title: t("Name"),
+                                        width: '200px',
                                         footer: (
                                             <Group spacing="xs">
                                                 <IconSum size="1.25em" />

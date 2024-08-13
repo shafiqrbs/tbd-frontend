@@ -409,7 +409,7 @@ function _SalesTable() {
                                         </Grid.Col>
                                     </Grid>
                                 </Box>
-                                <ScrollArea h={height} scrollbarSize={2} type="never" >
+                                <ScrollArea h={height - 18} scrollbarSize={2} type="never" >
                                     <Box>
                                         <Table stickyHeader >
                                             <Table.Thead>

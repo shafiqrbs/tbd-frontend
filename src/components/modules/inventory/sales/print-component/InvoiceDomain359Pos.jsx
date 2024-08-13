@@ -113,12 +113,10 @@ function InvoiceDomain359Pos(props) {
                                     <div className={classes['main-invoice']}>
                                         <div className={classes['invoice-details']}>
                                             <p className={`${classes['invoice-text']} ${classes['text-width']}`}>{t('Invoice')} :  {invoicePrintData && invoicePrintData.invoice && invoicePrintData.invoice}</p>
+                                            <p className={classes['invoice-text']}>{t('Created')} : {invoicePrintData && invoicePrintData.created && invoicePrintData.created}</p>
                                             <p className={`${classes['invoice-text']} ${classes['text-width']}`}>{t('CreatedBy')} : {invoicePrintData && invoicePrintData.created_by_user_name && invoicePrintData.created_by_user_name}</p>
                                             <p className={`${classes['invoice-text']} ${classes['text-width']}`}>{t('SalesBy')} : {invoicePrintData && invoicePrintData.sales_by_username && invoicePrintData.sales_by_username}</p>
-                                            <p className={`${classes['invoice-text']} ${classes['text-width']}`}>{t('Mode')} : {invoicePrintData && invoicePrintData.mode_name && invoicePrintData.mode_name}</p><p className={`${classes['invoice-text']} ${classes['text-width']}`}>{t('Process')} : {invoicePrintData && invoicePrintData.process_name && invoicePrintData.process_name}</p>
-                                        </div>
-                                        <div className={classes['invoice-details']}>
-                                            <p className={classes['invoice-text']}>{t('Created')} : {invoicePrintData && invoicePrintData.created_date && invoicePrintData.created_date}</p>
+                                            <p className={`${classes['invoice-text']} ${classes['text-width']}`}>{t('Mode')} : {invoicePrintData && invoicePrintData.mode_name && invoicePrintData.mode_name}</p><p className={`${classes['invoice-text']} ${classes['text-width']}`}>{t('Process')} : {invoicePrintData && invoicePrintData.process_id && invoicePrintData.process_id}</p>
                                         </div>
                                     </div>
                                     <h3 className={classes['main-title']}><span className={classes['main-title-span']}>{t('BillTo')}</span></h3>
@@ -131,11 +129,11 @@ function InvoiceDomain359Pos(props) {
                                     <h3 className={classes['main-title']}></h3>
                                     <table style={{ width: '78mm' }}>
                                         <tr>
-                                            <th className={`${classes['invoice-text']} ${classes['text-left']}`} style={{ width: '35mm' }}>{t('Name')}</th>
-                                            <th className={`${classes['invoice-text']} ${classes['text-left']}`} style={{ width: '5mm' }}>{t('QTY')}</th>
-                                            <th className={`${classes['invoice-text']} ${classes['text-center']}`} style={{ width: '10mm' }}>{t('Price')}</th>
-                                            <th className={`${classes['invoice-text']} ${classes['text-right']}`} style={{ width: '10mm' }}>{t('SalesPrice')}</th>
-                                            <th className={`${classes['invoice-text']} ${classes['text-right']}`} style={{ width: '20mm' }}>{t('SubTotal')}</th>
+                                            <th className={`${classes['invoice-text']} ${classes['text-left']}`} style={{ width: '30mm' }}>{t('Name')}</th>
+                                            <th className={`${classes['invoice-text']} ${classes['text-left']}`} style={{ width: '6mm' }}>{t('QTY')}</th>
+                                            <th className={`${classes['invoice-text']} ${classes['text-center']}`} style={{ width: '6mm' }}>{t('Unit')}</th>
+                                            <th className={`${classes['invoice-text']} ${classes['text-right']}`} style={{ width: '16mm' }}>{t('Price')}</th>
+                                            <th className={`${classes['invoice-text']} ${classes['text-right']}`} style={{ width: '22mm' }}>{t('Total')}</th>
                                         </tr>
                                     </table>
                                     <h3 className={classes['table-title']}></h3>
@@ -145,7 +143,7 @@ function InvoiceDomain359Pos(props) {
                                             {invoicePrintData && invoicePrintData.sales_items && invoicePrintData.sales_items.map((element, index) => (
                                                 <React.Fragment key={index}>
                                                     <tr>
-                                                        <td className={`${classes['invoice-text']} ${classes['text-left']}`} style={{ width: '35mm' }}>
+                                                        <td className={`${classes['invoice-text']} ${classes['text-left']}`} style={{ width: '30mm' }}>
                                                             {element.item_name}
                                                             {/* {element.sku && (
                                                 <>
@@ -154,16 +152,16 @@ function InvoiceDomain359Pos(props) {
                                                 </>
                                             )} */}
                                                         </td>
-                                                        <td className={`${classes['invoice-text']} ${classes['text-left']}`} style={{ width: '5mm' }}>
+                                                        <td className={`${classes['invoice-text']} ${classes['text-left']}`} style={{ width: '6mm' }}>
                                                             {element.quantity}
                                                         </td>
-                                                        <td className={`${classes['invoice-text']} ${classes['text-center']}`} style={{ width: '10mm' }}>
-                                                            {element.price}
+                                                        <td className={`${classes['invoice-text']} ${classes['text-center']}`} style={{ width: '6mm' }}>
+                                                            {element.uom}
                                                         </td>
-                                                        <td className={`${classes['invoice-text']} ${classes['text-right']}`} style={{ width: '10mm' }}>
+                                                        <td className={`${classes['invoice-text']} ${classes['text-right']}`} style={{ width: '16mm' }}>
                                                             {element.sales_price}
                                                         </td>
-                                                        <td className={`${classes['invoice-text']} ${classes['text-right']}`} style={{ width: '20mm' }}>
+                                                        <td className={`${classes['invoice-text']} ${classes['text-right']}`} style={{ width: '22mm' }}>
                                                             {element.sub_total}
                                                         </td>
                                                     </tr>
