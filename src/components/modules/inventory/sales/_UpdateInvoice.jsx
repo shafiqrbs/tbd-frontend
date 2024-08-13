@@ -2,15 +2,16 @@ import React, { useEffect, useState, useRef } from "react";
 import { useOutletContext } from "react-router-dom";
 import {
     Button, Flex, ActionIcon, TextInput,
-    Grid, Box, Group, Text
+    Grid, Box, Group, Text,
+    Tooltip
 } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
 import {
-    IconDeviceFloppy, IconPercentage,IconSum, IconCurrency, IconX, IconBarcode, IconCoinMonero, IconSortAscendingNumbers, IconPlusMinus
+    IconDeviceFloppy, IconPercentage, IconSum, IconCurrency, IconX, IconBarcode, IconCoinMonero, IconSortAscendingNumbers, IconPlusMinus, IconPlus
 } from "@tabler/icons-react";
 import { getHotkeyHandler, useHotkeys } from "@mantine/hooks";
 import { useForm } from "@mantine/form";
-import {notifications, showNotification} from "@mantine/notifications";
+import { notifications, showNotification } from "@mantine/notifications";
 import SelectServerSideForm from "../../../form-builders/SelectServerSideForm.jsx";
 import InputButtonForm from "../../../form-builders/InputButtonForm";
 import InputNumberForm from "../../../form-builders/InputNumberForm";
@@ -20,9 +21,10 @@ import tableCss from "../../../../assets/css/Table.module.css";
 import productsDataStoreIntoLocalStorage from "../../../global-hook/local-storage/productsDataStoreIntoLocalStorage.js";
 import _addProduct from "../../popover-form/_addProduct.jsx";
 import __UpdateInvoiceForm from "./__UpdateInvoiceForm.jsx";
+import AddProductDrawer from "./drawer-form/AddProductDrawer.jsx";
 
 function _UpdateInvoice(props) {
-    const { currencySymbol, allowZeroPercentage, domainId, isSMSActive, isZeroReceiveAllow, focusFrom,entityEditData } = props
+    const { currencySymbol, allowZeroPercentage, domainId, isSMSActive, isZeroReceiveAllow, focusFrom, entityEditData } = props
     const { t, i18n } = useTranslation();
     const { isOnline, mainAreaHeight } = useOutletContext();
     const height = mainAreaHeight - 176; //TabList height 104
@@ -33,8 +35,9 @@ function _UpdateInvoice(props) {
 
     const [tempCardProducts, setTempCardProducts] = useState([])
     const [loadCardProducts, setLoadCardProducts] = useState(false)
+    const [productDrawer, setProductDrawer] = useState(false)
 
-    console.log(tempCardProducts)
+    // console.log(tempCardProducts)
 
     let salesSubTotalAmount = tempCardProducts?.reduce((total, item) => total + item.sub_total, 0) || 0;
     let totalPurchaseAmount = tempCardProducts?.reduce((total, item) => total + (item.purchase_price * item.quantity), 0) || 0;
@@ -92,7 +95,7 @@ function _UpdateInvoice(props) {
             }
             return acc;
         }, [])];
-        updateLocalStorageAndResetForm(addProducts,'product');
+        updateLocalStorageAndResetForm(addProducts, 'product');
     }
 
     function handleAddProductByBarcode(values, myCardProducts, localProducts) {
@@ -106,7 +109,7 @@ function _UpdateInvoice(props) {
                 return acc;
             }, myCardProducts);
 
-            updateLocalStorageAndResetForm(addProducts,'barcode');
+            updateLocalStorageAndResetForm(addProducts, 'barcode');
         } else {
             notifications.show({
                 loading: true,
@@ -119,7 +122,7 @@ function _UpdateInvoice(props) {
         }
     }
 
-    function updateLocalStorageAndResetForm(addProducts,type) {
+    function updateLocalStorageAndResetForm(addProducts, type) {
         setTempCardProducts(addProducts);
         setSearchValue('');
         form.reset();
@@ -464,11 +467,28 @@ function _UpdateInvoice(props) {
                                             </Grid.Col>
 
                                             <Grid.Col span={1} bg={'white'}>
-                                                <_addProduct
-                                                    setStockProductRestore={setStockProductRestore}
-                                                    focusField={'product_id'}
-                                                    fieldPrefix="sales_"
-                                                />
+                                                <Tooltip
+                                                    multiline
+                                                    bg={'orange.8'}
+                                                    position="top"
+                                                    withArrow
+                                                    ta={'center'}
+                                                    offset={{ crossAxis: '-50', mainAxis: '5' }}
+                                                    transitionProps={{ duration: 200 }}
+                                                    label={t('InstantProductCreate')}
+                                                >
+                                                    <ActionIcon
+                                                        variant="outline"
+                                                        size={'lg'}
+                                                        color="red.5"
+                                                        mt={'1'}
+                                                        aria-label="Settings"
+                                                        onClick={() => setProductDrawer(true)}
+                                                    >
+                                                        <IconPlus style={{ width: '100%', height: '70%' }}
+                                                            stroke={1.5} />
+                                                    </ActionIcon>
+                                                </Tooltip>
                                             </Grid.Col>
                                         </Grid>
                                     </Box>
@@ -756,6 +776,15 @@ function _UpdateInvoice(props) {
                     </Box>
                 </Grid.Col>
             </Grid>
+            {productDrawer &&
+                <AddProductDrawer
+                    productDrawer={productDrawer}
+                    setProductDrawer={setProductDrawer}
+                    setStockProductRestore={setStockProductRestore}
+                    focusField={'product_id'}
+                    fieldPrefix="sales_"
+                />
+            }
         </Box>
     );
 }

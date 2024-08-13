@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {useNavigate, useOutletContext, useParams} from "react-router-dom";
+import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 import {
     Button, rem, Center, Switch, ActionIcon,
     Grid, Box, ScrollArea, Tooltip, Group, Text
@@ -12,12 +12,12 @@ import {
     IconReceipt,
     IconPercentage,
     IconCurrencyTaka,
-    IconMessage,
+    IconMessage, IconUserPlus,
     IconEyeEdit, IconDiscountOff, IconCurrency, IconPlusMinus, IconCheck, IconTallymark1,
 
 } from "@tabler/icons-react";
 import { useHotkeys } from "@mantine/hooks";
-import {useDispatch, useSelector} from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { isNotEmpty, useForm } from "@mantine/form";
 
 import SelectForm from "../../../form-builders/SelectForm";
@@ -35,10 +35,11 @@ import _CustomerViewModel from "./modal/_CustomerViewModel.jsx";
 import customerDataStoreIntoLocalStorage from "../../../global-hook/local-storage/customerDataStoreIntoLocalStorage.js";
 import _addCustomer from "../../popover-form/_addCustomer.jsx";
 import _InvoiceDrawerForPrint from "./print-drawer/_InvoiceDrawerForPrint.jsx";
+import AddCustomerDrawer from "./drawer-form/AddCustomerDrawer.jsx";
 
 function __UpdateInvoiceForm(props) {
     let { id } = useParams();
-    const { currencySymbol, domainId, isSMSActive, isZeroReceiveAllow,entityEditData,tempCardProducts } = props
+    const { currencySymbol, domainId, isSMSActive, isZeroReceiveAllow, entityEditData, tempCardProducts } = props
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const navigate = useNavigate()
@@ -67,8 +68,9 @@ function __UpdateInvoiceForm(props) {
     const [invoicePrintData, setInvoicePrintData] = useState(null)
     const [invoicePrintForSave, setInvoicePrintForSave] = useState(false)
     const [customerData, setCustomerData] = useState(entityEditData?.customer_id.toString());
-    const [salesByUser, setSalesByUser] = useState(entityEditData?.sales_by_id?entityEditData?.sales_by_id.toString():null);
-    const [orderProcess, setOrderProcess] = useState(entityEditData?.process_id?entityEditData?.process_id.toString():null);
+    const [salesByUser, setSalesByUser] = useState(entityEditData?.sales_by_id ? entityEditData?.sales_by_id.toString() : null);
+    const [orderProcess, setOrderProcess] = useState(entityEditData?.process_id ? entityEditData?.process_id.toString() : null);
+    const [customerDrawer, setCustomerDrawer] = useState(false)
 
     const form = useForm({
         initialValues: {
@@ -77,7 +79,7 @@ function __UpdateInvoiceForm(props) {
             sales_by: entityEditData?.sales_by_id,
             order_process: entityEditData?.process_id,
             narration: entityEditData?.narration,
-            discount: discountType==='Flat'?entityEditData?.discount:entityEditData?.discount_calculation,
+            discount: discountType === 'Flat' ? entityEditData?.discount : entityEditData?.discount_calculation,
             receive_amount: entityEditData?.payment
         },
         validate: {
@@ -217,10 +219,10 @@ function __UpdateInvoiceForm(props) {
         </Text>
     );
 
-    const [openInvoiceDrawerForPrint,setOpenInvoiceDrawerForPrint] = useState(false)
+    const [openInvoiceDrawerForPrint, setOpenInvoiceDrawerForPrint] = useState(false)
 
     useEffect(() => {
-        if (entityUpdateData?.data?.id && (lastClicked === 'print' || lastClicked==='pos')){
+        if (entityUpdateData?.data?.id && (lastClicked === 'print' || lastClicked === 'pos')) {
             setTimeout(() => {
                 setOpenInvoiceDrawerForPrint(true)
             }, 400);
@@ -288,7 +290,7 @@ function __UpdateInvoiceForm(props) {
 
                 if (transformedArray && transformedArray.length > 0) {
                     const data = {
-                        url: 'inventory/sales/'+id,
+                        url: 'inventory/sales/' + id,
                         data: formValue
                     }
                     dispatch(updateEntityData(data))
@@ -302,7 +304,7 @@ function __UpdateInvoiceForm(props) {
                         style: { backgroundColor: 'lightgray' },
                     });
 
-                    if (lastClicked === 'save'){
+                    if (lastClicked === 'save') {
                         navigate('/inventory/sales')
                     }
                 } else {
@@ -343,11 +345,29 @@ function __UpdateInvoiceForm(props) {
                                             </Box>
                                         </Grid.Col>
                                         <Grid.Col span={1}>
-                                            <_addCustomer
-                                                setRefreshCustomerDropdown={setRefreshCustomerDropdown}
-                                                focusField={'customer_id'}
-                                                fieldPrefix="sales_"
-                                            />
+                                            <Box pt={'8'}>
+                                                <Tooltip
+                                                    multiline
+                                                    bg={'orange.8'}
+                                                    offset={{ crossAxis: '-52', mainAxis: '5' }}
+                                                    position="top"
+                                                    ta={'center'}
+                                                    withArrow
+                                                    transitionProps={{ duration: 200 }}
+                                                    label={t('InstantCustomerCreate')}
+                                                >
+                                                    <ActionIcon
+                                                        variant="outline"
+                                                        bg={'white'}
+                                                        size={'lg'}
+                                                        color="red.5"
+                                                        aria-label="Settings"
+                                                        onClick={() => setCustomerDrawer(true)}
+                                                    >
+                                                        <IconUserPlus style={{ width: '100%', height: '70%' }} stroke={1.5} />
+                                                    </ActionIcon>
+                                                </Tooltip>
+                                            </Box>
                                         </Grid.Col>
                                     </Grid>
                                 </Box>
@@ -496,7 +516,7 @@ function __UpdateInvoiceForm(props) {
                                                                     form.setFieldValue('transaction_mode_id', e.currentTarget.value)
                                                                     form.setFieldError('transaction_mode_id', null)
                                                                 }}
-                                                                defaultChecked={ entityEditData?.transaction_mode_id?entityEditData?.transaction_mode_id==mode.id: (mode.is_selected ? true : false)}
+                                                                defaultChecked={entityEditData?.transaction_mode_id ? entityEditData?.transaction_mode_id == mode.id : (mode.is_selected ? true : false)}
                                                             />
                                                             <Tooltip
                                                                 label={mode.name}
@@ -563,8 +583,8 @@ function __UpdateInvoiceForm(props) {
                                             <Grid.Col span={4}>
                                                 <Button
                                                     fullWidth
-                                                    onClick={() =>{
-                                                        setDiscountType(discountType==='Flat'?'Percent':'Flat')
+                                                    onClick={() => {
+                                                        setDiscountType(discountType === 'Flat' ? 'Percent' : 'Flat')
                                                     }}
                                                     variant="filled"
                                                     fz={'xs'}
@@ -723,7 +743,14 @@ function __UpdateInvoiceForm(props) {
                     </Grid>
                 </Box>
             </form>
-
+            {customerDrawer &&
+                <AddCustomerDrawer
+                    setRefreshCustomerDropdown={setRefreshCustomerDropdown}
+                    focusField={'customer_id'}
+                    fieldPrefix="sales_"
+                    customerDrawer={customerDrawer}
+                    setCustomerDrawer={setCustomerDrawer}
+                />}
             {isShowSMSPackageModel &&
                 <_SmsPurchaseModel
                     isShowSMSPackageModel={isShowSMSPackageModel}
