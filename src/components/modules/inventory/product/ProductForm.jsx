@@ -66,6 +66,13 @@ function ProductForm() {
                     return true;
                 }
             },
+            barcode: (value) => {
+                if (value) {
+                    return /^\d+$/.test(value) ? null : 'Must be a numeric value';
+                }
+                else
+                    return null;
+            }
         }
     });
 

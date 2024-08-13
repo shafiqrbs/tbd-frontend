@@ -67,7 +67,6 @@ function DomainForm(props) {
             mobile: (value) => {
                 const isNotEmpty = !    !value.trim().length;
                 const isDigitsOnly = /^\d+$/.test(value.trim());
-
                 if (isNotEmpty && isDigitsOnly) {
                     return false;
                 } else {

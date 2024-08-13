@@ -75,6 +75,8 @@
     padding: 2px;
     font-weight: 400;
     font-size: 9px;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
 }
 .text-width{
     width: 50mm;

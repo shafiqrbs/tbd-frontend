@@ -247,7 +247,7 @@ function __UpdateInvoiceForm(props) {
                             <Box>
                                 <Box pl={'xs'} pr={'xs'} pb={'xs'} className={'boxBackground'}>
                                     <Grid gutter={{ base: 6 }}>
-                                        <Grid.Col span={11}  >
+                                        <Grid.Col span={12}  >
                                             <Box pt={'xs'}>
                                                 <SelectForm
                                                     tooltip={t('PurchaseValidateMessage')}
@@ -266,13 +266,13 @@ function __UpdateInvoiceForm(props) {
                                                 />
                                             </Box>
                                         </Grid.Col>
-                                        <Grid.Col span={1}>
+                                        {/* <Grid.Col span={1}>
                                             <_addVendor
                                                 setRefreshVendorDropdown={setRefreshVendorDropdown}
                                                 focusField={'purchase_vendor_id'}
                                                 fieldPrefix="purchase_"
                                             />
-                                        </Grid.Col>
+                                        </Grid.Col> */}
                                     </Grid>
                                 </Box>
                                 <Box>

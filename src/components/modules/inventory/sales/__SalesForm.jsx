@@ -339,7 +339,7 @@ function __SalesForm(props) {
                 }
 
             })}>
-                <Box>
+                <Box mb={'xs'}>
                     <Grid columns={48}>
                         <Box className={'borderRadiusAll'} >
                             <Box>
@@ -526,7 +526,7 @@ function __SalesForm(props) {
                                         {
                                             (transactionModeData && transactionModeData.length > 0) && transactionModeData.map((mode, index) => {
                                                 return (
-                                                    <Grid.Col span={4}>
+                                                    <Grid.Col span={4} key={index}>
                                                         <Box bg={'gray.1'} h={'82'}>
                                                             <input
                                                                 type="radio"
@@ -609,7 +609,7 @@ function __SalesForm(props) {
                                             />
                                         </Grid.Col>
                                         <Grid.Col span={4}>
-                                            <Box fz={'md'} pr={'8'} mt={'4'} c={'red'} style={{ textAlign: 'right', float: 'right' }} fw={'800'}>
+                                            <Box fz={'xl'} pr={'8'} mt={'4'} c={'red'} style={{ textAlign: 'right', float: 'right' }} fw={'800'}>
                                                 {returnOrDueText} {currencySymbol} {salesDueAmount.toFixed(2)}
                                             </Box>
                                         </Grid.Col>
@@ -619,6 +619,7 @@ function __SalesForm(props) {
                                         <Grid gutter={{ base: 2 }} mt={'xs'}>
                                             <Grid.Col span={4}>
                                                 <Button
+                                                    fullWidth
                                                     onClick={() => setDiscountType()}
                                                     variant="filled"
                                                     fz={'xs'}
@@ -713,9 +714,9 @@ function __SalesForm(props) {
 
                             </ScrollArea>
                             <Box>
-                                <Button.Group>
-
+                                <Button.Group fullWidth >
                                     <Button
+                                        fullWidth
                                         variant="filled"
                                         leftSection={<IconStackPush size={14} />}
                                         color="orange.5"
@@ -723,6 +724,7 @@ function __SalesForm(props) {
                                         {t('Hold')}
                                     </Button>
                                     <Button
+                                        fullWidth
                                         variant="filled"
                                         type={'submit'}
                                         onClick={handleClick}
@@ -738,6 +740,7 @@ function __SalesForm(props) {
                                         {t('Print')}
                                     </Button>
                                     <Button
+                                        fullWidth
                                         type={'submit'}
                                         onClick={handleClick}
                                         name="pos"
@@ -753,6 +756,7 @@ function __SalesForm(props) {
                                         {t('Pos')}
                                     </Button>
                                     <Button
+                                        fullWidth
                                         type={'submit'}
                                         onClick={handleClick}
                                         name="save"
@@ -781,7 +785,7 @@ function __SalesForm(props) {
                     fieldPrefix="sales_"
                     customerDrawer={customerDrawer}
                     setCustomerDrawer={setCustomerDrawer}
-            />}
+                />}
 
             {isShowSMSPackageModel &&
                 <_SmsPurchaseModel

@@ -388,7 +388,7 @@ function _UpdateInvoice(props) {
                                                     disabled={isPurchaseByPurchasePrice ? true : false}
                                                 />
                                             </Grid.Col>
-                                            <Grid.Col span={2}>
+                                            <Grid.Col span={3}>
                                                 <>
                                                     <Button
                                                         size="sm"
@@ -398,23 +398,19 @@ function _UpdateInvoice(props) {
                                                         mr={'xs'}
                                                         w={'100%'}
                                                         id="EntityFormSubmit"
-                                                        leftSection={<IconDeviceFloppy size={16} />}
+                                                        leftSection={<IconDeviceFloppy size={14} />}
                                                     >
-                                                        <Flex direction={`column`} gap={0}>
-                                                            <Text fz={12} fw={400}>
-                                                                {t("Add")}
-                                                            </Text>
-                                                        </Flex>
+                                                        {t("Add")}
                                                     </Button>
                                                 </>
                                             </Grid.Col>
-                                            <Grid.Col span={1} bg={'white'}>
+                                            {/* <Grid.Col span={1} bg={'white'}>
                                                 <_addProduct
                                                     setStockProductRestore={setStockProductRestore}
                                                     focusField={'product_id'}
                                                     fieldPrefix="purchase_"
                                                 />
-                                            </Grid.Col>
+                                            </Grid.Col> */}
                                         </Grid>
                                     </Box>
                                 </Box>

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {useNavigate, useOutletContext, useParams} from "react-router-dom";
+import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 import {
     Button, rem, Center, Switch, ActionIcon,
     Grid, Box, ScrollArea, Tooltip, Group, Text
@@ -12,12 +12,12 @@ import {
     IconReceipt,
     IconPercentage,
     IconCurrencyTaka,
-    IconMessage,
+    IconMessage, IconUserPlus,
     IconEyeEdit, IconDiscountOff, IconCurrency, IconPlusMinus, IconCheck, IconTallymark1,
 
 } from "@tabler/icons-react";
 import { useHotkeys } from "@mantine/hooks";
-import {useDispatch, useSelector} from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { isNotEmpty, useForm } from "@mantine/form";
 
 import SelectForm from "../../../form-builders/SelectForm";
@@ -35,10 +35,11 @@ import _CustomerViewModel from "./modal/_CustomerViewModel.jsx";
 import customerDataStoreIntoLocalStorage from "../../../global-hook/local-storage/customerDataStoreIntoLocalStorage.js";
 import _addCustomer from "../../popover-form/_addCustomer.jsx";
 import _InvoiceDrawerForPrint from "./print-drawer/_InvoiceDrawerForPrint.jsx";
+import AddCustomerDrawer from "./drawer-form/AddCustomerDrawer.jsx";
 
 function __UpdateInvoiceForm(props) {
     let { id } = useParams();
-    const { currencySymbol, domainId, isSMSActive, isZeroReceiveAllow,entityEditData,tempCardProducts } = props
+    const { currencySymbol, domainId, isSMSActive, isZeroReceiveAllow, entityEditData, tempCardProducts } = props
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const navigate = useNavigate()
@@ -61,14 +62,15 @@ function __UpdateInvoiceForm(props) {
     const [hoveredModeId, setHoveredModeId] = useState(false);
     const [isShowSMSPackageModel, setIsShowSMSPackageModel] = useState(false)
 
-    const formHeight = mainAreaHeight - 268;
+    const formHeight = mainAreaHeight - 262;
     const [customerViewModel, setCustomerViewModel] = useState(false);
     const [discountType, setDiscountType] = useState(entityEditData.discount_type);
     const [invoicePrintData, setInvoicePrintData] = useState(null)
     const [invoicePrintForSave, setInvoicePrintForSave] = useState(false)
     const [customerData, setCustomerData] = useState(entityEditData?.customer_id.toString());
-    const [salesByUser, setSalesByUser] = useState(entityEditData?.sales_by_id?entityEditData?.sales_by_id.toString():null);
-    const [orderProcess, setOrderProcess] = useState(entityEditData?.process_id?entityEditData?.process_id.toString():null);
+    const [salesByUser, setSalesByUser] = useState(entityEditData?.sales_by_id ? entityEditData?.sales_by_id.toString() : null);
+    const [orderProcess, setOrderProcess] = useState(entityEditData?.process_id ? entityEditData?.process_id.toString() : null);
+    // const [customerDrawer, setCustomerDrawer] = useState(false)
 
     const form = useForm({
         initialValues: {
@@ -77,7 +79,7 @@ function __UpdateInvoiceForm(props) {
             sales_by: entityEditData?.sales_by_id,
             order_process: entityEditData?.process_id,
             narration: entityEditData?.narration,
-            discount: discountType==='Flat'?entityEditData?.discount:entityEditData?.discount_calculation,
+            discount: discountType === 'Flat' ? entityEditData?.discount : entityEditData?.discount_calculation,
             receive_amount: entityEditData?.payment
         },
         validate: {
@@ -217,10 +219,10 @@ function __UpdateInvoiceForm(props) {
         </Text>
     );
 
-    const [openInvoiceDrawerForPrint,setOpenInvoiceDrawerForPrint] = useState(false)
+    const [openInvoiceDrawerForPrint, setOpenInvoiceDrawerForPrint] = useState(false)
 
     useEffect(() => {
-        if (entityUpdateData?.data?.id && (lastClicked === 'print' || lastClicked==='pos')){
+        if (entityUpdateData?.data?.id && (lastClicked === 'print' || lastClicked === 'pos')) {
             setTimeout(() => {
                 setOpenInvoiceDrawerForPrint(true)
             }, 400);
@@ -288,7 +290,7 @@ function __UpdateInvoiceForm(props) {
 
                 if (transformedArray && transformedArray.length > 0) {
                     const data = {
-                        url: 'inventory/sales/'+id,
+                        url: 'inventory/sales/' + id,
                         data: formValue
                     }
                     dispatch(updateEntityData(data))
@@ -302,7 +304,7 @@ function __UpdateInvoiceForm(props) {
                         style: { backgroundColor: 'lightgray' },
                     });
 
-                    if (lastClicked === 'save'){
+                    if (lastClicked === 'save') {
                         navigate('/inventory/sales')
                     }
                 } else {
@@ -317,14 +319,14 @@ function __UpdateInvoiceForm(props) {
                 }
 
             })}>
-                <Box>
+                <Box mb={'xs'}>
                     <Grid columns={48}>
                         <Box className={'borderRadiusAll'} >
                             <Box>
                                 <Box pl={'xs'} pr={'xs'} pb={'xs'} className={'boxBackground'}>
                                     <Grid gutter={{ base: 6 }} pt={'3'} pb={'2'} >
-                                        <Grid.Col span={11}>
-                                            <Box pt={'6'}>
+                                        <Grid.Col span={12}>
+                                            <Box pt={'6'} pb={1}>
                                                 <SelectForm
                                                     tooltip={t('CustomerValidateMessage')}
                                                     label=''
@@ -342,13 +344,31 @@ function __UpdateInvoiceForm(props) {
                                                 />
                                             </Box>
                                         </Grid.Col>
-                                        <Grid.Col span={1}>
-                                            <_addCustomer
-                                                setRefreshCustomerDropdown={setRefreshCustomerDropdown}
-                                                focusField={'customer_id'}
-                                                fieldPrefix="sales_"
-                                            />
-                                        </Grid.Col>
+                                        {/* <Grid.Col span={1}>
+                                            <Box pt={'8'}>
+                                                <Tooltip
+                                                    multiline
+                                                    bg={'orange.8'}
+                                                    offset={{ crossAxis: '-52', mainAxis: '5' }}
+                                                    position="top"
+                                                    ta={'center'}
+                                                    withArrow
+                                                    transitionProps={{ duration: 200 }}
+                                                    label={t('InstantCustomerCreate')}
+                                                >
+                                                    <ActionIcon
+                                                        variant="outline"
+                                                        bg={'white'}
+                                                        size={'lg'}
+                                                        color="red.5"
+                                                        aria-label="Settings"
+                                                        onClick={() => setCustomerDrawer(true)}
+                                                    >
+                                                        <IconUserPlus style={{ width: '100%', height: '70%' }} stroke={1.5} />
+                                                    </ActionIcon>
+                                                </Tooltip>
+                                            </Box>
+                                        </Grid.Col> */}
                                     </Grid>
                                 </Box>
                                 <Box>
@@ -478,13 +498,11 @@ function __UpdateInvoiceForm(props) {
                             </Box>
                             <ScrollArea h={formHeight} scrollbarSize={2} type="never" bg={'gray.1'}>
                                 <Box pl={'xs'} pt={'xs'} pr={'xs'} bg={`white`}>
-
                                     <Grid columns={'16'} gutter="6">
-
                                         {
                                             (transactionModeData && transactionModeData.length > 0) && transactionModeData.map((mode, index) => {
                                                 return (
-                                                    <Grid.Col span={4}>
+                                                    <Grid.Col span={4} key={index}>
                                                         <Box bg={'gray.1'} h={'82'}>
                                                             <input
                                                                 type="radio"
@@ -496,7 +514,7 @@ function __UpdateInvoiceForm(props) {
                                                                     form.setFieldValue('transaction_mode_id', e.currentTarget.value)
                                                                     form.setFieldError('transaction_mode_id', null)
                                                                 }}
-                                                                defaultChecked={ entityEditData?.transaction_mode_id?entityEditData?.transaction_mode_id==mode.id: (mode.is_selected ? true : false)}
+                                                                defaultChecked={entityEditData?.transaction_mode_id ? entityEditData?.transaction_mode_id == mode.id : (mode.is_selected ? true : false)}
                                                             />
                                                             <Tooltip
                                                                 label={mode.name}
@@ -534,7 +552,6 @@ function __UpdateInvoiceForm(props) {
                                     <Grid gutter={{ base: 2 }}>
                                         <Grid.Col span={2}>
                                             <Switch
-                                                fullWidth
                                                 size="lg"
                                                 w={'100%'}
                                                 color={'red.3'}
@@ -556,15 +573,15 @@ function __UpdateInvoiceForm(props) {
                                             </Box>
                                         </Grid.Col>
                                     </Grid>
-                                    <Box mt={'xs'} h={1} bg={`red.3`}></Box>
+                                    <Box mt={11} h={1} bg={`red.3`}></Box>
 
                                     <Tooltip label={t('MustBeNeedReceiveAmountWithoutCustomer')} opened={isDisabled} position="bottom-end" withArrow>
                                         <Grid gutter={{ base: 2 }} mt={'xs'}>
                                             <Grid.Col span={4}>
                                                 <Button
                                                     fullWidth
-                                                    onClick={() =>{
-                                                        setDiscountType(discountType==='Flat'?'Percent':'Flat')
+                                                    onClick={() => {
+                                                        setDiscountType(discountType === 'Flat' ? 'Percent' : 'Flat')
                                                     }}
                                                     variant="filled"
                                                     fz={'xs'}
@@ -660,7 +677,6 @@ function __UpdateInvoiceForm(props) {
                             </ScrollArea>
                             <Box>
                                 <Button.Group fullWidth>
-
                                     <Button
                                         fullWidth
                                         variant="filled"
@@ -683,7 +699,7 @@ function __UpdateInvoiceForm(props) {
                                             backgroundColor: isDisabled ? "#f1f3f500" : ""
                                         }}
                                     >
-                                        Print
+                                        {t('Print')}
                                     </Button>
                                     <Button
                                         fullWidth
@@ -699,7 +715,7 @@ function __UpdateInvoiceForm(props) {
                                             backgroundColor: isDisabled ? "#f1f3f500" : ""
                                         }}
                                     >
-                                        Pos
+                                        {t('Pos')}
                                     </Button>
                                     <Button
                                         fullWidth
@@ -715,7 +731,7 @@ function __UpdateInvoiceForm(props) {
                                             backgroundColor: isDisabled ? "#f1f3f500" : ""
                                         }}
                                     >
-                                        Save
+                                        {t('Save')}
                                     </Button>
                                 </Button.Group>
                             </Box>
@@ -723,7 +739,14 @@ function __UpdateInvoiceForm(props) {
                     </Grid>
                 </Box>
             </form>
-
+            {/* {customerDrawer &&
+                <AddCustomerDrawer
+                    setRefreshCustomerDropdown={setRefreshCustomerDropdown}
+                    focusField={'customer_id'}
+                    fieldPrefix="sales_"
+                    customerDrawer={customerDrawer}
+                    setCustomerDrawer={setCustomerDrawer}
+                />} */}
             {isShowSMSPackageModel &&
                 <_SmsPurchaseModel
                     isShowSMSPackageModel={isShowSMSPackageModel}

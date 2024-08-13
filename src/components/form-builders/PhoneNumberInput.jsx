@@ -82,7 +82,7 @@ export default function PhoneNumber(props) {
                         }}
                         containerStyle={{ marginBottom: 0 }}
                         placeholder={placeholder}
-                        countryCodeEditable={false}
+                    // countryCodeEditable={false}
                     />
 
                     <div style={{

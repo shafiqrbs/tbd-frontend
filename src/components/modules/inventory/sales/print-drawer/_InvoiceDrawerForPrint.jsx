@@ -20,13 +20,12 @@ function _InvoiceDrawerForPrint(props) {
     return (
         <>
             <Drawer
-                offset={8}
                 radius="md"
                 position="right"
                 opened={openInvoiceDrawerForPrint}
                 onClose={close}
                 overlayProps={{ backgroundOpacity: 0.5, blur: 4 }}
-                size="lg"
+                size="40%"
                 title={printType === 'pos' ? t('PosPrint') : t('NormalPrint')}
                 scrollAreaComponent={ScrollArea.Autosize}
                 transitionProps={{ transition: 'rotate-left', duration: 150, timingFunction: 'linear' }}
@@ -35,10 +34,26 @@ function _InvoiceDrawerForPrint(props) {
                 }}
             >
 
+                {/* {configData?.domain?.id ? (
+                    (configData?.domain?.id == '359' && printType === 'pos' &&
+                        <InvoiceDomain359Pos
+                            mode={mode}
+                            setOpenInvoiceDrawerForPrint={setOpenInvoiceDrawerForPrint}
+                        />
+                    ) ||
+                    (configData?.domain?.id == '359' && printType === 'print' &&
+                        <InvoiceDomain359Normal
+                            mode={mode}
+                            setOpenInvoiceDrawerForPrint={setOpenInvoiceDrawerForPrint}
+                        />
+                    )
+                ) : (
+                    printType === 'print' && <_InvoiceForDomain359Normal mode={mode} />
+                )} */}
                 {/* {configData?.domain?.id == '359' && printType === 'pos' && <_InvoiceForDomain359Pos mode={mode} />} */}
-                {configData?.domain?.id == '359' && printType === 'pos' && <InvoiceDomain359Pos mode={mode} />}
+                {configData?.domain?.id == '359' && printType === 'pos' && <InvoiceDomain359Pos mode={mode} setOpenInvoiceDrawerForPrint={setOpenInvoiceDrawerForPrint} />}
                 {/* { configData?.domain?.id =='359' && printType==='print' && <_InvoiceForDomain359Normal  mode={mode}/> } */}
-                {configData?.domain?.id == '359' && printType === 'print' && <InvoiceDomain359Normal mode={mode} />}
+                {configData?.domain?.id == '359' && printType === 'print' && <InvoiceDomain359Normal mode={mode} setOpenInvoiceDrawerForPrint={setOpenInvoiceDrawerForPrint} />}
             </Drawer>
         </>
     );
