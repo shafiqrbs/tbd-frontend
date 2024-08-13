@@ -67,7 +67,7 @@ function SalesEdit() {
                             />
                             <Box p={'8'}>
                                 {
-                                    configData.business_model.slug === 'general' &&
+                                    configData?.business_model?.slug === 'general' &&
                                     <_UpdateInvoice
                                         allowZeroPercentage={configData?.zero_stock}
                                         currencySymbol={configData?.currency?.symbol}

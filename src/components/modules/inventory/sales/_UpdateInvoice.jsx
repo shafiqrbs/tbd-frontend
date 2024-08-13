@@ -35,7 +35,7 @@ function _UpdateInvoice(props) {
 
     const [tempCardProducts, setTempCardProducts] = useState([])
     const [loadCardProducts, setLoadCardProducts] = useState(false)
-    const [productDrawer, setProductDrawer] = useState(false)
+    // const [productDrawer, setProductDrawer] = useState(false)
 
     // console.log(tempCardProducts)
 
@@ -445,7 +445,7 @@ function _UpdateInvoice(props) {
                                                     closeIcon={false}
                                                 />
                                             </Grid.Col>
-                                            <Grid.Col span={3}>
+                                            <Grid.Col span={4}>
                                                 <>
                                                     <Button
                                                         size="sm"
@@ -455,18 +455,16 @@ function _UpdateInvoice(props) {
                                                         mr={'xs'}
                                                         w={'100%'}
                                                         id="EntityFormSubmit"
-                                                        leftSection={<IconDeviceFloppy size={16} />}
+                                                        leftSection={<IconDeviceFloppy size={14} />}
                                                     >
                                                         <Flex direction={`column`} gap={0}>
-                                                            <Text fz={12} fw={400}>
-                                                                {t("Add")}
-                                                            </Text>
+                                                            {t("Add")}
                                                         </Flex>
                                                     </Button>
                                                 </>
                                             </Grid.Col>
 
-                                            <Grid.Col span={1} bg={'white'}>
+                                            {/* <Grid.Col span={1} bg={'white'}>
                                                 <Tooltip
                                                     multiline
                                                     bg={'orange.8'}
@@ -489,7 +487,7 @@ function _UpdateInvoice(props) {
                                                             stroke={1.5} />
                                                     </ActionIcon>
                                                 </Tooltip>
-                                            </Grid.Col>
+                                            </Grid.Col> */}
                                         </Grid>
                                     </Box>
                                 </Box>
@@ -776,7 +774,7 @@ function _UpdateInvoice(props) {
                     </Box>
                 </Grid.Col>
             </Grid>
-            {productDrawer &&
+            {/* {productDrawer &&
                 <AddProductDrawer
                     productDrawer={productDrawer}
                     setProductDrawer={setProductDrawer}
@@ -784,7 +782,7 @@ function _UpdateInvoice(props) {
                     focusField={'product_id'}
                     fieldPrefix="sales_"
                 />
-            }
+            } */}
         </Box>
     );
 }
