@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, } from "react";
+import React, { useCallback, useEffect, useRef, useState, } from "react";
 import { Box, Button, Grid, Space, Center } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
 import { useSelector } from "react-redux";
@@ -6,29 +6,70 @@ import { IconReceipt } from "@tabler/icons-react";
 import { ReactToPrint } from "react-to-print";
 import classes from './InvoiceDomain359Normal.module.css'
 import barCode from '../../../../../assets/images/frame.png';
+import { useNavigate } from "react-router-dom";
 
 function InvoiceDomain359Normal(props) {
+
     let invoicePrintData;
     if (props.mode === 'insert') {
         invoicePrintData = useSelector((state) => state.inventoryCrudSlice.entityNewData.data);
     } else {
         invoicePrintData = useSelector((state) => state.inventoryCrudSlice.entityUpdateData.data);
     }
+
     const { t, i18n } = useTranslation();
-    const printRef = useRef()
-    const printButtonRef = useRef(null);  // Add this line
+    const printRef = useRef();
+    const navigate = useNavigate();
+    const [isPrinting, setIsPrinting] = useState(false);
+
+
     const configData = localStorage.getItem('config-data') ? JSON.parse(localStorage.getItem('config-data')) : []
     const imageSrc = `${import.meta.env.VITE_IMAGE_GATEWAY_URL}uploads/inventory/logo/${configData.path}`;
 
-    useEffect(() => {
-        if (printButtonRef.current) {
-            printButtonRef.current.click();
-        }
+    const handleBeforePrint = useCallback(() => {
+        setIsPrinting(true);
     }, []);
 
-    window.addEventListener('focus', () => {
-        console.log('Print dialog closed');
-    });
+    const handleAfterPrint = useCallback(() => {
+        props.mode === 'insert'
+            ? (setIsPrinting(false),
+                props.setOpenInvoiceDrawerForPrint(false))
+            : (setIsPrinting(false),
+                navigate('/inventory/sales'))
+    }, []);
+
+    useEffect(() => {
+        const handleVisibilityChange = () => {
+            if (!document.hidden && isPrinting) {
+                handleAfterPrint();
+            }
+        };
+
+        document.addEventListener('visibilitychange', handleVisibilityChange);
+
+        return () => {
+            document.removeEventListener('visibilitychange', handleVisibilityChange);
+        };
+    }, [isPrinting, handleAfterPrint]);
+
+    const reactToPrintContent = useCallback(() => {
+        return printRef.current;
+    }, []);
+
+    const reactToPrintTrigger = useCallback(() => {
+        return (
+            <Button
+                fullWidth
+                variant="filled"
+                leftSection={<IconReceipt size={14} />}
+                color="red.5"
+            >
+                {t('Print')}
+            </Button>
+        );
+    }, []);
+
+
     const data2 = [
         {
             company_name: "Right Brain Solution Ltd.",
@@ -261,19 +302,14 @@ function InvoiceDomain359Normal(props) {
                             </div>
                         </Box>
 
-                        <Button
-                            fullWidth
-                            variant="filled"
-                            leftSection={<IconReceipt size={14} />}
-                            color="red.5"
-                        >
-                            <ReactToPrint
-                                trigger={() => {
-                                    return <a href="" ref={printButtonRef}>{t('Pos')}</a>;  // Add ref to the <a> tag
-                                }}
-                                content={() => printRef.current}
-                            />
-                        </Button>
+                        <ReactToPrint
+                            content={reactToPrintContent}
+                            documentTitle="Invoice"
+                            onBeforePrint={handleBeforePrint}
+                            onAfterPrint={handleAfterPrint}
+                            removeAfterPrint
+                            trigger={reactToPrintTrigger}
+                        />
 
                     </Grid.Col>
                 </Grid>

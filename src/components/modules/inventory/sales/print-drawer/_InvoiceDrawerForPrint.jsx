@@ -36,9 +36,9 @@ function _InvoiceDrawerForPrint(props) {
             >
 
                 {/* {configData?.domain?.id == '359' && printType === 'pos' && <_InvoiceForDomain359Pos mode={mode} />} */}
-                {configData?.domain?.id == '359' && printType === 'pos' && <InvoiceDomain359Pos mode={mode} />}
+                {configData?.domain?.id == '359' && printType === 'pos' && <InvoiceDomain359Pos mode={mode} setOpenInvoiceDrawerForPrint={setOpenInvoiceDrawerForPrint} />}
                 {/* { configData?.domain?.id =='359' && printType==='print' && <_InvoiceForDomain359Normal  mode={mode}/> } */}
-                {configData?.domain?.id == '359' && printType === 'print' && <InvoiceDomain359Normal mode={mode} />}
+                {configData?.domain?.id == '359' && printType === 'print' && <InvoiceDomain359Normal mode={mode} setOpenInvoiceDrawerForPrint={setOpenInvoiceDrawerForPrint} />}
             </Drawer>
         </>
     );

@@ -18,7 +18,6 @@ function InvoiceDomain359Pos(props) {
 
     const { t, i18n } = useTranslation();
     const printRef = useRef()
-    const printButtonRef = useRef(null);
     const [isPrinting, setIsPrinting] = useState(false);
     const navigate = useNavigate()
 
@@ -30,8 +29,11 @@ function InvoiceDomain359Pos(props) {
     }, []);
 
     const handleAfterPrint = useCallback(() => {
-        setIsPrinting(false);
-        navigate('/inventory/sales');
+        props.mode === 'insert'
+            ? (setIsPrinting(false),
+                props.setOpenInvoiceDrawerForPrint(false))
+            : (setIsPrinting(false),
+                navigate('/inventory/sales'))
     }, []);
 
     useEffect(() => {
