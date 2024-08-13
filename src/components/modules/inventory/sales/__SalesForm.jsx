@@ -713,9 +713,9 @@ function __SalesForm(props) {
 
                             </ScrollArea>
                             <Box>
-                                <Button.Group>
-
+                                <Button.Group fullWidth>
                                     <Button
+                                        fullWidth
                                         variant="filled"
                                         leftSection={<IconStackPush size={14} />}
                                         color="orange.5"
@@ -723,6 +723,7 @@ function __SalesForm(props) {
                                         {t('Hold')}
                                     </Button>
                                     <Button
+                                        fullWidth
                                         variant="filled"
                                         type={'submit'}
                                         onClick={handleClick}
@@ -738,6 +739,7 @@ function __SalesForm(props) {
                                         {t('Print')}
                                     </Button>
                                     <Button
+                                        fullWidth
                                         type={'submit'}
                                         onClick={handleClick}
                                         name="pos"
@@ -753,6 +755,7 @@ function __SalesForm(props) {
                                         {t('Pos')}
                                     </Button>
                                     <Button
+                                        fullWidth
                                         type={'submit'}
                                         onClick={handleClick}
                                         name="save"
@@ -781,7 +784,7 @@ function __SalesForm(props) {
                     fieldPrefix="sales_"
                     customerDrawer={customerDrawer}
                     setCustomerDrawer={setCustomerDrawer}
-            />}
+                />}
 
             {isShowSMSPackageModel &&
                 <_SmsPurchaseModel
