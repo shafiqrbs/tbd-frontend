@@ -38,6 +38,7 @@ import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
 import { getSettingDropdown } from "../../../../store/utility/utilitySlice.js";
 import getSettingAccountTypeDropdownData from "../../../global-hook/dropdown/getSettingAccountTypeDropdownData.js";
 import getSettingAuthorizedTypeDropdownData from "../../../global-hook/dropdown/getSettingAuthorizedTypeDropdownData.js";
+import SwitchForm from "../../../form-builders/SwitchForm.jsx";
 
 function TransactionModeForm(props) {
     const { t, i18n } = useTranslation();
@@ -65,7 +66,7 @@ function TransactionModeForm(props) {
 
     const form = useForm({
         initialValues: {
-            method_id: '', name: '', short_name: '', authorised_mode_id: '', account_mode_id: '', service_charge: '', account_owner: '', path: ''
+            method_id: '', name: '', short_name: '', authorised_mode_id: '', account_mode_id: '', service_charge: '', account_owner: '', path: '',is_selected:false
         },
         validate: {
             method_id: isNotEmpty(),
@@ -104,6 +105,7 @@ function TransactionModeForm(props) {
             <Grid columns={9} gutter={{ base: 8 }}>
                 <Grid.Col span={8} >
                     <form onSubmit={form.onSubmit((values) => {
+                        // console.log(form.values)
                         dispatch(setValidationData(false))
                         modals.openConfirmModal({
                             title: (
@@ -276,11 +278,24 @@ function TransactionModeForm(props) {
                                                             label={t('AccountOwner')}
                                                             placeholder={t('AccountOwner')}
                                                             required={false}
-                                                            nextField={'service_name'}
+                                                            nextField={'is_selected'}
                                                             name={'account_owner'}
                                                             form={form}
                                                             mt={8}
                                                             id={'account_owner'}
+                                                        />
+                                                    </Box>
+                                                    <Box mt={'xs'}>
+                                                        <SwitchForm
+                                                            tooltip={t('IsSelected')}
+                                                            label={t('IsSelected')}
+                                                            nextField={'is_selected'}
+                                                            name={'is_selected'}
+                                                            form={form}
+                                                            color="red"
+                                                            id={'is_selected'}
+                                                            position={'left'}
+                                                            defaultChecked={form.is_selected}
                                                         />
                                                     </Box>
                                                     <Box mt={'xs'}>

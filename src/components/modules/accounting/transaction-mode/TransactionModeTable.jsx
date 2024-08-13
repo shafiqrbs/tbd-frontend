@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import {
-    Group,
+    Group,Image,
     Box, Grid,
-    ActionIcon, Text, Title, Stack, Menu, rem
+    ActionIcon, Text, Title, Stack, Menu, rem, Tooltip, Checkbox
 } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import { IconEye, IconEdit, IconTrash, IconTrashX, IconDotsVertical } from "@tabler/icons-react";
@@ -86,6 +86,19 @@ function TransactionModeTable(props) {
                         { accessor: 'account_type_name', title: t('AccountType') },
                         { accessor: 'service_charge', title: t('ServiceCharge') },
                         { accessor: 'account_owner', title: t('AccountOwner') },
+                        {
+                            accessor: 'path',
+                            title: t('Image'),
+                            width:"100px",
+                            render: (item) => (
+                                <Image
+                                    radius="md"
+                                    w="70%"
+                                    src={isOnline ? item.path : '/images/transaction-mode-offline.jpg'}
+                                    alt={item.method_name}
+                                />
+                            )
+                        },
 
                         {
                             accessor: "action",
