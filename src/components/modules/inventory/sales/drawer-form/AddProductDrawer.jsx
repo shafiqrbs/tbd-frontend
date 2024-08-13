@@ -41,7 +41,12 @@ function AddProductDrawer(props) {
                             </ActionIcon>
                         </Drawer.Header>
                         <Box ml={2} mr={2} mb={0}>
-                            <AddProductDrawerForm setProductDrawer={setProductDrawer} setStockProductRestore={setStockProductRestore} focusField={focusField} fieldPrefix={fieldPrefix} />
+                            <AddProductDrawerForm
+                                setProductDrawer={setProductDrawer}
+                                setStockProductRestore={setStockProductRestore}
+                                focusField={focusField}
+                                fieldPrefix={fieldPrefix}
+                            />
                         </Box>
                     </ScrollArea>
 

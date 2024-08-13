@@ -43,6 +43,7 @@ import InputButtonForm from "../../../form-builders/InputButtonForm";
 import { deleteEntityData, storeEntityData } from "../../../../store/inventory/crudSlice.js";
 import { modals } from "@mantine/modals";
 import { Dropzone } from "@mantine/dropzone";
+import productsDataStoreIntoLocalStorage from "../../../global-hook/local-storage/productsDataStoreIntoLocalStorage.js";
 
 function ProductUpdateForm() {
     const { t, i18n } = useTranslation();
@@ -329,6 +330,7 @@ function ProductUpdateForm() {
                         });
 
                         setTimeout(() => {
+                            productsDataStoreIntoLocalStorage()
                             form.reset()
                             dispatch(setInsertType('create'))
                             dispatch(setEditEntityData([]))

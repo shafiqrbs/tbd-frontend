@@ -77,7 +77,7 @@ function _SalesTable() {
             <Table.Td ta="left" fz="xs" width={'300'}>{element.name}</Table.Td>
             <Table.Td ta="center" fz="xs" width={'60'}>{element.quantity}</Table.Td>
             <Table.Td ta="right" fz="xs" width={'80'}>{element.uom}</Table.Td>
-            <Table.Td ta="right" fz="xs" width={'80'}>{element.price}</Table.Td>
+            <Table.Td ta="right" fz="xs" width={'80'}>{element.sales_price}</Table.Td>
             <Table.Td ta="right" fz="xs" width={'100'}>{element.sub_total}</Table.Td>
         </Table.Tr>
     ));

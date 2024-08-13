@@ -7,14 +7,14 @@ import {ReactToPrint} from "react-to-print";
 
 function _InvoiceForDomain359Pos(props) {
     let invoicePrintData;
-    if (props.mode==='insert'){
+    if (props.mode === 'insert'){
         invoicePrintData = useSelector((state) => state.inventoryCrudSlice.entityNewData.data);
-    } else {
+    }else{
         invoicePrintData = useSelector((state) => state.inventoryCrudSlice.entityUpdateData.data);
     }
 
     const { t, i18n } = useTranslation();
-    const printRef = useRef()
+    const printRef = useRef();
     const printButtonRef = useRef(null);
 
     useEffect(() => {
