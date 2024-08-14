@@ -23,30 +23,6 @@ export function SalesPrintPos(props) {
         )
     }, []);
 
-    const data2 = [
-        {
-            company_name: "Right Brain Solution Ltd.",
-            email: 'info@lazycoders.com',
-            mobile: '+8801521334751',
-            order_id: '12345678914654',
-            payment_method: 'Cash',
-            name: 'Lan Lewis',
-            address: 'Rando, Avenel, Victoria - 123123, Australia',
-            customer_email: 'alanjohnlewis88@gmail.com',
-            customer_phone: '+880152134752',
-            sales_by: 'Foysal Mahmud Hasan',
-            total: '20001',
-            shipping_cost: '1000',
-            service_fee: '100',
-            total_tax: '1000',
-            coupon_discount: '2000',
-            grand_total: '20947298',
-            date: '15-07-2024',
-            time: '12:16 PM'
-
-
-        }
-    ]
 
     return (
         <>
@@ -54,10 +30,10 @@ export function SalesPrintPos(props) {
                 <header className={classes['body-head']}>
                     <div className={classes['pos-head']}>
                         <img src={imageSrc} alt="logo" className={classes['head-img']} />
-                        <h3 className={classes['head-title']}>{data2[0].company_name}</h3>
-                        <p className={classes['head-email']}>{data2[0].email}</p>
-                        <p className={classes['head-phone']}>{t('Mobile')} : {data2[0].mobile}</p>
-                        <p className={classes['head-address']}>{t('Address')} : {data2[0].address}</p>
+                        <h3 className={classes['head-title']}>{configData.domain.name}</h3>
+                        <p className={classes['head-email']}>{configData.domain.email}</p>
+                        <p className={classes['head-phone']}>{t('Mobile')} : {configData.domain.mobile}</p>
+                        <p className={classes['head-address']}>{t('Address')} : {configData.address}</p>
                     </div>
                 </header>
                 <main className={classes['body-main']}>
@@ -161,7 +137,7 @@ export function SalesPrintPos(props) {
                             <p className={`${classes['footer-name']} ${classes['invoice-text']}`}>Grand Total</p>
                             <p className={`${classes['footer-details']} ${classes['invoice-text']}`}>{data2[0].grand_total}</p>
                         </div> */}
-                        <p className={`${classes['footer-company']} ${classes['invoice-text']}`}>&copy; {data2[0].company_name}</p>
+                        <p className={`${classes['footer-company']} ${classes['invoice-text']}`}>&copy; {configData.domain.name}</p>
                     </footer>
                 </main>
             </div>

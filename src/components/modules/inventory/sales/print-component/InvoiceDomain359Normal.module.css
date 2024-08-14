@@ -54,6 +54,41 @@
     font-weight: 300;
     font-size: 12px;
 }
+.invoice-text{
+    max-width: 180px;
+    min-height: 18px;
+    margin: 0px;
+    padding: 0px;
+    font-weight: 300;
+    font-size: 12px;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+.padding-left{
+    max-width: 180px;
+    min-height: 18px;
+    margin: 0px;
+    padding: 0px;
+    padding-left: 12px;
+    font-weight: 300;
+    font-size: 12px;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+.invoice-text-title{
+    width: 50px;
+    margin: 0px;
+    padding: 1px;
+    font-weight: 300;
+    font-size: 12px;
+}
+.invoice-text-title-two{
+    width: 70px;
+    margin: 0px;
+    padding: 1px;
+    font-weight: 300;
+    font-size: 12px;
+}
 .invoice-body-text{
     margin: 0px;
     padding: 0px;

@@ -300,7 +300,7 @@ function _SalesTable() {
                                     }}
                                     loaderSize="xs"
                                     loaderColor="grape"
-                                    height={tableHeight}
+                                    height={tableHeight + 2}
                                     scrollAreaProps={{ type: 'never' }}
                                     rowBackgroundColor={(item) => {
                                         if (item.invoice === selectedRow) return '#e2c2c263';
@@ -329,89 +329,91 @@ function _SalesTable() {
                                 {t('Invoice')}: {salesViewData && salesViewData.invoice && salesViewData.invoice}
                             </Box>
                             <Box className={'borderRadiusAll'} fz={'sm'}  >
-                                <Box pl={`xs`} fz={'sm'} fw={'600'} pr={'xs'} pt={'6'} pb={'xs'} className={'boxBackground textColor'} >
-                                    <Grid gutter={{ base: 4 }}>
-                                        <Grid.Col span={'6'}>
-                                            <Grid columns={15} gutter={{ base: 4 }}>
-                                                <Grid.Col span={6} ><Text fz="sm" lh="xs">{t('Customer')}</Text></Grid.Col>
-                                                <Grid.Col span={9} >
-                                                    <Text fz="sm" lh="xs">
-                                                        {salesViewData && salesViewData.customerName && salesViewData.customerName}
-                                                    </Text>
-                                                </Grid.Col>
-                                            </Grid>
-                                            <Grid columns={15} gutter={{ base: 4 }}>
-                                                <Grid.Col span={6} ><Text fz="sm" lh="xs">{t('Mobile')}</Text></Grid.Col>
-                                                <Grid.Col span={9} >
-                                                    <Text fz="sm" lh="xs">
-                                                        {salesViewData && salesViewData.customerMobile && salesViewData.customerMobile}
-                                                    </Text>
-                                                </Grid.Col>
-                                            </Grid>
-                                            <Grid columns={15} gutter={{ base: 4 }}>
-                                                <Grid.Col span={6} ><Text fz="sm" lh="xs">{t('Address')}</Text></Grid.Col>
-                                                <Grid.Col span={9} >
-                                                    <Text fz="sm" lh="xs">
-                                                        {salesViewData && salesViewData.customer_address && salesViewData.customer_address}
-                                                    </Text>
-                                                </Grid.Col>
-                                            </Grid>
-                                            <Grid columns={15} gutter={{ base: 4 }}>
-                                                <Grid.Col span={6} ><Text fz="sm" lh="xs">{t('Balance')}</Text></Grid.Col>
-                                                <Grid.Col span={9} >
-                                                    <Text fz="sm" lh="xs">
-                                                        {salesViewData && salesViewData.balance ? Number(salesViewData.balance).toFixed(2) : 0.00}
-                                                    </Text>
-                                                </Grid.Col>
-                                            </Grid>
-                                        </Grid.Col>
-                                        <Grid.Col span={'6'}>
-                                            <Grid columns={15} gutter={{ base: 4 }}>
-                                                <Grid.Col span={6} ><Text fz="sm" lh="xs">{t('Created')}</Text></Grid.Col>
-                                                <Grid.Col span={9} >
-                                                    <Text fz="sm" lh="xs">
-                                                        {salesViewData && salesViewData.created && salesViewData.created}
-                                                    </Text>
-                                                </Grid.Col>
-                                            </Grid>
-                                            <Grid columns={15} gutter={{ base: 4 }}>
-                                                <Grid.Col span={6} ><Text fz="sm" lh="xs">{t('CreatedBy')}</Text></Grid.Col>
-                                                <Grid.Col span={9} >
-                                                    <Text fz="sm" lh="xs">
-                                                        {salesViewData && salesViewData.createdByName && salesViewData.createdByName}
-                                                    </Text>
-                                                </Grid.Col>
-                                            </Grid>
-                                            <Grid columns={15} gutter={{ base: 4 }}>
-                                                <Grid.Col span={6} ><Text fz="sm" lh="xs">{t('SalesBy')}</Text></Grid.Col>
-                                                <Grid.Col span={9} >
-                                                    <Text fz="sm" lh="xs">
-                                                        {salesViewData && salesViewData.salesByUser && salesViewData.salesByUser}
-                                                    </Text>
-                                                </Grid.Col>
-                                            </Grid>
-                                            <Grid columns={15} gutter={{ base: 4 }}>
-                                                <Grid.Col span={6} ><Text fz="sm" lh="xs">{t('Mode')}</Text></Grid.Col>
-                                                <Grid.Col span={9} >
-                                                    <Text fz="sm" lh="xs">
-                                                        {salesViewData && salesViewData.mode_name && salesViewData.mode_name}
-                                                    </Text>
-                                                </Grid.Col>
-                                            </Grid>
-                                            <Grid columns={15} gutter={{ base: 4 }}>
-                                                <Grid.Col span={6} ><Text fz="sm" lh="xs">{t('Process')}</Text></Grid.Col>
-                                                <Grid.Col span={9} >
-                                                    <Text fz="sm" lh="xs">
-                                                        {salesViewData && salesViewData.process && salesViewData.process}
-                                                    </Text>
-                                                </Grid.Col>
-                                            </Grid>
-                                        </Grid.Col>
-                                    </Grid>
-                                </Box>
-                                <ScrollArea h={height - 18} scrollbarSize={2} type="never" >
-                                    <Box>
-                                        <Table stickyHeader >
+                                <ScrollArea h={122} type="never">
+                                    <Box pl={`xs`} fz={'sm'} fw={'600'} pr={'xs'} pt={'6'} pb={'xs'} className={'boxBackground textColor'} >
+                                        <Grid gutter={{ base: 4 }}>
+                                            <Grid.Col span={'6'}>
+                                                <Grid columns={15} gutter={{ base: 4 }}>
+                                                    <Grid.Col span={6} ><Text fz="sm" lh="xs">{t('Customer')}</Text></Grid.Col>
+                                                    <Grid.Col span={9} >
+                                                        <Text fz="sm" lh="xs">
+                                                            {salesViewData && salesViewData.customerName && salesViewData.customerName}
+                                                        </Text>
+                                                    </Grid.Col>
+                                                </Grid>
+                                                <Grid columns={15} gutter={{ base: 4 }}>
+                                                    <Grid.Col span={6} ><Text fz="sm" lh="xs">{t('Mobile')}</Text></Grid.Col>
+                                                    <Grid.Col span={9} >
+                                                        <Text fz="sm" lh="xs">
+                                                            {salesViewData && salesViewData.customerMobile && salesViewData.customerMobile}
+                                                        </Text>
+                                                    </Grid.Col>
+                                                </Grid>
+                                                <Grid columns={15} gutter={{ base: 4 }}>
+                                                    <Grid.Col span={6} ><Text fz="sm" lh="xs">{t('Address')}</Text></Grid.Col>
+                                                    <Grid.Col span={9} >
+                                                        <Text fz="sm" lh="xs">
+                                                            {salesViewData && salesViewData.customer_address && salesViewData.customer_address}
+                                                        </Text>
+                                                    </Grid.Col>
+                                                </Grid>
+                                                <Grid columns={15} gutter={{ base: 4 }}>
+                                                    <Grid.Col span={6} ><Text fz="sm" lh="xs">{t('Balance')}</Text></Grid.Col>
+                                                    <Grid.Col span={9} >
+                                                        <Text fz="sm" lh="xs">
+                                                            {salesViewData && salesViewData.balance ? Number(salesViewData.balance).toFixed(2) : 0.00}
+                                                        </Text>
+                                                    </Grid.Col>
+                                                </Grid>
+                                            </Grid.Col>
+                                            <Grid.Col span={'6'}>
+                                                <Grid columns={15} gutter={{ base: 4 }}>
+                                                    <Grid.Col span={6} ><Text fz="sm" lh="xs">{t('Created')}</Text></Grid.Col>
+                                                    <Grid.Col span={9} >
+                                                        <Text fz="sm" lh="xs">
+                                                            {salesViewData && salesViewData.created && salesViewData.created}
+                                                        </Text>
+                                                    </Grid.Col>
+                                                </Grid>
+                                                <Grid columns={15} gutter={{ base: 4 }}>
+                                                    <Grid.Col span={6} ><Text fz="sm" lh="xs">{t('CreatedBy')}</Text></Grid.Col>
+                                                    <Grid.Col span={9} >
+                                                        <Text fz="sm" lh="xs">
+                                                            {salesViewData && salesViewData.createdByName && salesViewData.createdByName}
+                                                        </Text>
+                                                    </Grid.Col>
+                                                </Grid>
+                                                <Grid columns={15} gutter={{ base: 4 }}>
+                                                    <Grid.Col span={6} ><Text fz="sm" lh="xs">{t('SalesBy')}</Text></Grid.Col>
+                                                    <Grid.Col span={9} >
+                                                        <Text fz="sm" lh="xs">
+                                                            {salesViewData && salesViewData.salesByUser && salesViewData.salesByUser}
+                                                        </Text>
+                                                    </Grid.Col>
+                                                </Grid>
+                                                <Grid columns={15} gutter={{ base: 4 }}>
+                                                    <Grid.Col span={6} ><Text fz="sm" lh="xs">{t('Mode')}</Text></Grid.Col>
+                                                    <Grid.Col span={9} >
+                                                        <Text fz="sm" lh="xs">
+                                                            {salesViewData && salesViewData.mode_name && salesViewData.mode_name}
+                                                        </Text>
+                                                    </Grid.Col>
+                                                </Grid>
+                                                <Grid columns={15} gutter={{ base: 4 }}>
+                                                    <Grid.Col span={6} ><Text fz="sm" lh="xs">{t('Process')}</Text></Grid.Col>
+                                                    <Grid.Col span={9} >
+                                                        <Text fz="sm" lh="xs">
+                                                            {salesViewData && salesViewData.process && salesViewData.process}
+                                                        </Text>
+                                                    </Grid.Col>
+                                                </Grid>
+                                            </Grid.Col>
+                                        </Grid>
+                                    </Box>
+                                </ScrollArea>
+                                <ScrollArea h={height} scrollbarSize={2} type="never">
+                                    <Box >
+                                        <Table stickyHeader>
                                             <Table.Thead>
                                                 <Table.Tr>
                                                     <Table.Th fz="xs" w={'20'}>{t('S/N')}</Table.Th>
@@ -459,7 +461,7 @@ function _SalesTable() {
                                     </Box>
                                 </ScrollArea>
                             </Box>
-                            <Button.Group fullWidth>
+                            <Button.Group fullWidth mb={'2'}>
                                 <Button
                                     fullWidth
                                     variant="filled"
@@ -492,9 +494,6 @@ function _SalesTable() {
                                     color="cyan.5"
                                 >{t('Edit')}</Button>
                             </Button.Group>
-                        </Box>
-                        <Box>
-
                         </Box>
                     </Grid.Col>
                     <Grid.Col span={1} >
