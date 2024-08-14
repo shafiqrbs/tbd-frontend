@@ -1,6 +1,6 @@
 import React from 'react'
 import { IconSearch, IconDeviceFloppy, IconRestore, IconPlus, IconClockPause, IconHandStop, IconUser, IconRotateClockwise } from "@tabler/icons-react";
-import { Button, Flex, Text, Tooltip, Box, Center, Stack, Container } from "@mantine/core";
+import { Button, Flex, Text, Tooltip, Box, Center, Stack, Container, ScrollArea } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import { useWindowScroll } from '@mantine/hooks';
 import { useOutletContext } from "react-router-dom";
@@ -11,9 +11,9 @@ function _ShortcutInvoice(props) {
     const formHeight = mainAreaHeight - 46; //TabList height 104
     return (
         <>
-            <Stack h={formHeight} bg="var(--mantine-color-body)" align="center">
-                <Center>
-                    <Container fluid mb={'8'}>
+            <ScrollArea h={formHeight} bg="var(--mantine-color-body)" type='never'>
+                <Flex direction={`column`} align={'center'} gap={'16'}>
+                    <Flex direction={`column`} align={'center'} mb={'8'}>
                         <Tooltip
                             label={t('AltTextNew')}
                             px={16}
@@ -41,10 +41,9 @@ function _ShortcutInvoice(props) {
                             </Button>
                         </Tooltip>
                         <Flex direction={`column`} align={'center'} fz={'12'} c={'gray.5'}>alt+n</Flex>
-                    </Container>
-                </Center>
-                <Center>
-                    <Container fluid mb={'8'}>
+                    </Flex>
+
+                    <Flex direction={`column`} align={'center'} mb={'8'}>
                         <Tooltip
                             label={t('AltTextReset')}
                             px={16}
@@ -72,11 +71,9 @@ function _ShortcutInvoice(props) {
                             </Button>
                         </Tooltip>
                         <Flex direction={`column`} align={'center'} fz={'12'} c={'gray.5'}>alt+r</Flex>
-                    </Container>
-                </Center>
+                    </Flex>
 
-                <Center>
-                    <Container fluid mb={'8'}>
+                    <Flex direction={`column`} align={'center'} mb={'8'}>
                         <Tooltip
                             label={t('AltTextPause')}
                             px={16}
@@ -104,10 +101,8 @@ function _ShortcutInvoice(props) {
                             </Button>
                         </Tooltip>
                         <Flex direction={`column`} align={'center'} fz={'12'} c={'gray.5'}>alt+o</Flex>
-                    </Container>
-                </Center>
-                <Center>
-                    <Container fluid mb={'8'}>
+                    </Flex>
+                    <Flex direction={`column`} align={'center'} mb={'8'}>
                         <Tooltip
                             label={t('AltTextHold')}
                             px={16}
@@ -135,10 +130,8 @@ function _ShortcutInvoice(props) {
                             </Button>
                         </Tooltip>
                         <Flex direction={`column`} align={'center'} fz={'12'} c={'gray.5'}>alt+o</Flex>
-                    </Container>
-                </Center>
-                <Center>
-                    <Container fluid mb={'8'}>
+                    </Flex>
+                    <Flex direction={`column`} align={'center'} mb={'8'}>
                         <Tooltip
                             label={t('AltTextCustomer')}
                             px={16}
@@ -166,10 +159,8 @@ function _ShortcutInvoice(props) {
                             </Button>
                         </Tooltip>
                         <Flex direction={`column`} align={'center'} fz={'12'} c={'gray.5'}>alt+o</Flex>
-                    </Container>
-                </Center>
-                <Center>
-                    <Container fluid mb={'8'}>
+                    </Flex>
+                    <Flex direction={`column`} align={'center'} mb={'8'}>
                         <Tooltip
                             label={t('AltTextReload')}
                             px={16}
@@ -197,10 +188,8 @@ function _ShortcutInvoice(props) {
                             </Button>
                         </Tooltip>
                         <Flex direction={`column`} align={'center'} fz={'12'} c={'gray.5'}>alt+o</Flex>
-                    </Container>
-                </Center>
-                <Center>
-                    <Container fluid mb={'8'}>
+                    </Flex>
+                    <Flex direction={`column`} align={'center'} mb={'8'}>
                         <Tooltip
                             label={t('AltTextSave')}
                             px={16}
@@ -228,10 +217,10 @@ function _ShortcutInvoice(props) {
                             </Button>
                         </Tooltip>
                         <Flex direction={`column`} align={'center'} fz={'12'} c={'gray.5'}>alt+s</Flex>
-                    </Container>
-                </Center>
+                    </Flex>
 
-            </Stack>
+                </Flex>
+            </ScrollArea >
         </>
     )
 }
