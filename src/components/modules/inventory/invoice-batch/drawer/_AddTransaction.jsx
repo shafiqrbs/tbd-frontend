@@ -102,7 +102,9 @@ function _AddTransaction(props) {
                     <Drawer.Overlay />
                     <Drawer.Content>
                         <Drawer.Header>
-                            <Drawer.Title>{t('AddTransaction')}</Drawer.Title>
+                            <Drawer.Title><Text fw={'600'} fz={'16'}>
+                                {t('AddTransaction')}
+                            </Text></Drawer.Title>
                             <Drawer.CloseButton />
                         </Drawer.Header>
                         <form onSubmit={form.onSubmit((values) => {

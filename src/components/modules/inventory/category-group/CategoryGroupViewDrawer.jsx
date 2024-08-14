@@ -3,6 +3,7 @@ import { useOutletContext } from "react-router-dom";
 import {
     ActionIcon,
     Grid, Box, Drawer,
+    Text,
 } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
 
@@ -31,7 +32,11 @@ function CategoryGroupViewDrawer(props) {
                 <Drawer.Overlay />
                 <Drawer.Content>
                     <Drawer.Header>
-                        <Drawer.Title>{t('UserDetails')}</Drawer.Title>
+                        <Drawer.Title>
+                            <Text fw={'600'} fz={'16'}>
+                                {t('UserDetails')}
+                            </Text>
+                        </Drawer.Title>
                         <ActionIcon
                             className="ActionIconCustom"
                             radius="xl"

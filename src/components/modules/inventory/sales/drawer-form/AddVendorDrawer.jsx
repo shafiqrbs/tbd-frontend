@@ -1,7 +1,8 @@
 import React from "react";
 import { useOutletContext } from "react-router-dom";
 import {
-    ActionIcon, Box, ScrollArea, Drawer
+    ActionIcon, Box, ScrollArea, Drawer,
+    Text
 } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
 
@@ -29,7 +30,11 @@ function AddVendorDrawer(props) {
                 <Drawer.Content>
                     <ScrollArea h={height + 100} scrollbarSize={2} type="never" bg={'gray.1'}>
                         <Drawer.Header>
-                            <Drawer.Title>{t('InstantVendorCreate')}</Drawer.Title>
+                            <Drawer.Title>
+                                <Text fw={'600'} fz={'16'}>
+                                    {t('InstantVendorCreate')}
+                                </Text>
+                            </Drawer.Title>
                             <ActionIcon
                                 className="ActionIconCustom"
                                 radius="xl"

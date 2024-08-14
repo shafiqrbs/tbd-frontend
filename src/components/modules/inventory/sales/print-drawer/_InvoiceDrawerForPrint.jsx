@@ -1,7 +1,7 @@
 import React from "react";
-import { Drawer, ScrollArea } from "@mantine/core";
+import { ActionIcon, Box, Drawer, ScrollArea, Text } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
-import { IconXboxX } from "@tabler/icons-react";
+import { IconX, IconXboxX } from "@tabler/icons-react";
 import _InvoiceForDomain359Pos from "../print-component/_InvoiceForDomain359Pos.jsx";
 import _InvoiceForDomain359Normal from "../print-component/_InvoiceForDomain359Normal.jsx";
 import InvoiceDomain359Normal from "../print-component/InvoiceDomain359Normal.jsx";
@@ -19,7 +19,7 @@ function _InvoiceDrawerForPrint(props) {
 
     return (
         <>
-            <Drawer
+            <Drawer.Root
                 radius="md"
                 position="right"
                 opened={openInvoiceDrawerForPrint}
@@ -33,6 +33,32 @@ function _InvoiceDrawerForPrint(props) {
                     icon: <IconXboxX size={20} stroke={1.5} />,
                 }}
             >
+                <Drawer.Overlay />
+                <Drawer.Content>
+
+                    <Drawer.Header>
+                        <Drawer.Title>
+                            <Text fw={'600'} fz={'16'}>
+                                {printType === 'pos' ? t('PosPrint') : t('NormalPrint')}
+                            </Text>
+                        </Drawer.Title>
+                        <ActionIcon
+                            className="ActionIconCustom"
+                            radius="xl"
+                            color="red.6" size="lg"
+                            onClick={close}
+                        >
+                            <IconX style={{ width: '70%', height: '70%' }} stroke={1.5} />
+                        </ActionIcon>
+                    </Drawer.Header>
+                    <Box mb={0} bg={'gray.1'} >
+                        <Box p={'md'} className="boxBackground borderRadiusAll" >
+                            {configData?.domain?.id == '359' && printType === 'pos' && <InvoiceDomain359Pos mode={mode} setOpenInvoiceDrawerForPrint={setOpenInvoiceDrawerForPrint} />}
+                            {/* { configData?.domain?.id =='359' && printType==='print' && <_InvoiceForDomain359Normal  mode={mode}/> } */}
+                            {configData?.domain?.id == '359' && printType === 'print' && <InvoiceDomain359Normal mode={mode} setOpenInvoiceDrawerForPrint={setOpenInvoiceDrawerForPrint} />}
+                        </Box>
+                    </Box>
+                </Drawer.Content>
 
                 {/* {configData?.domain?.id ? (
                     (configData?.domain?.id == '359' && printType === 'pos' &&
@@ -51,10 +77,8 @@ function _InvoiceDrawerForPrint(props) {
                     printType === 'print' && <_InvoiceForDomain359Normal mode={mode} />
                 )} */}
                 {/* {configData?.domain?.id == '359' && printType === 'pos' && <_InvoiceForDomain359Pos mode={mode} />} */}
-                {configData?.domain?.id == '359' && printType === 'pos' && <InvoiceDomain359Pos mode={mode} setOpenInvoiceDrawerForPrint={setOpenInvoiceDrawerForPrint} />}
-                {/* { configData?.domain?.id =='359' && printType==='print' && <_InvoiceForDomain359Normal  mode={mode}/> } */}
-                {configData?.domain?.id == '359' && printType === 'print' && <InvoiceDomain359Normal mode={mode} setOpenInvoiceDrawerForPrint={setOpenInvoiceDrawerForPrint} />}
-            </Drawer>
+
+            </Drawer.Root >
         </>
     );
 }

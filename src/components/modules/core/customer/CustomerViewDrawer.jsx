@@ -3,6 +3,7 @@ import { useOutletContext } from "react-router-dom";
 import {
     ActionIcon,
     Grid, Box, Drawer,
+    Text,
 } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
 import {
@@ -39,7 +40,11 @@ function CustomerViewDrawer(props) {
                 <Drawer.Overlay />
                 <Drawer.Content>
                     <Drawer.Header>
-                        <Drawer.Title>{t('CustomerDetailsData')}</Drawer.Title>
+                        <Drawer.Title>
+                            <Text fw={'600'} fz={'16'}>
+                                {t('CustomerDetailsData')}
+                            </Text>
+                        </Drawer.Title>
                         <ActionIcon
                             className="ActionIconCustom"
                             radius="xl"
