@@ -92,8 +92,6 @@ function AppRoute() {
                     <Route path="product-settings" element={<ProductSettingsIndex />} />
                     <Route path="product-settings/:settingsId" element={<ProductSettingsIndex />} />
                     <Route path="product-management" element={<ProductManagementIndex />} />
-
-
                 </Route>
 
                 <Route path="/production/">
