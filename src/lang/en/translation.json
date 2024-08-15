@@ -528,5 +528,6 @@
   "CategoryDetailsInformation" : "Category Details Information",
   "TotalAmount" : "Total Amount",
   "Checked" : "Checked",
+  "IsSelected" : "Is selected",
   "" : ""
 }

@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import {
-    Group,
-    Box, Grid,
-    ActionIcon, Text, Title, Stack, Menu, rem
+    Group,Image,
+    Box,
+    ActionIcon, Text, Menu, rem
 } from "@mantine/core";
 import { useTranslation } from "react-i18next";
-import { IconEye, IconEdit, IconTrash, IconTrashX, IconDotsVertical } from "@tabler/icons-react";
+import { IconTrashX, IconDotsVertical } from "@tabler/icons-react";
 import { DataTable } from 'mantine-datatable';
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -14,17 +14,14 @@ import {
     getIndexEntityData,
     setFetching, setFormLoading,
     setInsertType,
-    showEntityData
 } from "../../../../store/accounting/crudSlice.js";
 import KeywordSearch from "../../filter/KeywordSearch";
 import { modals } from "@mantine/modals";
 import { deleteEntityData } from "../../../../store/core/crudSlice";
-import ShortcutInvoice from "../../shortcut/ShortcutInvoice";
-import Shortcut from "../../shortcut/Shortcut";
 import tableCss from "../../../../assets/css/Table.module.css";
 import CustomerViewModel from "../../core/customer/CustomerViewModel.jsx";
-
-
+import transactionModeDataStoreIntoLocalStorage
+    from "../../../global-hook/local-storage/transactionModeDataStoreIntoLocalStorage.js";
 
 function TransactionModeTable(props) {
 
@@ -39,7 +36,6 @@ function TransactionModeTable(props) {
     const fetching = useSelector((state) => state.crudSlice.fetching)
     const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword)
     const indexData = useSelector((state) => state.crudSlice.indexEntityData)
-    const customerFilterData = useSelector((state) => state.crudSlice.customerFilterData)
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -47,13 +43,12 @@ function TransactionModeTable(props) {
             url: 'accounting/transaction-mode',
             param: {
                 term: searchKeyword,
-                // name: customerFilterData.name,
-                // mobile: customerFilterData.mobile,
                 page: page,
                 offset: perPage
             }
         }
         dispatch(getIndexEntityData(value))
+        transactionModeDataStoreIntoLocalStorage(JSON.parse(localStorage.getItem('user')).id)
     }, [fetching]);
 
     return (
@@ -86,6 +81,19 @@ function TransactionModeTable(props) {
                         { accessor: 'account_type_name', title: t('AccountType') },
                         { accessor: 'service_charge', title: t('ServiceCharge') },
                         { accessor: 'account_owner', title: t('AccountOwner') },
+                        {
+                            accessor: 'path',
+                            title: t('Image'),
+                            width:"100px",
+                            render: (item) => (
+                                <Image
+                                    radius="md"
+                                    w="70%"
+                                    src={isOnline ? item.path : '/images/transaction-mode-offline.jpg'}
+                                    alt={item.method_name}
+                                />
+                            )
+                        },
 
                         {
                             accessor: "action",
@@ -114,8 +122,6 @@ function TransactionModeTable(props) {
                                             <Menu.Item
                                                 onClick={() => {
                                                     console.log('ok')
-                                                    // setCustomerViewModel(true)
-                                                    // dispatch(showEntityData('core/customer/' + data.id))
                                                 }}
                                                 target="_blank"
                                                 component="a"
@@ -123,7 +129,7 @@ function TransactionModeTable(props) {
                                             >
                                                 {t('Show')}
                                             </Menu.Item>
-                                            <Menu.Item
+                                            {/*<Menu.Item
                                                 target="_blank"
                                                 component="a"
                                                 w={'200'}
@@ -149,7 +155,7 @@ function TransactionModeTable(props) {
                                                 rightSection={<IconTrashX style={{ width: rem(14), height: rem(14) }} />}
                                             >
                                                 {t('Delete')}
-                                            </Menu.Item>
+                                            </Menu.Item>*/}
                                         </Menu.Dropdown>
                                     </Menu>
                                 </Group>
