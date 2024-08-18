@@ -22,6 +22,7 @@ function InvoiceDomain359Pos(props) {
     const navigate = useNavigate();
     const { isOnline, mainAreaHeight } = useOutletContext();
     const height = mainAreaHeight; //TabList height 104
+    const effectRan = useRef(false);
 
     const configData = localStorage.getItem('config-data') ? JSON.parse(localStorage.getItem('config-data')) : []
     const imageSrc = `${import.meta.env.VITE_IMAGE_GATEWAY_URL}uploads/inventory/logo/${configData.path}`;
@@ -33,7 +34,8 @@ function InvoiceDomain359Pos(props) {
     const handleAfterPrint = useCallback(() => {
         props.mode === 'insert'
             ? (setIsPrinting(false),
-                props.setOpenInvoiceDrawerForPrint(false))
+                // props.setOpenInvoiceDrawerForPrint(false))
+                console.log("printing closed"))
             : (setIsPrinting(false),
                 navigate('/inventory/sales'))
     }, []);
@@ -63,19 +65,32 @@ function InvoiceDomain359Pos(props) {
                 variant="filled"
                 leftSection={<IconReceipt size={14} />}
                 color="red.5"
+                id="print_button"
             >
                 {t('Print')}
             </Button>
         );
     }, []);
 
+    useEffect(() => {
+        !effectRan.current && (
+            setTimeout(() => {
+                document.getElementById('print_button').click()
+            }, 500),
+            (effectRan.current = true)
+        );
+        return () => {
+            !effectRan.current && clearTimeout(setTimeout);
+        };
+    }, [])
+
     return (
         <>
             <Box>
                 <Grid columns={8} gutter={{ base: 8 }}>
                     <Grid.Col span={8} >
-                        <ScrollArea h={height - 36} type='never'>
-                            <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} id={"printElement"} ref={printRef}>
+                        <ScrollArea h={height - 36} type='never' ref={printRef}>
+                            <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} id={"printElement"} >
                                 <div className={classes['pos-body']}>
                                     <header className={classes['body-head']}>
                                         <div className={classes['pos-head']}>

@@ -21,7 +21,8 @@ function InvoiceDomain359Normal(props) {
     const navigate = useNavigate();
     const [isPrinting, setIsPrinting] = useState(false);
     const { isOnline, mainAreaHeight } = useOutletContext();
-    const height = mainAreaHeight; //TabList height 104
+    const height = mainAreaHeight; //TabList height 104;
+    const effectRan = useRef(false);
 
 
     const configData = localStorage.getItem('config-data') ? JSON.parse(localStorage.getItem('config-data')) : []
@@ -34,7 +35,8 @@ function InvoiceDomain359Normal(props) {
     const handleAfterPrint = useCallback(() => {
         props.mode === 'insert'
             ? (setIsPrinting(false),
-                props.setOpenInvoiceDrawerForPrint(false))
+                // props.setOpenInvoiceDrawerForPrint(false))
+                console.log("printing closed"))
             : (setIsPrinting(false),
                 navigate('/inventory/sales'))
     }, []);
@@ -64,11 +66,24 @@ function InvoiceDomain359Normal(props) {
                 variant="filled"
                 leftSection={<IconReceipt size={14} />}
                 color="red.5"
+                id="print_button"
             >
                 {t('Print')}
             </Button>
         );
     }, []);
+
+    useEffect(() => {
+        !effectRan.current && (
+            setTimeout(() => {
+                document.getElementById('print_button').click()
+            }, 500),
+            (effectRan.current = true)
+        );
+        return () => {
+            !effectRan.current && clearTimeout(setTimeout);
+        };
+    }, [])
 
     return (
         <>
