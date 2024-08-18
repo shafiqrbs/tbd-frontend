@@ -71,7 +71,6 @@ function InvoiceDomain359Pos(props) {
             </Button>
         );
     }, []);
-
     useEffect(() => {
         !effectRan.current && (
             setTimeout(() => {
@@ -325,7 +324,7 @@ function InvoiceDomain359Pos(props) {
                             <p className={`${classes['footer-details']} ${classes['invoice-text']}`}>{data2[0].grand_total}</p>
                         </div> */}
                                             <Text className={`${classes['footer-company']} ${classes['invoice-text']}`} mt={'md'} mb={0}>
-                                                Sold Good Are not refundable
+                                                {configData?.print_footer_text}
                                             </Text>
                                             <p className={`${classes['footer-company']} ${classes['invoice-text']}`}>&copy; {configData?.domain?.name}</p>
                                         </footer>
