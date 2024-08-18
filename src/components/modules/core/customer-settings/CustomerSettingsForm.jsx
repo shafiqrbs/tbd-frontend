@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import {
     Button, rem, Flex, Grid, Box, ScrollArea, Group, Text, Title, Stack,
@@ -28,8 +28,18 @@ function CustomerSettingsForm(props) {
     const height = mainAreaHeight - 100; //TabList height 104
     const [categoryGroupData, setCategoryGroupData] = useState(null);
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
+    const effectRan = useRef(true)
 
     const { adjustment, saveId } = props
+
+    useEffect(() => {
+        saveId !== 'EntityFormSubmit' && effectRan.current && (
+            setTimeout(() => {
+                document.getElementById('setting_type').click()
+            }, 100),
+            effectRan.current = false
+        )
+    })
 
     const settingsForm = useForm({
         initialValues: {
@@ -41,15 +51,15 @@ function CustomerSettingsForm(props) {
         }
     });
 
-    useHotkeys([['alt+n', () => {
+    saveId === 'EntityFormSubmit' && useHotkeys([['alt+n', () => {
         document.getElementById('setting_type').click()
     }]], []);
 
-    useHotkeys([['alt+r', () => {
+    saveId === 'EntityFormSubmit' && useHotkeys([['alt+r', () => {
         settingsForm.reset()
     }]], []);
 
-    useHotkeys([['alt+s', () => {
+    saveId === 'EntityFormSubmit' && useHotkeys([['alt+s', () => {
         document.getElementById(saveId).click()
     }]], []);
 
@@ -97,7 +107,7 @@ function CustomerSettingsForm(props) {
                     <Box mb={0}>
 
                         <Grid columns={9} gutter={{ base: 6 }} >
-                            <Grid.Col span={8} >
+                            <Grid.Col span={saveId === 'EntityFormSubmit' ? 8 : 9} >
                                 <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
                                     <Box bg={"white"} >
                                         <Box pl={`xs`} pr={8} pt={'6'} pb={'6'} mb={'4'} className={'boxBackground borderRadiusAll'} >
@@ -183,17 +193,19 @@ function CustomerSettingsForm(props) {
                                     </Box>
                                 </Box>
                             </Grid.Col>
-                            <Grid.Col span={1} >
-                                <Box bg={'white'} className={'borderRadiusAll'} pt={'16'}>
-                                    <_ShortcutMasterData
-                                        adjustment={adjustment}
-                                        form={settingsForm}
-                                        FormSubmit={saveId}
-                                        Name={'setting_type'}
-                                        inputType="select"
-                                    />
-                                </Box>
-                            </Grid.Col>
+                            {saveId === 'EntityFormSubmit' &&
+                                <Grid.Col span={1} >
+                                    <Box bg={'white'} className={'borderRadiusAll'} pt={'16'}>
+                                        <_ShortcutMasterData
+                                            adjustment={adjustment}
+                                            form={settingsForm}
+                                            FormSubmit={saveId}
+                                            Name={'setting_type'}
+                                            inputType="select"
+                                        />
+                                    </Box>
+                                </Grid.Col>
+                            }
                         </Grid>
                     </Box>
                 </form>

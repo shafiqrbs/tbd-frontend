@@ -39,7 +39,7 @@ function CustomerGroupDrawer(props) {
                         <Drawer.Header>
                             <Drawer.Title>
                                 <Text fw={'600'} fz={'16'}>
-                                    {t('AddCustomerGroup')}
+                                    {t('AddCustomerSetting')}
                                 </Text>
                             </Drawer.Title>
                             <ActionIcon

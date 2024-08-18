@@ -51,7 +51,7 @@ function CategoryIndex() {
             url: 'inventory/select/group-category',
         }
         dispatch(getGroupCategoryDropdown(value))
-    }, []);
+    }, [setDropdownLoad]);
 
 
     return (
