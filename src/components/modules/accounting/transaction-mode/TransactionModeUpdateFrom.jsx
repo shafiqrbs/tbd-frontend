@@ -1,27 +1,22 @@
 import React, { useEffect, useState } from "react";
-import { useOutletContext } from "react-router-dom";
+import {useNavigate, useOutletContext} from "react-router-dom";
 import {
-    Button,
-    rem, Flex,
-    Grid, Box, ScrollArea, Group, Text, Title, Alert, List, Stack, Tooltip, SimpleGrid, Image,
+    Button, Flex,
+    Grid, Box, ScrollArea, Text, Title, Stack, Tooltip, SimpleGrid, Image,
 } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
 import {
-    IconCheck,
-    IconDeviceFloppy, IconInfoCircle, IconPlus,
+    IconDeviceFloppy
 } from "@tabler/icons-react";
 import { useDisclosure, useHotkeys } from "@mantine/hooks";
 import { useDispatch, useSelector } from "react-redux";
 import { hasLength, isNotEmpty, useForm } from "@mantine/form";
 import { modals } from "@mantine/modals";
-import { notifications } from "@mantine/notifications";
 
 import {
-    setEntityNewData,
     setFetching,
     setFormLoading,
     setValidationData,
-    storeEntityData
 } from "../../../../store/accounting/crudSlice.js";
 
 import Shortcut from "../../shortcut/Shortcut";
@@ -34,10 +29,14 @@ import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
 import getSettingAuthorizedTypeDropdownData
     from "../../../global-hook/dropdown/getSettingAuthorizedTypeDropdownData.js";
 import getSettingAccountTypeDropdownData from "../../../global-hook/dropdown/getSettingAccountTypeDropdownData.js";
+import {setInsertType} from "../../../../store/inventory/crudSlice.js";
+import {setEditEntityData} from "../../../../store/core/crudSlice.js";
+import SwitchForm from "../../../form-builders/SwitchForm.jsx";
 
 function TransactionModeUpdateFrom(props) {
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const { isOnline, mainAreaHeight } = useOutletContext();
     const height = mainAreaHeight - 100; //TabList height 104
     const [opened, { open, close }] = useDisclosure(false);
@@ -72,7 +71,8 @@ function TransactionModeUpdateFrom(props) {
             account_mode_id: '',
             service_charge: '',
             account_owner: '',
-            path: ''
+            path: '',
+            is_selected:entityEditData?.is_selected==1?true:false
         },
         validate: {
             method_id: isNotEmpty(),
@@ -101,14 +101,15 @@ function TransactionModeUpdateFrom(props) {
     useEffect(() => {
 
         form.setValues({
-            method_id: entityEditData.method_id ? entityEditData.method_id : '',
-            name: entityEditData.name ? entityEditData.name : '',
-            short_name: entityEditData.short_name ? entityEditData.short_name : '',
-            authorised_mode_id: entityEditData.authorised_mode_id ? entityEditData.authorised_mode_id : '',
-            account_mode_id: entityEditData.account_mode_id ? entityEditData.account_mode_id : '',
-            service_charge: entityEditData.service_charge ? entityEditData.service_charge : '',
-            account_owner: entityEditData.account_owner ? entityEditData.account_owner : '',
-            path: entityEditData.path ? entityEditData.path : '',
+            method_id: entityEditData?.method_id ? entityEditData.method_id : '',
+            name: entityEditData?.name ? entityEditData.name : '',
+            short_name: entityEditData?.short_name ? entityEditData.short_name : '',
+            authorised_mode_id: entityEditData?.authorised_mode_id ? entityEditData.authorised_mode_id : '',
+            account_mode_id: entityEditData?.account_mode_id ? entityEditData.account_mode_id : '',
+            service_charge: entityEditData?.service_charge ? entityEditData.service_charge : '',
+            account_owner: entityEditData?.account_owner ? entityEditData.account_owner : '',
+            path: entityEditData?.path ? entityEditData.path : '',
+            is_selected: entityEditData?.is_selected ? entityEditData.is_selected : '',
         })
 
         dispatch(setFormLoading(false))
@@ -118,8 +119,6 @@ function TransactionModeUpdateFrom(props) {
         }, 500)
 
     }, [dispatch, setFormData])
-
-
 
     useHotkeys([['alt+n', () => {
         document.getElementById('method_id').click()
@@ -152,6 +151,16 @@ function TransactionModeUpdateFrom(props) {
                             onConfirm: () => {
                                 const formValue = { ...form.values };
                                 formValue['path'] = files[0];
+                                formValue['is_selected'] = form.values.is_selected==true?1:0;
+                                const data = {
+                                    url: 'accounting/transaction-mode-update/'+entityEditData.id,
+                                    data: formValue
+                                }
+                                dispatch(storeEntityDataWithFile(data))
+                                dispatch(setInsertType('create'));
+                                dispatch(setFetching(true))
+                                dispatch(setEditEntityData([]))
+                                navigate('/accounting/transaction-mode');
                             },
                         });
                     })}>
@@ -205,7 +214,7 @@ function TransactionModeUpdateFrom(props) {
                                                             mt={8}
                                                             id={'method_id'}
                                                             searchable={false}
-                                                            value={methodData ? String(methodData) : (entityEditData.method_id ? String(entityEditData.method_id) : null)}
+                                                            value={methodData ? String(methodData) : (entityEditData?.method_id ? String(entityEditData.method_id) : null)}
                                                             changeValue={setMethodData}
                                                         />
                                                     </Box>
@@ -248,7 +257,7 @@ function TransactionModeUpdateFrom(props) {
                                                             mt={8}
                                                             id={'authorised_mode_id'}
                                                             searchable={false}
-                                                            value={authorisedData ? String(authorisedData) : (entityEditData.authorised_mode_id ? String(entityEditData.authorised_mode_id) : null)}
+                                                            value={authorisedData ? String(authorisedData) : (entityEditData?.authorised_mode_id ? String(entityEditData.authorised_mode_id) : null)}
                                                             changeValue={setAuthorisedData}
                                                         />
                                                     </Box>
@@ -265,7 +274,7 @@ function TransactionModeUpdateFrom(props) {
                                                             mt={8}
                                                             id={'account_mode_id'}
                                                             searchable={false}
-                                                            value={accountTypeData ? String(accountTypeData) : (entityEditData.account_mode_id ? String(entityEditData.account_mode_id) : null)}
+                                                            value={accountTypeData ? String(accountTypeData) : (entityEditData?.account_mode_id ? String(entityEditData.account_mode_id) : null)}
                                                             changeValue={setAccountTypeData}
                                                         />
                                                     </Box>
@@ -293,6 +302,19 @@ function TransactionModeUpdateFrom(props) {
                                                             form={form}
                                                             mt={8}
                                                             id={'account_owner'}
+                                                        />
+                                                    </Box>
+                                                    <Box mt={'xs'}>
+                                                        <SwitchForm
+                                                            tooltip={t('IsSelected')}
+                                                            label={t('IsSelected')}
+                                                            nextField={'is_selected'}
+                                                            name={'is_selected'}
+                                                            form={form}
+                                                            color="red"
+                                                            id={'is_selected'}
+                                                            position={'left'}
+                                                            checked={form.values?.is_selected==1?true:false}
                                                         />
                                                     </Box>
                                                     <Box mt={'xs'}>
@@ -330,7 +352,7 @@ function TransactionModeUpdateFrom(props) {
 
                                                         <SimpleGrid cols={{ base: 1, sm: 4 }} mt={previews.length > 0 ? 'xl' : 0}>
                                                             {previews}
-                                                            <Image src={'http://www.tbd.local/image/accounting/transaction-mode/' + entityEditData.path} />
+                                                            <Image src={'http://www.tbd.local/uploads/accounting/transaction-mode/' + entityEditData?.path} />
                                                         </SimpleGrid>
                                                     </Box>
                                                 </Box>
