@@ -1,8 +1,8 @@
 import React from "react";
 import { useOutletContext } from "react-router-dom";
-import {ActionIcon, Box, ScrollArea, Drawer} from "@mantine/core";
+import { ActionIcon, Box, ScrollArea, Drawer } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
-import {IconX} from "@tabler/icons-react";
+import { IconX } from "@tabler/icons-react";
 import AddCustomerDrawerForm from "./AddCustomerDrawerForm";
 
 function AddCustomerDrawer(props) {
@@ -21,7 +21,11 @@ function AddCustomerDrawer(props) {
                 <Drawer.Content>
                     <ScrollArea h={height + 100} scrollbarSize={2} type="never" bg={'gray.1'}>
                         <Drawer.Header>
-                            <Drawer.Title>{t('InstantCustomerCreate')}</Drawer.Title>
+                            <Drawer.Title>
+                                <Text fw={'600'} fz={'16'}>
+                                    {t('InstantCustomerCreate')}
+                                </Text>
+                            </Drawer.Title>
                             <ActionIcon
                                 className="ActionIconCustom"
                                 radius="xl"

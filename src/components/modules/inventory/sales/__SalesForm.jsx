@@ -339,7 +339,7 @@ function __SalesForm(props) {
                 }
 
             })}>
-                <Box mb={'xs'}>
+                <Box mb={'1'}>
                     <Grid columns={48}>
                         <Box className={'borderRadiusAll'} >
                             <Box>

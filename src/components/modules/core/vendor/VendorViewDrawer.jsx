@@ -34,7 +34,11 @@ function VendorViewDrawer(props) {
                 <Drawer.Overlay />
                 <Drawer.Content>
                     <Drawer.Header>
-                        <Drawer.Title>{t('VendorDetailsData')}</Drawer.Title>
+                        <Drawer.Title>
+                            <Text fw={'600'} fz={'16'}>
+                                {t('VendorDetailsData')}
+                            </Text>
+                        </Drawer.Title>
                         <ActionIcon
                             className="ActionIconCustom"
                             radius="xl"
