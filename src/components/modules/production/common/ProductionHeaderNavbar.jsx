@@ -23,7 +23,7 @@ function ProductionHeaderNavbar(props) {
     const links = [
         { link: '/production/items', label: t('ProductionItems') },
         { link: '/production/setting', label: t('ProductionSetting') },
-        { link: '/inventory/category-group', label: t('ProductionConfiguration') },
+        { link: '/production/config', label: t('ProductionConfiguration') },
     ];
     const items = links.map((link) => (
         <a

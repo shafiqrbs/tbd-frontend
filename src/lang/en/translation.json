@@ -530,5 +530,9 @@
   "Checked": "Checked",
   "NormalPrint": "Normal Print",
   "IsSelected" : "Is selected",
+  "ProductionProcedure" : "Production Procedure",
+  "ChooseProductionProcedure" : "Choose production procedure",
+  "ConsumptionMethod" : "Consumption method",
+  "ChooseConsumptionMethod" : "Choose consumption method",
   "": ""
 }
