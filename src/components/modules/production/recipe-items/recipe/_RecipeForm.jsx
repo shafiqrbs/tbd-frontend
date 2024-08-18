@@ -166,8 +166,8 @@ function _RecipeForm() {
                                                                         value={item.amount}
                                                                         onChange={(e)=>{
                                                                             const newValue = e.target.value;
+                                                                            console.log(key,item.slug,newValue)
                                                                             dispatch(setUpdateMeasurementData({ key, slug: item.slug, newAmount: newValue }));
-
                                                                             const value = {
                                                                                 url: 'production/inline-update-value-added',
                                                                                 data: {

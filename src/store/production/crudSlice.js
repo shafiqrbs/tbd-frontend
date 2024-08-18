@@ -194,7 +194,9 @@ const crudSlice = createSlice({
             state.recipeItemFilterData.product_name = action.payload.product_name
         },
         setUpdateMeasurementData(state, action) {
+            // console.log(action,payload)
             const { key, slug, newAmount } = action.payload;
+            console.log(key,slug,newAmount)
             const itemIndex = state.measurementInputData[key].findIndex(item => item.slug === slug);
             if(itemIndex >= 0) state.measurementInputData[key][itemIndex].amount = newAmount;
         }

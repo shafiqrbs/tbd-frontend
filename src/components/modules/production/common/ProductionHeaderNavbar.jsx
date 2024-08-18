@@ -40,7 +40,7 @@ function ProductionHeaderNavbar(props) {
     ));
 
     const dataRestore = () => {
-        dispatch(getRestoreData('production/recipe-items'))
+        dispatch(getRestoreData('production/restore/item'))
     }
 
     return (
