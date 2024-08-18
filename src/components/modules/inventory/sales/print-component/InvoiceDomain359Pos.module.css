@@ -41,7 +41,7 @@
 .head-address{
     font-size: 11px;
     margin-top: 0px;
-    text-align: center;
+    text-align: left;
 }
 .head-phone{
     margin-top: 0px;
@@ -80,6 +80,11 @@
 }
 .text-width{
     width: 50mm;
+}
+.text-width-two{
+    width: 78mm;
+    padding-left: 1px;
+    padding-right: 1px;
 }
 .invoice-details{
     margin: 0px;
@@ -130,6 +135,8 @@
     justify-content: space-between;
 }
 .footer-company{
+    margin: 0px;
+    padding: 0px;
     display: flex;
     width: 100%;
     text-align: center;

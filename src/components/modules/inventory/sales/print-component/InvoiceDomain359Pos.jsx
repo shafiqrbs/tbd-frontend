@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { Box, Button, Grid, ScrollArea, Table, Text } from "@mantine/core";
+import { Box, Button, Grid, ScrollArea, Space, Stack, Table, Text } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
 import { useSelector } from "react-redux";
 import { IconReceipt } from "@tabler/icons-react";
@@ -96,28 +96,149 @@ function InvoiceDomain359Pos(props) {
                                         <div className={classes['pos-head']}>
                                             <img src={imageSrc} alt="logo" className={classes['head-img']} />
                                             <h3 className={classes['head-title']}>{configData?.domain?.name}</h3>
-                                            <p className={classes['head-email']}>{configData?.domain?.email}</p>
-                                            <p className={classes['head-phone']}>{t('Mobile')} : {configData?.domain?.mobile}</p>
-                                            <p className={classes['head-address']}>{t('Address')} : {configData?.address}</p>
+                                            {/* <p className={classes['head-email']}>{configData?.domain?.email}</p> */}
+                                            {/* <p className={classes['head-phone']}>{t('Mobile')} : {configData?.domain?.mobile}</p>
+                                            <p className={classes['head-address']}>{t('Address')} : {configData?.address}</p> */}
+                                            <Grid columns={24} gutter={0} className={`${classes['head-phone']} ${classes['text-width-two']}`} mt={'xs'}>
+                                                <Grid.Col span={6}>
+                                                    {t('Email')}
+                                                </Grid.Col>
+                                                <Grid.Col span={2}>
+                                                    :
+                                                </Grid.Col>
+                                                <Grid.Col span={16}>
+                                                    {configData?.domain?.email}
+                                                </Grid.Col>
+                                            </Grid>
+                                            <Grid columns={24} gutter={0} className={`${classes['head-phone']} ${classes['text-width-two']}`}>
+                                                <Grid.Col span={6}>
+                                                    {t('Mobile')}
+                                                </Grid.Col>
+                                                <Grid.Col span={2}>
+                                                    :
+                                                </Grid.Col>
+                                                <Grid.Col span={16}>
+                                                    {configData?.domain?.mobile}
+                                                </Grid.Col>
+                                            </Grid>
+                                            <Grid columns={24} gutter={0} className={`${classes['head-address']} ${classes['text-width-two']}`} mb={'xs'}>
+                                                <Grid.Col span={6}>
+                                                    {t('Address')}
+                                                </Grid.Col>
+                                                <Grid.Col span={2}>
+                                                    :
+                                                </Grid.Col>
+                                                <Grid.Col span={16}>
+                                                    {configData?.address}
+                                                </Grid.Col>
+                                            </Grid>
                                         </div>
                                     </header>
                                     <main className={classes['body-main']}>
                                         <h3 className={classes['main-title']}><span className={classes['main-title-span']}>{t('RetailInvoice')}</span></h3>
                                         <div className={classes['main-invoice']}>
-                                            <div className={classes['invoice-details']}>
-                                                <p className={`${classes['invoice-text']} ${classes['text-width']}`}>{t('Invoice')} :  {invoicePrintData && invoicePrintData.invoice && invoicePrintData.invoice}</p>
+                                            <div className={classes['invoice-details']} >
+                                                <Grid columns={24} gutter={0} className={`${classes['invoice-text']} ${classes['text-width-two']}`}>
+                                                    <Grid.Col span={6}>
+                                                        {t('Invoice')}
+                                                    </Grid.Col>
+                                                    <Grid.Col span={2}>
+                                                        :
+                                                    </Grid.Col>
+                                                    <Grid.Col span={16}>
+                                                        {invoicePrintData && invoicePrintData.invoice && invoicePrintData.invoice}
+                                                    </Grid.Col>
+                                                </Grid>
+                                                <Grid columns={24} gutter={0} className={`${classes['invoice-text']} ${classes['text-width-two']}`}>
+                                                    <Grid.Col span={6}>
+                                                        {t('CreatedBy')}
+                                                    </Grid.Col>
+                                                    <Grid.Col span={2}>
+                                                        :
+                                                    </Grid.Col>
+                                                    <Grid.Col span={16}>
+                                                        {invoicePrintData && invoicePrintData.created && invoicePrintData.created}
+                                                    </Grid.Col>
+                                                </Grid>
+                                                <Grid columns={24} gutter={0} className={`${classes['invoice-text']} ${classes['text-width-two']}`}>
+                                                    <Grid.Col span={6}>
+                                                        {t('SalesBy')}
+                                                    </Grid.Col>
+                                                    <Grid.Col span={2}>
+                                                        :
+                                                    </Grid.Col>
+                                                    <Grid.Col span={16}>
+                                                        {invoicePrintData && invoicePrintData.sales_by_username && invoicePrintData.sales_by_username}
+                                                    </Grid.Col>
+                                                </Grid>
+                                                <Grid columns={24} gutter={0} className={`${classes['invoice-text']} ${classes['text-width-two']}`}>
+                                                    <Grid.Col span={6}>
+                                                        {t('Mode')}
+                                                    </Grid.Col>
+                                                    <Grid.Col span={2}>
+                                                        :
+                                                    </Grid.Col>
+                                                    <Grid.Col span={16}>
+                                                        {invoicePrintData && invoicePrintData.mode_name && invoicePrintData.mode_name}
+                                                    </Grid.Col>
+                                                </Grid>
+                                                <Grid columns={24} gutter={0} className={`${classes['invoice-text']} ${classes['text-width-two']}`}>
+                                                    <Grid.Col span={6}>
+                                                        {t('Process')}
+                                                    </Grid.Col>
+                                                    <Grid.Col span={2}>
+                                                        :
+                                                    </Grid.Col>
+                                                    <Grid.Col span={16}>
+                                                        {invoicePrintData && invoicePrintData.process_id && invoicePrintData.process_id}
+                                                    </Grid.Col>
+                                                </Grid>
+                                                {/* <p className={`${classes['invoice-text']} ${classes['text-width']}`}>{t('Invoice')} :  {invoicePrintData && invoicePrintData.invoice && invoicePrintData.invoice}</p>
                                                 <p className={classes['invoice-text']}>{t('Created')} : {invoicePrintData && invoicePrintData.created && invoicePrintData.created}</p>
                                                 <p className={`${classes['invoice-text']} ${classes['text-width']}`}>{t('CreatedBy')} : {invoicePrintData && invoicePrintData.created_by_user_name && invoicePrintData.created_by_user_name}</p>
                                                 <p className={`${classes['invoice-text']} ${classes['text-width']}`}>{t('SalesBy')} : {invoicePrintData && invoicePrintData.sales_by_username && invoicePrintData.sales_by_username}</p>
-                                                <p className={`${classes['invoice-text']} ${classes['text-width']}`}>{t('Mode')} : {invoicePrintData && invoicePrintData.mode_name && invoicePrintData.mode_name}</p><p className={`${classes['invoice-text']} ${classes['text-width']}`}>{t('Process')} : {invoicePrintData && invoicePrintData.process_id && invoicePrintData.process_id}</p>
+                                                <p className={`${classes['invoice-text']} ${classes['text-width']}`}>{t('Mode')} : {invoicePrintData && invoicePrintData.mode_name && invoicePrintData.mode_name}</p><p className={`${classes['invoice-text']} ${classes['text-width']}`}>{t('Process')} : {invoicePrintData && invoicePrintData.process_id && invoicePrintData.process_id}</p> */}
                                             </div>
                                         </div>
                                         <h3 className={classes['main-title']}><span className={classes['main-title-span']}>{t('BillTo')}</span></h3>
                                         <div className={classes['main-address']}>
-                                            <p className={classes['invoice-text']}>{t('Customer')} : {invoicePrintData && invoicePrintData.customer_name && invoicePrintData.customer_name}</p>
+                                            <Grid columns={24} gutter={0} className={`${classes['invoice-text']} ${classes['text-width-two']}`}>
+                                                <Grid.Col span={6}>
+                                                    {t('Customer')}
+                                                </Grid.Col>
+                                                <Grid.Col span={2}>
+                                                    :
+                                                </Grid.Col>
+                                                <Grid.Col span={16}>
+                                                    {invoicePrintData && invoicePrintData.customer_name && invoicePrintData.customer_name}
+                                                </Grid.Col>
+                                            </Grid>
+                                            <Grid columns={24} gutter={0} className={`${classes['invoice-text']} ${classes['text-width-two']}`}>
+                                                <Grid.Col span={6}>
+                                                    {t('Mobile')}
+                                                </Grid.Col>
+                                                <Grid.Col span={2}>
+                                                    :
+                                                </Grid.Col>
+                                                <Grid.Col span={16}>
+                                                    {invoicePrintData && invoicePrintData.customer_mobile && invoicePrintData.customer_mobile}
+                                                </Grid.Col>
+                                            </Grid>
+                                            <Grid columns={24} gutter={0} className={`${classes['invoice-text']} ${classes['text-width-two']}`}>
+                                                <Grid.Col span={6}>
+                                                    {t('Address')}
+                                                </Grid.Col>
+                                                <Grid.Col span={2}>
+                                                    :
+                                                </Grid.Col>
+                                                <Grid.Col span={16}>
+                                                    {invoicePrintData && invoicePrintData.customer_address && invoicePrintData.customer_address}
+                                                </Grid.Col>
+                                            </Grid>
+                                            {/* <p className={classes['invoice-text']}>{t('Customer')} : {invoicePrintData && invoicePrintData.customer_name && invoicePrintData.customer_name}</p>
                                             <p className={classes['invoice-text']}>{t('Mobile')} : {invoicePrintData && invoicePrintData.customer_mobile && invoicePrintData.customer_mobile}</p>
                                             <p className={classes['invoice-text']}>{t('Address')} : {invoicePrintData && invoicePrintData.customer_address && invoicePrintData.customer_address}</p>
-                                            <p className={classes['invoice-text']}>{t('Balance')} : {invoicePrintData && invoicePrintData.balance ? Number(invoicePrintData.balance).toFixed(2) : 0.00}</p>
+                                            <p className={classes['invoice-text']}>{t('Balance')} : {invoicePrintData && invoicePrintData.balance ? Number(invoicePrintData.balance).toFixed(2) : 0.00}</p> */}
                                         </div>
                                         <h3 className={classes['main-title']}></h3>
                                         <table style={{ width: '78mm' }}>
@@ -203,6 +324,9 @@ function InvoiceDomain359Pos(props) {
                             <p className={`${classes['footer-name']} ${classes['invoice-text']}`}>Grand Total</p>
                             <p className={`${classes['footer-details']} ${classes['invoice-text']}`}>{data2[0].grand_total}</p>
                         </div> */}
+                                            <Text className={`${classes['footer-company']} ${classes['invoice-text']}`} mt={'md'} mb={0}>
+                                                Sold Good Are not refundable
+                                            </Text>
                                             <p className={`${classes['footer-company']} ${classes['invoice-text']}`}>&copy; {configData?.domain?.name}</p>
                                         </footer>
                                     </main>
