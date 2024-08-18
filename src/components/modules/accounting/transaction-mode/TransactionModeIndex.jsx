@@ -1,13 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import {
-    Box, Button,
-    Grid, Progress, Title, Group, Burger, Menu, rem, ActionIcon
+    Box,
+    Grid, Progress
 } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from "react-redux";
 import { setInsertType } from "../../../../store/inventory/crudSlice";
-import { setSearchKeyword } from "../../../../store/core/crudSlice";
-import getConfigData from "../../../global-hook/config-data/getConfigData.js";
+import {editEntityData, setSearchKeyword} from "../../../../store/core/crudSlice";
 import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress.js";
 import TransactionModeForm from "./TransactionModeFrom.jsx";
 import TransactionModeUpdateFrom from "./TransactionModeUpdateFrom.jsx";
@@ -15,24 +14,23 @@ import TransactionModeTable from "./TransactionModeTable";
 import AccountingHeaderNavbar from "../AccountingHeaderNavbar";
 import { useNavigate, useParams } from "react-router-dom";
 import { setFormLoading } from "../../../../store/accounting/crudSlice.js";
+
 function TransactionModeIndex() {
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const insertType = useSelector((state) => state.crudSlice.insertType)
 
-    const configData = getConfigData()
     const progress = getLoadingProgress()
 
     const { transactionModeId } = useParams();
     const navigate = useNavigate();
 
 
-
     useEffect(() => {
         if (transactionModeId) {
             dispatch(setInsertType('update'));
-            // dispatch(editEntityData(`accounting/transaction-mode/${transactionModeId}`));
             dispatch(setFormLoading(true));
+            dispatch(editEntityData('accounting/transaction-mode/' + transactionModeId))
         } else if (!transactionModeId) {
             dispatch(setInsertType('create'));
             dispatch(setSearchKeyword(''));

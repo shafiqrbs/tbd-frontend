@@ -1,43 +1,36 @@
-import React, { useEffect, useState } from "react";
+import React, {useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import {
     Button,
     rem, Flex,
-    Grid, Box, ScrollArea, Group, Text, Title, Alert, List, Stack, SimpleGrid, Image, Tooltip
+    Grid, Box, ScrollArea, Text, Title, Stack, SimpleGrid, Image, Tooltip
 } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
 import {
     IconCheck,
-    IconDeviceFloppy, IconInfoCircle, IconPlus,
+    IconDeviceFloppy
 } from "@tabler/icons-react";
-import { useDisclosure, useHotkeys } from "@mantine/hooks";
-import { useDispatch, useSelector } from "react-redux";
+import { useHotkeys } from "@mantine/hooks";
+import { useDispatch } from "react-redux";
 import { hasLength, isNotEmpty, useForm } from "@mantine/form";
 import { modals } from "@mantine/modals";
 import { notifications } from "@mantine/notifications";
 
 import {
-    getExecutiveDropdown, getLocationDropdown,
-} from "../../../../store/core/utilitySlice";
-import {
-    setEntityNewData,
     setFetching,
     setValidationData,
-    storeEntityData,
     storeEntityDataWithFile
 } from "../../../../store/accounting/crudSlice.js";
 
 import Shortcut from "../../shortcut/Shortcut";
 import InputForm from "../../../form-builders/InputForm";
-import TextAreaForm from "../../../form-builders/TextAreaForm";
-import TransactionModeTable from "./TransactionModeTable.jsx";
 import InputNumberForm from "../../../form-builders/InputNumberForm";
 import SelectForm from "../../../form-builders/SelectForm.jsx";
 import getTransactionMethodDropdownData from "../../../global-hook/dropdown/getTransactionMethodDropdownData.js";
 import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
-import { getSettingDropdown } from "../../../../store/utility/utilitySlice.js";
 import getSettingAccountTypeDropdownData from "../../../global-hook/dropdown/getSettingAccountTypeDropdownData.js";
 import getSettingAuthorizedTypeDropdownData from "../../../global-hook/dropdown/getSettingAuthorizedTypeDropdownData.js";
+import SwitchForm from "../../../form-builders/SwitchForm.jsx";
 
 function TransactionModeForm(props) {
     const { t, i18n } = useTranslation();
@@ -50,11 +43,8 @@ function TransactionModeForm(props) {
     const [methodData, setMethodData] = useState(null);
     const [accountTypeData, setAccountTypeData] = useState(null);
 
-
     const authorizedDropdown = getSettingAuthorizedTypeDropdownData()
     const accountDropdown = getSettingAccountTypeDropdownData()
-
-
 
     const [files, setFiles] = useState([]);
 
@@ -65,7 +55,7 @@ function TransactionModeForm(props) {
 
     const form = useForm({
         initialValues: {
-            method_id: '', name: '', short_name: '', authorised_mode_id: '', account_mode_id: '', service_charge: '', account_owner: '', path: ''
+            method_id: '', name: '', short_name: '', authorised_mode_id: '', account_mode_id: '', service_charge: '', account_owner: '', path: '',is_selected:0
         },
         validate: {
             method_id: isNotEmpty(),
@@ -117,6 +107,7 @@ function TransactionModeForm(props) {
                             onConfirm: () => {
                                 const formValue = { ...form.values };
                                 formValue['path'] = files[0];
+                                formValue['is_selected'] = form.values.is_selected==true?1:0;
 
                                 const data = {
                                     url: 'accounting/transaction-mode',
@@ -276,11 +267,24 @@ function TransactionModeForm(props) {
                                                             label={t('AccountOwner')}
                                                             placeholder={t('AccountOwner')}
                                                             required={false}
-                                                            nextField={'service_name'}
+                                                            nextField={'is_selected'}
                                                             name={'account_owner'}
                                                             form={form}
                                                             mt={8}
                                                             id={'account_owner'}
+                                                        />
+                                                    </Box>
+                                                    <Box mt={'xs'}>
+                                                        <SwitchForm
+                                                            tooltip={t('IsSelected')}
+                                                            label={t('IsSelected')}
+                                                            nextField={'is_selected'}
+                                                            name={'is_selected'}
+                                                            form={form}
+                                                            color="red"
+                                                            id={'is_selected'}
+                                                            position={'left'}
+                                                            defaultChecked={form.is_selected}
                                                         />
                                                     </Box>
                                                     <Box mt={'xs'}>
