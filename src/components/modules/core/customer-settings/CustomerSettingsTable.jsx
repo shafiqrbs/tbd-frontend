@@ -21,7 +21,7 @@ import { modals } from "@mantine/modals";
 import { deleteEntityData } from "../../../../store/core/crudSlice";
 import { notifications } from "@mantine/notifications";
 import tableCss from "../../../../assets/css/Table.module.css";
-import CustomerSettingsViewModal from "./CustomerSettingsViewModal.jsx";
+import CustomerSettingsViewDrawer from "./CustomerSettingsViewDrawer.jsx";
 
 
 function CustomerSettingsTable() {
@@ -37,11 +37,12 @@ function CustomerSettingsTable() {
     const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword)
     const indexData = useSelector((state) => state.inventoryCrudSlice.indexEntityData)
     const entityDataDelete = useSelector((state) => state.inventoryCrudSlice.entityDataDelete)
-    const productCategoryFilterData = useSelector((state) => state.inventoryCrudSlice.productCategoryFilterData)
+    const productionSettingFilterData = useSelector((state) => state.productionCrudSlice.productionSettingFilterData)
 
-    const [categoryViewModal, setCategoryViewModal] = useState(false)
+    const [settingsData, setSettingsData] = useState([])
 
-    const navigate = useNavigate()
+    const navigate = useNavigate();
+    const [viewDrawer, setViewDrawer] = useState(false)
 
     useEffect(() => {
         dispatch(setDeleteMessage(''))
@@ -64,10 +65,11 @@ function CustomerSettingsTable() {
 
     useEffect(() => {
         const value = {
-            url: 'inventory/category-group',
+            url: 'inventory/particular',
             param: {
                 term: searchKeyword,
-                type: 'category',
+                name: productionSettingFilterData.name && productionSettingFilterData.name,
+                setting_type_id: productionSettingFilterData.setting_type_id && productionSettingFilterData.setting_type_id,
                 page: page,
                 offset: perPage
             }
@@ -97,8 +99,8 @@ function CustomerSettingsTable() {
                             textAlignment: 'right',
                             render: (item) => (indexData.data.indexOf(item) + 1)
                         },
-                        { accessor: 'name', title: t("SettingType") },
-                        { accessor: 'parent_name', title: t("SettingName") },
+                        { accessor: 'name', title: t("SettingName") },
+                        { accessor: 'setting_type_name', title: t("SettingType") },
                         {
                             accessor: "action",
                             title: t("Action"),
@@ -115,7 +117,7 @@ function CustomerSettingsTable() {
                                             <Menu.Item
                                                 onClick={() => {
                                                     dispatch(setInsertType('update'))
-                                                    dispatch(editEntityData('core/customer-settings/' + data.id))
+                                                    dispatch(editEntityData('inventory/particular/' + data.id))
                                                     dispatch(setFormLoading(true))
                                                     navigate(`/core/customer-settings/${data.id}`)
                                                 }}
@@ -125,8 +127,8 @@ function CustomerSettingsTable() {
 
                                             <Menu.Item
                                                 onClick={() => {
-                                                    setCategoryViewModal(true)
-                                                    // dispatch(editEntityData('inventory/category-group/' + data.id))
+                                                    setViewDrawer(true)
+                                                    setSettingsData(data)
                                                 }}
                                                 target="_blank"
                                                 component="a"
@@ -154,7 +156,17 @@ function CustomerSettingsTable() {
                                                         confirmProps: { color: 'red.6' },
                                                         onCancel: () => console.log('Cancel'),
                                                         onConfirm: () => {
-                                                            dispatch(deleteEntityData('inventory/category-group/' + data.id))
+                                                            dispatch(deleteEntityData('inventory/particular/' + data.id))
+                                                            dispatch(setFetching(true))
+                                                            notifications.show({
+                                                                color: 'red',
+                                                                title: t('DeleteSuccessfully'),
+                                                                icon: <IconCheck
+                                                                    style={{ width: rem(18), height: rem(18) }} />,
+                                                                loading: false,
+                                                                autoClose: 700,
+                                                                style: { backgroundColor: 'lightgray' },
+                                                            });
                                                         },
                                                     });
                                                 }}
@@ -183,7 +195,10 @@ function CustomerSettingsTable() {
                     scrollAreaProps={{ type: 'never' }}
                 />
             </Box>
-            {categoryViewModal && <CustomerSettingsViewModal categoryViewModal={categoryViewModal} setCategoryViewModal={setCategoryViewModal} />}
+            {
+                viewDrawer &&
+                <CustomerSettingsViewDrawer viewDrawer={viewDrawer} setViewDrawer={setViewDrawer} settingsData={settingsData} />
+            }
         </>
     );
 }

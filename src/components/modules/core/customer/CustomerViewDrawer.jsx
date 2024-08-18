@@ -32,8 +32,6 @@ function CustomerViewDrawer(props) {
         showData = customerObject
     }
 
-
-
     return (
         <>
             <Drawer.Root opened={viewDrawer} position="right" onClose={closeDrawer} size={'30%'} >
@@ -60,7 +58,7 @@ function CustomerViewDrawer(props) {
                                 <Grid columns={24}>
                                     <Grid.Col span={'8'} align={'left'} fw={'600'} fz={'14'}>{t('CustomerId')}</Grid.Col>
                                     <Grid.Col span={'1'}>:</Grid.Col>
-                                    <Grid.Col span={'auto'}>{entityEditData && entityEditData.customerId && entityEditData.customerId}</Grid.Col>
+                                    <Grid.Col span={'auto'}>{showData && showData.id && showData.id}</Grid.Col>
                                 </Grid>
                                 <Grid columns={24}>
                                     <Grid.Col span={'8'} align={'left'} fw={'600'} fz={'14'}>{t('Name')}</Grid.Col>
@@ -94,7 +92,7 @@ function CustomerViewDrawer(props) {
                                 <Grid columns={24}>
                                     <Grid.Col span={'8'} align={'left'} fw={'600'} fz={'14'}>{t('Created')}</Grid.Col>
                                     <Grid.Col span={'1'}>:</Grid.Col>
-                                    <Grid.Col span={'auto'}>{showData && showData.created && showData.created}</Grid.Col>
+                                    <Grid.Col span={'auto'}>{showData && showData.created_date && showData.created_date}</Grid.Col>
                                 </Grid>
                             </Box>
 

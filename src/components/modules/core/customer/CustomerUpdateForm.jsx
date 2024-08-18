@@ -118,11 +118,8 @@ function CustomerUpdateForm(props) {
     }, [entityEditData, dispatch])
 
 
-    const [groupDrawer, setGroupDrawer] = useState(false)
-
-
     useHotkeys([['alt+n', () => {
-        !groupDrawer && document.getElementById('customer_group_id').click()
+        document.getElementById('customer_group_id').click()
     }]], []);
 
     useHotkeys([['alt+r', () => {
@@ -130,7 +127,7 @@ function CustomerUpdateForm(props) {
     }]], []);
 
     useHotkeys([['alt+s', () => {
-        !groupDrawer && document.getElementById('EntityFormSubmit').click()
+        document.getElementById('EntityFormSubmit').click()
     }]], []);
 
     const handleFormReset = () => {
@@ -256,7 +253,7 @@ function CustomerUpdateForm(props) {
                                                         </Box>
                                                     </Grid.Col>
                                                     <Grid.Col span={1}>
-                                                        
+
                                                     </Grid.Col>
 
                                                 </Grid>
@@ -423,7 +420,7 @@ function CustomerUpdateForm(props) {
                     </Grid.Col>
                 </Grid>
             </form>
-            
+
         </Box>
     )
 }

@@ -89,6 +89,7 @@ function AppRoute() {
                     {/*<Route path="production-recipe" element={<RecipeIndex />} />*/}
                     <Route path="invoice-batch" element={<InvoiceBatchIndex />} />
                     <Route path="particular" element={<ParticularIndex />} />
+                    <Route path="particular/:id" element={<ParticularIndex />} />
                     <Route path="product-settings" element={<ProductSettingsIndex />} />
                     <Route path="product-settings/:settingsId" element={<ProductSettingsIndex />} />
                     <Route path="product-management" element={<ProductManagementIndex />} />
