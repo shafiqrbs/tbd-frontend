@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import {
     Button, rem, Flex, Grid, Box, ScrollArea, Group, Text, Title, Stack,
@@ -28,6 +28,7 @@ function ProductCategoryDrawerForm(props) {
     const height = mainAreaHeight - 100; //TabList height 104
     const [categoryGroupData, setCategoryGroupData] = useState(null);
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
+    const effectRan = useRef(true);
 
 
 
@@ -35,25 +36,34 @@ function ProductCategoryDrawerForm(props) {
 
     const categoryForm = useForm({
         initialValues: {
-            category_group: '', category_name: '', category_status: true
+            parent: '', name: '', status: true
         },
         validate: {
-            category_group: isNotEmpty(),
-            category_name: hasLength({ min: 2, max: 20 }),
+            parent: isNotEmpty(),
+            name: hasLength({ min: 2, max: 20 }),
         }
     });
 
-    useHotkeys([['alt+n', () => {
-        document.getElementById('category_group').click()
-    }]], []);
+    useEffect(() => {
+        effectRan.current && (
+            setTimeout(() => {
+                document.getElementById('category_group').click()
+            }, 100),
+            effectRan.current = false
+        )
+    })
 
-    useHotkeys([['alt+r', () => {
-        categoryForm.reset()
-    }]], []);
+    // useHotkeys([['alt+n', () => {
+    //     document.getElementById('category_group').click()
+    // }]], []);
 
-    useHotkeys([['alt+s', () => {
-        document.getElementById(saveId).click()
-    }]], []);
+    // useHotkeys([['alt+r', () => {
+    //     categoryForm.reset()
+    // }]], []);
+
+    // useHotkeys([['alt+s', () => {
+    //     document.getElementById(saveId).click()
+    // }]], []);
 
 
     return (
@@ -99,7 +109,7 @@ function ProductCategoryDrawerForm(props) {
                     <Box mb={0}>
 
                         <Grid columns={9} gutter={{ base: 6 }} >
-                            <Grid.Col span={8} >
+                            <Grid.Col span={9} >
                                 <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
                                     <Box bg={"white"} >
                                         <Box pl={`xs`} pr={8} pt={'6'} pb={'6'} mb={'4'} className={'boxBackground borderRadiusAll'} >
@@ -140,7 +150,7 @@ function ProductCategoryDrawerForm(props) {
                                                         placeholder={t('ChooseCategoryGroup')}
                                                         required={true}
                                                         nextField={'category_name'}
-                                                        name={'category_group'}
+                                                        name={'parent'}
                                                         form={categoryForm}
                                                         dropdownValue={groupCategoryDropdown}
                                                         id={'category_group'}
@@ -158,7 +168,7 @@ function ProductCategoryDrawerForm(props) {
                                                         required={true}
                                                         nextField={'category_status'}
                                                         form={categoryForm}
-                                                        name={'category_name'}
+                                                        name={'name'}
                                                         id={'category_name'}
                                                     />
                                                 </Box>
@@ -169,7 +179,7 @@ function ProductCategoryDrawerForm(props) {
                                                                 tooltip={t('Status')}
                                                                 label=''
                                                                 nextField={saveId}
-                                                                name={'category_status'}
+                                                                name={'status'}
                                                                 form={categoryForm}
                                                                 color="red"
                                                                 id={'category_status'}
@@ -185,7 +195,7 @@ function ProductCategoryDrawerForm(props) {
                                     </Box>
                                 </Box>
                             </Grid.Col>
-                            <Grid.Col span={1} >
+                            {/* <Grid.Col span={1} >
                                 <Box bg={'white'} className={'borderRadiusAll'} pt={'16'}>
                                     <_ShortcutMasterData
                                         adjustment={adjustment}
@@ -195,7 +205,7 @@ function ProductCategoryDrawerForm(props) {
                                         inputType="select"
                                     />
                                 </Box>
-                            </Grid.Col>
+                            </Grid.Col> */}
                         </Grid>
                     </Box>
                 </form>
