@@ -47,6 +47,7 @@ function _SalesTable() {
     const [selectedRow, setSelectedRow] = useState('');
     const [printA4, setPrintA4] = useState(false);
     const [printPos, setPrintPos] = useState(false);
+    const [checked, setChecked] = useState(false);
 
     useEffect(() => {
         dispatch(setSearchKeyword(''))
@@ -192,6 +193,7 @@ function _SalesTable() {
                                                         setLoading(true)
                                                         setSalesViewData(item)
                                                         setSelectedRow(item.invoice)
+                                                        item?.invoice_batch_id ? setChecked(true) : setChecked(false)
                                                     }}
                                                     style={{ cursor: "pointer" }}
                                                 >
@@ -248,7 +250,10 @@ function _SalesTable() {
                                                             {
                                                                 !data.invoice_batch_id &&
                                                                 <Menu.Item
-                                                                    href={`/inventory/sales/edit/${data.id}`}
+                                                                    // href={`/inventory/sales/edit/${data.id}`}
+                                                                    onClick={() => {
+                                                                        navigate(`/inventory/sales/edit/${data.id}`)
+                                                                    }}
                                                                     component="a"
                                                                     w={'200'}
                                                                 >
@@ -256,22 +261,23 @@ function _SalesTable() {
                                                                 </Menu.Item>
                                                             }
                                                             <Menu.Item
-                                                                href={``}
+                                                                // href={``}
                                                                 onClick={(e) => {
                                                                     e.preventDefault();
                                                                     setLoading(true)
-                                                                    setSalesViewData(item)
+                                                                    setSalesViewData(data)
+                                                                    setSelectedRow(data.invoice)
+                                                                    data?.invoice_batch_id ? setChecked(true) : setChecked(false)
                                                                 }}
                                                                 component="a"
                                                                 w={'200'}
                                                             >
                                                                 {t('Show')}
                                                             </Menu.Item>
-
                                                             {
                                                                 !data.invoice_batch_id &&
                                                                 <Menu.Item
-                                                                    href={``}
+                                                                    // href={``}
                                                                     component="a"
                                                                     w={'200'}
                                                                     mt={'2'}
@@ -486,12 +492,14 @@ function _SalesTable() {
                                 </Button>
 
                                 <Button
-                                    href={`/inventory/sales/edit/${salesViewData?.id}`}
+                                    // href={`/inventory/sales/edit/${salesViewData?.id}`}
+                                    onClick={checked ? undefined : () => navigate(`/inventory/sales/edit/${salesViewData?.id}`)}
                                     component="a"
                                     fullWidth
                                     variant="filled"
                                     leftSection={<IconEdit size={14} />}
                                     color="cyan.5"
+                                    disabled={checked}
                                 >{t('Edit')}</Button>
                             </Button.Group>
                         </Box>
