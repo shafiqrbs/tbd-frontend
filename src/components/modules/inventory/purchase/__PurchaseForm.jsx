@@ -461,10 +461,7 @@ function __PurchaseForm(props) {
 
                                 <Box p={'xs'} className={'boxBackground'} mt={'4'} pt={'xs'} mb={'xs'} pb={'xs'} >
                                     <Grid gutter={{ base: 2 }}>
-                                        <Grid.Col span={2}>
-
-                                        </Grid.Col>
-                                        <Grid.Col span={4}>
+                                        <Grid.Col span={6}>
                                             <DatePickerForm
                                                 tooltip={t('InvoiceDateValidateMessage')}
                                                 label=''
@@ -480,8 +477,10 @@ function __PurchaseForm(props) {
                                                 closeIcon={true}
                                             />
                                         </Grid.Col>
-                                        <Grid.Col span={4}><Center fz={'md'} mt={'4'} c={'red'}
-                                            fw={'800'}>{returnOrDueText} {currencySymbol} {purchaseDueAmount.toFixed(2)}</Center></Grid.Col>
+                                        <Grid.Col span={6}>
+                                            <Box ta="right" fz={'md'} mt={'4'} c={'red'}
+                                            fw={'800'}>{returnOrDueText} {currencySymbol} {purchaseDueAmount.toFixed(2)}</Box>
+                                        </Grid.Col>
                                     </Grid>
                                     <Box mt={'xs'} h={1} bg={`red.3`}></Box>
                                     <Grid gutter={{ base: 6 }} mt={'xs'}>
@@ -498,7 +497,7 @@ function __PurchaseForm(props) {
                                                 {discountType}
                                             </Button>
                                         </Grid.Col>
-                                        <Grid.Col span={4}>
+                                        <Grid.Col span={4} bg={'orange.8'}>
                                             <InputButtonForm
                                                 tooltip={t('DiscountValidateMessage')}
                                                 label=''
@@ -513,7 +512,7 @@ function __PurchaseForm(props) {
                                                 rightSectionWidth={30}
                                             />
                                         </Grid.Col>
-                                        <Grid.Col span={4}>
+                                        <Grid.Col span={4} bg={'green'}>
                                             <InputNumberForm
                                                 type="number"
                                                 tooltip={t('ReceiveAmountValidateMessage')}
