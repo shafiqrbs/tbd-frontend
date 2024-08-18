@@ -306,7 +306,7 @@ function _SalesTable() {
                                     }}
                                     loaderSize="xs"
                                     loaderColor="grape"
-                                    height={tableHeight + 2}
+                                    height={tableHeight}
                                     scrollAreaProps={{ type: 'never' }}
                                     rowBackgroundColor={(item) => {
                                         if (item.invoice === selectedRow) return '#e2c2c263';
