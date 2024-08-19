@@ -46,7 +46,7 @@ function VendorUpdateForm(props) {
 
     const form = useForm({
         initialValues: {
-            company_name: '', name: '', mobile: '', tp_percent: '', email: '', customer_id: '', address: ''
+            company_name: '', name: '', mobile: '', email: '', customer_id: '', address: ''
         },
         validate: {
             company_name: hasLength({ min: 2, max: 20 }),
@@ -61,8 +61,6 @@ function VendorUpdateForm(props) {
                 }
                 return null;
             },
-            // tp_percent: (value) => (value && !/^\d*\.?\d*$/.test(value)),
-            // email: (value) => (value && !/^\S+@\S+$/.test(value)),
         }
     });
 
@@ -81,7 +79,6 @@ function VendorUpdateForm(props) {
                 customer_id: entityEditData.customer_id ? entityEditData.customer_id : '',
                 address: entityEditData.address ? entityEditData.address : '',
                 email: entityEditData.email ? entityEditData.email : '',
-                tp_percent: entityEditData.tp_percent ? entityEditData.tp_percent : '',
             })
         }
         dispatch(setFormLoading(false))
@@ -101,7 +98,6 @@ function VendorUpdateForm(props) {
                 customer_id: entityEditData.customer_id ? entityEditData.customer_id : '',
                 address: entityEditData.address ? entityEditData.address : '',
                 email: entityEditData.email ? entityEditData.email : '',
-                tp_percent: entityEditData.tp_percent ? entityEditData.tp_percent : '',
             }
             form.setValues(originalValues)
         }
@@ -235,27 +231,14 @@ function VendorUpdateForm(props) {
                                                     required={true}
                                                     name={'mobile'}
                                                     id={'mobile'}
-                                                    nextField={'tp_percent'}
-                                                    mt={8}
-                                                />
-                                            </Box>
-                                            <Box mt={'xs'}>
-                                                <InputNumberForm
-                                                    tooltip={t('TPPercentValidateMessage')}
-                                                    label={t('TPPercent')}
-                                                    placeholder={t('TPPercent')}
-                                                    required={false}
                                                     nextField={'email'}
-                                                    name={'tp_percent'}
-                                                    form={form}
                                                     mt={8}
-                                                    id={'tp_percent'}
                                                 />
                                             </Box>
                                             <Box mt={'xs'}>
                                                 <InputForm
                                                     form={form}
-                                                    tooltip={t('RequiredAndInvalidEmail')}
+                                                    tooltip={t('InvalidEmail')}
                                                     label={t('Email')}
                                                     placeholder={t('Email')}
                                                     required={false}
@@ -286,7 +269,7 @@ function VendorUpdateForm(props) {
                                             </Box>
                                             <Box mt={'xs'}>
                                                 <TextAreaForm
-                                                    tooltip={t('Address')}
+                                                    tooltip={t('AddressValidateMessage')}
                                                     label={t('Address')}
                                                     placeholder={t('Address')}
                                                     required={false}

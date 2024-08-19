@@ -37,7 +37,7 @@ const getSpotlightDropdownData = (t) => {
                 },
                 {
                     id: 'marketing-executive',
-                    label: t('MarketingExecutive'),
+                    label: t('MarketingExecutiveN'),
                     description: t('WhereWePresentTheVendorInformationN'),
 
                 },
@@ -103,13 +103,13 @@ const getSpotlightDropdownData = (t) => {
                 },
                 {
                     id: 'settings',
-                    label: t('ProductSetting'),
+                    label: t('ProductSettingN'),
                     description: t('WhereWePresentTheInvoiceBatchInformationN'),
 
                 },
                 {
                     id: 'particular',
-                    label: t('ParticularSettings'),
+                    label: t('ParticularSettingN'),
                     description: t('WhereWePresentTheInvoiceBatchInformationN'),
 
                 },
@@ -120,25 +120,33 @@ const getSpotlightDropdownData = (t) => {
             group: 'Production',
             actions: [
                 {
-                    id: 'production',
-                    label: t('ProductionN'),
-                    description: t('WhereWePresentTheProductionInformationN'),
-
-                },
-                {
-                    id: 'items-inhouse',
-                    label: t('ProductionInhouseN'),
-                    description: t('WhereWePresentTheProductionInhouseInformationN'),
-
-
-                },
-                {
                     id: 'items',
                     label: t('ProductionReceipeN'),
                     description: t('WhereWePresentTheProductionReceipeInformationN'),
 
 
                 },
+                {
+                    id: 'setting',
+                    label: t('ProductionSetting'),
+                    description: t('WhereWePresentTheProductionInformationN'),
+
+                },
+                {
+                    id: 'config',
+                    label: t('ProductionConfigurationN'),
+                    description: t('WhereWePresentTheProductionInhouseInformationN'),
+
+
+                },
+                {
+                    id: 'production-inhouse',
+                    label: t('ProductionInhouseN'),
+                    description: t('WhereWePresentTheProductionInhouseInformationN'),
+
+
+                },
+
             ],
         },
         {

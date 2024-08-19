@@ -60,12 +60,12 @@ function UserForm() {
                 return null;
             },
             password: (value) => {
-                if (!value) return t('PasswordRequiredMessage');
-                if ((value.length < 6)) return t('PasswordValidateMessage');
+                if (!value) true;
+                if ((value.length < 6)) true;
                 return null;
             },
             confirm_password: (value, values) => {
-                if (values.password && value !== values.password) return t('PasswordSimilarMessage');
+                if (values.password && value !== values.password) return true;
                 return null;
             }
         }
@@ -160,7 +160,7 @@ function UserForm() {
 
                                             <Box mt={'xs'}>
                                                 <InputForm
-                                                    tooltip={form.errors.name ? form.errors.name : t('NameValidateMessage')}
+                                                    tooltip={t('UserNameValidateMessage')}
                                                     label={t('Name')}
                                                     placeholder={t('Name')}
                                                     required={true}
@@ -174,7 +174,7 @@ function UserForm() {
                                             <Box mt={'xs'}>
                                                 <InputForm
                                                     form={form}
-                                                    tooltip={form.errors.username ? form.errors.username : t('UserNameValidateMessage')}
+                                                    tooltip={t('UserNameValidateMessage')}
                                                     label={t('UserName')}
                                                     placeholder={t('UserName')}
                                                     required={true}
@@ -214,7 +214,7 @@ function UserForm() {
 
                                                 <PasswordInputForm
                                                     form={form}
-                                                    tooltip={form.errors.password ? form.errors.password : t('RequiredPassword')}
+                                                    tooltip={t('RequiredPassword')}
                                                     label={t('Password')}
                                                     placeholder={t('Password')}
                                                     required={true}
@@ -228,7 +228,7 @@ function UserForm() {
 
                                                 <PasswordInputForm
                                                     form={form}
-                                                    tooltip={form.errors.confirm_password ? form.errors.confirm_password : t('ConfirmPassword')}
+                                                    tooltip={t('ConfirmPasswordValidateMessage')}
                                                     label={t('ConfirmPassword')}
                                                     placeholder={t('ConfirmPassword')}
                                                     required={true}

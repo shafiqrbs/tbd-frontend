@@ -384,7 +384,7 @@ function __PurchaseForm(props) {
                                         <Center fz={'xs'} c="dimmed" >{t('Discount')}</Center>
                                     </Grid.Col>
                                     <Grid.Col span={3}>
-                                        <Center fz={'xs'} c="dimmed">{t('VAT')}</Center>
+                                        <Center fz={'xs'} c="dimmed">{t('Vat')}</Center>
                                     </Grid.Col>
                                     <Grid.Col span={3}>
                                         <Center fz={'xs'} c="dimmed">{t('Total')}</Center>

@@ -37,7 +37,7 @@ function _AddTransactionModel(props) {
         </Card.Section>
 
         <Badge className={classes.rating} variant="gradient" gradient={{ from: 'yellow', to: 'red' }}>
-            outstanding
+            {t('Outstanding')}
         </Badge>
 
         <Text className={classes.title} fw={500} component="a" {...linkProps}>

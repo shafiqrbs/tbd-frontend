@@ -109,7 +109,7 @@ function CategoryGroupDrawerForm(props) {
                                         <Box pl={`xs`} pr={8} pt={'6'} pb={'6'} mb={'4'} className={'boxBackground borderRadiusAll'} >
                                             <Grid>
                                                 <Grid.Col span={8} >
-                                                    <Title order={6} pt={'6'}>{t('InstantCategoryGroup')}</Title>
+                                                    <Title order={6} pt={'6'}>{t('CreateProductCategoryGroup')}</Title>
                                                 </Grid.Col>
                                                 <Grid.Col span={4}>
                                                     <Stack right align="flex-end">
@@ -139,7 +139,7 @@ function CategoryGroupDrawerForm(props) {
                                             <ScrollArea h={height - (adjustment ? adjustment : 0)} scrollbarSize={2} scrollbars="y" type="never">
                                                 <Box mt={'8'}>
                                                     <InputForm
-                                                        tooltip={t('CategoryGroupValidateMessage')}
+                                                        tooltip={t('CategoryGroupNameValidateMessage')}
                                                         label={t('CategoryGroup')}
                                                         placeholder={t('CategoryGroup')}
                                                         required={true}
