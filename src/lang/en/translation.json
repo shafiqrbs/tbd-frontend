@@ -529,10 +529,10 @@
   "TotalAmount": "Total Amount",
   "Checked": "Checked",
   "NormalPrint": "Normal Print",
-  "IsSelected": "Is selected",
-  "InstantCategoryGroup": "Create Category Group",
-  "AddCategoryGroup": "Add Category Group",
-  "AddCustomerSetting": "Add Customer Setting",
-  "SettingsDetailsData": "Settings Details",
+  "IsSelected" : "Is selected",
+  "ProductionProcedure" : "Production Procedure",
+  "ChooseProductionProcedure" : "Choose production procedure",
+  "ConsumptionMethod" : "Consumption method",
+  "ChooseConsumptionMethod" : "Choose consumption method",
   "": ""
 }

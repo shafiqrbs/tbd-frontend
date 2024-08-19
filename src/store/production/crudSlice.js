@@ -152,6 +152,7 @@ const crudSlice = createSlice({
         productionSettingFilterData: { setting_type_id: '',name:''},
         recipeItemFilterData: { setting_type_id: '',product_name:''},
         measurementInputData:[],
+        measurementInputDataCalculation:[],
         itemProcessUpdate : false
     },
     reducers: {
@@ -195,8 +196,9 @@ const crudSlice = createSlice({
         },
         setUpdateMeasurementData(state, action) {
             const { key, slug, newAmount } = action.payload;
-            const itemIndex = state.measurementInputData[key].findIndex(item => item.slug === slug);
-            if(itemIndex >= 0) state.measurementInputData[key][itemIndex].amount = newAmount;
+            // console.log(state.measurementInputData.field,key)
+            const itemIndex = state.measurementInputData.field[key].findIndex(item => item.slug === slug);
+            if(itemIndex >= 0) state.measurementInputData.field[key][itemIndex].amount = newAmount;
         }
     },
 

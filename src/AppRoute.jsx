@@ -6,7 +6,8 @@ import './lang/i18next';
 import CustomerIndex from "./components/modules/core/customer/CustomerIndex";
 import UserIndex from "./components/modules/core/user/UserIndex";
 import VendorIndex from "./components/modules/core/vendor/VendorIndex";
-import ConfigurationIndex from "./components/modules/inventory/configuraton/ConfigurationIndex";
+import InventoryConfigurationIndex from "./components/modules/inventory/configuraton/ConfigurationIndex";
+import ProductionConfigurationIndex from "./components/modules/production/configuraton/ConfigurationIndex";
 import CategoryGroupIndex from "./components/modules/inventory/category-group/CategoryGroupIndex";
 import CategoryIndex from "./components/modules/inventory/category/CategoryIndex";
 import ProductIndex from "./components/modules/inventory/product/ProductIndex.jsx";
@@ -83,7 +84,7 @@ function AppRoute() {
                     <Route path="category/:categoryId" element={<CategoryIndex />} />
                     <Route path="category-group" element={<CategoryGroupIndex />} />
                     <Route path="category-group/:categoryGroupId" element={<CategoryGroupIndex />} />
-                    <Route path="config" element={<ConfigurationIndex />} />
+                    <Route path="config" element={<InventoryConfigurationIndex />} />
                     {/*<Route path="production" element={<RecipeItemsIndex />} />*/}
                     {/*<Route path="production-inhouse" element={<InhouseIndex />} />*/}
                     {/*<Route path="production-recipe" element={<RecipeIndex />} />*/}
@@ -100,6 +101,8 @@ function AppRoute() {
                     <Route path="recipe-update/:id" element={<RecipeIndex />} />
                     <Route path="setting" element={<ProductionSettingIndex />} />
                     <Route path="setting/:id" element={<ProductionSettingIndex />} />
+                    <Route path="setting/:id" element={<ProductionSettingIndex />} />
+                    <Route path="config" element={<ProductionConfigurationIndex />} />
                 </Route>
 
                 <Route path="/domain/">
