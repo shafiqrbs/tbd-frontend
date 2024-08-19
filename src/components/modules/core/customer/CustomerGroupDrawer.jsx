@@ -11,6 +11,7 @@ import {
 
 } from "@tabler/icons-react";
 import CustomerSettingsForm from "../customer-settings/CustomerSettingsForm.jsx";
+import getParticularTypeDropdownData from "../../../global-hook/dropdown/inventroy/getParticularTypeDropdownData.js";
 
 
 function CustomerGroupDrawer(props) {
@@ -24,9 +25,11 @@ function CustomerGroupDrawer(props) {
     const { isOnline, mainAreaHeight } = useOutletContext();
     const { t, i18n } = useTranslation();
     const height = mainAreaHeight; //TabList height 104
+    const settingTypeDropdown = getParticularTypeDropdownData()
     const closeModel = () => {
         setGroupDrawer(false)
     }
+
 
 
 
@@ -39,7 +42,7 @@ function CustomerGroupDrawer(props) {
                         <Drawer.Header>
                             <Drawer.Title>
                                 <Text fw={'600'} fz={'16'}>
-                                    {t('AddCustomerGroup')}
+                                    {t('AddCustomerSetting')}
                                 </Text>
                             </Drawer.Title>
                             <ActionIcon
@@ -52,7 +55,7 @@ function CustomerGroupDrawer(props) {
                             </ActionIcon>
                         </Drawer.Header>
                         <Box ml={2} mr={2} mb={0}>
-                            <CustomerSettingsForm adjustment={adjustment} saveId={saveId} />
+                            <CustomerSettingsForm settingTypeDropdown={settingTypeDropdown} adjustment={adjustment} saveId={saveId} />
                         </Box>
                     </ScrollArea>
 

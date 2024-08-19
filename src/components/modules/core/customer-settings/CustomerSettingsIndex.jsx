@@ -19,6 +19,7 @@ import CoreHeaderNavbar from "../CoreHeaderNavbar.jsx";
 import CustomerSettingsTable from "./CustomerSettingsTable.jsx";
 import CustomerSettingsForm from "./CustomerSettingsForm.jsx";
 import CustomerSettingsUpdateForm from "./CustomerSettingsUpdateForm.jsx";
+import getParticularTypeDropdownData from "../../../global-hook/dropdown/inventroy/getParticularTypeDropdownData.js";
 
 function CustomerSettingsIndex() {
     const { t, i18n } = useTranslation();
@@ -31,6 +32,7 @@ function CustomerSettingsIndex() {
     const navigate = useNavigate()
 
     const { settingsId } = useParams();
+    const settingTypeDropdown = getParticularTypeDropdownData()
 
 
     useEffect(() => {
@@ -42,7 +44,7 @@ function CustomerSettingsIndex() {
             dispatch(setInsertType('create'));
             dispatch(setSearchKeyword(''));
             dispatch(setEntityNewData([]));
-            navigate('/core/customer-settings');
+            navigate('/core/customer-settings', { replace: true });
         }
     }, [settingsId, dispatch, navigate]);
 
@@ -72,8 +74,8 @@ function CustomerSettingsIndex() {
                                     <Grid.Col span={9}>
                                         {
                                             insertType === 'create'
-                                                ? <CustomerSettingsForm saveId={'EntityFormSubmit'} />
-                                                : <CustomerSettingsUpdateForm saveId={'EntityFormSubmit'} />
+                                                ? <CustomerSettingsForm saveId={'EntityFormSubmit'} settingTypeDropdown={settingTypeDropdown} />
+                                                : <CustomerSettingsUpdateForm saveId={'EntityFormSubmit'} settingTypeDropdown={settingTypeDropdown} />
                                         }
                                     </Grid.Col>
                                 </Grid>

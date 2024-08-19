@@ -1,6 +1,6 @@
 import React from "react";
 import { useOutletContext } from "react-router-dom";
-import { ActionIcon, Box, ScrollArea, Drawer } from "@mantine/core";
+import { ActionIcon, Box, ScrollArea, Drawer, Text } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
 import { IconX } from "@tabler/icons-react";
 import AddCustomerDrawerForm from "./AddCustomerDrawerForm";

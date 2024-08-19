@@ -36,12 +36,13 @@ function CustomerSettingsUpdateForm(props) {
     const [setFormData, setFormDataForUpdate] = useState(false);
     const [categoryGroupData, setCategoryGroupData] = useState(null);
 
-    const entityEditData = useSelector((state) => state.inventoryCrudSlice.entityEditData)
+    const entityEditData = useSelector((state) => state.productionCrudSlice.entityEditData)
     const formLoading = useSelector((state) => state.crudSlice.formLoading)
     const [formLoad, setFormLoad] = useState('');
     const navigate = useNavigate();
+    const [settingTypeData, setSettingTypeData] = useState(null);
 
-    const { saveId } = props
+    const { saveId, settingTypeDropdown } = props
 
 
     // useEffect(() => {
@@ -56,11 +57,11 @@ function CustomerSettingsUpdateForm(props) {
 
     const settingsForm = useForm({
         initialValues: {
-            setting_type: '', setting_name: '', status: ''
+            particular_type_id: '', name: '', status: ''
         },
         validate: {
-            setting_type: isNotEmpty(),
-            setting_name: hasLength({ min: 2, max: 20 }),
+            particular_type_id: isNotEmpty(),
+            name: hasLength({ min: 2, max: 20 }),
         }
     });
 
@@ -72,9 +73,9 @@ function CustomerSettingsUpdateForm(props) {
     useEffect(() => {
 
         settingsForm.setValues({
-            setting_type: entityEditData.setting_type ? entityEditData.setting_type : '',
-            setting_name: entityEditData.setting_name ? entityEditData.setting_name : '',
-            status: entityEditData.status ? entityEditData.status : ''
+            setting_type_id: entityEditData.setting_type_id ? entityEditData.setting_type_id : '',
+            name: entityEditData.name ? entityEditData.name : '',
+            status: entityEditData.status
         })
 
         dispatch(setFormLoading(false))
@@ -115,7 +116,7 @@ function CustomerSettingsUpdateForm(props) {
                         onConfirm: () => {
                             setSaveCreateLoading(true)
                             const value = {
-                                url: 'inventory/category-group/' + entityEditData.id,
+                                url: 'production/setting/' + entityEditData.id,
                                 data: values
                             }
                             dispatch(updateEntityData(value))
@@ -183,13 +184,13 @@ function CustomerSettingsUpdateForm(props) {
                                                         placeholder={t('SettingType')}
                                                         required={true}
                                                         nextField={'setting_name'}
-                                                        name={'setting_type'}
+                                                        name={'particular_type_id'}
                                                         form={settingsForm}
-                                                        dropdownValue={['test1', 'test2']}
+                                                        dropdownValue={settingTypeDropdown}
                                                         id={'setting_type'}
                                                         searchable={false}
-                                                        value={categoryGroupData}
-                                                        changeValue={setCategoryGroupData}
+                                                        value={settingTypeData}
+                                                        changeValue={setSettingTypeData}
                                                     />
                                                 </Box>
                                                 <Box mt={'xs'}>
@@ -200,7 +201,7 @@ function CustomerSettingsUpdateForm(props) {
                                                         required={true}
                                                         nextField={'status'}
                                                         form={settingsForm}
-                                                        name={'setting_name'}
+                                                        name={'name'}
                                                         id={'setting_name'}
                                                     />
                                                 </Box>

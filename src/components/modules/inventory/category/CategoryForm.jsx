@@ -225,8 +225,8 @@ function CategoryForm(props) {
                         </Grid.Col>
                     </Grid>
                 </form>
-                {groupDrawer && <CategoryGroupDrawer saveId={'EntityDrawerSubmit'} groupDrawer={groupDrawer} setGroupDrawer={setGroupDrawer} />}
             </Box>
+            {groupDrawer && <CategoryGroupDrawer saveId={'EntityDrawerSubmit'} groupDrawer={groupDrawer} setGroupDrawer={setGroupDrawer} />}
         </>
 
     );

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import {
     Button, rem, Flex, Grid, Box, ScrollArea, Group, Text, Title, Stack,
@@ -13,12 +13,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { hasLength, isNotEmpty, useForm } from "@mantine/form";
 import { modals } from "@mantine/modals";
 import { notifications } from "@mantine/notifications";
-import { setFetching, storeEntityData } from "../../../../store/core/crudSlice.js";
+import { setFetching } from "../../../../store/core/crudSlice.js";
 
 import _ShortcutMasterData from "../../shortcut/_ShortcutMasterData.jsx";
 import InputForm from "../../../form-builders/InputForm.jsx";
 import SelectForm from "../../../form-builders/SelectForm.jsx";
 import SwitchForm from "../../../form-builders/SwitchForm.jsx";
+import { storeEntityData } from "../../../../store/inventory/crudSlice.js";
 
 
 function CustomerSettingsForm(props) {
@@ -28,28 +29,39 @@ function CustomerSettingsForm(props) {
     const height = mainAreaHeight - 100; //TabList height 104
     const [categoryGroupData, setCategoryGroupData] = useState(null);
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
+    const effectRan = useRef(true);
+    const [settingTypeData, setSettingTypeData] = useState(null);
 
-    const { adjustment, saveId } = props
+    const { adjustment, saveId, settingTypeDropdown } = props
+
+    useEffect(() => {
+        saveId !== 'EntityFormSubmit' && effectRan.current && (
+            setTimeout(() => {
+                document.getElementById('setting_type').click()
+            }, 100),
+            effectRan.current = false
+        )
+    })
 
     const settingsForm = useForm({
         initialValues: {
-            setting_type: '', setting_name: '', status: true
+            particular_type_id: '', name: '', status: true
         },
         validate: {
-            setting_type: isNotEmpty(),
-            setting_name: hasLength({ min: 2, max: 20 }),
+            particular_type_id: isNotEmpty(),
+            name: hasLength({ min: 2, max: 20 }),
         }
     });
 
-    useHotkeys([['alt+n', () => {
+    saveId === 'EntityFormSubmit' && useHotkeys([['alt+n', () => {
         document.getElementById('setting_type').click()
     }]], []);
 
-    useHotkeys([['alt+r', () => {
+    saveId === 'EntityFormSubmit' && useHotkeys([['alt+r', () => {
         settingsForm.reset()
     }]], []);
 
-    useHotkeys([['alt+s', () => {
+    saveId === 'EntityFormSubmit' && useHotkeys([['alt+s', () => {
         document.getElementById(saveId).click()
     }]], []);
 
@@ -71,7 +83,7 @@ function CustomerSettingsForm(props) {
                         onConfirm: () => {
                             setSaveCreateLoading(true)
                             const value = {
-                                url: 'inventory/category-group',
+                                url: 'inventory/particular',
                                 data: settingsForm.values
                             }
                             dispatch(storeEntityData(value))
@@ -97,7 +109,7 @@ function CustomerSettingsForm(props) {
                     <Box mb={0}>
 
                         <Grid columns={9} gutter={{ base: 6 }} >
-                            <Grid.Col span={8} >
+                            <Grid.Col span={saveId === 'EntityFormSubmit' ? 8 : 9} >
                                 <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
                                     <Box bg={"white"} >
                                         <Box pl={`xs`} pr={8} pt={'6'} pb={'6'} mb={'4'} className={'boxBackground borderRadiusAll'} >
@@ -138,13 +150,13 @@ function CustomerSettingsForm(props) {
                                                         placeholder={t('SettingType')}
                                                         required={true}
                                                         nextField={'setting_name'}
-                                                        name={'setting_type'}
+                                                        name={'particular_type_id'}
                                                         form={settingsForm}
-                                                        dropdownValue={['test1', 'test2']}
+                                                        dropdownValue={settingTypeDropdown}
                                                         id={'setting_type'}
                                                         searchable={false}
-                                                        value={categoryGroupData}
-                                                        changeValue={setCategoryGroupData}
+                                                        value={settingTypeData}
+                                                        changeValue={setSettingTypeData}
                                                     />
                                                 </Box>
 
@@ -156,7 +168,7 @@ function CustomerSettingsForm(props) {
                                                         required={true}
                                                         nextField={'status'}
                                                         form={settingsForm}
-                                                        name={'setting_name'}
+                                                        name={'name'}
                                                         id={'setting_name'}
                                                     />
                                                 </Box>
@@ -183,17 +195,19 @@ function CustomerSettingsForm(props) {
                                     </Box>
                                 </Box>
                             </Grid.Col>
-                            <Grid.Col span={1} >
-                                <Box bg={'white'} className={'borderRadiusAll'} pt={'16'}>
-                                    <_ShortcutMasterData
-                                        adjustment={adjustment}
-                                        form={settingsForm}
-                                        FormSubmit={saveId}
-                                        Name={'setting_type'}
-                                        inputType="select"
-                                    />
-                                </Box>
-                            </Grid.Col>
+                            {saveId === 'EntityFormSubmit' &&
+                                <Grid.Col span={1} >
+                                    <Box bg={'white'} className={'borderRadiusAll'} pt={'16'}>
+                                        <_ShortcutMasterData
+                                            adjustment={adjustment}
+                                            form={settingsForm}
+                                            FormSubmit={saveId}
+                                            Name={'setting_type'}
+                                            inputType="select"
+                                        />
+                                    </Box>
+                                </Grid.Col>
+                            }
                         </Grid>
                     </Box>
                 </form>

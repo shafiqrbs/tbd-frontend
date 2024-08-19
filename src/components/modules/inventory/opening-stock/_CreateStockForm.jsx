@@ -1,14 +1,16 @@
-import React, {useEffect, useState} from "react";
-import {useNavigate, useOutletContext} from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import {
     Button, ActionIcon, TextInput, Grid, Box, Group, Text,
+    Tooltip,
 } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
 import {
-    IconDeviceFloppy, IconX, IconBarcode,IconChevronsRight,IconArrowRight
+    IconDeviceFloppy, IconX, IconBarcode, IconChevronsRight, IconArrowRight,
+    IconPlus
 } from "@tabler/icons-react";
 import { getHotkeyHandler, useHotkeys } from "@mantine/hooks";
-import {useDispatch, useSelector} from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
 import SelectServerSideForm from "../../../form-builders/SelectServerSideForm.jsx";
@@ -26,6 +28,7 @@ import {
     inlineUpdateEntityData,
     storeEntityData
 } from "../../../../store/inventory/crudSlice.js";
+import AddProductDrawer from "../sales/drawer-form/AddProductDrawer.jsx";
 
 function _CreateStockForm(props) {
     const { currencySymbol } = props
@@ -41,7 +44,8 @@ function _CreateStockForm(props) {
 
     const indexData = useSelector((state) => state.inventoryCrudSlice.indexEntityData)
     const [searchValue, setSearchValue] = useState('');
-    const [productDropdown, setProductDropdown] = useState([]);
+    const [productDropdown, setProductDropdown] = useState([])
+    const [productDrawer, setProductDrawer] = useState(false);
 
     useEffect(() => {
         const value = {
@@ -49,14 +53,14 @@ function _CreateStockForm(props) {
             param: {
                 page: page,
                 offset: perPage,
-                mode:"opening",
-                is_approved:0
+                mode: "opening",
+                is_approved: 0
             }
         }
         dispatch(getIndexEntityData(value))
-        setTimeout(()=>{
+        setTimeout(() => {
             setFetching(false)
-        },500)
+        }, 500)
     }, [fetching]);
 
     const [stockProductRestore, setStockProductRestore] = useState(false)
@@ -103,7 +107,7 @@ function _CreateStockForm(props) {
                 purchase_price: Number(values.purchase_price),
                 sub_total: Number(values.sub_total),
                 sales_price: Number(values.sales_price),
-                mode:"opening"
+                mode: "opening"
             }, 'productId');
         }
     }
@@ -115,7 +119,7 @@ function _CreateStockForm(props) {
         const barcodeExists = localProducts.some(product => product.barcode === values.barcode);
         if (barcodeExists) {
             const product = localProducts.find(product => String(product.barcode) === String(values.barcode));
-            if (product){
+            if (product) {
                 const addProduct = bindProductValueForBarcode(product);
                 createOpeningStockAndResetForm(addProduct, 'barcode');
             }
@@ -140,7 +144,7 @@ function _CreateStockForm(props) {
             purchase_price: product.purchase_price,
             sub_total: Number(product.purchase_price),
             sales_price: Number(product.sales_price),
-            mode:"opening"
+            mode: "opening"
         };
     }
 
@@ -148,7 +152,7 @@ function _CreateStockForm(props) {
      * Updates local storage with new products, resets form, and sets focus on the product search.
      */
     function createOpeningStockAndResetForm(addProducts, type) {
-        if (addProducts){
+        if (addProducts) {
             const data = {
                 url: 'inventory/opening-stock',
                 data: addProducts
@@ -239,7 +243,7 @@ function _CreateStockForm(props) {
     /*END QUANTITY AND PURCHASE PRICE WISE SUB TOTAL*/
 
 
-    const [editedSubtotal,setEditedSubtotal] = useState(0)
+    const [editedSubtotal, setEditedSubtotal] = useState(0)
 
     useHotkeys([['alt+n', () => {
         document.getElementById('product_id').focus()
@@ -389,31 +393,47 @@ function _CreateStockForm(props) {
                                             <Grid.Col span={6}>
                                                 <Box>
                                                     <Group justify="right">
-                                                    <Button
-                                                        size="sm"
-                                                        color={`red.5`}
-                                                        type="submit"
-                                                        mt={0}
-                                                        id="EntityFormSubmit"
-                                                        leftSection={<IconDeviceFloppy size={16} />}
-                                                    >
-                                                        {t("Add")}
-                                                    </Button>
+                                                        <Button
+                                                            size="sm"
+                                                            color={`red.5`}
+                                                            type="submit"
+                                                            mt={0}
+                                                            id="EntityFormSubmit"
+                                                            leftSection={<IconDeviceFloppy size={16} />}
+                                                        >
+                                                            {t("Add")}
+                                                        </Button>
 
-                                                <_addProduct
-                                                    setStockProductRestore={setStockProductRestore}
-                                                    focusField={'product_id'}
-                                                    fieldPrefix="purchase_"
-                                                />
-                                                    <Button onClick={(e) => { navigate('/inventory/opening-approve-stock') }}
-                                                        size="sm"
-                                                        color={`red.8`}
-                                                        variant="outline"
-                                                        mt={0}
-                                                        rightSection={<IconArrowRight size={16} />}
-                                                    >
-                                                        {t("ApproveStock")}
-                                                    </Button>
+                                                        <Tooltip
+                                                            multiline
+                                                            bg={'orange.8'}
+                                                            position="top"
+                                                            withArrow
+                                                            ta={'center'}
+                                                            offset={{ crossAxis: '-50', mainAxis: '5' }}
+                                                            transitionProps={{ duration: 200 }}
+                                                            label={t('InstantProductCreate')}
+                                                        >
+                                                            <ActionIcon
+                                                                variant="outline"
+                                                                size={'lg'}
+                                                                color="red.5"
+                                                                aria-label="Settings"
+                                                                onClick={() => setProductDrawer(true)}
+                                                            >
+                                                                <IconPlus style={{ width: '100%', height: '70%' }}
+                                                                    stroke={1.5} />
+                                                            </ActionIcon>
+                                                        </Tooltip>
+                                                        <Button onClick={(e) => { navigate('/inventory/opening-approve-stock') }}
+                                                            size="sm"
+                                                            color={`red.8`}
+                                                            variant="outline"
+                                                            mt={0}
+                                                            rightSection={<IconArrowRight size={16} />}
+                                                        >
+                                                            {t("ApproveStock")}
+                                                        </Button>
                                                     </Group>
                                                 </Box>
                                             </Grid.Col>
@@ -467,7 +487,7 @@ function _CreateStockForm(props) {
                                                 const editedQuantity = e.currentTarget.value;
                                                 setEditedQuantity(editedQuantity);
 
-                                                let purchasePriceElement = document.getElementById('inline-update-purchase-price-'+item.id);
+                                                let purchasePriceElement = document.getElementById('inline-update-purchase-price-' + item.id);
                                                 let purchasePrice = parseFloat(purchasePriceElement.value);
                                                 let subTotal = Number(editedQuantity) * purchasePrice;
 
@@ -499,7 +519,7 @@ function _CreateStockForm(props) {
                                                         type="number"
                                                         label=""
                                                         size="xs"
-                                                        id={"inline-update-quantity-"+item.id}
+                                                        id={"inline-update-quantity-" + item.id}
                                                         value={Number(editedQuantity)}
                                                         onChange={handlQuantityChange}
                                                         onKeyDown={getHotkeyHandler([
@@ -525,7 +545,7 @@ function _CreateStockForm(props) {
                                                 const editedPurchaseQuantity = e.currentTarget.value;
                                                 setEditedPurchaseQuantity(editedPurchaseQuantity);
 
-                                                let quantityElement = document.getElementById('inline-update-quantity-'+item.id);
+                                                let quantityElement = document.getElementById('inline-update-quantity-' + item.id);
                                                 let quantity = parseFloat(quantityElement.value);
                                                 let subTotal = quantity * editedPurchaseQuantity;
 
@@ -601,7 +621,7 @@ function _CreateStockForm(props) {
                                                     color="green"
                                                     size="xs"
                                                     radius="xs"
-                                                    onClick={()=>{
+                                                    onClick={() => {
                                                         const approveData = {
                                                             url: 'inventory/opening-stock/inline-update',
                                                             data: {
@@ -614,19 +634,19 @@ function _CreateStockForm(props) {
                                                         setFetching(true)
                                                     }}
                                                 >
-                                                        {t('Approve')}
+                                                    {t('Approve')}
                                                 </Button>
                                                 <ActionIcon
                                                     size="sm"
                                                     variant="subtle"
                                                     color="red"
                                                     onClick={() => {
-                                                        dispatch(deleteEntityData('inventory/opening-stock/'+item.id))
+                                                        dispatch(deleteEntityData('inventory/opening-stock/' + item.id))
                                                         setFetching(true)
                                                     }}
                                                 >
                                                     <IconX size={16} style={{ width: '70%', height: '70%' }}
-                                                           stroke={1.5} />
+                                                        stroke={1.5} />
                                                 </ActionIcon>
                                             </Group>
 
@@ -662,6 +682,15 @@ function _CreateStockForm(props) {
                     </Box>
                 </Grid.Col>
             </Grid>
+            {productDrawer &&
+                <AddProductDrawer
+                    productDrawer={productDrawer}
+                    setProductDrawer={setProductDrawer}
+                    setStockProductRestore={setStockProductRestore}
+                    focusField={'product_id'}
+                    fieldPrefix="purchase_"
+                />
+            }
         </Box>
 
     );
