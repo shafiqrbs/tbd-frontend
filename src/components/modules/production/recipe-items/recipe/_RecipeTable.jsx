@@ -291,6 +291,7 @@ function _RecipeTable() {
                                     <Switch
                                         defaultChecked={item.status==1?true:false}
                                         color="red"
+                                        radius="xs"
                                         size="md"
                                         onLabel="Enable"
                                         offLabel="Disable"
@@ -334,13 +335,13 @@ function _RecipeTable() {
                     ]
                     }
                     fetching={fetching}
-                    totalRecords={indexData.total}
-                    recordsPerPage={perPage}
-                    page={page}
-                    onPageChange={(p) => {
-                        setPage(p)
-                        dispatch(setFetching(true))
-                    }}
+                    // totalRecords={indexData.total}
+                    // recordsPerPage={perPage}
+                    // page={page}
+                    // onPageChange={(p) => {
+                    //     setPage(p)
+                    //     dispatch(setFetching(true))
+                    // }}
                     loaderSize="xs"
                     loaderColor="grape"
                     height={tableHeight}
