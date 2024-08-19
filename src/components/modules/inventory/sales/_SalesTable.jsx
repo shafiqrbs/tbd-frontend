@@ -490,17 +490,17 @@ function _SalesTable() {
                                 >
                                     {t('Pos')}
                                 </Button>
-
-                                <Button
+                                {!checked && <Button
                                     // href={`/inventory/sales/edit/${salesViewData?.id}`}
-                                    onClick={checked ? undefined : () => navigate(`/inventory/sales/edit/${salesViewData?.id}`)}
+                                    onClick={() => navigate(`/inventory/sales/edit/${salesViewData?.id}`)}
                                     component="a"
                                     fullWidth
                                     variant="filled"
                                     leftSection={<IconEdit size={14} />}
                                     color="cyan.5"
-                                    disabled={checked}
-                                >{t('Edit')}</Button>
+                                >{t('Edit')}
+                                </Button>}
+
                             </Button.Group>
                         </Box>
                     </Grid.Col>
