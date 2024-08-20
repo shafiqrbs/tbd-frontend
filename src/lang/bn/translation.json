@@ -368,7 +368,7 @@
   "CreditLimitValidationMessage": "ক্রেডিট সীমাটি একটি পজিটিভ সংখ্যা হতে হবে",
   "OLDReferenceNoValidateMessage": "পুরোনো রেফারেন্স নম্বর লিখুন",
   "ConfirmPasswordValidateMessage": "পাসওয়ার্ড টি অবশ্যই এক হতে হবে",
-  "UpdateUser": "আপডেট ইউসার",
+  "UpdateUser": "আপডেট ইউজার",
   "AddCategoryGroup": "অ্যাড ক্যাটাগরি গ্রুপ",
   "UpdateCategory": "আপডেট ক্যাটাগরি",
   "ChooseProductUnit": "পণ্যের একক নির্বাচন করুন",

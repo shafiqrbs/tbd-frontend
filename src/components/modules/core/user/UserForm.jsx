@@ -60,8 +60,8 @@ function UserForm() {
                 return null;
             },
             password: (value) => {
-                if (!value) true;
-                if ((value.length < 6)) true;
+                if (!value) return true;
+                if ((value.length < 6)) return true;
                 return null;
             },
             confirm_password: (value, values) => {
@@ -211,10 +211,9 @@ function UserForm() {
                                                 />
                                             </Box>
                                             <Box mt={'xs'}>
-
                                                 <PasswordInputForm
-                                                    form={form}
                                                     tooltip={t('RequiredPassword')}
+                                                    form={form}
                                                     label={t('Password')}
                                                     placeholder={t('Password')}
                                                     required={true}
@@ -225,7 +224,6 @@ function UserForm() {
                                                 />
                                             </Box>
                                             <Box mt={'xs'}>
-
                                                 <PasswordInputForm
                                                     form={form}
                                                     tooltip={t('ConfirmPasswordValidateMessage')}

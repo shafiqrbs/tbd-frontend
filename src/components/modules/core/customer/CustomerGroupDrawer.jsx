@@ -55,7 +55,7 @@ function CustomerGroupDrawer(props) {
                             </ActionIcon>
                         </Drawer.Header>
                         <Box ml={2} mr={2} mb={0}>
-                            <CustomerSettingsForm settingTypeDropdown={settingTypeDropdown} adjustment={adjustment} saveId={saveId} />
+                            <CustomerSettingsForm setGroupDrawer={setGroupDrawer} settingTypeDropdown={settingTypeDropdown} adjustment={adjustment} saveId={saveId} />
                         </Box>
                     </ScrollArea>
 

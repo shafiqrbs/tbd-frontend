@@ -32,7 +32,7 @@ function CustomerSettingsForm(props) {
     const effectRan = useRef(true);
     const [settingTypeData, setSettingTypeData] = useState(null);
 
-    const { adjustment, saveId, settingTypeDropdown } = props
+    const { adjustment, saveId, settingTypeDropdown, setGroupDrawer } = props
 
     useEffect(() => {
         saveId !== 'EntityFormSubmit' && effectRan.current && (
@@ -101,6 +101,7 @@ function CustomerSettingsForm(props) {
                                 settingsForm.reset()
                                 setCategoryGroupData(null)
                                 setSaveCreateLoading(false)
+                                setGroupDrawer(false)
                                 dispatch(setFetching(true))
                             }, 700)
                         },

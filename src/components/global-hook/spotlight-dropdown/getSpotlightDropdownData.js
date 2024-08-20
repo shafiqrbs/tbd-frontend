@@ -102,7 +102,7 @@ const getSpotlightDropdownData = (t) => {
 
                 },
                 {
-                    id: 'settings',
+                    id: 'product-settings',
                     label: t('ProductSettingN'),
                     description: t('WhereWePresentTheInvoiceBatchInformationN'),
 
@@ -110,6 +110,11 @@ const getSpotlightDropdownData = (t) => {
                 {
                     id: 'particular',
                     label: t('ParticularSettingN'),
+                    description: t('WhereWePresentTheInvoiceBatchInformationN'),
+
+                },{
+                    id: 'product-management',
+                    label: t('ProductManagementN'),
                     description: t('WhereWePresentTheInvoiceBatchInformationN'),
 
                 },
