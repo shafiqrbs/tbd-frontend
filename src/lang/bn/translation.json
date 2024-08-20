@@ -377,5 +377,8 @@
   "OpeningStock": "ওপেনিং স্টক",
   "ApproveStock": "এপ্রুভ স্টক",
   "CreatedDate": "ক্রিয়েটেড ডেট",
-  "Approve": "এপ্রুভ"
+  "Approve": "এপ্রুভ",
+  "Hold": "হোল্ড",
+  "Save": "সেভ",
+  "Items": "আইটেমস"
 }

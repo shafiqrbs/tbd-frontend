@@ -554,5 +554,6 @@
   "ProductSettingN": "Product Setting",
   "ParticularSettingN": "Particular Setting",
   "OLDReferenceNoValidateMessage": "Enter your old reference number",
-  "AddCategoryGroup": "Add Category Group"
+  "AddCategoryGroup": "Add Category Group",
+  "Items" : "Items"
 }

@@ -518,7 +518,7 @@ function _GenericInvoiceForm(props) {
                                         footer: (
                                             <Group spacing="xs">
                                                 <IconSum size="1.25em" />
-                                                <Text mb={-2}>{tempCardProducts.length} Items</Text>
+                                                <Text mb={-2}>{tempCardProducts.length} {t('Items')}</Text>
                                             </Group>
                                         )
                                     },
