@@ -316,7 +316,7 @@ function _UpdateInvoice(props) {
                                                 <InputNumberForm
                                                     tooltip={t('BarcodeValidateMessage')}
                                                     label=''
-                                                    placeholder={t('barcode')}
+                                                    placeholder={t('Barcode')}
                                                     required={true}
                                                     nextField={'EntityFormSubmit'}
                                                     form={form}

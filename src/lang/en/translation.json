@@ -425,7 +425,6 @@
   "CreatedDate": "Created Date",
   "OpeningStock": "Opening Stock",
   "ApproveStock": "Approve Stock",
-  "ApproveOpeningStock": "Approve Stock",
   "InvoiceBatch": "Invoice Batch",
   "ViewInvoiceBatch": "View Invoice Batch",
   "InvoiceBatchInformation": "Invoice Batch Information",
@@ -555,5 +554,5 @@
   "ProductSettingN": "Product Setting",
   "ParticularSettingN": "Particular Setting",
   "OLDReferenceNoValidateMessage": "Enter your old reference number",
-  "AddCategoryGroup" : "Add Category Group"
+  "AddCategoryGroup": "Add Category Group"
 }

@@ -371,5 +371,11 @@
   "UpdateUser": "আপডেট ইউসার",
   "AddCategoryGroup": "অ্যাড ক্যাটাগরি গ্রুপ",
   "UpdateCategory": "আপডেট ক্যাটাগরি",
-  "ChooseProductUnit": "পণ্যের একক নির্বাচন করুন"
+  "ChooseProductUnit": "পণ্যের একক নির্বাচন করুন",
+  "StartDate": "স্টার্ট ডেট",
+  "EndDate": "এন্ড ডেট",
+  "OpeningStock": "ওপেনিং স্টক",
+  "ApproveStock": "এপ্রুভ স্টক",
+  "CreatedDate": "ক্রিয়েটেড ডেট",
+  "Approve": "এপ্রুভ"
 }
