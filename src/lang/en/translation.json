@@ -556,5 +556,7 @@
   "OLDReferenceNoValidateMessage": "Enter your old reference number",
   "AddCategoryGroup": "Add Category Group",
   "Items": "Items",
-  "ProductManagementN": "Product Management"
+  "ProductManagementN": "Product Management",
+  "ReceiveAmountValidateMessage" : "Enter the amount",
+  "InvoiceDateValidateMessage" : "Select a date"
 }

@@ -381,5 +381,7 @@
   "Hold": "হোল্ড",
   "Save": "সেভ",
   "Items": "আইটেমস",
-  "Shortcut": "শর্টকাট"
+  "Shortcut": "শর্টকাট",
+  "ReceiveAmountValidateMessage": "টাকার পরিমাণ লিখুন",
+  "InvoiceDateValidateMessage": "তারিখ নির্বাচন করুন"
 }
