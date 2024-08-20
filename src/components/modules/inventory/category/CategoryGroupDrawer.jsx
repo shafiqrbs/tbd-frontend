@@ -2,7 +2,8 @@ import React from "react";
 import { useOutletContext } from "react-router-dom";
 import {
     ActionIcon, Box, ScrollArea, Drawer,
-    Text
+    Text,
+    Flex
 } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
 
@@ -34,21 +35,23 @@ function CategoryGroupDrawer(props) {
                 <Drawer.Overlay />
                 <Drawer.Content>
                     <ScrollArea h={height + 100} scrollbarSize={2} type="never" bg={'gray.1'}>
-                        <Drawer.Header>
-                            <Drawer.Title>
-                                <Text fw={'600'} fz={'16'}>
-                                    {t('AddCategoryGroup')}
-                                </Text>
-                            </Drawer.Title>
+                        <Flex
+                            mih={40}
+                            gap="md"
+                            justify="flex-end"
+                            align="center"
+                            direction="row"
+                            wrap="wrap"
+                        >
                             <ActionIcon
-                                className="ActionIconCustom"
+                                mr={'sm'}
                                 radius="xl"
-                                color="red.6" size="lg"
+                                color="red.6" size="md"
                                 onClick={closeModel}
                             >
-                                <IconX style={{ width: '70%', height: '70%' }} stroke={1.5} />
+                                <IconX style={{ width: '100%', height: '100%' }} stroke={1.5} />
                             </ActionIcon>
-                        </Drawer.Header>
+                        </Flex>
                         <Box ml={2} mr={2} mb={0}>
                             <CategoryGroupDrawerForm saveId={saveId} setGroupDrawer={setGroupDrawer} />
                         </Box>
