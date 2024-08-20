@@ -16,7 +16,7 @@ function CategoryFilterForm(props) {
             <InputForm
                 label={t("Name")}
                 placeHolder={t("Name")}
-                nextField={"ParentName"}
+                nextField={"parentName"}
                 id={"name"}
                 name={"name"}
                 module={props.module}
