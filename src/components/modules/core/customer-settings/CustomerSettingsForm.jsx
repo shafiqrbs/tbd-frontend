@@ -257,7 +257,6 @@ function CustomerSettingsForm(props) {
                                 <Grid.Col span={1} >
                                     <Box bg={'white'} className={'borderRadiusAll'} pt={'16'}>
                                         <_ShortcutMasterData
-                                            adjustment={adjustment}
                                             form={settingsForm}
                                             FormSubmit={saveId}
                                             Name={'setting_type'}
