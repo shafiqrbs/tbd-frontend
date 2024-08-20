@@ -2,7 +2,8 @@ import React, { useEffect } from "react";
 import { useOutletContext } from "react-router-dom";
 import {
     ActionIcon, Box, ScrollArea, Drawer,
-    Text
+    Text,
+    Flex
 } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
 
@@ -17,13 +18,9 @@ import { useSelector, useDispatch } from "react-redux";
 
 function ProductCategoryDrawer(props) {
     // const configData = localStorage.getItem('config-data');
-
-    const adjustment = -28;
     const dispatch = useDispatch()
 
-    const { saveId } = props
-
-    const { groupDrawer, setGroupDrawer } = props
+    const { groupDrawer, setGroupDrawer, saveId } = props
     const { isOnline, mainAreaHeight } = useOutletContext();
     const { t, i18n } = useTranslation();
     const height = mainAreaHeight; //TabList height 104
@@ -49,23 +46,25 @@ function ProductCategoryDrawer(props) {
                 <Drawer.Overlay />
                 <Drawer.Content>
                     <ScrollArea h={height + 100} scrollbarSize={2} type="never" bg={'gray.1'}>
-                        <Drawer.Header>
-                            <Drawer.Title>
-                                <Text fw={'600'} fz={'16'}>
-                                    {t('AddProductCategory')}
-                                </Text>
-                            </Drawer.Title>
+                        <Flex
+                            mih={40}
+                            gap="md"
+                            justify="flex-end"
+                            align="center"
+                            direction="row"
+                            wrap="wrap"
+                        >
                             <ActionIcon
-                                className="ActionIconCustom"
+                                mr={'sm'}
                                 radius="xl"
-                                color="red.6" size="lg"
+                                color="red.6" size="md"
                                 onClick={closeModel}
                             >
-                                <IconX style={{ width: '70%', height: '70%' }} stroke={1.5} />
+                                <IconX style={{ width: '100%', height: '100%' }} stroke={1.5} />
                             </ActionIcon>
-                        </Drawer.Header>
+                        </Flex>
                         <Box ml={2} mr={2} mb={0}>
-                            <ProductCategoryDrawerForm groupCategoryDropdown={groupCategoryDropdown} adjustment={adjustment} saveId={saveId} />
+                            <ProductCategoryDrawerForm groupCategoryDropdown={groupCategoryDropdown} setGroupDrawer={setGroupDrawer} saveId={saveId} />
                         </Box>
                     </ScrollArea>
                 </Drawer.Content>
