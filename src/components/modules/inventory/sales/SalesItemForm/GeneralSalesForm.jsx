@@ -472,7 +472,7 @@ function GeneralSalesForm(props) {
                                             <InputForm
                                                 tooltip={t('BarcodeValidateMessage')}
                                                 label=''
-                                                placeholder={t('barcode')}
+                                                placeholder={t('Barcode')}
                                                 required={true}
                                                 nextField={'EntityFormSubmit'}
                                                 form={form}
@@ -733,7 +733,7 @@ function GeneralSalesForm(props) {
                                         </Grid.Col>
                                         <Grid.Col span={6}>
                                             <Center fz={'md'} fw={'800'}>{currancySymbol} {salesSubTotalAmount.toFixed(2)}</Center>
-                                            <Center fz={'xs'}>{t('VAT')}</Center>
+                                            <Center fz={'xs'}>{t('Vat')}</Center>
                                         </Grid.Col>
                                     </Grid>
                                     <Grid gutter={{ base: 6 }}>

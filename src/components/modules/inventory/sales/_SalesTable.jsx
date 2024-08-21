@@ -22,16 +22,19 @@ import {
     IconEdit,
     IconPrinter,
     IconReceipt, IconDotsVertical, IconTrashX,
+    IconCheck,
 } from "@tabler/icons-react";
 import { DataTable } from 'mantine-datatable';
 import { useDispatch, useSelector } from "react-redux";
 import { useHotkeys } from "@mantine/hooks";
-import { getIndexEntityData, setFetching, setSalesFilterData } from "../../../../store/inventory/crudSlice.js";
+import { deleteEntityData, getIndexEntityData, setDeleteMessage, setFetching, setSalesFilterData,  } from "../../../../store/inventory/crudSlice.js";
 import __ShortcutTable from "../../shortcut/__ShortcutTable";
 import _SalesSearch from "./_SalesSearch.jsx";
 import { setSearchKeyword } from "../../../../store/core/crudSlice.js";
 import { SalesPrintA4 } from "./print-component/SalesPrintA4.jsx";
 import { SalesPrintPos } from "./print-component/SalesPrintPos.jsx";
+import { modals } from "@mantine/modals";
+import { notifications } from "@mantine/notifications";
 
 function _SalesTable() {
     const navigate = useNavigate();
@@ -56,6 +59,7 @@ function _SalesTable() {
     const fetching = useSelector((state) => state.inventoryCrudSlice.fetching)
     const salesFilterData = useSelector((state) => state.inventoryCrudSlice.salesFilterData)
     const indexData = useSelector((state) => state.inventoryCrudSlice.indexEntityData)
+    const entityDataDelete = useSelector((state) => state.inventoryCrudSlice.entityDataDelete)
 
     const [loading, setLoading] = useState(true);
     useEffect(() => {
@@ -82,6 +86,25 @@ function _SalesTable() {
             <Table.Td ta="right" fz="xs" width={'100'}>{element.sub_total}</Table.Td>
         </Table.Tr>
     ));
+
+    useEffect(() => {
+        dispatch(setDeleteMessage(''))
+        if (entityDataDelete === 'success') {
+            notifications.show({
+                color: 'red',
+                title: t('DeleteSuccessfully'),
+                icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
+                loading: false,
+                autoClose: 700,
+                style: { backgroundColor: 'lightgray' },
+            });
+
+            setTimeout(() => {
+                dispatch(setFetching(true))
+            }, 700)
+        }
+    }, [entityDataDelete]);
+
     useEffect(() => {
         const options = {
             year: 'numeric',
@@ -250,7 +273,6 @@ function _SalesTable() {
                                                             {
                                                                 !data.invoice_batch_id &&
                                                                 <Menu.Item
-                                                                    // href={`/inventory/sales/edit/${data.id}`}
                                                                     onClick={() => {
                                                                         navigate(`/inventory/sales/edit/${data.id}`)
                                                                     }}
@@ -261,7 +283,6 @@ function _SalesTable() {
                                                                 </Menu.Item>
                                                             }
                                                             <Menu.Item
-                                                                // href={``}
                                                                 onClick={(e) => {
                                                                     e.preventDefault();
                                                                     setLoading(true)
@@ -277,7 +298,24 @@ function _SalesTable() {
                                                             {
                                                                 !data.invoice_batch_id &&
                                                                 <Menu.Item
-                                                                    // href={``}
+                                                                    onClick={() => {
+                                                                        modals.openConfirmModal({
+                                                                            title: (
+                                                                                <Text size="md"> {t("FormConfirmationTitle")}</Text>
+                                                                            ),
+                                                                            children: (
+                                                                                <Text size="sm"> {t("FormConfirmationMessage")}</Text>
+                                                                            ),
+                                                                            labels: { confirm: 'Confirm', cancel: 'Cancel' },
+                                                                            confirmProps: { color: 'red.6' },
+                                                                            onCancel: () => console.log('Cancel'),
+                                                                            onConfirm: () => {
+                                                                                {
+                                                                                    dispatch(deleteEntityData('inventory/sales/' + data.id));
+                                                                                }
+                                                                            },
+                                                                        });
+                                                                    }}
                                                                     component="a"
                                                                     w={'200'}
                                                                     mt={'2'}
@@ -288,7 +326,6 @@ function _SalesTable() {
                                                                     {t('Delete')}
                                                                 </Menu.Item>
                                                             }
-
                                                         </Menu.Dropdown>
                                                     </Menu>
                                                 </Group>
@@ -490,17 +527,16 @@ function _SalesTable() {
                                 >
                                     {t('Pos')}
                                 </Button>
-
-                                <Button
-                                    // href={`/inventory/sales/edit/${salesViewData?.id}`}
-                                    onClick={checked ? undefined : () => navigate(`/inventory/sales/edit/${salesViewData?.id}`)}
+                                {!checked && <Button
+                                    onClick={() => navigate(`/inventory/sales/edit/${salesViewData?.id}`)}
                                     component="a"
                                     fullWidth
                                     variant="filled"
                                     leftSection={<IconEdit size={14} />}
                                     color="cyan.5"
-                                    disabled={checked}
-                                >{t('Edit')}</Button>
+                                >{t('Edit')}
+                                </Button>}
+
                             </Button.Group>
                         </Box>
                     </Grid.Col>

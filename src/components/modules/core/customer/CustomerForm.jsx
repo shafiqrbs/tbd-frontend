@@ -324,7 +324,7 @@ function CustomerForm(props) {
                                                     <Grid.Col span={6} >
                                                         <Box >
                                                             <InputForm
-                                                                tooltip={t('CreditLimit')}
+                                                                tooltip={t('CreditLimitValidationMessage')}
                                                                 label={t('CreditLimit')}
                                                                 placeholder={t('CreditLimit')}
                                                                 required={false}
@@ -339,7 +339,7 @@ function CustomerForm(props) {
                                                     <Grid.Col span={6}>
                                                         <Box>
                                                             <InputForm
-                                                                tooltip={t('OLDReferenceNo')}
+                                                                tooltip={t('OLDReferenceNoValidateMessage')}
                                                                 label={t('OLDReferenceNo')}
                                                                 placeholder={t('OLDReferenceNo')}
                                                                 required={false}
@@ -389,7 +389,7 @@ function CustomerForm(props) {
                                             </Box>
                                             <Box mt={'xs'} mb={'xs'}>
                                                 <TextAreaForm
-                                                    tooltip={t('Address')}
+                                                    tooltip={t('AddressValidateMessage')}
                                                     label={t('Address')}
                                                     placeholder={t('Address')}
                                                     required={false}

@@ -2,11 +2,13 @@ import React, { useEffect, useRef, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import {
     Button, rem, Flex, Grid, Box, ScrollArea, Group, Text, Title, Stack,
+    ActionIcon,
 } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
 import {
     IconCheck,
     IconDeviceFloppy,
+    IconX,
 } from "@tabler/icons-react";
 import { useDisclosure, useHotkeys } from "@mantine/hooks";
 import { useDispatch, useSelector } from "react-redux";
@@ -30,9 +32,7 @@ function ProductCategoryDrawerForm(props) {
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
     const effectRan = useRef(true);
 
-
-
-    const { adjustment, saveId, groupCategoryDropdown } = props
+    const { saveId, groupCategoryDropdown, setGroupDrawer } = props
 
     const categoryForm = useForm({
         initialValues: {
@@ -52,20 +52,9 @@ function ProductCategoryDrawerForm(props) {
             effectRan.current = false
         )
     })
-
-    // useHotkeys([['alt+n', () => {
-    //     document.getElementById('category_group').click()
-    // }]], []);
-
-    // useHotkeys([['alt+r', () => {
-    //     categoryForm.reset()
-    // }]], []);
-
-    // useHotkeys([['alt+s', () => {
-    //     document.getElementById(saveId).click()
-    // }]], []);
-
-
+    const closeModel = () => {
+        setGroupDrawer(false)
+    }
     return (
         <>
             <Box>
@@ -102,6 +91,7 @@ function ProductCategoryDrawerForm(props) {
                                 setCategoryGroupData(null)
                                 setSaveCreateLoading(false)
                                 dispatch(setFetching(true))
+                                setGroupDrawer(false)
                             }, 700)
                         },
                     });
@@ -112,37 +102,18 @@ function ProductCategoryDrawerForm(props) {
                             <Grid.Col span={9} >
                                 <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
                                     <Box bg={"white"} >
-                                        <Box pl={`xs`} pr={8} pt={'6'} pb={'6'} mb={'4'} className={'boxBackground borderRadiusAll'} >
+                                        <Box pl={`xs`} pr={8} pt={'4'} pb={'6'} mb={'4'} className={'boxBackground borderRadiusAll'} >
                                             <Grid>
                                                 <Grid.Col span={8} >
                                                     <Title order={6} pt={'6'}>{t('CreateProductCategory')}</Title>
                                                 </Grid.Col>
                                                 <Grid.Col span={4}>
-                                                    <Stack right align="flex-end">
-                                                        <>
-                                                            {
-                                                                !saveCreateLoading && isOnline &&
-                                                                <Button
-                                                                    size="xs"
-                                                                    color={`green.8`}
-                                                                    type="submit"
-                                                                    id={saveId}
-                                                                    leftSection={<IconDeviceFloppy size={16} />}
-                                                                >
 
-                                                                    <Flex direction={`column`} gap={0}>
-                                                                        <Text fz={14} fw={400}>
-                                                                            {t("CreateAndSave")}
-                                                                        </Text>
-                                                                    </Flex>
-                                                                </Button>
-                                                            }
-                                                        </></Stack>
                                                 </Grid.Col>
                                             </Grid>
                                         </Box>
                                         <Box pl={`xs`} pr={'xs'} className={'borderRadiusAll'}>
-                                            <ScrollArea h={height - (adjustment ? adjustment : 0)} scrollbarSize={2} scrollbars="y" type="never">
+                                            <ScrollArea h={height + 18} scrollbarSize={2} scrollbars="y" type="never">
                                                 <Box mt={'8'}>
                                                     <SelectForm
                                                         tooltip={t('ChooseCategoryGroup')}
@@ -192,20 +163,54 @@ function ProductCategoryDrawerForm(props) {
                                                 </Box>
                                             </ScrollArea>
                                         </Box>
+                                        <Box pl={`xs`} pr={8} pt={'6'} pb={'6'} mb={'2'} mt={4} className={'boxBackground borderRadiusAll'}>
+                                            <Group justify="space-between">
+                                                <Flex
+                                                    gap="md"
+                                                    justify="center"
+                                                    align="center"
+                                                    direction="row"
+                                                    wrap="wrap"
+                                                >
+                                                    <ActionIcon
+                                                        variant="transparent"
+                                                        size="sm"
+                                                        color="red.6"
+                                                        onClick={closeModel}
+                                                        ml={'4'}
+                                                    >
+                                                        <IconX style={{ width: '100%', height: '100%' }} stroke={1.5} />
+                                                    </ActionIcon>
+                                                </Flex>
+
+                                                <Group gap={8}>
+                                                    <Stack align="flex-start">
+                                                        <>
+                                                            {
+                                                                !saveCreateLoading && isOnline &&
+                                                                <Button
+                                                                    size="xs"
+                                                                    color={`green.8`}
+                                                                    type="submit"
+                                                                    id={saveId}
+                                                                    leftSection={<IconDeviceFloppy size={16} />}
+                                                                >
+
+                                                                    <Flex direction={`column`} gap={0}>
+                                                                        <Text fz={14} fw={400}>
+                                                                            {t("CreateAndSave")}
+                                                                        </Text>
+                                                                    </Flex>
+                                                                </Button>
+                                                            }
+                                                        </>
+                                                    </Stack>
+                                                </Group>
+                                            </Group>
+                                        </Box>
                                     </Box>
                                 </Box>
                             </Grid.Col>
-                            {/* <Grid.Col span={1} >
-                                <Box bg={'white'} className={'borderRadiusAll'} pt={'16'}>
-                                    <_ShortcutMasterData
-                                        adjustment={adjustment}
-                                        form={categoryForm}
-                                        FormSubmit={saveId}
-                                        Name={'setting_type'}
-                                        inputType="select"
-                                    />
-                                </Box>
-                            </Grid.Col> */}
                         </Grid>
                     </Box>
                 </form>

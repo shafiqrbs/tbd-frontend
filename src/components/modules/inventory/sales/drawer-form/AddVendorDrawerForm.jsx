@@ -3,6 +3,8 @@ import { useOutletContext } from "react-router-dom";
 import {
     Button, rem, Flex, Grid, Box, ScrollArea, Text, Title, Stack,
     Center,
+    Group,
+    ActionIcon,
 } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
 import {
@@ -12,6 +14,7 @@ import {
     IconDeviceMobile,
     IconRefreshDot,
     IconUserCircle,
+    IconX
 } from "@tabler/icons-react";
 import { useDispatch } from "react-redux";
 import { hasLength, useForm } from "@mantine/form";
@@ -59,7 +62,9 @@ function AddVendorDrawerForm(props) {
             },
         }
     });
-
+    const closeModel = () => {
+        setVendorDrawer(false)
+    }
 
     return (
         <>
@@ -106,55 +111,19 @@ function AddVendorDrawerForm(props) {
                             <Grid.Col span={9} >
                                 <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
                                     <Box bg={"white"} >
-                                        <Box pl={`xs`} pr={8} pt={'6'} pb={'6'} mb={'4'} className={'boxBackground borderRadiusAll'} >
+                                        <Box pl={`xs`} pr={8} pt={'4'} pb={'6'} mb={'4'} className={'boxBackground borderRadiusAll'} >
                                             <Grid columns={12}>
                                                 <Grid.Col span={6} >
                                                     <Title order={6} pt={'6'}>{t('InstantVendorCreate')}</Title>
                                                 </Grid.Col>
-                                                <Grid.Col span={2} p={0}>
-                                                    <Flex justify="flex-end" align="center" h="100%">
-                                                        <Button
-                                                            variant="transparent"
-                                                            size="xs"
-                                                            color="red.4"
-                                                            type="reset"
-                                                            id=""
-                                                            comboboxProps={{ withinPortal: false }}
-                                                            onClick={() => vendorAddedForm.reset()}
-                                                            p={0}
-                                                            rightSection={
-                                                                <IconRefreshDot style={{ width: '100%', height: '60%' }} stroke={1.5} />
-                                                            }>
-                                                        </Button>
-                                                    </Flex>
-                                                </Grid.Col>
-                                                <Grid.Col span={4} >
-                                                    <Stack right align="flex-end">
-                                                        <>
-                                                            {
-                                                                !saveCreateLoading && isOnline &&
-                                                                <Button
-                                                                    size="xs"
-                                                                    color={`green.8`}
-                                                                    type="submit"
-                                                                    id={fieldPrefix + "EntityCustomerFormSubmit"}
-                                                                    leftSection={<IconDeviceFloppy size={16} />}
-                                                                >
-                                                                    <Flex direction={`column`} gap={0}>
-                                                                        <Text fz={14} fw={400}>
-                                                                            {t("CreateAndSave")}
-                                                                        </Text>
-                                                                    </Flex>
-                                                                </Button>
-                                                            }
-                                                        </>
-                                                    </Stack>
+                                                <Grid.Col span={6} >
+
                                                 </Grid.Col>
                                             </Grid>
                                         </Box>
                                         <Box pl={`xs`} pr={'xs'} className={'borderRadiusAll'}>
-                                            <ScrollArea h={height} scrollbarSize={2} scrollbars="y" type="never">
-                                                <Box mt={'xs'}>
+                                            <ScrollArea h={height + 18} scrollbarSize={2} scrollbars="y" type="never">
+                                                <Box mt={'8'}>
                                                     <InputForm
                                                         tooltip={t('CompanyNameValidateMessage')}
                                                         label={t('CompanyName')}
@@ -197,19 +166,68 @@ function AddVendorDrawerForm(props) {
                                                 </Box>
                                             </ScrollArea>
                                         </Box>
+                                        <Box pl={`xs`} pr={8} pt={'6'} pb={'6'} mb={'2'} mt={4} className={'boxBackground borderRadiusAll'}>
+                                            <Group justify="space-between">
+                                                <Flex
+                                                    gap="md"
+                                                    justify="center"
+                                                    align="center"
+                                                    direction="row"
+                                                    wrap="wrap"
+                                                >
+                                                    <ActionIcon
+                                                        variant="transparent"
+                                                        size="sm"
+                                                        color="red.6"
+                                                        onClick={closeModel}
+                                                        ml={'4'}
+                                                    >
+                                                        <IconX style={{ width: '100%', height: '100%' }} stroke={1.5} />
+                                                    </ActionIcon>
+                                                </Flex>
+
+                                                <Group gap={8}>
+                                                    <Flex justify="flex-end" align="center" h="100%">
+                                                        <Button
+                                                            variant="transparent"
+                                                            size="xs"
+                                                            color="red.4"
+                                                            type="reset"
+                                                            id=""
+                                                            comboboxProps={{ withinPortal: false }}
+                                                            onClick={() => vendorAddedForm.reset()}
+                                                            p={0}
+                                                            rightSection={
+                                                                <IconRefreshDot style={{ width: '100%', height: '60%' }} stroke={1.5} />
+                                                            }>
+                                                        </Button>
+                                                    </Flex>
+                                                    <Stack align="flex-start">
+                                                        <>
+                                                            {
+                                                                !saveCreateLoading && isOnline &&
+                                                                <Button
+                                                                    size="xs"
+                                                                    color={`green.8`}
+                                                                    type="submit"
+                                                                    id={fieldPrefix + "EntityCustomerFormSubmit"}
+                                                                    leftSection={<IconDeviceFloppy size={16} />}
+                                                                >
+                                                                    <Flex direction={`column`} gap={0}>
+                                                                        <Text fz={14} fw={400}>
+                                                                            {t("CreateAndSave")}
+                                                                        </Text>
+                                                                    </Flex>
+                                                                </Button>
+                                                            }
+                                                        </>
+                                                    </Stack>
+                                                </Group>
+                                            </Group>
+                                        </Box>
                                     </Box>
                                 </Box>
                             </Grid.Col>
-                            {/* <Grid.Col span={1} >
-                                <Box bg={'white'} className={'borderRadiusAll'} pt={'16'}>
-                                    <_ShortcutMasterData
-                                        form={vendorAddedForm}
-                                        FormSubmit={fieldPrefix + "EntityProductFormSubmit"}
-                                        Name={fieldPrefix + 'product_type_id'}
-                                        inputType="select"
-                                    />
-                                </Box>
-                            </Grid.Col> */}
                         </Grid>
                     </Box>
                 </form >

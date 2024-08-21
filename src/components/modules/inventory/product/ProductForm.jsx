@@ -293,7 +293,7 @@ function ProductForm() {
                                                 </Grid.Col>
                                                 <Grid.Col span={6}>
                                                     <InputForm
-                                                        tooltip={t('PurchasePrice')}
+                                                        tooltip={t('PurchasePriceValidateMessage')}
                                                         label={t('PurchasePrice')}
                                                         placeholder={t('PurchasePrice')}
                                                         required={false}
@@ -346,26 +346,25 @@ function ProductForm() {
                                             </Grid>
                                         </Box>
                                         <Box mt={'md'} mb={'md'}>
-                                            <Grid gutter={{ base: 6 }}>
-                                                <Box mt={'xs'}>
-                                                    <Grid gutter={{ base: 1 }}>
-                                                        <Grid.Col span={8}>
-                                                            <SwitchForm
-                                                                tooltip={t('PrintLogo')}
-                                                                label=''
-                                                                nextField=''
-                                                                name={'sttaus'}
-                                                                form={form}
-                                                                color="red"
-                                                                id={'status'}
-                                                                position={'left'}
-                                                                defaultChecked={1}
-                                                            />
-                                                        </Grid.Col>
-                                                        <Grid.Col span={4} fz={'sm'} pt={'1'}>{t('Status')}</Grid.Col>
-                                                    </Grid>
-                                                </Box>
-                                            </Grid>
+                                            <Box mt={'xs'}>
+                                                <Grid columns={12} gutter={{ base: 1 }}>
+                                                    <Grid.Col span={2}>
+                                                        <SwitchForm
+                                                            tooltip={t('PrintLogo')}
+                                                            label=''
+                                                            nextField=''
+                                                            name={'status'}
+                                                            form={form}
+                                                            color="red"
+                                                            id={'status'}
+                                                            position={'left'}
+                                                            defaultChecked={1}
+                                                        />
+                                                    </Grid.Col>
+                                                    <Grid.Col span={4} fz={'sm'} pt={'1'}>{t('Status')}</Grid.Col>
+                                                    <Grid.Col span={6} fz={'sm'} pt={'1'}></Grid.Col>
+                                                </Grid>
+                                            </Box>
                                         </Box>
                                     </ScrollArea>
                                 </Box>

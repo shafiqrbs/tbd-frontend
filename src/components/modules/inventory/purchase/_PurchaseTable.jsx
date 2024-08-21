@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useOutletContext } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import tableCss from '../../../../assets/css/Table.module.css';
 import {
     Group,
@@ -8,29 +8,24 @@ import {
 } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import {
-    IconEye,
     IconEdit,
-    IconTrash,
     IconPrinter,
     IconReceipt, IconDotsVertical, IconPencil, IconEyeEdit, IconTrashX,
+    IconCheck,
 } from "@tabler/icons-react";
 import { DataTable } from 'mantine-datatable';
 import { useDispatch, useSelector } from "react-redux";
 import {
-    editEntityData,
-    getIndexEntityData, setEditEntityData,
-    setFetching, setFormLoading,
-    setInsertType,
-    showEntityData
+    getIndexEntityData, setDeleteMessage,
+    setFetching,
 } from "../../../../store/inventory/crudSlice.js";
 import { modals } from "@mantine/modals";
 import { deleteEntityData } from "../../../../store/core/crudSlice";
 import ShortcutTable from "../../shortcut/ShortcutTable";
-import KeywordDateRangeSearch from "../../filter/KeywordDateRangeSearch";
-import { ReactToPrint } from "react-to-print";
 import _PurchaseSearch from "./_PurchaseSearch.jsx";
 import { PurchasePrintNormal } from "./print-component/PurchasePrintNormal.jsx";
 import { PurchasePrintPos } from "./print-component/PurchasePrintPos.jsx";
+import { notifications } from "@mantine/notifications";
 
 function _PurchaseTable() {
     const printRef = useRef()
@@ -44,11 +39,14 @@ function _PurchaseTable() {
     const [page, setPage] = useState(1);
     const [printA4, setPrintA4] = useState(false);
     const [printPos, setPrintPos] = useState(false);
+    const navigate = useNavigate();
+    const [selectedRow, setSelectedRow] = useState('');
 
 
     const fetching = useSelector((state) => state.inventoryCrudSlice.fetching)
     const purchaseFilterData = useSelector((state) => state.inventoryCrudSlice.purchaseFilterData)
     const indexData = useSelector((state) => state.inventoryCrudSlice.indexEntityData)
+    const entityDataDelete = useSelector((state) => state.inventoryCrudSlice.entityDataDelete)
 
     const [loading, setLoading] = useState(true);
     useEffect(() => {
@@ -95,6 +93,24 @@ function _PurchaseTable() {
         }
         dispatch(getIndexEntityData(value))
     }, [fetching]);
+
+    useEffect(() => {
+        dispatch(setDeleteMessage(''))
+        if (entityDataDelete === 'success') {
+            notifications.show({
+                color: 'red',
+                title: t('DeleteSuccessfully'),
+                icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
+                loading: false,
+                autoClose: 700,
+                style: { backgroundColor: 'lightgray' },
+            });
+
+            setTimeout(() => {
+                dispatch(setFetching(true))
+            }, 700)
+        }
+    }, [entityDataDelete]);
 
 
     return (
@@ -149,6 +165,7 @@ function _PurchaseTable() {
                                                         e.preventDefault();
                                                         setLoading(true)
                                                         setPurchaseViewData(item)
+                                                        setSelectedRow(item.invoice)
                                                     }}
                                                     style={{ cursor: "pointer" }}
                                                 >
@@ -175,7 +192,9 @@ function _PurchaseTable() {
                                                         </Menu.Target>
                                                         <Menu.Dropdown>
                                                             <Menu.Item
-                                                                href={`/inventory/purchase/edit/${data.id}`}
+                                                                onClick={() => {
+                                                                    navigate(`/inventory/purchase/edit/${data.id}`)
+                                                                }}
                                                                 target="_blank"
                                                                 component="a"
                                                                 w={'200'}
@@ -185,7 +204,12 @@ function _PurchaseTable() {
                                                             </Menu.Item>
 
                                                             <Menu.Item
-                                                                href={``}
+                                                                onClick={(e) => {
+                                                                    e.preventDefault();
+                                                                    setLoading(true)
+                                                                    setPurchaseViewData(data)
+                                                                    setSelectedRow(data.invoice)
+                                                                }}
                                                                 target="_blank"
                                                                 component="a"
                                                                 w={'200'}
@@ -195,9 +219,26 @@ function _PurchaseTable() {
                                                             </Menu.Item>
 
                                                             <Menu.Item
-                                                                href={``}
                                                                 target="_blank"
                                                                 component="a"
+                                                                onClick={() => {
+                                                                    modals.openConfirmModal({
+                                                                        title: (
+                                                                            <Text size="md"> {t("FormConfirmationTitle")}</Text>
+                                                                        ),
+                                                                        children: (
+                                                                            <Text size="sm"> {t("FormConfirmationMessage")}</Text>
+                                                                        ),
+                                                                        labels: { confirm: 'Confirm', cancel: 'Cancel' },
+                                                                        confirmProps: { color: 'red.6' },
+                                                                        onCancel: () => console.log('Cancel'),
+                                                                        onConfirm: () => {
+                                                                            {
+                                                                                dispatch(deleteEntityData('inventory/purchase/' + data.id));
+                                                                            }
+                                                                        },
+                                                                    });
+                                                                }}
                                                                 w={'200'}
                                                                 leftSection={<IconTrashX style={{ width: rem(14), height: rem(14) }} />}
                                                             >
@@ -222,6 +263,12 @@ function _PurchaseTable() {
                                     loaderColor="grape"
                                     height={tableHeight}
                                     scrollAreaProps={{ type: 'never' }}
+                                    rowBackgroundColor={(item) => {
+                                        if (item.invoice === selectedRow) return '#e2c2c263';
+                                    }}
+                                    rowColor={(item) => {
+                                        if (item.invoice === selectedRow) return 'red.6';
+                                    }}
                                 />
                             </Box>
                         </Box>
@@ -369,12 +416,6 @@ function _PurchaseTable() {
                                         setPrintA4(true);
                                     }}
                                 >
-                                    {/* <ReactToPrint
-                                        trigger={() => {
-                                            return <>{t('Print')}</>;
-                                        }}
-                                        content={() => printRef.current}
-                                    /> */}
                                     {t('Print')}
                                 </Button>
                                 <Button
@@ -389,6 +430,9 @@ function _PurchaseTable() {
                                     {t('Pos')}
                                 </Button>
                                 <Button
+                                    onClick={() => {
+                                        navigate(`/inventory/purchase/edit/${purchaseViewData?.id}`);
+                                    }}
                                     fullWidth
                                     variant="filled"
                                     leftSection={<IconEdit size={14} />}
@@ -412,13 +456,16 @@ function _PurchaseTable() {
                         </Box>
                     </Grid.Col>
                 </Grid>
-            </Box>
+            </Box >
             {printA4 && <div style={{ display: "none" }}>
                 <PurchasePrintNormal setPrintA4={setPrintA4} purchaseViewData={purchaseViewData} />
-            </div>}
-            {printPos && <div style={{ display: "none" }}>
-                <PurchasePrintPos purchaseViewData={purchaseViewData} setPrintPos={setPrintPos} />
-            </div>}
+            </div>
+            }
+            {
+                printPos && <div style={{ display: "none" }}>
+                    <PurchasePrintPos purchaseViewData={purchaseViewData} setPrintPos={setPrintPos} />
+                </div>
+            }
         </>
     );
 }

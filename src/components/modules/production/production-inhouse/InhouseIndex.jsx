@@ -10,7 +10,7 @@ import InhouseForm from "./InhouseForm.jsx";
 // import InhouseUpdateForm from "./InhouseUpdateForm.jsx";
 import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress.js";
 import getConfigData from "../../../global-hook/config-data/getConfigData.js";
-import InventoryHeaderNavbar from "../configuraton/InventoryHeaderNavbar";
+import ProductionHeaderNavbar from "../common/ProductionHeaderNavbar.jsx";
 
 
 function InhouseIndex() {
@@ -29,7 +29,7 @@ function InhouseIndex() {
                 <Box>
                     {configData &&
                         <>
-                            <InventoryHeaderNavbar
+                            <ProductionHeaderNavbar
                                 pageTitle={t('ProductionBatch')}
                                 roles={t('Roles')}
                                 allowZeroPercentage={configData.zero_stock}

@@ -40,7 +40,7 @@ function _CustomerViewModel(props) {
         </Card.Section>
 
         <Badge className={classes.rating} variant="gradient" gradient={{ from: 'yellow', to: 'red' }}>
-            outstanding {customerObject.name}
+            {t('Outstanding')} {customerObject.name}
         </Badge>
 
         <Text className={classes.title} fw={500} component="a" {...linkProps}>

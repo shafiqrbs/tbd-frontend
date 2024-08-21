@@ -497,7 +497,7 @@ function ProductUpdateForm() {
                                                 </Grid.Col>
                                                 <Grid.Col span={6}>
                                                     <InputForm
-                                                        tooltip={t('PurchasePrice')}
+                                                        tooltip={t('PurchasePriceValidateMessage')}
                                                         label={t('PurchasePrice')}
                                                         placeholder={t('PurchasePrice')}
                                                         required={false}

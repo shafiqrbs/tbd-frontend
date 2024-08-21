@@ -23,7 +23,7 @@ function OpeningApproveIndex() {
                         configData &&
                         <>
                             <_SalesPurchaseHeaderNavbar
-                                pageTitle={t('ApproveOpeningStock')}
+                                pageTitle={t('ApproveStock')}
                                 roles={t('Roles')}
                                 currencySymbol={configData?.currency?.symbol}
                             />

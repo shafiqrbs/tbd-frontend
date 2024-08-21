@@ -40,6 +40,7 @@ import RecipeItemsIndex from "./components/modules/production/recipe-items/Recip
 import RecipeIndex from "./components/modules/production/recipe-items/recipe/RecipeIndex.jsx";
 import ProductManagementIndex from './components/modules/inventory/product-management/ProductManagementIndex.jsx';
 import ParticularIndex from "./components/modules/inventory/particular/ParticularIndex";
+import InhouseIndex from './components/modules/production/production-inhouse/InhouseIndex.jsx';
 
 
 function AppRoute() {
@@ -85,9 +86,6 @@ function AppRoute() {
                     <Route path="category-group" element={<CategoryGroupIndex />} />
                     <Route path="category-group/:categoryGroupId" element={<CategoryGroupIndex />} />
                     <Route path="config" element={<InventoryConfigurationIndex />} />
-                    {/*<Route path="production" element={<RecipeItemsIndex />} />*/}
-                    {/*<Route path="production-inhouse" element={<InhouseIndex />} />*/}
-                    {/*<Route path="production-recipe" element={<RecipeIndex />} />*/}
                     <Route path="invoice-batch" element={<InvoiceBatchIndex />} />
                     <Route path="particular" element={<ParticularIndex />} />
                     <Route path="particular/:id" element={<ParticularIndex />} />
@@ -101,8 +99,8 @@ function AppRoute() {
                     <Route path="recipe-update/:id" element={<RecipeIndex />} />
                     <Route path="setting" element={<ProductionSettingIndex />} />
                     <Route path="setting/:id" element={<ProductionSettingIndex />} />
-                    <Route path="setting/:id" element={<ProductionSettingIndex />} />
                     <Route path="config" element={<ProductionConfigurationIndex />} />
+                    <Route path="production-inhouse" element={<InhouseIndex />} />
                 </Route>
 
                 <Route path="/domain/">

@@ -1,6 +1,9 @@
 import React from "react";
 import {
-    Drawer, Button, Box, Grid, Flex, Text
+    Drawer, Button, Box, Grid, Flex, Text,
+    ScrollArea,
+    ActionIcon,
+    Group
 } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
 import { setFetching } from "../../../store/core/crudSlice.js";
@@ -12,7 +15,7 @@ import ProductFilterForm from "../inventory/product/ProductFilterForm.jsx";
 import CategoryGroupFilterForm from "../inventory/category-group/CategoryGroupFilterForm.jsx";
 import CategoryFilterForm from "../inventory/category/CategoryFilterForm.jsx";
 import { useOutletContext } from "react-router-dom";
-import { IconSearch } from "@tabler/icons-react";
+import { IconSearch, IconX } from "@tabler/icons-react";
 import __ProductionSettingFilterForm from "../production/settings/__ProductionSettingFilterForm.jsx";
 
 function FilterModel(props) {
@@ -28,54 +31,68 @@ function FilterModel(props) {
 
     return (
 
-        <Drawer opened={props.filterModel} position="right" onClose={closeModel} title={t('FilterData')}>
-            <Box mb={0} bg={'white'} h={height}>
+        <Drawer.Root opened={props.filterModel} position="right" onClose={closeModel} size={'30%'}  >
+            <Drawer.Overlay />
+            <Drawer.Content>
+                <ScrollArea h={height + 100} scrollbarSize={2} type="never" bg={'gray.1'} >
+                    <Group mih={40}  justify="space-between">
+                        <Box >
+                            <Text fw={'600'} fz={'16'} ml={'md'}>
+                                {t('FilterData')}
+                            </Text>
+                        </Box>
+                        <ActionIcon
+                            mr={'sm'}
+                            radius="xl"
+                            color="red.6" size="md"
+                            onClick={closeModel}
+                        >
+                            <IconX style={{ width: '100%', height: '100%' }} stroke={1.5} />
+                        </ActionIcon>
+                    </Group>
 
-                <Box p={'md'} mb={4} className="boxBackground borderRadiusAll" h={height - 44}>
+                    <Box ml={2} mr={2} mt={0} p={'xs'} className="borderRadiusAll" bg={'white'}>
+                        <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} h={height - 37}>
+                            {props.module === 'customer' && <CustomerFilterForm module={props.module} />}
+                            {props.module === 'category-group' && <CategoryGroupFilterForm module={props.module} />}
+                            {props.module === 'vendor' && <VendorFilterForm module={props.module} />}
+                            {props.module === 'user' && <UserFilterForm module={props.module} />}
+                            {props.module === 'product' && <ProductFilterForm module={props.module} />}
+                            {props.module === 'category' && <CategoryFilterForm module={props.module} />}
+                            {props.module === 'production-setting' && <__ProductionSettingFilterForm module={props.module} />}
+                        </Box>
+                        <Box pl={`xs`} pr={8} pt={'6'} pb={'6'} mb={'2'} mt={4} className={'boxBackground borderRadiusAll'}>
+                            <Group justify="flex-end">
+                                <Button
+                                    size="xs"
+                                    color={`green.8`}
+                                    type="submit"
+                                    id={'submit'}
+                                    w={142}
+                                    onClick={() => {
+                                        dispatch(setFetching(true))
+                                        closeModel()
+                                    }}
+                                    leftSection={<IconSearch size={16} />}
+                                >
+                                    <Flex direction={`column`} gap={0}>
+                                        <Text fz={14} fw={400}>
+                                            {t("Submit")}
+                                        </Text>
+                                    </Flex>
+                                </Button>
+                            </Group>
+                        </Box>
+                    </Box>
 
-                    {props.module === 'customer' && <CustomerFilterForm module={props.module} />}
-                    {props.module === 'category-group' && <CategoryGroupFilterForm module={props.module} />}
-                    {props.module === 'vendor' && <VendorFilterForm module={props.module} />}
-                    {props.module === 'user' && <UserFilterForm module={props.module} />}
-                    {props.module === 'product' && <ProductFilterForm module={props.module} />}
-                    {props.module === 'category' && <CategoryFilterForm module={props.module} />}
-                    {props.module === 'production-setting' && <__ProductionSettingFilterForm module={props.module} />}
-                </Box>
-                <Box pl={`xs`} pr={8} pt={'6'} pb={'6'} mb={'4'} className={'boxBackground borderRadiusAll'} >
-                    <Grid columns={4} gutter={0}>
-                        <Grid.Col span={1}>
+                </ScrollArea>
+            </Drawer.Content>
+        </Drawer.Root >
 
-                        </Grid.Col>
-                        <Grid.Col span={2}>
-                            <Button
-                                id={'submit'}
-                                p={'absolute'}
-                                right
-                                variant="filled"
-                                w={'100%'}
-                                size="sm"
-                                color="green.8"
-                                onClick={() => {
-                                    dispatch(setFetching(true))
-                                    closeModel()
-                                }}
-                                leftSection={<IconSearch size={16} />}
-                            >
-                                <Flex direction={`column`} gap={0}>
-                                    <Text fz={14} fw={400}>
-                                        {t("Submit")}
-                                    </Text>
-                                </Flex>
-                            </Button>
-                        </Grid.Col>
-                        <Grid.Col span={1}>
 
-                        </Grid.Col>
-                    </Grid>
-                </Box>
-            </Box>
-        </Drawer>
     );
 }
 
 export default FilterModel;
+
+
