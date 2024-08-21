@@ -7,6 +7,7 @@ import {
 } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import {
+    IconCheck,
     IconDotsVertical,
     IconTrashX
 } from "@tabler/icons-react";
@@ -15,6 +16,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
     deleteEntityData, editEntityData,
     getIndexEntityData,
+    setDeleteMessage,
     setFetching,
     setFormLoading,
     setInsertType
@@ -23,6 +25,7 @@ import { modals } from "@mantine/modals";
 import KeywordSearch from "../../filter/KeywordSearch.jsx";
 import tableCss from "../../../../assets/css/Table.module.css";
 import UserViewDrawer from "./UserViewDrawer.jsx";
+import { notifications } from "@mantine/notifications";
 
 function UserTable() {
     const dispatch = useDispatch();
@@ -34,6 +37,7 @@ function UserTable() {
     const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword)
     const indexData = useSelector((state) => state.crudSlice.indexEntityData)
     const userFilterData = useSelector((state) => state.crudSlice.userFilterData)
+    const entityDataDelete = useSelector((state) => state.crudSlice.entityDataDelete)
 
     const perPage = 50;
     const [page, setPage] = useState(1);
@@ -54,6 +58,24 @@ function UserTable() {
         }
         dispatch(getIndexEntityData(value))
     }, [fetching]);
+
+    useEffect(() => {
+        dispatch(setDeleteMessage(''))
+        if (entityDataDelete.message === 'delete') {
+            notifications.show({
+                color: 'red',
+                title: t('DeleteSuccessfully'),
+                icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
+                loading: false,
+                autoClose: 700,
+                style: { backgroundColor: 'lightgray' },
+            });
+
+            setTimeout(() => {
+                dispatch(setFetching(true))
+            }, 700)
+        }
+    }, [entityDataDelete]);
 
     return (
         <>
@@ -140,7 +162,6 @@ function UserTable() {
                                                         onCancel: () => console.log('Cancel'),
                                                         onConfirm: () => {
                                                             dispatch(deleteEntityData('core/user/' + data.id))
-                                                            dispatch(setFetching(true))
                                                         },
                                                     });
                                                 }}

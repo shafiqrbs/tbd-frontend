@@ -9,6 +9,7 @@ import {
 } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import {
+    IconCheck,
     IconDotsVertical,
     IconTrashX
 } from "@tabler/icons-react";
@@ -25,6 +26,8 @@ import KeywordSearch from "../../filter/KeywordSearch";
 import { modals } from "@mantine/modals";
 import tableCss from "../../../../assets/css/Table.module.css";
 import ProductViewDrawer from "./ProductViewDrawer.jsx";
+import { notifications } from "@mantine/notifications";
+import { setDeleteMessage } from "../../../../store/inventory/crudSlice.js";
 
 function ProductTable() {
 
@@ -41,6 +44,7 @@ function ProductTable() {
     const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword)
     const indexData = useSelector((state) => state.crudSlice.indexEntityData)
     const productFilterData = useSelector((state) => state.inventoryCrudSlice.productFilterData)
+    const entityDataDelete = useSelector((state) => state.inventoryCrudSlice.entityDataDelete)
 
     const navigate = useNavigate()
 
@@ -60,6 +64,24 @@ function ProductTable() {
         }
         dispatch(getIndexEntityData(value))
     }, [fetching]);
+
+    useEffect(() => {
+        dispatch(setDeleteMessage(''))
+        if (entityDataDelete === 'success') {
+            notifications.show({
+                color: 'red',
+                title: t('DeleteSuccessfully'),
+                icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
+                loading: false,
+                autoClose: 700,
+                style: { backgroundColor: 'lightgray' },
+            });
+
+            setTimeout(() => {
+                dispatch(setFetching(true))
+            }, 700)
+        }
+    }, [entityDataDelete]);
 
     return (
         <>
@@ -103,7 +125,6 @@ function ProductTable() {
                                         </Menu.Target>
                                         <Menu.Dropdown>
                                             <Menu.Item
-                                                // href={`/inventory/sales/edit/${data.id}`}
                                                 onClick={() => {
                                                     dispatch(setInsertType('update'))
                                                     dispatch(editEntityData('inventory/product/' + data.id))
@@ -146,7 +167,6 @@ function ProductTable() {
                                                         onCancel: () => console.log('Cancel'),
                                                         onConfirm: () => {
                                                             dispatch(deleteEntityData('inventory/product/' + data.id))
-                                                            dispatch(setFetching(true))
                                                         },
                                                     });
                                                 }}

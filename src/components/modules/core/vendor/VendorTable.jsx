@@ -6,12 +6,13 @@ import {
     ActionIcon, Text, Menu, rem
 } from "@mantine/core";
 import { useTranslation } from "react-i18next";
-import { IconDotsVertical, IconTrashX } from "@tabler/icons-react";
+import { IconCheck, IconDotsVertical, IconTrashX } from "@tabler/icons-react";
 import { DataTable } from 'mantine-datatable';
 import { useDispatch, useSelector } from "react-redux";
 import {
     editEntityData,
     getIndexEntityData,
+    setDeleteMessage,
     setFetching, setFormLoading,
     setInsertType,
 } from "../../../../store/core/crudSlice.js";
@@ -20,6 +21,7 @@ import { modals } from "@mantine/modals";
 import { deleteEntityData } from "../../../../store/core/crudSlice";
 import tableCss from "../../../../assets/css/Table.module.css";
 import VendorViewDrawer from "./VendorViewDrawer.jsx";
+import { notifications } from "@mantine/notifications";
 function VendorTable() {
 
     const dispatch = useDispatch();
@@ -34,11 +36,30 @@ function VendorTable() {
     const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword)
     const indexData = useSelector((state) => state.crudSlice.indexEntityData)
     const vendorFilterData = useSelector((state) => state.crudSlice.vendorFilterData)
+    const entityDataDelete = useSelector((state) => state.crudSlice.entityDataDelete)
 
     const [vendorObject, setVendorObject] = useState({});
     const navigate = useNavigate();
     const [viewDrawer, setViewDrawer] = useState(false);
 
+
+    useEffect(() => {
+        dispatch(setDeleteMessage(''))
+        if (entityDataDelete.message === 'delete') {
+            notifications.show({
+                color: 'red',
+                title: t('DeleteSuccessfully'),
+                icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
+                loading: false,
+                autoClose: 700,
+                style: { backgroundColor: 'lightgray' },
+            });
+
+            setTimeout(() => {
+                dispatch(setFetching(true))
+            }, 700)
+        }
+    }, [entityDataDelete]);
 
 
     useEffect(() => {
@@ -146,7 +167,6 @@ function VendorTable() {
                                                         onCancel: () => console.log('Cancel'),
                                                         onConfirm: () => {
                                                             dispatch(deleteEntityData('core/vendor/' + data.id))
-                                                            dispatch(setFetching(true))
                                                         },
                                                     });
                                                 }}

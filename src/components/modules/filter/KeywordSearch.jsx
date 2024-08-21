@@ -49,7 +49,6 @@ function KeywordSearch(props) {
     );
 
     const handleKeyDown = (event) => {
-        console.log("hello")
         if (event.key === 'Enter' && searchKeyword.length > 0) {
             (dispatch(setFetching(true)),
                 setSearchKeywordTooltip(false))
@@ -222,7 +221,7 @@ function KeywordSearch(props) {
                                     } else if (props.module === 'production-setting') {
                                         dispatch(setProductionSettingFilterData({
                                             ...productionSettingFilterData,
-                                            name:''
+                                            name: ''
                                         }));
                                     }
                                 }} />
