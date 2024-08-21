@@ -58,7 +58,8 @@ function _PurchaseTable() {
     const [purchaseViewData, setPurchaseViewData] = useState({})
 
     useEffect(() => {
-        setPurchaseViewData(indexData.data && indexData.data[0] && indexData.data[0])
+        setPurchaseViewData(indexData.data && indexData.data[0] && indexData.data[0]);
+        setSelectedRow(indexData.data && indexData.data[0] && indexData.data[0].invoice)
     }, [indexData.data])
 
 
