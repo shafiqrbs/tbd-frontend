@@ -3,24 +3,25 @@ import { useNavigate, useOutletContext } from "react-router-dom";
 import {
     Group,
     Box,
-    ActionIcon, Text, Menu, rem, Anchor
+    ActionIcon, Text, Menu, rem,
 } from "@mantine/core";
 import { useTranslation } from "react-i18next";
-import { IconEye, IconEdit, IconTrash, IconInfoCircle, IconSettings, IconEyeEdit, IconTrashX, IconPencil, IconDotsVertical } from "@tabler/icons-react";
+import { IconTrashX, IconDotsVertical, IconCheck } from "@tabler/icons-react";
 import { DataTable } from 'mantine-datatable';
 import { useDispatch, useSelector } from "react-redux";
 import {
     editEntityData,
     getIndexEntityData,
+    setDeleteMessage,
     setFetching, setFormLoading,
     setInsertType,
-    showEntityData
 } from "../../../../store/core/crudSlice.js";
 import KeywordSearch from "../../filter/KeywordSearch";
 import { modals } from "@mantine/modals";
 import { deleteEntityData } from "../../../../store/core/crudSlice";
 import tableCss from "../../../../assets/css/Table.module.css";
 import CustomerViewDrawer from "./CustomerViewDrawer.jsx";
+import { notifications } from "@mantine/notifications";
 
 function CustomerTable() {
 
@@ -41,6 +42,25 @@ function CustomerTable() {
     const [viewDrawer, setViewDrawer] = useState(false)
 
     const navigate = useNavigate();
+    const entityDataDelete = useSelector((state) => state.crudSlice.entityDataDelete)
+
+    useEffect(() => {
+        dispatch(setDeleteMessage(''))
+        if (entityDataDelete?.message === 'delete') {
+            notifications.show({
+                color: 'red',
+                title: t('DeleteSuccessfully'),
+                icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
+                loading: false,
+                autoClose: 700,
+                style: { backgroundColor: 'lightgray' },
+            });
+
+            setTimeout(() => {
+                dispatch(setFetching(true))
+            }, 700)
+        }
+    }, [entityDataDelete]);
 
     useEffect(() => {
         const value = {
@@ -145,7 +165,6 @@ function CustomerTable() {
                                                         onCancel: () => console.log('Cancel'),
                                                         onConfirm: () => {
                                                             dispatch(deleteEntityData('core/customer/' + data.id))
-                                                            dispatch(setFetching(true))
                                                         },
                                                     });
                                                 }}
