@@ -8,9 +8,7 @@ import {
 } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import {
-    IconEye,
     IconEdit,
-    IconTrash,
     IconPrinter,
     IconReceipt, IconDotsVertical, IconPencil, IconEyeEdit, IconTrashX,
     IconCheck,
@@ -18,17 +16,12 @@ import {
 import { DataTable } from 'mantine-datatable';
 import { useDispatch, useSelector } from "react-redux";
 import {
-    editEntityData,
-    getIndexEntityData, setDeleteMessage, setEditEntityData,
-    setFetching, setFormLoading,
-    setInsertType,
-    showEntityData
+    getIndexEntityData, setDeleteMessage,
+    setFetching,
 } from "../../../../store/inventory/crudSlice.js";
 import { modals } from "@mantine/modals";
 import { deleteEntityData } from "../../../../store/core/crudSlice";
 import ShortcutTable from "../../shortcut/ShortcutTable";
-import KeywordDateRangeSearch from "../../filter/KeywordDateRangeSearch";
-import { ReactToPrint } from "react-to-print";
 import _PurchaseSearch from "./_PurchaseSearch.jsx";
 import { PurchasePrintNormal } from "./print-component/PurchasePrintNormal.jsx";
 import { PurchasePrintPos } from "./print-component/PurchasePrintPos.jsx";

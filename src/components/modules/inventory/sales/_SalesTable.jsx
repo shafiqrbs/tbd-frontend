@@ -27,7 +27,7 @@ import {
 import { DataTable } from 'mantine-datatable';
 import { useDispatch, useSelector } from "react-redux";
 import { useHotkeys } from "@mantine/hooks";
-import { deleteEntityData, getIndexEntityData, setDeleteMessage, setFetching, setSalesFilterData, showEntityData } from "../../../../store/inventory/crudSlice.js";
+import { deleteEntityData, getIndexEntityData, setDeleteMessage, setFetching, setSalesFilterData,  } from "../../../../store/inventory/crudSlice.js";
 import __ShortcutTable from "../../shortcut/__ShortcutTable";
 import _SalesSearch from "./_SalesSearch.jsx";
 import { setSearchKeyword } from "../../../../store/core/crudSlice.js";
