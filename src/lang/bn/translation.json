@@ -383,5 +383,6 @@
   "Items": "আইটেমস",
   "Shortcut": "শর্টকাট",
   "ReceiveAmountValidateMessage": "টাকার পরিমাণ লিখুন",
-  "InvoiceDateValidateMessage": "তারিখ নির্বাচন করুন"
+  "InvoiceDateValidateMessage": "তারিখ নির্বাচন করুন",
+  "ChooseVendor": "বিক্রেতা নির্বাচন করুন"
 }

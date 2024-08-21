@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useOutletContext } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import tableCss from '../../../../assets/css/Table.module.css';
 import {
     Group,
@@ -44,6 +44,8 @@ function _PurchaseTable() {
     const [page, setPage] = useState(1);
     const [printA4, setPrintA4] = useState(false);
     const [printPos, setPrintPos] = useState(false);
+    const navigate = useNavigate();
+    const [selectedRow, setSelectedRow] = useState('');
 
 
     const fetching = useSelector((state) => state.inventoryCrudSlice.fetching)
@@ -149,6 +151,7 @@ function _PurchaseTable() {
                                                         e.preventDefault();
                                                         setLoading(true)
                                                         setPurchaseViewData(item)
+                                                        setSelectedRow(item.invoice)
                                                     }}
                                                     style={{ cursor: "pointer" }}
                                                 >
@@ -175,7 +178,9 @@ function _PurchaseTable() {
                                                         </Menu.Target>
                                                         <Menu.Dropdown>
                                                             <Menu.Item
-                                                                href={`/inventory/purchase/edit/${data.id}`}
+                                                                onClick={() => {
+                                                                    navigate(`/inventory/purchase/edit/${data.id}`)
+                                                                }}
                                                                 target="_blank"
                                                                 component="a"
                                                                 w={'200'}
@@ -185,7 +190,6 @@ function _PurchaseTable() {
                                                             </Menu.Item>
 
                                                             <Menu.Item
-                                                                href={``}
                                                                 target="_blank"
                                                                 component="a"
                                                                 w={'200'}
@@ -222,6 +226,12 @@ function _PurchaseTable() {
                                     loaderColor="grape"
                                     height={tableHeight}
                                     scrollAreaProps={{ type: 'never' }}
+                                    rowBackgroundColor={(item) => {
+                                        if (item.invoice === selectedRow) return '#e2c2c263';
+                                    }}
+                                    rowColor={(item) => {
+                                        if (item.invoice === selectedRow) return 'red.6';
+                                    }}
                                 />
                             </Box>
                         </Box>
@@ -389,6 +399,9 @@ function _PurchaseTable() {
                                     {t('Pos')}
                                 </Button>
                                 <Button
+                                    onClick={() => {
+                                        navigate(`/inventory/purchase/edit/${purchaseViewData?.id}`);
+                                    }}
                                     fullWidth
                                     variant="filled"
                                     leftSection={<IconEdit size={14} />}
@@ -412,13 +425,16 @@ function _PurchaseTable() {
                         </Box>
                     </Grid.Col>
                 </Grid>
-            </Box>
+            </Box >
             {printA4 && <div style={{ display: "none" }}>
                 <PurchasePrintNormal setPrintA4={setPrintA4} purchaseViewData={purchaseViewData} />
-            </div>}
-            {printPos && <div style={{ display: "none" }}>
-                <PurchasePrintPos purchaseViewData={purchaseViewData} setPrintPos={setPrintPos} />
-            </div>}
+            </div>
+            }
+            {
+                printPos && <div style={{ display: "none" }}>
+                    <PurchasePrintPos purchaseViewData={purchaseViewData} setPrintPos={setPrintPos} />
+                </div>
+            }
         </>
     );
 }

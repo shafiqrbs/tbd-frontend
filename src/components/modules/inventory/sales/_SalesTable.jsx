@@ -250,7 +250,6 @@ function _SalesTable() {
                                                             {
                                                                 !data.invoice_batch_id &&
                                                                 <Menu.Item
-                                                                    // href={`/inventory/sales/edit/${data.id}`}
                                                                     onClick={() => {
                                                                         navigate(`/inventory/sales/edit/${data.id}`)
                                                                     }}
@@ -261,7 +260,6 @@ function _SalesTable() {
                                                                 </Menu.Item>
                                                             }
                                                             <Menu.Item
-                                                                // href={``}
                                                                 onClick={(e) => {
                                                                     e.preventDefault();
                                                                     setLoading(true)
@@ -277,7 +275,6 @@ function _SalesTable() {
                                                             {
                                                                 !data.invoice_batch_id &&
                                                                 <Menu.Item
-                                                                    // href={``}
                                                                     component="a"
                                                                     w={'200'}
                                                                     mt={'2'}
@@ -491,7 +488,6 @@ function _SalesTable() {
                                     {t('Pos')}
                                 </Button>
                                 {!checked && <Button
-                                    // href={`/inventory/sales/edit/${salesViewData?.id}`}
                                     onClick={() => navigate(`/inventory/sales/edit/${salesViewData?.id}`)}
                                     component="a"
                                     fullWidth
