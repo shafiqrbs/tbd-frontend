@@ -40,11 +40,8 @@ import RecipeItemsIndex from "./components/modules/production/recipe-items/Recip
 import RecipeIndex from "./components/modules/production/recipe-items/recipe/RecipeIndex.jsx";
 import ProductManagementIndex from './components/modules/inventory/product-management/ProductManagementIndex.jsx';
 import ParticularIndex from "./components/modules/inventory/particular/ParticularIndex";
-<<<<<<< HEAD
 import InhouseIndex from './components/modules/production/production-inhouse/InhouseIndex.jsx';
-=======
 import SettingsIndex from "./components/modules/core/settings/SettingsIndex";
->>>>>>> 30602e2 (Create new setting module for core setting.)
 
 
 function AppRoute() {

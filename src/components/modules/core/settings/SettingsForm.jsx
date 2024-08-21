@@ -83,7 +83,7 @@ function SettingsForm(props) {
                         onConfirm: () => {
                             setSaveCreateLoading(true)
                             const value = {
-                                url: 'inventory/particular',
+                                url: 'core/setting',
                                 data: settingsForm.values
                             }
                             dispatch(storeEntityData(value))

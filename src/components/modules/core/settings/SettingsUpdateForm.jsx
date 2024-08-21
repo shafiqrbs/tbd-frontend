@@ -116,7 +116,7 @@ function SettingsUpdateForm(props) {
                         onConfirm: () => {
                             setSaveCreateLoading(true)
                             const value = {
-                                url: 'production/setting/' + entityEditData.id,
+                                url: 'core/setting/' + entityEditData.id,
                                 data: values
                             }
                             dispatch(updateEntityData(value))
@@ -135,7 +135,7 @@ function SettingsUpdateForm(props) {
                                 dispatch(setEditEntityData([]))
                                 dispatch(setFetching(true))
                                 setSaveCreateLoading(false)
-                                navigate('/core/customer-settings', { replace: true });
+                                navigate('/core/settings', { replace: true });
                             }, 700)
                         },
                     });
@@ -184,7 +184,7 @@ function SettingsUpdateForm(props) {
                                                         placeholder={t('SettingType')}
                                                         required={true}
                                                         nextField={'setting_name'}
-                                                        name={'particular_type_id'}
+                                                        name={'setting_type_id'}
                                                         form={settingsForm}
                                                         dropdownValue={settingTypeDropdown}
                                                         id={'setting_type'}

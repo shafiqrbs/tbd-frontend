@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {getSettingTypeDropdown} from "../../../../store/core/utilitySlice.js";
-import coreCrudSlice from "../../../../store/core/crudSlice";
 
 const  getSettingTypeDropdownData= () => {
     const dispatch = useDispatch();
@@ -11,7 +10,7 @@ const  getSettingTypeDropdownData= () => {
         dispatch(getSettingTypeDropdown('core/select/setting-type'))
     }, [dispatch]);
 
-    const settingTypeDropdownData = useSelector((state) => state.coreCrudSlice.settingTypeDropdownData);
+    const settingTypeDropdownData = useSelector((state) => state.utilitySlice.settingTypeDropdownData);
 
     useEffect(() => {
         if (settingTypeDropdownData && settingTypeDropdownData.length > 0) {

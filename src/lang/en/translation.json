@@ -529,7 +529,6 @@
   "TotalAmount": "Total Amount",
   "Checked": "Checked",
   "NormalPrint": "Normal Print",
-<<<<<<< HEAD
   "IsSelected": "Is selected",
   "ProductionProcedure": "Production Procedure",
   "ChooseProductionProcedure": "Choose production procedure",
@@ -540,7 +539,6 @@
   "Edit": "Edit",
   "Show": "Show",
   "Delete": "Delete",
-  "NatureOfProduct": "Nature of Product",
   "AlternativeName": "Alternative Name",
   "MinimumQuantityValidateMessage": "Enter the minimum quantity",
   "Mode": "Mode",
@@ -559,14 +557,7 @@
   "Items": "Items",
   "ProductManagementN": "Product Management",
   "ReceiveAmountValidateMessage" : "Enter the amount",
-  "InvoiceDateValidateMessage" : "Select a date"
-=======
-  "IsSelected" : "Is selected",
-  "ProductionProcedure" : "Production Procedure",
-  "ChooseProductionProcedure" : "Choose production procedure",
-  "ConsumptionMethod" : "Consumption method",
-  "ChooseConsumptionMethod" : "Choose consumption method",
+  "InvoiceDateValidateMessage" : "Select a date",
   "NatureOfProduct" : "Nature of Product",
   "": ""
->>>>>>> 30602e2 (Create new setting module for core setting.)
 }

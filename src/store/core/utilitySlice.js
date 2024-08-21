@@ -7,7 +7,7 @@ import {
     getCoreSettingDropdown
 } from "../../services/apiService";
 import {getSettingDropdown} from "../utility/utilitySlice.js";
-import {getSettingTypeDropdown} from "../inventory/utilitySlice";
+
 
 
 export const getSettingTypeDropdown = createAsyncThunk("select/setting-type", async (value) => {
