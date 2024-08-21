@@ -58,7 +58,7 @@ function CoreHeaderNavbar(props) {
                             </Menu.Target>
                             <Menu.Dropdown>
                                 <Menu.Item
-                                    component="button" onClick={(e) => { navigate('/core/customer-settings') }} leftSection={<IconAdjustments style={{ width: rem(14), height: rem(14) }} />}>
+                                    component="button" onClick={(e) => { navigate('/core/settings') }} leftSection={<IconAdjustments style={{ width: rem(14), height: rem(14) }} />}>
                                     {t('Settings')}
                                 </Menu.Item>
                                 <Menu.Item

@@ -529,6 +529,7 @@
   "TotalAmount": "Total Amount",
   "Checked": "Checked",
   "NormalPrint": "Normal Print",
+<<<<<<< HEAD
   "IsSelected": "Is selected",
   "ProductionProcedure": "Production Procedure",
   "ChooseProductionProcedure": "Choose production procedure",
@@ -559,4 +560,13 @@
   "ProductManagementN": "Product Management",
   "ReceiveAmountValidateMessage" : "Enter the amount",
   "InvoiceDateValidateMessage" : "Select a date"
+=======
+  "IsSelected" : "Is selected",
+  "ProductionProcedure" : "Production Procedure",
+  "ChooseProductionProcedure" : "Choose production procedure",
+  "ConsumptionMethod" : "Consumption method",
+  "ChooseConsumptionMethod" : "Choose consumption method",
+  "NatureOfProduct" : "Nature of Product",
+  "": ""
+>>>>>>> 30602e2 (Create new setting module for core setting.)
 }

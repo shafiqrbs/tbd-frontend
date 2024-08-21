@@ -142,7 +142,14 @@ const crudSlice = createSlice({
             state.userFilterData.mobile = action.payload.mobile
             state.userFilterData.email = action.payload.email
         },
+<<<<<<< HEAD
         setValidationData: (state, action) => {
+=======
+        setDeleteMessage: (state, action) => {
+            state.entityDataDelete = action.payload
+        },
+        setValidationData : (state,action) => {
+>>>>>>> 30602e2 (Create new setting module for core setting.)
             state.validation = action.payload
         },
         setEntityNewData: (state, action) => {
@@ -189,6 +196,10 @@ const crudSlice = createSlice({
     }
 })
 
+<<<<<<< HEAD
 export const { setFetching, setFormLoading, setInsertType, setSearchKeyword, setEntityUpdateId, setEntityIsUpdate, setEditEntityData, setCustomerFilterData, setVendorFilterData, setUserFilterData, setValidationData, setEntityNewData, setCategoryGroupFilterData, setDeleteMessage } = crudSlice.actions
+=======
+export const { setFetching,setFormLoading ,setInsertType,setSearchKeyword,setEntityUpdateId,setEntityIsUpdate,setEditEntityData,setCustomerFilterData,setDeleteMessage,setVendorFilterData,setUserFilterData,setValidationData,setEntityNewData,setCategoryGroupFilterData} = crudSlice.actions
+>>>>>>> 30602e2 (Create new setting module for core setting.)
 
 export default crudSlice.reducer;

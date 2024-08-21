@@ -16,10 +16,10 @@ import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoa
 import getConfigData from "../../../global-hook/config-data/getConfigData.js";
 import { useNavigate, useParams } from "react-router-dom";
 import CoreHeaderNavbar from "../CoreHeaderNavbar.jsx";
-import CustomerSettingsTable from "./CustomerSettingsTable.jsx";
-import CustomerSettingsForm from "./CustomerSettingsForm.jsx";
-import CustomerSettingsUpdateForm from "./CustomerSettingsUpdateForm.jsx";
-import getParticularTypeDropdownData from "../../../global-hook/dropdown/inventroy/getParticularTypeDropdownData.js";
+import SettingsTable from "./SettingsTable.jsx";
+import SettingsForm from "./SettingsForm.jsx";
+import SettingsUpdateForm from "./SettingsUpdateForm.jsx";
+import getParticularTypeDropdownData from "../../../global-hook/dropdown/core/getSettingTypeDropdownData.js";
 
 function SettingsIndex() {
     const { t, i18n } = useTranslation();
@@ -38,13 +38,13 @@ function SettingsIndex() {
     useEffect(() => {
         if (settingsId) {
             dispatch(setInsertType('update'));
-            dispatch(editEntityData(`/core/customer-settings/${settingsId}`));
+            dispatch(editEntityData(`/core/settings/${settingsId}`));
             dispatch(setFormLoading(true));
         } else if (!settingsId) {
             dispatch(setInsertType('create'));
             dispatch(setSearchKeyword(''));
             dispatch(setEntityNewData([]));
-            navigate('/core/customer-settings', { replace: true });
+            navigate('/core/settings', { replace: true });
         }
     }, [settingsId, dispatch, navigate]);
 
@@ -68,14 +68,14 @@ function SettingsIndex() {
                                 <Grid columns={24} gutter={{ base: 8 }}>
                                     <Grid.Col span={15} >
                                         <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
-                                            <CustomerSettingsTable />
+                                            <SettingsTable />
                                         </Box>
                                     </Grid.Col>
                                     <Grid.Col span={9}>
                                         {
                                             insertType === 'create'
-                                                ? <CustomerSettingsForm saveId={'EntityFormSubmit'} settingTypeDropdown={settingTypeDropdown} />
-                                                : <CustomerSettingsUpdateForm saveId={'EntityFormSubmit'} settingTypeDropdown={settingTypeDropdown} />
+                                                ? <SettingsForm saveId={'EntityFormSubmit'} settingTypeDropdown={settingTypeDropdown} />
+                                                : <SettingsUpdateForm saveId={'EntityFormSubmit'} settingTypeDropdown={settingTypeDropdown} />
                                         }
                                     </Grid.Col>
                                 </Grid>

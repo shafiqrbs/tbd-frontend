@@ -7,7 +7,18 @@ import {
     getCoreSettingDropdown
 } from "../../services/apiService";
 import {getSettingDropdown} from "../utility/utilitySlice.js";
+import {getSettingTypeDropdown} from "../inventory/utilitySlice";
 
+
+export const getSettingTypeDropdown = createAsyncThunk("select/setting-type", async (value) => {
+    try {
+        const response = getDataWithoutParam(value);
+        return response;
+    } catch (error) {
+        console.log('error', error.message);
+        throw error;
+    }
+});
 
 export const getUserDropdown = createAsyncThunk("user/select", async (value) => {
     try {
@@ -113,6 +124,10 @@ const utilitySlice = createSlice({
     },
 
     extraReducers : (builder) => {
+
+        builder.addCase(getSettingTypeDropdown.fulfilled, (state, action) => {
+            state.settingTypeDropdownData = action.payload
+        })
 
         builder.addCase(getUserDropdown.fulfilled, (state, action) => {
             state.userDropdownData = action.payload

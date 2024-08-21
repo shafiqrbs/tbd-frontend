@@ -40,7 +40,11 @@ import RecipeItemsIndex from "./components/modules/production/recipe-items/Recip
 import RecipeIndex from "./components/modules/production/recipe-items/recipe/RecipeIndex.jsx";
 import ProductManagementIndex from './components/modules/inventory/product-management/ProductManagementIndex.jsx';
 import ParticularIndex from "./components/modules/inventory/particular/ParticularIndex";
+<<<<<<< HEAD
 import InhouseIndex from './components/modules/production/production-inhouse/InhouseIndex.jsx';
+=======
+import SettingsIndex from "./components/modules/core/settings/SettingsIndex";
+>>>>>>> 30602e2 (Create new setting module for core setting.)
 
 
 function AppRoute() {
@@ -53,7 +57,6 @@ function AppRoute() {
                     <Route path="" element={<SampleDashboard />} />
                     <Route path="invoice" element={<SampleInvoice />} />
                     <Route path="index" element={<SampleIndex />} />
-
                 </Route>
                 <Route path="core/">
                     <Route path="customer" element={<CustomerIndex />} />
@@ -62,8 +65,8 @@ function AppRoute() {
                     <Route path="user/:userId" element={<UserIndex />} />
                     <Route path="vendor" element={<VendorIndex />} />
                     <Route path="vendor/:vendorId" element={<VendorIndex />} />
-                    <Route path="customer-settings" element={<CustomerSettingsIndex />} />
-                    <Route path="customer-settings/:settingsId" element={<CustomerSettingsIndex />} />
+                    <Route path="settings" element={<SettingsIndex />} />
+                    <Route path="settings/:settingsId" element={<SettingsIndex />} />
                     <Route path="location" element={<LocationIndex />} />
                     <Route path="location/:locationId" element={<LocationIndex />} />
                     <Route path="marketing-executive" element={<MarketingExecutiveIndex />} />
