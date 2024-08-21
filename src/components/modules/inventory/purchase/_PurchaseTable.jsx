@@ -13,12 +13,13 @@ import {
     IconTrash,
     IconPrinter,
     IconReceipt, IconDotsVertical, IconPencil, IconEyeEdit, IconTrashX,
+    IconCheck,
 } from "@tabler/icons-react";
 import { DataTable } from 'mantine-datatable';
 import { useDispatch, useSelector } from "react-redux";
 import {
     editEntityData,
-    getIndexEntityData, setEditEntityData,
+    getIndexEntityData, setDeleteMessage, setEditEntityData,
     setFetching, setFormLoading,
     setInsertType,
     showEntityData
@@ -31,6 +32,7 @@ import { ReactToPrint } from "react-to-print";
 import _PurchaseSearch from "./_PurchaseSearch.jsx";
 import { PurchasePrintNormal } from "./print-component/PurchasePrintNormal.jsx";
 import { PurchasePrintPos } from "./print-component/PurchasePrintPos.jsx";
+import { notifications } from "@mantine/notifications";
 
 function _PurchaseTable() {
     const printRef = useRef()
@@ -51,6 +53,7 @@ function _PurchaseTable() {
     const fetching = useSelector((state) => state.inventoryCrudSlice.fetching)
     const purchaseFilterData = useSelector((state) => state.inventoryCrudSlice.purchaseFilterData)
     const indexData = useSelector((state) => state.inventoryCrudSlice.indexEntityData)
+    const entityDataDelete = useSelector((state) => state.inventoryCrudSlice.entityDataDelete)
 
     const [loading, setLoading] = useState(true);
     useEffect(() => {
@@ -97,6 +100,24 @@ function _PurchaseTable() {
         }
         dispatch(getIndexEntityData(value))
     }, [fetching]);
+
+    useEffect(() => {
+        dispatch(setDeleteMessage(''))
+        if (entityDataDelete === 'success') {
+            notifications.show({
+                color: 'red',
+                title: t('DeleteSuccessfully'),
+                icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
+                loading: false,
+                autoClose: 700,
+                style: { backgroundColor: 'lightgray' },
+            });
+
+            setTimeout(() => {
+                dispatch(setFetching(true))
+            }, 700)
+        }
+    }, [entityDataDelete]);
 
 
     return (
@@ -190,6 +211,12 @@ function _PurchaseTable() {
                                                             </Menu.Item>
 
                                                             <Menu.Item
+                                                                onClick={(e) => {
+                                                                    e.preventDefault();
+                                                                    setLoading(true)
+                                                                    setPurchaseViewData(data)
+                                                                    setSelectedRow(data.invoice)
+                                                                }}
                                                                 target="_blank"
                                                                 component="a"
                                                                 w={'200'}
@@ -199,9 +226,26 @@ function _PurchaseTable() {
                                                             </Menu.Item>
 
                                                             <Menu.Item
-                                                                href={``}
                                                                 target="_blank"
                                                                 component="a"
+                                                                onClick={() => {
+                                                                    modals.openConfirmModal({
+                                                                        title: (
+                                                                            <Text size="md"> {t("FormConfirmationTitle")}</Text>
+                                                                        ),
+                                                                        children: (
+                                                                            <Text size="sm"> {t("FormConfirmationMessage")}</Text>
+                                                                        ),
+                                                                        labels: { confirm: 'Confirm', cancel: 'Cancel' },
+                                                                        confirmProps: { color: 'red.6' },
+                                                                        onCancel: () => console.log('Cancel'),
+                                                                        onConfirm: () => {
+                                                                            {
+                                                                                dispatch(deleteEntityData('inventory/purchase/' + data.id));
+                                                                            }
+                                                                        },
+                                                                    });
+                                                                }}
                                                                 w={'200'}
                                                                 leftSection={<IconTrashX style={{ width: rem(14), height: rem(14) }} />}
                                                             >
@@ -379,12 +423,6 @@ function _PurchaseTable() {
                                         setPrintA4(true);
                                     }}
                                 >
-                                    {/* <ReactToPrint
-                                        trigger={() => {
-                                            return <>{t('Print')}</>;
-                                        }}
-                                        content={() => printRef.current}
-                                    /> */}
                                     {t('Print')}
                                 </Button>
                                 <Button
