@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
-import {useNavigate, useOutletContext} from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import {
     Button, Flex,
     Grid, Box, ScrollArea, Text, Title, Stack, Tooltip, SimpleGrid, Image,
+    rem,
 } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
 import {
+    IconCheck,
     IconDeviceFloppy
 } from "@tabler/icons-react";
 import { useDisclosure, useHotkeys } from "@mantine/hooks";
@@ -29,9 +31,10 @@ import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
 import getSettingAuthorizedTypeDropdownData
     from "../../../global-hook/dropdown/getSettingAuthorizedTypeDropdownData.js";
 import getSettingAccountTypeDropdownData from "../../../global-hook/dropdown/getSettingAccountTypeDropdownData.js";
-import {setInsertType} from "../../../../store/inventory/crudSlice.js";
-import {setEditEntityData} from "../../../../store/core/crudSlice.js";
+import { setInsertType } from "../../../../store/inventory/crudSlice.js";
+import { setEditEntityData } from "../../../../store/core/crudSlice.js";
 import SwitchForm from "../../../form-builders/SwitchForm.jsx";
+import { notifications } from "@mantine/notifications";
 
 function TransactionModeUpdateFrom(props) {
     const { t, i18n } = useTranslation();
@@ -56,12 +59,6 @@ function TransactionModeUpdateFrom(props) {
 
     const [files, setFiles] = useState([]);
 
-    const previews = files.map((file, index) => {
-        const imageUrl = URL.createObjectURL(file);
-        return <Image key={index} src={imageUrl} onLoad={() => URL.revokeObjectURL(imageUrl)} />;
-    });
-
-
     const form = useForm({
         initialValues: {
             method_id: '',
@@ -72,7 +69,7 @@ function TransactionModeUpdateFrom(props) {
             service_charge: '',
             account_owner: '',
             path: '',
-            is_selected:entityEditData?.is_selected==1?true:false
+            is_selected: entityEditData?.is_selected == 1 ? true : false
         },
         validate: {
             method_id: isNotEmpty(),
@@ -149,18 +146,33 @@ function TransactionModeUpdateFrom(props) {
                             labels: { confirm: 'Submit', cancel: 'Cancel' }, confirmProps: { color: 'red.5' },
                             onCancel: () => console.log('Cancel'),
                             onConfirm: () => {
+                                setSaveCreateLoading(false)
                                 const formValue = { ...form.values };
                                 formValue['path'] = files[0];
-                                formValue['is_selected'] = form.values.is_selected==true?1:0;
+                                formValue['is_selected'] = form.values.is_selected == true ? 1 : 0;
                                 const data = {
-                                    url: 'accounting/transaction-mode-update/'+entityEditData.id,
+                                    url: 'accounting/transaction-mode-update/' + entityEditData.id,
                                     data: formValue
                                 }
                                 dispatch(storeEntityDataWithFile(data))
-                                dispatch(setInsertType('create'));
-                                dispatch(setFetching(true))
-                                dispatch(setEditEntityData([]))
-                                navigate('/accounting/transaction-mode');
+
+
+                                notifications.show({
+                                    color: 'teal',
+                                    title: t('UpdateSuccessfully'),
+                                    icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
+                                    loading: false,
+                                    autoClose: 700,
+                                    style: { backgroundColor: 'lightgray' },
+                                });
+
+                                setTimeout(() => {
+                                    dispatch(setInsertType('create'));
+                                    dispatch(setFetching(true))
+                                    dispatch(setEditEntityData([]))
+                                    setSaveCreateLoading(false)
+                                    navigate('/accounting/transaction-mode');
+                                }, 700)
                             },
                         });
                     })}>
@@ -314,7 +326,7 @@ function TransactionModeUpdateFrom(props) {
                                                             color="red"
                                                             id={'is_selected'}
                                                             position={'left'}
-                                                            checked={form.values?.is_selected==1?true:false}
+                                                            checked={form.values?.is_selected == 1 ? true : false}
                                                         />
                                                     </Box>
                                                     <Box mt={'xs'}>
@@ -350,10 +362,16 @@ function TransactionModeUpdateFrom(props) {
                                                             </Dropzone>
                                                         </Tooltip>
 
-                                                        <SimpleGrid cols={{ base: 1, sm: 4 }} mt={previews.length > 0 ? 'xl' : 0}>
-                                                            {previews}
-                                                            <Image src={'http://www.tbd.local/uploads/accounting/transaction-mode/' + entityEditData?.path} />
-                                                        </SimpleGrid>
+                                                        <Flex
+                                                            justify="center"
+                                                            align="center"
+                                                            direction="row"
+                                                            mt={'xs'}
+                                                            mb={'xs'}
+                                                        >
+                                                            <Image height={100} fit="cover" alt="Logo" src={'https://poshbackend.poskeeper.com/uploads/accounting/transaction-mode/' + entityEditData?.path} />
+                                                        </Flex>
+
                                                     </Box>
                                                 </Box>
                                             </ScrollArea>

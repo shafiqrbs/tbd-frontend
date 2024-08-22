@@ -6,7 +6,6 @@ import {
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from "react-redux";
 import { setSearchKeyword } from "../../../../store/core/crudSlice";
-import { setInsertType } from "../../../../store/generic/crudSlice";
 import getConfigData from "../../../global-hook/config-data/getConfigData.js";
 import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress.js";
 import HeadGroupForm from "./HeadGroupForm";
@@ -14,7 +13,7 @@ import HeadGroupUpdateFrom from "./HeadGroupUpdateFrom";
 import HeadGroupTable from "./HeadGroupTable";
 import AccountingHeaderNavbar from "../AccountingHeaderNavbar";
 import { useNavigate, useParams } from "react-router-dom";
-import { editEntityData, setEntityNewData, setFormLoading } from "../../../../store/accounting/crudSlice.js";
+import { editEntityData, setEntityNewData, setFormLoading, setInsertType } from "../../../../store/accounting/crudSlice.js";
 function HeadGroupIndex() {
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
@@ -31,13 +30,12 @@ function HeadGroupIndex() {
             dispatch(editEntityData(`accounting/account-head/${id}`)),
             dispatch(setFormLoading(true))
         ) : (
-            dispatch(setInsertType('create')),
             dispatch(setSearchKeyword('')),
             dispatch(setEntityNewData([])),
             navigate('/accounting/head-group')
         );
     }, [id, dispatch, navigate])
-    
+
     return (
         <>
             {progress !== 100 &&

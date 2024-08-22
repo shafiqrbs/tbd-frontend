@@ -11,9 +11,9 @@ import { notifications } from "@mantine/notifications";
 import Shortcut from "../../shortcut/Shortcut";
 import { setValidationData, updateEntityData } from "../../../../store/inventory/crudSlice.js";
 import SwitchForm from "../../../form-builders/SwitchForm.jsx";
-import getConfigData from "../../../global-hook/config-data/getConfigData.js";
+import getProductConfigData from "../../../global-hook/config-data/getProductConfigData.js";
 
-function ProductManagementForm() {
+function ProductConfigurationForm() {
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
@@ -28,27 +28,32 @@ function ProductManagementForm() {
 
 
 
-    // localStorage.setItem('config-data', JSON.stringify(getConfigData()));
+    localStorage.setItem('product-configuration', JSON.stringify(getProductConfigData()));
 
-    // const configData = localStorage.getItem('config-data') ? JSON.parse(localStorage.getItem('config-data')) : []
+    const productConfigData = localStorage.getItem('product-configuration') ? JSON.parse(localStorage.getItem('product-configuration')) : []
 
     const form = useForm({
         initialValues: {
-            color: '',
-            size: '',
-            brand: '',
-            vat_enable: '',
-            product_image: '',
-            product_gallery: '',
-            zero_stock: '',
-            stock_item: '',
-            is_stock_history: '',
+            brand: productConfigData.brand ? productConfigData.brand : '',
+            color: productConfigData.color ? productConfigData.color : '',
+            size: productConfigData.size ? productConfigData.size : '',
+            model: productConfigData.model ? productConfigData.model : '',
+            measurement: productConfigData.measurement ? productConfigData.measurement : '',
+            product_image: productConfigData.product_image ? productConfigData.product_image : '',
+            product_gallery: productConfigData.product_gallery ? productConfigData.product_gallery : '',
+            is_multi_price: productConfigData.is_multi_price ? productConfigData.is_multi_price : '',
+            zero_stock: productConfigData.zero_stock ? productConfigData.zero_stock : '',
+            stock_item: productConfigData.stock_item ? productConfigData.stock_item : '',
+            is_stock_history: productConfigData.is_stock_history ? productConfigData.is_stock_history : '',
+            mrp_price: productConfigData.mrp_price ? productConfigData.mrp_price : '',
+            total_price: productConfigData.total_price ? productConfigData.total_price : '',
+            purchase_price: productConfigData.purchase_price ? productConfigData.purchase_price : '',
 
         },
         validate: {
-            // business_model_id: isNotEmpty(),
-            // country_id: isNotEmpty(),
-            // currency_id: isNotEmpty(),
+            // brand: isNotEmpty(),
+            // color: isNotEmpty(),
+            // size: isNotEmpty(),
         }
     });
 
@@ -77,7 +82,7 @@ function ProductManagementForm() {
 
 
     useHotkeys([['alt+n', () => {
-        document.getElementById('color').click()
+        document.getElementById('brand').click()
     }]], []);
 
     useHotkeys([['alt+r', () => {
@@ -92,32 +97,39 @@ function ProductManagementForm() {
     return (
         <Box>
             <form onSubmit={form.onSubmit((values) => {
-                // if (files) {
-                //     form.values['logo'] = files[0]
-                // }
-                // form.values['sku_wearhouse'] = (values.sku_wearhouse === true || values.sku_wearhouse == 1) ? 1 : 0
-                // form.values['sku_category'] = (values.sku_category === true || values.sku_category == 1) ? 1 : 0
-                // form.values['vat_enable'] = (values.vat_enable === true || values.vat_enable == 1) ? 1 : 0
-                // form.values['ait_enable'] = (values.ait_enable === true || values.ait_enable == 1) ? 1 : 0
-
+                form.values['brand'] = (values.brand === true || values.brand == 1) ? 1 : 0
+                form.values['color'] = (values.color === true || values.color == 1) ? 1 : 0
+                form.values['size'] = (values.size === true || values.size == 1) ? 1 : 0
+                form.values['model'] = (values.model === true || values.model == 1) ? 1 : 0
+                form.values['measurement'] = (values.measurement === true || values.measurement == 1) ? 1 : 0
+                form.values['product_image'] = (values.product_image === true || values.product_image == 1) ? 1 : 0
+                form.values['product_gallery'] = (values.product_gallery === true || values.product_gallery == 1) ? 1 : 0
+                form.values['is_multi_price'] = (values.is_multi_price === true || values.is_multi_price == 1) ? 1 : 0
+                form.values['zero_stock'] = (values.zero_stock === true || values.zero_stock == 1) ? 1 : 0
+                form.values['stock_item'] = (values.stock_item === true || values.stock_item == 1) ? 1 : 0
+                form.values['is_stock_history'] = (values.is_stock_history === true || values.is_stock_history == 1) ? 1 : 0
+                form.values['mrp_price'] = (values.mrp_price === true || values.mrp_price == 1) ? 1 : 0
+                form.values['total_price'] = (values.total_price === true || values.total_price == 1) ? 1 : 0
+                form.values['purchase_price'] = (values.purchase_price === true || values.purchase_price == 1) ? 1 : 0
                 dispatch(setValidationData(false))
-                modals.openConfirmModal({
-                    title: (
-                        <Text size="md"> {t("FormConfirmationTitle")}</Text>
-                    ),
-                    children: (
-                        <Text size="sm"> {t("FormConfirmationMessage")}</Text>
-                    ),
-                    labels: { confirm: t('Submit'), cancel: t('Cancel') }, confirmProps: { color: 'red' },
-                    onCancel: () => console.log('Cancel'),
-                    onConfirm: () => {
-                        const value = {
-                            url: 'inventory/config-update',
-                            data: values
-                        }
-                        dispatch(updateEntityData(value))
-                    },
-                });
+                console.log(values)
+                // modals.openConfirmModal({
+                //     title: (
+                //         <Text size="md"> {t("FormConfirmationTitle")}</Text>
+                //     ),
+                //     children: (
+                //         <Text size="sm"> {t("FormConfirmationMessage")}</Text>
+                //     ),
+                //     labels: { confirm: t('Submit'), cancel: t('Cancel') }, confirmProps: { color: 'red' },
+                //     onCancel: () => console.log('Cancel'),
+                //     onConfirm: () => {
+                //         const value = {
+                //             url: 'inventory/product-configuration',
+                //             data: values
+                //         }
+                //         dispatch(updateEntityData(value))
+                //     },
+                // });
             })}>
                 <Grid columns={24} gutter={{ base: 8 }}>
                     <Grid.Col span={7}>
@@ -134,9 +146,25 @@ function ProductManagementForm() {
                                     <ScrollArea h={height} scrollbarSize={2} scrollbars="y" type="never">
                                         <Box pl={'xs'} pt={'xs'} >
 
-                                            {/* <Box mt={'xs'}>
-                                                    <Text fz="sm">{t("StockFormat")}</Text>
-                                                </Box> */}
+
+                                            <Box mt={'xs'}>
+                                                <Grid gutter={{ base: 1 }}>
+                                                    <Grid.Col span={2}>
+                                                        <SwitchForm
+                                                            tooltip={t('Brand')}
+                                                            label=''
+                                                            nextField={'color'}
+                                                            name={'brand'}
+                                                            form={form}
+                                                            color="red"
+                                                            id={'brand'}
+                                                            position={'left'}
+                                                            defaultChecked={productConfigData.brand}
+                                                        />
+                                                    </Grid.Col>
+                                                    <Grid.Col span={6} fz={'sm'} pt={'1'}>{t('Brand')}</Grid.Col>
+                                                </Grid>
+                                            </Box>
                                             <Box mt={'xs'}>
                                                 <Grid gutter={{ base: 1 }}>
                                                     <Grid.Col span={2}>
@@ -149,7 +177,7 @@ function ProductManagementForm() {
                                                             color="red"
                                                             id={'color'}
                                                             position={'left'}
-                                                        // defaultChecked={configData.sku_wearhouse}
+                                                            defaultChecked={productConfigData.color}
                                                         />
                                                     </Grid.Col>
                                                     <Grid.Col span={6} fz={'sm'} pt={'1'}>{t('Color')}</Grid.Col>
@@ -161,34 +189,34 @@ function ProductManagementForm() {
                                                         <SwitchForm
                                                             tooltip={t('Size')}
                                                             label=''
-                                                            nextField={'brand'}
+                                                            nextField={'model'}
                                                             name={'size'}
                                                             form={form}
                                                             color="red"
                                                             id={'size'}
                                                             position={'left'}
-                                                        // defaultChecked={configData.sku_category}
+                                                            defaultChecked={productConfigData.size}
                                                         />
                                                     </Grid.Col>
-                                                    <Grid.Col span={6} fz={'sm'} pt={'1'}>{t('Brand')}</Grid.Col>
+                                                    <Grid.Col span={6} fz={'sm'} pt={'1'}>{t('Size')}</Grid.Col>
                                                 </Grid>
                                             </Box>
                                             <Box mt={'xs'}>
                                                 <Grid gutter={{ base: 1 }}>
                                                     <Grid.Col span={2}>
                                                         <SwitchForm
-                                                            tooltip={t('Size')}
+                                                            tooltip={t('Model')}
                                                             label=''
-                                                            nextField={'measurment'}
-                                                            name={'brand'}
+                                                            nextField={'measurement'}
+                                                            name={'model'}
                                                             form={form}
                                                             color="red"
-                                                            id={'brand'}
+                                                            id={'model'}
                                                             position={'left'}
-                                                        // defaultChecked={configData.sku_category}
+                                                            defaultChecked={productConfigData.model}
                                                         />
                                                     </Grid.Col>
-                                                    <Grid.Col span={6} fz={'sm'} pt={'1'}>{t('Brand')}</Grid.Col>
+                                                    <Grid.Col span={6} fz={'sm'} pt={'1'}>{t('Model')}</Grid.Col>
                                                 </Grid>
                                             </Box>
 
@@ -205,7 +233,7 @@ function ProductManagementForm() {
                                     className={'boxBackground borderRadiusAll'}>
                                     <Grid>
                                         <Grid.Col >
-                                            <Title order={6} pt={'4'} >{t('Title')}</Title>
+                                            <Title order={6} pt={'4'} >{t('Product')}</Title>
                                         </Grid.Col>
 
                                     </Grid>
@@ -217,18 +245,18 @@ function ProductManagementForm() {
                                                 <Grid gutter={{ base: 1 }}>
                                                     <Grid.Col span={2}>
                                                         <SwitchForm
-                                                            tooltip={t('Measurment')}
+                                                            tooltip={t('Measurement')}
                                                             label=''
                                                             nextField={'product_image'}
-                                                            name={'measurment'}
+                                                            name={'measurement'}
                                                             form={form}
                                                             color="red"
-                                                            id={'vat_enable'}
+                                                            id={'measurement'}
                                                             position={'left'}
-                                                        // defaultChecked={configData.invoice_print_logo}
+                                                            defaultChecked={productConfigData.measurement}
                                                         />
                                                     </Grid.Col>
-                                                    <Grid.Col span={6} fz={'sm'} pt={'1'}>{t('Measurment')}</Grid.Col>
+                                                    <Grid.Col span={6} fz={'sm'} pt={'1'}>{t('Measurement')}</Grid.Col>
                                                 </Grid>
                                             </Box>
                                             <Box mt={'xs'}>
@@ -243,7 +271,7 @@ function ProductManagementForm() {
                                                             color="red"
                                                             id={'product_image'}
                                                             position={'left'}
-                                                        // defaultChecked={configData.print_outstanding}
+                                                            defaultChecked={productConfigData.product_image}
                                                         />
                                                     </Grid.Col>
                                                     <Grid.Col span={6} fz={'sm'}
@@ -262,7 +290,7 @@ function ProductManagementForm() {
                                                             color="red"
                                                             id={'product_gallery'}
                                                             position={'left'}
-                                                        // defaultChecked={configData.pos_print}
+                                                            defaultChecked={productConfigData.product_gallery}
                                                         />
                                                     </Grid.Col>
                                                     <Grid.Col span={6} fz={'sm'} pt={'1'}>{t('ProductGallery')}</Grid.Col>
@@ -280,7 +308,7 @@ function ProductManagementForm() {
                                                             color="red"
                                                             id={'is_multi_price'}
                                                             position={'left'}
-                                                        // defaultChecked={configData.pos_print}
+                                                            defaultChecked={productConfigData.is_multi_price}
                                                         />
                                                     </Grid.Col>
                                                     <Grid.Col span={6} fz={'sm'} pt={'1'}>{t('ProductMultiPrice')}</Grid.Col>
@@ -342,7 +370,7 @@ function ProductManagementForm() {
                                                             color="red"
                                                             id={'zero_stock'}
                                                             position={'left'}
-                                                        // defaultChecked={configData.custom_invoice}
+                                                            defaultChecked={productConfigData.zero_stock}
                                                         />
                                                     </Grid.Col>
                                                     <Grid.Col span={6} fz={'sm'}
@@ -361,7 +389,7 @@ function ProductManagementForm() {
                                                             color="red"
                                                             id={'stock_item'}
                                                             position={'left'}
-                                                        // defaultChecked={configData.bonus_from_stock}
+                                                            defaultChecked={productConfigData.stock_item}
                                                         />
                                                     </Grid.Col>
                                                     <Grid.Col span={6} fz={'sm'}
@@ -374,13 +402,13 @@ function ProductManagementForm() {
                                                         <SwitchForm
                                                             tooltip={t('StockHistory')}
                                                             label=''
-                                                            nextField={'is_description'}
+                                                            nextField={'mrp_price'}
                                                             name={'is_stock_history'}
                                                             form={form}
                                                             color="red"
                                                             id={'is_stock_history'}
                                                             position={'left'}
-                                                        // defaultChecked={configData.is_unit_price}
+                                                            defaultChecked={productConfigData.is_stock_history}
                                                         />
                                                     </Grid.Col>
                                                     <Grid.Col span={6} fz={'sm'} pt={'1'}>{t('StockHistory')}</Grid.Col>
@@ -401,7 +429,7 @@ function ProductManagementForm() {
                                     className={'boxBackground borderRadiusAll'}>
                                     <Grid>
                                         <Grid.Col >
-                                            <Title order={6} pt={'4'} >{t('Pruchase')}</Title>
+                                            <Title order={6} pt={'4'} >{t('Purchase')}</Title>
                                         </Grid.Col>
 
                                     </Grid>
@@ -414,56 +442,62 @@ function ProductManagementForm() {
                                                     <Grid gutter={{ base: 1 }}>
                                                         <Grid.Col span={2}>
                                                             <SwitchForm
-                                                                tooltip={t('ZeroStockAllowed')}
+                                                                tooltip={t('MrpPrice')}
                                                                 label=''
-                                                                nextField={'stock_item'}
-                                                                name={'zero_stock'}
+                                                                nextField={'total_price'}
+                                                                name={'mrp_price'}
                                                                 form={form}
                                                                 color="red"
-                                                                id={'zero_stock'}
+                                                                id={'mrp_price'}
                                                                 position={'left'}
-                                                            // defaultChecked={configData.custom_invoice}
+                                                                defaultChecked={productConfigData.mrp_price}
                                                             />
                                                         </Grid.Col>
                                                         <Grid.Col span={6} fz={'sm'}
-                                                            pt={'1'}>{t('ZeroStockAllowed')}</Grid.Col>
+                                                            pt={'1'}>
+                                                            {t('MrpPrice')}
+                                                        </Grid.Col>
                                                     </Grid>
                                                 </Box>
                                                 <Box mt={'xs'}>
                                                     <Grid gutter={{ base: 1 }}>
                                                         <Grid.Col span={2}>
                                                             <SwitchForm
-                                                                tooltip={t('StockItem')}
+                                                                tooltip={t('TotalPrice')}
                                                                 label=''
-                                                                nextField={'is_stock_history'}
-                                                                name={'stock_item'}
+                                                                nextField={'purchase_price'}
+                                                                name={'total_price'}
                                                                 form={form}
                                                                 color="red"
-                                                                id={'stock_item'}
+                                                                id={'total_price'}
                                                                 position={'left'}
-                                                            // defaultChecked={configData.bonus_from_stock}
+                                                                defaultChecked={productConfigData.total_price}
                                                             />
                                                         </Grid.Col>
                                                         <Grid.Col span={6} fz={'sm'}
-                                                            pt={'1'}>{t('StockItem')}</Grid.Col>
+                                                            pt={'1'}>
+                                                            {t('TotalPrice')}
+                                                        </Grid.Col>
                                                     </Grid>
                                                 </Box>
                                                 <Box mt={'xs'}>
                                                     <Grid gutter={{ base: 1 }}>
                                                         <Grid.Col span={2}>
                                                             <SwitchForm
-                                                                tooltip={t('StockHistory')}
+                                                                tooltip={t('PurchasePrice')}
                                                                 label=''
-                                                                nextField={'is_description'}
-                                                                name={'is_stock_history'}
+                                                                nextField={'EntityFormSubmit'}
+                                                                name={'purchase_price'}
                                                                 form={form}
                                                                 color="red"
-                                                                id={'is_stock_history'}
+                                                                id={'purchase_price'}
                                                                 position={'left'}
-                                                            // defaultChecked={configData.is_unit_price}
+                                                                defaultChecked={productConfigData.purchase_price}
                                                             />
                                                         </Grid.Col>
-                                                        <Grid.Col span={6} fz={'sm'} pt={'1'}>{t('StockHistory')}</Grid.Col>
+                                                        <Grid.Col span={6} fz={'sm'} pt={'1'}>
+                                                            {t('PurchasePrice')}
+                                                        </Grid.Col>
                                                     </Grid>
                                                 </Box>
                                             </Box>
@@ -490,4 +524,4 @@ function ProductManagementForm() {
     );
 }
 
-export default ProductManagementForm;
+export default ProductConfigurationForm;
