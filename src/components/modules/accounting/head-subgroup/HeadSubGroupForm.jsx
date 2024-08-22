@@ -116,7 +116,7 @@ function HeadSubGroupForm(props) {
                                 <Box pl={`xs`} pr={8} pt={'6'} pb={'6'} mb={'4'} className={'boxBackground borderRadiusAll'}>
                                     <Grid>
                                         <Grid.Col span={6} >
-                                            <Title order={6} pt={'6'}>{t('CreateHeadGroup')}</Title>
+                                            <Title order={6} pt={'6'}>{t('CreateHeadSubGroup')}</Title>
                                         </Grid.Col>
                                         <Grid.Col span={6}>
                                             <Stack right align="flex-end">

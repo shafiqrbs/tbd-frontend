@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {useNavigate, useOutletContext, useParams} from "react-router-dom";
+import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 import {
     Button,
     rem, Flex,
@@ -57,7 +57,7 @@ function HeadSubGroupUpdateFrom(props) {
 
     const form = useForm({
         initialValues: {
-            mother_account_id:'', name:'', code: '', status: ''
+            mother_account_id: '', name: '', code: '', status: ''
         },
         validate: {
             mother_account_id: isNotEmpty(),
@@ -146,7 +146,7 @@ function HeadSubGroupUpdateFrom(props) {
                                 <Box pl={`xs`} pr={8} pt={'6'} pb={'6'} mb={'4'} className={'boxBackground borderRadiusAll'}>
                                     <Grid>
                                         <Grid.Col span={6} >
-                                            <Title order={6} pt={'6'}>{t('UpdateAccountHeadGroup')}</Title>
+                                            <Title order={6} pt={'6'}>{t('UpdateAccountHeadSubGroup')}</Title>
                                         </Grid.Col>
                                         <Grid.Col span={6}>
                                             <Stack right align="flex-end">

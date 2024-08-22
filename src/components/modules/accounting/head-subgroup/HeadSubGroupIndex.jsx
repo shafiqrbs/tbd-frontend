@@ -6,7 +6,6 @@ import {
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from "react-redux";
 import { setSearchKeyword } from "../../../../store/core/crudSlice";
-import { setInsertType } from "../../../../store/generic/crudSlice";
 import getConfigData from "../../../global-hook/config-data/getConfigData.js";
 import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress.js";
 import HeadSubGroupForm from "./HeadSubGroupForm";
@@ -14,7 +13,7 @@ import HeadSubGroupUpdateFrom from "./HeadSubGroupUpdateFrom";
 import HeadSubGroupTable from "./HeadSubGroupTable";
 import AccountingHeaderNavbar from "../AccountingHeaderNavbar";
 import { useNavigate, useParams } from "react-router-dom";
-import { editEntityData, setEntityNewData, setFormLoading } from "../../../../store/accounting/crudSlice.js";
+import { editEntityData, setEntityNewData, setFormLoading, setInsertType } from "../../../../store/accounting/crudSlice.js";
 function HeadSubGroupIndex() {
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
@@ -28,16 +27,16 @@ function HeadSubGroupIndex() {
     useEffect(() => {
         id ? (
             dispatch(setInsertType('update')),
-            dispatch(editEntityData(`accounting/account-head/${id}`)),
+            dispatch(editEntityData(`accounting/head-subgroup/${id}`)),
             dispatch(setFormLoading(true))
         ) : (
             dispatch(setInsertType('create')),
             dispatch(setSearchKeyword('')),
             dispatch(setEntityNewData([])),
-            navigate('/accounting/head-group', { replace: true })
+            navigate('/accounting/head-subgroup', { replace: true })
         );
     }, [id, dispatch, navigate])
-    
+
     return (
         <>
             {progress !== 100 &&
@@ -46,7 +45,7 @@ function HeadSubGroupIndex() {
                 <>
                     <Box>
                         <AccountingHeaderNavbar
-                            pageTitle={t('ManageAccountHeadGroup')}
+                            pageTitle={t('ManageAccountHeadSubGroup')}
                             roles={t('Roles')}
                             allowZeroPercentage=''
                             currencySymbol=''

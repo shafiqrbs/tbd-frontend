@@ -60,8 +60,8 @@ function InventoryHeaderNavbar(props) {
                                     {t('ProductSettings')}
                                 </Menu.Item>
                                 <Menu.Item
-                                    component="button" onClick={(e) => { navigate('/inventory/product-management') }} leftSection={<IconBrandCodesandbox style={{ width: rem(14), height: rem(14) }} />}>
-                                    {t('ProductManagement')}
+                                    component="button" onClick={(e) => { navigate('/inventory/product-configuration') }} leftSection={<IconBrandCodesandbox style={{ width: rem(14), height: rem(14) }} />}>
+                                    {t('ProductConfiguration')}
                                 </Menu.Item>
                                 <Menu.Item
                                     component="button" onClick={(e) => { navigate('/inventory/config') }} leftSection={<IconSettings style={{ width: rem(14), height: rem(14) }} />}>

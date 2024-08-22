@@ -6,9 +6,9 @@ import {
 import { useTranslation } from 'react-i18next';
 import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress.js";
 import InventoryHeaderNavbar from "../configuraton/InventoryHeaderNavbar.jsx";
-import ProductManagementForm from "./ProductManagementForm.jsx";
+import ProductConfigurationForm from "./ProductConfigurationForm.jsx";
 
-function ProductManagementIndex() {
+function ProductConfigurationIndex() {
     const { t, i18n } = useTranslation();
 
     const progress = getLoadingProgress()
@@ -20,7 +20,7 @@ function ProductManagementIndex() {
             {progress === 100 &&
                 <>
                     <InventoryHeaderNavbar
-                        pageTitle={t('ProductManagement')}
+                        pageTitle={t('ProductConfiguration')}
                         roles={t('Roles')}
                         allowZeroPercentage=''
                         currencySymbol=''
@@ -28,7 +28,7 @@ function ProductManagementIndex() {
                     <Box p={'8'}>
                         <Grid columns={24} gutter={{ base: 8 }}>
                             <Grid.Col span={24}>
-                                <ProductManagementForm />
+                                <ProductConfigurationForm />
                             </Grid.Col>
                         </Grid>
                     </Box>
@@ -38,4 +38,4 @@ function ProductManagementIndex() {
     );
 }
 
-export default ProductManagementIndex;
+export default ProductConfigurationIndex;

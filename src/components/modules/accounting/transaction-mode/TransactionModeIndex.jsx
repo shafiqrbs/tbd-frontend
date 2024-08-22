@@ -6,7 +6,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from "react-redux";
 import { setInsertType } from "../../../../store/inventory/crudSlice";
-import {editEntityData, setSearchKeyword} from "../../../../store/core/crudSlice";
+import { editEntityData, setSearchKeyword } from "../../../../store/core/crudSlice";
 import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress.js";
 import TransactionModeForm from "./TransactionModeFrom.jsx";
 import TransactionModeUpdateFrom from "./TransactionModeUpdateFrom.jsx";
@@ -22,21 +22,21 @@ function TransactionModeIndex() {
 
     const progress = getLoadingProgress()
 
-    const { transactionModeId } = useParams();
+    const { id } = useParams();
     const navigate = useNavigate();
 
 
     useEffect(() => {
-        if (transactionModeId) {
+        if (id) {
             dispatch(setInsertType('update'));
             dispatch(setFormLoading(true));
-            dispatch(editEntityData('accounting/transaction-mode/' + transactionModeId))
-        } else if (!transactionModeId) {
+            dispatch(editEntityData('accounting/transaction-mode/' + id))
+        } else if (!id) {
             dispatch(setInsertType('create'));
             dispatch(setSearchKeyword(''));
-            navigate('/accounting/transaction-mode');
+            navigate('/accounting/transaction-mode', { replace: true });
         }
-    }, [transactionModeId, dispatch, navigate]);
+    }, [id, dispatch, navigate]);
 
     return (
         <>

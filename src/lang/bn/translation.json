@@ -157,7 +157,7 @@
   "ManageProduct": "পণ্য পরিচালনা",
   "Unit": "ইউনিট",
   "Brand": "ব্র্যান্ড",
-  "PurchasePrice": "ক্রয় মূল্য",
+  "PurchasePrice": "পার্চেজ প্রাইস",
   "CreateProduct": "প্রোডাক্ট তৈরী",
   "ProductInformation": "পণ্যের বিবরণ",
   "AlternativeProductName": "পণ্যের বিকল্প নাম",
@@ -384,5 +384,16 @@
   "Shortcut": "শর্টকাট",
   "ReceiveAmountValidateMessage": "টাকার পরিমাণ লিখুন",
   "InvoiceDateValidateMessage": "তারিখ নির্বাচন করুন",
-  "ChooseVendor": "বিক্রেতা নির্বাচন করুন"
+  "ChooseVendor": "বিক্রেতা নির্বাচন করুন",
+  "ProductConfiguration": "প্রোডাক্ট কনফিগারেশন",
+  "Color": "কালার",
+  "Size": "সাইজ",
+  "Model": "মডেল",
+  "Measurement": "মেজারমেন্ট",
+  "ProductImage": "প্রোডাক্ট ইমেজ",
+  "ProductGallery": "প্রোডাক্ট গ্যালারি",
+  "ProductMultiPrice": "প্রোডাক্ট মাল্টি প্রাইস",
+  "SkuManagement": "SKU ম্যানেজমেন্ট",
+  "MrpPrice": "MRP প্রাইস",
+  "TotalPrice": "টোটাল প্রাইস"
 }

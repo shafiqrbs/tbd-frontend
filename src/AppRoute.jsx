@@ -12,7 +12,6 @@ import CategoryGroupIndex from "./components/modules/inventory/category-group/Ca
 import CategoryIndex from "./components/modules/inventory/category/CategoryIndex";
 import ProductIndex from "./components/modules/inventory/product/ProductIndex.jsx";
 import SalesIndex from "./components/modules/inventory/sales/SalesIndex";
-
 import SampleInvoice from "./components/modules/sample-module/sample-layout/SampleInvoice";
 import SampleIndex from "./components/modules/sample-module/sample-layout/SampleIndex";
 import DomainIndex from "./components/modules/domain/domain/DomainIndex";
@@ -31,14 +30,13 @@ import SampleModalIndex from './components/modules/sample3Grid/SampleModalIndex.
 import OpeningApproveIndex from "./components/modules/inventory/opening-stock/OpeningApproveIndex";
 import OpeningStockIndex from "./components/modules/inventory/opening-stock/OpeningStockIndex";
 import InvoiceBatchIndex from './components/modules/inventory/invoice-batch/InvoiceBatchIndex.jsx';
-import CustomerSettingsIndex from './components/modules/core/customer-settings/CustomerSettingsIndex.jsx';
 import LocationIndex from './components/modules/core/location/LocationIndex.jsx';
 import MarketingExecutiveIndex from './components/modules/core/marketing-executive/MarketingExecutiveIndex.jsx';
 import ProductSettingsIndex from './components/modules/inventory/product-settings/ProductSettingsIndex.jsx';
 import ProductionSettingIndex from "./components/modules/production/settings/ProductionSettingIndex.jsx";
 import RecipeItemsIndex from "./components/modules/production/recipe-items/RecipeItemsIndex.jsx";
 import RecipeIndex from "./components/modules/production/recipe-items/recipe/RecipeIndex.jsx";
-import ProductManagementIndex from './components/modules/inventory/product-management/ProductManagementIndex.jsx';
+import ProductConfigurationIndex from './components/modules/inventory/product-configuration/ProductConfigurationIndex.jsx';
 import ParticularIndex from "./components/modules/inventory/particular/ParticularIndex";
 import InhouseIndex from './components/modules/production/production-inhouse/InhouseIndex.jsx';
 import SettingsIndex from "./components/modules/core/settings/SettingsIndex";
@@ -91,7 +89,7 @@ function AppRoute() {
                     <Route path="particular/:id" element={<ParticularIndex />} />
                     <Route path="product-settings" element={<ProductSettingsIndex />} />
                     <Route path="product-settings/:settingsId" element={<ProductSettingsIndex />} />
-                    <Route path="product-management" element={<ProductManagementIndex />} />
+                    <Route path="product-configuration" element={<ProductConfigurationIndex />} />
                 </Route>
 
                 <Route path="/production/">
@@ -113,11 +111,11 @@ function AppRoute() {
                     <Route path="ledger" element={<LedgerIndex />} />
                     <Route path="ledger/:ledgerId" element={<LedgerIndex />} />
                     <Route path="head-subgroup" element={<HeadSubGroupIndex />} />
-                    <Route path="head-subgroup/:headSubGroupId" element={<HeadSubGroupIndex />} />
+                    <Route path="head-subgroup/:id" element={<HeadSubGroupIndex />} />
                     <Route path="head-group" element={<HeadGroupIndex />} />
                     <Route path="head-group/:id" element={<HeadGroupIndex />} />
                     <Route path="transaction-mode" element={<TransactionModeIndex />} />
-                    <Route path="transaction-mode/:transactionModeId" element={<TransactionModeIndex />} />
+                    <Route path="transaction-mode/:id" element={<TransactionModeIndex />} />
                     <Route path="modalIndex" element={<SampleModalIndex />} />
                 </Route>
                 <Route path="sitemap" element={<Sitemap />} />
