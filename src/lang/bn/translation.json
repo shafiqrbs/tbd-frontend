@@ -395,5 +395,14 @@
   "ProductMultiPrice": "প্রোডাক্ট মাল্টি প্রাইস",
   "SkuManagement": "SKU ম্যানেজমেন্ট",
   "MrpPrice": "MRP প্রাইস",
-  "TotalPrice": "টোটাল প্রাইস"
+  "TotalPrice": "টোটাল প্রাইস",
+  "SelectImage": "ছবি নির্বাচন",
+  "ChooseColor": "কালার নির্বাচন",
+  "ChooseSize": "সাইজ নির্বাচন",
+  "ChooseBrand": "ব্র্যান্ড নির্বাচন",
+  "Preview": "প্রিভিউ",
+  "AddMeasurement": "অ্যাড মেজারমেন্ট",
+  "Gallery": "গ্যালারি",
+  "UpdateProduct": "আপডেট প্রোডাক্ট",
+  "SelectFeatureImage": "ফিচার ছবি নির্বাচন"
 }

@@ -567,5 +567,12 @@
   "ProductGallery": "Product Gallery",
   "ProductMultiPrice": "Product Multi Price",
   "MrpPrice": "MRP Price",
-  "TotalPrice": "Total Price"
+  "TotalPrice": "Total Price",
+  "SelectImage": "Select Image",
+  "ChooseColor": "Choose Color",
+  "ChooseSize": "Choose Size",
+  "Preview": "Preview",
+  "AddMeasurement": "Add Measurement",
+  "Gallery": "Gallery",
+  "SelectFeatureImage": "Select Feature Image"
 }
