@@ -251,7 +251,7 @@ function InvoiceBatchTable() {
                                                             </ActionIcon>
                                                         </Menu.Target>
                                                         <Menu.Dropdown>
-                                                            <Menu.Item
+                                                            {/* <Menu.Item
                                                                 onClick={(e) => {
                                                                     e.preventDefault();
                                                                     setBatchLedgerModal(true)
@@ -261,11 +261,10 @@ function InvoiceBatchTable() {
                                                                 w={'200'}
                                                             >
                                                                 {t('Test')}
-                                                            </Menu.Item>
+                                                            </Menu.Item> */}
                                                             <Menu.Item
                                                                 onClick={(e) => {
                                                                     e.preventDefault();
-                                                                    setLoading(true)
                                                                     setInvoiceBatchData(item)
                                                                     setBatchViewModal(true)
                                                                 }}

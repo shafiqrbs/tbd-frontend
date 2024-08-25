@@ -146,7 +146,7 @@ function InvoiceBatchModalInvoice(props) {
                     }}
                     loaderSize="xs"
                     loaderColor="grape"
-                    height={tableHeight}
+                    height={tableHeight-20}
                     scrollAreaProps={{ type: 'never' }}
                 />
             </Box >

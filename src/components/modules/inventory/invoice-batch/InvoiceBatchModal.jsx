@@ -7,15 +7,16 @@ import { useTranslation } from 'react-i18next';
 import React, { useEffect, } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import {IconEyeEdit, IconMessage, IconTallymark1
+import {
+    IconEyeEdit, IconMessage, IconTallymark1
 } from '@tabler/icons-react';
 import { useState } from 'react';
-import { getShowEntityData} from "../../../../store/inventory/crudSlice.js";
+import { getShowEntityData } from "../../../../store/inventory/crudSlice.js";
 import InvoiceBatchModalTable from './InvoiceBatchModalTable.jsx';
 import InvoiceBatchModalTransaction from './InvoiceBatchModalTransaction.jsx';
 import InvoiceBatchModalInvoice from './InvoiceBatchModalInvoice.jsx';
 import _AddTransaction from "./drawer/_AddTransaction";
-import {notifications} from "@mantine/notifications";
+import { notifications } from "@mantine/notifications";
 
 function InvoiceBatchModal(props) {
     const theme = useMantineTheme();
@@ -35,7 +36,7 @@ function InvoiceBatchModal(props) {
     const showEntityData = useSelector((state) => state.inventoryCrudSlice.showEntityData);
 
     useEffect(() => {
-        dispatch(getShowEntityData('inventory/invoice-batch/'+props.invoiceId))
+        dispatch(getShowEntityData('inventory/invoice-batch/' + props.invoiceId))
     }, []);
 
 
@@ -60,10 +61,10 @@ function InvoiceBatchModal(props) {
                         <Modal.CloseButton />
                     </Modal.Header>
                     <Modal.Body>
-                        <Box h={height + 130} bg={''}>
+                        <Box h={height + 120} bg={''}>
                             <Box >
                                 <Box bg={'#f0f1f9'} className={''} >
-                                    <Box pl={'xs'} pr={'xs'} pb={'xs'} pt={'xs'}>
+                                    <Box pl={'8'} pr={'8'} pb={'xs'} pt={'8'}>
                                         <Grid columns={24} gutter={{ base: 8 }} >
                                             <Grid.Col span={7} >
                                                 <Box h={110} bg={'white'} pl={`xs`} pr={8} pt={'xs'} className={' borderRadiusAll'} >
@@ -332,15 +333,15 @@ function InvoiceBatchModal(props) {
                                 </Box>
                             </Box>
                             <Box >
-                                <Box pl={'xs'} pr={'xs'}>
+                                <Box pl={'8'} pr={'8'}>
                                     <Grid columns={24} gutter={{ base: 8 }}>
                                         <Grid.Col span={7} >
                                             <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
                                                 <Box h={40} pl={`xs`} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'} >
                                                     <Title order={6} pl={'6'}>{t('Invoices')}</Title>
                                                 </Box>
-                                                <Box className={'borderRadiusAll'} h={height - 90}>
-                                                    <InvoiceBatchModalInvoice batchInvoice={showEntityData?.batch_invoices?showEntityData.batch_invoices:[]} />
+                                                <Box className={'borderRadiusAll'} h={height - 86}>
+                                                    <InvoiceBatchModalInvoice batchInvoice={showEntityData?.batch_invoices ? showEntityData.batch_invoices : []} />
                                                 </Box>
                                             </Box>
 
@@ -350,8 +351,8 @@ function InvoiceBatchModal(props) {
                                                 <Box h={40} pl={`xs`} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'} >
                                                     <Title order={6} pl={'6'}>{t('BatchItems')}</Title>
                                                 </Box>
-                                                <Box bg={'white'} h={height - 90} >
-                                                    <InvoiceBatchModalTable invoiceBatchItems={showEntityData?.invoice_batch_items?showEntityData.invoice_batch_items:[]} />
+                                                <Box bg={'white'} h={height - 86} >
+                                                    <InvoiceBatchModalTable invoiceBatchItems={showEntityData?.invoice_batch_items ? showEntityData.invoice_batch_items : []} />
                                                 </Box>
 
                                             </Box>
@@ -361,8 +362,8 @@ function InvoiceBatchModal(props) {
                                                 <Box h={40} pl={`xs`} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'} >
                                                     <Title order={6} pl={'6'}>{t('Transactions')}</Title>
                                                 </Box>
-                                                <Box className={'borderRadiusAll'} h={height - 90}>
-                                                    <InvoiceBatchModalTransaction batchTransactions={showEntityData?.invoice_batch_transactions?showEntityData.invoice_batch_transactions:[]} />
+                                                <Box className={'borderRadiusAll'} h={height - 86}>
+                                                    <InvoiceBatchModalTransaction batchTransactions={showEntityData?.invoice_batch_transactions ? showEntityData.invoice_batch_transactions : []} />
                                                 </Box>
                                             </Box>
                                         </Grid.Col>
