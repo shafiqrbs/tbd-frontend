@@ -232,99 +232,90 @@ function InvoiceBatchModal(props) {
                                                 </Box>
                                             </Grid.Col>
                                             <Grid.Col span={9} >
-                                                <Box h={110} bg={'white'} pl={`xs`} pr={8} pt={'4'} className={' borderRadiusAll'} >
-                                                    <Flex spacing={0} direction={'column'} >
-                                                        <Grid >
-                                                            <Grid.Col span={8}>
-                                                                <Text fw={900} pt={'xs'} pl={'6'} fz={'md'}>{t('BatchDetails')}</Text>
-                                                            </Grid.Col>
-                                                            <Grid.Col span={4} pt={'sm'}>
-                                                                <Grid span={12} gutter={0}>
+                                                <Box bg={'white'} pl={`xs`} pr={8} pt={'4'} className={' borderRadiusAll'} >
+                                                    <Grid columns={12} gutter={0} >
+                                                        <Grid.Col span={10}>
+                                                            <Stack h={104} gap={0}>
+                                                                <Text fw={900} pt={'8'} pl={'6'} fz={'md'}>{t('BatchDetails')}</Text>
+                                                                <Grid columns={12} gutter={0} pt={8}>
                                                                     <Grid.Col span={6}>
-                                                                        <Button
-                                                                            color={'green.8'}
-                                                                            size='xs'
-                                                                            variant="filled"
-                                                                            onClick={(e) => {
-                                                                                e.preventDefault();
-                                                                                setAddTransactionDrawer(true)
-                                                                            }}
-                                                                        >{t('Receive')}</Button>
+                                                                        <Grid columns={12} gutter={{ base: 0 }} pl={6}>
+                                                                            <Grid.Col span={4}>
+                                                                                <Text fz="xs" fw={600} >{t('TotalAmount')}</Text>
+                                                                            </Grid.Col>
+                                                                            <Grid.Col span={1}>
+                                                                                <Text fz={'xs'} fw={700}>:</Text>
+                                                                            </Grid.Col>
+                                                                            <Grid.Col span={7}>
+                                                                                <Text fz="xs" fw={300} >{showEntityData?.total}</Text>
+                                                                            </Grid.Col>
+                                                                        </Grid>
+                                                                        <Grid columns={12} gutter={{ base: 0 }} pl={6}>
+                                                                            <Grid.Col span={4}>
+                                                                                <Text fz="xs" fw={600} >{t('Discount')}</Text>
+                                                                            </Grid.Col>
+                                                                            <Grid.Col span={1}>
+                                                                                <Text fz={'xs'} fw={700}>:</Text>
+                                                                            </Grid.Col>
+                                                                            <Grid.Col span={7}>
+                                                                                <Text fz="xs" fw={300} >{showEntityData?.discount}</Text>
+                                                                            </Grid.Col>
+                                                                        </Grid>
                                                                     </Grid.Col>
                                                                     <Grid.Col span={6}>
-                                                                        <Button
-                                                                            color={'green.8'}
-                                                                            size='xs'
-                                                                            variant="filled"
-                                                                            onClick={(e) => {
-                                                                                e.preventDefault();
-                                                                                setAddTransactionDrawer(true)
-                                                                            }}
-                                                                        >{t('AddBill')}</Button>
+                                                                        <Grid gutter={{ base: 0 }} pl={6}>
+                                                                            <Grid.Col span={4}>
+                                                                                <Text fz="xs" fw={600} >{t('Receive')}</Text>
+                                                                            </Grid.Col>
+                                                                            <Grid.Col span={1}>
+                                                                                <Text fz={'xs'} fw={700}>:</Text>
+                                                                            </Grid.Col>
+                                                                            <Grid.Col span={7}>
+                                                                                <Text fz="xs" fw={300} >{showEntityData?.received}</Text>
+                                                                            </Grid.Col>
+                                                                        </Grid>
+                                                                        <Grid gutter={{ base: 0 }} pl={6}>
+                                                                            <Grid.Col span={4}>
+                                                                                <Text fz="xs" fw={600} >{t('Balance')}</Text>
+                                                                            </Grid.Col>
+                                                                            <Grid.Col span={1}>
+                                                                                <Text fz={'xs'} fw={700}>:</Text>
+                                                                            </Grid.Col>
+                                                                            <Grid.Col span={7}>
+                                                                                <Text fz="xs" fw={300} >{showEntityData?.balance}</Text>
+                                                                            </Grid.Col>
+                                                                        </Grid>
                                                                     </Grid.Col>
                                                                 </Grid>
-                                                            </Grid.Col>
-                                                        </Grid>
-                                                        <Stack
-                                                            h={40}
-                                                            bg="var(--mantine-color-body)"
-                                                            align="stretch"
-                                                            justify="center"
-                                                            gap="2"
-                                                            pt={'sm'}
-                                                        >
-                                                            <Grid columns={12} gutter={0}>
-                                                                <Grid.Col span={6}>
-                                                                    <Grid columns={12} gutter={{ base: 0 }} pl={6}>
-                                                                        <Grid.Col span={3}>
-                                                                            <Text fz="xs" fw={600} >{t('TotalAmount')}</Text>
-                                                                        </Grid.Col>
-                                                                        <Grid.Col span={1}>
-                                                                            <Text fz={'xs'} fw={700}>:</Text>
-                                                                        </Grid.Col>
-                                                                        <Grid.Col span={8}>
-                                                                            <Text fz="xs" fw={300} >{showEntityData?.total}</Text>
-                                                                        </Grid.Col>
-                                                                    </Grid>
-                                                                    <Grid columns={12} gutter={{ base: 0 }} pl={6}>
-                                                                        <Grid.Col span={3}>
-                                                                            <Text fz="xs" fw={600} >{t('Discount')}</Text>
-                                                                        </Grid.Col>
-                                                                        <Grid.Col span={1}>
-                                                                            <Text fz={'xs'} fw={700}>:</Text>
-                                                                        </Grid.Col>
-                                                                        <Grid.Col span={8}>
-                                                                            <Text fz="xs" fw={300} >{showEntityData?.discount}</Text>
-                                                                        </Grid.Col>
-                                                                    </Grid>
-                                                                </Grid.Col>
-                                                                <Grid.Col span={6}>
-                                                                    <Grid gutter={{ base: 0 }} pl={6}>
-                                                                        <Grid.Col span={3}>
-                                                                            <Text fz="xs" fw={600} >{t('Receive')}</Text>
-                                                                        </Grid.Col>
-                                                                        <Grid.Col span={1}>
-                                                                            <Text fz={'xs'} fw={700}>:</Text>
-                                                                        </Grid.Col>
-                                                                        <Grid.Col span={8}>
-                                                                            <Text fz="xs" fw={300} >{showEntityData?.received}</Text>
-                                                                        </Grid.Col>
-                                                                    </Grid>
-                                                                    <Grid gutter={{ base: 0 }} pl={6}>
-                                                                        <Grid.Col span={3}>
-                                                                            <Text fz="xs" fw={600} >{t('Balance')}</Text>
-                                                                        </Grid.Col>
-                                                                        <Grid.Col span={1}>
-                                                                            <Text fz={'xs'} fw={700}>:</Text>
-                                                                        </Grid.Col>
-                                                                        <Grid.Col span={8}>
-                                                                            <Text fz="xs" fw={300} >{showEntityData?.balance}</Text>
-                                                                        </Grid.Col>
-                                                                    </Grid>
-                                                                </Grid.Col>
-                                                            </Grid>
-                                                        </Stack>
-                                                    </Flex>
+                                                            </Stack>
+                                                        </Grid.Col>
+                                                        <Grid.Col span={2}>
+                                                            <Stack gap={2} align="center"
+                                                                justify="center" h={104}>
+                                                                <Button
+                                                                    color={'green.8'}
+                                                                    size='xs'
+                                                                    w={80}
+                                                                    variant="filled"
+                                                                    onClick={(e) => {
+                                                                        e.preventDefault();
+                                                                        setAddTransactionDrawer(true)
+                                                                    }}
+                                                                >{t('Receive')}</Button>
+                                                                <Button
+                                                                    color={'green.8'}
+                                                                    size='xs'
+                                                                    w={80}
+                                                                    variant="filled"
+                                                                    onClick={(e) => {
+                                                                        e.preventDefault();
+                                                                        setAddTransactionDrawer(true)
+                                                                    }}
+                                                                >{t('AddBill')}
+                                                                </Button>
+                                                            </Stack>
+                                                        </Grid.Col>
+                                                    </Grid>
                                                 </Box>
                                             </Grid.Col>
                                         </Grid>

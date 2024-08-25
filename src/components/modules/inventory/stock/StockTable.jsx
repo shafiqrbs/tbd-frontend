@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import {
-    Group,
-    Box,
-    Button,
+    Group, Box, Button, Switch, Menu, ActionIcon, rem
 } from "@mantine/core";
 
 import { DataTable } from 'mantine-datatable';
@@ -16,7 +14,8 @@ import {
 import tableCss from "../../../../assets/css/Table.module.css";
 import KeywordSearch from "../../filter/KeywordSearch.jsx";
 import { setDeleteMessage } from "../../../../store/inventory/crudSlice.js";
-import _StockModal from './_StockModal.jsx'
+import _StockModal from './_StockModal.jsx';
+import { IconCheck, IconDotsVertical, IconTrashX } from "@tabler/icons-react";
 
 function StockTable() {
     const dispatch = useDispatch();
@@ -35,6 +34,27 @@ function StockTable() {
 
     const [viewModal, setViewModal] = useState(false);
 
+    // remove this line when api integrated
+    const [checked, setChecked] = useState({})
+
+    const [swtichEnable, setSwitchEnable] = useState({});
+
+    const handleSwtich = (event, item) => {
+        setChecked(prev => ({ ...prev, [item.id]: !prev[item.id] }));
+        setSwitchEnable(prev => ({ ...prev, [item.id]: true }));
+        // const value = {
+        //     url: '',
+        //     data: {
+        //         status: event.currentTarget.checked,
+        //         id: item.id
+        //     }
+        // }
+        // dispatch(inlineUpdateEntityData(value))
+        // dispatch(setFetching(true))
+        setTimeout(() => {
+            setSwitchEnable(prev => ({ ...prev, [item.id]: false }));
+        }, 5000)
+    }
 
 
     useEffect(() => {
@@ -101,6 +121,28 @@ function StockTable() {
                         { accessor: 'unit_name', title: t("Unit") },
                         { accessor: 'quantity', title: t("Quantity") },
                         {
+                            accessor: 'status',
+                            title: t("Status"),
+                            width: 70,
+                            render: (item) => (
+                                <>
+                                    <Switch
+                                        disabled={swtichEnable[item.id] || false}
+                                        checked={checked[item.id] || item.status == 1}
+                                        color="red"
+                                        radius="xs"
+                                        size="md"
+                                        onLabel="Enable"
+                                        offLabel="Disable"
+                                        onChange={(event) => {
+                                            handleSwtich(event, item)
+                                        }}
+
+                                    />
+                                </>
+                            )
+                        },
+                        {
                             accessor: "action",
                             title: t("Action"),
                             textAlign: "right",
@@ -111,6 +153,62 @@ function StockTable() {
                                             setViewModal(true)
                                         }}
                                     >  {t('View')}</Button>
+                                    <Menu position="bottom-end" offset={3} withArrow trigger="hover" openDelay={100} closeDelay={400}>
+                                        <Menu.Target>
+                                            <ActionIcon size="sm" variant="outline" color="red" radius="xl" aria-label="Settings">
+                                                <IconDotsVertical height={'18'} width={'18'} stroke={1.5} />
+                                            </ActionIcon>
+                                        </Menu.Target>
+                                        <Menu.Dropdown>
+                                            <Menu.Item
+                                                onClick={() => {
+                                                    // dispatch(setInsertType('update'))
+                                                    // dispatch(editEntityData('inventory/particular/' + data.id))
+                                                    // dispatch(setFormLoading(true))
+                                                    // navigate(`/core/customer-settings/${data.id}`)
+                                                }}
+                                            >
+                                                {t('Edit')}
+                                            </Menu.Item>
+                                            <Menu.Item
+                                                target="_blank"
+                                                component="a"
+                                                w={'200'}
+                                                mt={'2'}
+                                                bg={'red.1'}
+                                                c={'red.6'}
+                                                onClick={() => {
+                                                    // modals.openConfirmModal({
+                                                    //     title: (
+                                                    //         <Text size="md"> {t("FormConfirmationTitle")}</Text>
+                                                    //     ),
+                                                    //     children: (
+                                                    //         <Text size="sm"> {t("FormConfirmationMessage")}</Text>
+                                                    //     ),
+                                                    //     labels: { confirm: 'Confirm', cancel: 'Cancel' },
+                                                    //     confirmProps: { color: 'red.6' },
+                                                    //     onCancel: () => console.log('Cancel'),
+                                                    //     onConfirm: () => {
+                                                    //         dispatch(deleteEntityData('inventory/particular/' + data.id))
+                                                    //         dispatch(setFetching(true))
+                                                    //         notifications.show({
+                                                    //             color: 'red',
+                                                    //             title: t('DeleteSuccessfully'),
+                                                    //             icon: <IconCheck
+                                                    //                 style={{ width: rem(18), height: rem(18) }} />,
+                                                    //             loading: false,
+                                                    //             autoClose: 700,
+                                                    //             style: { backgroundColor: 'lightgray' },
+                                                    //         });
+                                                    //     },
+                                                    // });
+                                                }}
+                                                rightSection={<IconTrashX style={{ width: rem(14), height: rem(14) }} />}
+                                            >
+                                                {t('Delete')}
+                                            </Menu.Item>
+                                        </Menu.Dropdown>
+                                    </Menu>
                                 </Group>
                             ),
                         },

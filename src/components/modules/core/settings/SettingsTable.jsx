@@ -23,7 +23,6 @@ import { notifications } from "@mantine/notifications";
 import tableCss from "../../../../assets/css/Table.module.css";
 import SettingsViewDrawer from "./SettingsViewDrawer.jsx";
 import { inlineUpdateEntityData } from "../../../../store/production/crudSlice";
-import { Tooltip } from "recharts";
 
 
 function SettingsTable() {
@@ -45,10 +44,10 @@ function SettingsTable() {
 
     const navigate = useNavigate();
     const [viewDrawer, setViewDrawer] = useState(false)
-    const [swtichEnable, setSwitchEnable] = useState(false);
+    const [swtichEnable, setSwitchEnable] = useState({});
 
     const handleSwtich = (event, item) => {
-        setSwitchEnable(true);
+        setSwitchEnable(prev => ({ ...prev, [item.id]: true }));
         const value = {
             url: 'core/setting/inline-status',
             data: {
@@ -59,7 +58,7 @@ function SettingsTable() {
         dispatch(inlineUpdateEntityData(value))
         dispatch(setFetching(true))
         setTimeout(() => {
-            setSwitchEnable(false);
+            setSwitchEnable(prev => ({ ...prev, [item.id]: false }));
         }, 5000)
     }
 
@@ -126,7 +125,7 @@ function SettingsTable() {
                             render: (item) => (
                                 <>
                                     <Switch
-                                        disabled={swtichEnable}
+                                        disabled={swtichEnable[item.id] || false}
                                         defaultChecked={item.status == 1 ? true : false}
                                         color="red"
                                         radius="xs"
