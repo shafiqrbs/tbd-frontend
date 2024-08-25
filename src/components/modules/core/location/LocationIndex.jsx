@@ -50,7 +50,7 @@ function LocationIndex() {
     return (
         <>
             {progress !== 100 &&
-                <Progress color="red" size={"xs"} striped animated value={progress} transitionDuration={200} />}
+                <Progress color="red" size={"sm"} striped animated value={progress} transitionDuration={200} />}
             {progress === 100 &&
                 <Box>
                     {configData &&
