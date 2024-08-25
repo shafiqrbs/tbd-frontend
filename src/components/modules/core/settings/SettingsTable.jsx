@@ -22,7 +22,8 @@ import { deleteEntityData } from "../../../../store/core/crudSlice";
 import { notifications } from "@mantine/notifications";
 import tableCss from "../../../../assets/css/Table.module.css";
 import SettingsViewDrawer from "./SettingsViewDrawer.jsx";
-import {inlineUpdateEntityData} from "../../../../store/production/crudSlice";
+import { inlineUpdateEntityData } from "../../../../store/production/crudSlice";
+import { Tooltip } from "recharts";
 
 
 function SettingsTable() {
@@ -44,6 +45,23 @@ function SettingsTable() {
 
     const navigate = useNavigate();
     const [viewDrawer, setViewDrawer] = useState(false)
+    const [swtichEnable, setSwitchEnable] = useState(false);
+
+    const handleSwtich = (event, item) => {
+        setSwitchEnable(true);
+        const value = {
+            url: 'core/setting/inline-status',
+            data: {
+                status: event.currentTarget.checked,
+                id: item.id
+            }
+        }
+        dispatch(inlineUpdateEntityData(value))
+        dispatch(setFetching(true))
+        setTimeout(() => {
+            setSwitchEnable(false);
+        }, 5000)
+    }
 
     useEffect(() => {
         dispatch(setDeleteMessage(''))
@@ -108,22 +126,15 @@ function SettingsTable() {
                             render: (item) => (
                                 <>
                                     <Switch
-                                        defaultChecked={item.status==1?true:false}
+                                        disabled={swtichEnable}
+                                        defaultChecked={item.status == 1 ? true : false}
                                         color="red"
                                         radius="xs"
                                         size="md"
                                         onLabel="Enable"
                                         offLabel="Disable"
                                         onChange={(event) => {
-                                            const value ={
-                                                url:'core/setting/inline-status',
-                                                data:{
-                                                    status : event.currentTarget.checked,
-                                                    id : item.id
-                                                }
-                                            }
-                                            dispatch(inlineUpdateEntityData(value))
-                                            dispatch(setFetching(true))
+                                            handleSwtich(event, item)
                                         }}
 
                                     />
