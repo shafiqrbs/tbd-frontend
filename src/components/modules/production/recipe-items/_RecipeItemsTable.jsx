@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {useOutletContext} from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import {
     Group,
     Box,
@@ -29,6 +29,7 @@ function _RecipeItemsTable() {
     const searchKeyword = useSelector((state) => state.productionCrudSlice.searchKeyword)
     const indexData = useSelector((state) => state.productionCrudSlice.indexEntityData)
     const recipeItemFilterData = useSelector((state) => state.productionCrudSlice.recipeItemFilterData)
+    const navigate = useNavigate()
 
     useEffect(() => {
         const value = {
@@ -70,30 +71,30 @@ function _RecipeItemsTable() {
                         { accessor: 'unit_name', title: t("Uom") },
                         { accessor: 'license_date', title: t("LicenseDate") },
                         { accessor: 'initiate_date', title: t("InitiateDate") },
-                        { accessor: 'waste_percent', title: t("Wastage%"),textAlign:"center"},
-                        { accessor: 'quantity', title: t("Quantity"),textAlign:'center' },
+                        { accessor: 'waste_percent', title: t("Wastage%"), textAlign: "center" },
+                        { accessor: 'quantity', title: t("Quantity"), textAlign: 'center' },
                         {
                             accessor: 'total',
                             title: t("WastageQuantity"),
-                            textAlign:'center',
-                            render : (item) => (
+                            textAlign: 'center',
+                            render: (item) => (
                                 <>
-                                    {item.quantity && item.waste_percent ? ((Number(item.quantity)*Number(item.waste_percent))/100).toFixed(2) : "0.00"}
+                                    {item.quantity && item.waste_percent ? ((Number(item.quantity) * Number(item.waste_percent)) / 100).toFixed(2) : "0.00"}
                                 </>
                             )
                         },
-                        { accessor: 'waste_amount', title: t("WastageAmount"),textAlign:'center' },
-                        { accessor: 'material_amount', title: t("MaterialValue"),textAlign:'center' },
-                        { accessor: 'value_added_amount', title: t("ValueAdded"),textAlign:'center' },
-                        { accessor: 'sub_total', title: t("Total"),textAlign:'center' },
+                        { accessor: 'waste_amount', title: t("WastageAmount"), textAlign: 'center' },
+                        { accessor: 'material_amount', title: t("MaterialValue"), textAlign: 'center' },
+                        { accessor: 'value_added_amount', title: t("ValueAdded"), textAlign: 'center' },
+                        { accessor: 'sub_total', title: t("Total"), textAlign: 'center' },
                         {
                             accessor: 'process',
                             title: t("Status"),
                             render: (item) => (
                                 <>
-                                    {item.process=='created'&&'Created'}
-                                    {item.process=='checked'&&'Checked'}
-                                    {item.process=='approved'&&'Approved'}
+                                    {item.process == 'created' && 'Created'}
+                                    {item.process == 'checked' && 'Checked'}
+                                    {item.process == 'approved' && 'Approved'}
                                 </>
                             )
                         },
@@ -105,13 +106,16 @@ function _RecipeItemsTable() {
                                 item.process != 'approved' ?
                                     <Group gap={4} justify="right" wrap="nowrap">
                                         <Button component="a" size="compact-xs" radius="xs" variant="filled" fw={'100'} fz={'12'} color="red.3" mr={'4'}
-                                                href={`/production/recipe-update/${item.id}`}
+                                            onClick={() => {
+                                                {
+                                                    navigate(`/production/recipe-update/${item.id}`)
+                                                }
+                                            }}
                                         >  {t('Recipe')}</Button>
                                     </Group>
                                     :
                                     <Group gap={4} justify="right" wrap="nowrap">
                                         <Button component="a" size="compact-xs" radius="xs" variant="filled" fw={'100'} fz={'12'} color="red.3" mr={'4'}
-                                                href={''}
                                         >  {t('Amendment')}</Button>
                                     </Group>
                             ),
