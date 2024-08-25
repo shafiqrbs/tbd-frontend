@@ -574,5 +574,7 @@
   "Preview": "Preview",
   "AddMeasurement": "Add Measurement",
   "Gallery": "Gallery",
-  "SelectFeatureImage": "Select Feature Image"
+  "SelectFeatureImage": "Select Feature Image",
+  "inventorySetting" : "inventory Setting",
+  "ProductSetting" : "Product Setting"
 }

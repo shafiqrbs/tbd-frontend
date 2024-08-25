@@ -40,6 +40,7 @@ import ProductConfigurationIndex from './components/modules/inventory/product-co
 import ParticularIndex from "./components/modules/inventory/particular/ParticularIndex";
 import InhouseIndex from './components/modules/production/production-inhouse/InhouseIndex.jsx';
 import SettingsIndex from "./components/modules/core/settings/SettingsIndex";
+import StockIndex from './components/modules/inventory/stock/StockIndex.jsx';
 
 
 function AppRoute() {
@@ -90,6 +91,7 @@ function AppRoute() {
                     <Route path="product-settings" element={<ProductSettingsIndex />} />
                     <Route path="product-settings/:settingsId" element={<ProductSettingsIndex />} />
                     <Route path="product-configuration" element={<ProductConfigurationIndex />} />
+                    <Route path="stock" element={<StockIndex />} />
                 </Route>
 
                 <Route path="/production/">

@@ -757,6 +757,9 @@ function ProductUpdateForm() {
                                     </Box>
                                     <Box className={'borderRadiusAll'}>
                                         <ScrollArea h={height - 105} scrollbarSize={2} scrollbars="y" type="never">
+                                            <Box>
+                                                <LoadingOverlay visible={formLoad} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />
+                                            </Box>
                                             <Card padding="xs">
                                                 <Card.Section p={'xs'}>
                                                     <Dropzone
@@ -832,377 +835,382 @@ function ProductUpdateForm() {
                                 </Grid>
                             </Box>
                             <Box className={'borderRadiusAll'}>
-                                <Box>
-                                    <form >
-                                        <>
-                                            <LoadingOverlay visible={formLoad} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />
-                                            <Box pl={4} pr={4} pt={'4'} pb={2} className={'boxBackground  border-bottom-none'}>
-                                                <Grid columns={24} >
-                                                    <Grid.Col span={22}>
-                                                        <Grid columns={12} gutter={{ base: 2 }}>
-                                                            {colorDropdown &&
-                                                                <Grid.Col span={'auto'}>
-                                                                    <SelectForm
-                                                                        tooltip={t('ChooseProdcutColor')}
-                                                                        placeholder={t('ChooseColor')}
-                                                                        // required={true}
-                                                                        name={'color'}
-                                                                        form={skuForm}
-                                                                        dropdownValue={color}
-                                                                        mt={0}
-                                                                        id={'color'}
-                                                                        nextField={'size'}
-                                                                        searchable={true}
-                                                                        value={colorData}
-                                                                        changeValue={setColorData}
-                                                                    />
-                                                                </Grid.Col>
-                                                            }
-                                                            {sizeDropdown &&
-                                                                <Grid.Col span={'auto'}>
-                                                                    <SelectForm
-                                                                        tooltip={t('ChooseProductUpdateFormize')}
-                                                                        placeholder={t('ChooseSize')}
-                                                                        // required={true}
-                                                                        name={'size'}
-                                                                        form={skuForm}
-                                                                        dropdownValue={size}
-                                                                        mt={0}
-                                                                        id={'size'}
-                                                                        nextField={'brand'}
-                                                                        searchable={true}
-                                                                        value={sizeData}
-                                                                        changeValue={setSizeData}
-                                                                    />
-
-                                                                </Grid.Col>
-                                                            }
-                                                            {brandDropdown &&
-                                                                <Grid.Col span={'auto'}>
-                                                                    < SelectForm
-                                                                        tooltip={t('ChooseProductBrand')}
-                                                                        placeholder={t('ChooseBrand')}
-                                                                        // required={true}
-                                                                        name={'brand'}
-                                                                        form={skuForm}
-                                                                        dropdownValue={brand}
-                                                                        mt={0}
-                                                                        id={'brand'}
-                                                                        nextField={'title'}
-                                                                        searchable={true}
-                                                                        value={brandData}
-                                                                        changeValue={setBrandData}
-                                                                    />
-
-                                                                </Grid.Col>
-                                                            }
-                                                            {titleDropdown &&
-                                                                <Grid.Col span={'auto'}>
-                                                                    <SelectForm
-                                                                        tooltip={t('ChooseProductType')}
-                                                                        placeholder={t('ChooseProductType')}
-                                                                        // required={true}
-                                                                        name={'title'}
-                                                                        form={skuForm}
-                                                                        dropdownValue={title}
-                                                                        mt={0}
-                                                                        id={'title'}
-                                                                        nextField={'EntityDropDownSubmit'}
-                                                                        searchable={true}
-                                                                        value={titleData}
-                                                                        changeValue={setTitleData}
-                                                                    />
-
-                                                                </Grid.Col>
-                                                            }
-
-                                                        </Grid>
-                                                    </Grid.Col>
-                                                    <Grid.Col span={2}>
-                                                        <Flex
-                                                            mt={1}
-                                                            align="flex-end" direction="column">
-                                                            <>
-                                                                {
-                                                                    !saveCreateLoading && isOnline &&
-                                                                    <Button
-                                                                        size="xs"
-                                                                        color={`green.8`}
-                                                                        onClick={
-                                                                            () => {
-                                                                                handleSkuFormSubmit(skuForm.values)
-                                                                            }
-                                                                        }
-                                                                        id="EntityDropDownSubmit"
-                                                                        leftSection={<IconDeviceFloppy size={16} />}
-                                                                    >
-                                                                        <Flex direction={`column`} gap={0}>
-                                                                            <Text fz={14} fw={400}>
-                                                                                {t("Add")}
-                                                                            </Text>
-                                                                        </Flex>
-                                                                    </Button>
-                                                                }
-                                                            </>
-                                                        </Flex>
-                                                    </Grid.Col>
-                                                </Grid>
-                                            </Box>
-
-                                        </>
-                                    </form>
-                                    <Box className={'border-top-none'}>
-                                        <DataTable
-                                            classNames={{
-                                                root: tableCss.root,
-                                                table: tableCss.table,
-                                                header: tableCss.header,
-                                                footer: tableCss.footer,
-                                                pagination: tableCss.pagination,
-                                            }}
-                                            records={data}
-                                            columns={[
-                                                {
-                                                    accessor: 'index',
-                                                    title: t('S/N'),
-                                                    textAlignment: 'right   ',
-                                                    render: (item) => (data.indexOf(item) + 1),
-                                                    width: 50
-                                                },
-                                                { accessor: 'name', title: t("Name"), width: 200 },
-                                                ...(sizeDropdown ? [{ accessor: 'size', title: t("Size"), width: 60 }] : []),
-                                                ...(colorDropdown ? [{ accessor: 'color', title: t("Color"), width: 80 }] : []),
-                                                ...(brandDropdown ? [{ accessor: 'brand', title: t("Brand"), width: 80 }] : []),
-                                                ...(titleDropdown ? [{ accessor: 'title', title: t("Title"), width: 80 }] : []),
-                                                {
-                                                    accessor: 'price', title: t("Price"), textAlign: "center",
-                                                    width: '100px',
-                                                    render: (item) => {
-                                                        const [editedPrice, setEditedPrice] = useState(item.price);
-
-                                                        const handlPriceChange = (e) => {
-                                                            const editedPrice = e.currentTarget.value;
-                                                            setEditedPrice(editedPrice);
-                                                            console.log(editedPrice)
-                                                        };
-
-                                                        return (
-                                                            priceInput ?
-                                                                <>
-                                                                    <TextInput
-                                                                        type="number"
-                                                                        label=""
-                                                                        size="xs"
-                                                                        value={editedPrice}
-                                                                        onChange={handlPriceChange}
-                                                                    // onKeyDown={getHotkeyHandler([
-                                                                    //     ['Enter', (e) => {
-                                                                    //         document.getElementById('inline-update-quantity-' + item.product_id).focus();
-                                                                    //     }],
-                                                                    // ])}
-                                                                    />
-                                                                </>
-                                                                :
-                                                                1000
-                                                        );
-                                                    }
-                                                },
-                                                {
-                                                    accessor: 'vat', title: t("Vat"), textAlign: "center",
-                                                    width: '100px',
-                                                    render: (item) => {
-                                                        const [editedVat, setEditedVat] = useState(item.vat);
-
-                                                        const handlVatChange = (e) => {
-                                                            const editedVat = e.currentTarget.value;
-                                                            setEditedVat(editedVat);
-                                                            console.log(editedVat)
-                                                        };
-
-                                                        return (
-                                                            !vatInput ?
-                                                                <>
-                                                                    <TextInput
-                                                                        type="number"
-                                                                        label=""
-                                                                        size="xs"
-                                                                        value={editedVat}
-                                                                        onChange={handlVatChange}
-                                                                    // onKeyDown={getHotkeyHandler([
-                                                                    //     ['Enter', (e) => {
-                                                                    //         document.getElementById('inline-update-quantity-' + item.product_id).focus();
-                                                                    //     }],
-                                                                    // ])}
-                                                                    />
-                                                                </>
-                                                                :
-                                                                '10%'
-                                                        );
-                                                    }
-                                                },
-                                                {
-                                                    accessor: 'att', title: t("ATT"), textAlign: "center",
-                                                    width: '100px',
-                                                    render: (item) => {
-                                                        const [editedAtt, setEditedAtt] = useState(item.att);
-
-                                                        const handlAttChange = (e) => {
-                                                            const editedAtt = e.currentTarget.value;
-                                                            setEditedAtt(editedAtt);
-                                                            console.log(editedAtt)
-                                                        };
-
-                                                        return (
-                                                            attInput ?
-                                                                <>
-                                                                    <TextInput
-                                                                        type="number"
-                                                                        label=""
-                                                                        size="xs"
-                                                                        value={editedAtt}
-                                                                        onChange={handlAttChange}
-                                                                    // onKeyDown={getHotkeyHandler([
-                                                                    //     ['Enter', (e) => {
-                                                                    //         document.getElementById('inline-update-quantity-' + item.product_id).focus();
-                                                                    //     }],
-                                                                    // ])}
-                                                                    />
-                                                                </>
-                                                                :
-                                                                10
-                                                        );
-                                                    }
-                                                },
-                                                {
-                                                    accessor: "action",
-                                                    title: t("Action"),
-                                                    textAlign: "right",
-                                                    render: (data) => (
-                                                        <Group gap={4} justify="right" wrap="nowrap">
-                                                            <Menu position="bottom-end" offset={3} withArrow trigger="hover" openDelay={100} closeDelay={400}>
-                                                                <Menu.Target>
-                                                                    <ActionIcon size="sm" variant="outline" color="red" radius="xl" aria-label="Settings">
-                                                                        <IconDotsVertical height={'18'} width={'18'} stroke={1.5} />
-                                                                    </ActionIcon>
-                                                                </Menu.Target>
-                                                                <Menu.Dropdown>
-                                                                    <Menu.Item
-                                                                        // href={`/inventory/sales/edit/${data.id}`}
-                                                                        onClick={() => {
-                                                                            dispatch(setInsertType('update'))
-                                                                            dispatch(editEntityData('inventory/product/' + data.id))
-                                                                            dispatch(setFormLoading(true))
-                                                                            navigate(`/inventory/product/${data.id}`)
-                                                                        }}
-                                                                    >
-                                                                        {t('Edit')}
-                                                                    </Menu.Item>
-
-                                                                    <Menu.Item
-                                                                        onClick={() => {
-                                                                            setViewDrawer(true)
-                                                                            dispatch(showEntityData('inventory/product/' + data.id))
-                                                                        }}
-                                                                        target="_blank"
-                                                                        component="a"
-                                                                        w={'200'}
-                                                                    >
-                                                                        {t('Show')}
-                                                                    </Menu.Item>
-                                                                    <Menu.Item
-                                                                        // href={``}
-                                                                        target="_blank"
-                                                                        component="a"
-                                                                        w={'200'}
-                                                                        mt={'2'}
-                                                                        bg={'red.1'}
-                                                                        c={'red.6'}
-                                                                        onClick={() => {
-                                                                            modals.openConfirmModal({
-                                                                                title: (
-                                                                                    <Text size="md"> {t("FormConfirmationTitle")}</Text>
-                                                                                ),
-                                                                                children: (
-                                                                                    <Text size="sm"> {t("FormConfirmationMessage")}</Text>
-                                                                                ),
-                                                                                labels: { confirm: 'Confirm', cancel: 'Cancel' },
-                                                                                confirmProps: { color: 'red.6' },
-                                                                                onCancel: () => console.log('Cancel'),
-                                                                                onConfirm: () => {
-                                                                                    dispatch(deleteEntityData('inventory/product/' + data.id))
-                                                                                    dispatch(setFetching(true))
-                                                                                },
-                                                                            });
-                                                                        }}
-                                                                        rightSection={<IconTrashX style={{ width: rem(14), height: rem(14) }} />}
-                                                                    >
-                                                                        {t('Delete')}
-                                                                    </Menu.Item>
-                                                                </Menu.Dropdown>
-                                                            </Menu>
-                                                        </Group>
-                                                    ),
-                                                },
-                                            ]
-                                            }
-                                            // fetching={fetching}
-                                            // totalRecords={indexData.total}
-                                            // recordsPerPage={perPage}
-                                            // page={page}
-                                            // onPageChange={(p) => {
-                                            //     setPage(p)
-                                            //     dispatch(setFetching(true))
-                                            // }}
-                                            loaderSize="xs"
-                                            loaderColor="grape"
-                                            height={height - 154}
-                                            scrollAreaProps={{ type: 'never' }}
-                                        />
+                                <ScrollArea scrollbars="y" type="never">
+                                    <Box>
+                                        <LoadingOverlay visible={formLoad} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />
                                     </Box>
-                                </Box>
-                                <Box pl={`xs`} pb={'6'} pr={8} pt={'6'} className={'boxBackground borderRadiusAll border-left-none border-right-none border-bottom-none'} >
-                                    <Group justify="flex-end" >
-                                        <Stack right align="flex-end">
-                                            <>
-                                                {
-                                                    !saveCreateLoading && isOnline &&
-                                                    <Button
-                                                        size="xs"
-                                                        color={`green.8`}
-                                                        // type="submit"
-                                                        // id="EntityFormSubmit"
-                                                        leftSection={<IconDeviceFloppy size={16} />}
-                                                    >
-                                                        <Flex direction={`column`} gap={0}>
-                                                            <Text fz={14} fw={400}>
-                                                                {t("Preview")}
-                                                            </Text>
-                                                        </Flex>
-                                                    </Button>
-                                                }
-                                            </></Stack>
-                                        <Stack right align="flex-end">
-                                            <>
-                                                {
-                                                    !saveCreateLoading && isOnline &&
-                                                    <Button
-                                                        size="xs"
-                                                        color={`green.8`}
-                                                        type="submit"
-                                                        id="EntityFormSubmit"
-                                                        leftSection={<IconDeviceFloppy size={16} />}
-                                                    >
-                                                        <Flex direction={`column`} gap={0}>
-                                                            <Text fz={14} fw={400}>
-                                                                {t("UpdateAndSave")}
-                                                            </Text>
-                                                        </Flex>
-                                                    </Button>
-                                                }
-                                            </></Stack>
-                                    </Group>
-                                </Box>
+                                    <Box>
 
+                                        <form >
+                                            <>
+                                                <Box pl={4} pr={4} pt={'4'} pb={2} className={'boxBackground  border-bottom-none'}>
+                                                    <Grid columns={24} >
+                                                        <Grid.Col span={22}>
+                                                            <Grid columns={12} gutter={{ base: 2 }}>
+                                                                {colorDropdown &&
+                                                                    <Grid.Col span={'auto'}>
+                                                                        <SelectForm
+                                                                            tooltip={t('ChooseProdcutColor')}
+                                                                            placeholder={t('ChooseColor')}
+                                                                            // required={true}
+                                                                            name={'color'}
+                                                                            form={skuForm}
+                                                                            dropdownValue={color}
+                                                                            mt={0}
+                                                                            id={'color'}
+                                                                            nextField={'size'}
+                                                                            searchable={true}
+                                                                            value={colorData}
+                                                                            changeValue={setColorData}
+                                                                        />
+                                                                    </Grid.Col>
+                                                                }
+                                                                {sizeDropdown &&
+                                                                    <Grid.Col span={'auto'}>
+                                                                        <SelectForm
+                                                                            tooltip={t('ChooseProductUpdateFormize')}
+                                                                            placeholder={t('ChooseSize')}
+                                                                            // required={true}
+                                                                            name={'size'}
+                                                                            form={skuForm}
+                                                                            dropdownValue={size}
+                                                                            mt={0}
+                                                                            id={'size'}
+                                                                            nextField={'brand'}
+                                                                            searchable={true}
+                                                                            value={sizeData}
+                                                                            changeValue={setSizeData}
+                                                                        />
+
+                                                                    </Grid.Col>
+                                                                }
+                                                                {brandDropdown &&
+                                                                    <Grid.Col span={'auto'}>
+                                                                        < SelectForm
+                                                                            tooltip={t('ChooseProductBrand')}
+                                                                            placeholder={t('ChooseBrand')}
+                                                                            // required={true}
+                                                                            name={'brand'}
+                                                                            form={skuForm}
+                                                                            dropdownValue={brand}
+                                                                            mt={0}
+                                                                            id={'brand'}
+                                                                            nextField={'title'}
+                                                                            searchable={true}
+                                                                            value={brandData}
+                                                                            changeValue={setBrandData}
+                                                                        />
+
+                                                                    </Grid.Col>
+                                                                }
+                                                                {titleDropdown &&
+                                                                    <Grid.Col span={'auto'}>
+                                                                        <SelectForm
+                                                                            tooltip={t('ChooseProductType')}
+                                                                            placeholder={t('ChooseProductType')}
+                                                                            // required={true}
+                                                                            name={'title'}
+                                                                            form={skuForm}
+                                                                            dropdownValue={title}
+                                                                            mt={0}
+                                                                            id={'title'}
+                                                                            nextField={'EntityDropDownSubmit'}
+                                                                            searchable={true}
+                                                                            value={titleData}
+                                                                            changeValue={setTitleData}
+                                                                        />
+
+                                                                    </Grid.Col>
+                                                                }
+
+                                                            </Grid>
+                                                        </Grid.Col>
+                                                        <Grid.Col span={2}>
+                                                            <Flex
+                                                                mt={1}
+                                                                align="flex-end" direction="column">
+                                                                <>
+                                                                    {
+                                                                        !saveCreateLoading && isOnline &&
+                                                                        <Button
+                                                                            size="xs"
+                                                                            color={`green.8`}
+                                                                            onClick={
+                                                                                () => {
+                                                                                    handleSkuFormSubmit(skuForm.values)
+                                                                                }
+                                                                            }
+                                                                            id="EntityDropDownSubmit"
+                                                                            leftSection={<IconDeviceFloppy size={16} />}
+                                                                        >
+                                                                            <Flex direction={`column`} gap={0}>
+                                                                                <Text fz={14} fw={400}>
+                                                                                    {t("Add")}
+                                                                                </Text>
+                                                                            </Flex>
+                                                                        </Button>
+                                                                    }
+                                                                </>
+                                                            </Flex>
+                                                        </Grid.Col>
+                                                    </Grid>
+                                                </Box>
+                                            </>
+                                        </form>
+
+                                        <Box className={'border-top-none'}>
+                                            <DataTable
+                                                classNames={{
+                                                    root: tableCss.root,
+                                                    table: tableCss.table,
+                                                    header: tableCss.header,
+                                                    footer: tableCss.footer,
+                                                    pagination: tableCss.pagination,
+                                                }}
+                                                records={data}
+                                                columns={[
+                                                    {
+                                                        accessor: 'index',
+                                                        title: t('S/N'),
+                                                        textAlignment: 'right   ',
+                                                        render: (item) => (data.indexOf(item) + 1),
+                                                        width: 50
+                                                    },
+                                                    { accessor: 'name', title: t("Name"), width: 200 },
+                                                    ...(sizeDropdown ? [{ accessor: 'size', title: t("Size"), width: 60 }] : []),
+                                                    ...(colorDropdown ? [{ accessor: 'color', title: t("Color"), width: 80 }] : []),
+                                                    ...(brandDropdown ? [{ accessor: 'brand', title: t("Brand"), width: 80 }] : []),
+                                                    ...(titleDropdown ? [{ accessor: 'title', title: t("Title"), width: 80 }] : []),
+                                                    {
+                                                        accessor: 'price', title: t("Price"), textAlign: "center",
+                                                        width: '100px',
+                                                        render: (item) => {
+                                                            const [editedPrice, setEditedPrice] = useState(item.price);
+
+                                                            const handlPriceChange = (e) => {
+                                                                const editedPrice = e.currentTarget.value;
+                                                                setEditedPrice(editedPrice);
+                                                                console.log(editedPrice)
+                                                            };
+
+                                                            return (
+                                                                priceInput ?
+                                                                    <>
+                                                                        <TextInput
+                                                                            type="number"
+                                                                            label=""
+                                                                            size="xs"
+                                                                            value={editedPrice}
+                                                                            onChange={handlPriceChange}
+                                                                        // onKeyDown={getHotkeyHandler([
+                                                                        //     ['Enter', (e) => {
+                                                                        //         document.getElementById('inline-update-quantity-' + item.product_id).focus();
+                                                                        //     }],
+                                                                        // ])}
+                                                                        />
+                                                                    </>
+                                                                    :
+                                                                    1000
+                                                            );
+                                                        }
+                                                    },
+                                                    {
+                                                        accessor: 'vat', title: t("Vat"), textAlign: "center",
+                                                        width: '100px',
+                                                        render: (item) => {
+                                                            const [editedVat, setEditedVat] = useState(item.vat);
+
+                                                            const handlVatChange = (e) => {
+                                                                const editedVat = e.currentTarget.value;
+                                                                setEditedVat(editedVat);
+                                                                console.log(editedVat)
+                                                            };
+
+                                                            return (
+                                                                !vatInput ?
+                                                                    <>
+                                                                        <TextInput
+                                                                            type="number"
+                                                                            label=""
+                                                                            size="xs"
+                                                                            value={editedVat}
+                                                                            onChange={handlVatChange}
+                                                                        // onKeyDown={getHotkeyHandler([
+                                                                        //     ['Enter', (e) => {
+                                                                        //         document.getElementById('inline-update-quantity-' + item.product_id).focus();
+                                                                        //     }],
+                                                                        // ])}
+                                                                        />
+                                                                    </>
+                                                                    :
+                                                                    '10%'
+                                                            );
+                                                        }
+                                                    },
+                                                    {
+                                                        accessor: 'att', title: t("ATT"), textAlign: "center",
+                                                        width: '100px',
+                                                        render: (item) => {
+                                                            const [editedAtt, setEditedAtt] = useState(item.att);
+
+                                                            const handlAttChange = (e) => {
+                                                                const editedAtt = e.currentTarget.value;
+                                                                setEditedAtt(editedAtt);
+                                                                console.log(editedAtt)
+                                                            };
+
+                                                            return (
+                                                                attInput ?
+                                                                    <>
+                                                                        <TextInput
+                                                                            type="number"
+                                                                            label=""
+                                                                            size="xs"
+                                                                            value={editedAtt}
+                                                                            onChange={handlAttChange}
+                                                                        // onKeyDown={getHotkeyHandler([
+                                                                        //     ['Enter', (e) => {
+                                                                        //         document.getElementById('inline-update-quantity-' + item.product_id).focus();
+                                                                        //     }],
+                                                                        // ])}
+                                                                        />
+                                                                    </>
+                                                                    :
+                                                                    10
+                                                            );
+                                                        }
+                                                    },
+                                                    {
+                                                        accessor: "action",
+                                                        title: t("Action"),
+                                                        textAlign: "right",
+                                                        render: (data) => (
+                                                            <Group gap={4} justify="right" wrap="nowrap">
+                                                                <Menu position="bottom-end" offset={3} withArrow trigger="hover" openDelay={100} closeDelay={400}>
+                                                                    <Menu.Target>
+                                                                        <ActionIcon size="sm" variant="outline" color="red" radius="xl" aria-label="Settings">
+                                                                            <IconDotsVertical height={'18'} width={'18'} stroke={1.5} />
+                                                                        </ActionIcon>
+                                                                    </Menu.Target>
+                                                                    <Menu.Dropdown>
+                                                                        <Menu.Item
+                                                                            // href={`/inventory/sales/edit/${data.id}`}
+                                                                            onClick={() => {
+                                                                                dispatch(setInsertType('update'))
+                                                                                dispatch(editEntityData('inventory/product/' + data.id))
+                                                                                dispatch(setFormLoading(true))
+                                                                                navigate(`/inventory/product/${data.id}`)
+                                                                            }}
+                                                                        >
+                                                                            {t('Edit')}
+                                                                        </Menu.Item>
+
+                                                                        <Menu.Item
+                                                                            onClick={() => {
+                                                                                setViewDrawer(true)
+                                                                                dispatch(showEntityData('inventory/product/' + data.id))
+                                                                            }}
+                                                                            target="_blank"
+                                                                            component="a"
+                                                                            w={'200'}
+                                                                        >
+                                                                            {t('Show')}
+                                                                        </Menu.Item>
+                                                                        <Menu.Item
+                                                                            // href={``}
+                                                                            target="_blank"
+                                                                            component="a"
+                                                                            w={'200'}
+                                                                            mt={'2'}
+                                                                            bg={'red.1'}
+                                                                            c={'red.6'}
+                                                                            onClick={() => {
+                                                                                modals.openConfirmModal({
+                                                                                    title: (
+                                                                                        <Text size="md"> {t("FormConfirmationTitle")}</Text>
+                                                                                    ),
+                                                                                    children: (
+                                                                                        <Text size="sm"> {t("FormConfirmationMessage")}</Text>
+                                                                                    ),
+                                                                                    labels: { confirm: 'Confirm', cancel: 'Cancel' },
+                                                                                    confirmProps: { color: 'red.6' },
+                                                                                    onCancel: () => console.log('Cancel'),
+                                                                                    onConfirm: () => {
+                                                                                        dispatch(deleteEntityData('inventory/product/' + data.id))
+                                                                                        dispatch(setFetching(true))
+                                                                                    },
+                                                                                });
+                                                                            }}
+                                                                            rightSection={<IconTrashX style={{ width: rem(14), height: rem(14) }} />}
+                                                                        >
+                                                                            {t('Delete')}
+                                                                        </Menu.Item>
+                                                                    </Menu.Dropdown>
+                                                                </Menu>
+                                                            </Group>
+                                                        ),
+                                                    },
+                                                ]
+                                                }
+                                                // fetching={fetching}
+                                                // totalRecords={indexData.total}
+                                                // recordsPerPage={perPage}
+                                                // page={page}
+                                                // onPageChange={(p) => {
+                                                //     setPage(p)
+                                                //     dispatch(setFetching(true))
+                                                // }}
+                                                loaderSize="xs"
+                                                loaderColor="grape"
+                                                height={height - 154}
+                                                scrollAreaProps={{ type: 'never' }}
+                                            />
+                                        </Box>
+                                    </Box>
+                                    <Box pl={`xs`} pb={'6'} pr={8} pt={'6'} className={'boxBackground borderRadiusAll border-left-none border-right-none border-bottom-none'} >
+                                        <Group justify="flex-end" >
+                                            <Stack right align="flex-end">
+                                                <>
+                                                    {
+                                                        !saveCreateLoading && isOnline &&
+                                                        <Button
+                                                            size="xs"
+                                                            color={`green.8`}
+                                                            // type="submit"
+                                                            // id="EntityFormSubmit"
+                                                            leftSection={<IconDeviceFloppy size={16} />}
+                                                        >
+                                                            <Flex direction={`column`} gap={0}>
+                                                                <Text fz={14} fw={400}>
+                                                                    {t("Preview")}
+                                                                </Text>
+                                                            </Flex>
+                                                        </Button>
+                                                    }
+                                                </></Stack>
+                                            <Stack right align="flex-end">
+                                                <>
+                                                    {
+                                                        !saveCreateLoading && isOnline &&
+                                                        <Button
+                                                            size="xs"
+                                                            color={`green.8`}
+                                                            type="submit"
+                                                            id="EntityFormSubmit"
+                                                            leftSection={<IconDeviceFloppy size={16} />}
+                                                        >
+                                                            <Flex direction={`column`} gap={0}>
+                                                                <Text fz={14} fw={400}>
+                                                                    {t("UpdateAndSave")}
+                                                                </Text>
+                                                            </Flex>
+                                                        </Button>
+                                                    }
+                                                </></Stack>
+                                        </Group>
+                                    </Box>
+
+                                </ScrollArea>
                             </Box>
                         </Box>
                     }

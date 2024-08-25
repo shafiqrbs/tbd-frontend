@@ -404,5 +404,11 @@
   "AddMeasurement": "অ্যাড মেজারমেন্ট",
   "Gallery": "গ্যালারি",
   "UpdateProduct": "আপডেট প্রোডাক্ট",
-  "SelectFeatureImage": "ফিচার ছবি নির্বাচন"
+  "SelectFeatureImage": "ফিচার ছবি নির্বাচন",
+  "inventorySetting": "ইনভেন্টরি সেটিং",
+  "ProductSetting": "প্রোডাক্ট সেটিং",
+  "CreateSetting": "সেটিং তৈরী",
+  "SettingName": "সেটিং নাম",
+  "SettingType": "সেটিং টাইপ",
+  "UpdateSetting": "আপডেট সেটিং"
 }
