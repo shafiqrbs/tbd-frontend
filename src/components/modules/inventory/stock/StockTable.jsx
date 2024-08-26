@@ -16,6 +16,7 @@ import KeywordSearch from "../../filter/KeywordSearch.jsx";
 import { setDeleteMessage } from "../../../../store/inventory/crudSlice.js";
 import _StockModal from './_StockModal.jsx';
 import { IconCheck, IconDotsVertical, IconTrashX } from "@tabler/icons-react";
+import { showEntityData } from "../../../../store/core/crudSlice.js";
 
 function StockTable() {
     const dispatch = useDispatch();
@@ -150,6 +151,7 @@ function StockTable() {
                                 <Group gap={4} justify="right" wrap="nowrap">
                                     <Button component="a" size="compact-xs" radius="xs" variant="filled" fw={'100'} fz={'12'} color="red.3" mr={'4'}
                                         onClick={() => {
+                                            dispatch(showEntityData('inventory/product/' + item.id))
                                             setViewModal(true)
                                         }}
                                     >  {t('View')}</Button>
@@ -163,7 +165,7 @@ function StockTable() {
                                             <Menu.Item
                                                 onClick={() => {
                                                     // dispatch(setInsertType('update'))
-                                                    // dispatch(editEntityData('inventory/particular/' + data.id))
+                                                    // dispatch(editEntityData('inventory/products/' + data.id))
                                                     // dispatch(setFormLoading(true))
                                                     // navigate(`/core/customer-settings/${data.id}`)
                                                 }}

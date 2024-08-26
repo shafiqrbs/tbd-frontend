@@ -23,6 +23,7 @@ function InventoryHeaderNavbar(props) {
     const [opened, { toggle }] = useDisclosure(false);
     const navigate = useNavigate();
     const links = [
+        { link: '/inventory/stock', label: t('Stock') },
         { link: '/inventory/product', label: t('Products') },
         { link: '/inventory/category', label: t('Category') },
         { link: '/inventory/category-group', label: t('CategoryGroup') },
@@ -67,10 +68,6 @@ function InventoryHeaderNavbar(props) {
                                 <Menu.Item
                                     component="button" onClick={(e) => { navigate('/inventory/stock') }} leftSection={<IconStack2 style={{ width: rem(14), height: rem(14) }} />}>
                                     {t('Stock')}
-                                </Menu.Item>
-                                <Menu.Item
-                                    component="button" onClick={(e) => { navigate('/inventory/config') }} leftSection={<IconSettings style={{ width: rem(14), height: rem(14) }} />}>
-                                    {t('Settings')}
                                 </Menu.Item>
                             </Menu.Dropdown>
                         </Menu>
