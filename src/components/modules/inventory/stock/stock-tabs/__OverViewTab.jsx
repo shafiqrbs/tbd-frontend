@@ -43,7 +43,7 @@ function __OverViewTab(props) {
                                                             <Text fz="xs" fw={600} >:</Text>
                                                         </Grid.Col>
                                                         <Grid.Col span={7}>
-                                                            <Text fz="xs" fw={600} >{showEntityData?.product_name}</Text>
+                                                            <Text fz="xs" fw={600} pl={'16'} >{showEntityData?.product_name}</Text>
                                                         </Grid.Col>
                                                     </Grid>
                                                     <Grid columns={12} gutter={0} pt={'6'}>
@@ -54,7 +54,7 @@ function __OverViewTab(props) {
                                                             <Text fz="xs" fw={600} >:</Text>
                                                         </Grid.Col>
                                                         <Grid.Col span={7}>
-                                                            <Text fz="xs" fw={600}>{showEntityData?.alternative_name}</Text>
+                                                            <Text fz="xs" fw={600} pl={'16'}>{showEntityData?.alternative_name}</Text>
                                                         </Grid.Col>
                                                     </Grid>
                                                     <Grid columns={12} gutter={0} pt={'4'}>
@@ -67,11 +67,11 @@ function __OverViewTab(props) {
                                                         <Grid.Col span={7}>
                                                             <Text fz="xs" fw={600}>
                                                                 {showEntityData?.status === 1 ? (
-                                                                    <Chip defaultChecked color="red" size="xs" radius="xs">
+                                                                    <Chip checked={true} color="red" size="xs" radius="xs">
                                                                         {t('Active')}
                                                                     </Chip>
                                                                 ) : (
-                                                                    <Chip defaultChecked={false} color="gray.1" size="xs" radius="xs">
+                                                                    <Chip checked={false} color="gray.1" size="xs" radius="xs">
                                                                         {t('Disable')}
                                                                     </Chip>
                                                                 )}
@@ -92,10 +92,26 @@ function __OverViewTab(props) {
                                                         </Grid.Col>
                                                     </Grid>
                                                     <Grid columns={12} gutter={0} pt={'4'}>
-
+                                                        <Grid.Col span={4}>
+                                                            <Text pt={2} fz="xs" fw={600} >{t('ID')}</Text>
+                                                        </Grid.Col>
+                                                        <Grid.Col span={1}>
+                                                            <Text fz="xs" fw={600} pt={2} >:</Text>
+                                                        </Grid.Col>
+                                                        <Grid.Col span={7}>
+                                                            <Text fz="xs" fw={600} pt={2} >{showEntityData?.id}</Text>
+                                                        </Grid.Col>
                                                     </Grid>
                                                     <Grid columns={12} gutter={0} pt={'4'}>
-
+                                                        <Grid.Col span={4}>
+                                                            <Text fz="xs" fw={600} >{t('ProductType')}</Text>
+                                                        </Grid.Col>
+                                                        <Grid.Col span={1}>
+                                                            <Text fz="xs" fw={600}>:</Text>
+                                                        </Grid.Col>
+                                                        <Grid.Col span={7}>
+                                                            <Text fz="xs" fw={600}>{showEntityData?.product_type}</Text>
+                                                        </Grid.Col>
                                                     </Grid>
                                                 </Grid.Col>
                                             </Grid>
@@ -107,7 +123,7 @@ function __OverViewTab(props) {
                                         <Stack>
                                             <Text fw={900} pl={'sm'} fz={'md'}>{t('Stock Information')}</Text>
                                             <Grid columns={24} gutter={0} >
-                                                <Grid.Col span={14} pl={'12'}>
+                                                <Grid.Col span={12} pl={'12'}>
                                                     <Grid columns={12} gutter={0}>
                                                         <Grid.Col span={5}>
                                                             <Text fz="xs" fw={600} >{t('PurchasePrice')}</Text>
@@ -115,8 +131,8 @@ function __OverViewTab(props) {
                                                         <Grid.Col span={1}>
                                                             <Text fz="xs" fw={600}  >:</Text>
                                                         </Grid.Col>
-                                                        <Grid.Col span={6}>
-                                                            <Text fz="xs" fw={600} >{showEntityData?.purchase_price}</Text>
+                                                        <Grid.Col span={5}>
+                                                            <Text wrap fz="xs" fw={600} >{showEntityData?.purchase_price}</Text>
                                                         </Grid.Col>
                                                     </Grid>
                                                     <Grid columns={12} gutter={0} pt={'6'} >
@@ -142,37 +158,29 @@ function __OverViewTab(props) {
                                                         </Grid.Col>
                                                     </Grid>
                                                 </Grid.Col>
-                                                <Grid.Col span={10}>
+                                                <Grid.Col span={12}>
                                                     <Grid columns={12} gutter={0}>
-                                                        <Grid.Col span={4}>
+                                                        <Grid.Col span={5}>
                                                             <Text fz="xs" fw={600} >{t('Unit')}</Text>
                                                         </Grid.Col>
                                                         <Grid.Col span={1}>
                                                             <Text fz="xs" fw={600} >:</Text>
                                                         </Grid.Col>
-                                                        <Grid.Col span={7}>
+                                                        <Grid.Col span={6}>
                                                             <Text fz="xs" fw={600} >{showEntityData?.unit_name}</Text>
                                                         </Grid.Col>
                                                     </Grid>
                                                     <Grid columns={12} gutter={0} pt={'4'}>
-                                                        <Grid.Col span={4}>
-                                                            <Text fz="xs" fw={600} >{t('Type')}</Text>
-                                                        </Grid.Col>
-                                                        <Grid.Col span={1}>
-                                                            <Text fz="xs" fw={600} >:</Text>
-                                                        </Grid.Col>
-                                                        <Grid.Col span={7}>
-                                                            <Text fz="xs" fw={600}  >{showEntityData?.product_type}</Text>
-                                                        </Grid.Col>
+
                                                     </Grid>
                                                     <Grid columns={12} gutter={0} pt={'4'}>
-                                                        <Grid.Col span={4}>
-                                                            <Text pt={2} fz="xs" fw={600} >{t('Id')}</Text>
+                                                        <Grid.Col span={5}>
+                                                            <Text pt={2} fz="xs" fw={600} >{t('RemainingStock')}</Text>
                                                         </Grid.Col>
                                                         <Grid.Col span={1}>
                                                             <Text fz="xs" fw={600} pt={2} >:</Text>
                                                         </Grid.Col>
-                                                        <Grid.Col span={7}>
+                                                        <Grid.Col span={6}>
                                                             <Text fz="xs" fw={600} pt={2} >{showEntityData?.id}</Text>
                                                         </Grid.Col>
                                                     </Grid>
@@ -198,7 +206,7 @@ function __OverViewTab(props) {
                                                                         <Text fz="xs" fw={600} >:</Text>
                                                                     </Grid.Col>
                                                                     <Grid.Col span={8}>
-                                                                        <Text fz="xs" fw={600} >{showEntityData?.sku ? showEntityData?.sku : (t('Not Available'))}</Text>
+                                                                        <Text fz="xs" fw={600} >{showEntityData?.sku ? showEntityData?.sku : (t('NotAvailable'))}</Text>
                                                                     </Grid.Col>
                                                                 </Grid>
                                                                 <Grid columns={12} gutter={0} pt={'6'}>
@@ -209,7 +217,7 @@ function __OverViewTab(props) {
                                                                         <Text fz="xs" fw={600} >:</Text>
                                                                     </Grid.Col>
                                                                     <Grid.Col span={8}>
-                                                                        <Text fz="xs" fw={600} >{showEntityData?.barcode ? showEntityData?.barcode : t('Not Available')}</Text>
+                                                                        <Text fz="xs" fw={600} >{showEntityData?.barcode ? showEntityData?.barcode : t('NotAvailable')}</Text>
                                                                     </Grid.Col>
                                                                 </Grid>
                                                                 <Grid columns={12} gutter={0} pt={'4'}>

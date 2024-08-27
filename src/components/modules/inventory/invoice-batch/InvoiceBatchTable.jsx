@@ -103,7 +103,6 @@ function InvoiceBatchTable() {
             <Table.Td ta="right" fz="xs" width={'100'}>{element.sub_total}</Table.Td>
         </Table.Tr>
     ));
-
     useEffect(() => {
         const options = {
             year: 'numeric',
@@ -156,7 +155,7 @@ function InvoiceBatchTable() {
                                         { accessor: 'created', title: t("Created") },
                                         {
                                             accessor: 'invoice',
-                                            title: t("Batch No"),
+                                            title: t("BatchNo"),
                                             render: (item) => (
                                                 <Text
                                                     component="a"
@@ -275,7 +274,6 @@ function InvoiceBatchTable() {
                                                                 {t('ViewInvoiceBatch')}
                                                             </Menu.Item>
                                                             <Menu.Item
-                                                                href={``}
                                                                 target=""
                                                                 component="a"
                                                                 w={'200'}
@@ -333,63 +331,65 @@ function InvoiceBatchTable() {
                                 {t('Invoice')}: {invoiceBatchData && invoiceBatchData.invoice && invoiceBatchData.invoice}
                             </Box>
                             <Box className={'borderRadiusAll border-top-none'} fz={'sm'}  >
-                                <Box pl={`xs`} fz={'sm'} fw={'600'} pr={'xs'} pt={'6'} pb={'xs'} className={'boxBackground textColor'} >
-                                    <Grid gutter={{ base: 4 }}>
-                                        <Grid.Col span={'6'}>
-                                            <Grid columns={15} gutter={{ base: 4 }}>
-                                                <Grid.Col span={6} ><Text fz="sm" lh="xs">{t('Customer')}</Text></Grid.Col>
-                                                <Grid.Col span={9} >
-                                                    <Text fz="sm" lh="xs">
-                                                        {invoiceBatchData && invoiceBatchData.customer_name && invoiceBatchData.customer_name}
-                                                    </Text>
-                                                </Grid.Col>
-                                            </Grid>
-                                            <Grid columns={15} gutter={{ base: 4 }}>
-                                                <Grid.Col span={6} ><Text fz="sm" lh="xs">{t('Mobile')}</Text></Grid.Col>
-                                                <Grid.Col span={9} >
-                                                    <Text fz="sm" lh="xs">
-                                                        {invoiceBatchData && invoiceBatchData.customer_mobile && invoiceBatchData.customer_mobile}
-                                                    </Text>
-                                                </Grid.Col>
-                                            </Grid>
-                                            <Grid columns={15} gutter={{ base: 4 }}>
-                                                <Grid.Col span={6} ><Text fz="sm" lh="xs">{t('Address')}</Text></Grid.Col>
-                                                <Grid.Col span={9} >
-                                                    <Text fz="sm" lh="xs">
-                                                        {invoiceBatchData && invoiceBatchData.customer_address && invoiceBatchData.customer_address}
-                                                    </Text>
-                                                </Grid.Col>
-                                            </Grid>
-                                            <Grid columns={15} gutter={{ base: 4 }}>
-                                                <Grid.Col span={6} ><Text fz="sm" lh="xs">{t('Balance')}</Text></Grid.Col>
-                                                <Grid.Col span={9} >
-                                                    <Text fz="sm" lh="xs">
-                                                        {invoiceBatchData && invoiceBatchData.balance ? Number(invoiceBatchData.balance).toFixed(2) : 0.00}
-                                                    </Text>
-                                                </Grid.Col>
-                                            </Grid>
-                                        </Grid.Col>
-                                        <Grid.Col span={'6'}>
-                                            <Grid columns={15} gutter={{ base: 4 }}>
-                                                <Grid.Col span={6} ><Text fz="sm" lh="xs">{t('Created')}</Text></Grid.Col>
-                                                <Grid.Col span={9} >
-                                                    <Text fz="sm" lh="xs">
-                                                        {invoiceBatchData && invoiceBatchData.created && invoiceBatchData.created}
-                                                    </Text>
-                                                </Grid.Col>
-                                            </Grid>
-                                            <Grid columns={15} gutter={{ base: 4 }}>
-                                                <Grid.Col span={6} ><Text fz="sm" lh="xs">{t('CreatedBy')}</Text></Grid.Col>
-                                                <Grid.Col span={9} >
-                                                    <Text fz="sm" lh="xs">
-                                                        {invoiceBatchData && invoiceBatchData.created_by_name && invoiceBatchData.created_by_name}
-                                                    </Text>
-                                                </Grid.Col>
-                                            </Grid>
-                                        </Grid.Col>
-                                    </Grid>
-                                </Box>
-                                <ScrollArea h={height + 37} scrollbarSize={2} type="never" >
+                                <ScrollArea h={100} type="never">
+                                    <Box pl={`xs`} fz={'sm'} fw={'600'} pr={'xs'} pt={'6'} pb={'xs'} className={'boxBackground textColor'} >
+                                        <Grid gutter={{ base: 4 }}>
+                                            <Grid.Col span={'6'}>
+                                                <Grid columns={15} gutter={{ base: 4 }}>
+                                                    <Grid.Col span={6} ><Text fz="sm" lh="xs">{t('Customer')}</Text></Grid.Col>
+                                                    <Grid.Col span={9} >
+                                                        <Text fz="sm" lh="xs">
+                                                            {invoiceBatchData && invoiceBatchData.customer_name && invoiceBatchData.customer_name}
+                                                        </Text>
+                                                    </Grid.Col>
+                                                </Grid>
+                                                <Grid columns={15} gutter={{ base: 4 }}>
+                                                    <Grid.Col span={6} ><Text fz="sm" lh="xs">{t('Mobile')}</Text></Grid.Col>
+                                                    <Grid.Col span={9} >
+                                                        <Text fz="sm" lh="xs">
+                                                            {invoiceBatchData && invoiceBatchData.customer_mobile && invoiceBatchData.customer_mobile}
+                                                        </Text>
+                                                    </Grid.Col>
+                                                </Grid>
+                                                <Grid columns={15} gutter={{ base: 4 }}>
+                                                    <Grid.Col span={6} ><Text fz="sm" lh="xs">{t('Address')}</Text></Grid.Col>
+                                                    <Grid.Col span={9} >
+                                                        <Text fz="sm" lh="xs">
+                                                            {invoiceBatchData && invoiceBatchData.customer_address && invoiceBatchData.customer_address}
+                                                        </Text>
+                                                    </Grid.Col>
+                                                </Grid>
+                                                <Grid columns={15} gutter={{ base: 4 }}>
+                                                    <Grid.Col span={6} ><Text fz="sm" lh="xs">{t('Balance')}</Text></Grid.Col>
+                                                    <Grid.Col span={9} >
+                                                        <Text fz="sm" lh="xs">
+                                                            {invoiceBatchData && invoiceBatchData.balance ? Number(invoiceBatchData.balance).toFixed(2) : 0.00}
+                                                        </Text>
+                                                    </Grid.Col>
+                                                </Grid>
+                                            </Grid.Col>
+                                            <Grid.Col span={'6'}>
+                                                <Grid columns={15} gutter={{ base: 4 }}>
+                                                    <Grid.Col span={6} ><Text fz="sm" lh="xs">{t('Created')}</Text></Grid.Col>
+                                                    <Grid.Col span={9} >
+                                                        <Text fz="sm" lh="xs">
+                                                            {invoiceBatchData && invoiceBatchData.created && invoiceBatchData.created}
+                                                        </Text>
+                                                    </Grid.Col>
+                                                </Grid>
+                                                <Grid columns={15} gutter={{ base: 4 }}>
+                                                    <Grid.Col span={6} ><Text fz="sm" lh="xs">{t('CreatedBy')}</Text></Grid.Col>
+                                                    <Grid.Col span={9} >
+                                                        <Text fz="sm" lh="xs">
+                                                            {invoiceBatchData && invoiceBatchData.created_by_name && invoiceBatchData.created_by_name}
+                                                        </Text>
+                                                    </Grid.Col>
+                                                </Grid>
+                                            </Grid.Col>
+                                        </Grid>
+                                    </Box>
+                                </ScrollArea>
+                                <ScrollArea h={height + 34} scrollbarSize={2} type="never" >
                                     <Box>
                                         <Table stickyHeader >
                                             <Table.Thead>
@@ -439,7 +439,7 @@ function InvoiceBatchTable() {
                                     </Box>
                                 </ScrollArea>
                             </Box>
-                            <Button.Group fullWidth>
+                            <Button.Group fullWidth pb={1}>
                                 <Button
                                     fullWidth
                                     variant="filled"
@@ -481,6 +481,7 @@ function InvoiceBatchTable() {
                     <Grid.Col span={1} >
                         <Box bg={'white'} className={'borderRadiusAll'} pt={'16'}>
                             <_ShortcutTable
+                                heightOffset={56}
                                 form=''
                                 FormSubmit={'EntityFormSubmit'}
                                 Name={'CompanyName'}

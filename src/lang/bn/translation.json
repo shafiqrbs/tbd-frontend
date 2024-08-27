@@ -410,5 +410,21 @@
   "CreateSetting": "সেটিং তৈরী",
   "SettingName": "সেটিং নাম",
   "SettingType": "সেটিং টাইপ",
-  "UpdateSetting": "আপডেট সেটিং"
+  "UpdateSetting": "আপডেট সেটিং",
+  "TotalBalance": "টোটাল ব্যালেন্স",
+  "TotalSales": "টোটাল সেলস",
+  "RemainingStock": "রিমেইনিং স্টক",
+  "NotAvailable": "নট এভেইল্যাবল",
+  "AlternateName": "অল্টারনেট নাম",
+  "SKU": "এসকেউ",
+  "AddBill": "অ্যাড বিল",
+  "CustomerDetails": "কাস্টমার ডিটেলস",
+  "BatchDetails": "ব্যাচ ডিটেলস",
+  "BatchItems": "ব্যাচ আইটেমস",
+  "Transactions": "লেনদেনসমূহ",
+  "Invoices": "চালানসমূহ",
+  "BatchNo": "ব্যাচ নং",
+  "TotalAmount": "টোটাল এমাউন্ট",
+  "TotalReceive": "টোটাল রিসিভ",
+  "Date" : "তারিখ"
 }

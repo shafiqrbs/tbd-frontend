@@ -117,118 +117,117 @@ function InvoiceBatchModal(props) {
                                             </Grid.Col>
                                             <Grid.Col span={8} >
                                                 <Box h={110} bg={'white'} pl={`xs`} pr={8} pt={'xs'} className={' borderRadiusAll'} >
-                                                    <Flex spacing={0} direction={'column'} >
-                                                        <Text fw={900} pl={'6'} fz={'md'}>{t('Outstanding')}</Text>
-                                                        <Stack
-                                                            h={60}
-                                                            bg="var(--mantine-color-body)"
-                                                            align="stretch"
-                                                            justify="center"
-                                                            gap="2"
-                                                            mt={4}
-                                                        >
-                                                            <Grid columns={12}>
-                                                                <Grid.Col span={8}>
-                                                                    <Grid gutter={{ base: 0 }} pl={6}>
-                                                                        <Grid.Col span={3}>
-                                                                            <Text fz="xs" fw={600} >{t('TotalBalance')}</Text>
-                                                                        </Grid.Col>
-                                                                        <Grid.Col span={1}>
-                                                                            <Text fz={'xs'} fw={700}>:</Text>
-                                                                        </Grid.Col>
-                                                                        <Grid.Col span={8}>
-                                                                            <Text fz="xs" fw={300} >{showEntityData?.total_balance}</Text>
-                                                                        </Grid.Col>
-                                                                    </Grid>
-                                                                    <Grid gutter={{ base: 0 }} pl={6}>
-                                                                        <Grid.Col span={3}>
-                                                                            <Text fz="xs" fw={600} >{t('TotalSales')}</Text>
-                                                                        </Grid.Col>
-                                                                        <Grid.Col span={1}>
-                                                                            <Text fz={'xs'} fw={700}>:</Text>
-                                                                        </Grid.Col>
-                                                                        <Grid.Col span={8}>
-                                                                            <Text fz="xs" fw={300} >{showEntityData?.total_sales}</Text>
-                                                                        </Grid.Col>
-                                                                    </Grid>
-                                                                    <Grid gutter={{ base: 0 }} pl={6}>
-                                                                        <Grid.Col span={3}>
-                                                                            <Text fz="xs" fw={600} >{t('TotalReceive')}</Text>
-                                                                        </Grid.Col>
-                                                                        <Grid.Col span={1}>
-                                                                            <Text fz={'xs'} fw={700}>:</Text>
-                                                                        </Grid.Col>
-                                                                        <Grid.Col span={8}>
-                                                                            <Text fz="xs" fw={300} >{showEntityData?.total_received}</Text>
-                                                                        </Grid.Col>
-                                                                    </Grid>
-                                                                </Grid.Col>
-                                                                <Grid.Col span={4}>
-                                                                    <Box mt={'8'} mr={6} style={{ textAlign: 'right', float: 'right' }}>
-                                                                        <Group>
-                                                                            <Tooltip
-                                                                                multiline
-                                                                                bg={'orange.8'}
-                                                                                position="top"
-                                                                                ta={'center'}
-                                                                                withArrow
-                                                                                transitionProps={{ duration: 200 }}
-                                                                                label={'Hello'}
-                                                                            >
-                                                                                <ActionIcon
-                                                                                    bg={'white'}
-                                                                                    variant="outline"
-                                                                                    color={'green'}
-                                                                                    disabled={false}
-                                                                                    onClick={(e) => {
-                                                                                        if (isShowSMSPackageModel) {
-                                                                                            notifications.show({
-                                                                                                withCloseButton: true,
-                                                                                                autoClose: 1000,
-                                                                                                title: t('smsSendSuccessfully'),
-                                                                                                message: t('smsSendSuccessfully'),
-                                                                                                icon: <IconTallymark1 />,
-                                                                                                className: 'my-notification-class',
-                                                                                                style: {},
-                                                                                                loading: true,
-                                                                                            })
-                                                                                        } else {
-                                                                                            setIsShowSMSPackageModel(true)
-                                                                                        }
-                                                                                    }}
-                                                                                >
-                                                                                    <IconMessage size={18} stroke={1.5} />
-                                                                                </ActionIcon>
-                                                                            </Tooltip>
-                                                                            <Tooltip
-                                                                                multiline
-                                                                                bg={'orange.8'}
-                                                                                position="top"
-                                                                                withArrow
-                                                                                offset={{ crossAxis: '-45', mainAxis: '5' }}
-                                                                                ta={'center'}
-                                                                                transitionProps={{ duration: 200 }}
-                                                                                label={'Hello'}
-                                                                            >
-                                                                                <ActionIcon
-                                                                                    variant="outline"
-                                                                                    color={'green'}
-                                                                                    disabled={false}
-                                                                                >
-                                                                                    <IconEyeEdit
-                                                                                        size={18}
-                                                                                        stroke={1.5}
-                                                                                    />
-                                                                                </ActionIcon>
-                                                                            </Tooltip>
 
-                                                                        </Group>
-                                                                    </Box>
-                                                                </Grid.Col>
-                                                            </Grid>
-
-                                                        </Stack>
-                                                    </Flex>
+                                                    <Grid columns={12} gutter={0}>
+                                                        <Grid.Col span={8}>
+                                                            <Stack h={104} gap={0}>
+                                                                <Text fw={900} pl={'6'} fz={'md'}>
+                                                                    {t('Outstanding')}
+                                                                </Text>
+                                                                <Grid columns={12}>
+                                                                    <Grid.Col span={12}>
+                                                                        <Grid gutter={{ base: 0 }} pl={6} pt={'4'}>
+                                                                            <Grid.Col span={4}>
+                                                                                <Text fz="xs" fw={600} >{t('TotalBalance')}</Text>
+                                                                            </Grid.Col>
+                                                                            <Grid.Col span={1}>
+                                                                                <Text fz={'xs'} fw={700}>:</Text>
+                                                                            </Grid.Col>
+                                                                            <Grid.Col span={7}>
+                                                                                <Text fz="xs" fw={300} >{showEntityData?.total_balance}</Text>
+                                                                            </Grid.Col>
+                                                                        </Grid>
+                                                                        <Grid gutter={{ base: 0 }} pl={6}>
+                                                                            <Grid.Col span={4}>
+                                                                                <Text fz="xs" fw={600} >{t('TotalSales')}</Text>
+                                                                            </Grid.Col>
+                                                                            <Grid.Col span={1}>
+                                                                                <Text fz={'xs'} fw={700}>:</Text>
+                                                                            </Grid.Col>
+                                                                            <Grid.Col span={7}>
+                                                                                <Text fz="xs" fw={300} >{showEntityData?.total_sales}</Text>
+                                                                            </Grid.Col>
+                                                                        </Grid>
+                                                                        <Grid gutter={{ base: 0 }} pl={6}>
+                                                                            <Grid.Col span={4}>
+                                                                                <Text fz="xs" fw={600} >{t('TotalReceive')}</Text>
+                                                                            </Grid.Col>
+                                                                            <Grid.Col span={1}>
+                                                                                <Text fz={'xs'} fw={700}>:</Text>
+                                                                            </Grid.Col>
+                                                                            <Grid.Col span={7}>
+                                                                                <Text fz="xs" fw={300} >{showEntityData?.total_received}</Text>
+                                                                            </Grid.Col>
+                                                                        </Grid>
+                                                                    </Grid.Col>
+                                                                </Grid>
+                                                            </Stack>
+                                                        </Grid.Col>
+                                                        <Grid.Col span={4} >
+                                                            <Box mr={6} style={{ textAlign: 'right', float: 'right' }}>
+                                                                <Stack gap={2} align="center"
+                                                                    justify="center" h={86}>
+                                                                    <Group pr={'xs'}>
+                                                                        <Tooltip
+                                                                            multiline
+                                                                            bg={'orange.8'}
+                                                                            position="top"
+                                                                            ta={'center'}
+                                                                            withArrow
+                                                                            transitionProps={{ duration: 200 }}
+                                                                            label={'Hello'}
+                                                                        >
+                                                                            <ActionIcon
+                                                                                bg={'white'}
+                                                                                variant="outline"
+                                                                                color={'green'}
+                                                                                disabled={false}
+                                                                                onClick={(e) => {
+                                                                                    if (isShowSMSPackageModel) {
+                                                                                        notifications.show({
+                                                                                            withCloseButton: true,
+                                                                                            autoClose: 1000,
+                                                                                            title: t('smsSendSuccessfully'),
+                                                                                            message: t('smsSendSuccessfully'),
+                                                                                            icon: <IconTallymark1 />,
+                                                                                            className: 'my-notification-class',
+                                                                                            style: {},
+                                                                                            loading: true,
+                                                                                        })
+                                                                                    } else {
+                                                                                        setIsShowSMSPackageModel(true)
+                                                                                    }
+                                                                                }}
+                                                                            >
+                                                                                <IconMessage size={18} stroke={1.5} />
+                                                                            </ActionIcon>
+                                                                        </Tooltip>
+                                                                        <Tooltip
+                                                                            multiline
+                                                                            bg={'orange.8'}
+                                                                            position="top"
+                                                                            withArrow
+                                                                            offset={{ crossAxis: '-45', mainAxis: '5' }}
+                                                                            ta={'center'}
+                                                                            transitionProps={{ duration: 200 }}
+                                                                            label={'Hello'}
+                                                                        >
+                                                                            <ActionIcon
+                                                                                variant="outline"
+                                                                                color={'green'}
+                                                                                disabled={false}
+                                                                            >
+                                                                                <IconEyeEdit
+                                                                                    size={18}
+                                                                                    stroke={1.5}
+                                                                                />
+                                                                            </ActionIcon>
+                                                                        </Tooltip>
+                                                                    </Group>
+                                                                </Stack>
+                                                            </Box>
+                                                        </Grid.Col>
+                                                    </Grid>
                                                 </Box>
                                             </Grid.Col>
                                             <Grid.Col span={9} >
@@ -247,7 +246,7 @@ function InvoiceBatchModal(props) {
                                                                                 <Text fz={'xs'} fw={700}>:</Text>
                                                                             </Grid.Col>
                                                                             <Grid.Col span={7}>
-                                                                                <Text fz="xs" fw={300} >{showEntityData?.total}</Text>
+                                                                                <Text fz="xs" fw={300} >{showEntityData?.batch_invoices?.reduce((acc, item) => acc + item.sub_total, 0)}</Text>
                                                                             </Grid.Col>
                                                                         </Grid>
                                                                         <Grid columns={12} gutter={{ base: 0 }} pl={6}>
@@ -258,7 +257,7 @@ function InvoiceBatchModal(props) {
                                                                                 <Text fz={'xs'} fw={700}>:</Text>
                                                                             </Grid.Col>
                                                                             <Grid.Col span={7}>
-                                                                                <Text fz="xs" fw={300} >{showEntityData?.discount}</Text>
+                                                                                <Text fz="xs" fw={300} >{showEntityData?.batch_invoices?.reduce((acc, item) => acc + item.discount, 0)}</Text>
                                                                             </Grid.Col>
                                                                         </Grid>
                                                                     </Grid.Col>
@@ -303,7 +302,7 @@ function InvoiceBatchModal(props) {
                                                                     }}
                                                                 >{t('Receive')}</Button>
                                                                 <Button
-                                                                    color={'green.8'}
+                                                                    color={'red.5'}
                                                                     size='xs'
                                                                     w={80}
                                                                     variant="filled"

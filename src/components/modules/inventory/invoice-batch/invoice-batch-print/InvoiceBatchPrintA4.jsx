@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { Paper, Group, Stack, Image, Text, Table, Grid, Box, Title, Space, Center, Button } from '@mantine/core';
+import { Flex, Group, Stack, Image, Text, Grid, Box, Space, Center } from '@mantine/core';
 import barCode from '../../../../../assets/images/frame.png';
 import { useReactToPrint } from 'react-to-print';
 import classes from './InvoiceBatchPrintA4.module.css';
@@ -27,155 +27,173 @@ export function InvoiceBatchPrintA4(props) {
         )
     }, []);
 
-    const data = [
-        {
-            item_name: 'Shower Room Assemble',
-            sku: 'Bhd019237493847',
-            quantity: '100',
-            qty: '1000',
-            price: '5000',
-            sales_price: '1000',
-            sub_total: '6000',
-        },
-        {
-            item_name: 'Shower Room Assemble',
-            sku: 'Bhd019237493847',
-            quantity: '100',
-            qty: '1000',
-            price: '5000',
-            sales_price: '1000',
-            sub_total: '6000',
-        },
-        {
-            item_name: 'Shower Room Assemble',
-            sku: 'Bhd019237493847',
-            quantity: '100',
-            qty: '1000',
-            price: '5000',
-            sales_price: '1000',
-            sub_total: '6000',
-        },
-    ];
-    const data2 = [
-        {
-            company_name: "Right Brain Solution Ltd.",
-            email: 'info@lazycoders.com',
-            mobile: '+8801521334751',
-            order_id: '12345678914654',
-            payment_method: 'Cash',
-            name: 'Lan Lewis',
-            address: 'Rando, Avenel, Victoria - 123123, Australia',
-            customer_email: 'alanjohnlewis88@gmail.com',
-            customer_phone: '+880152134752',
-            sales_by: 'Foysal Mahmud Hasan',
-            total: '20001',
-            shipping_cost: '1000',
-            service_fee: '100',
-            total_tax: '1000',
-            coupon_discount: '2000',
-            grand_total: '20947298',
-            date: '15-07-2024',
-            time: '12:16 PM'
-
-        }
-    ]
     return (
         <>
             <div className={classes['invoice-body']} ref={componentRef}>
-                <Grid columns={24} bg={'#E9ECEF'} p={10}>
-                    <Grid.Col span={12} >
-                        <img src={imageSrc} alt="" className={classes['invoice-header-img']} />
-                        <Box >
-                            <Grid columns={24} >
-                                <Grid.Col span={'24'} mt={'md'} align={'left'} fw={'800'} fz={'19'}>{data2[0].company_name}</Grid.Col>
-                            </Grid>
-                            <Grid columns={24} mt={'md'}>
-                                <Grid.Col span={'6'} align={'left'} fw={'300'} fz={'14'}>{t('Email')}</Grid.Col>
-                                <Grid.Col span={'2'} align={'center'} fw={'300'} fz={'14'}>:</Grid.Col>
-                                <Grid.Col span={'12'} align={'left'} fw={'300'} fz={'14'}>{data2[0].email}</Grid.Col>
-                            </Grid>
-                            <Grid columns={24}>
-                                <Grid.Col span={'6'} align={'left'} fw={'300'} fz={'14'}>{t('Mobile')}</Grid.Col>
-                                <Grid.Col span={'2'} align={'center'} fw={'300'} fz={'14'}>:</Grid.Col>
-                                <Grid.Col span={'12'} align={'left'} fw={'300'} fz={'14'}>{data2[0].mobile}</Grid.Col>
-                            </Grid>
-                        </Box>
-                    </Grid.Col>
-                    <Grid.Col span={2}>
-                    </Grid.Col>
-                    <Grid.Col span={10}>
-                        <Box>
-                            <Grid columns={12}  >
-                                <Grid.Col span={'auto'} align={'right'} fw={'800'} fz={'19'} mr={'sm'}>{t('Invoice')}</Grid.Col>
-                            </Grid>
-                            <Grid columns={12} mt={'100'} pr={'sm'}>
-                                <Grid.Col span={'6'} align={'right'} fw={'300'} fz={'14'}>{t('Invoice')}</Grid.Col>
-                                <Grid.Col span={'1'} align={'right'} fw={'300'} fz={'14'}>:</Grid.Col>
-                                <Grid.Col span={'5'} align={'left'} fw={'300'} fz={'14'}>
-                                    {invoiceBatchData && invoiceBatchData.invoice && invoiceBatchData.invoice}
-                                </Grid.Col>
-                            </Grid>
-                            <Grid columns={12} pr={'sm'}>
-                                <Grid.Col span={'6'} align={'right'} fw={'300'} fz={'14'}>{t('Created')}</Grid.Col>
-                                <Grid.Col span={'1'} align={'right'} fw={'300'} fz={'14'}>:</Grid.Col>
-                                <Grid.Col span={'5'} align={'left'} fw={'300'} fz={'14'}>
-                                    {invoiceBatchData && invoiceBatchData.created && invoiceBatchData.created}
-                                </Grid.Col>
-                            </Grid>
-                            <Grid columns={12} pr={'sm'}>
-                                <Grid.Col span={'6'} align={'right'} fw={'300'} fz={'14'}>{t('CreatedBy')}</Grid.Col>
-                                <Grid.Col span={'1'} align={'right'} fw={'300'} fz={'14'}>:</Grid.Col>
-                                <Grid.Col span={'5'} align={'left'} fw={'300'} fz={'14'}>
-                                    {invoiceBatchData && invoiceBatchData.created_by_name && invoiceBatchData.created_by_name}
-                                </Grid.Col>
-                            </Grid>
-                        </Box>
-                    </Grid.Col>
-                </Grid>
+                <Box bg={'#E9ECEF'} p={10}>
+                    <Box >
+                        <Grid columns={24} gutter={0} >
+                            <Grid.Col span={8} >
+                                <Box mt={'2'} ml={'2'}>
+                                    {/* <Space h="40"></Space> */}
+                                    <img src={imageSrc} alt="" className={classes['invoice-header-img']} />
+                                </Box>
+                            </Grid.Col>
+                            <Grid.Col span={16} >
+                                <Group justify="space-between" gap="0">
+                                    <Flex h={80} justify="center"
+                                        ml={'48'}
+                                        align="flex-start"
+                                        direction="row" pt={6}>
+                                        <Text fw={'800'} fz={'19'} mr={'sm'} mb={'xs'}>
+                                            {t('Invoice')}
+                                        </Text>
+                                    </Flex>
+                                    <Stack justify="center" gap={0}>
+                                        <Flex justify={'flex-end'} mt={'0'}>
+                                            <Text fw={'600'} fz={'16'} mr={'sm'}>
+                                                {configData.domain.name}
+                                            </Text>
+                                        </Flex>
+                                        <Stack justify="flex-end" gap={0} mt={'4'}>
+                                            <Group justify="flex-start" gap={0}>
+                                                <p className={classes['invoice-text-title']}
+                                                >
+                                                    {t('Email')}
+                                                </p>
+                                                <p className={classes['invoice-text']}
+                                                >
+                                                    :
+                                                </p>
+                                                <p className={classes['invoice-text']}
+                                                >
+                                                    {configData.domain.email}
+                                                </p>
+                                            </Group>
+                                            <Group justify="flex-start" gap={0}>
+                                                <p className={classes['invoice-text-title']}
+                                                >
+                                                    {t('Mobile')}
+                                                </p>
+                                                <p className={classes['invoice-text']}
+                                                >
+                                                    :
+                                                </p>
+                                                <p className={classes['invoice-text']}
+                                                >
+                                                    {configData.domain.mobile}
+                                                </p>
+                                            </Group>
+                                        </Stack>
+                                    </Stack>
+                                </Group>
+                            </Grid.Col>
+                        </Grid>
+                    </Box>
+                </Box>
                 <main className={classes['invoice-body-main']}>
                     <Box className={classes['invoice-body-details']}>
-                        <Grid columns={24}>
-                            <Grid.Col span={'3'} align={'left'} fw={'600'} fz={'14'}>{t('BillTo')}</Grid.Col>
-                            <Grid.Col span={'auto'}></Grid.Col>
-                        </Grid>
+                        <Group justify="space-between" gap="0">
+                            <Box pt={'12'}>
+                                <Flex h={120} justify={'flex-start'} direction={'column'}>
+                                    <Stack justify="center" gap={0}>
+                                        <Stack justify="flex-end" gap={0} >
+                                            <Group justify="flex-start" gap={0}>
+                                                <p className={classes['invoice-text-title-two']}
+                                                >
+                                                    {t('Customer')}
+                                                </p>
+                                                <p className={classes['invoice-text']}
+                                                >
+                                                    :
+                                                </p>
+                                                <p className={classes['padding-left']}
+                                                >
+                                                    {invoiceBatchData && invoiceBatchData.customer_name && invoiceBatchData.customer_name}
+                                                </p>
+                                            </Group>
+                                            <Group justify="flex-start" gap={0}>
+                                                <p className={classes['invoice-text-title-two']}
+                                                >
+                                                    {t('Mobile')}
+                                                </p>
+                                                <p className={classes['invoice-text']}
+                                                >
+                                                    :
+                                                </p>
+                                                <p className={classes['padding-left']}
+                                                >
+                                                    {invoiceBatchData && invoiceBatchData.customer_mobile && invoiceBatchData.customer_mobile}
+                                                </p>
+                                            </Group>
+                                            <Group justify="flex-start" gap={0}>
+                                                <p className={classes['invoice-text-title-two']}
+                                                >
+                                                    {t('Address')}
+                                                </p>
+                                                <p className={classes['invoice-text']}
+                                                >
+                                                    :
+                                                </p>
+                                                <p className={classes['padding-left']}
+                                                >
+                                                    {invoiceBatchData && invoiceBatchData.customer_address && invoiceBatchData.customer_address}
+                                                </p>
+                                            </Group>
+                                        </Stack>
+                                    </Stack>
+                                </Flex>
+                            </Box>
+                            <Box>
+                                <Flex h={120} justify={'flex-start'} direction={'column'} pt={'4'}>
+                                    <Group justify="center" gap="xs">
+                                        <Stack align="flex-start"
+                                            justify="center"
+                                            gap="0">
+                                            <Text h={18} fw={'300'} fz={'12'}
+                                            >
+                                                {t('Invoice')}
+                                            </Text>
+                                            <Text h={18} fw={'300'} fz={'12'}>
+                                                {t('Created')}
+                                            </Text>
+                                            <Text h={18} fw={'300'} fz={'12'}>
+                                                {t('CreatedBy')}
+                                            </Text>
+                                        </Stack>
+                                        <Stack align="center"
+                                            justify="center"
+                                            gap="0">
+                                            <Text h={18} fw={'300'} fz={'12'}
+                                            >
+                                                :
+                                            </Text>
+                                            <Text h={18} fw={'300'} fz={'12'}>
+                                                :
+                                            </Text>
+                                            <Text h={18} fw={'300'} fz={'12'}>
+                                                :
+                                            </Text>
+                                        </Stack>
+                                        <Stack align="flex-start"
+                                            justify="center"
+                                            gap="0">
+                                            <Text h={18} fw={'300'} fz={'12'}
+                                            >
+                                                {invoiceBatchData && invoiceBatchData.invoice && invoiceBatchData.invoice}
+                                            </Text>
+                                            <Text h={18} fw={'300'} fz={'12'}>
+                                                {invoiceBatchData && invoiceBatchData.created && invoiceBatchData.created}
+                                            </Text>
+                                            <Text h={18} fw={'300'} fz={'12'}>
+                                                {invoiceBatchData && invoiceBatchData.created_by_name && invoiceBatchData.created_by_name}
+                                            </Text>
+                                        </Stack>
+                                    </Group>
+                                </Flex>
+                            </Box>
 
-                        <Space h={'xs'} />
-                        <Grid columns={24}>
-                            <Grid.Col span={'4'} align={'left'} fw={'300'} fz={'14'}>{t('Customer')}</Grid.Col>
-                            <Grid.Col span={'1'} align={'left'} fw={'300'} fz={'14'}>:</Grid.Col>
-                            <Grid.Col span={'auto'} align={'left'} fw={'300'} fz={'14'}>
-                                {invoiceBatchData && invoiceBatchData.customer_name && invoiceBatchData.customer_name}
-                            </Grid.Col>
-                        </Grid>
-                        <Grid columns={24}>
-                            <Grid.Col span={'4'} align={'left'} fw={'300'} fz={'14'} >{t('Mobile')}</Grid.Col>
-                            <Grid.Col span={'1'} align={'left'} fw={'300'} fz={'14'}>:</Grid.Col>
-                            <Grid.Col span={'auto'} align={'left'} fw={'300'} fz={'14'}>
-                                {invoiceBatchData && invoiceBatchData.customer_mobile && invoiceBatchData.customer_mobile}
-                            </Grid.Col>
-                        </Grid>
-                        <Grid columns={24}>
-                            <Grid.Col span={'4'} align={'left'} fw={'300'} fz={'14'}>{t('Address')}</Grid.Col>
-                            <Grid.Col span={'1'} align={'left'} fw={'300'} fz={'14'}>:</Grid.Col>
-                            <Grid.Col span={'auto'} align={'left'} fw={'300'} fz={'14'}>
-                                {invoiceBatchData && invoiceBatchData.customer_address && invoiceBatchData.customer_address}
-                            </Grid.Col>
-                        </Grid>
-
-                        <Grid columns={24}>
-                            <Grid.Col span={'4'} align={'left'} fw={'300'} fz={'14'}>{t('Balance')}</Grid.Col>
-                            <Grid.Col span={'1'} align={'left'} fw={'300'} fz={'14'}>:</Grid.Col>
-                            <Grid.Col span={'auto'} align={'left'} fw={'300'} fz={'14'}>{invoiceBatchData && invoiceBatchData.balance ? Number(invoiceBatchData.balance).toFixed(2) : 0.00}</Grid.Col>
-                        </Grid>
-                        {/* <Space h={'lg'} />
-                        <Grid columns={24}>
-                            <Grid.Col span={'4'} align={'left'} fw={'600'} fz={'14'}>{t('SalesBy')}</Grid.Col>
-                            <Grid.Col span={'auto'}></Grid.Col>
-                        </Grid>
-                        <Grid columns={24}>
-                            <Grid.Col span={'6'} align={'left'} fw={'300'} fz={'14'}>{data2[0].sales_by}</Grid.Col>
-                            <Grid.Col span={'auto'}></Grid.Col>
-                        </Grid> */}
+                        </Group>
                     </Box>
 
                     <div className={classes['invoice-body-table-section']}>

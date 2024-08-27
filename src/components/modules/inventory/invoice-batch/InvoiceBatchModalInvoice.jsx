@@ -40,7 +40,7 @@ function InvoiceBatchModalInvoice(props) {
                     columns={[
                         {
                             accessor: 'index',
-                            title: 'S/N',
+                            title: t('S/N'),
                             textAlignment: 'right',
                             render: (rowData, rowIndex) => (
                                 rowIndex + 1
@@ -48,7 +48,7 @@ function InvoiceBatchModalInvoice(props) {
                         },
                         {
                             accessor: 'invoice',
-                            title: 'Invoice',
+                            title: t('Invoice'),
 
                             render: (rowData) => (
                                 <Box component="a" size="sm" variant="subtle" c={'red.6'} style={{ cursor: "pointer" }}>
@@ -58,7 +58,7 @@ function InvoiceBatchModalInvoice(props) {
                         },
                         {
                             accessor: 'created_at',
-                            title: 'Date',
+                            title: t('Date'),
                             render: (rowData) => (
                                 <Box component="a" size="sm" variant="subtle">
                                     {formatDate(rowData.created_at)}
@@ -67,7 +67,7 @@ function InvoiceBatchModalInvoice(props) {
                         },
                         {
                             accessor: 'total',
-                            title: 'Amount',
+                            title: t('Amount'),
                             textAlign: "right",
                             render: (rowData) => (
                                 <Box component="a" size="sm" variant="subtle">
