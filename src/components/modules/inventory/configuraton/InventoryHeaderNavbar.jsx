@@ -10,7 +10,8 @@ import classes from '../../../../assets/css/HeaderSearch.module.css';
 import {
     IconInfoCircle, IconTrash, IconSearch, IconSettings,
     IconBrandProducthunt,
-    IconBrandCodesandbox
+    IconBrandCodesandbox,
+    IconStack2
 } from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
 
@@ -22,6 +23,7 @@ function InventoryHeaderNavbar(props) {
     const [opened, { toggle }] = useDisclosure(false);
     const navigate = useNavigate();
     const links = [
+        { link: '/inventory/stock', label: t('Stock') },
         { link: '/inventory/product', label: t('Products') },
         { link: '/inventory/category', label: t('Category') },
         { link: '/inventory/category-group', label: t('CategoryGroup') },
@@ -57,15 +59,15 @@ function InventoryHeaderNavbar(props) {
                             <Menu.Dropdown>
                                 <Menu.Item
                                     component="button" onClick={(e) => { navigate('/inventory/product-settings') }} leftSection={<IconBrandProducthunt style={{ width: rem(14), height: rem(14) }} />}>
-                                    {t('ProductSettings')}
+                                    {t('ProductSetting')}
                                 </Menu.Item>
                                 <Menu.Item
                                     component="button" onClick={(e) => { navigate('/inventory/product-configuration') }} leftSection={<IconBrandCodesandbox style={{ width: rem(14), height: rem(14) }} />}>
                                     {t('ProductConfiguration')}
                                 </Menu.Item>
                                 <Menu.Item
-                                    component="button" onClick={(e) => { navigate('/inventory/config') }} leftSection={<IconSettings style={{ width: rem(14), height: rem(14) }} />}>
-                                    {t('Settings')}
+                                    component="button" onClick={(e) => { navigate('/inventory/stock') }} leftSection={<IconStack2 style={{ width: rem(14), height: rem(14) }} />}>
+                                    {t('Stock')}
                                 </Menu.Item>
                             </Menu.Dropdown>
                         </Menu>

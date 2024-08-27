@@ -111,7 +111,7 @@ function SampleModalIndex() {
                 </Spotlight.ActionsList>
             </Spotlight.Root>
 
-            {progress !== 100 && <Progress color="red" size={"xs"} striped animated value={progress} />}
+            {progress !== 100 && <Progress color="red" size={"sm"} striped animated value={progress} />}
             {progress === 100 &&
                 <>
                     <AccountingHeaderNavbar

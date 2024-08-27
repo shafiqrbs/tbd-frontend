@@ -42,7 +42,7 @@ function ProductIndex() {
     return (
         <>
             {progress !== 100 &&
-                <Progress color="red" size={"xs"} striped animated value={progress} transitionDuration={200} />}
+                <Progress color="red" size={"sm"} striped animated value={progress} transitionDuration={200} />}
             {progress === 100 &&
                 <Box>
                     {configData &&
@@ -54,7 +54,6 @@ function ProductIndex() {
                                 currencySymbol={configData?.currency?.symbol}
                             />
                             <Box p={'8'}>
-
                                 {
                                     insertType === 'create' ?
                                         <Grid columns={24} gutter={{ base: 8 }}>

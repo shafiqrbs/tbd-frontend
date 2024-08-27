@@ -8,7 +8,7 @@ import { useOutletContext } from "react-router-dom";
 function ShortcutTable(props) {
     const { t, i18n } = useTranslation();
     const { isOnline, mainAreaHeight } = useOutletContext();
-    const formHeight = mainAreaHeight - 100; //TabList height 104
+    const formHeight = mainAreaHeight - (100 - (props?.heightOffset ? props?.heightOffset : 0)); //TabList height 104
     return (
         <>
             <Stack h={formHeight} bg="var(--mantine-color-body)" align="center">
@@ -32,9 +32,9 @@ function ShortcutTable(props) {
                                 color={`red.5`}
                                 radius="xl"
                                 onClick={(e) => {
-                                    // props.inputType === 'select' ?
-                                    // document.getElementById(props.Name).click() :
-                                    document.getElementById(props.Name).focus()
+                                    // props?.inputType === 'select' ?
+                                    // document.getElementById(props?.Name).click() :
+                                    document.getElementById(props?.Name).focus()
                                 }}
                             >
                                 <Flex direction={`column`} align={'center'}>
@@ -65,7 +65,7 @@ function ShortcutTable(props) {
                                 color={`red`}
                                 radius="xl"
                                 onClick={(e) => {
-                                    props.form.reset()
+                                    props?.form.reset()
                                 }}
                             >
                                 <Flex direction={`column`} align={'center'}>
@@ -96,7 +96,7 @@ function ShortcutTable(props) {
                                 color={`green.8`}
                                 radius="xl"
                                 onClick={(e) => {
-                                    document.getElementById(props.FormSubmit).click()
+                                    document.getElementById(props?.FormSubmit).click()
                                 }}
                             >
                                 <Flex direction={`column`} align={'center'}>

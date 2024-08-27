@@ -70,7 +70,6 @@ function SettingsForm(props) {
         <>
             <Box>
                 <form onSubmit={settingsForm.onSubmit((values) => {
-                    // console.log(values)
                     modals.openConfirmModal({
                         title: (
                             <Text size="md"> {t("FormConfirmationTitle")}</Text>

@@ -95,7 +95,7 @@ function InvoiceBatchModalTransaction(props) {
                                                 </Grid.Col>
                                             </Grid>
                                         </Grid.Col>
-                                        <Grid.Col span={2}>
+                                        <Grid.Col span={4}>
                                             <Flex justify={'center'} align={'center'} direction={'column'} h={'100%'}>
                                                 <Box>
                                                     <ActionIcon color='red.5' variant='transparent' >
