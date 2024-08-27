@@ -1081,6 +1081,138 @@ function ProductUpdateForm() {
                                                         }
                                                     },
                                                     {
+                                                        accessor: 'wholesale_price', title: t("Wholesale Price"), textAlign: "center",
+                                                        width: '150px',
+                                                        render: (item) => {
+                                                            const [editedAtt, setEditedAtt] = useState(item.wholesale_price);
+
+                                                            const handlAttChange = (e) => {
+                                                                const editedAtt = e.currentTarget.value;
+                                                                setEditedAtt(editedAtt);
+                                                                console.log(editedAtt)
+                                                            };
+
+                                                            return (
+                                                                attInput ?
+                                                                    <>
+                                                                        <TextInput
+                                                                            type="number"
+                                                                            label=""
+                                                                            size="xs"
+                                                                            value={editedAtt}
+                                                                            onChange={handlAttChange}
+                                                                        // onKeyDown={getHotkeyHandler([
+                                                                        //     ['Enter', (e) => {
+                                                                        //         document.getElementById('inline-update-quantity-' + item.product_id).focus();
+                                                                        //     }],
+                                                                        // ])}
+                                                                        />
+                                                                    </>
+                                                                    :
+                                                                    10
+                                                            );
+                                                        }
+                                                    },
+                                                    {
+                                                        accessor: 'branch_price', title: t("Branch Price"), textAlign: "center",
+                                                        width: '140px',
+                                                        render: (item) => {
+                                                            const [editedAtt, setEditedAtt] = useState(item.branch_price);
+
+                                                            const handlAttChange = (e) => {
+                                                                const editedAtt = e.currentTarget.value;
+                                                                setEditedAtt(editedAtt);
+                                                                console.log(editedAtt)
+                                                            };
+
+                                                            return (
+                                                                attInput ?
+                                                                    <>
+                                                                        <TextInput
+                                                                            type="number"
+                                                                            label=""
+                                                                            size="xs"
+                                                                            value={editedAtt}
+                                                                            onChange={handlAttChange}
+                                                                        // onKeyDown={getHotkeyHandler([
+                                                                        //     ['Enter', (e) => {
+                                                                        //         document.getElementById('inline-update-quantity-' + item.product_id).focus();
+                                                                        //     }],
+                                                                        // ])}
+                                                                        />
+                                                                    </>
+                                                                    :
+                                                                    10
+                                                            );
+                                                        }
+                                                    },
+                                                    ...(titleDropdown ? [{
+                                                        accessor: 'retail_price', title: t("Retail Price"), textAlign: "center",
+                                                        width: '120px',
+                                                        render: (item) => {
+                                                            const [editedPrice, setEditedPrice] = useState(item.retail_price);
+
+                                                            const handlPriceChange = (e) => {
+                                                                const editedPrice = e.currentTarget.value;
+                                                                setEditedPrice(editedPrice);
+                                                                console.log(editedPrice)
+                                                            };
+
+                                                            return (
+                                                                priceInput ?
+                                                                    <>
+                                                                        <TextInput
+                                                                            type="number"
+                                                                            label=""
+                                                                            size="xs"
+                                                                            value={editedPrice}
+                                                                            onChange={handlPriceChange}
+                                                                        // onKeyDown={getHotkeyHandler([
+                                                                        //     ['Enter', (e) => {
+                                                                        //         document.getElementById('inline-update-quantity-' + item.product_id).focus();
+                                                                        //     }],
+                                                                        // ])}
+                                                                        />
+                                                                    </>
+                                                                    :
+                                                                    1000
+                                                            );
+                                                        }
+                                                    }] : []),
+                                                    ...(titleDropdown ? [{
+                                                        accessor: 'promo_price', title: t("Promo Price"), textAlign: "center",
+                                                        width: '120px',
+                                                        render: (item) => {
+                                                            const [editedPrice, setEditedPrice] = useState(item.promo_price);
+
+                                                            const handlPriceChange = (e) => {
+                                                                const editedPrice = e.currentTarget.value;
+                                                                setEditedPrice(editedPrice);
+                                                                console.log(editedPrice)
+                                                            };
+
+                                                            return (
+                                                                priceInput ?
+                                                                    <>
+                                                                        <TextInput
+                                                                            type="number"
+                                                                            label=""
+                                                                            size="xs"
+                                                                            value={editedPrice}
+                                                                            onChange={handlPriceChange}
+                                                                        // onKeyDown={getHotkeyHandler([
+                                                                        //     ['Enter', (e) => {
+                                                                        //         document.getElementById('inline-update-quantity-' + item.product_id).focus();
+                                                                        //     }],
+                                                                        // ])}
+                                                                        />
+                                                                    </>
+                                                                    :
+                                                                    1000
+                                                            );
+                                                        }
+                                                    }] : []),
+                                                    {
                                                         accessor: "action",
                                                         title: t("Action"),
                                                         textAlign: "right",
