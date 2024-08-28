@@ -180,6 +180,30 @@ export const deleteData = async (value) => {
     return data
 };
 
+/* Inline Status Update */
+
+export const inlineStatusUpdateData = async (value) => {
+    let data = []
+    await axios({
+        method: 'get',
+        url: `${import.meta.env.VITE_API_GATEWAY_URL+value.url}`,
+        headers: {
+            "Accept": `application/json`,
+            "Content-Type": `application/json`,
+            "Access-Control-Allow-Origin": '*',
+            "X-Api-Key": import.meta.env.VITE_API_KEY,
+            "X-Api-User": JSON.parse(localStorage.getItem('user')).id
+        },
+    })
+        .then(res => {
+            data = res
+        })
+        .catch(function (error) {
+            console.log(error)
+        })
+    return data
+};
+
 
 export const getCoreSettingDropdown = async (value) => {
     let data = []

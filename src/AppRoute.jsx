@@ -61,8 +61,8 @@ function AppRoute() {
                     <Route path="user/:userId" element={<UserIndex />} />
                     <Route path="vendor" element={<VendorIndex />} />
                     <Route path="vendor/:vendorId" element={<VendorIndex />} />
-                    <Route path="settings" element={<SettingsIndex />} />
-                    <Route path="settings/:settingsId" element={<SettingsIndex />} />
+                    <Route path="setting" element={<SettingsIndex />} />
+                    <Route path="setting/:id" element={<SettingsIndex />} />
                     <Route path="location" element={<LocationIndex />} />
                     <Route path="location/:locationId" element={<LocationIndex />} />
                     <Route path="marketing-executive" element={<MarketingExecutiveIndex />} />

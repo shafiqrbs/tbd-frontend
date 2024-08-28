@@ -18,12 +18,10 @@ import {
 } from "../../../../store/core/crudSlice.js";
 import KeywordSearch from "../../filter/KeywordSearch";
 import { modals } from "@mantine/modals";
-import { deleteEntityData } from "../../../../store/core/crudSlice";
+import {deleteEntityData, getStatusInlineUpdateData} from "../../../../store/core/crudSlice";
 import { notifications } from "@mantine/notifications";
 import tableCss from "../../../../assets/css/Table.module.css";
 import SettingsViewDrawer from "./SettingsViewDrawer.jsx";
-import { inlineUpdateEntityData } from "../../../../store/production/crudSlice";
-
 
 function SettingsTable() {
 
@@ -49,13 +47,9 @@ function SettingsTable() {
     const handleSwtich = (event, item) => {
         setSwitchEnable(prev => ({ ...prev, [item.id]: true }));
         const value = {
-            url: 'core/setting/inline-status',
-            data: {
-                status: event.currentTarget.checked,
-                id: item.id
-            }
+            url: 'core/setting/inline-status/'+item.id
         }
-        dispatch(inlineUpdateEntityData(value))
+        dispatch(getStatusInlineUpdateData(value))
         dispatch(setFetching(true))
         setTimeout(() => {
             setSwitchEnable(prev => ({ ...prev, [item.id]: false }));
@@ -156,9 +150,9 @@ function SettingsTable() {
                                             <Menu.Item
                                                 onClick={() => {
                                                     dispatch(setInsertType('update'))
-                                                    dispatch(editEntityData('inventory/particular/' + data.id))
+                                                    dispatch(editEntityData('core/setting/' + data.id))
                                                     dispatch(setFormLoading(true))
-                                                    navigate(`/core/customer-settings/${data.id}`)
+                                                    navigate(`/core/setting/${data.id}`)
                                                 }}
                                             >
                                                 {t('Edit')}
@@ -195,7 +189,7 @@ function SettingsTable() {
                                                         confirmProps: { color: 'red.6' },
                                                         onCancel: () => console.log('Cancel'),
                                                         onConfirm: () => {
-                                                            dispatch(deleteEntityData('inventory/particular/' + data.id))
+                                                            dispatch(deleteEntityData('core/setting/' + data.id))
                                                             dispatch(setFetching(true))
                                                             notifications.show({
                                                                 color: 'red',

@@ -45,10 +45,10 @@ function SettingsForm(props) {
 
     const settingsForm = useForm({
         initialValues: {
-            particular_type_id: '', name: '', status: true
+            setting_type_id: '', name: '', status: true
         },
         validate: {
-            particular_type_id: isNotEmpty(),
+            setting_type_id: isNotEmpty(),
             name: hasLength({ min: 2, max: 20 }),
         }
     });
@@ -149,7 +149,7 @@ function SettingsForm(props) {
                                                         placeholder={t('SettingType')}
                                                         required={true}
                                                         nextField={'setting_name'}
-                                                        name={'particular_type_id'}
+                                                        name={'setting_type_id'}
                                                         form={settingsForm}
                                                         dropdownValue={settingTypeDropdown}
                                                         id={'setting_type'}

@@ -4,7 +4,7 @@ import {
     deleteData,
     editData,
     getDataWithoutParam,
-    getDataWithParam, showData,
+    getDataWithParam, inlineStatusUpdateData, showData,
     updateData
 } from "../../services/apiService";
 
@@ -21,6 +21,16 @@ export const getIndexEntityData = createAsyncThunk("index", async (value) => {
 export const getCustomerIndexData = createAsyncThunk("customer-index", async (value) => {
     try {
         const response = getDataWithoutParam(value);
+        return response;
+    } catch (error) {
+        console.log('error', error.message);
+        throw error;
+    }
+});
+
+export const getStatusInlineUpdateData = createAsyncThunk("status-update", async (value) => {
+    try {
+        const response = inlineStatusUpdateData(value);
         return response;
     } catch (error) {
         console.log('error', error.message);
@@ -102,6 +112,7 @@ const crudSlice = createSlice({
         vendorFilterData: { name: '', mobile: '', company_name: '' },
         userFilterData: { name: '', mobile: '', email: '' },
         categoryGroupFilterData: { name: '' },
+        statusInlineUpdateData:null
     },
     reducers: {
         setFetching: (state, action) => {
@@ -184,6 +195,10 @@ const crudSlice = createSlice({
 
         builder.addCase(deleteEntityData.fulfilled, (state, action) => {
             state.entityDataDelete = action.payload.data.data
+        })
+
+        builder.addCase(getStatusInlineUpdateData.fulfilled, (state, action) => {
+            state.statusInlineUpdateData = action.payload.data.data
         })
 
 

@@ -43,24 +43,12 @@ function SettingsUpdateForm(props) {
     const [settingTypeData, setSettingTypeData] = useState(null);
 
     const { saveId, settingTypeDropdown } = props
-
-
-    // useEffect(() => {
-
-    //     const value = {
-    //         url: 'inventory/select/group-category',
-    //     }
-
-    //     dispatch(getCategoryDropdown(value))
-    //     dispatch(setDropdownLoad(false))
-    // }, [dropdownLoad]);
-
     const settingsForm = useForm({
         initialValues: {
-            particular_type_id: '', name: '', status: ''
+            setting_type_id: '', name: '', status: ''
         },
         validate: {
-            particular_type_id: isNotEmpty(),
+            setting_type_id: isNotEmpty(),
             name: hasLength({ min: 2, max: 20 }),
         }
     });
@@ -135,7 +123,7 @@ function SettingsUpdateForm(props) {
                                 dispatch(setEditEntityData([]))
                                 dispatch(setFetching(true))
                                 setSaveCreateLoading(false)
-                                navigate('/core/settings', { replace: true });
+                                navigate('/core/setting', { replace: true });
                             }, 700)
                         },
                     });
@@ -189,7 +177,7 @@ function SettingsUpdateForm(props) {
                                                         dropdownValue={settingTypeDropdown}
                                                         id={'setting_type'}
                                                         searchable={false}
-                                                        value={settingTypeData}
+                                                        value={settingTypeData ? String(settingTypeDropdown) : (entityEditData.setting_type_id ? String(entityEditData.setting_type_id) : null)}
                                                         changeValue={setSettingTypeData}
                                                     />
                                                 </Box>

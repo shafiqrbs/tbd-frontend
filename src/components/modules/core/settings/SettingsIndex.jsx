@@ -31,22 +31,22 @@ function SettingsIndex() {
     const configData = getConfigData()
     const navigate = useNavigate()
 
-    const { settingsId } = useParams();
+    const { id } = useParams();
     const settingTypeDropdown = getParticularTypeDropdownData()
 
 
     useEffect(() => {
-        if (settingsId) {
+        if (id) {
             dispatch(setInsertType('update'));
-            dispatch(editEntityData(`/core/settings/${settingsId}`));
+            dispatch(editEntityData(`/core/setting/${id}`));
             dispatch(setFormLoading(true));
-        } else if (!settingsId) {
+        } else if (!id) {
             dispatch(setInsertType('create'));
             dispatch(setSearchKeyword(''));
             dispatch(setEntityNewData([]));
-            navigate('/core/settings', { replace: true });
+            navigate('/core/setting', { replace: true });
         }
-    }, [settingsId, dispatch, navigate]);
+    }, [id, dispatch, navigate]);
 
 
     return (
