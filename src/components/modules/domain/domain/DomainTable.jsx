@@ -116,6 +116,16 @@ function DomainTable(props) {
                                                 {t('Show')}
                                             </Menu.Item>
                                             <Menu.Item
+                                                onClick={() => {
+                                                    navigate('/domain/config')
+                                                }}
+                                                target="_blank"
+                                                component="a"
+                                                w={'200'}
+                                            >
+                                                {t('Configuration')}
+                                            </Menu.Item>
+                                            <Menu.Item
                                                 // href={``}
                                                 target="_blank"
                                                 component="a"

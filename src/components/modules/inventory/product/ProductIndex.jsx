@@ -10,7 +10,7 @@ import ProductForm from "./ProductForm.jsx";
 import ProductUpdateForm from "./ProductUpdateForm.jsx";
 import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress.js";
 import getConfigData from "../../../global-hook/config-data/getConfigData.js";
-import InventoryHeaderNavbar from "../configuraton/InventoryHeaderNavbar";
+import InventoryHeaderNavbar from "../../domain/configuraton/InventoryHeaderNavbar";
 import { useNavigate, useParams } from "react-router-dom";
 import { editEntityData, setEntityNewData, setFormLoading, setInsertType, setSearchKeyword } from "../../../../store/inventory/crudSlice.js";
 

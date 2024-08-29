@@ -16,7 +16,7 @@ import _ParticularTable from "./_ParticularTable.jsx";
 import _ParticularForm from "./_ParticularForm.jsx";
 import _ParticularUpdateForm from "./_ParticularUpdateForm.jsx";
 import getParticularTypeDropdownData from "../../../global-hook/dropdown/inventroy/getParticularTypeDropdownData.js";
-import InventoryHeaderNavbar from "../configuraton/InventoryHeaderNavbar";
+import InventoryHeaderNavbar from "../../domain/configuraton/InventoryHeaderNavbar";
 import {
     editEntityData,
     setInsertType,

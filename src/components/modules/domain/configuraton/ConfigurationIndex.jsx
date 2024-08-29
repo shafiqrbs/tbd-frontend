@@ -4,9 +4,9 @@ import {
     Grid, Progress,
 } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
-import ConfigurationForm from "./ConfigurationForm";
+import ConfigurationForm from "./ConfigurationForm.jsx";
 import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress.js";
-import InventoryHeaderNavbar from "./InventoryHeaderNavbar.jsx";
+import DomainHeaderNavbar from "../DomainHeaderNavbar.jsx";
 
 function ConfigurationIndex() {
     const { t, i18n } = useTranslation();
@@ -19,7 +19,7 @@ function ConfigurationIndex() {
             {progress !== 100 && <Progress color="red" size={"sm"} striped animated value={progress} />}
             {progress === 100 &&
                 <>
-                    <InventoryHeaderNavbar
+                    <DomainHeaderNavbar
                         pageTitle={t('ConfigurationInformationFormDetails')}
                         roles={t('Roles')}
                         allowZeroPercentage=''

@@ -6,7 +6,6 @@ import './lang/i18next';
 import CustomerIndex from "./components/modules/core/customer/CustomerIndex";
 import UserIndex from "./components/modules/core/user/UserIndex";
 import VendorIndex from "./components/modules/core/vendor/VendorIndex";
-import InventoryConfigurationIndex from "./components/modules/inventory/configuraton/ConfigurationIndex";
 import ProductionConfigurationIndex from "./components/modules/production/configuraton/ConfigurationIndex";
 import CategoryGroupIndex from "./components/modules/inventory/category-group/CategoryGroupIndex";
 import CategoryIndex from "./components/modules/inventory/category/CategoryIndex";
@@ -36,11 +35,12 @@ import ProductSettingsIndex from './components/modules/inventory/product-setting
 import ProductionSettingIndex from "./components/modules/production/settings/ProductionSettingIndex.jsx";
 import RecipeItemsIndex from "./components/modules/production/recipe-items/RecipeItemsIndex.jsx";
 import RecipeIndex from "./components/modules/production/recipe-items/recipe/RecipeIndex.jsx";
-import ProductConfigurationIndex from './components/modules/inventory/product-configuration/ProductConfigurationIndex.jsx';
+import InventoryConfigurationIndex from './components/modules/inventory/inventory-configuration/InventoryConfigurationIndex.jsx';
 import ParticularIndex from "./components/modules/inventory/particular/ParticularIndex";
 import InhouseIndex from './components/modules/production/production-inhouse/InhouseIndex.jsx';
 import SettingsIndex from "./components/modules/core/settings/SettingsIndex";
 import StockIndex from './components/modules/inventory/stock/StockIndex.jsx';
+import ConfigurationIndex from './components/modules/domain/configuraton/ConfigurationIndex.jsx';
 
 
 function AppRoute() {
@@ -90,7 +90,7 @@ function AppRoute() {
                     <Route path="particular/:id" element={<ParticularIndex />} />
                     <Route path="product-settings" element={<ProductSettingsIndex />} />
                     <Route path="product-settings/:settingsId" element={<ProductSettingsIndex />} />
-                    <Route path="product-configuration" element={<ProductConfigurationIndex />} />
+                    <Route path="config" element={<InventoryConfigurationIndex />} />
                     <Route path="stock" element={<StockIndex />} />
                 </Route>
 
@@ -106,6 +106,7 @@ function AppRoute() {
                 <Route path="/domain/">
                     <Route path="domain-index" element={<DomainIndex />} />
                     <Route path="domain-index/:domainId" element={<DomainIndex />} />
+                    <Route path="config" element={<ConfigurationIndex />} />
                 </Route>
 
                 <Route path="/accounting/">

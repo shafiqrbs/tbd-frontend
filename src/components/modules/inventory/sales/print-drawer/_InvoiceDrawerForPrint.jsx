@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { IconX, IconXboxX } from "@tabler/icons-react";
 import _InvoiceForDomain359Pos from "../print-component/_InvoiceForDomain359Pos.jsx";
 import _InvoiceForDomain359Normal from "../print-component/_InvoiceForDomain359Normal.jsx";
-import InvoiceDomain359Normal from "../print-component/InvoiceDomain359Normal.jsx";
+import _InvoiceForDomain359Custom from "../print-component/_InvoiceForDomain359Custom.jsx";
 import InvoiceDomain359Pos from "../print-component/InvoiceDomain359Pos.jsx";
 
 function _InvoiceDrawerForPrint(props) {
@@ -55,7 +55,8 @@ function _InvoiceDrawerForPrint(props) {
                         <Box p={'md'} className="boxBackground borderRadiusAll" >
                             {configData?.domain?.id == '359' && printType === 'pos' && <InvoiceDomain359Pos mode={mode} setOpenInvoiceDrawerForPrint={setOpenInvoiceDrawerForPrint} />}
                             {/* { configData?.domain?.id =='359' && printType==='print' && <_InvoiceForDomain359Normal  mode={mode}/> } */}
-                            {configData?.domain?.id == '359' && printType === 'print' && <InvoiceDomain359Normal mode={mode} setOpenInvoiceDrawerForPrint={setOpenInvoiceDrawerForPrint} />}
+                            {/* {configData?.domain?.id == '359' && printType === 'print' && <InvoiceDomain359Normal mode={mode} setOpenInvoiceDrawerForPrint={setOpenInvoiceDrawerForPrint} />} */}
+                            {configData?.domain?.id == '359' && printType === 'print' && <_InvoiceForDomain359Custom mode={mode} setOpenInvoiceDrawerForPrint={setOpenInvoiceDrawerForPrint} />}
                         </Box>
                     </Box>
                 </Drawer.Content>

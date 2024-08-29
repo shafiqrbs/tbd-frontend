@@ -65,12 +65,7 @@ const getSpotlightDropdownData = (t) => {
                     description: t('WhereWePresentTheProductInformationN'),
 
                 },
-                {
-                    id: 'config',
-                    label: t('ConfigurationN'),
-                    description: t('WhereWePresentTheConfigurationInformationN'),
 
-                },
                 {
                     id: 'sales',
                     label: t('SalesN'),
@@ -112,9 +107,10 @@ const getSpotlightDropdownData = (t) => {
                     label: t('ParticularSettingN'),
                     description: t('WhereWePresentTheInvoiceBatchInformationN'),
 
-                }, {
-                    id: 'product-configuration',
-                    label: t('ProductConfigurationN'),
+                },
+                {
+                    id: 'config',
+                    label: t('InventoryConfigurationN'),
                     description: t('WhereWePresentTheInvoiceBatchInformationN'),
 
                 },
@@ -163,6 +159,12 @@ const getSpotlightDropdownData = (t) => {
                     description: t('WhereWePresentTheDomainInformationN'),
 
                 },
+                // {
+                //     id: 'config',
+                //     label: t('ConfigurationN'),
+                //     description: t('WhereWePresentTheConfigurationInformationN'),
+
+                // },
             ],
         },
         {

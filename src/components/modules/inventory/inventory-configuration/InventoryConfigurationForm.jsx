@@ -11,9 +11,9 @@ import { notifications } from "@mantine/notifications";
 import Shortcut from "../../shortcut/Shortcut";
 import { setValidationData, updateEntityData } from "../../../../store/inventory/crudSlice.js";
 import SwitchForm from "../../../form-builders/SwitchForm.jsx";
-import getProductConfigData from "../../../global-hook/config-data/getProductConfigData.js";
+import getInventoryConfigData from "../../../global-hook/config-data/getInventoryConfigData.js";
 
-function ProductConfigurationForm() {
+function InventoryConfigurationForm() {
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
@@ -28,26 +28,28 @@ function ProductConfigurationForm() {
 
 
 
-    localStorage.setItem('product-configuration', JSON.stringify(getProductConfigData()));
+    localStorage.setItem('inventory-config', JSON.stringify(getInventoryConfigData()));
 
-    const productConfigData = localStorage.getItem('product-configuration') ? JSON.parse(localStorage.getItem('product-configuration')) : []
+    const inventoryConfigData = localStorage.getItem('inventory-config') ? JSON.parse(localStorage.getItem('inventory-config')) : []
 
     const form = useForm({
         initialValues: {
-            brand: productConfigData.brand ? productConfigData.brand : '',
-            color: productConfigData.color ? productConfigData.color : '',
-            size: productConfigData.size ? productConfigData.size : '',
-            model: productConfigData.model ? productConfigData.model : '',
-            measurement: productConfigData.measurement ? productConfigData.measurement : '',
-            product_image: productConfigData.product_image ? productConfigData.product_image : '',
-            product_gallery: productConfigData.product_gallery ? productConfigData.product_gallery : '',
-            is_multi_price: productConfigData.is_multi_price ? productConfigData.is_multi_price : '',
-            zero_stock: productConfigData.zero_stock ? productConfigData.zero_stock : '',
-            stock_item: productConfigData.stock_item ? productConfigData.stock_item : '',
-            is_stock_history: productConfigData.is_stock_history ? productConfigData.is_stock_history : '',
-            mrp_price: productConfigData.mrp_price ? productConfigData.mrp_price : '',
-            total_price: productConfigData.total_price ? productConfigData.total_price : '',
-            purchase_price: productConfigData.purchase_price ? productConfigData.purchase_price : '',
+            brand: inventoryConfigData.brand ? inventoryConfigData.brand : '',
+            color: inventoryConfigData.color ? inventoryConfigData.color : '',
+            size: inventoryConfigData.size ? inventoryConfigData.size : '',
+            model: inventoryConfigData.model ? inventoryConfigData.model : '',
+            measurement: inventoryConfigData.measurement ? inventoryConfigData.measurement : '',
+            product_image: inventoryConfigData.product_image ? inventoryConfigData.product_image : '',
+            product_gallery: inventoryConfigData.product_gallery ? inventoryConfigData.product_gallery : '',
+            is_multi_price: inventoryConfigData.is_multi_price ? inventoryConfigData.is_multi_price : '',
+            zero_stock: inventoryConfigData.zero_stock ? inventoryConfigData.zero_stock : '',
+            stock_item: inventoryConfigData.stock_item ? inventoryConfigData.stock_item : '',
+            is_stock_history: inventoryConfigData.is_stock_history ? inventoryConfigData.is_stock_history : '',
+            mrp_price: inventoryConfigData.mrp_price ? inventoryConfigData.mrp_price : '',
+            total_price: inventoryConfigData.total_price ? inventoryConfigData.total_price : '',
+            purchase_price: inventoryConfigData.purchase_price ? inventoryConfigData.purchase_price : '',
+            batch_invoice: inventoryConfigData.batch_invoice ? inventoryConfigData.batch_invoice : '',
+            provision: inventoryConfigData.provision ? inventoryConfigData.provision : '',
 
         },
         validate: {
@@ -111,6 +113,8 @@ function ProductConfigurationForm() {
                 form.values['mrp_price'] = (values.mrp_price === true || values.mrp_price == 1) ? 1 : 0
                 form.values['total_price'] = (values.total_price === true || values.total_price == 1) ? 1 : 0
                 form.values['purchase_price'] = (values.purchase_price === true || values.purchase_price == 1) ? 1 : 0
+                form.values['batch_invoice'] = (values.batch_invoice === true || values.batch_invoice == 1) ? 1 : 0
+                form.values['provision'] = (values.provision === true || values.provision == 1) ? 1 : 0
                 dispatch(setValidationData(false))
                 console.log(values)
                 // modals.openConfirmModal({
@@ -124,7 +128,7 @@ function ProductConfigurationForm() {
                 //     onCancel: () => console.log('Cancel'),
                 //     onConfirm: () => {
                 //         const value = {
-                //             url: 'inventory/product-configuration',
+                //             url: 'inventory/inventory-config',
                 //             data: values
                 //         }
                 //         dispatch(updateEntityData(value))
@@ -159,7 +163,7 @@ function ProductConfigurationForm() {
                                                             color="red"
                                                             id={'brand'}
                                                             position={'left'}
-                                                            defaultChecked={productConfigData.brand}
+                                                            defaultChecked={inventoryConfigData.brand}
                                                         />
                                                     </Grid.Col>
                                                     <Grid.Col span={6} fz={'sm'} pt={'1'}>{t('Brand')}</Grid.Col>
@@ -177,7 +181,7 @@ function ProductConfigurationForm() {
                                                             color="red"
                                                             id={'color'}
                                                             position={'left'}
-                                                            defaultChecked={productConfigData.color}
+                                                            defaultChecked={inventoryConfigData.color}
                                                         />
                                                     </Grid.Col>
                                                     <Grid.Col span={6} fz={'sm'} pt={'1'}>{t('Color')}</Grid.Col>
@@ -195,7 +199,7 @@ function ProductConfigurationForm() {
                                                             color="red"
                                                             id={'size'}
                                                             position={'left'}
-                                                            defaultChecked={productConfigData.size}
+                                                            defaultChecked={inventoryConfigData.size}
                                                         />
                                                     </Grid.Col>
                                                     <Grid.Col span={6} fz={'sm'} pt={'1'}>{t('Size')}</Grid.Col>
@@ -207,13 +211,13 @@ function ProductConfigurationForm() {
                                                         <SwitchForm
                                                             tooltip={t('Model')}
                                                             label=''
-                                                            nextField={'measurement'}
+                                                            nextField={'zero_stock'}
                                                             name={'model'}
                                                             form={form}
                                                             color="red"
                                                             id={'model'}
                                                             position={'left'}
-                                                            defaultChecked={productConfigData.model}
+                                                            defaultChecked={inventoryConfigData.model}
                                                         />
                                                     </Grid.Col>
                                                     <Grid.Col span={6} fz={'sm'} pt={'1'}>{t('Model')}</Grid.Col>
@@ -227,136 +231,19 @@ function ProductConfigurationForm() {
                         </Box>
                     </Grid.Col>
                     <Grid.Col span={8}>
-                        <Box bg={'white'} p={'xs'} className={'borderRadiusAll'}>
+                        <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} mb={'8'}>
                             <Box bg={"white"}>
                                 <Box pl={`xs`} pr={8} pt={'8'} pb={'10'} mb={'4'}
                                     className={'boxBackground borderRadiusAll'}>
                                     <Grid>
                                         <Grid.Col >
-                                            <Title order={6} pt={'4'} >{t('Product')}</Title>
+                                            <Title order={6} pt={'4'} >{t('Sales')}</Title>
                                         </Grid.Col>
 
                                     </Grid>
                                 </Box>
                                 <Box pl={`xs`} pr={'xs'} className={'borderRadiusAll'}>
-                                    <ScrollArea h={height} scrollbarSize={2} scrollbars="y" type="never">
-                                        <Box pl={'xs'} pt={'xs'}>
-                                            <Box mt={'xs'}>
-                                                <Grid gutter={{ base: 1 }}>
-                                                    <Grid.Col span={2}>
-                                                        <SwitchForm
-                                                            tooltip={t('Measurement')}
-                                                            label=''
-                                                            nextField={'product_image'}
-                                                            name={'measurement'}
-                                                            form={form}
-                                                            color="red"
-                                                            id={'measurement'}
-                                                            position={'left'}
-                                                            defaultChecked={productConfigData.measurement}
-                                                        />
-                                                    </Grid.Col>
-                                                    <Grid.Col span={6} fz={'sm'} pt={'1'}>{t('Measurement')}</Grid.Col>
-                                                </Grid>
-                                            </Box>
-                                            <Box mt={'xs'}>
-                                                <Grid gutter={{ base: 1 }}>
-                                                    <Grid.Col span={2}>
-                                                        <SwitchForm
-                                                            tooltip={t('ProductImage')}
-                                                            label=''
-                                                            nextField={'product_gallery'}
-                                                            name={'product_image'}
-                                                            form={form}
-                                                            color="red"
-                                                            id={'product_image'}
-                                                            position={'left'}
-                                                            defaultChecked={productConfigData.product_image}
-                                                        />
-                                                    </Grid.Col>
-                                                    <Grid.Col span={6} fz={'sm'}
-                                                        pt={'1'}>{t('ProductImage')}</Grid.Col>
-                                                </Grid>
-                                            </Box>
-                                            <Box mt={'xs'}>
-                                                <Grid gutter={{ base: 1 }}>
-                                                    <Grid.Col span={2}>
-                                                        <SwitchForm
-                                                            tooltip={t('ProductGallery')}
-                                                            label=''
-                                                            nextField={'is_multi_price'}
-                                                            name={'product_gallery'}
-                                                            form={form}
-                                                            color="red"
-                                                            id={'product_gallery'}
-                                                            position={'left'}
-                                                            defaultChecked={productConfigData.product_gallery}
-                                                        />
-                                                    </Grid.Col>
-                                                    <Grid.Col span={6} fz={'sm'} pt={'1'}>{t('ProductGallery')}</Grid.Col>
-                                                </Grid>
-                                            </Box>
-                                            <Box mt={'xs'}>
-                                                <Grid gutter={{ base: 1 }}>
-                                                    <Grid.Col span={2}>
-                                                        <SwitchForm
-                                                            tooltip={t('ProductMultiPrice')}
-                                                            label=''
-                                                            nextField={'zero_stock'}
-                                                            name={'is_multi_price'}
-                                                            form={form}
-                                                            color="red"
-                                                            id={'is_multi_price'}
-                                                            position={'left'}
-                                                            defaultChecked={productConfigData.is_multi_price}
-                                                        />
-                                                    </Grid.Col>
-                                                    <Grid.Col span={6} fz={'sm'} pt={'1'}>{t('ProductMultiPrice')}</Grid.Col>
-                                                </Grid>
-                                            </Box>
-
-                                        </Box>
-
-                                    </ScrollArea>
-                                </Box>
-                            </Box>
-                        </Box>
-                    </Grid.Col>
-                    <Grid.Col span={8}>
-                        <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} mb={'xs'}>
-                            <Box bg={"white"}>
-                                <Box pl={`xs`} pr={8} pt={'6'} pb={'6'} mb={'4'} className={'boxBackground borderRadiusAll'}>
-                                    <Grid>
-                                        <Grid.Col span={6}>
-                                            <Title order={6} pt={'6'}>{t('Sales')}</Title>
-                                        </Grid.Col>
-                                        <Grid.Col span={6}>
-                                            <Stack right align="flex-end">
-                                                <>
-                                                    {
-                                                        !saveCreateLoading && isOnline &&
-                                                        <Button
-                                                            size="xs"
-                                                            color={`green.8`}
-                                                            type="submit"
-                                                            id="EntityFormSubmit"
-                                                            leftSection={<IconDeviceFloppy size={16} />}
-                                                        >
-
-                                                            <Flex direction={`column`} gap={0}>
-                                                                <Text fz={14} fw={400}>
-                                                                    {t("UpdateAndSave")}
-                                                                </Text>
-                                                            </Flex>
-                                                        </Button>
-                                                    }
-                                                </>
-                                            </Stack>
-                                        </Grid.Col>
-                                    </Grid>
-                                </Box>
-                                <Box pl={`xs`} pr={'xs'} className={'borderRadiusAll'}>
-                                    <ScrollArea h={height / 2 - 42} scrollbarSize={2} scrollbars="y" type="never">
+                                    <ScrollArea h={height / 2 - 41} scrollbarSize={2} scrollbars="y" type="never">
                                         <Box pt={'xs'} pl={'xs'}>
                                             <Box mt={'xs'}>
                                                 <Grid gutter={{ base: 1 }}>
@@ -370,7 +257,7 @@ function ProductConfigurationForm() {
                                                             color="red"
                                                             id={'zero_stock'}
                                                             position={'left'}
-                                                            defaultChecked={productConfigData.zero_stock}
+                                                            defaultChecked={inventoryConfigData.zero_stock}
                                                         />
                                                     </Grid.Col>
                                                     <Grid.Col span={6} fz={'sm'}
@@ -389,7 +276,7 @@ function ProductConfigurationForm() {
                                                             color="red"
                                                             id={'stock_item'}
                                                             position={'left'}
-                                                            defaultChecked={productConfigData.stock_item}
+                                                            defaultChecked={inventoryConfigData.stock_item}
                                                         />
                                                     </Grid.Col>
                                                     <Grid.Col span={6} fz={'sm'}
@@ -408,7 +295,7 @@ function ProductConfigurationForm() {
                                                             color="red"
                                                             id={'is_stock_history'}
                                                             position={'left'}
-                                                            defaultChecked={productConfigData.is_stock_history}
+                                                            defaultChecked={inventoryConfigData.is_stock_history}
                                                         />
                                                     </Grid.Col>
                                                     <Grid.Col span={6} fz={'sm'} pt={'1'}>{t('StockHistory')}</Grid.Col>
@@ -437,7 +324,7 @@ function ProductConfigurationForm() {
                                 <Box pl={`xs`} pr={'xs'} className={'borderRadiusAll'}>
                                     <ScrollArea h={height / 2 - 40} scrollbarSize={2} scrollbars="y" type="never">
                                         <Box pl={'xs'} pt={'xs'}>
-                                            <Box pt={'xs'} pl={'xs'}>
+                                            <Box mt={'xs'}>
                                                 <Box mt={'xs'}>
                                                     <Grid gutter={{ base: 1 }}>
                                                         <Grid.Col span={2}>
@@ -450,7 +337,7 @@ function ProductConfigurationForm() {
                                                                 color="red"
                                                                 id={'mrp_price'}
                                                                 position={'left'}
-                                                                defaultChecked={productConfigData.mrp_price}
+                                                                defaultChecked={inventoryConfigData.mrp_price}
                                                             />
                                                         </Grid.Col>
                                                         <Grid.Col span={6} fz={'sm'}
@@ -471,7 +358,7 @@ function ProductConfigurationForm() {
                                                                 color="red"
                                                                 id={'total_price'}
                                                                 position={'left'}
-                                                                defaultChecked={productConfigData.total_price}
+                                                                defaultChecked={inventoryConfigData.total_price}
                                                             />
                                                         </Grid.Col>
                                                         <Grid.Col span={6} fz={'sm'}
@@ -486,17 +373,199 @@ function ProductConfigurationForm() {
                                                             <SwitchForm
                                                                 tooltip={t('PurchasePrice')}
                                                                 label=''
-                                                                nextField={'EntityFormSubmit'}
+                                                                nextField={'measurement'}
                                                                 name={'purchase_price'}
                                                                 form={form}
                                                                 color="red"
                                                                 id={'purchase_price'}
                                                                 position={'left'}
-                                                                defaultChecked={productConfigData.purchase_price}
+                                                                defaultChecked={inventoryConfigData.purchase_price}
                                                             />
                                                         </Grid.Col>
                                                         <Grid.Col span={6} fz={'sm'} pt={'1'}>
                                                             {t('PurchasePrice')}
+                                                        </Grid.Col>
+                                                    </Grid>
+                                                </Box>
+                                            </Box>
+                                        </Box>
+
+                                    </ScrollArea>
+                                </Box>
+                            </Box>
+                        </Box>
+                    </Grid.Col>
+                    <Grid.Col span={8}>
+                        <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} mb={'8'}>
+                            <Box bg={"white"}>
+                                <Box pl={`xs`} pr={8} pt={'6'} pb={'6'} mb={'4'} className={'boxBackground borderRadiusAll'}>
+                                    <Grid>
+                                        <Grid.Col span={6}>
+                                            <Title order={6} pt={'6'}>{t('Product')}</Title>
+                                        </Grid.Col>
+                                        <Grid.Col span={6}>
+                                            <Stack right align="flex-end">
+                                                <>
+                                                    {
+                                                        !saveCreateLoading && isOnline &&
+                                                        <Button
+                                                            size="xs"
+                                                            color={`green.8`}
+                                                            type="submit"
+                                                            id="EntityFormSubmit"
+                                                            leftSection={<IconDeviceFloppy size={16} />}
+                                                        >
+
+                                                            <Flex direction={`column`} gap={0}>
+                                                                <Text fz={14} fw={400}>
+                                                                    {t("UpdateAndSave")}
+                                                                </Text>
+                                                            </Flex>
+                                                        </Button>
+                                                    }
+                                                </>
+                                            </Stack>
+                                        </Grid.Col>
+                                    </Grid>
+                                </Box>
+
+                                <Box pl={`xs`} pr={'xs'} className={'borderRadiusAll'}>
+                                    <ScrollArea h={height / 2 - 40} scrollbarSize={2} scrollbars="y" type="never">
+                                        <Box pl={'xs'} pt={'xs'}>
+                                            <Box mt={'xs'}>
+                                                <Grid gutter={{ base: 1 }}>
+                                                    <Grid.Col span={2}>
+                                                        <SwitchForm
+                                                            tooltip={t('Measurement')}
+                                                            label=''
+                                                            nextField={'product_image'}
+                                                            name={'measurement'}
+                                                            form={form}
+                                                            color="red"
+                                                            id={'measurement'}
+                                                            position={'left'}
+                                                            defaultChecked={inventoryConfigData.measurement}
+                                                        />
+                                                    </Grid.Col>
+                                                    <Grid.Col span={6} fz={'sm'} pt={'1'}>{t('Measurement')}</Grid.Col>
+                                                </Grid>
+                                            </Box>
+                                            <Box mt={'xs'}>
+                                                <Grid gutter={{ base: 1 }}>
+                                                    <Grid.Col span={2}>
+                                                        <SwitchForm
+                                                            tooltip={t('ProductImage')}
+                                                            label=''
+                                                            nextField={'product_gallery'}
+                                                            name={'product_image'}
+                                                            form={form}
+                                                            color="red"
+                                                            id={'product_image'}
+                                                            position={'left'}
+                                                            defaultChecked={inventoryConfigData.product_image}
+                                                        />
+                                                    </Grid.Col>
+                                                    <Grid.Col span={6} fz={'sm'}
+                                                        pt={'1'}>{t('ProductImage')}</Grid.Col>
+                                                </Grid>
+                                            </Box>
+                                            <Box mt={'xs'}>
+                                                <Grid gutter={{ base: 1 }}>
+                                                    <Grid.Col span={2}>
+                                                        <SwitchForm
+                                                            tooltip={t('ProductGallery')}
+                                                            label=''
+                                                            nextField={'is_multi_price'}
+                                                            name={'product_gallery'}
+                                                            form={form}
+                                                            color="red"
+                                                            id={'product_gallery'}
+                                                            position={'left'}
+                                                            defaultChecked={inventoryConfigData.product_gallery}
+                                                        />
+                                                    </Grid.Col>
+                                                    <Grid.Col span={6} fz={'sm'} pt={'1'}>{t('ProductGallery')}</Grid.Col>
+                                                </Grid>
+                                            </Box>
+                                            <Box mt={'xs'}>
+                                                <Grid gutter={{ base: 1 }}>
+                                                    <Grid.Col span={2}>
+                                                        <SwitchForm
+                                                            tooltip={t('ProductMultiPrice')}
+                                                            label=''
+                                                            nextField={'batch_invoice'}
+                                                            name={'is_multi_price'}
+                                                            form={form}
+                                                            color="red"
+                                                            id={'is_multi_price'}
+                                                            position={'left'}
+                                                            defaultChecked={inventoryConfigData.is_multi_price}
+                                                        />
+                                                    </Grid.Col>
+                                                    <Grid.Col span={6} fz={'sm'} pt={'1'}>{t('ProductMultiPrice')}</Grid.Col>
+                                                </Grid>
+                                            </Box>
+
+                                        </Box>
+
+                                    </ScrollArea>
+                                </Box>
+                            </Box>
+                        </Box>
+                        <Box bg={'white'} p={'xs'} className={'borderRadiusAll'}>
+                            <Box bg={"white"}>
+                                <Box pl={`xs`} pr={8} pt={'8'} pb={'10'} mb={'4'}
+                                    className={'boxBackground borderRadiusAll'}>
+                                    <Grid>
+                                        <Grid.Col >
+                                            <Title order={6} pt={'4'} >{t('InventoryConfiguration')}</Title>
+                                        </Grid.Col>
+
+                                    </Grid>
+                                </Box>
+                                <Box pl={`xs`} pr={'xs'} className={'borderRadiusAll'}>
+                                    <ScrollArea h={height / 2 - 40} scrollbarSize={2} scrollbars="y" type="never">
+                                        <Box pl={'xs'} pt={'xs'}>
+                                            <Box mt={'xs'} >
+                                                <Box mt={'xs'}>
+                                                    <Grid gutter={{ base: 1 }}>
+                                                        <Grid.Col span={2}>
+                                                            <SwitchForm
+                                                                tooltip={t('BatchInvoice')}
+                                                                label=''
+                                                                nextField={'provision'}
+                                                                name={'batch_invoice'}
+                                                                form={form}
+                                                                color="red"
+                                                                id={'batch_invoice'}
+                                                                position={'left'}
+                                                                defaultChecked={inventoryConfigData.mrp_price}
+                                                            />
+                                                        </Grid.Col>
+                                                        <Grid.Col span={6} fz={'sm'}
+                                                            pt={'1'}>
+                                                            {t('BatchInvoice')}
+                                                        </Grid.Col>
+                                                    </Grid>
+                                                </Box>
+                                                <Box mt={'xs'}>
+                                                    <Grid gutter={{ base: 1 }}>
+                                                        <Grid.Col span={2}>
+                                                            <SwitchForm
+                                                                tooltip={t('Provision')}
+                                                                label=''
+                                                                nextField={'EntityFormSubmit'}
+                                                                name={'provision'}
+                                                                form={form}
+                                                                color="red"
+                                                                id={'provision'}
+                                                                position={'left'}
+                                                                defaultChecked={inventoryConfigData.total_price}
+                                                            />
+                                                        </Grid.Col>
+                                                        <Grid.Col span={6} fz={'sm'}
+                                                            pt={'1'}>
+                                                            {t('Provision')}
                                                         </Grid.Col>
                                                     </Grid>
                                                 </Box>
@@ -524,4 +593,4 @@ function ProductConfigurationForm() {
     );
 }
 
-export default ProductConfigurationForm;
+export default InventoryConfigurationForm;
