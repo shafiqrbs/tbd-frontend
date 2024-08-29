@@ -327,7 +327,7 @@ function InvoiceBatchTable() {
                                     loaderProps={{ color: 'red' }}
                                 />
                             }
-                            <Box h={'42'} pl={`xs`} fz={'sm'} fw={'600'} pr={8} pt={'xs'} className={'boxBackground textColor borderRadiusAll'} >
+                            <Box h={'42'} pl={`xs`} mb={4} fz={'sm'} fw={'600'} pr={8} pt={'xs'} className={'boxBackground textColor borderRadiusAll'} >
                                 {t('Invoice')}: {invoiceBatchData && invoiceBatchData.invoice && invoiceBatchData.invoice}
                             </Box>
                             <Box className={'borderRadiusAll border-top-none'} fz={'sm'}  >
@@ -389,7 +389,7 @@ function InvoiceBatchTable() {
                                         </Grid>
                                     </Box>
                                 </ScrollArea>
-                                <ScrollArea h={height + 34} scrollbarSize={2} type="never" >
+                                <ScrollArea h={height + 31} scrollbarSize={2} type="never" >
                                     <Box>
                                         <Table stickyHeader >
                                             <Table.Thead>
@@ -439,7 +439,7 @@ function InvoiceBatchTable() {
                                     </Box>
                                 </ScrollArea>
                             </Box>
-                            <Button.Group fullWidth pb={1}>
+                            <Button.Group fullWidth mb={2}>
                                 <Button
                                     fullWidth
                                     variant="filled"
