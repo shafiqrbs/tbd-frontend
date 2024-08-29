@@ -30,21 +30,21 @@ function MarketingExecutiveIndex() {
     const configData = getConfigData()
     const navigate = useNavigate()
 
-    const { executiveId } = useParams();
+    const { id } = useParams();
 
 
     useEffect(() => {
-        if (executiveId) {
+        if (id) {
             dispatch(setInsertType('update'));
-            dispatch(editEntityData(`/core/marketing-executive/${executiveId}`));
+            dispatch(editEntityData(`/core/marketing-executive/${id}`));
             dispatch(setFormLoading(true));
-        } else if (!executiveId) {
+        } else if (!id) {
             dispatch(setInsertType('create'));
             dispatch(setSearchKeyword(''));
             dispatch(setEntityNewData([]));
             navigate('/core/marketing-executive');
         }
-    }, [executiveId, dispatch, navigate]);
+    }, [id, dispatch, navigate]);
 
 
     return (

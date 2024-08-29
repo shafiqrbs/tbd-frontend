@@ -33,21 +33,21 @@ function ProductSettingsIndex() {
     const configData = getConfigData()
     const navigate = useNavigate()
 
-    const { settingsId } = useParams();
+    const { id } = useParams();
 
 
     useEffect(() => {
-        if (settingsId) {
+        if (id) {
             dispatch(setInsertType('update'));
-            dispatch(editEntityData(`/inventory/product-settings/${settingsId}`));
+            dispatch(editEntityData(`/inventory/product-settings/${id}`));
             dispatch(setFormLoading(true));
-        } else if (!settingsId) {
+        } else if (!id) {
             dispatch(setInsertType('create'));
             dispatch(setSearchKeyword(''));
             dispatch(setEntityNewData([]));
             navigate('/inventory/product-settings');
         }
-    }, [settingsId, dispatch, navigate]);
+    }, [id, dispatch, navigate]);
 
 
     return (

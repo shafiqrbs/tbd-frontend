@@ -23,15 +23,15 @@ function UserIndex() {
     const insertType = useSelector((state) => state.crudSlice.insertType)
     const userFilterData = useSelector((state) => state.crudSlice.userFilterData)
 
-    const { userId } = useParams();
+    const { id } = useParams();
     const navigate = useNavigate();
     const progress = getLoadingProgress()
 
     useEffect(() => {
-        userId ? (
+        id ? (
             (
                 dispatch(setInsertType('update')),
-                dispatch(editEntityData(`core/user/${userId}`)),
+                dispatch(editEntityData(`core/user/${id}`)),
                 dispatch(setFormLoading(true)))
         ) : (
             (
@@ -45,7 +45,7 @@ function UserIndex() {
                 })),
                 navigate('/core/user', { replace: true }))
         );
-    }, [userId, dispatch, navigate]);
+    }, [id, dispatch, navigate]);
 
 
     return (

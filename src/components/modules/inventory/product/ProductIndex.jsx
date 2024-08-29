@@ -23,12 +23,12 @@ function ProductIndex() {
     const dispatch = useDispatch()
 
     const navigate = useNavigate();
-    const { productId } = useParams()
+    const { id } = useParams()
 
     useEffect(() => {
-        productId ? ((
+        id ? ((
             dispatch(setInsertType('update')),
-            dispatch(editEntityData(`inventory/product/${productId}`)),
+            dispatch(editEntityData(`inventory/product/${id}`)),
             dispatch(setFormLoading(true))
         )) : ((
             dispatch(setInsertType('create')),
@@ -36,7 +36,7 @@ function ProductIndex() {
             dispatch(setEntityNewData([])),
             navigate('/inventory/product', { replace: true })
         ))
-    }, [productId, dispatch, navigate])
+    }, [id, dispatch, navigate])
 
 
     return (

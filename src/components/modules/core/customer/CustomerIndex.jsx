@@ -28,7 +28,7 @@ import getCoreSettingCustomerGroupDropdownData
 function CustomerIndex() {
     const { t } = useTranslation();
     const dispatch = useDispatch();
-    const { customerId } = useParams();
+    const { id } = useParams();
     const navigate = useNavigate();
 
     const insertType = useSelector((state) => state.crudSlice.insertType)
@@ -43,11 +43,11 @@ function CustomerIndex() {
 
 
     useEffect(() => {
-        if (customerId) {
+        if (id) {
             dispatch(setInsertType('update'));
-            dispatch(editEntityData(`core/customer/${customerId}`));
+            dispatch(editEntityData(`core/customer/${id}`));
             dispatch(setFormLoading(true));
-        } else if (!customerId) {
+        } else if (!id) {
             dispatch(setInsertType('create'));
             dispatch(setSearchKeyword(''));
             dispatch(setEntityNewData([]));
@@ -58,7 +58,7 @@ function CustomerIndex() {
             }));
             navigate('/core/customer', { replace: true });
         }
-    }, [customerId, dispatch, navigate]);
+    }, [id, dispatch, navigate]);
 
 
 

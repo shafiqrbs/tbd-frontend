@@ -27,12 +27,12 @@ function CategoryGroupIndex() {
     const configData = getConfigData()
 
     const navigate = useNavigate()
-    const { categoryGroupId } = useParams()
+    const { id } = useParams()
 
     useEffect(() => {
-        categoryGroupId ? ((
+        id ? ((
             dispatch(setInsertType('update')),
-            dispatch(editEntityData(`inventory/category-group/${categoryGroupId}`))
+            dispatch(editEntityData(`inventory/category-group/${id}`))
             
         )) : ((
             dispatch(setInsertType('create')),
@@ -40,7 +40,7 @@ function CategoryGroupIndex() {
             dispatch(setEntityNewData([])),
             navigate('/inventory/category-group', {replace : true})
         ))
-    }, [categoryGroupId, dispatch, navigate])
+    }, [id, dispatch, navigate])
 
     return (
         <>

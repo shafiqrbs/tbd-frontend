@@ -30,21 +30,21 @@ function LocationIndex() {
     const configData = getConfigData()
     const navigate = useNavigate()
 
-    const { locationId } = useParams();
+    const { id } = useParams();
 
 
     useEffect(() => {
-        if (locationId) {
+        if (id) {
             dispatch(setInsertType('update'));
-            dispatch(editEntityData(`/core/location/${locationId}`));
+            dispatch(editEntityData(`/core/location/${id}`));
             dispatch(setFormLoading(true));
-        } else if (!locationId) {
+        } else if (!id) {
             dispatch(setInsertType('create'));
             dispatch(setSearchKeyword(''));
             dispatch(setEntityNewData([]));
             navigate('/core/location');
         }
-    }, [locationId, dispatch, navigate]);
+    }, [id, dispatch, navigate]);
 
 
     return (
