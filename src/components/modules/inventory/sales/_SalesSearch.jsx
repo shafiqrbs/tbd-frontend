@@ -372,7 +372,7 @@ function _SalesSearch(props) {
                                 transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
                             >
                                 <Button
-                                    fullWidth
+                                    fullWidth={true}
                                     variant="filled"
                                     color="green.8"
                                     onClick={(e) => {

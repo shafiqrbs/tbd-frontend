@@ -25,7 +25,6 @@ import {
 
 import SelectForm from "../../../form-builders/SelectForm.jsx";
 import TextAreaForm from "../../../form-builders/TextAreaForm.jsx";
-import InputNumberForm from "../../../form-builders/InputNumberForm";
 import Shortcut from "../../shortcut/Shortcut.jsx";
 import PhoneNumber from "../../../form-builders/PhoneNumberInput.jsx";
 
@@ -46,7 +45,12 @@ function VendorUpdateForm(props) {
 
     const form = useForm({
         initialValues: {
-            company_name: '', name: '', mobile: '', email: '', customer_id: '', address: ''
+            company_name: entityEditData.company_name ? entityEditData.company_name : '',
+            name: entityEditData.name ? entityEditData.name : '',
+            mobile: entityEditData.mobile ? entityEditData.mobile : '',
+            customer_id: entityEditData.customer_id ? entityEditData.customer_id : '',
+            address: entityEditData.address ? entityEditData.address : '',
+            email: entityEditData.email ? entityEditData.email : '',
         },
         validate: {
             company_name: hasLength({ min: 2, max: 20 }),
@@ -89,7 +93,7 @@ function VendorUpdateForm(props) {
 
     }, [dispatch, entityEditData])
 
-    const handelFormReset = () => {
+    const handleFormReset = () => {
         if (entityEditData) {
             const originalValues = {
                 company_name: entityEditData.company_name ? entityEditData.company_name : '',
@@ -109,7 +113,7 @@ function VendorUpdateForm(props) {
     }]], []);
 
     useHotkeys([['alt+r', () => {
-        handelFormReset();
+        handleFormReset();
     }]], []);
 
     useHotkeys([['alt+s', () => {
@@ -290,6 +294,7 @@ function VendorUpdateForm(props) {
                     <Grid.Col span={1} >
                         <Box bg={'white'} className={'borderRadiusAll'} pt={'16'}>
                             <Shortcut
+                                handleFormReset={handleFormReset}
                                 entityEditData={entityEditData}
                                 form={form}
                                 FormSubmit={'EntityFormSubmit'}

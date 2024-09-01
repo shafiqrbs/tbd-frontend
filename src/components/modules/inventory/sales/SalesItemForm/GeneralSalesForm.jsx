@@ -905,7 +905,7 @@ function GeneralSalesForm(props) {
                                     <Box p={'xs'} pt={0}>
                                         <Grid gutter={{ base: 6 }}  >
                                             <Grid.Col span={3}>
-                                                <Switch fullWidth size="lg" w={'100%'} color={'red.3'} mt={'2'} ml={'6'} onLabel={t('Profit')} offLabel={t('Hide')} radius="xs" />
+                                                <Switch size="lg" w={'100%'} color={'red.3'} mt={'2'} ml={'6'} onLabel={t('Profit')} offLabel={t('Hide')} radius="xs" />
                                             </Grid.Col>
                                             <Grid.Col span={3}><Center fz={'xs'} mt={'xs'} c={'red'}>{currancySymbol} 1200</Center></Grid.Col>
                                             <Grid.Col span={3}><Center fz={'md'} mt={'4'}>Due</Center></Grid.Col>
@@ -915,7 +915,7 @@ function GeneralSalesForm(props) {
                                     <Box p={'xs'} style={{ background: 'rgba(226,194,194,0.39)' }}>
                                         <Grid gutter={{ base: 6 }}>
                                             <Grid.Col span={3}>
-                                                <Button fullWidth onClick={() => discountType()} variant="filled" fz={'xs'}
+                                                <Button fullWidth={true} onClick={() => discountType()} variant="filled" fz={'xs'}
                                                     leftSection={
                                                         value === 'Flat' ? <IconCurrencyTaka size={14} /> : <IconPercentage size={14} />
                                                     } color="red">{value}</Button>
@@ -982,11 +982,11 @@ function GeneralSalesForm(props) {
                             </ScrollArea>
 
                             <Box mt={'xs'} style={{ borderTop: '1px solid red' }} pt={'xs'}>
-                                <Button.Group fullWidth>
-                                    <Button fullWidth variant="filled" leftSection={<IconPrinter size={14} />} color="green">Print</Button>
-                                    <Button fullWidth variant="filled" leftSection={<IconReceipt size={14} />} color="red">Pos</Button>
-                                    <Button fullWidth variant="filled" leftSection={<IconDeviceFloppy size={14} />} color="indigo">Save</Button>
-                                    <Button fullWidth variant="filled" leftSection={<IconStackPush size={14} />} color="yellow">Hold</Button>
+                                <Button.Group >
+                                    <Button fullWidth={true} variant="filled" leftSection={<IconPrinter size={14} />} color="green">Print</Button>
+                                    <Button fullWidth={true} variant="filled" leftSection={<IconReceipt size={14} />} color="red">Pos</Button>
+                                    <Button fullWidth={true} variant="filled" leftSection={<IconDeviceFloppy size={14} />} color="indigo">Save</Button>
+                                    <Button fullWidth={true} variant="filled" leftSection={<IconStackPush size={14} />} color="yellow">Hold</Button>
                                 </Button.Group>
                             </Box>
                         </Grid.Col>

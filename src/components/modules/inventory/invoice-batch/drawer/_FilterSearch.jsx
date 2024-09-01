@@ -137,9 +137,9 @@ function _FilterSearch(props) {
                     <Drawer.Header>
                         <Drawer.Title>
                             <Text fw={'600'} fz={'16'}>
-                            {t('AddTransaction')}
+                                {t('AddTransaction')}
                             </Text>
-                            </Drawer.Title>
+                        </Drawer.Title>
                         <Drawer.CloseButton />
                     </Drawer.Header>
                     <form onSubmit={form.onSubmit((values) => {
@@ -252,10 +252,10 @@ function _FilterSearch(props) {
                         </ScrollArea>
                         <Box className={'boxBackground'} p={'md'}>
                             <Box>
-                                <Button.Group fullWidth>
+                                <Button.Group >
 
                                     <Button
-                                        fullWidth
+                                        fullWidth={true}
                                         variant="filled"
                                         type={'submit'}
                                         onClick={handleClick}
@@ -268,11 +268,11 @@ function _FilterSearch(props) {
                                             backgroundColor: isDisabled ? "#f1f3f500" : ""
                                         }}
                                     >
-                                        Print
+                                        {t('Print')}
                                     </Button>
 
                                     <Button
-                                        fullWidth
+                                        fullWidth={true}
                                         type={'submit'}
                                         onClick={handleClick}
                                         name="save"
@@ -285,7 +285,7 @@ function _FilterSearch(props) {
                                             backgroundColor: isDisabled ? "#f1f3f500" : ""
                                         }}
                                     >
-                                        Save
+                                        {t('Save')}
                                     </Button>
                                 </Button.Group>
                             </Box>

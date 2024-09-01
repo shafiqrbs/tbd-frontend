@@ -62,7 +62,7 @@ function InvoiceDomain359Normal(props) {
     const reactToPrintTrigger = useCallback(() => {
         return (
             <Button
-                fullWidth
+            fullWidth={true}
                 variant="filled"
                 leftSection={<IconReceipt size={14} />}
                 color="red.5"

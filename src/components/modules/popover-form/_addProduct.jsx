@@ -186,7 +186,7 @@ function _addProduct(props) {
                                         type="reset"
                                         mt={0}
                                         mr={'xs'}
-                                        fullWidth
+                                        fullWidth={true}
                                         id=""
                                         comboboxProps={{ withinPortal: false }}
                                         onClick={() => {
@@ -207,7 +207,7 @@ function _addProduct(props) {
                                         type="submit"
                                         mt={0}
                                         mr={'xs'}
-                                        fullWidth
+                                        fullWidth={true}
                                         comboboxProps={{ withinPortal: false }}
                                         id={fieldPrefix+"EntityProductFormSubmit"}
                                         leftSection={<IconDeviceFloppy size={16} />}

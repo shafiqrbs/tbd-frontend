@@ -579,7 +579,7 @@ function __UpdateInvoiceForm(props) {
                                         <Grid gutter={{ base: 2 }} mt={'xs'}>
                                             <Grid.Col span={4}>
                                                 <Button
-                                                    fullWidth
+                                                    fullWidth={true}
                                                     onClick={() => {
                                                         setDiscountType(discountType === 'Flat' ? 'Percent' : 'Flat')
                                                     }}
@@ -676,9 +676,9 @@ function __UpdateInvoiceForm(props) {
 
                             </ScrollArea>
                             <Box>
-                                <Button.Group fullWidth>
+                                <Button.Group >
                                     <Button
-                                        fullWidth
+                                        fullWidth={true}
                                         variant="filled"
                                         leftSection={<IconStackPush size={14} />}
                                         color="orange.5"
@@ -686,7 +686,7 @@ function __UpdateInvoiceForm(props) {
                                         Hold
                                     </Button>
                                     <Button
-                                        fullWidth
+                                        fullWidth={true}
                                         type={'submit'}
                                         onClick={handleClick}
                                         variant="filled"
@@ -702,7 +702,7 @@ function __UpdateInvoiceForm(props) {
                                         {t('Print')}
                                     </Button>
                                     <Button
-                                        fullWidth
+                                        fullWidth={true}
                                         type={'submit'}
                                         variant="filled"
                                         leftSection={<IconReceipt size={14} />}
@@ -718,7 +718,7 @@ function __UpdateInvoiceForm(props) {
                                         {t('Pos')}
                                     </Button>
                                     <Button
-                                        fullWidth
+                                        fullWidth={true}
                                         type={'submit'}
                                         variant="filled"
                                         leftSection={<IconDeviceFloppy size={14} />}

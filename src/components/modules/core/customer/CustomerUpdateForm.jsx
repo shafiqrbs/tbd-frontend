@@ -49,25 +49,21 @@ function CustomerUpdateForm(props) {
 
     const form = useForm({
         initialValues: {
-            name: '',
-            customer_group_id: '',
-            credit_limit: '',
-            reference_id: '',
-            mobile: '',
-            alternative_mobile: '',
-            email: '',
-            location_id: '',
-            marketing_id: '',
-            address: '',
+            name: entityEditData?.name || '',
+            customer_group_id: entityEditData?.customer_group_id || '',
+            credit_limit: entityEditData?.credit_Limit || '',
+            reference_id: entityEditData?.reference_id || '',
+            mobile: entityEditData?.mobile || '',
+            alternative_mobile: entityEditData?.alternative_mobile || '',
+            email: entityEditData?.email || '',
+            location_id: entityEditData?.location_id || '',
+            marketing_id: entityEditData?.marketing_id || '',
+            address: entityEditData?.address || '',
         },
         validate: {
             name: hasLength({ min: 2, max: 50 }),
             mobile: (value) => {
                 if (!value) return t('MobileValidationRequired');
-                return null;
-            },
-            alternative_mobile: (value) => {
-                if (value && !value) return t('MobileValidationRequired');
                 return null;
             },
             email: (value) => {
@@ -97,17 +93,17 @@ function CustomerUpdateForm(props) {
     useEffect(() => {
         if (entityEditData) {
             form.setValues({
-                name: entityEditData.name,
-                customer_group_id: entityEditData.customer_group_id,
-                credit_limit: entityEditData.credit_limit,
-                reference_id: entityEditData.reference_id,
-                mobile: entityEditData.mobile,
-                alternative_mobile: entityEditData.alternative_mobile,
-                email: entityEditData.email,
-                location_id: entityEditData.location_id,
-                marketing_id: entityEditData.marketing_id,
-                address: entityEditData.address,
-            })
+                name: entityEditData?.name || '',
+                customer_group_id: entityEditData?.customer_group_id || '',
+                credit_limit: entityEditData?.credit_Limit || '',
+                reference_id: entityEditData?.reference_id || '',
+                mobile: entityEditData?.mobile || '',
+                alternative_mobile: entityEditData?.alternative_mobile || '',
+                email: entityEditData?.email || '',
+                location_id: entityEditData?.location_id || '',
+                marketing_id: entityEditData?.marketing_id || '',
+                address: entityEditData?.address || '',
+            });
         }
         dispatch(setFormLoading(false))
         setTimeout(() => {
@@ -133,16 +129,16 @@ function CustomerUpdateForm(props) {
     const handleFormReset = () => {
         if (entityEditData && Object.keys(entityEditData).length > 0) {
             const originalValues = {
-                name: entityEditData.name || '',
-                customer_group_id: entityEditData.customer_group_id || '',
-                credit_limit: entityEditData.credit_limit || '',
-                reference_id: entityEditData.reference_id || '',
-                mobile: entityEditData.mobile || '',
-                alternative_mobile: entityEditData.alternative_mobile || '',
-                email: entityEditData.email || '',
-                location_id: entityEditData.location_id || '',
-                marketing_id: entityEditData.marketing_id || '',
-                address: entityEditData.address || '',
+                name: entityEditData?.name || '',
+                customer_group_id: entityEditData?.customer_group_id || '',
+                credit_limit: entityEditData?.credit_Limit || '',
+                reference_id: entityEditData?.reference_id || '',
+                mobile: entityEditData?.mobile || '',
+                alternative_mobile: entityEditData?.alternative_mobile || '',
+                email: entityEditData?.email || '',
+                location_id: entityEditData?.location_id || '',
+                marketing_id: entityEditData?.marketing_id || '',
+                address: entityEditData?.address || '',
             };
             form.setValues(originalValues);
         }
@@ -183,11 +179,7 @@ function CustomerUpdateForm(props) {
                         setTimeout(() => {
                             customerDataStoreIntoLocalStorage()
                             form.reset()
-                            dispatch(setInsertType('create'))
-                            dispatch(setEditEntityData([]))
                             dispatch(setFetching(true))
-                            setSaveCreateLoading(false)
-                            navigate('/core/customer', { replace: true })
                         }, 700)
                     },
                 });
@@ -410,6 +402,7 @@ function CustomerUpdateForm(props) {
                     <Grid.Col span={1} >
                         <Box bg={'white'} className={'borderRadiusAll'} pt={'16'}>
                             <Shortcut
+                                handleFormReset={handleFormReset}
                                 entityEditData={entityEditData}
                                 form={form}
                                 FormSubmit={'EntityFormSubmit'}

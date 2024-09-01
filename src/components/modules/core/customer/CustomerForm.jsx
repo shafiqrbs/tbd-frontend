@@ -39,11 +39,6 @@ function CustomerForm(props) {
     const [locationData, setLocationData] = useState(null);
     const [marketingExeData, setMarketingExeData] = useState(null);
 
-    const validationMessage = useSelector((state) => state.crudSlice.validationMessage)
-    const validation = useSelector((state) => state.crudSlice.validation)
-    const entityNewData = useSelector((state) => state.crudSlice.entityNewData)
-
-
     const form = useForm({
         initialValues: {
             name: '',
@@ -61,10 +56,6 @@ function CustomerForm(props) {
             name: hasLength({ min: 2, max: 20 }),
             mobile: (value) => {
                 if (!value) return t('MobileValidationRequired');
-                return null;
-            },
-            alternative_mobile: (value) => {
-                if (value && !value) return t('MobileValidationRequired');
                 return null;
             },
             email: (value) => {
@@ -85,39 +76,6 @@ function CustomerForm(props) {
         }
     });
 
-
-    useEffect(() => {
-        if (validation) {
-            validationMessage.name && (form.setFieldError('name', true));
-            validationMessage.mobile && (form.setFieldError('mobile', true));
-            validationMessage.email && (form.setFieldError('email', true));
-            validationMessage.credit_limit && (form.setFieldError('credit_limit', true));
-            validationMessage.alternative_mobile && (form.setFieldError('alternative_mobile', true));
-            dispatch(setValidationData(false))
-        }
-
-        if (entityNewData.message === 'success') {
-            customerDataStoreIntoLocalStorage()
-            notifications.show({
-                color: 'teal',
-                title: t('CreateSuccessfully'),
-                icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
-                loading: false,
-                autoClose: 700,
-                style: { backgroundColor: 'lightgray' },
-            });
-
-            setTimeout(() => {
-                form.reset()
-                setMarketingExeData(null)
-                setCustomerGroupData(null)
-                setLocationData(null)
-                dispatch(setEntityNewData([]))
-                dispatch(setFetching(true))
-            }, 700)
-        }
-    }, [validation, validationMessage, form]);
-
     const [groupDrawer, setGroupDrawer] = useState(false)
 
 
@@ -127,34 +85,16 @@ function CustomerForm(props) {
 
 
     useHotkeys([['alt+r', () => {
-        handleFormReset()
+        form.reset()
     }]], []);
 
     useHotkeys([['alt+s', () => {
         !groupDrawer && document.getElementById('EntityFormSubmit').click()
     }]], []);
 
-    const handleFormReset = () => {
-
-        const originalValues = {
-            name: '',
-            customer_group_id: '',
-            credit_limit: '',
-            reference_id: '',
-            mobile: '',
-            alternative_mobile: '',
-            email: '',
-            location_id: '',
-            marketing_id: '',
-            address: '',
-        };
-        form.setValues(originalValues);
-    }
-
     return (
         <Box>
             <form onSubmit={form.onSubmit((values) => {
-                dispatch(setValidationData(false))
                 modals.openConfirmModal({
                     title: (
                         <Text size="md"> {t("FormConfirmationTitle")}</Text>
@@ -170,6 +110,24 @@ function CustomerForm(props) {
                             data: values
                         }
                         dispatch(storeEntityData(value))
+
+                        notifications.show({
+                            color: 'teal',
+                            title: t('CreateSuccessfully'),
+                            icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
+                            loading: false,
+                            autoClose: 700,
+                            style: { backgroundColor: 'lightgray' },
+                        });
+
+                        setTimeout(() => {
+                            form.reset()
+                            setMarketingExeData(null)
+                            setCustomerGroupData(null)
+                            setLocationData(null)
+                            dispatch(setEntityNewData([]))
+                            dispatch(setFetching(true))
+                        }, 700)
                     },
                 });
             })}>
@@ -247,7 +205,7 @@ function CustomerForm(props) {
                                                                 transitionProps={{ duration: 200 }}
                                                                 label={t('QuickCustomerGroup')}
                                                             >
-                                                                <ActionIcon fullWidth variant="outline" bg={'white'} size={'lg'} color="red.5" mt={'1'} aria-label="Settings" onClick={() => {
+                                                                <ActionIcon variant="outline" bg={'white'} size={'lg'} color="red.5" mt={'1'} aria-label="Settings" onClick={() => {
                                                                     setGroupDrawer(true)
                                                                 }}>
                                                                     <IconUsersGroup style={{ width: '100%', height: '70%' }} stroke={1.5} />

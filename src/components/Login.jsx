@@ -173,7 +173,7 @@ export default function Login() {
                                 <Box ml={5}>Back to the sign-up page</Box>
                             </Center>
                         </Anchor>
-                        <Button fullWidth mt="xl" size="md" type='submit' id={"LoginSubmit"} className={LoginPage.control} rightSection={<IconLogin />}>
+                        <Button fullWidth={true} mt="xl" bg={'red.5'} size="md" type='submit' id={"LoginSubmit"} className={LoginPage.control} rightSection={<IconLogin />}>
                             {
                                 spinner ? <Loader color="red" type="dots" size={30} /> : 'Login'
                             }

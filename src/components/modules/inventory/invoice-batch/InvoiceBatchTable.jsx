@@ -405,31 +405,31 @@ function InvoiceBatchTable() {
                                             <Table.Tbody>{rows}</Table.Tbody>
                                             <Table.Tfoot>
                                                 <Table.Tr>
-                                                    <Table.Th colspan={'5'} ta="right" fz="xs" w={'100'}>{t('SubTotal')}</Table.Th>
+                                                    <Table.Th colSpan={'5'} ta="right" fz="xs" w={'100'}>{t('SubTotal')}</Table.Th>
                                                     <Table.Th ta="right" fz="xs" w={'100'}>
                                                         {invoiceBatchData && invoiceBatchData.sub_total && Number(invoiceBatchData.sub_total).toFixed(2)}
                                                     </Table.Th>
                                                 </Table.Tr>
                                                 <Table.Tr>
-                                                    <Table.Th colspan={'5'} ta="right" fz="xs" w={'100'}>{t('Discount')}</Table.Th>
+                                                    <Table.Th colSpan={'5'} ta="right" fz="xs" w={'100'}>{t('Discount')}</Table.Th>
                                                     <Table.Th ta="right" fz="xs" w={'100'}>
                                                         {invoiceBatchData && invoiceBatchData.discount && Number(invoiceBatchData.discount).toFixed(2)}
                                                     </Table.Th>
                                                 </Table.Tr>
                                                 <Table.Tr>
-                                                    <Table.Th colspan={'5'} ta="right" fz="xs" w={'100'}>{t('Total')}</Table.Th>
+                                                    <Table.Th colSpan={'5'} ta="right" fz="xs" w={'100'}>{t('Total')}</Table.Th>
                                                     <Table.Th ta="right" fz="xs" w={'100'}>
                                                         {invoiceBatchData && invoiceBatchData.total && Number(invoiceBatchData.total).toFixed(2)}
                                                     </Table.Th>
                                                 </Table.Tr>
                                                 <Table.Tr>
-                                                    <Table.Th colspan={'5'} ta="right" fz="xs" w={'100'}>{t('Receive')}</Table.Th>
+                                                    <Table.Th colSpan={'5'} ta="right" fz="xs" w={'100'}>{t('Receive')}</Table.Th>
                                                     <Table.Th ta="right" fz="xs" w={'100'}>
                                                         {invoiceBatchData && invoiceBatchData.payment && Number(invoiceBatchData.payment).toFixed(2)}
                                                     </Table.Th>
                                                 </Table.Tr>
                                                 <Table.Tr>
-                                                    <Table.Th colspan={'5'} ta="right" fz="xs" w={'100'}>{t('Due')}</Table.Th>
+                                                    <Table.Th colSpan={'5'} ta="right" fz="xs" w={'100'}>{t('Due')}</Table.Th>
                                                     <Table.Th ta="right" fz="xs" w={'100'}>
                                                         {invoiceBatchData && invoiceBatchData.total && (Number(invoiceBatchData.total) - Number(invoiceBatchData.payment)).toFixed(2)}
                                                     </Table.Th>
@@ -439,9 +439,9 @@ function InvoiceBatchTable() {
                                     </Box>
                                 </ScrollArea>
                             </Box>
-                            <Button.Group fullWidth mb={2}>
+                            <Button.Group mb={2}>
                                 <Button
-                                    fullWidth
+                                    fullWidth={true}
                                     variant="filled"
                                     leftSection={<IconPrinter size={14} />}
                                     color="green.5"
@@ -452,7 +452,7 @@ function InvoiceBatchTable() {
                                     {t('Print')}
                                 </Button>
                                 <Button
-                                    fullWidth
+                                    fullWidth={true}
                                     variant="filled"
                                     leftSection={<IconReceipt size={14} />}
                                     color="red.5"
@@ -466,7 +466,7 @@ function InvoiceBatchTable() {
                                 <Button
                                     // href={`/inventory/sales/edit/${salesViewData?.id}`}
                                     component="a"
-                                    fullWidth
+                                    fullWidth={true}
                                     variant="filled"
                                     leftSection={<IconEdit size={14} />}
                                     color="cyan.5"

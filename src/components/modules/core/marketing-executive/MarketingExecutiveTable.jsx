@@ -98,9 +98,9 @@ function MarketingExecutiveTable() {
                             render: (item) => (indexData.data.indexOf(item) + 1)
                         },
                         { accessor: 'name', title: t("Name") },
-                        { accessor: 'parent_name', title: t("Mobile") },
-                        { accessor: 'parent_name', title: t("Email") },
-                        { accessor: 'parent_name', title: t("Designation") },
+                        { accessor: 'mobile', title: t("Mobile") },
+                        { accessor: 'email', title: t("Email") },
+                        { accessor: 'designation', title: t("Designation") },
                         {
                             accessor: "action",
                             title: t("Action"),

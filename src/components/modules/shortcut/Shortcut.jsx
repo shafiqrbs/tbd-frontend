@@ -72,7 +72,8 @@ function Shortcut(props) {
                                 color={`red`}
                                 radius="xl"
                                 onClick={(e) => {
-                                    props.form.reset()
+                                    props.handleFormReset ? props.handleFormReset() :
+                                        props.form.reset()
                                 }}
                             >
                                 <Flex direction={`column`} align={'center'}>

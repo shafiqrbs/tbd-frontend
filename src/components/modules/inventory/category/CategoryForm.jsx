@@ -164,7 +164,7 @@ function CategoryForm(props) {
                                                                 transitionProps={{ duration: 200 }}
                                                                 label={t('CreateCategoryGroup')}
                                                             >
-                                                                <ActionIcon fullWidth variant="outline" bg={'white'} size={'lg'} color="red.5" mt={'1'} aria-label="Settings" onClick={() => {
+                                                                <ActionIcon variant="outline" bg={'white'} size={'lg'} color="red.5" mt={'1'} aria-label="Settings" onClick={() => {
                                                                     setGroupDrawer(true)
                                                                 }}>
                                                                     <IconCategory style={{ width: '100%', height: '70%' }} stroke={1.5} />

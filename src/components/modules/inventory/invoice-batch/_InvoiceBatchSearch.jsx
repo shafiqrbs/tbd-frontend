@@ -65,7 +65,6 @@ function _InvoiceBatchSearch(props) {
                 <Grid.Col span="auto">
                     <Flex gap="xs"
                         justify="center"
-                        fullWidth
                         align="center"
                         direction="row">
                         <SearchActionMenu />

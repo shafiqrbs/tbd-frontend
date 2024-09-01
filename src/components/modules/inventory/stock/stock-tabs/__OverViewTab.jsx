@@ -132,7 +132,7 @@ function __OverViewTab(props) {
                                                             <Text fz="xs" fw={600}  >:</Text>
                                                         </Grid.Col>
                                                         <Grid.Col span={5}>
-                                                            <Text wrap fz="xs" fw={600} >{showEntityData?.purchase_price}</Text>
+                                                            <Text fz="xs" fw={600} >{showEntityData?.purchase_price}</Text>
                                                         </Grid.Col>
                                                     </Grid>
                                                     <Grid columns={12} gutter={0} pt={'6'} >

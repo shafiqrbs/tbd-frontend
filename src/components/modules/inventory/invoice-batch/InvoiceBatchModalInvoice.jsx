@@ -1,4 +1,4 @@
-import {Table,Box} from '@mantine/core';
+import { Table, Box } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 import { useOutletContext } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
@@ -8,7 +8,7 @@ import tableCss from '../../../../assets/css/Table.module.css';
 import classes from './RowExpansion.module.css';
 
 function InvoiceBatchModalInvoice(props) {
-    const {batchInvoice} = props
+    const { batchInvoice } = props
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
@@ -146,7 +146,7 @@ function InvoiceBatchModalInvoice(props) {
                     }}
                     loaderSize="xs"
                     loaderColor="grape"
-                    height={tableHeight-20}
+                    height={tableHeight - 20}
                     scrollAreaProps={{ type: 'never' }}
                 />
             </Box >
