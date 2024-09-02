@@ -589,6 +589,7 @@
   "Transactions": "Transactions",
   "Invoices": "Invoices",
   "BatchNo": "Batch No",
-  "TotalReceive" : "Total Receive",
-  "Date" : "Date"
+  "TotalReceive": "Total Receive",
+  "Date": "Date",
+  "InventoryConfigurationN": "Inventory Configuration"
 }
