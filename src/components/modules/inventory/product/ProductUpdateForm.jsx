@@ -38,14 +38,14 @@ import SelectForm from "../../../form-builders/SelectForm.jsx";
 import SwitchForm from "../../../form-builders/SwitchForm.jsx";
 import getSettingProductTypeDropdownData from "../../../global-hook/dropdown/getSettingProductTypeDropdownData.js";
 import getSettingProductUnitDropdownData from "../../../global-hook/dropdown/getSettingProductUnitDropdownData.js";
-import getSettingCategoryDropdownData from "../../../global-hook/dropdown/getSettingCategoryDropdownData.js";
 import InputButtonForm from "../../../form-builders/InputButtonForm";
 import { deleteEntityData, storeEntityData } from "../../../../store/inventory/crudSlice.js";
 import { modals } from "@mantine/modals";
 import { Dropzone } from "@mantine/dropzone";
 import productsDataStoreIntoLocalStorage from "../../../global-hook/local-storage/productsDataStoreIntoLocalStorage.js";
 
-function ProductUpdateForm() {
+function ProductUpdateForm(props) {
+    const { categoryDropdown } = props
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
@@ -421,7 +421,7 @@ function ProductUpdateForm() {
                                                             nextField={'name'}
                                                             name={'category_id'}
                                                             form={form}
-                                                            dropdownValue={getSettingCategoryDropdownData()}
+                                                            dropdownValue={categoryDropdown}
                                                             id={'category_id'}
                                                             searchable={true}
                                                             value={categoryData ? String(categoryData) : (entityEditData.category_id ? String(entityEditData.category_id) : null)}

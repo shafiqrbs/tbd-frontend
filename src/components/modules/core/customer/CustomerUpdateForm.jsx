@@ -64,7 +64,8 @@ function CustomerUpdateForm(props) {
             name: hasLength({ min: 2, max: 50 }),
             mobile: (value) => {
                 if (!value) return t('MobileValidationRequired');
-                return null;
+                // if (!/^\d{13}$/.test(value)) return t('MobileValidationDigitCount');
+                // return null;
             },
             email: (value) => {
                 if (value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
@@ -84,7 +85,6 @@ function CustomerUpdateForm(props) {
 
         }
     });
-
     useEffect(() => {
         setFormLoad(true)
         setFormDataForUpdate(true)
@@ -103,7 +103,7 @@ function CustomerUpdateForm(props) {
                 location_id: entityEditData?.location_id || '',
                 marketing_id: entityEditData?.marketing_id || '',
                 address: entityEditData?.address || '',
-            });
+            })
         }
         dispatch(setFormLoading(false))
         setTimeout(() => {
@@ -112,7 +112,6 @@ function CustomerUpdateForm(props) {
         }, 500)
 
     }, [entityEditData, dispatch])
-
 
     useHotkeys([['alt+n', () => {
         document.getElementById('customer_group_id').click()
@@ -179,7 +178,10 @@ function CustomerUpdateForm(props) {
                         setTimeout(() => {
                             customerDataStoreIntoLocalStorage()
                             form.reset()
+                            dispatch(setInsertType('create'))
+                            dispatch(setEditEntityData([]))
                             dispatch(setFetching(true))
+                            setSaveCreateLoading(false)
                         }, 700)
                     },
                 });

@@ -22,11 +22,11 @@ import SwitchForm from "../../../form-builders/SwitchForm";
 import { setFetching, storeEntityData } from "../../../../store/inventory/crudSlice.js";
 import getSettingProductTypeDropdownData from "../../../global-hook/dropdown/getSettingProductTypeDropdownData.js";
 import getSettingProductUnitDropdownData from "../../../global-hook/dropdown/getSettingProductUnitDropdownData.js";
-import getSettingCategoryDropdownData from "../../../global-hook/dropdown/getSettingCategoryDropdownData.js";
 import ProductCategoryDrawer from "./ProductCategoryDrawer.jsx";
 import productsDataStoreIntoLocalStorage from "../../../global-hook/local-storage/productsDataStoreIntoLocalStorage.js";
 
-function ProductForm() {
+function ProductForm(props) {
+    const { categoryDropdown } = props
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
@@ -187,7 +187,7 @@ function ProductForm() {
                                                             required={true}
                                                             name={'category_id'}
                                                             form={form}
-                                                            dropdownValue={getSettingCategoryDropdownData()}
+                                                            dropdownValue={categoryDropdown}
                                                             mt={8}
                                                             id={'category_id'}
                                                             nextField={'name'}

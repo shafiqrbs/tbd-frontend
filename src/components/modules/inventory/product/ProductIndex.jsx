@@ -12,7 +12,8 @@ import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoa
 import getConfigData from "../../../global-hook/config-data/getConfigData.js";
 import InventoryHeaderNavbar from "../../domain/configuraton/InventoryHeaderNavbar";
 import { useNavigate, useParams } from "react-router-dom";
-import { editEntityData, setEntityNewData, setFormLoading, setInsertType, setSearchKeyword } from "../../../../store/inventory/crudSlice.js";
+import { editEntityData, setDropdownLoad, setEntityNewData, setFormLoading, setInsertType, setSearchKeyword } from "../../../../store/inventory/crudSlice.js";
+import { getCategoryDropdown } from "../../../../store/inventory/utilitySlice.js";
 
 function ProductIndex() {
     const { t, i18n } = useTranslation();
@@ -37,6 +38,26 @@ function ProductIndex() {
             navigate('/inventory/product', { replace: true })
         ))
     }, [id, dispatch, navigate])
+
+    const dropdownLoad = useSelector((state) => state.inventoryCrudSlice.dropdownLoad)
+    const categoryDropdownData = useSelector((state) => state.inventoryUtilitySlice.categoryDropdownData)
+
+    let categoryDropdown = categoryDropdownData && categoryDropdownData.length > 0
+        ? categoryDropdownData.map((type, index) => {
+            return ({ 'label': type.name, 'value': String(type.id) })
+        }) : []
+
+    useEffect(() => {
+        const value = {
+            url: 'inventory/select/category',
+            param: {
+                type: 'parent'
+            }
+        }
+        dispatch(getCategoryDropdown(value))
+        dispatch(setDropdownLoad(false))
+    }, [dropdownLoad]);
+
 
 
     return (
@@ -63,12 +84,12 @@ function ProductIndex() {
                                                 </Box>
                                             </Grid.Col>
                                             <Grid.Col span={9}>
-                                                <ProductForm />
+                                                <ProductForm categoryDropdown={categoryDropdown} />
                                             </Grid.Col>
                                         </Grid>
                                         :
                                         <Box>
-                                            <ProductUpdateForm />
+                                            <ProductUpdateForm categoryDropdown={categoryDropdown} />
                                         </Box>
                                 }
                             </Box>

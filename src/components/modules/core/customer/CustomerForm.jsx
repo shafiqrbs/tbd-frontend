@@ -56,7 +56,8 @@ function CustomerForm(props) {
             name: hasLength({ min: 2, max: 20 }),
             mobile: (value) => {
                 if (!value) return t('MobileValidationRequired');
-                return null;
+                // if (!/^\d{13}$/.test(value)) return t('MobileValidationDigitCount');
+                // return null;
             },
             email: (value) => {
                 if (value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
@@ -78,7 +79,6 @@ function CustomerForm(props) {
 
     const [groupDrawer, setGroupDrawer] = useState(false)
 
-
     useHotkeys([['alt+n', () => {
         !groupDrawer && document.getElementById('customer_group_id').click()
     }]], []);
@@ -94,7 +94,7 @@ function CustomerForm(props) {
 
     return (
         <Box>
-            <form onSubmit={form.onSubmit((values) => {
+            <form onSubmit={form.onSubmit((values) => { 
                 modals.openConfirmModal({
                     title: (
                         <Text size="md"> {t("FormConfirmationTitle")}</Text>
@@ -110,7 +110,6 @@ function CustomerForm(props) {
                             data: values
                         }
                         dispatch(storeEntityData(value))
-
                         notifications.show({
                             color: 'teal',
                             title: t('CreateSuccessfully'),
@@ -119,8 +118,8 @@ function CustomerForm(props) {
                             autoClose: 700,
                             style: { backgroundColor: 'lightgray' },
                         });
-
                         setTimeout(() => {
+                            customerDataStoreIntoLocalStorage()
                             form.reset()
                             setMarketingExeData(null)
                             setCustomerGroupData(null)
@@ -128,6 +127,7 @@ function CustomerForm(props) {
                             dispatch(setEntityNewData([]))
                             dispatch(setFetching(true))
                         }, 700)
+
                     },
                 });
             })}>
@@ -164,15 +164,6 @@ function CustomerForm(props) {
                                 <Box pl={`xs`} pr={'xs'} className={'borderRadiusAll'}>
                                     <ScrollArea h={height} scrollbarSize={2} scrollbars="y" type="never">
                                         <Box>
-                                            {/* {
-                                                Object.keys(form.errors).length > 0 && validationMessage != 0 &&
-                                                <Alert variant="light" color="red" radius="md" mt={'xs'} title={
-                                                    <List withPadding size="sm">
-                                                        {validationMessage.name && <List.Item>{t('NameValidateMessage')}</List.Item>}
-                                                        {validationMessage.mobile && <List.Item>{t('MobileTakenValidationMessage')}</List.Item>}
-                                                    </List>
-                                                }></Alert>
-                                            } */}
                                             <Box>
                                                 <Grid gutter={{ base: 6 }}>
                                                     <Grid.Col span={11} >

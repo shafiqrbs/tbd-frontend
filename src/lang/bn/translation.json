@@ -57,7 +57,7 @@
   "UpdateAndSave": "আপডেট এবং সংরক্ষণ করুন",
   "ManageVendor": "বিক্রেতা পরিচালনা",
   "Roles": "ভূমিকা",
-  "Settings": "সেটিংস",
+  "Setting": "সেটিং",
   "VendorInformation": "বিক্রেতাদের তথ্য পরিচালনা",
   "CompanyName": "কোম্পানির নাম",
   "CreateVendor": "বিক্রেতা তৈরী করুন",
@@ -426,5 +426,5 @@
   "BatchNo": "ব্যাচ নং",
   "TotalAmount": "টোটাল এমাউন্ট",
   "TotalReceive": "টোটাল রিসিভ",
-  "Date" : "তারিখ"
+  "Date": "তারিখ"
 }

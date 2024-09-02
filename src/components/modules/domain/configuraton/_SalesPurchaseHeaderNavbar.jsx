@@ -65,7 +65,7 @@ function _SalesPurchaseHeaderNavbar(props) {
                                 </Menu.Item>
                                 <Menu.Item href="/inventory/config"
                                     component="button" onClick={(e) => { navigate('/inventory/config') }} leftSection={<IconSettings style={{ width: rem(14), height: rem(14) }} />}>
-                                    {t('Settings')}
+                                    {t('Setting')}
                                 </Menu.Item>
                             </Menu.Dropdown>
                         </Menu>

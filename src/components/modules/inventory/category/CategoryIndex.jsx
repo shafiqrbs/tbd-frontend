@@ -21,6 +21,7 @@ function CategoryIndex() {
     const dispatch = useDispatch();
 
     const insertType = useSelector((state) => state.inventoryCrudSlice.insertType)
+    const dropdownLoad = useSelector((state) => state.inventoryCrudSlice.dropdownLoad)
 
     const progress = getLoadingProgress()
     const configData = getConfigData()
@@ -51,7 +52,8 @@ function CategoryIndex() {
             url: 'inventory/select/group-category',
         }
         dispatch(getGroupCategoryDropdown(value))
-    }, [setDropdownLoad]);
+        dispatch(setDropdownLoad(false))
+    }, [dropdownLoad]);
 
 
     return (
