@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import {
-    Button, Flex, ActionIcon, TextInput,
+    Button, ActionIcon, TextInput,
     Grid, Box, Group, Text,
 } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
@@ -9,9 +9,8 @@ import {
     IconDeviceFloppy, IconSum, IconX, IconBarcode
 } from "@tabler/icons-react";
 import { getHotkeyHandler, useHotkeys } from "@mantine/hooks";
-import { useDispatch } from "react-redux";
 import { isNotEmpty, useForm } from "@mantine/form";
-import { notifications } from "@mantine/notifications";
+import {notifications} from "@mantine/notifications";
 import SelectServerSideForm from "../../../form-builders/SelectServerSideForm.jsx";
 import InputButtonForm from "../../../form-builders/InputButtonForm";
 import InputNumberForm from "../../../form-builders/InputNumberForm";
@@ -19,13 +18,11 @@ import InputNumberForm from "../../../form-builders/InputNumberForm";
 import { DataTable } from "mantine-datatable";
 import ShortcutInvoice from "../../shortcut/ShortcutInvoice";
 import tableCss from "../../../../assets/css/Table.module.css";
-import __PurchaseForm from "./__PurchaseForm.jsx";
-import _addProduct from "../../popover-form/_addProduct.jsx";
 import productsDataStoreIntoLocalStorage from "../../../global-hook/local-storage/productsDataStoreIntoLocalStorage.js";
 import __UpdateInvoiceForm from "./__UpdateInvoiceForm.jsx";
 
 function _UpdateInvoice(props) {
-    const { currencySymbol, allowZeroPercentage, isPurchaseByPurchasePrice } = props
+    const { currencySymbol, isPurchaseByPurchasePrice,editedData } = props
     const { t, i18n } = useTranslation();
     const { isOnline, mainAreaHeight } = useOutletContext();
     const height = mainAreaHeight - 130; //TabList height 104
@@ -48,10 +45,9 @@ function _UpdateInvoice(props) {
     }, [stockProductRestore])
 
     useEffect(() => {
-        const tempProducts = localStorage.getItem('temp-purchase-products');
-        setTempCardProducts(tempProducts ? JSON.parse(tempProducts) : [])
+        setTempCardProducts(editedData?.purchase_items ? editedData.purchase_items : [])
         setLoadCardProducts(false)
-    }, [loadCardProducts])
+    }, [])
 
     useEffect(() => {
         if (searchValue.length > 0) {
@@ -79,7 +75,7 @@ function _UpdateInvoice(props) {
      * Adds a product to a collection based on ID, updates the local storage and resets the form
      */
     function handleAddProductByProductId(values, myCardProducts, localProducts) {
-        const addProducts = localProducts.reduce((acc, product) => {
+        const addProducts = [...myCardProducts, ...localProducts.reduce((acc, product) => {
             if (product.id === Number(values.product_id)) {
                 acc.push({
                     product_id: product.id,
@@ -92,7 +88,7 @@ function _UpdateInvoice(props) {
                 });
             }
             return acc;
-        }, myCardProducts);
+        }, [])];
         updateLocalStorageAndResetForm(addProducts, 'productId');
     }
 
@@ -101,13 +97,15 @@ function _UpdateInvoice(props) {
      */
     function handleAddProductByBarcode(values, myCardProducts, localProducts) {
         const barcodeExists = localProducts.some(product => product.barcode === values.barcode);
+
         if (barcodeExists) {
             const addProducts = localProducts.reduce((acc, product) => {
                 if (String(product.barcode) === String(values.barcode)) {
-                    acc.push(createProductFromValues(product));
+                    acc = [...acc, createProductFromValues(product)];
                 }
                 return acc;
-            }, myCardProducts);
+            }, [...myCardProducts]);
+
             updateLocalStorageAndResetForm(addProducts, 'barcode');
         } else {
             notifications.show({
@@ -125,7 +123,7 @@ function _UpdateInvoice(props) {
      * Updates local storage with new products, resets form, and sets focus on the product search.
      */
     function updateLocalStorageAndResetForm(addProducts, type) {
-        localStorage.setItem('temp-purchase-products', JSON.stringify(addProducts));
+        setTempCardProducts(addProducts);
         setSearchValue('');
         form.reset();
         setLoadCardProducts(true);
@@ -143,7 +141,7 @@ function _UpdateInvoice(props) {
             quantity: 1,
             unit_name: product.unit_name,
             purchase_price: product.purchase_price,
-            sub_total: Number(product.sub_total),
+            sub_total: Number(product.purchase_price),
             sales_price: Number(product.sales_price),
         };
     }
@@ -179,23 +177,6 @@ function _UpdateInvoice(props) {
                 }
                 return null;
             }
-        }
-    });
-
-    const productAddedForm = useForm({
-        initialValues: {
-            name: '',
-            purchase_price: '',
-            sales_price: '',
-            unit_id: '',
-            category_id: '',
-            product_type_id: '',
-            product_name: '',
-            quantity: '',
-            status: 1
-        },
-        validate: {
-            name: isNotEmpty()
         }
     });
 
@@ -296,8 +277,7 @@ function _UpdateInvoice(props) {
                                     setTimeout(() => { }, 1000)
                                 } else {
 
-                                    const cardProducts = localStorage.getItem('temp-purchase-products');
-                                    const myCardProducts = cardProducts ? JSON.parse(cardProducts) : [];
+                                    const myCardProducts = tempCardProducts ? tempCardProducts : [];
                                     const storedProducts = localStorage.getItem('core-products');
                                     const localProducts = storedProducts ? JSON.parse(storedProducts) : [];
 
@@ -307,7 +287,6 @@ function _UpdateInvoice(props) {
                                         handleAddProductByBarcode(values, myCardProducts, localProducts);
                                     }
                                 }
-
                             })}>
                                 <Box pl={`xs`} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'}>
                                     <Box pb={'xs'}>
@@ -450,22 +429,18 @@ function _UpdateInvoice(props) {
                                                 const editedQuantity = e.currentTarget.value;
                                                 setEditedQuantity(editedQuantity);
 
-                                                const tempCardProducts = localStorage.getItem('temp-purchase-products');
-                                                const cardProducts = tempCardProducts ? JSON.parse(tempCardProducts) : [];
-
-                                                const updatedProducts = cardProducts.map(product => {
-                                                    if (product.product_id === item.product_id) {
+                                                const updatedProducts = tempCardProducts.map(product => {
+                                                    if (product.id === item.id) {
                                                         return {
                                                             ...product,
                                                             quantity: e.currentTarget.value,
-                                                            sub_total: e.currentTarget.value * item.sales_price,
+                                                            sub_total: e.currentTarget.value * item.purchase_price,
                                                         };
                                                     }
                                                     return product
                                                 });
 
-                                                localStorage.setItem('temp-purchase-products', JSON.stringify(updatedProducts));
-                                                setLoadCardProducts(true)
+                                                setTempCardProducts(updatedProducts)
                                             };
 
                                             return (
@@ -484,6 +459,7 @@ function _UpdateInvoice(props) {
                                                     />
                                                 </>
                                             );
+
                                         }
                                     },
                                     {
@@ -504,10 +480,8 @@ function _UpdateInvoice(props) {
                                             };
                                             useEffect(() => {
                                                 const timeoutId = setTimeout(() => {
-                                                    const tempCardProducts = localStorage.getItem('temp-purchase-products');
-                                                    const cardProducts = tempCardProducts ? JSON.parse(tempCardProducts) : [];
-                                                    const updatedProducts = cardProducts.map(product => {
-                                                        if (product.product_id === item.product_id) {
+                                                    const updatedProducts = tempCardProducts.map(product => {
+                                                        if (product.id === item.id) {
                                                             return {
                                                                 ...product,
                                                                 purchase_price: editedPurchasePrice,
@@ -516,9 +490,7 @@ function _UpdateInvoice(props) {
                                                         }
                                                         return product;
                                                     });
-
-                                                    localStorage.setItem('temp-purchase-products', JSON.stringify(updatedProducts));
-                                                    setLoadCardProducts(true);
+                                                    setTempCardProducts(updatedProducts)
                                                 }, 1000);
 
                                                 return () => clearTimeout(timeoutId);
@@ -571,15 +543,9 @@ function _UpdateInvoice(props) {
                                                     variant="subtle"
                                                     color="red"
                                                     onClick={() => {
-                                                        const dataString = localStorage.getItem('temp-purchase-products');
-                                                        let data = dataString ? JSON.parse(dataString) : [];
-
-                                                        data = data.filter(d => d.product_id !== item.product_id);
-
-                                                        const updatedDataString = JSON.stringify(data);
-
-                                                        localStorage.setItem('temp-purchase-products', updatedDataString);
-                                                        setLoadCardProducts(true)
+                                                        let data = tempCardProducts ? tempCardProducts : [];
+                                                        data = data.filter(d => d.id !== item.id);
+                                                        setTempCardProducts(data)
                                                     }}
                                                 >
                                                     <IconX size={16} style={{ width: '70%', height: '70%' }}
@@ -610,6 +576,7 @@ function _UpdateInvoice(props) {
                             totalPurchaseAmount={totalPurchaseAmount}
                             currencySymbol={currencySymbol}
                             setLoadCardProducts={setLoadCardProducts}
+                            editedData={editedData}
                         />
                     </Box>
                 </Grid.Col>
