@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useOutletContext } from "react-router-dom";
+import {useNavigate, useOutletContext, useParams} from "react-router-dom";
 import {
     Button, rem, Center, ActionIcon,
     Grid, Box, ScrollArea, Tooltip, Group, Text
@@ -15,26 +15,27 @@ import {
     IconEyeEdit, IconDiscountOff, IconCurrency, IconPlusMinus, IconCheck,
 
 } from "@tabler/icons-react";
-import { useHotkeys, useToggle } from "@mantine/hooks";
+import { useHotkeys } from "@mantine/hooks";
 import { useDispatch } from "react-redux";
 import { isNotEmpty, useForm } from "@mantine/form";
 
 import SelectForm from "../../../form-builders/SelectForm";
 import TextAreaForm from "../../../form-builders/TextAreaForm";
 
-import { storeEntityData } from "../../../../store/inventory/crudSlice.js";
+import {updateEntityData} from "../../../../store/inventory/crudSlice.js";
 import InputNumberForm from "../../../form-builders/InputNumberForm";
 import InputButtonForm from "../../../form-builders/InputButtonForm";
 import { notifications } from "@mantine/notifications";
 import _VendorViewModel from "../../core/vendor/_VendorViewModel.jsx";
-import _addVendor from "../../popover-form/_addVendor.jsx";
 import vendorDataStoreIntoLocalStorage from "../../../global-hook/local-storage/vendorDataStoreIntoLocalStorage.js";
 
 function __UpdateInvoiceForm(props) {
-    const { currencySymbol } = props
+    let { id } = useParams();
+    const { currencySymbol,editedData,tempCardProducts } = props
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
+    const navigate = useNavigate()
     const transactionModeData = JSON.parse(localStorage.getItem('accounting-transaction-mode')) ? JSON.parse(localStorage.getItem('accounting-transaction-mode')) : [];
 
     const [purchaseSubTotalAmount, setPurchaseSubTotalAmount] = useState(0);
@@ -43,12 +44,18 @@ function __UpdateInvoiceForm(props) {
     const [purchaseTotalAmount, setPurchaseTotalAmount] = useState(0);
     const [purchaseDueAmount, setPurchaseDueAmount] = useState(props.purchaseSubTotalAmount);
     const [hoveredModeId, setHoveredModeId] = useState(false);
+    const [lastClicked, setLastClicked] = useState(null);
+
+    const handleClick = (event) => {
+        setLastClicked(event.currentTarget.name);
+    };
 
     const formHeight = mainAreaHeight - 268; //TabList height 104
     const [viewVendorModel, setVendorViewModel] = useState(false);
 
     /*START GET VENDOR DATA BY ID FROM LOCAL STORAGE*/
-    const [vendorData, setVendorData] = useState(null);
+    const [vendorData, setVendorData] = useState(editedData?.vendor_id.toString());
+
     const [vendorObject, setVendorObject] = useState({});
     useEffect(() => {
         if (vendorData) {
@@ -62,19 +69,9 @@ function __UpdateInvoiceForm(props) {
     }, [vendorData]);
     /*END GET VENDOR DATA BY ID FROM LOCAL STORAGE*/
 
+    const [discountType, setDiscountType] = useState(editedData.discount_type);
+    const [orderProcess, setOrderProcess] = useState(editedData?.process.toString());
 
-    const [tempCardProducts, setTempCardProducts] = useState([])
-    const [loadCardProducts, setLoadCardProducts] = useState(false)
-    const [discountType, setDiscountType] = useToggle(['Flat', 'Percent']);
-
-
-    useEffect(() => {
-        const tempProducts = localStorage.getItem('temp-purchase-products');
-        setTempCardProducts(tempProducts ? JSON.parse(tempProducts) : [])
-        setLoadCardProducts(false)
-    }, [loadCardProducts])
-
-    const [orderProcess, setOrderProcess] = useState(null);
 
     /*START GET VENDOR DROPDOWN FROM LOCAL STORAGE*/
     const [vendorsDropdownData, setVendorsDropdownData] = useState([])
@@ -101,17 +98,16 @@ function __UpdateInvoiceForm(props) {
 
     const form = useForm({
         initialValues: {
-            vendor_id: '',
-            transaction_mode_id: '',
-            order_process: '',
-            narration: '',
-            discount: '',
-            receive_amount: ''
+            vendor_id: editedData?.vendor_id,
+            transaction_mode_id: editedData?.transaction_mode_id,
+            order_process: editedData?.order_process,
+            narration: editedData?.remark,
+            discount: discountType === 'Flat' ? editedData?.discount : editedData?.discount_calculation,
+            payment: editedData?.payment
         },
         validate: {
-            vendor_id: isNotEmpty(),
             transaction_mode_id: isNotEmpty(),
-            order_process: isNotEmpty()
+            vendor_id: isNotEmpty(),
         }
     });
 
@@ -156,14 +152,14 @@ function __UpdateInvoiceForm(props) {
         setPurchaseDiscountAmount(discountAmount);
 
         let returnOrDueAmount = 0;
-        let receiveAmount = form.values.receive_amount == '' ? 0 : form.values.receive_amount
+        let receiveAmount = form.values.payment == '' ? 0 : form.values.payment
         if (receiveAmount >= 0) {
             const text = purchaseTotalAmount < receiveAmount ? 'Return' : 'Due';
             setReturnOrDueText(text);
             returnOrDueAmount = purchaseTotalAmount - receiveAmount;
             setPurchaseDueAmount(returnOrDueAmount);
         }
-    }, [form.values.discount, discountType, form.values.receive_amount, purchaseSubTotalAmount, purchaseTotalAmount]);
+    }, [form.values.discount, discountType, form.values.payment, purchaseSubTotalAmount, purchaseTotalAmount]);
 
 
     useHotkeys([['alt+n', () => {
@@ -189,10 +185,8 @@ function __UpdateInvoiceForm(props) {
     return (
         <>
             <form onSubmit={form.onSubmit((values) => {
-                const tempProducts = localStorage.getItem('temp-purchase-products');
-                let items = tempProducts ? JSON.parse(tempProducts) : [];
                 let createdBy = JSON.parse(localStorage.getItem('user'));
-                let transformedArray = items.map(product => {
+                let transformedArray = tempCardProducts.map(product => {
                     return {
                         "product_id": product.product_id,
                         "quantity": product.quantity,
@@ -211,34 +205,41 @@ function __UpdateInvoiceForm(props) {
                 formValue['discount_calculation'] = discountType === 'Percent' ? form.values.discount : 0;
                 formValue['vat'] = 0;
                 formValue['total'] = purchaseTotalAmount;
-                formValue['payment'] = form.values.receive_amount;
+                formValue['payment'] = form.values.payment;
                 formValue['created_by_id'] = Number(createdBy['id']);
-                formValue['process'] = form.values.order_process;
+                formValue['process'] = orderProcess;
                 formValue['narration'] = form.values.narration;
                 formValue['items'] = transformedArray ? transformedArray : [];
 
-                const data = {
-                    url: 'inventory/purchase',
-                    data: formValue
+                if (transformedArray && transformedArray.length > 0) {
+                    const data = {
+                        url: 'inventory/purchase/' + id,
+                        data: formValue
+                    }
+                    dispatch(updateEntityData(data))
+
+                    notifications.show({
+                        color: 'teal',
+                        title: t('UpdatedSuccessfully'),
+                        icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
+                        loading: false,
+                        autoClose: 700,
+                        style: { backgroundColor: 'lightgray' },
+                    });
+
+                    if (lastClicked === 'save') {
+                        navigate('/inventory/purchase')
+                    }
+                } else {
+                    notifications.show({
+                        color: 'red',
+                        title: t('PleaseChooseItems'),
+                        icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
+                        loading: false,
+                        autoClose: 700,
+                        style: { backgroundColor: 'lightgray' },
+                    });
                 }
-
-                dispatch(storeEntityData(data))
-                notifications.show({
-                    color: 'teal',
-                    title: t('CreateSuccessfully'),
-                    icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
-                    loading: false,
-                    autoClose: 700,
-                    style: { backgroundColor: 'lightgray' },
-                });
-
-                setTimeout(() => {
-                    localStorage.removeItem('temp-purchase-products');
-                    form.reset()
-                    setVendorData(null)
-                    setOrderProcess(null)
-                    props.setLoadCardProducts(true)
-                }, 700)
 
             })}>
                 <Box>
@@ -254,7 +255,7 @@ function __UpdateInvoiceForm(props) {
                                                     label=''
                                                     placeholder={t('Vendor')}
                                                     required={false}
-                                                    nextField={'receive_amount'}
+                                                    nextField={'payment'}
                                                     name={'vendor_id'}
                                                     form={form}
                                                     dropdownValue={vendorsDropdownData}
@@ -376,7 +377,6 @@ function __UpdateInvoiceForm(props) {
                                     >
 
                                         <Grid columns={'16'} gutter="6">
-
                                             {
                                                 (transactionModeData && transactionModeData.length > 0) && transactionModeData.map((mode, index) => {
                                                     return (
@@ -392,7 +392,8 @@ function __UpdateInvoiceForm(props) {
                                                                         form.setFieldValue('transaction_mode_id', e.currentTarget.value)
                                                                         form.setFieldError('transaction_mode_id', null)
                                                                     }}
-                                                                    defaultChecked={mode.is_selected ? true : false}
+                                                                    defaultChecked={editedData?.transaction_mode_id ? editedData?.transaction_mode_id == mode.id : (mode.is_selected ? true : false)}
+
                                                                 />
                                                                 <Tooltip
                                                                     label={mode.name}
@@ -444,7 +445,9 @@ function __UpdateInvoiceForm(props) {
                                         <Grid.Col span={4}>
                                             <Button
                                                 fullWidth={true}
-                                                onClick={() => setDiscountType()}
+                                                onClick={() => {
+                                                    setDiscountType(discountType === 'Flat' ? 'Percent' : 'Flat')
+                                                }}
                                                 variant="filled"
                                                 fz={'xs'}
                                                 leftSection={
@@ -460,7 +463,7 @@ function __UpdateInvoiceForm(props) {
                                                 label=''
                                                 placeholder={t('Discount')}
                                                 required={false}
-                                                nextField={'receive_amount'}
+                                                nextField={'payment'}
                                                 form={form}
                                                 name={'discount'}
                                                 id={'discount'}
@@ -478,8 +481,8 @@ function __UpdateInvoiceForm(props) {
                                                 required={false}
                                                 nextField={'order_process'}
                                                 form={form}
-                                                name={'receive_amount'}
-                                                id={'receive_amount'}
+                                                name={'payment'}
+                                                id={'payment'}
                                                 rightIcon={<IconCurrency size={16} opacity={0.5} />}
                                                 leftSection={<IconPlusMinus size={16} opacity={0.5} />}
                                                 closeIcon={true}
@@ -522,24 +525,69 @@ function __UpdateInvoiceForm(props) {
                             </ScrollArea>
                             <Box>
                                 <Button.Group >
-                                    <Button fullWidth variant="filled" leftSection={<IconPrinter size={14} />}
-                                        color="green.5">Print</Button>
-                                    <Button fullWidth={true} variant="filled" leftSection={<IconReceipt size={14} />}
-                                        color="red.5">Pos</Button>
-                                    <Button type={'submit'} fullWidth={true} variant="filled" leftSection={<IconDeviceFloppy size={14} />}
-                                        color="cyan.5">Save</Button>
-                                    <Button fullWidth={true} variant="filled" leftSection={<IconStackPush size={14} />}
-                                        color="orange.5">Hold</Button>
+                                    <Button
+                                        fullWidth={true}
+                                        variant="filled"
+                                        leftSection={<IconStackPush size={14} />}
+                                        color="orange.5"
+                                    >
+                                        Hold
+                                    </Button>
+                                    <Button
+                                        fullWidth={true}
+                                        type={'submit'}
+                                        onClick={handleClick}
+                                        variant="filled"
+                                        leftSection={<IconPrinter size={14} />}
+                                        color="green.5"
+                                        // disabled={isDisabled}
+                                        name="print"
+                                        style={{
+                                            transition: "all 0.3s ease",
+                                            // backgroundColor: isDisabled ? "#f1f3f500" : ""
+                                        }}
+                                    >
+                                        {t('Print')}
+                                    </Button>
+                                    <Button
+                                        fullWidth={true}
+                                        type={'submit'}
+                                        variant="filled"
+                                        leftSection={<IconReceipt size={14} />}
+                                        color="red.5"
+                                        name="pos"
+                                        onClick={handleClick}
+                                        // disabled={isDisabled}
+                                        style={{
+                                            transition: "all 0.3s ease",
+                                            // backgroundColor: isDisabled ? "#f1f3f500" : ""
+                                        }}
+                                    >
+                                        {t('Pos')}
+                                    </Button>
+                                    <Button
+                                        fullWidth={true}
+                                        type={'submit'}
+                                        variant="filled"
+                                        leftSection={<IconDeviceFloppy size={14} />}
+                                        color="cyan.5"
+                                        name="save"
+                                        onClick={handleClick}
+                                        // disabled={isDisabled}
+                                        style={{
+                                            transition: "all 0.3s ease",
+                                            // backgroundColor: isDisabled ? "#f1f3f500" : ""
+                                        }}
+                                    >
+                                        {t('Save')}
+                                    </Button>
                                 </Button.Group>
                             </Box>
                         </Box>
-
-
                     </Grid>
                 </Box>
             </form>
-
-
+            
             {viewVendorModel && vendorData &&
                 <_VendorViewModel
                     vendorViewModel={viewVendorModel}

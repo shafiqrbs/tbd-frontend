@@ -4,9 +4,7 @@ import {
 } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
 import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress.js";
-import getConfigData from "../../../global-hook/config-data/getConfigData.js";
 import _SalesPurchaseHeaderNavbar from "../../domain/configuraton/_SalesPurchaseHeaderNavbar.jsx";
-import _GenericInvoiceForm from "./_GenericInvoiceForm.jsx";
 import {useNavigate, useParams} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {editEntityData} from "../../../../store/inventory/crudSlice.js";
@@ -20,7 +18,8 @@ function PurchaseEdit() {
     const dispatch = useDispatch();
     const navigate = useNavigate()
     const progress = getLoadingProgress()
-    const configData = getConfigData()
+    const configData = localStorage.getItem('config-data') ? JSON.parse(localStorage.getItem('config-data')) : []
+
 
     const dataStatus = useSelector((state) => state.inventoryCrudSlice.dataStatus);
     const editedData = useSelector((state) => state.inventoryCrudSlice.entityEditData);
@@ -51,9 +50,6 @@ function PurchaseEdit() {
         }
     },[dataStatus, entityEditData.id]);
 
-
-    console.log(editedData,id)
-
     return (
         <>
             {progress !== 100 &&
@@ -73,15 +69,14 @@ function PurchaseEdit() {
                                 {
                                     configData?.business_model?.slug === 'general' &&
                                     <_UpdateInvoice
-                                        allowZeroPercentage={configData?.zero_stock}
-                                        currencySymbol={configData?.currency.symbol}
+                                        currencySymbol={configData?.currency?.symbol}
                                         isPurchaseByPurchasePrice={configData?.is_purchase_by_purchase_price}
+                                        editedData={editedData}
                                     />
                                 }
                             </Box>
                         </>
                     }
-
                 </Box>
             }
         </>
