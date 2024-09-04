@@ -21,7 +21,6 @@ import { setFetching, storeEntityData } from "../../../../store/core/crudSlice.j
 import InputForm from "../../../form-builders/InputForm";
 import SelectForm from "../../../form-builders/SelectForm";
 import TextAreaForm from "../../../form-builders/TextAreaForm";
-import InputNumberForm from "../../../form-builders/InputNumberForm";
 import PhoneNumber from "../../../form-builders/PhoneNumberInput.jsx";
 import Shortcut from "../../shortcut/Shortcut.jsx";
 
@@ -69,7 +68,6 @@ function VendorForm(props) {
     return (
         <Box>
             <form onSubmit={form.onSubmit((values) => {
-                console.log(values);
                 modals.openConfirmModal({
                     title: (
                         <Text size="md"> {t("FormConfirmationTitle")}</Text>

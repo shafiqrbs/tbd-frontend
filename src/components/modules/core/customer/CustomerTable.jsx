@@ -22,6 +22,7 @@ import { deleteEntityData } from "../../../../store/core/crudSlice";
 import tableCss from "../../../../assets/css/Table.module.css";
 import CustomerViewDrawer from "./CustomerViewDrawer.jsx";
 import { notifications } from "@mantine/notifications";
+import _AddProvisionDrawer from "./_AddProvisionDrawer.jsx";
 
 function CustomerTable() {
 
@@ -40,6 +41,7 @@ function CustomerTable() {
     const [customerObject, setCustomerObject] = useState({});
 
     const [viewDrawer, setViewDrawer] = useState(false)
+    const [provisionDrawer, setProvisionDrawer] = useState(false)
 
     const navigate = useNavigate();
     const entityDataDelete = useSelector((state) => state.crudSlice.entityDataDelete)
@@ -119,6 +121,15 @@ function CustomerTable() {
                                         <Menu.Dropdown>
                                             <Menu.Item
                                                 onClick={() => {
+                                                    setProvisionDrawer(true)
+                                                }}
+                                                target="_blank"
+                                                component="a"
+                                                w={'200'}
+                                            >
+                                                {t('AddProvision')}
+                                            </Menu.Item><Menu.Item
+                                                onClick={() => {
                                                     dispatch(setInsertType('update'))
                                                     dispatch(editEntityData('core/customer/' + data.id))
                                                     dispatch(setFormLoading(true))
@@ -197,6 +208,10 @@ function CustomerTable() {
             {
                 viewDrawer &&
                 <CustomerViewDrawer viewDrawer={viewDrawer} setViewDrawer={setViewDrawer} customerObject={customerObject} />
+            }
+            {
+                provisionDrawer &&
+                <_AddProvisionDrawer provisionDrawer={provisionDrawer} setProvisionDrawer={setProvisionDrawer} saveId={'EntityProvisionSubmit'} />
             }
         </>
     );

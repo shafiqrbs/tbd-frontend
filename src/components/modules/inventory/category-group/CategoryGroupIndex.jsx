@@ -12,7 +12,7 @@ import { setSearchKeyword } from "../../../../store/core/crudSlice.js";
 import { editEntityData, setEntityNewData, setInsertType } from "../../../../store/inventory/crudSlice.js";
 import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress.js";
 import getConfigData from "../../../global-hook/config-data/getConfigData.js";
-import InventoryHeaderNavbar from "../configuraton/InventoryHeaderNavbar";
+import InventoryHeaderNavbar from "../../domain/configuraton/InventoryHeaderNavbar";
 import { useNavigate, useParams } from "react-router-dom";
 
 
@@ -27,12 +27,12 @@ function CategoryGroupIndex() {
     const configData = getConfigData()
 
     const navigate = useNavigate()
-    const { categoryGroupId } = useParams()
+    const { id } = useParams()
 
     useEffect(() => {
-        categoryGroupId ? ((
+        id ? ((
             dispatch(setInsertType('update')),
-            dispatch(editEntityData(`inventory/category-group/${categoryGroupId}`))
+            dispatch(editEntityData(`inventory/category-group/${id}`))
             
         )) : ((
             dispatch(setInsertType('create')),
@@ -40,7 +40,7 @@ function CategoryGroupIndex() {
             dispatch(setEntityNewData([])),
             navigate('/inventory/category-group', {replace : true})
         ))
-    }, [categoryGroupId, dispatch, navigate])
+    }, [id, dispatch, navigate])
 
     return (
         <>
@@ -54,7 +54,7 @@ function CategoryGroupIndex() {
                                 pageTitle={t('ProductCategoryGroup')}
                                 roles={t('Roles')}
                                 allowZeroPercentage={configData?.zero_stock}
-                                currencySymbol={configData?.currency.symbol}
+                                currencySymbol={configData?.currency?.symbol}
                             />
                             <Box p={'8'}>
                                 <Grid columns={24} gutter={{ base: 8 }}>

@@ -59,7 +59,7 @@ function CoreHeaderNavbar(props) {
                             <Menu.Dropdown>
                                 <Menu.Item
                                     component="button" onClick={(e) => { navigate('/core/setting') }} leftSection={<IconAdjustments style={{ width: rem(14), height: rem(14) }} />}>
-                                    {t('Settings')}
+                                    {t('Setting')}
                                 </Menu.Item>
                                 <Menu.Item
                                     component="button" onClick={(e) => { navigate('/core/location') }} leftSection={<IconMap2 style={{ width: rem(14), height: rem(14) }} />}>

@@ -398,7 +398,7 @@ function SampleInvoiceForm(props) {
                                                             transitionProps={{ duration: 200 }}
                                                             label="Use this button to save this information in your profile, after that you will be able to access it any time and share it via email."
                                                         >
-                                                            <ActionIcon fullWidth variant="outline" bg={'white'} size={'lg'} color="red.5" mt={'1'} aria-label="Settings">
+                                                            <ActionIcon  variant="outline" bg={'white'} size={'lg'} color="red.5" mt={'1'} aria-label="Settings">
                                                                 <IconUserCog style={{ width: '100%', height: '70%' }} stroke={1.5} />
                                                             </ActionIcon>
                                                         </Tooltip>

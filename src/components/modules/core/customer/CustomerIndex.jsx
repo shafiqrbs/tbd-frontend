@@ -22,13 +22,13 @@ import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoa
 import CoreHeaderNavbar from "../CoreHeaderNavbar";
 import getLocationDropdownData from "../../../global-hook/dropdown/getLocationDropdownData.js";
 import getExecutiveDropdownData from "../../../global-hook/dropdown/getExecutiveDropdownData.js";
-import getCoreSettingCustomerGroupDropdownData
-    from "../../../global-hook/dropdown/getCoreSettingCustomerGroupDropdownData.js";
+import { setDropdownLoad } from "../../../../store/inventory/crudSlice.js";
+import { coreSettingDropdown } from "../../../../store/core/utilitySlice.js";
 
 function CustomerIndex() {
     const { t } = useTranslation();
     const dispatch = useDispatch();
-    const { customerId } = useParams();
+    const { id } = useParams();
     const navigate = useNavigate();
 
     const insertType = useSelector((state) => state.crudSlice.insertType)
@@ -37,17 +37,32 @@ function CustomerIndex() {
     const progress = getLoadingProgress()
 
     const locationDropdown = getLocationDropdownData();
-    const customerGroupDropdownData = getCoreSettingCustomerGroupDropdownData();
     const executiveDropdown = getExecutiveDropdownData();
 
+    const dropdownLoad = useSelector((state) => state.inventoryCrudSlice.dropdownLoad)
+
+    const dropdownData = useSelector((state) => state.utilitySlice.customerGroupDropdownData);
+
+    let groupDropdownData = dropdownData && dropdownData.length > 0 ?
+        dropdownData.map((type, index) => {
+            return ({ 'label': type.name, 'value': String(type.id) })
+        }) : []
+    useEffect(() => {
+        const value = {
+            url: 'core/select/setting',
+            param: { 'dropdown-type': 'customer-group' }
+        }
+        dispatch(coreSettingDropdown(value))
+        dispatch(setDropdownLoad(false))
+    }, [dropdownLoad]);
 
 
     useEffect(() => {
-        if (customerId) {
+        if (id) {
             dispatch(setInsertType('update'));
-            dispatch(editEntityData(`core/customer/${customerId}`));
+            dispatch(editEntityData(`core/customer/${id}`));
             dispatch(setFormLoading(true));
-        } else if (!customerId) {
+        } else if (!id) {
             dispatch(setInsertType('create'));
             dispatch(setSearchKeyword(''));
             dispatch(setEntityNewData([]));
@@ -58,7 +73,7 @@ function CustomerIndex() {
             }));
             navigate('/core/customer', { replace: true });
         }
-    }, [customerId, dispatch, navigate]);
+    }, [id, dispatch, navigate]);
 
 
 
@@ -83,8 +98,8 @@ function CustomerIndex() {
                             <Grid.Col span={9}>
                                 {
                                     insertType === 'create'
-                                        ? <CustomerForm locationDropdown={locationDropdown} customerGroupDropdownData={customerGroupDropdownData} executiveDropdown={executiveDropdown} />
-                                        : <CustomerUpdateForm locationDropdown={locationDropdown} customerGroupDropdownData={customerGroupDropdownData} executiveDropdown={executiveDropdown} />
+                                        ? <CustomerForm locationDropdown={locationDropdown} customerGroupDropdownData={groupDropdownData} executiveDropdown={executiveDropdown} />
+                                        : <CustomerUpdateForm locationDropdown={locationDropdown} customerGroupDropdownData={groupDropdownData} executiveDropdown={executiveDropdown} />
                                 }
                             </Grid.Col>
                         </Grid>

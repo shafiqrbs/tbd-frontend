@@ -27,7 +27,7 @@ import {
 import { DataTable } from 'mantine-datatable';
 import { useDispatch, useSelector } from "react-redux";
 import { useHotkeys } from "@mantine/hooks";
-import { deleteEntityData, getIndexEntityData, setDeleteMessage, setFetching, setSalesFilterData,  } from "../../../../store/inventory/crudSlice.js";
+import { deleteEntityData, getIndexEntityData, setDeleteMessage, setFetching, setSalesFilterData, } from "../../../../store/inventory/crudSlice.js";
 import __ShortcutTable from "../../shortcut/__ShortcutTable";
 import _SalesSearch from "./_SalesSearch.jsx";
 import { setSearchKeyword } from "../../../../store/core/crudSlice.js";
@@ -470,31 +470,31 @@ function _SalesTable() {
                                             <Table.Tbody>{rows}</Table.Tbody>
                                             <Table.Tfoot>
                                                 <Table.Tr>
-                                                    <Table.Th colspan={'5'} ta="right" fz="xs" w={'100'}>{t('SubTotal')}</Table.Th>
+                                                    <Table.Th colSpan={'5'} ta="right" fz="xs" w={'100'}>{t('SubTotal')}</Table.Th>
                                                     <Table.Th ta="right" fz="xs" w={'100'}>
                                                         {salesViewData && salesViewData.sub_total && Number(salesViewData.sub_total).toFixed(2)}
                                                     </Table.Th>
                                                 </Table.Tr>
                                                 <Table.Tr>
-                                                    <Table.Th colspan={'5'} ta="right" fz="xs" w={'100'}>{t('Discount')}</Table.Th>
+                                                    <Table.Th colSpan={'5'} ta="right" fz="xs" w={'100'}>{t('Discount')}</Table.Th>
                                                     <Table.Th ta="right" fz="xs" w={'100'}>
                                                         {salesViewData && salesViewData.discount && Number(salesViewData.discount).toFixed(2)}
                                                     </Table.Th>
                                                 </Table.Tr>
                                                 <Table.Tr>
-                                                    <Table.Th colspan={'5'} ta="right" fz="xs" w={'100'}>{t('Total')}</Table.Th>
+                                                    <Table.Th colSpan={'5'} ta="right" fz="xs" w={'100'}>{t('Total')}</Table.Th>
                                                     <Table.Th ta="right" fz="xs" w={'100'}>
                                                         {salesViewData && salesViewData.total && Number(salesViewData.total).toFixed(2)}
                                                     </Table.Th>
                                                 </Table.Tr>
                                                 <Table.Tr>
-                                                    <Table.Th colspan={'5'} ta="right" fz="xs" w={'100'}>{t('Receive')}</Table.Th>
+                                                    <Table.Th colSpan={'5'} ta="right" fz="xs" w={'100'}>{t('Receive')}</Table.Th>
                                                     <Table.Th ta="right" fz="xs" w={'100'}>
                                                         {salesViewData && salesViewData.payment && Number(salesViewData.payment).toFixed(2)}
                                                     </Table.Th>
                                                 </Table.Tr>
                                                 <Table.Tr>
-                                                    <Table.Th colspan={'5'} ta="right" fz="xs" w={'100'}>{t('Due')}</Table.Th>
+                                                    <Table.Th colSpan={'5'} ta="right" fz="xs" w={'100'}>{t('Due')}</Table.Th>
                                                     <Table.Th ta="right" fz="xs" w={'100'}>
                                                         {salesViewData && salesViewData.total && (Number(salesViewData.total) - Number(salesViewData.payment)).toFixed(2)}
                                                     </Table.Th>
@@ -504,9 +504,9 @@ function _SalesTable() {
                                     </Box>
                                 </ScrollArea>
                             </Box>
-                            <Button.Group fullWidth mb={'2'}>
+                            <Button.Group mb={'1'}>
                                 <Button
-                                    fullWidth
+                                    fullWidth={true}
                                     variant="filled"
                                     leftSection={<IconPrinter size={14} />}
                                     color="green.5"
@@ -517,7 +517,7 @@ function _SalesTable() {
                                     {t('Print')}
                                 </Button>
                                 <Button
-                                    fullWidth
+                                    fullWidth={true}
                                     variant="filled"
                                     leftSection={<IconReceipt size={14} />}
                                     color="red.5"
@@ -530,7 +530,7 @@ function _SalesTable() {
                                 {!checked && <Button
                                     onClick={() => navigate(`/inventory/sales/edit/${salesViewData?.id}`)}
                                     component="a"
-                                    fullWidth
+                                    fullWidth={true}
                                     variant="filled"
                                     leftSection={<IconEdit size={14} />}
                                     color="cyan.5"

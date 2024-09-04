@@ -32,6 +32,8 @@ function ImageUploadDropzone(props) {
                             {files[0] ? previews :
                                 <>
                                     <Image
+                                        mb={'4'}
+                                        mt={'xs'}
                                         maw={240}
                                         key={0}
                                         mx="auto"

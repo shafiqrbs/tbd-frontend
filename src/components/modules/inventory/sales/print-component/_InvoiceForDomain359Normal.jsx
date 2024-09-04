@@ -1,13 +1,13 @@
-import React, {useEffect, useRef,} from "react";
-import {Box, Button, Grid, Table, Text} from "@mantine/core";
+import React, { useEffect, useRef, } from "react";
+import { Box, Button, Grid, Table, Text } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
 import { useSelector } from "react-redux";
-import {IconReceipt} from "@tabler/icons-react";
-import {ReactToPrint} from "react-to-print";
+import { IconReceipt } from "@tabler/icons-react";
+import { ReactToPrint } from "react-to-print";
 
 function _InvoiceForDomain359Normal(props) {
     let invoicePrintData;
-    if (props.mode==='insert'){
+    if (props.mode === 'insert') {
         invoicePrintData = useSelector((state) => state.inventoryCrudSlice.entityNewData.data);
     } else {
         invoicePrintData = useSelector((state) => state.inventoryCrudSlice.entityUpdateData.data);
@@ -143,25 +143,25 @@ function _InvoiceForDomain359Normal(props) {
                                         <Table.Tbody>{rows}</Table.Tbody>
                                         <Table.Tfoot>
                                             <Table.Tr>
-                                                <Table.Th colspan={'5'} ta="right" fz="xs" w={'100'}>{t('SubTotal')}</Table.Th>
+                                                <Table.Th colSpan={'5'} ta="right" fz="xs" w={'100'}>{t('SubTotal')}</Table.Th>
                                                 <Table.Th ta="right" fz="xs" w={'100'}>
                                                     {invoicePrintData && invoicePrintData.sub_total && Number(invoicePrintData.sub_total).toFixed(2)}
                                                 </Table.Th>
                                             </Table.Tr>
                                             <Table.Tr>
-                                                <Table.Th colspan={'5'} ta="right" fz="xs" w={'100'}>{t('Discount')}</Table.Th>
+                                                <Table.Th colSpan={'5'} ta="right" fz="xs" w={'100'}>{t('Discount')}</Table.Th>
                                                 <Table.Th ta="right" fz="xs" w={'100'}>
                                                     {invoicePrintData && invoicePrintData.discount && Number(invoicePrintData.discount).toFixed(2)}
                                                 </Table.Th>
                                             </Table.Tr>
                                             <Table.Tr>
-                                                <Table.Th colspan={'5'} ta="right" fz="xs" w={'100'}>{t('Total')}</Table.Th>
+                                                <Table.Th colSpan={'5'} ta="right" fz="xs" w={'100'}>{t('Total')}</Table.Th>
                                                 <Table.Th ta="right" fz="xs" w={'100'}>
                                                     {invoicePrintData && invoicePrintData.total && Number(invoicePrintData.total).toFixed(2)}
                                                 </Table.Th>
                                             </Table.Tr>
                                             <Table.Tr>
-                                                <Table.Th colspan={'5'} ta="right" fz="xs" w={'100'}>{t('Receive')}</Table.Th>
+                                                <Table.Th colSpan={'5'} ta="right" fz="xs" w={'100'}>{t('Receive')}</Table.Th>
                                                 <Table.Th ta="right" fz="xs" w={'100'}>
                                                     {invoicePrintData && invoicePrintData.payment && Number(invoicePrintData.payment).toFixed(2)}
                                                 </Table.Th>
@@ -173,7 +173,7 @@ function _InvoiceForDomain359Normal(props) {
                         </Box>
 
                         <Button
-                            fullWidth
+                            fullWidth={true}
                             variant="filled"
                             leftSection={<IconReceipt size={14} />}
                             color="red.5"

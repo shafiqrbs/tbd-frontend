@@ -6,7 +6,7 @@ import {
     Card,
     SimpleGrid,
     Container,
-    useMantineTheme, List, ThemeIcon, Anchor, ScrollArea, Grid, NavLink
+    useMantineTheme, List, ThemeIcon, Anchor, ScrollArea, Grid, NavLink, Box
 } from "@mantine/core";
 import {
     IconGauge, IconUser, IconUsers, IconUsersGroup, IconBuildingStore, IconBasket, IconShoppingCartUp, IconShoppingBagSearch, IconCurrencyMonero,
@@ -61,7 +61,7 @@ function MainDashboard(props) {
                                     <Text fz="md" fw={500} className={classes.cardTitle} >{t('SalesandPurchase')}</Text>
                                 </Grid.Col>
                             </Grid>
-                            <Text fz="sm" c="dimmed" mt="sm">
+                            <Box fz="sm" c="dimmed" mt="sm">
                                 <List spacing="ms" size="sm" center>
                                     <List.Item pl={'xs'} icon={<ThemeIcon color="teal.6" size={20} radius="xl" variant="outline" ><IconBasket /></ThemeIcon>}>
                                         <NavLink pl={'md'} href="/inventory/sales" label={t('Sales')} component="button" onClick={(e) => {
@@ -98,7 +98,7 @@ function MainDashboard(props) {
                                         }} />
                                     </List.Item>
                                 </List>
-                            </Text>
+                            </Box>
                         </Card>
                         <Card shadow="md" radius="md" className={classes.card} padding="lg">
                             <Grid gutter={{ base: 2 }}>
@@ -109,7 +109,7 @@ function MainDashboard(props) {
                                     <Text fz="md" fw={500} className={classes.cardTitle} >{t('AccountingandFinancial')}</Text>
                                 </Grid.Col>
                             </Grid>
-                            <Text fz="sm" c="dimmed" mt="sm">
+                            <Box fz="sm" c="dimmed" mt="sm">
                                 <List spacing="ms" size="sm" center>
                                     <List.Item pl={'xs'} icon={<ThemeIcon color="blue.6" size={20} radius="xl" variant="outline" ><IconBasket /></ThemeIcon>}>
                                         <NavLink pl={'md'} href="accounting/voucher-entry" label={t('VoucherEntry')} component="button" onClick={(e) => { navigate('/accounting/voucher-entry') }} onAuxClick={(e) => {
@@ -159,16 +159,16 @@ function MainDashboard(props) {
                                             }
                                         }} />
                                     </List.Item>
-                                    <List.Item pl={'xs'} icon={<ThemeIcon color="blue.6" size={20} radius="xl" variant="outline" ><IconBasket /></ThemeIcon>}>
+                                    {/* <List.Item pl={'xs'} icon={<ThemeIcon color="blue.6" size={20} radius="xl" variant="outline" ><IconBasket /></ThemeIcon>}>
                                         <NavLink pl={'md'} href="accounting/voucher-entry" label={t('SampleModal')} component="button" onClick={(e) => { navigate('/accounting/modalIndex') }} onAuxClick={(e) => {
                                             // Handle middle mouse button click for browsers that support it
                                             if (e.button === 1) {
                                                 window.open('/accounting/voucher-entry', '_blank');
                                             }
                                         }} />
-                                    </List.Item>
+                                    </List.Item> */}
                                 </List>
-                            </Text>
+                            </Box>
                         </Card>
                         <Card shadow="md" radius="md" className={classes.card} padding="lg">
                             <Grid gutter={{ base: 2 }}>
@@ -179,7 +179,7 @@ function MainDashboard(props) {
                                     <Text fz="md" fw={500} className={classes.cardTitle} >{t('InventoryandProduct')}</Text>
                                 </Grid.Col>
                             </Grid>
-                            <Text fz="sm" c="dimmed" mt="sm">
+                            <Box fz="sm" c="dimmed" mt="sm">
                                 <List spacing="ms" size="sm" center>
                                     <List.Item pl={'xs'} icon={<ThemeIcon color="yellow.6" size={20} radius="xl" variant="outline" ><IconListDetails /></ThemeIcon>}>
                                         <NavLink pl={'md'} href="/inventory/product" label={t('ManageProduct')} component="button" onClick={(e) => { navigate('inventory/product') }} onAuxClick={(e) => {
@@ -206,7 +206,7 @@ function MainDashboard(props) {
                                         }} />
                                     </List.Item>
                                 </List>
-                            </Text>
+                            </Box>
                         </Card>
                         <Card shadow="md" radius="md" className={classes.card} padding="lg">
                             <Grid gutter={{ base: 2 }}>
@@ -217,7 +217,7 @@ function MainDashboard(props) {
                                     <Text fz="md" fw={500} className={classes.cardTitle} >{t('CustomerAndVendor')}</Text>
                                 </Grid.Col>
                             </Grid>
-                            <Text fz="sm" c="dimmed" mt="sm">
+                            <Box fz="sm" c="dimmed" mt="sm">
                                 <List spacing="ms" size="sm" center>
                                     <List.Item pl={'xs'} icon={<ThemeIcon color="cyan.6" size={20} radius="xl" variant="outline" ><IconUsersGroup /></ThemeIcon>}>
                                         <NavLink pl={'md'} href="core/customer" label={t('ManageCustomers')} component="button" onClick={(e) => { navigate('core/customer') }} onAuxClick={(e) => {
@@ -244,7 +244,7 @@ function MainDashboard(props) {
                                         }} />
                                     </List.Item>
                                 </List>
-                            </Text>
+                            </Box>
                         </Card>
                         <Card shadow="md" radius="md" className={classes.card} padding="lg">
                             <Grid gutter={{ base: 2 }}>
@@ -255,7 +255,7 @@ function MainDashboard(props) {
                                     <Text fz="md" fw={500} className={classes.cardTitle} >{t('AccountingandFinancial')}</Text>
                                 </Grid.Col>
                             </Grid>
-                            <Text fz="sm" c="dimmed" mt="sm">
+                            <Box fz="sm" c="dimmed" mt="sm">
                                 <List spacing="ms" size="sm" center>
                                     {/*<List.Item pl={'xs'} icon={<ThemeIcon color="blue.6" size={20} radius="xl" variant="outline" ><IconBasket/></ThemeIcon>}>
                                     <NavLink pl={'md'} href="accounting/sales" label={t('ManageSales')} component="button" onClick={(e)=>{navigate('inventory/sales')}}  />
@@ -275,7 +275,7 @@ function MainDashboard(props) {
                                         }} />
                                     </List.Item>
                                 </List>
-                            </Text>
+                            </Box>
                         </Card>
                     </SimpleGrid>
                 </ScrollArea>

@@ -247,7 +247,7 @@
   "Submit": "Submit",
   "Cancel": "Cancel",
   "Roles": "Roles",
-  "Settings": "Settings",
+  "Setting": "Setting",
   "Category": "Category",
   "Sales": "Sales",
   "Product": "Product",
@@ -589,6 +589,7 @@
   "Transactions": "Transactions",
   "Invoices": "Invoices",
   "BatchNo": "Batch No",
-  "TotalReceive" : "Total Receive",
-  "Date" : "Date"
+  "TotalReceive": "Total Receive",
+  "Date": "Date",
+  "InventoryConfigurationN": "Inventory Configuration"
 }

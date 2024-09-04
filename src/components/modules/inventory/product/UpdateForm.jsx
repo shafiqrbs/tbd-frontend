@@ -320,7 +320,7 @@ function UpdateForm() {
                                                                 transitionProps={{ duration: 200 }}
                                                                 label={t('QuickCategory')}
                                                             >
-                                                                <ActionIcon fullWidth variant="outline" bg={'white'} size={'lg'} color="red.5" mt={'1'} aria-label="Settings" onClick={open}>
+                                                                <ActionIcon  variant="outline" bg={'white'} size={'lg'} color="red.5" mt={'1'} aria-label="Settings" onClick={open}>
                                                                     <IconCategoryPlus style={{ width: '100%', height: '70%' }} stroke={1.5} />
                                                                 </ActionIcon>
                                                             </Tooltip>
@@ -432,7 +432,7 @@ function UpdateForm() {
                                                                 transitionProps={{ duration: 200 }}
                                                                 label={t('QuickCategory')}
                                                             >
-                                                                <ActionIcon fullWidth variant="outline" bg={'white'} size={'lg'} color="red.5" mt={'1'} aria-label="Settings" onClick={open}>
+                                                                <ActionIcon  variant="outline" bg={'white'} size={'lg'} color="red.5" mt={'1'} aria-label="Settings" onClick={open}>
                                                                     <IconClipboardPlus style={{ width: '100%', height: '70%' }} stroke={1.5} />
                                                                 </ActionIcon>
                                                             </Tooltip>

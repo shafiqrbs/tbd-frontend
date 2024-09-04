@@ -24,13 +24,13 @@ function LedgerIndex() {
     const configData = getConfigData()
     const progress = getLoadingProgress()
 
-    const { ledgerId } = useParams();
+    const { id } = useParams();
     const navigate = useNavigate()
 
     useEffect(() => {
-        ledgerId ? (
+        id ? (
             dispatch(setInsertType('update')),
-            dispatch(editEntityData(`accounting/ledger/${ledgerId}`)),
+            dispatch(editEntityData(`accounting/ledger/${id}`)),
             dispatch(setFormLoading(true))
         ) : (
             dispatch(setInsertType('create')),
@@ -42,7 +42,7 @@ function LedgerIndex() {
             })),
             navigate('/accounting/ledger')
         );
-    }, [ledgerId, dispatch, navigate])
+    }, [id, dispatch, navigate])
 
 
 

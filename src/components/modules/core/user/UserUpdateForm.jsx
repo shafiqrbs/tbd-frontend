@@ -40,10 +40,12 @@ function UserUpdateForm() {
 
     const form = useForm({
         initialValues: {
-            name: '',
-            username: '',
-            email: '',
-            mobile: ''
+            name: entityEditData?.name || '',
+            username: entityEditData?.username || '',
+            email: entityEditData?.email || '',
+            mobile: entityEditData?.mobile || '',
+            password: '',
+            confirm_password: ''
         },
         validate: {
             name: (value) => {
@@ -89,10 +91,12 @@ function UserUpdateForm() {
     const handleFormReset = () => {
         if (entityEditData) {
             const originalValues = {
-                name: entityEditData.name ? entityEditData.name : '',
-                username: entityEditData.username ? entityEditData.username : '',
-                email: entityEditData.email ? entityEditData.email : '',
-                mobile: entityEditData.mobile ? entityEditData.mobile : ''
+                name: entityEditData?.name || '',
+                username: entityEditData?.username || '',
+                email: entityEditData?.email || '',
+                mobile: entityEditData?.mobile || '',
+                password: '',
+                confirm_password: ''
             }
             form.setValues(originalValues);
         }
@@ -101,11 +105,13 @@ function UserUpdateForm() {
     useEffect(() => {
         if (entityEditData) {
             form.setValues({
-                name: entityEditData.name ? entityEditData.name : '',
-                username: entityEditData.username ? entityEditData.username : '',
-                email: entityEditData.email ? entityEditData.email : '',
-                mobile: entityEditData.mobile ? entityEditData.mobile : '',
-                password: ''
+                name: entityEditData?.name || '',
+                username: entityEditData?.username || '',
+                email: entityEditData?.email || '',
+                mobile: entityEditData?.mobile || '',
+                password: '',
+                confirm_password: ''
+
             })
         }
         dispatch(setFormLoading(false))
@@ -298,6 +304,7 @@ function UserUpdateForm() {
                         <Grid.Col span={1} >
                             <Box bg={'white'} className={'borderRadiusAll'} pt={'16'}>
                                 <Shortcut
+                                    handleFormReset={handleFormReset}
                                     entityEditData={entityEditData}
                                     form={form}
                                     FormSubmit={'EntityFormSubmit'}

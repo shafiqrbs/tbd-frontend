@@ -183,25 +183,6 @@ function CategoryUpdateForm(props) {
                                                                 />
                                                             </Box>
                                                         </Grid.Col>
-                                                        {/* <Grid.Col span={1}>
-                                                            <Box pt={'xl'}>
-                                                                <Tooltip
-                                                                    multiline
-                                                                    ta={'center'}
-                                                                    bg={'orange.8'}
-                                                                    offset={{ crossAxis: '-95', mainAxis: '5' }}
-                                                                    withArrow
-                                                                    transitionProps={{ duration: 200 }}
-                                                                    label={t('CreateCategoryGroup')}
-                                                                >
-                                                                    <ActionIcon fullWidth variant="outline" bg={'white'} size={'lg'} color="red.5" mt={'1'} aria-label="Settings" onClick={open}>
-                                                                        <IconCategoryPlus style={{ width: '100%', height: '70%' }} stroke={1.5} />
-                                                                    </ActionIcon>
-                                                                </Tooltip>
-                                                            </Box>
-
-                                                        </Grid.Col> */}
-                                                        
                                                     </Grid>
                                                 </Box>
                                                 <Box mt={'xs'}>

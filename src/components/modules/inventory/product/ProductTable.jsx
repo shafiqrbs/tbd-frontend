@@ -5,7 +5,9 @@ import {
     Box,
     ActionIcon, Text,
     Menu,
-    rem
+    rem,
+    Switch,
+    Flex
 } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import {
@@ -45,6 +47,20 @@ function ProductTable() {
     const indexData = useSelector((state) => state.crudSlice.indexEntityData)
     const productFilterData = useSelector((state) => state.inventoryCrudSlice.productFilterData)
     const entityDataDelete = useSelector((state) => state.inventoryCrudSlice.entityDataDelete)
+
+    const [swtichEnable, setSwitchEnable] = useState({});
+
+    const handleSwtich = (event, item) => {
+        setSwitchEnable(prev => ({ ...prev, [item.id]: true }));
+        // const value = {
+        //     url: 'core/setting/inline-status/' + item.id
+        // }
+        // dispatch(getStatusInlineUpdateData(value))
+        // dispatch(setFetching(true))
+        setTimeout(() => {
+            setSwitchEnable(prev => ({ ...prev, [item.id]: false }));
+        }, 3000)
+    }
 
     const navigate = useNavigate()
 
@@ -111,6 +127,27 @@ function ProductTable() {
                         { accessor: 'product_name', title: t("Name") },
                         { accessor: 'alternative_name', title: t("AlternativeName") },
                         { accessor: 'unit_name', title: t("Unit") },
+                        {
+                            accessor: 'status',
+                            title: t("Status"),
+                            textAlign: 'center',
+                            render: (item) => (
+                                <Flex justify="center" align="center">
+                                    <Switch
+                                        disabled={swtichEnable[item.id] || false}
+                                        defaultChecked={item.status == 1 ? true : false}
+                                        color="red"
+                                        radius="xs"
+                                        size="md"
+                                        onLabel="Enable"
+                                        offLabel="Disable"
+                                        onChange={(event) => {
+                                            handleSwtich(event, item);
+                                        }}
+                                    />
+                                </Flex>
+                            )
+                        },
                         {
                             accessor: "action",
                             title: t("Action"),

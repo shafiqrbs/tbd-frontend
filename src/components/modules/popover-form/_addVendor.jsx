@@ -53,7 +53,6 @@ function _addVendor(props) {
                         label={t('InstantVendorCreate')}
                     >
                         <ActionIcon
-                            fullWidth
                             variant="outline"
                             bg={'white'}
                             size={'lg'}
@@ -117,7 +116,7 @@ function _addVendor(props) {
                                     type="submit"
                                     mt={0}
                                     mr={'xs'}
-                                    fullWidth
+                                    fullWidth={true}
                                 >
                                     <IconRefreshDot style={{ width: '100%', height: '70%' }} stroke={1.5} />
                                 </Button>
@@ -129,7 +128,7 @@ function _addVendor(props) {
                                     type="submit"
                                     mt={0}
                                     mr={'xs'}
-                                    fullWidth
+                                    fullWidth={true}
                                     id={fieldPrefix+"EntityFormSubmit"}
                                     leftSection={<IconDeviceFloppy size={16} />}
                                     onClick={() => {

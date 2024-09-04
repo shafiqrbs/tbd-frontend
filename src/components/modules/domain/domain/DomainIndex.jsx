@@ -24,20 +24,20 @@ function DomainIndex() {
     const progress = getLoadingProgress()
     const configData = getConfigData()
 
-    const { domainId } = useParams();
+    const { id } = useParams();
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (domainId) {
+        if (id) {
             dispatch(setInsertType('update'));
-            // dispatch(editEntityData(`domain/domain-index/${domainId}`));
+            // dispatch(editEntityData(`domain/domain-index/${id}`));
             dispatch(setFormLoading(true));
-        } else if (!domainId) {
+        } else if (!id) {
             dispatch(setInsertType('create'));
             dispatch(setSearchKeyword(''));
             navigate('/domain/domain-index');
         }
-    }, [domainId, dispatch, navigate]);
+    }, [id, dispatch, navigate]);
 
 
     return (

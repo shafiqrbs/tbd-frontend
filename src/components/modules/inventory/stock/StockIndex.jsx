@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from "react-redux";
 import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress.js";
 import getConfigData from "../../../global-hook/config-data/getConfigData.js";
-import InventoryHeaderNavbar from "../configuraton/InventoryHeaderNavbar";
+import InventoryHeaderNavbar from "../../domain/configuraton/InventoryHeaderNavbar";
 import StockTable from "./StockTable.jsx";
 
 function StockIndex() {

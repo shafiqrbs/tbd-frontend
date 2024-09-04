@@ -1,33 +1,31 @@
 import React, { useEffect, useState } from "react";
 import {
     Box, Button,
-    Grid, Progress, Title, Group, Burger, Menu, rem, ActionIcon, Text, NavLink
+    Grid, Progress, Title, Group, Burger, Menu, rem, ActionIcon, Text
 } from "@mantine/core";
 import { getHotkeyHandler, useDisclosure, useHotkeys, useToggle } from "@mantine/hooks";
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from "react-redux";
 import classes from '../../../../assets/css/HeaderSearch.module.css';
 import {
-    IconInfoCircle, IconTrash, IconSearch, IconSettings,
-    IconBrandProducthunt,
-    IconBrandCodesandbox,
-    IconStack2
+    IconInfoCircle, IconTrash, IconSearch, IconSettings, IconTable
 } from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
 
-
-function InventoryHeaderNavbar(props) {
-    const { pageTitle, roles, currancySymbol, allowZeroPercentage } = props
+function _SalesPurchaseHeaderNavbar(props) {
     const { t, i18n } = useTranslation();
+    const links = [
+        { link: '/inventory/invoice-batch', label: t('InvoiceBatch') },
+        { link: '/inventory/sales', label: t('Sales') },
+        { link: '/inventory/sales-invoice', label: t('NewSales') },
+        { link: '/inventory/purchase', label: t('Purchase') },
+        { link: '/inventory/purchase-invoice', label: t('NewPurchase') },
+
+    ];
+    const { pageTitle } = props
     const dispatch = useDispatch();
     const [opened, { toggle }] = useDisclosure(false);
     const navigate = useNavigate();
-    const links = [
-        { link: '/inventory/stock', label: t('Stock') },
-        { link: '/inventory/product', label: t('Products') },
-        { link: '/inventory/category', label: t('Category') },
-        { link: '/inventory/category-group', label: t('CategoryGroup') },
-    ];
     const items = links.map((link) => (
         <a
             key={link.label}
@@ -45,7 +43,7 @@ function InventoryHeaderNavbar(props) {
         <>
             <header className={classes.header}>
                 <div className={classes.inner}>
-                    <Group ml={10}><Text>{pageTitle}</Text></Group>
+                    <Group><Text>{pageTitle}</Text></Group>
                     <Group>
                         <Group ml={50} gap={5} className={classes.links} visibleFrom="sm" mt={'2'}>
                             {items}
@@ -57,17 +55,17 @@ function InventoryHeaderNavbar(props) {
                                 </ActionIcon>
                             </Menu.Target>
                             <Menu.Dropdown>
-                                <Menu.Item
-                                    component="button" onClick={(e) => { navigate('/inventory/product-settings') }} leftSection={<IconBrandProducthunt style={{ width: rem(14), height: rem(14) }} />}>
-                                    {t('ProductSetting')}
+                                <Menu.Item href="/inventory/opening-stock"
+                                    component="button" onClick={(e) => { navigate('/inventory/opening-stock') }} leftSection={<IconTable style={{ width: rem(14), height: rem(14) }} />}>
+                                    {t('OpeningStock')}
                                 </Menu.Item>
-                                <Menu.Item
-                                    component="button" onClick={(e) => { navigate('/inventory/product-configuration') }} leftSection={<IconBrandCodesandbox style={{ width: rem(14), height: rem(14) }} />}>
-                                    {t('ProductConfiguration')}
+                                <Menu.Item href="/inventory/opening-approve-stock"
+                                    component="button" onClick={(e) => { navigate('/inventory/opening-approve-stock') }} leftSection={<IconTable style={{ width: rem(14), height: rem(14) }} />}>
+                                    {t('ApproveStock')}
                                 </Menu.Item>
-                                <Menu.Item
-                                    component="button" onClick={(e) => { navigate('/inventory/stock') }} leftSection={<IconStack2 style={{ width: rem(14), height: rem(14) }} />}>
-                                    {t('Stock')}
+                                <Menu.Item href="/inventory/config"
+                                    component="button" onClick={(e) => { navigate('/inventory/config') }} leftSection={<IconSettings style={{ width: rem(14), height: rem(14) }} />}>
+                                    {t('Setting')}
                                 </Menu.Item>
                             </Menu.Dropdown>
                         </Menu>
@@ -78,4 +76,4 @@ function InventoryHeaderNavbar(props) {
     );
 }
 
-export default InventoryHeaderNavbar;
+export default _SalesPurchaseHeaderNavbar;

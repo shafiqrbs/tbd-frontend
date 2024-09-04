@@ -11,13 +11,10 @@ import {
     IconX,
 
 } from "@tabler/icons-react";
-import CustomerSettingsForm from "../customer-settings/CustomerSettingsForm.jsx";
-import getParticularTypeDropdownData from "../../../global-hook/dropdown/inventroy/getParticularTypeDropdownData.js";
-
+import SettingsForm from "../settings/SettingsForm.jsx";
+import getParticularTypeDropdownData from "../../../global-hook/dropdown/core/getSettingTypeDropdownData.js";
 
 function CustomerGroupDrawer(props) {
-    // const configData = localStorage.getItem('config-data');
-
     const { groupDrawer, setGroupDrawer, saveId } = props
     const { isOnline, mainAreaHeight } = useOutletContext();
     const { t, i18n } = useTranslation();
@@ -26,9 +23,6 @@ function CustomerGroupDrawer(props) {
     const closeModel = () => {
         setGroupDrawer(false)
     }
-
-
-
 
     return (
         <>
@@ -55,7 +49,7 @@ function CustomerGroupDrawer(props) {
                         </Flex>
 
                         <Box ml={2} mr={2} mb={0}>
-                            <CustomerSettingsForm setGroupDrawer={setGroupDrawer} settingTypeDropdown={settingTypeDropdown} saveId={saveId} />
+                            <SettingsForm setGroupDrawer={setGroupDrawer} settingTypeDropdown={settingTypeDropdown} saveId={saveId} />
                         </Box>
                     </ScrollArea>
 

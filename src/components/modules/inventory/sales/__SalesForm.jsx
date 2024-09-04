@@ -619,7 +619,7 @@ function __SalesForm(props) {
                                         <Grid gutter={{ base: 2 }} mt={'xs'}>
                                             <Grid.Col span={4}>
                                                 <Button
-                                                    fullWidth
+                                                    fullWidth={true}
                                                     onClick={() => setDiscountType()}
                                                     variant="filled"
                                                     fz={'xs'}
@@ -714,9 +714,9 @@ function __SalesForm(props) {
 
                             </ScrollArea>
                             <Box>
-                                <Button.Group fullWidth >
+                                <Button.Group  >
                                     <Button
-                                        fullWidth
+                                        fullWidth={true}
                                         variant="filled"
                                         leftSection={<IconStackPush size={14} />}
                                         color="orange.5"
@@ -724,7 +724,7 @@ function __SalesForm(props) {
                                         {t('Hold')}
                                     </Button>
                                     <Button
-                                        fullWidth
+                                        fullWidth={true}
                                         variant="filled"
                                         type={'submit'}
                                         onClick={handleClick}
@@ -740,7 +740,7 @@ function __SalesForm(props) {
                                         {t('Print')}
                                     </Button>
                                     <Button
-                                        fullWidth
+                                        fullWidth={true}
                                         type={'submit'}
                                         onClick={handleClick}
                                         name="pos"
@@ -756,7 +756,7 @@ function __SalesForm(props) {
                                         {t('Pos')}
                                     </Button>
                                     <Button
-                                        fullWidth
+                                        fullWidth={true}
                                         type={'submit'}
                                         onClick={handleClick}
                                         name="save"

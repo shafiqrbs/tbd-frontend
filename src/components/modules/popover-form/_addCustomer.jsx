@@ -52,7 +52,6 @@ function _addCustomer(props) {
                         label={t('InstantCustomerCreate')}
                     >
                         <ActionIcon
-                            fullWidth
                             variant="outline"
                             bg={'white'}
                             size={'lg'}
@@ -105,7 +104,7 @@ function _addCustomer(props) {
                                     type="submit"
                                     mt={0}
                                     mr={'xs'}
-                                    fullWidth
+                                    fullWidth={true}
                                 >
                                     <IconRefreshDot style={{ width: '100%', height: '70%' }} stroke={1.5} />
                                 </Button>
@@ -117,7 +116,7 @@ function _addCustomer(props) {
                                     type="submit"
                                     mt={0}
                                     mr={'xs'}
-                                    fullWidth
+                                    fullWidth={true}
                                     id={fieldPrefix+"EntityCustomerFormSubmit"}
                                     leftSection={<IconDeviceFloppy size={16} />}
                                     onClick={() => {

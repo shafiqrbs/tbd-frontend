@@ -25,7 +25,7 @@ import getCustomerDropdownData from "../../../global-hook/dropdown/getCustomerDr
 function VendorIndex() {
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
-    const { vendorId } = useParams();
+    const { id } = useParams();
     const navigate = useNavigate();
 
     const insertType = useSelector((state) => state.crudSlice.insertType)
@@ -35,9 +35,9 @@ function VendorIndex() {
     const progress = getLoadingProgress()
 
     useEffect(() => {
-        vendorId ? ((
+        id ? ((
             dispatch(setInsertType('update')),
-            dispatch(editEntityData(`core/vendor/${vendorId}`)),
+            dispatch(editEntityData(`core/vendor/${id}`)),
             dispatch(setFormLoading(true))
         )) : ((
             dispatch(setInsertType('create')),
@@ -51,7 +51,7 @@ function VendorIndex() {
             })),
             navigate('/core/vendor', { replace: true })
         ))
-    }, [vendorId, dispatch, navigate])
+    }, [id, dispatch, navigate])
 
 
     return (

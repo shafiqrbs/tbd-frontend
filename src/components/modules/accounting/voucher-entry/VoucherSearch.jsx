@@ -316,7 +316,7 @@ function VoucherSearch(props) {
                                     transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
                                 >
                                     <Button
-                                        fullWidth
+                                        fullWidth={true}
                                         variant="filled"
                                         color="cyan.5"
                                         onClick={(e) => {

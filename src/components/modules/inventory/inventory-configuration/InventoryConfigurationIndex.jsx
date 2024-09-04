@@ -5,10 +5,10 @@ import {
 } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
 import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress.js";
-import InventoryHeaderNavbar from "../configuraton/InventoryHeaderNavbar.jsx";
-import ProductConfigurationForm from "./ProductConfigurationForm.jsx";
+import InventoryHeaderNavbar from "../../domain/configuraton/InventoryHeaderNavbar.jsx";
+import InventoryConfigurationForm from "./InventoryConfigurationForm.jsx";
 
-function ProductConfigurationIndex() {
+function InventoryConfigurationIndex() {
     const { t, i18n } = useTranslation();
 
     const progress = getLoadingProgress()
@@ -28,7 +28,7 @@ function ProductConfigurationIndex() {
                     <Box p={'8'}>
                         <Grid columns={24} gutter={{ base: 8 }}>
                             <Grid.Col span={24}>
-                                <ProductConfigurationForm />
+                                <InventoryConfigurationForm />
                             </Grid.Col>
                         </Grid>
                     </Box>
@@ -38,4 +38,4 @@ function ProductConfigurationIndex() {
     );
 }
 
-export default ProductConfigurationIndex;
+export default InventoryConfigurationIndex;

@@ -443,7 +443,7 @@ function __UpdateInvoiceForm(props) {
                                     <Grid gutter={{ base: 6 }} mt={'xs'}>
                                         <Grid.Col span={4}>
                                             <Button
-                                                fullWidth
+                                                fullWidth={true}
                                                 onClick={() => setDiscountType()}
                                                 variant="filled"
                                                 fz={'xs'}
@@ -521,14 +521,14 @@ function __UpdateInvoiceForm(props) {
 
                             </ScrollArea>
                             <Box>
-                                <Button.Group fullWidth>
+                                <Button.Group >
                                     <Button fullWidth variant="filled" leftSection={<IconPrinter size={14} />}
                                         color="green.5">Print</Button>
-                                    <Button fullWidth variant="filled" leftSection={<IconReceipt size={14} />}
+                                    <Button fullWidth={true} variant="filled" leftSection={<IconReceipt size={14} />}
                                         color="red.5">Pos</Button>
-                                    <Button type={'submit'} fullWidth variant="filled" leftSection={<IconDeviceFloppy size={14} />}
+                                    <Button type={'submit'} fullWidth={true} variant="filled" leftSection={<IconDeviceFloppy size={14} />}
                                         color="cyan.5">Save</Button>
-                                    <Button fullWidth variant="filled" leftSection={<IconStackPush size={14} />}
+                                    <Button fullWidth={true} variant="filled" leftSection={<IconStackPush size={14} />}
                                         color="orange.5">Hold</Button>
                                 </Button.Group>
                             </Box>

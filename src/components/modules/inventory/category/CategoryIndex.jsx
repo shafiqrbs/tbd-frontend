@@ -12,7 +12,7 @@ import { editEntityData, setFormLoading, setSearchKeyword } from "../../../../st
 import { setDropdownLoad, setEntityNewData, setInsertType } from "../../../../store/inventory/crudSlice.js";
 import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress.js";
 import getConfigData from "../../../global-hook/config-data/getConfigData.js";
-import InventoryHeaderNavbar from "../configuraton/InventoryHeaderNavbar";
+import InventoryHeaderNavbar from "../../domain/configuraton/InventoryHeaderNavbar";
 import { useNavigate, useParams } from "react-router-dom";
 import { getGroupCategoryDropdown } from "../../../../store/inventory/utilitySlice.js";
 
@@ -21,6 +21,7 @@ function CategoryIndex() {
     const dispatch = useDispatch();
 
     const insertType = useSelector((state) => state.inventoryCrudSlice.insertType)
+    const dropdownLoad = useSelector((state) => state.inventoryCrudSlice.dropdownLoad)
 
     const progress = getLoadingProgress()
     const configData = getConfigData()
@@ -51,7 +52,8 @@ function CategoryIndex() {
             url: 'inventory/select/group-category',
         }
         dispatch(getGroupCategoryDropdown(value))
-    }, [setDropdownLoad]);
+        dispatch(setDropdownLoad(false))
+    }, [dropdownLoad]);
 
 
     return (

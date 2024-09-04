@@ -314,7 +314,7 @@ function _AddTransaction(props) {
                                                 <Grid gutter={{ base: 2 }} mt={'xs'}>
                                                     <Grid.Col span={4}>
                                                         <Button
-                                                            fullWidth
+                                                            fullWidth={true}
                                                             onClick={() => setProvisionMode()}
                                                             variant="filled"
                                                             fz={'xs'}
@@ -324,7 +324,7 @@ function _AddTransaction(props) {
                                                     </Grid.Col>
                                                     <Grid.Col span={4}>
                                                         <Button
-                                                            fullWidth
+                                                            fullWidth={true}
                                                             onClick={() => setDiscountType()}
                                                             variant="filled"
                                                             fz={'xs'}
@@ -376,10 +376,10 @@ function _AddTransaction(props) {
                         </ScrollArea>
                         <Box  className={'boxBackground'} p={'md'}>
                             <Box>
-                                <Button.Group fullWidth>
+                                <Button.Group>
 
                                     <Button
-                                        fullWidth
+                                        fullWidth={true}
                                         variant="filled"
                                         type={'submit'}
                                         onClick={handleClick}
@@ -396,7 +396,7 @@ function _AddTransaction(props) {
                                     </Button>
 
                                     <Button
-                                        fullWidth
+                                        fullWidth={true}
                                         type={'submit'}
                                         // onClick={handleClick}
                                         name="save"
