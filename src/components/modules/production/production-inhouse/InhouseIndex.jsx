@@ -11,44 +11,14 @@ import InhouseForm from "./InhouseForm.jsx";
 import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress.js";
 import getConfigData from "../../../global-hook/config-data/getConfigData.js";
 import ProductionHeaderNavbar from "../common/ProductionHeaderNavbar.jsx";
-import {useNavigate, useParams} from "react-router-dom";
-import axios from "axios";
 
 
 function InhouseIndex() {
-    let { invoice } = useParams();
-    const navigate = useNavigate()
     const { t, i18n } = useTranslation();
     const insertType = useSelector((state) => state.crudSlice.insertType)
 
     const progress = getLoadingProgress()
     const configData = getConfigData()
-
-    useEffect(() => {
-        if (!invoice) {
-            axios({
-                method: 'POST',
-                url: `${import.meta.env.VITE_API_GATEWAY_URL + 'production/inhouse'}`,
-                headers: {
-                    "Accept": `application/json`,
-                    "Content-Type": `application/json`,
-                    "Access-Control-Allow-Origin": '*',
-                    "X-Api-Key": import.meta.env.VITE_API_KEY,
-                    "X-Api-User": JSON.parse(localStorage.getItem('user')).id
-                },
-                data: []
-            })
-                .then(res => {
-                    if (res.data.status === 201) {
-                        navigate('/production/inhouse/' + res.data.data.invoice)
-                    }
-                })
-                .catch(function (error) {
-                    console.log(error)
-                    alert(error)
-                })
-        }
-    }, []);
 
 
     return (

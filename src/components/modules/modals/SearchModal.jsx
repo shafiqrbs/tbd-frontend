@@ -5,7 +5,6 @@ import { useTranslation } from "react-i18next";
 import { useNavigate, Link } from "react-router-dom";
 import { useHotkeys } from "@mantine/hooks";
 import getSpotlightDropdownData from "../../global-hook/spotlight-dropdown/getSpotlightDropdownData.js";
-import axios from "axios";
 
 function SearchModal({ onClose }) {
     const [filteredItems, setFilteredItems] = useState([]);
@@ -15,30 +14,6 @@ function SearchModal({ onClose }) {
     const ref = useRef(null);
     const scrollRef = useRef(null);
     const [selectedIndex, setSelectedIndex] = useState(-1);
-
-    const CallInhouseCreateApi = () => {
-        axios({
-            method: 'POST',
-            url: `${import.meta.env.VITE_API_GATEWAY_URL+'production/inhouse'}`,
-            headers: {
-                "Accept": `application/json`,
-                "Content-Type": `application/json`,
-                "Access-Control-Allow-Origin": '*',
-                "X-Api-Key": import.meta.env.VITE_API_KEY,
-                "X-Api-User": JSON.parse(localStorage.getItem('user')).id
-            },
-            data : []
-        })
-        .then(res => {
-            if (res.data.status === 201){
-                navigate('production/inhouse/'+res.data.data.invoice)
-            }
-        })
-        .catch(function (error) {
-            console.log(error)
-            alert(error)
-        })
-    }
 
     useHotkeys([['alt+c', () => {
         setValue('');
@@ -187,32 +162,33 @@ function SearchModal({ onClose }) {
                                     {groupData.items.map((action, itemIndex) => (
                                         <GridCol key={itemIndex} span={6}>
                                             <Link
-                                                to={action.id === 'inhouse' ? '#' : (
-                                                    (action.group === 'Production' || action.group === 'প্রোডাকশন') ? `production/${action.id}`
+                                                // `${action.group.toLowerCase()}/${action.id}` 
+                                                to={
+                                                    (action.group === 'Production' || action.group === 'প্রোডাকশন')
+                                                        ? `production/${action.id}`
                                                         : (action.group === 'Core' || action.group === 'কেন্দ্র') ? `core/${action.id}`
-                                                            : (action.group === 'Inventory' || action.group === 'ইনভেন্টরি') ? `inventory/${action.id}`
-                                                                : (action.group === 'Domain' || action.group === 'ডোমেইন') ? `domain/${action.id}`
-                                                                    : (action.group === 'Accounting' || action.group === 'একাউন্টিং') ? `accounting/${action.id}`
+                                                            : (action.group === 'Inventory' || action.group === 'ইনভেন্টরি')
+                                                                ? `inventory/${action.id}`
+                                                                : (action.group === 'Domain' || action.group === 'ডোমেইন')
+                                                                    ? `domain/${action.id}`
+                                                                    : (action.group === 'Accounting' || action.group === 'একাউন্টিং')
+                                                                        ? `accounting/${action.id}`
                                                                         : `/sitemap`
-                                                )}
-
+                                                }
                                                 onClick={(e) => {
                                                     e.preventDefault();
-                                                    if (action.id === 'inhouse') {
-                                                        CallInhouseCreateApi();
-                                                    } else {
-                                                        navigate(
-                                                            (action.group === 'Production' || action.group === 'প্রোডাকশন') ? `production/${action.id}`
-                                                                : (action.group === 'Core' || action.group === 'কেন্দ্র') ? `core/${action.id}`
-                                                                    : (action.group === 'Inventory' || action.group === 'ইনভেন্টরি') ? `inventory/${action.id}`
-                                                                        : (action.group === 'Domain' || action.group === 'ডোমেইন') ? `domain/${action.id}`
-                                                                            : (action.group === 'Accounting' || action.group === 'একাউন্টিং') ? `accounting/${action.id}`
-                                                                                : `/sitemap`
-                                                        );
-                                                    }
+                                                    navigate((action.group === 'Production' || action.group === 'প্রোডাকশন')
+                                                        ? `production/${action.id}`
+                                                        : (action.group === 'Core' || action.group === 'কেন্দ্র') ? `core/${action.id}`
+                                                            : (action.group === 'Inventory' || action.group === 'ইনভেন্টরি')
+                                                                ? `inventory/${action.id}`
+                                                                : (action.group === 'Domain' || action.group === 'ডোমেইন')
+                                                                    ? `domain/${action.id}`
+                                                                    : (action.group === 'Accounting' || action.group === 'একাউন্টিং')
+                                                                        ? `accounting/${action.id}`
+                                                                        : `/sitemap`);
                                                     onClose();
                                                 }}
-
                                                 style={{ textDecoration: 'none', color: 'inherit' }}
                                                 onMouseEnter={() => {
                                                     setHoveredIndex(action.index);

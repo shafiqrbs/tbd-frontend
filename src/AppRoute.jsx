@@ -100,8 +100,7 @@ function AppRoute() {
                     <Route path="setting" element={<ProductionSettingIndex />} />
                     <Route path="setting/:id" element={<ProductionSettingIndex />} />
                     <Route path="config" element={<ProductionConfigurationIndex />} />
-                    <Route path="inhouse" element={<InhouseIndex />} />
-                    <Route path="inhouse/:invoice" element={<InhouseIndex />} />
+                    <Route path="production-inhouse" element={<InhouseIndex />} />
                 </Route>
 
                 <Route path="/domain/">
