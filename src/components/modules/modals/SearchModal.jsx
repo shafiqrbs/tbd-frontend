@@ -19,7 +19,7 @@ function SearchModal({ onClose }) {
     const CallInhouseCreateApi = () => {
         axios({
             method: 'POST',
-            url: `${import.meta.env.VITE_API_GATEWAY_URL+'production/inhouse'}`,
+            url: `${import.meta.env.VITE_API_GATEWAY_URL+'production/batch'}`,
             headers: {
                 "Accept": `application/json`,
                 "Content-Type": `application/json`,
@@ -27,11 +27,13 @@ function SearchModal({ onClose }) {
                 "X-Api-Key": import.meta.env.VITE_API_KEY,
                 "X-Api-User": JSON.parse(localStorage.getItem('user')).id
             },
-            data : []
+            data : {
+                mode : 'in-house'
+            }
         })
         .then(res => {
-            if (res.data.status === 201){
-                navigate('production/inhouse/'+res.data.data.invoice)
+            if (res.data.status === 200){
+                navigate('production/batch/'+res.data.data.id)
             }
         })
         .catch(function (error) {
@@ -198,7 +200,7 @@ function SearchModal({ onClose }) {
 
                                                 onClick={(e) => {
                                                     e.preventDefault();
-                                                    if (action.id === 'inhouse') {
+                                                    if (action.id === 'batch') {
                                                         CallInhouseCreateApi();
                                                     } else {
                                                         navigate(
