@@ -1,123 +1,53 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useOutletContext } from "react-router-dom";
+import { useOutletContext } from "react-router-dom";
 import {
-    Button, rem, Flex, Grid, Box, ScrollArea, Group, Text, Title, Stack, Tooltip, ActionIcon,
-    NumberInput,
-    TextInput
+    Button, Flex, Grid, Box, ScrollArea, Text, Title, Stack, Tooltip
 } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
 import {
-    IconCategoryPlus,
-    IconCheck,
-    IconDeviceFloppy, IconInfoCircle, IconPlus, IconClipboardPlus,
+    IconDeviceFloppy,
     IconCalendar
 } from "@tabler/icons-react";
-import { useDisclosure, useHotkeys } from "@mantine/hooks";
-import { useDispatch, useSelector } from "react-redux";
-import { hasLength, isNotEmpty, useForm } from "@mantine/form";
-import { modals } from "@mantine/modals";
-import { notifications } from "@mantine/notifications";
+import {getHotkeyHandler, useHotkeys} from "@mantine/hooks";
+import { useDispatch } from "react-redux";
+import { isNotEmpty, useForm } from "@mantine/form";
 
 import Shortcut from "../../shortcut/Shortcut";
 import InputForm from "../../../form-builders/InputForm";
 import SelectForm from "../../../form-builders/SelectForm";
-import SwitchForm from "../../../form-builders/SwitchForm";
-import { getBrandDropdown, getCategoryDropdown } from "../../../../store/inventory/utilitySlice";
-import { getSettingDropdown, getProductUnitDropdown } from "../../../../store/utility/utilitySlice.js";
 
-import { setFetching, storeEntityData } from "../../../../store/inventory/crudSlice.js";
-import { DateInput, DatePicker } from "@mantine/dates";
+import { DateInput } from "@mantine/dates";
 
 function InhouseForm(Props) {
+    const {batchData} = Props
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
     const height = mainAreaHeight - 100; //TabList height 104
-    const [opened, { open, close }] = useDisclosure(false);
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
 
-    const [categoryData, setCategoryData] = useState(null);
-    const categoryDropdownData = useSelector((state) => state.inventoryUtilitySlice.categoryDropdownData)
-    const dropdownLoad = useSelector((state) => state.inventoryCrudSlice.dropdownLoad)
+    const [issueDate, setIssueDate] = useState(null);
+    const [receiveDate, setReceiveDate] = useState(null);
 
-    let categoryDropdown = categoryDropdownData && categoryDropdownData.length > 0 ?
-        categoryDropdownData.map((type, index) => {
-            return ({ 'label': type.name, 'value': String(type.id) })
-        }) : []
     useEffect(() => {
-        const value = {
-            url: 'inventory/select/category',
-            param: {
-                type: 'parent'
-            }
-        }
-        dispatch(getCategoryDropdown(value))
-    }, [dropdownLoad]);
-
-    const [brandData, setBrandData] = useState(null);
-    const brandDropdownData = useSelector((state) => state.inventoryUtilitySlice.brandDropdownData)
-    const dropdownBrandLoad = useSelector((state) => state.inventoryCrudSlice.dropdownLoad)
-    let brandDropdown = brandDropdownData && brandDropdownData.length > 0 ?
-        brandDropdownData.map((type, index) => {
-            return ({ 'label': type.name, 'value': String(type.id) })
-        }) : []
-    useEffect(() => {
-        const value = {
-            url: 'inventory/select/product-brand',
-        }
-        dispatch(getBrandDropdown(value))
-    }, [dropdownBrandLoad]);
-
-    const [productTypeData, setProductTypeData] = useState(null);
-
-    const [productUnitData, setProductUnitData] = useState(null);
-    const [value, setValue] = useState(null);
-    const [value1, setValue1] = useState(null);
-    const productUnitDropdownData = useSelector((state) => state.utilityUtilitySlice.productUnitDropdown)
-    let productUnitDropdown = productUnitDropdownData && productUnitDropdownData.length > 0 ?
-        productUnitDropdownData.map((type, index) => {
-            return ({ 'label': type.name, 'value': String(type.id) })
-        }) : []
-    useEffect(() => {
-        const value = {
-            url: 'utility/select/product-unit'
-        }
-        dispatch(getProductUnitDropdown(value))
-    }, []);
+        setIssueDate(new Date(batchData.issue_date))
+        setReceiveDate(new Date(batchData.receive_date))
+    },[])
 
     const form = useForm({
         initialValues: {
-            product_type_id: '',
-            category_id: '',
-            unit_id: '',
-            name: '',
-            alternative_name: '',
-            barcode: '',
-            sku: '',
-            brand_id: '',
-            opening_quantity: '',
-            sales_price: '',
-            purchase_price: '',
-            min_quantity: '',
-            reorder_quantity: '',
-            status: true
+            invoice: batchData?.invoice,
+            remark: batchData?.remark,
+            issue_date: batchData?.issue_date,
+            receive_date: batchData?.receive_date,
         },
         validate: {
-            product_type_id: isNotEmpty(),
-            category_id: isNotEmpty(),
-            unit_id: isNotEmpty(),
-            name: hasLength({ min: 2, max: 20 }),
-            sales_price: (value) => {
-                const isNumberOrFractional = /^-?\d+(\.\d+)?$/.test(value);
-                if (!isNumberOrFractional) {
-                    return true;
-                }
-            },
+            invoice: isNotEmpty(),
         }
     });
 
     useHotkeys([['alt+n', () => {
-        document.getElementById('product_type_id').focus()
+        document.getElementById('invoice').focus()
     }]], []);
 
     useHotkeys([['alt+r', () => {
@@ -130,7 +60,8 @@ function InhouseForm(Props) {
     return (
         <Box>
             <form onSubmit={form.onSubmit((values) => {
-                modals.openConfirmModal({
+                console.log(values);
+                /*modals.openConfirmModal({
                     title: (
                         <Text size="md"> {t("FormConfirmationTitle")}</Text>
                     ),
@@ -155,14 +86,9 @@ function InhouseForm(Props) {
                         });
                         setTimeout(() => {
                             form.reset()
-                            setCategoryData(null)
-                            setBrandData(null)
-                            setProductTypeData(null)
-                            setProductUnitData(null)
-                            dispatch(setFetching(true))
                         }, 700)
                     },
-                });
+                });*/
             })}>
                 <Grid columns={9} gutter={{ base: 8 }}>
                     <Grid.Col span={8} >
@@ -225,7 +151,7 @@ function InhouseForm(Props) {
                                                             tooltip={t('InvoiceNo')}
                                                             placeholder={t('InvoiceNo')}
                                                             required={false}
-                                                            nextField={'issueDate'}
+                                                            nextField={'issue_date'}
                                                             name={'invoice'}
                                                             form={form}
                                                             id={'invoice'}
@@ -257,13 +183,17 @@ function InhouseForm(Props) {
                                                 <Grid.Col span={12}>
                                                     <Box mt={'xs'}>
                                                         <DateInput
-                                                            value={value}
-                                                            valueFormat="DD-MM-YYYY "
-                                                            onChange={setValue}
-                                                            id={'issueDate'}
+                                                            value={issueDate}
+                                                            valueFormat="DD-MM-YYYY"
+                                                            onChange={setIssueDate}
+                                                            id={'issue_date'}
                                                             name={'issue_date'}
                                                             placeholder={t('IssueDate')}
-                                                            nextField={'receiveDate'}
+                                                            onKeyDown={getHotkeyHandler([
+                                                                ['Enter', (e) => {
+                                                                        document.getElementById('receive_date').focus()
+                                                                }],
+                                                            ])}
                                                             rightSection={
                                                                 <Tooltip
                                                                     withArrow
@@ -309,13 +239,18 @@ function InhouseForm(Props) {
                                                 <Grid.Col span={12}>
                                                     <Box mt={'xs'}>
                                                         <DateInput
-                                                            value={value1}
+                                                            value={receiveDate}
                                                             valueFormat="DD-MM-YYYY "
-                                                            onChange={setValue1}
-                                                            nextField={'remarks'}
+                                                            onChange={setReceiveDate}
+                                                            onKeyDown={getHotkeyHandler([
+                                                                ['Enter', (e) => {
+                                                                    document.getElementById('remark').focus()
+                                                                }],
+                                                            ])}
                                                             placeholder={t('ReceiveDate')}
-                                                            id={'receiveDate'}
-                                                            name={'receive_date'} rightSection={
+                                                            id={'receive_date'}
+                                                            name={'receive_date'}
+                                                            rightSection={
                                                                 <Tooltip
                                                                     withArrow
                                                                     ta="center"
@@ -366,8 +301,8 @@ function InhouseForm(Props) {
                                                             nextField={'process'}
                                                             form={form}
                                                             mt={0}
-                                                            id={'remarks'}
-                                                            name={'remarks'}
+                                                            id={'remark'}
+                                                            name={'remark'}
                                                         />
                                                     </Box>
                                                 </Grid.Col>
@@ -401,8 +336,8 @@ function InhouseForm(Props) {
                                                             placeholder={t('Process')}
                                                             dropdownValue={''}
                                                             searchable={true}
-                                                            changeValue={setProductTypeData}
-                                                            value={productTypeData}
+                                                            // changeValue={setProductTypeData}
+                                                            // value={productTypeData}
                                                             required={false}
                                                             nextField={'EntityFormSubmit'}
                                                             name={'process'}

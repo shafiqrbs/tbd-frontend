@@ -19,6 +19,15 @@ export const getProConfigDropdown = createAsyncThunk("pro-config-dropdown", asyn
         throw error;
     }
 });
+export const getProItemsDropdownData = createAsyncThunk("pro-item-dropdown", async (value) => {
+    try {
+        const response = getDataWithoutParam(value);
+        return response;
+    } catch (error) {
+        console.log('error', error.message);
+        throw error;
+    }
+});
 
 export const getMaterialProductDropdown = createAsyncThunk("material-product/select", async (value) => {
     try {
@@ -38,6 +47,7 @@ const utilitySlice = createSlice({
         settingTypeDropdownData : [],
         materialProductDropdownData : [],
         proConfigDropdownData : [],
+        proItemDropdownData : [],
     },
     reducers : {
         setFetching : (state,action) => {
@@ -51,6 +61,9 @@ const utilitySlice = createSlice({
         })
         builder.addCase(getProConfigDropdown.fulfilled, (state, action) => {
             state.proConfigDropdownData = action.payload
+        })
+        builder.addCase(getProItemsDropdownData.fulfilled, (state, action) => {
+            state.proItemDropdownData = action.payload
         })
         builder.addCase(getMaterialProductDropdown.fulfilled, (state, action) => {
             state.materialProductDropdownData = action.payload

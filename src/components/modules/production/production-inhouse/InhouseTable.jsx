@@ -110,7 +110,7 @@ function InhouseTable() {
                 <InhouseAddItem />
             </Box>
             <Box className={'borderRadiusAll'}>
-                <DataTable
+                {/*<DataTable
                     classNames={{
                         root: tableCss.root,
                         table: tableCss.table,
@@ -217,7 +217,7 @@ function InhouseTable() {
                     loaderColor="grape"
                     height={height}
                     scrollAreaProps={{ type: 'never' }}
-                />
+                />*/}
             </Box>
             {/* {
                 productViewModel &&

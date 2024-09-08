@@ -15,7 +15,7 @@ import {getIndexEntityData, getRestoreData} from "../../../../store/production/c
 
 
 function ProductionHeaderNavbar(props) {
-    const { pageTitle, roles, currancySymbol, allowZeroPercentage } = props
+    const { pageTitle,roles } = props
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const [opened, { toggle }] = useDisclosure(false);

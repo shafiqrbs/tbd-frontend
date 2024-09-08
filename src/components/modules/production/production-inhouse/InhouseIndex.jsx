@@ -1,34 +1,36 @@
 import React, { useEffect, useState } from "react";
 import {
-    Box, Grid, Progress, Title
+    Box, Grid, Progress
 } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from "react-redux";
 
 import InhouseTable from "./InhouseTable.jsx";
 import InhouseForm from "./InhouseForm.jsx";
-// import InhouseUpdateForm from "./InhouseUpdateForm.jsx";
 import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress.js";
-import getConfigData from "../../../global-hook/config-data/getConfigData.js";
 import ProductionHeaderNavbar from "../common/ProductionHeaderNavbar.jsx";
 import {useNavigate, useParams} from "react-router-dom";
+import {editEntityData} from "../../../../store/production/crudSlice.js";
 import axios from "axios";
 
-
 function InhouseIndex() {
-    let { invoice } = useParams();
+    let { id } = useParams();
     const navigate = useNavigate()
-    const { t, i18n } = useTranslation();
-    const insertType = useSelector((state) => state.crudSlice.insertType)
+    const dispatch = useDispatch();
 
+    const { t, i18n } = useTranslation();
     const progress = getLoadingProgress()
-    const configData = getConfigData()
+
+    const editedData = useSelector((state) => state.productionCrudSlice.entityEditData);
+    const dataStatus = useSelector((state) => state.productionCrudSlice.dataStatus);
+
+    const [batchData, setBatchData] = useState({});
 
     useEffect(() => {
-        if (!invoice) {
+        if (!id){
             axios({
                 method: 'POST',
-                url: `${import.meta.env.VITE_API_GATEWAY_URL + 'production/inhouse'}`,
+                url: `${import.meta.env.VITE_API_GATEWAY_URL + 'production/batch'}`,
                 headers: {
                     "Accept": `application/json`,
                     "Content-Type": `application/json`,
@@ -36,11 +38,13 @@ function InhouseIndex() {
                     "X-Api-Key": import.meta.env.VITE_API_KEY,
                     "X-Api-User": JSON.parse(localStorage.getItem('user')).id
                 },
-                data: []
+                data: {
+                    mode : 'in-house'
+                }
             })
                 .then(res => {
-                    if (res.data.status === 201) {
-                        navigate('/production/inhouse/' + res.data.data.invoice)
+                    if (res.data.status === 200) {
+                        navigate('/production/batch/' + res.data.data.id)
                     }
                 })
                 .catch(function (error) {
@@ -48,8 +52,13 @@ function InhouseIndex() {
                     alert(error)
                 })
         }
-    }, []);
-
+        if (id) {
+            dispatch(editEntityData(`production/batch/${id}`))
+        }
+        if (dataStatus === 200) {
+            setBatchData(editedData);
+        }
+    }, [id,dataStatus]);
 
     return (
         <>
@@ -57,13 +66,10 @@ function InhouseIndex() {
                 <Progress color="red" size={"sm"} striped animated value={progress} transitionDuration={200} />}
             {progress === 100 &&
                 <Box>
-                    {configData &&
                         <>
                             <ProductionHeaderNavbar
                                 pageTitle={t('ProductionBatch')}
                                 roles={t('Roles')}
-                                allowZeroPercentage={configData.zero_stock}
-                                currencySymbol={configData.currency.symbol}
                             />
                             <Box p={'8'}>
                                 <Grid columns={24} gutter={{ base: 8 }}>
@@ -74,13 +80,12 @@ function InhouseIndex() {
                                     </Grid.Col>
                                     <Grid.Col span={9}>
                                         {
-                                            <InhouseForm />
+                                            <InhouseForm batchData={batchData} />
                                         }
                                     </Grid.Col>
                                 </Grid>
                             </Box>
                         </>
-                    }
                 </Box>
             }
         </>
