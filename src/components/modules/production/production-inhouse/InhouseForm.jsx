@@ -182,7 +182,7 @@ function InhouseForm(Props) {
                                                 </Grid.Col>
                                                 <Grid.Col span={12}>
                                                     <Box mt={'xs'}>
-                                                        <DateInput
+                                                        {/*<DateInput
                                                             value={issueDate}
                                                             valueFormat="DD-MM-YYYY"
                                                             onChange={setIssueDate}
@@ -212,7 +212,7 @@ function InhouseForm(Props) {
                                                                         style={{ width: '100%', height: '70%' }} stroke={1.5} />
                                                                 </Tooltip>
                                                             }
-                                                        />
+                                                        />*/}
                                                     </Box>
                                                 </Grid.Col>
                                             </Grid>
@@ -238,7 +238,7 @@ function InhouseForm(Props) {
                                                 </Grid.Col>
                                                 <Grid.Col span={12}>
                                                     <Box mt={'xs'}>
-                                                        <DateInput
+                                                        {/*<DateInput
                                                             value={receiveDate}
                                                             valueFormat="DD-MM-YYYY "
                                                             onChange={setReceiveDate}
@@ -268,7 +268,7 @@ function InhouseForm(Props) {
                                                                         style={{ width: '100%', height: '70%' }} stroke={1.5} />
                                                                 </Tooltip>
                                                             }
-                                                        />
+                                                        />*/}
                                                     </Box>
                                                 </Grid.Col>
                                             </Grid>
