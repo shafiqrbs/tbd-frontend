@@ -7,9 +7,13 @@ import { useTranslation } from 'react-i18next';
 import ConfigurationForm from "./ConfigurationForm.jsx";
 import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress.js";
 import DomainHeaderNavbar from "../DomainHeaderNavbar.jsx";
+import { useParams } from "react-router-dom";
 
 function ConfigurationIndex() {
     const { t, i18n } = useTranslation();
+
+    const {id } = useParams();
+    console.log(id);
 
     const progress = getLoadingProgress()
 

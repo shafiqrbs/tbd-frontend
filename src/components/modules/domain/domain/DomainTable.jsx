@@ -52,7 +52,6 @@ function DomainTable(props) {
         }
         dispatch(getIndexEntityData(value))
     }, [fetching]);
-
     return (
 
         <>
@@ -117,7 +116,7 @@ function DomainTable(props) {
                                             </Menu.Item>
                                             <Menu.Item
                                                 onClick={() => {
-                                                    navigate('/domain/config')
+                                                    navigate(`/domain/config/${data.id}`)
                                                 }}
                                                 target="_blank"
                                                 component="a"
