@@ -9,17 +9,7 @@ import {
 } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import { IconTrashX, IconDotsVertical, IconCheck, IconSearch,IconInfoCircle } from "@tabler/icons-react";
-import { DataTable } from 'mantine-datatable';
 import { useDispatch, useSelector } from "react-redux";
-import {
-    editEntityData,
-    getIndexEntityData,
-    setDeleteMessage,
-    setFetching, setFormLoading,
-    setInsertType,
-} from "../../../../store/core/crudSlice.js";
-import { modals } from "@mantine/modals";
-import { notifications } from "@mantine/notifications";
 import classes from './PosTable.module.css'
 
 
@@ -29,39 +19,7 @@ function PosTable() {
     const { t, i18n } = useTranslation();
     const { isOnline, mainAreaHeight } = useOutletContext();
     const height = mainAreaHeight - 202; //TabList height 104
-
-    const perPage = 50;
-    const [page, setPage] = useState(1);
-
-    const fetching = useSelector((state) => state.crudSlice.fetching)
     const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword)
-    const indexData = useSelector((state) => state.crudSlice.indexEntityData)
-    const customerFilterData = useSelector((state) => state.crudSlice.customerFilterData)
-    const [customerObject, setCustomerObject] = useState({});
-
-    const [viewDrawer, setViewDrawer] = useState(false)
-    const [provisionDrawer, setProvisionDrawer] = useState(false)
-
-    const navigate = useNavigate();
-    const entityDataDelete = useSelector((state) => state.crudSlice.entityDataDelete)
-
-    useEffect(() => {
-        dispatch(setDeleteMessage(''))
-        if (entityDataDelete?.message === 'delete') {
-            notifications.show({
-                color: 'red',
-                title: t('DeleteSuccessfully'),
-                icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
-                loading: false,
-                autoClose: 700,
-                style: { backgroundColor: 'lightgray' },
-            });
-
-            setTimeout(() => {
-                dispatch(setFetching(true))
-            }, 700)
-        }
-    }, [entityDataDelete]);
 
     const [tc, setTc] = useState('#333333')
     const [bg , setBg] = useState('#E6F5ED')
@@ -75,19 +33,7 @@ function PosTable() {
         );
       };
 
-    useEffect(() => {
-        const value = {
-            url: 'core/customer',
-            param: {
-                term: searchKeyword,
-                name: customerFilterData.name,
-                mobile: customerFilterData.mobile,
-                page: page,
-                offset: perPage
-            }
-        }
-        dispatch(getIndexEntityData(value))
-    }, [fetching]);
+    
 
     const data = [
         {id : 1, itemName : 'All'},
@@ -175,10 +121,10 @@ function PosTable() {
             </Group>
             </Box>
             <Grid columns={12} gutter={{base : 12}}>
-                <Grid.Col span={3}>
+                <Grid.Col span={2}>
                     <Box bg="white" w={'100%'}  mt={8} style={{ borderRadius: 8 }}>
                     <ScrollArea h={height - 40} type="never" scrollbars="y">
-                        <Box p={'xs'}>
+                        <Box pt={'4'} pl={'xs'} pr={'xs'} pb={'8'}>
                             {
                             data.map((data) => (
                                 <Box
@@ -187,7 +133,7 @@ function PosTable() {
                                     }}
                                     className={classes['pressable-card']}
                                     mih={40}
-                                    mt={'xs'}
+                                    mt={'4'}
                                     variant='default'
                                     key={data.id}
                                     onClick={() => {
@@ -207,33 +153,41 @@ function PosTable() {
                     </ScrollArea>
                     </Box>
                 </Grid.Col>
-                <Grid.Col span={9}>
+                <Grid.Col span={10}>
                     <Box bg="white" w={'100%'} h={height - 40} mt={8} style={{ borderRadius: 8 }}>
-                    <ScrollArea h={height - 40} type="never" pt={'18'} pl={'xs'} pr={'xs'} pb={'18'} scrollbars="y">
+                    <ScrollArea h={height - 40} type="never" pt={'8'} pl={'xs'} pr={'xs'} pb={'6'} scrollbars="y">
                     <Grid columns={12} gutter={{base : 8}}>
                         {products.map((product) => (
-                            <Grid.Col span={4} key={product.id}>
-                            <Card  radius="md" onClick={() =>{
+                            <Grid.Col span={3} key={product.id}>
+                            <Card p={'md'} radius="sm" onClick={() =>{
                                 handleSelect(product.id)
                             }} 
-                            className={`${classes['pressable-card']} ${selected.includes(product.id) ? classes['border'] : classes['border-not']}`}
+                            className={`${classes['pressable-card']} ${classes['card']}  ${selected.includes(product.id) ? classes['border'] : classes['border-not']}`}
                             >
                                 <Card.Section>
+                                <Flex justify={'center'} align={'center'}>
                                 <Image
-                                    p={'xs'}
+                                    mt={2}
+                                    mb={4}
+                                    pt={'xs'}   
+                                    pl={'xs'}
+                                    pr={'xs'}
+                                    pb={4}
                                     src={product.img}
-                                    height={140}
+                                    height={180}
+                                    w={'80%'}
                                     alt={product.name}
                                     fit="cover"
                                     radius="lg"
-                                />
+                                />  
+                                </Flex>
                                 </Card.Section>
 
-                                <Text fw={700} size="sm" mt="4" c={'#333333'}>
+                                <Text fw={700} size="sm" c={'#333333'}>
                                 {product.name}
                                 </Text>
 
-                                <Text mt="4" fw={800} size="md" c={'#333333'}>
+                                <Text fw={800} size="md" c={'#333333'}>
                                 ${product.price}
                                 </Text>
                             </Card>

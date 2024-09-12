@@ -1,19 +1,20 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import {
     Group,
     Box,
     ActionIcon, Text, Menu, rem,
-    TextInput, Tooltip,
-    Button, Grid, Flex, ScrollArea, Card, Image, Select, SimpleGrid,
-    Checkbox, Paper
+    TextInput, Center,
+    Button, Grid, Flex, ScrollArea, Divider, Image, Select, SimpleGrid,Badge,
+    Checkbox, Paper, Switch
 } from "@mantine/core";
 import { useTranslation } from "react-i18next";
-import { IconTrashX, IconDotsVertical, IconCheck, IconSearch, IconChevronDown, IconX, IconPlus, IconMinus, IconTrash, IconSum } from "@tabler/icons-react";
+import { IconChevronRight, IconChevronLeft, IconCheck, IconSearch, IconChevronDown, IconX, IconPlus, IconMinus, IconTrash, IconSum, IconUserFilled, IconPrinter, IconDeviceFloppy } from "@tabler/icons-react";
 import { DataTable } from 'mantine-datatable';
 import { useDispatch, useSelector } from "react-redux";
-import classes from '../Sales.module.css';
-import tableCss from './Table.module.css'
+import tableCss from './Table.module.css';
+import classes from './PosSales.module.css';
+import { IconChefHat } from "@tabler/icons-react";
 
 
 function PosSales() {
@@ -21,11 +22,41 @@ function PosSales() {
     const dispatch = useDispatch();
     const { t, i18n } = useTranslation();
     const { isOnline, mainAreaHeight } = useOutletContext();
-    const height = mainAreaHeight - 202; //TabList height 104
+    const height = mainAreaHeight - 202; //TabList height 104 
+    const heightHalf = height /2;
 
     const navigate = useNavigate();
     const [value, setValue] = useState('');
     const [searchValue, setSearchValue] = useState('');
+
+    const scrollRef = useRef(null);
+    const [showLeftArrow, setShowLeftArrow] = useState(false);
+    const [showRightArrow, setShowRightArrow] = useState(false);
+
+    const handleScroll = () =>{
+        if(scrollRef.current){
+            const { scrollLeft, scrollWidth, clientWidth} = scrollRef.current;
+            setShowLeftArrow(scrollLeft > 0);
+            setShowRightArrow(scrollLeft < scrollWidth - clientWidth - 1);
+        }
+    }
+    useEffect(() => {
+        handleScroll();
+        window.addEventListener('resize', handleScroll);
+        return () => window.removeEventListener('resize', handleScroll);
+    })
+
+    const scroll = (direction) => {
+        if(scrollRef.current){
+            const scrollAmount = 300;
+            scrollRef.current.scrollBy({
+                left: direction === 'left' ? -scrollAmount : scrollAmount,
+                behavior : 'smooth'
+            })
+        }
+    }
+
+    const [profitShow, setProfitShow] = useState(false);
 
     const data = [
         { "id": 1, "name": "T-1" },
@@ -53,6 +84,11 @@ function PosSales() {
       ]);
     const [checked, setChecked] = useState(false);
 
+    const [id, setId] = useState(null)
+    const clicked = (id) => {
+        setId(id);
+    }
+
     const handleIncrement = (id) => {
         setTableData((prevData) =>
           prevData.map((item) =>
@@ -75,6 +111,21 @@ function PosSales() {
         return data.reduce((total, item) => total + item.price * item.qty, 0);
     };
     const subtotal = calculateSubtotal(tableData);
+
+    // Demo
+    const price = 1000;
+
+    const paymentPartners = [
+        {id : 1, name : 'Bkash', img : 'https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png'},
+        {id : 2, name : 'Nogod',  img : 'https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png'},
+        {id : 3, name : 'MTB',  img : 'https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png'},
+        {id : 4, name : 'Google Pay',  img : 'https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png'},
+        {id : 5, name : 'Wise',  img : 'https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png'},
+        {id : 6, name : 'SCB',  img : 'https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png'},
+        {id : 7, name : 'Brac Bank',  img : 'https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png'},
+        {id : 8, name : 'Trust Bank',  img : 'https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png'},
+        {id : 9, name : 'Sonali bank',  img : 'https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png'},
+    ];
 
     return (
         <>
@@ -113,19 +164,20 @@ function PosSales() {
                         mt={10}
                         miw={122}
                         maw={122}
+                        leftSection={<IconChefHat height={18} width={18} stroke={2} /> }
                     >
                         <Text fw={600} size="sm">
-                            Search
+                            {t('Kitchen')}
                         </Text>
                     </Button>
                 </Group>
                 <Box>
 
-                    <ScrollArea h={height/2 } type="never" scrollbars="y">
-                        <Paper p="xs" radius="md" style={{ backgroundColor: checked ? '#4CAF50' : '#E8F5E9' }}>
+                    <ScrollArea h={heightHalf - 20} type="never" scrollbars="y">
+                        <Paper p="8" radius="md" style={{ backgroundColor: checked ? '#4CAF50' : '#E8F5E9' }}>
                             <Grid align="center">
                                 <Grid.Col span={11}>
-                                    <Text weight={500} color={checked ? 'white' : 'black'}>Select additional table</Text>
+                                    <Text weight={500} c={checked ? 'white' : 'black'}>Select additional table</Text>
                                 </Grid.Col>
                                 <Grid.Col span={1}>
                                     <Checkbox
@@ -164,7 +216,7 @@ function PosSales() {
                                 </Grid>
                             </Paper>
                         )}
-                        <ScrollArea h={268} type="never" scrollbars="y">
+                        <Box >
                         <DataTable
                                                 classNames={{
                                                     root: tableCss.root,
@@ -187,19 +239,21 @@ function PosSales() {
                                                         render : (data) =>(
                                                             <Group w={120} gap={8} justify="left">
                                                             <ActionIcon
+                                                            size={'sm'}
                                                                 bg={'#596972'}
                                                                 onClick={() => handleDecrement(data.id)}
                                                             >
-                                                                <IconMinus height={'24'} width={'24'} />
+                                                                <IconMinus height={'12'} width={'12'} />
                                                             </ActionIcon>
-                                                            <Text size="sm" ta={'center'} fw={600} maw={30}>
+                                                            <Text size="sm" ta={'center'} fw={600} maw={30} miw={30}>
                                                                 {data.qty}
                                                             </Text>
                                                             <ActionIcon
+                                                            size={'sm'}
                                                                 bg={'#596972'}
                                                                 onClick={() => handleIncrement(data.id)}
                                                             >
-                                                                <IconPlus height={'24'} width={'24'} />
+                                                                <IconPlus height={'12'} width={'12'} />
                                                             </ActionIcon>
                                                             </Group>
                                                         ),
@@ -235,12 +289,213 @@ function PosSales() {
                                                 }
                                                 loaderSize="xs"
                                                 loaderColor="grape"
-                                                height={height - 356}
+                                                height={248}
                                                 scrollAreaProps={{ type: 'never' }}
                         /> 
-                        </ScrollArea>
+                        </Box>
+                        
 
                     </ScrollArea>
+                </Box>
+                <Box className={classes['box-border']} h={heightHalf + 26} mt={'4'} p={'4'}>
+                    <TextInput
+                        p={'4'}
+                        size={'sm'}
+                        placeHolder={t('CustomerMobileNumber')}
+                        leftSection={<IconSearch height={18} width={18} stroke={2} />}
+                        rightSection={<IconUserFilled height={18} width={18} stroke={2} />}
+                    ></TextInput>
+                    <Box className={classes['box-white']} ml={4} mr={4} h={76}>
+                        <Grid columns={12} gutter={0} pt={4} pl={12} pr={12} pb={4}>
+                            <Grid.Col span={6} >
+                                <Grid columns={12} gutter={0} >
+                                    <Grid.Col span={2} >
+                                        <Text fw={500} c={'#333333'}>
+                                        {t('VAT')}
+                                        </Text>
+                                    </Grid.Col>
+                                    <Grid.Col span={'auto'} >
+                                        <Text  fw={800} c={'#333333'}>
+                                        {t('$')} {price}
+                                        </Text>
+                                    </Grid.Col>
+                                </Grid>
+                                <Grid columns={12} gutter={0} pt={0}>
+                                    <Grid.Col span={2} >
+                                        <Text fw={500} c={'#333333'}>
+                                        {t('SD')}
+                                        </Text>
+                                    </Grid.Col>
+                                    <Grid.Col span={'auto'} >
+                                        <Text  fw={800} c={'#333333'}>
+                                        {t('$')} {price}
+                                        </Text>
+                                    </Grid.Col>
+                                </Grid>
+                                <Grid columns={12} gutter={0} pt={0}>
+                                    <Grid.Col span={2} >
+                                        <Text fw={500} c={'#333333'}>
+                                        {t('DIS.')}
+                                        </Text>
+                                    </Grid.Col>
+                                    <Grid.Col span={'auto'} >
+                                        <Text  fw={800} c={'#333333'}>
+                                        {t('$')} {price}
+                                        </Text>
+                                    </Grid.Col>
+                                </Grid>
+                            </Grid.Col>
+                            <Grid.Col span={6}>
+                                <Box className={classes['box-border']} p={6}>
+                                    <Flex direction={'column'} justify={'center'} align={'center'} h={"100%"} p={2}>
+                                        <Text fw={500} c={'#333333'} size={'md'}>
+                                            {t('Total')}
+                                        </Text>
+                                        <Text fw={800} c={'#00542B'} size={'lg'}>
+                                            $ {price}
+                                        </Text>
+                                    </Flex>
+                                </Box>
+                            </Grid.Col>
+                        </Grid>
+                    </Box>
+                    <Box className={classes['box-white']} ml={4} mr={4} mt={4}>
+                    <Box style={{position : 'relative'}}>
+                <ScrollArea
+                        type="never"
+                        pl={'sm'}
+                        pr={'sm'}
+                        viewportRef={scrollRef}
+                        onScrollPositionChange={handleScroll}
+                        >
+                            <Group m={0} p={0} justify="flex-start" align="flex-start" gap="4" wrap="nowrap">
+                            {paymentPartners.map((partners) => (
+                                <Box
+                                    onClick={() => {
+                                        console.log("Clicked on Table -", partners.id),
+                                        clicked(partners.id)
+                                    }
+                                }
+                                mb={'2'}
+                                key={partners.id}
+                                style={{
+                                    position: 'relative',
+                                    cursor: 'pointer'
+                                }}
+                                >
+                                <Flex
+                                    bg={partners.id === id ? '#E6F5ED' : 'white'}
+                                    mt={2}
+                                    direction="column"
+                                    align="center"
+                                    justify="center"
+                                    style={{
+                                    height: '84px',
+                                    width: '98px',
+                                    borderRadius: '8px',
+                                    }}
+                                >
+                                    <Image h={'70%'} w={'70%'} fit="contain" src={partners.img} ></Image>
+                                    <Text pt={'4'} c={'#333333'} fw={500}>{partners.name}</Text>
+                                </Flex>
+                                </Box>
+                            ))}
+                            </Group>
+                    </ScrollArea>
+                    {showLeftArrow && (
+                            <ActionIcon
+                            variant="filled"
+                            color="#EAECED"
+                            radius="xl"
+                            size="lg"
+                            h={24}
+                            w={24}
+                            style={{
+                                position: 'absolute',
+                                left: 5,
+                                top: '50%',
+                                transform: 'translateY(-50%)'
+                            }}
+                            onClick={() => scroll('left')}
+                            >
+                            <IconChevronLeft height={18} width={18} stroke={2} color="#30444F"/>
+                            </ActionIcon>
+                    )}
+                    {showRightArrow && (
+                            <ActionIcon
+                            variant="filled"
+                            color="#EAECED"
+                            radius="xl"
+                            size="lg"
+                            h={24}
+                            w={24}
+                            style={{
+                                position: 'absolute',
+                                right: 5,
+                                top: '50%',
+                                transform: 'translateY(-50%)'
+                            }}
+                            onClick={() => scroll('right')}
+                            >
+                            <IconChevronRight height={18} width={18} stroke={2} color="#30444F"/>
+                            </ActionIcon>
+                    )}
+                    </Box>
+                    </Box>
+                    <Box mt={4} ml={4} mr={4}>
+                        <Group  justify="center" grow gap={'xs'} preventGrowOverflow={true}>
+                        {/* <Switch
+                        bg={'yellow'}
+                                                    size="lg"
+                                                    w={30}
+                                                    color={'#006d38'}
+                                                    mt={'2'}
+                                                    onLabel={t('Flat')}
+                                                    offLabel={t('Hide')}
+                                                    radius="xs"
+                                                    onChange={(event) => setProfitShow(event.currentTarget.checked)}
+                        /> */}
+                        <Box h={'40'} className={classes['box-green']}>
+                            <Grid columns={12} gutter={0}>
+                                <Grid.Col span={4}>
+                                    <Flex h={40} justify={'center'} align={'center'}   >
+                                        <Checkbox color="lime" size="lg">
+
+                                        </Checkbox>
+                                    </Flex>
+                                </Grid.Col>
+                                <Grid.Col span={8}>
+                                    <Flex h={40} justify={'center'} align={'center'} >
+                                        <Text>
+                                            {t('Flat')}
+                                        </Text>
+                                    </Flex>
+                                </Grid.Col>
+                            </Grid>
+                        </Box>
+                            <TextInput
+                            type="number"
+                            placeholder="0"
+                            size={rem(40)}classNames={{input : classes.input}}>
+
+                            </TextInput>
+                            <TextInput 
+                            type="number"
+                            placeholder="0" size={rem(40)} classNames={{input : classes.input}}>
+
+                            </TextInput>
+                        </Group>
+                        <Divider mt={'xs'} classNames={{ root: classes.divider}} my="md" mb={0}/> 
+                    <Group grow gap={'xs'} p={4}>
+                        <Button bg={'#30444F'} size={'md'} fullWidth={true} leftSection={<IconPrinter />}>
+                            {t('POS Print')}
+                        </Button>
+                        <Button size={'md'} bg={'#00994f'} fullWidth={true} leftSection={<IconDeviceFloppy />}>
+                        {t('Save')}
+                        </Button>
+                    </Group>
+                    </Box>
+                    
                 </Box>
             </Box>
 

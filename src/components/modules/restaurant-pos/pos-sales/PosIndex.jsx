@@ -57,10 +57,10 @@ function PosIndex() {
                     />
                     <Box pl={'4'}>
                         <Grid columns={24} gutter={{ base: 8 }}>
-                            <Grid.Col span={17} >
+                            <Grid.Col span={16} >
                                 <PosTable />
                             </Grid.Col>
-                            <Grid.Col span={7}>
+                            <Grid.Col span={8}>
                                 <Box bg="white" w={'100%'} h={height} style={{ borderRadius: 8 }}>
                                     <PosSales />
                                 </Box>
