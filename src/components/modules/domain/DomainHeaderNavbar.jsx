@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from "react-redux";
 import classes from '../../../assets/css/HeaderSearch.module.css';
 import {
-    IconInfoCircle, IconTrash, IconSearch, IconSettings
+    IconInfoCircle, IconAdjustments, IconSearch, IconSettings
 } from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
 
@@ -50,6 +50,12 @@ function DomainHeaderNavbar(props) {
                                     <IconInfoCircle height={'12'} width={'12'} stroke={1.5} />
                                 </ActionIcon>
                             </Menu.Target>
+                            <Menu.Dropdown>
+                                <Menu.Item
+                                    component="button" onClick={(e) => { navigate('/domain/sitemap') }} leftSection={<IconAdjustments style={{ width: rem(14), height: rem(14) }} />}>
+                                    {t('Sitemap')}
+                                </Menu.Item>
+                            </Menu.Dropdown>
                         </Menu>
                     </Group>
                 </div>
