@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams, useNavigate, useOutletContext } from "react-router-dom";
 import {
     Box,
@@ -27,7 +27,29 @@ function PosIndex() {
     const navigate = useNavigate();
     const { isOnline, mainAreaHeight } = useOutletContext();
     const height = mainAreaHeight - 130;
-    const progress = getLoadingProgress()
+    const progress = getLoadingProgress();
+
+    const [tables, setTables] = useState([
+        {'id' : 1, 'time' : '08:01:49 PM' },
+        {'id' : 2, 'time' : '08:01:49 PM' },
+        {'id' : 3, 'time' : '08:01:49 PM' },
+        {'id' : 4, 'time' : '08:01:49 PM' },
+        {'id' : 5, 'time' : '08:01:49 PM' },
+        {'id' : 6, 'time' : '08:01:49 PM' },
+        {'id' : 7, 'time' : '08:01:49 PM' },
+        {'id' : 8, 'time' : '08:01:49 PM' },
+        {'id' : 9, 'time' : '08:01:49 PM' },
+        {'id' : 10, 'time' : '08:01:49 PM' },
+        {'id' : 11, 'time' : '08:01:49 PM' },
+        {'id' : 12, 'time' : '08:01:49 PM' },
+        {'id' : 13, 'time' : '08:01:49 PM' },
+        {'id' : 14, 'time' : '08:01:49 PM' },
+        {'id' : 15, 'time' : '08:01:49 PM' },
+        {'id' : 16, 'time' : '08:01:49 PM' },
+        {'id' : 17, 'time' : '08:01:49 PM' },
+        {'id' : 18, 'time' : '08:01:49 PM' },
+        
+    ]);
 
     useEffect(() => {
         if (id) {
@@ -54,6 +76,8 @@ function PosIndex() {
                         roles={t('Roles')}
                         allowZeroPercentage=''
                         currencySymbol=''
+                        tables={tables}
+                        setTables={setTables}
                     />
                     <Box pl={'4'}>
                         <Grid columns={24} gutter={{ base: 8 }}>

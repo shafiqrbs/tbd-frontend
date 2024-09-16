@@ -8,7 +8,7 @@ import {
     Button,Grid,Flex, ScrollArea,Card, Image
 } from "@mantine/core";
 import { useTranslation } from "react-i18next";
-import { IconTrashX, IconDotsVertical, IconCheck, IconSearch,IconInfoCircle } from "@tabler/icons-react";
+import { IconLayoutGrid, IconListDetails, IconCheck, IconSearch,IconInfoCircle } from "@tabler/icons-react";
 import { useDispatch, useSelector } from "react-redux";
 import classes from './PosTable.module.css'
 
@@ -24,6 +24,7 @@ function PosTable() {
     const [tc, setTc] = useState('#333333')
     const [bg , setBg] = useState('#E6F5ED')
     const [selected, setSelected] = useState([]);
+    const [grid, setGrid] = useState(null);
 
     const handleSelect = (productId) => {
         setSelected((prevSelected) =>
@@ -32,9 +33,7 @@ function PosTable() {
             : [...prevSelected, productId] 
         );
       };
-
     
-
     const data = [
         {id : 1, itemName : 'All'},
         {id : 2, itemName : 'Pizza'},
@@ -53,24 +52,24 @@ function PosTable() {
     ]
 
     const products = [
-        {id : 1, name : 'Margarita Pizza',price : 1000, img : 'https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png'},
-        {id : 2, name : 'Lemonade Pizza', price : 1000, img : 'https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png'},
-        {id : 3, name : 'Barrista Pizza', price : 1000, img : 'https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png'},
-        {id : 4, name : 'Jhankar Pizza', price : 1000, img : 'https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png'},
-        {id : 5, name : 'Uttara Pizza', price : 1000, img : 'https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png'},
-        {id : 6, name : 'Chikni Pizza', price : 1000, img : 'https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png'},
-        {id : 7, name : 'Dambu Pizza', price : 1000, img : 'https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png'},
-        {id : 8, name : 'Gambu Pizza', price : 1000, img : 'https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png'},
-        {id : 9, name : 'Chontu Pizza', price : 1000, img : 'https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png'},
-        {id : 10, name : 'Pontu Pizza', price : 1000, img : 'https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png'},
-        {id : 11, name : 'Chintu Pizza', price : 1000, img : 'https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png'},
-        {id : 12, name : 'Kintu Pizza', price : 1000, img : 'https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png'},
-        {id : 13, name : 'Asta Pizza', price : 1000, img : 'https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png'},
-        {id : 14, name : 'Beef Pizza', price : 1000, img : 'https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png'},
-        {id : 15, name : 'Chicken Pizza', price : 1000, img : 'https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png'},
-        {id : 16, name : 'Mango Pizza', price : 1000, img : 'https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png'},
-        {id : 17, name : 'Django Pizza', price : 1000, img : 'https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png'},
-        {id : 18, name : 'Vue Pizza', price : 1000, img : 'https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png'},
+        {id : 1, name : 'Margarita Pizza', img : 'https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png', price : 120},
+        {id : 2, name : 'Lemonade Pizza',  img : 'https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png',price : 130 },
+        {id : 3, name : 'Barrista Pizza',  img : 'https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png',price : 110},
+        {id : 4, name : 'Jhankar Pizza',  img : 'https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png',price : 120},
+        {id : 5, name : 'Uttara Pizza',  img : 'https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png',price : 200},
+        {id : 6, name : 'Chikni Pizza',  img : 'https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png',price : 220},
+        {id : 7, name : 'Dambu Pizza',  img : 'https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png',price : 300},
+        {id : 8, name : 'Gambu Pizza',  img : 'https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png',price : 400},
+        {id : 9, name : 'Chontu Pizza',  img : 'https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png',price : 50},
+        {id : 10, name : 'Pontu Pizza',  img : 'https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png',price : 100},
+        {id : 11, name : 'Chintu Pizza',  img : 'https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png',price : 210},
+        {id : 12, name : 'Kintu Pizza',  img : 'https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png',price : 220},
+        {id : 13, name : 'Asta Pizza',  img : 'https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png',price : 240},
+        {id : 14, name : 'Beef Pizza',  img : 'https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png',price : 300},
+        {id : 15, name : 'Chicken Pizza',  img : 'https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png',price : 400},
+        {id : 16, name : 'Mango Pizza',  img : 'https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png',price : 500},
+        {id : 17, name : 'Django Pizza',  img : 'https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png',price : 180},
+        {id : 18, name : 'Vue Pizza',  img : 'https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png',price : 790},
     ]
 
     const [id, setId] = useState(null)
@@ -87,7 +86,7 @@ function PosTable() {
                 radius="md"
                 leftSection={<IconSearch size={16} opacity={0.5} />}
                 size="md"
-                placeholder="Enter search keyword"
+                placeholder="SearchFood"
                 rightSection={
                 searchKeyword ? (
                     <Tooltip label="Clear" withArrow position="top">
@@ -106,18 +105,12 @@ function PosTable() {
                 )
                 }
             />
-            <Button 
-                radius="md" 
-                size="sm" 
-                color="green" 
-                mt={2}
-                miw={110}
-                maw={110}
-            >
-                <Text fw={600} size="sm">
-                Search
-                </Text>
-            </Button>
+            <ActionIcon  size="input-md" variant="default" radius="md" aria-label="Settings" miw={60}
+                maw={60} c={'green.8'} onClick={()=>{
+                    grid ? setGrid(false) : setGrid(true); 
+                }} >
+                    {!grid ? (<IconListDetails height={'24'} width={'24'} stroke={1.5}/>) : (<IconLayoutGrid height={'24'} width={'24'} stroke={1.5}/>)}
+            </ActionIcon>
             </Group>
             </Box>
             <Grid columns={12} gutter={{base : 12}}>
@@ -156,44 +149,81 @@ function PosTable() {
                 <Grid.Col span={10}>
                     <Box bg="white" w={'100%'} h={height - 40} mt={8} style={{ borderRadius: 8 }}>
                     <ScrollArea h={height - 40} type="never" pt={'8'} pl={'xs'} pr={'xs'} pb={'6'} scrollbars="y">
-                    <Grid columns={12} gutter={{base : 8}}>
-                        {products.map((product) => (
-                            <Grid.Col span={3} key={product.id}>
-                            <Card p={'md'} radius="sm" onClick={() =>{
-                                handleSelect(product.id)
-                            }} 
-                            className={`${classes['pressable-card']} ${classes['card']}  ${selected.includes(product.id) ? classes['border'] : classes['border-not']}`}
-                            >
-                                <Card.Section>
-                                <Flex justify={'center'} align={'center'}>
-                                <Image
-                                    mt={2}
-                                    mb={4}
-                                    pt={'xs'}   
-                                    pl={'xs'}
-                                    pr={'xs'}
-                                    pb={4}
-                                    src={product.img}
-                                    height={180}
-                                    w={'80%'}
-                                    alt={product.name}
-                                    fit="cover"
-                                    radius="lg"
-                                />  
-                                </Flex>
-                                </Card.Section>
+                        {grid ? 
+                        (
+                            <>
+                                {products.map((product) => (
+                                    <Grid m={'xs'} columns={12} gutter={0} key={product.id}
+                                    className={`${classes['pressable-card']} ${classes['card']}  ${selected.includes(product.id) ? classes['border'] : classes['border-not']}`}
+                                    onClick={() =>{
+                                        handleSelect(product.id)
+                                    }}
+                                    >
+                                        <Grid.Col span={6}>
+                                        <Image
+                                            h={144}
+                                            src={product.img}
+                                            />
+                                        </Grid.Col>
+                                        <Grid.Col span={6} style={{ display: 'flex' }}>
+                                                <Card
+                                                    w={'100%'}
+                                                    shadow="sm"
+                                                    padding="xl"
+                                                    >
+                                                    <Text fw={500} size="lg" mt="md">
+                                                        {product.name}
+                                                    </Text>
 
-                                <Text fw={700} size="sm" c={'#333333'}>
-                                {product.name}
-                                </Text>
+                                                    <Text mt="xs" c="dimmed" size="md">
+                                                        {product.price}
+                                                    </Text>
+                                                </Card>
+                                        </Grid.Col>
+                                    </Grid>
+                                ))}
+                            </>
+                        )
+                        : 
+                        (<Grid columns={12} gutter={{base : 8}}>
+                            {products.map((product) => (
+                                <Grid.Col span={3} key={product.id}>
+                                <Card p={'md'} radius="sm" onClick={() =>{
+                                    handleSelect(product.id)
+                                }} 
+                                className={`${classes['pressable-card']} ${classes['card']}  ${selected.includes(product.id) ? classes['border'] : classes['border-not']}`}
+                                >
+                                    <Card.Section>
+                                    <Flex justify={'center'} align={'center'}>
+                                    <Image
+                                        mt={2}
+                                        mb={4}
+                                        pt={'xs'}   
+                                        pl={'xs'}
+                                        pr={'xs'}
+                                        pb={4}
+                                        src={product.img}
+                                        height={180}
+                                        w={'80%'}
+                                        alt={product.name}
+                                        fit="cover"
+                                        radius="lg"
+                                    />  
+                                    </Flex>
+                                    </Card.Section>
 
-                                <Text fw={800} size="md" c={'#333333'}>
-                                ${product.price}
-                                </Text>
-                            </Card>
-                            </Grid.Col>
-                        ))}
-                    </Grid>
+                                    <Text fw={700} size="sm" c={'#333333'} mt={'4'}>
+                                    {product.name}
+                                    </Text>
+
+                                    <Text fw={800} size="md" c={'#333333'}>
+                                    ${product.price}
+                                    </Text>
+                                </Card>
+                                </Grid.Col>
+                            ))}
+                        </Grid>)
+                        }
 
                     </ScrollArea>
                     </Box>
