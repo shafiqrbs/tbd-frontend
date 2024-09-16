@@ -151,38 +151,38 @@ function PosTable() {
                     <ScrollArea h={height - 40} type="never" pt={'8'} pl={'xs'} pr={'xs'} pb={'6'} scrollbars="y">
                         {grid ? 
                         (
-                            <>
-                                {products.map((product) => (
-                                    <Grid m={'xs'} columns={12} gutter={0} key={product.id}
-                                    className={`${classes['pressable-card']} ${classes['card']}  ${selected.includes(product.id) ? classes['border'] : classes['border-not']}`}
-                                    onClick={() =>{
-                                        handleSelect(product.id)
-                                    }}
-                                    >
-                                        <Grid.Col span={6}>
-                                        <Image
-                                            h={144}
-                                            src={product.img}
-                                            />
-                                        </Grid.Col>
-                                        <Grid.Col span={6} style={{ display: 'flex' }}>
-                                                <Card
-                                                    w={'100%'}
-                                                    shadow="sm"
-                                                    padding="xl"
-                                                    >
-                                                    <Text fw={500} size="lg" mt="md">
-                                                        {product.name}
-                                                    </Text>
+                            <Grid columns={12} gutter={8}>
+                            {products.map((product) => (
+                                <Grid.Col
+                                key={product.id}
+                                span={6}
+                                >
+                                <Grid columns={12} gutter={0} p="xs"  className={`${classes['pressable-card']} ${classes['card']} ${selected.includes(product.id) ? classes['border'] : classes['border-not']}`}
+                                style={{borderRadius : '4px'}}
+                                onClick={() => handleSelect(product.id)}>
+                                    <Grid.Col span={6}>
+                                    <Image
+                                        h={134}
+                                        w={'100%'}
+                                        src={product.img}
+                                        alt={product.name}
+                                    />
+                                    </Grid.Col>
+                                    <Grid.Col span={6} style={{ display: 'flex', alignItems: 'center' }}>
+                                    <Card w="100%" padding="xl" style={{ height: '100%' }}>
+                                        <Text fw={600} size="md" mt="sm">
+                                        {product.name}
+                                        </Text>
+                                        <Text mt="xs" fw={500} c="" size="sm">
+                                        {product.price}
+                                        </Text>
+                                    </Card>
+                                    </Grid.Col>
+                                </Grid>
+                                </Grid.Col>
+                            ))}
+                            </Grid>
 
-                                                    <Text mt="xs" c="dimmed" size="md">
-                                                        {product.price}
-                                                    </Text>
-                                                </Card>
-                                        </Grid.Col>
-                                    </Grid>
-                                ))}
-                            </>
                         )
                         : 
                         (<Grid columns={12} gutter={{base : 8}}>

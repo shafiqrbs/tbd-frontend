@@ -301,7 +301,7 @@ function PosSales() {
                     <TextInput
                         p={'4'}
                         size={'sm'}
-                        placeHolder={t('CustomerMobileNumber')}
+                        placeholder={t('CustomerMobileNumber')}
                         leftSection={<IconSearch height={18} width={18} stroke={2} />}
                         rightSection={<IconUserFilled height={18} width={18} stroke={2} />}
                     ></TextInput>
