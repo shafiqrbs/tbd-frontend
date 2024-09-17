@@ -426,5 +426,12 @@
   "BatchNo": "ব্যাচ নং",
   "TotalAmount": "টোটাল এমাউন্ট",
   "TotalReceive": "টোটাল রিসিভ",
-  "Date": "তারিখ"
+  "Date": "তারিখ",
+  "ManageSitemap" : "ম্যানেজ সাইটম্যাপ",
+  "ModuleName" : "মডিউল নাম",
+  "CreateSitemap" : "সাইটম্যাপ তৈরী",
+  "ChooseIcon" : "আইকন নির্বাচন",
+  "UrlName" : "ইউআরএল নাম",
+  "Icon" : "আইকন",
+  "Url" : "ইউআরএল"
 }

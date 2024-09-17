@@ -591,5 +591,12 @@
   "BatchNo": "Batch No",
   "TotalReceive": "Total Receive",
   "Date": "Date",
-  "InventoryConfigurationN": "Inventory Configuration"
+  "InventoryConfigurationN": "Inventory Configuration",
+  "ManageSitemap" : "Manage Sitemap",
+  "ModuleName" : "Module Name",
+  "CreateSitemap" : "Create Sitemap",
+  "ChooseIcon" : "Choose Icon",
+  "UrlName" : "Url Name",
+  "Icon" : "Icon",
+  "Url" : "Url"
 }
