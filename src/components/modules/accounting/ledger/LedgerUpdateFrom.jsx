@@ -52,7 +52,7 @@ function LedgerUpdateFrom(props) {
 
     const form = useForm({
         initialValues: {
-            parent_name: '', name: '', code: '', status: true
+            parent_name: '', name: '', code: '', status: true, head_group : 'ledger'
         },
         validate: {
             parent_name: isNotEmpty(),
@@ -118,7 +118,7 @@ function LedgerUpdateFrom(props) {
                     onConfirm: () => {
                         setSaveCreateLoading(true)
                         const value = {
-                            url: 'inventory/category-group/' + entityEditData.id,
+                            url: 'accounting/account-head/' + entityEditData.id,
                             data: values
                         }
                         dispatch(updateEntityData(value))

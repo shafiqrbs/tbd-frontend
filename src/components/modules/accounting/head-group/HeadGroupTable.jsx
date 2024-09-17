@@ -77,6 +77,7 @@ function HeadGroupTable(props) {
                         { accessor: 'name', title: t('Name') },
                         { accessor: 'mother_name', title: t('NatureOfGroup') },
                         { accessor: 'code', title: t('AccountCode') },
+                        { accessor: 'amount', title: t('Amount') },
                         {
                             accessor: "action",
                             title: t("Action"),

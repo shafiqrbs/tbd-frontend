@@ -53,7 +53,7 @@ function LedgerForm(props) {
 
     const form = useForm({
         initialValues: {
-            parent_name: '', name: '', code: '', status: true
+            parent_name: '', name: '', code: '', status: true, head_group : 'ledger'
         },
         validate: {
             parent_name: isNotEmpty(),
