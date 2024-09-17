@@ -32,13 +32,13 @@ import SelectForm from "../../../form-builders/SelectForm";
 import SwitchForm from "../../../form-builders/SwitchForm.jsx";
 
 function LedgerUpdateFrom(props) {
+    const {accountDropdown} = props;
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
     const height = mainAreaHeight - 100; //TabList height 104
-    const [opened, { open, close }] = useDisclosure(false);
     const [formLoad, setFormLoad] = useState('')
-    const [methodData, setMethodData] = useState(null);
+    const [motherData, setMotherData] = useState(null);
 
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
 
@@ -73,6 +73,14 @@ function LedgerUpdateFrom(props) {
             dispatch(setFormLoading(true));
         }
     }, [ledgerId, dispatch]);
+    const handleReset = () => {
+        form.setValues({
+            parent_name: entityEditData.parent_name ? entityEditData.parent_name : '',
+            name: entityEditData.name ? entityEditData.name : '',
+            code: entityEditData.code ? entityEditData.code : '',
+            status: entityEditData.status ? entityEditData.status : true,
+        })
+    }
     useEffect(() => {
         form.setValues({
             parent_name: entityEditData.parent_name ? entityEditData.parent_name : '',
@@ -95,7 +103,7 @@ function LedgerUpdateFrom(props) {
     }]], []);
 
     useHotkeys([['alt+r', () => {
-        form.reset()
+        handleReset()
     }]], []);
 
     useHotkeys([['alt+s', () => {
@@ -188,13 +196,12 @@ function LedgerUpdateFrom(props) {
                                                             nextField={'name'}
                                                             name={'parent_name'}
                                                             form={form}
-                                                            // dropdownValue={getTransactionMethodDropdownData()}
-                                                            dropdownValue={['test1', 'test2']}
+                                                            dropdownValue={accountDropdown}
                                                             mt={8}
                                                             id={'parent_name'}
                                                             searchable={false}
-                                                            value={methodData}
-                                                            changeValue={setMethodData}
+                                                            value={motherData ? String(motherData) : (entityEditData.mother_account_id ? String(entityEditData.mother_account_id) : null)}
+                                                            changeValue={setMotherData}
                                                         />
                                                     </Box>
                                                     <Box mt={'xs'}>

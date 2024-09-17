@@ -16,53 +16,39 @@ import { hasLength, isNotEmpty, useForm } from "@mantine/form";
 import { modals } from "@mantine/modals";
 import { notifications } from "@mantine/notifications";
 import {
-    setEntityNewData,
     setFetching,
     setValidationData,
     storeEntityData,
-    storeEntityDataWithFile
 } from "../../../../store/accounting/crudSlice.js";
-
 import Shortcut from "../../shortcut/Shortcut";
 import InputForm from "../../../form-builders/InputForm";
-import TextAreaForm from "../../../form-builders/TextAreaForm";
-import InputNumberForm from "../../../form-builders/InputNumberForm";
 import SelectForm from "../../../form-builders/SelectForm.jsx";
-import getTransactionMethodDropdownData from "../../../global-hook/dropdown/getTransactionMethodDropdownData.js";
-import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
-import getSettingAccountTypeDropdownData from "../../../global-hook/dropdown/getSettingAccountTypeDropdownData.js";
-import getSettingAuthorizedTypeDropdownData from "../../../global-hook/dropdown/getSettingAuthorizedTypeDropdownData.js";
 import SwitchForm from "../../../form-builders/SwitchForm";
 
 function LedgerForm(props) {
+    const {accountDropdown} = props;
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
     const height = mainAreaHeight - 100; //TabList height 104
-    const [opened, { open, close }] = useDisclosure(false);
 
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
-    const [authorisedData, setAuthorisedData] = useState(null);
-    const [methodData, setMethodData] = useState(null);
-    const [accountTypeData, setAccountTypeData] = useState(null);
-
-    const value = [
-        'head', 'headsub', 'headGroup'
-    ]
+    const [motherData, setMotherData] = useState(null);
 
 
     const form = useForm({
-        initialValues: {
-            parent_name: '', name: '', code: '', status: true, head_group : 'ledger'
+        initialValues: {    
+            mother_account_id: '', name: '', code: '', status: true, head_group : 'ledger'
         },
         validate: {
-            parent_name: isNotEmpty(),
-            name: hasLength({ min: 2, max: 20 })
+            mother_account_id: isNotEmpty(),
+            name: hasLength({ min: 2, max: 20 }),
+            code : isNotEmpty()
         }
     });
 
     useHotkeys([['alt+n', () => {
-        document.getElementById('parent_name').click()
+        document.getElementById('mother_account_id').click()
     }]], []);
 
     useHotkeys([['alt+r', () => {
@@ -76,7 +62,6 @@ function LedgerForm(props) {
     return (
         <Box>
             <form onSubmit={form.onSubmit((values) => {
-                console.log(values)
                 dispatch(setValidationData(false))
                 modals.openConfirmModal({
                     title: (
@@ -93,7 +78,7 @@ function LedgerForm(props) {
                             url: 'accounting/account-head',
                             data: form.values
                         }
-                        dispatch(storeEntityDataWithFile(value))
+                        dispatch(storeEntityData(value))
 
                         notifications.show({
                             color: 'teal',
@@ -107,9 +92,7 @@ function LedgerForm(props) {
                         setTimeout(() => {
                             form.reset()
                             setFiles([])
-                            setMethodData(null)
-                            setAccountTypeData(null)
-                            setAuthorisedData(null)
+                            setMotherData(null)
                             dispatch(setFetching(true))
                         }, 700)
                     },
@@ -158,15 +141,14 @@ function LedgerForm(props) {
                                                             placeholder={t('ChooseHeadGroup')}
                                                             required={true}
                                                             nextField={'name'}
-                                                            name={'parent_name'}
+                                                            name={'mother_account_id'}
                                                             form={form}
-                                                            // dropdownValue={getTransactionMethodDropdownData()}
-                                                            dropdownValue={value}
+                                                            dropdownValue={accountDropdown}
                                                             mt={8}
-                                                            id={'parent_name'}
+                                                            id={'mother_account_id'}
                                                             searchable={false}
-                                                            value={methodData}
-                                                            changeValue={setMethodData}
+                                                            value={motherData}
+                                                            changeValue={setMotherData}
                                                         />
                                                     </Box>
                                                     <Box mt={'xs'}>

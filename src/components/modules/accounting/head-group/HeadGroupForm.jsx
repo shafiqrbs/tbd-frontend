@@ -34,14 +34,9 @@ function HeadGroupForm(props) {
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
     const height = mainAreaHeight - 100; //TabList height 104
-    const [opened, { open, close }] = useDisclosure(false);
 
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
     const [motherData, setMotherData] = useState(null);
-
-    const validationMessage = useSelector((state) => state.crudSlice.validationMessage)
-    const validation = useSelector((state) => state.crudSlice.validation)
-    const entityNewData = useSelector((state) => state.crudSlice.entityNewData)
 
     const accountDropdown = getSettingMotherAccountDropdownData()
 

@@ -37,12 +37,12 @@ function LedgerTable(props) {
     const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword)
     const indexData = useSelector((state) => state.crudSlice.indexEntityData)
 
-
     useEffect(() => {
         const value = {
             url: 'accounting/account-head',
             param: {
-                mode: 'ledger',
+                group: 'ledger',
+                term: searchKeyword,
                 page: page,
                 offset: perPage
             }
