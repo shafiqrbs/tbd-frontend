@@ -222,6 +222,8 @@ function _PurchaseTable() {
                                                             <Menu.Item
                                                                 target="_blank"
                                                                 component="a"
+                                                                bg={'red.1'}
+                                                                c={'red.6'}
                                                                 onClick={() => {
                                                                     modals.openConfirmModal({
                                                                         title: (

@@ -15,14 +15,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { hasLength, isNotEmpty, useForm } from "@mantine/form";
 import { modals } from "@mantine/modals";
 import { notifications } from "@mantine/notifications";
-import { setFetching, setValidationData, storeEntityData } from "../../../../store/core/crudSlice.js";
+import { setFetching } from "../../../../store/core/crudSlice.js";
+
 
 import Shortcut from "../../shortcut/Shortcut";
 import InputForm from "../../../form-builders/InputForm";
-import TextAreaForm from "../../../form-builders/TextAreaForm";
 import InputNumberForm from "../../../form-builders/InputNumberForm";
+import SwitchForm from "../../../form-builders/SwitchForm.jsx";
 
-function DomainForm(props) {
+function SitemapUpdateForm(props) {
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
@@ -31,45 +32,24 @@ function DomainForm(props) {
 
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
 
+    const validationMessage = useSelector((state) => state.crudSlice.validationMessage)
+    const validation = useSelector((state) => state.crudSlice.validation)
+    const entityNewData = useSelector((state) => state.crudSlice.entityNewData)
+
     const form = useForm({
         initialValues: {
-            company_name: '', mobile: '', alternative_mobile: '', name: '', username: '', address: '', email: ''
+            module_name: '', name: '', url: '', icon: '', status: ''
         },
         validate: {
-            company_name: hasLength({ min: 2, max: 20 }),
+            module_name: hasLength({ min: 2, max: 20 }),
             name: hasLength({ min: 2, max: 20 }),
-            username: hasLength({ min: 2, max: 20 }),
-            mobile: (value) => {
-                const isNotEmpty = !    !value.trim().length;
-                const isDigitsOnly = /^\d+$/.test(value.trim());
-                if (isNotEmpty && isDigitsOnly) {
-                    return false;
-                } else {
-                    return true;
-                }
-            },
-            alternative_mobile: (value) => {
-                if (value) {
-                    const isNotEmpty = !!value.trim().length;
-                    const isDigitsOnly = /^\d+$/.test(value.trim());
-
-                    if (isNotEmpty && isDigitsOnly) {
-                        return false;
-                    } else {
-                        return true;
-                    }
-                } else {
-                    return false;
-                }
-            },
-            name : isNotEmpty(),
-            username : isNotEmpty()
-
+            url: isNotEmpty(),
+            icon: isNotEmpty(),
         }
     });
 
     useHotkeys([['alt+n', () => {
-        document.getElementById('company_name').focus()
+        document.getElementById('module_name').focus()
     }]], []);
 
     useHotkeys([['alt+r', () => {
@@ -86,26 +66,25 @@ function DomainForm(props) {
             <Grid columns={9} gutter={{ base: 8 }}>
                 <Grid.Col span={8} >
                     <form onSubmit={form.onSubmit((values) => {
-                        dispatch(setValidationData(false))
                         modals.openConfirmModal({
-                            centered: true,
                             title: (
                                 <Text size="md"> {t("FormConfirmationTitle")}</Text>
                             ),
                             children: (
                                 <Text size="sm"> {t("FormConfirmationMessage")}</Text>
                             ),
-                            labels: { confirm: 'Submit', cancel: 'Cancel' }, confirmProps: { color: 'red.5' },
+                            labels: { confirm: t('Submit'), cancel: t('Cancel') }, confirmProps: { color: 'red.6' },
                             onCancel: () => console.log('Cancel'),
                             onConfirm: () => {
+                                setSaveCreateLoading(true)
                                 const value = {
-                                    url: 'domain/global',
+                                    url: 'domain/sitemap/' + entityEditData.id,
                                     data: values
                                 }
-                                dispatch(storeEntityData(value))
+                                dispatch(updateEntityData(value))
                                 notifications.show({
                                     color: 'teal',
-                                    title: t('CreateSuccessfully'),
+                                    title: t('UpdateSuccessfully'),
                                     icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
                                     loading: false,
                                     autoClose: 700,
@@ -114,7 +93,11 @@ function DomainForm(props) {
 
                                 setTimeout(() => {
                                     form.reset()
+                                    dispatch(setInsertType('create'))
+                                    dispatch(setEditEntityData([]))
                                     dispatch(setFetching(true))
+                                    setSaveCreateLoading(false)
+                                    navigate('/domain/sitemap', { replace: true });
                                 }, 700)
                             },
                         });
@@ -125,7 +108,7 @@ function DomainForm(props) {
                                 <Box pl={`xs`} pr={8} pt={'6'} pb={'6'} mb={'4'} className={'boxBackground borderRadiusAll'}  >
                                     <Grid>
                                         <Grid.Col span={6} >
-                                            <Title order={6} pt={'6'}>{t('CreateNewDomain')}</Title>
+                                            <Title order={6} pt={'6'}>{t('UpdateSitemap')}</Title>
                                         </Grid.Col>
                                         <Grid.Col span={6}>
                                             <Stack right align="flex-end">
@@ -142,7 +125,7 @@ function DomainForm(props) {
 
                                                             <Flex direction={`column`} gap={0}>
                                                                 <Text fz={14} fw={400}>
-                                                                    {t("CreateAndSave")}
+                                                                    {t("UpdateAndSave")}
                                                                 </Text>
                                                             </Flex>
                                                         </Button>
@@ -155,99 +138,77 @@ function DomainForm(props) {
                                     <Grid columns={24}>
                                         <Grid.Col span={'auto'} >
                                             <ScrollArea h={height} scrollbarSize={2} scrollbars="y" type="never">
-                                                <Box pb={'md'}>
-                                                    <Box mt={'8'}>
+                                            <Box pb={'md'}>
+                                                    <Box mt={'xs'}>
                                                         <InputForm
-                                                            tooltip={t('CompanyStoreNameValidateMessage')}
-                                                            label={t('CompanyStoreName')}
-                                                            placeholder={t('CompanyStoreName')}
+                                                            tooltip={t('ModuleNameValidateMessage')}
+                                                            label={t('ModuleName')}
+                                                            placeholder={t('ModuleName')}
                                                             required={true}
-                                                            nextField={'mobile'}
-                                                            name={'company_name'}
+                                                            nextField={'name'}
+                                                            name={'module_name'}
                                                             form={form}
                                                             mt={0}
-                                                            id={'company_name'}
-                                                        />
-                                                    </Box>
-                                                    <Box mt={'xs'}>
-                                                        <InputNumberForm
-                                                            tooltip={t('MobileValidateMessage')}
-                                                            label={t('Mobile')}
-                                                            placeholder={t('Mobile')}
-                                                            required={true}
-                                                            nextField={'alternative_mobile'}
-                                                            name={'mobile'}
-                                                            form={form}
-                                                            id={'mobile'}
-                                                        />
-                                                    </Box>
-                                                    <Box mt={'xs'}>
-                                                        <InputNumberForm
-                                                            tooltip={t('AlternativeMobileValidateMessage')}
-                                                            label={t('AlternativeMobile')}
-                                                            placeholder={t('AlternativeMobile')}
-                                                            required={false}
-                                                            nextField={'email'}
-                                                            name={'alternative_mobile'}
-                                                            form={form}
-                                                            mt={8}
-                                                            id={'alternative_mobile'}
+                                                            id={'module_name'}
                                                         />
                                                     </Box>
                                                     <Box mt={'xs'}>
                                                         <InputForm
-                                                            tooltip={t('InvalidEmail')}
-                                                            label={t('Email')}
-                                                            placeholder={t('Email')}
-                                                            required={false}
-                                                            nextField={'name'}
-                                                            name={'email'}
-                                                            form={form}
-                                                            mt={8}
-                                                            id={'email'}
-                                                        />
-                                                    </Box>
-                                                    <Box mt={'xs'}>
-                                                        <InputForm
-                                                            tooltip={t('ClientNameValidateMessage')}
-                                                            label={t('ClientName')}
-                                                            placeholder={t('ClientName')}
+                                                            tooltip={t('NameValidateMessage')}
+                                                            label={t('Name')}
+                                                            placeholder={t('Name')}
                                                             required={true}
-                                                            nextField={'username'}
+                                                            nextField={'url'}
                                                             name={'name'}
                                                             form={form}
+                                                            mt={16}
                                                             id={'name'}
-                                                            mt={8}
                                                         />
                                                     </Box>
                                                     <Box mt={'xs'}>
-
                                                         <InputForm
-                                                            tooltip={t('DomainUserValidateMessage')}
-                                                            label={t('DomainUser')}
-                                                            placeholder={t('DomainUser')}
-                                                            required={true}
-                                                            nextField={'address'}
-                                                            name={'username'}
+                                                            tooltip={t('UrlValidateMessage')}
+                                                            label={t('UrlName')}
+                                                            placeholder={t('UrlName')}
+                                                            required={false}
+                                                            nextField={'icon'}
+                                                            name={'url'}
                                                             form={form}
-                                                            mt={8}
-                                                            id={'username'}
+                                                            mt={'md'}
+                                                            id={'url'}
                                                         />
                                                     </Box>
                                                     <Box mt={'xs'}>
-                                                        <TextAreaForm
-                                                            tooltip={t('Address')}
-                                                            label={t('Address')}
-                                                            placeholder={t('Address')}
+                                                    <InputForm
+                                                            tooltip={t('IconValidateMessage')}
+                                                            label={t('ChooseIcon')}
+                                                            placeholder={t('ChooseIcon')}
                                                             required={false}
-                                                            nextField={'isNotEmpty'}
-                                                            name={'address'}
+                                                            nextField={'status'}
+                                                            name={'icon'}
                                                             form={form}
-                                                            mt={8}
-                                                            id={'address'}
+                                                            mt={'md'}
+                                                            id={'icon'}
                                                         />
                                                     </Box>
-
+                                                    <Box mt={'xs'}>
+                                                        <Grid gutter={{ base: 1 }}>
+                                                            <Grid.Col span={2}>
+                                                                <SwitchForm
+                                                                    tooltip={t('Status')}
+                                                                    label=''
+                                                                    nextField={'EntityFormSubmit'}
+                                                                    name={'status'}
+                                                                    form={form}
+                                                                    color="red"
+                                                                    id={'status'}
+                                                                    position={'left'}
+                                                                    defaultChecked={1}
+                                                                />
+                                                            </Grid.Col>
+                                                            <Grid.Col span={6} fz={'sm'} pt={'1'}>{t('Status')}</Grid.Col>
+                                                        </Grid>
+                                                    </Box>
                                                 </Box>
                                             </ScrollArea>
                                         </Grid.Col>
@@ -263,13 +224,13 @@ function DomainForm(props) {
                         <Shortcut
                             form={form}
                             FormSubmit={'EntityFormSubmit'}
-                            Name={'company_name'}
+                            Name={'CompanyName'}
                         />
                     </Box>
                 </Grid.Col>
             </Grid>
-        </Box>
+        </Box >
 
     );
 }
-export default DomainForm;
+export default SitemapUpdateForm;

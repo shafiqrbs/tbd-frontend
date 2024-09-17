@@ -41,6 +41,8 @@ import InhouseIndex from './components/modules/production/production-inhouse/Inh
 import SettingsIndex from "./components/modules/core/settings/SettingsIndex";
 import StockIndex from './components/modules/inventory/stock/StockIndex.jsx';
 import ConfigurationIndex from './components/modules/domain/configuraton/ConfigurationIndex.jsx';
+import PosIndex from './components/modules/restaurant-pos/pos-sales/PosIndex.jsx';
+import SitemapIndex from './components/modules/domain/sitemap/SitemapIndex.jsx';
 
 
 function AppRoute() {
@@ -107,7 +109,9 @@ function AppRoute() {
                 <Route path="/domain/">
                     <Route path="domain-index" element={<DomainIndex />} />
                     <Route path="domain-index/:id" element={<DomainIndex />} />
-                    <Route path="config" element={<ConfigurationIndex />} />
+                    <Route path="config/:id" element={<ConfigurationIndex />} />
+                    <Route path="sitemap" element={<SitemapIndex />} />
+                    <Route path="sitemap/:id" element={<SitemapIndex />} />
                 </Route>
 
                 <Route path="/accounting/">
@@ -121,6 +125,9 @@ function AppRoute() {
                     <Route path="transaction-mode" element={<TransactionModeIndex />} />
                     <Route path="transaction-mode/:id" element={<TransactionModeIndex />} />
                     <Route path="modalIndex" element={<SampleModalIndex />} />
+                </Route>
+                <Route path="/pos/">
+                    <Route path="pos-index" element={<PosIndex />} />
                 </Route>
                 <Route path="sitemap" element={<Sitemap />} />
             </Route>

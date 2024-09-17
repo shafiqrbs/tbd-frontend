@@ -9,14 +9,13 @@ import { setInsertType } from "../../../../store/inventory/crudSlice";
 import { editEntityData, setSearchKeyword } from "../../../../store/core/crudSlice";
 import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress.js";
 import getConfigData from "../../../global-hook/config-data/getConfigData.js";
-import DomainTable from "./DomainTable";
 import DomainHeaderNavbar from "../DomainHeaderNavbar";
-import DomainUpdateForm from "./DomainUpdateFrom";
 import { useNavigate, useParams } from "react-router-dom";
 import { setFormLoading } from "../../../../store/generic/crudSlice.js";
-import DomainForm from './DomainFrom.jsx'
-
-function DomainIndex() {
+import SitemapTable from "./SitemapTable.jsx";
+import SitemapForm from "./SitemapForm.jsx";
+import SitemapUpdateForm from "./SitemapUpdateForm.jsx";
+function SitemapIndex() {
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const insertType = useSelector((state) => state.crudSlice.insertType)
@@ -30,12 +29,12 @@ function DomainIndex() {
     useEffect(() => {
         if (id) {
             dispatch(setInsertType('update'));
-            // dispatch(editEntityData(`domain/domain-index/${id}`));
+            // dispatch(editEntityData(`domain/sitemap/${id}`));
             dispatch(setFormLoading(true));
         } else if (!id) {
             dispatch(setInsertType('create'));
             dispatch(setSearchKeyword(''));
-            navigate('/domain/domain-index');
+            navigate('/domain/sitemap');
         }
     }, [id, dispatch, navigate]);
 
@@ -47,7 +46,7 @@ function DomainIndex() {
             {progress === 100 &&
                 <Box>
                     <DomainHeaderNavbar
-                        pageTitle={t('ManageDomain')}
+                        pageTitle={t('ManageSitemap')}
                         roles={t('Roles')}
                         allowZeroPercentage=''
                         currencySymbol=''
@@ -56,14 +55,14 @@ function DomainIndex() {
                         <Grid columns={24} gutter={{ base: 8 }}>
                             <Grid.Col span={15} >
                                 <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
-                                    <DomainTable />
+                                    <SitemapTable />
                                 </Box>
                             </Grid.Col>
                             <Grid.Col span={9}>
                                 {
                                     insertType === 'create'
-                                        ? <DomainForm />
-                                        : <DomainUpdateForm />
+                                        ? <SitemapForm />
+                                        : <SitemapUpdateForm />
                                 }
                             </Grid.Col>
                         </Grid>
@@ -74,4 +73,4 @@ function DomainIndex() {
     );
 }
 
-export default DomainIndex;
+export default SitemapIndex;

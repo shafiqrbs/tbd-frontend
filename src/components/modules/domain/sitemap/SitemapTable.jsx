@@ -3,7 +3,8 @@ import { useOutletContext, Link, useNavigate, } from "react-router-dom";
 import {
     Group,
     Box, Grid,
-    ActionIcon, Text, Title, Stack, Menu, rem
+    ActionIcon, Text, Switch, Flex, Menu, rem,
+    useMantineTheme
 } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import { IconTrashX, IconDotsVertical } from "@tabler/icons-react";
@@ -18,11 +19,13 @@ import {
 } from "../../../../store/core/crudSlice.js";
 import KeywordSearch from "../../filter/KeywordSearch";
 import { modals } from "@mantine/modals";
+import { deleteEntityData } from "../../../../store/core/crudSlice";
 import tableCss from "../../../../assets/css/Table.module.css";
+import * as TablerIcons from '@tabler/icons-react';
 
 
 
-function DomainTable(props) {
+function SitemapTable(props) {
 
     const dispatch = useDispatch();
     const { t, i18n } = useTranslation();
@@ -36,10 +39,31 @@ function DomainTable(props) {
     const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword)
     const indexData = useSelector((state) => state.crudSlice.indexEntityData)
     const navigate = useNavigate();
+    const theme = useMantineTheme();
+
+    const [swtichEnable, setSwitchEnable] = useState({});
+
+    const handleSwtich = (event, item) => {
+        setSwitchEnable(prev => ({ ...prev, [item.id]: true }));
+        // const value = {
+        //     url: 'domain/sitemap/inline-status/' + item.id
+        // }
+        // dispatch(getStatusInlineUpdateData(value))
+        // dispatch(setFetching(true))
+        setTimeout(() => {
+            setSwitchEnable(prev => ({ ...prev, [item.id]: false }));
+        }, 3000)
+    }
+
+    const data = [
+        {id : 1, module_name : "sales", name : 'test', url :  "test.com", icon : 'IconAbacusOff'},
+        {id : 2, module_name : "purchase", name : 'test', url :  "test.com", icon : 'IconABOff'},
+        {id : 3, module_name : "accounting", name : 'test', url :  "test.com", icon : 'IconAdjustmentsDown'},
+    ]
 
     useEffect(() => {
         const value = {
-            url: 'domain/global',
+            url: 'domain/sitemap',
             param: {
                 term: searchKeyword,
                 // name: customerFilterData.name,
@@ -50,11 +74,15 @@ function DomainTable(props) {
         }
         dispatch(getIndexEntityData(value))
     }, [fetching]);
+
+
+    const icon = TablerIcons[data.icon]
+
     return (
 
         <>
             <Box pl={`xs`} pr={8} pt={'6'} pb={'4'} className={'boxBackground borderRadiusAll border-bottom-none'} >
-                <KeywordSearch module={'customer'} />
+                <KeywordSearch module={'sitemap'} />
             </Box>
             <Box className={'borderRadiusAll border-top-none'}>
                 <DataTable
@@ -65,18 +93,44 @@ function DomainTable(props) {
                         footer: tableCss.footer,
                         pagination: tableCss.pagination,
                     }}
-                    records={indexData.data}
+                    records={data}
                     columns={[
                         {
                             accessor: 'index',
                             title: t('S/N'),
-                            textAlignment: 'right',
-                            render: (item) => (indexData.data.indexOf(item) + 1)
+                            textAlign: 'left',
+                            render: (item) => (data.indexOf(item) + 1)
                         },
-                        { accessor: 'name', title: t('CompanyName') },
-                        { accessor: 'mobile', title: t('Mobile') },
-                        { accessor: 'email', title: t("Email") },
-                        { accessor: 'unique_code', title: t("LicenseNo") },
+                        { accessor: 'module_name', title: t('ModuleName') },
+                        { accessor: 'name', title: t('Name') },
+                        { accessor: 'url', title: t("Url") },
+                        { accessor: 'icon', title: t("Icon"), textAlign: 'center',
+                            render : (item) => {
+                                const IconComponent = TablerIcons[item.icon];
+                                return IconComponent ? (<ActionIcon color={item.module_name === 'sales' ? 'teal.6' : item.module_name === 'purchase' ? 'red.6' : 'green.8'} size={20} radius="xl" variant="outline"><IconComponent /></ActionIcon>)  : null;
+                              }
+                        },
+                        {
+                            accessor: 'status',
+                            title: t("Status"),
+                            textAlign: 'center',
+                            render: (item) => (
+                                <Flex justify="center" align="center">
+                                    <Switch
+                                        disabled={swtichEnable[item.id] || false}
+                                        defaultChecked={item.status == 1 ? true : false}
+                                        color="red"
+                                        radius="xs"
+                                        size="md"
+                                        onLabel="Enable"
+                                        offLabel="Disable"
+                                        onChange={(event) => {
+                                            handleSwtich(event, item);
+                                        }}
+                                    />
+                                </Flex>
+                            )
+                        },
                         {
                             accessor: "action",
                             title: t("Action"),
@@ -93,9 +147,9 @@ function DomainTable(props) {
                                             <Menu.Item
                                                 onClick={() => {
                                                     dispatch(setInsertType('update'))
-                                                    // dispatch(editEntityData('domain/domain-index/' + data.id))
+                                                    // dispatch(editEntityData('domain/sitemap/' + data.id))
                                                     dispatch(setFormLoading(true))
-                                                    navigate(`/domain/domain-index/${data.id}`);
+                                                    navigate(`/domain/sitemap/${data.id}`);
                                                 }}
                                             >
                                                 {t('Edit')}
@@ -103,8 +157,8 @@ function DomainTable(props) {
 
                                             <Menu.Item
                                                 onClick={() => {
-                                                    //code to show data
-                                                    // dispatch(showEntityData('domain/domain-index/' + data.id))
+                                                    //code to show sitemap
+                                                    // dispatch(showEntityData('domain/sitemap/' + data.id))
                                                 }}
                                                 target="_blank"
                                                 component="a"
@@ -114,7 +168,7 @@ function DomainTable(props) {
                                             </Menu.Item>
                                             <Menu.Item
                                                 onClick={() => {
-                                                    navigate(`/domain/config/${data.id}`)
+                                                    navigate(`/domain/sitemap/${data.id}`)
                                                 }}
                                                 target="_blank"
                                                 component="a"
@@ -140,7 +194,7 @@ function DomainTable(props) {
                                                         labels: { confirm: 'Confirm', cancel: 'Cancel' },
                                                         onCancel: () => console.log('Cancel'),
                                                         onConfirm: () => {
-                                                            // dispatch(deleteEntityData('core/customer/' + data.id))
+                                                            // dispatch(deleteEntityData('domain/sitemap/' + data.id))
                                                             // dispatch(setFetching(true))
                                                         },
                                                     });
@@ -169,10 +223,9 @@ function DomainTable(props) {
                     height={height}
                     scrollAreaProps={{ type: 'never' }}
                 />
-                
             </Box>
         </>
 
     );
 }
-export default DomainTable;
+export default SitemapTable;
