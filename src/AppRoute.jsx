@@ -118,10 +118,10 @@ function AppRoute() {
                     <Route path="voucher-entry" element={<VoucherIndex />} />
                     <Route path="ledger" element={<LedgerIndex />} />
                     <Route path="ledger/:id" element={<LedgerIndex />} />
-                    <Route path="head-subgroup" element={<HeadSubGroupIndex />} />
-                    <Route path="head-subgroup/:id" element={<HeadSubGroupIndex />} />
                     <Route path="head-group" element={<HeadGroupIndex />} />
                     <Route path="head-group/:id" element={<HeadGroupIndex />} />
+                    <Route path="head-subgroup" element={<HeadSubGroupIndex />} />
+                    <Route path="head-subgroup/:id" element={<HeadSubGroupIndex />} />
                     <Route path="transaction-mode" element={<TransactionModeIndex />} />
                     <Route path="transaction-mode/:id" element={<TransactionModeIndex />} />
                     <Route path="modalIndex" element={<SampleModalIndex />} />

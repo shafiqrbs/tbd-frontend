@@ -56,11 +56,12 @@ function HeadGroupUpdateFrom(props) {
 
     const form = useForm({
         initialValues: {
-            mother_account_id:'', name:'', code: '', status: ''
+            mother_account_id:'', name:'', code: '', status: '', head_group : 'head'
         },
         validate: {
             mother_account_id: isNotEmpty(),
-            name: isNotEmpty()
+            name: isNotEmpty(),
+            code : isNotEmpty()
         }
     });
 
@@ -69,13 +70,23 @@ function HeadGroupUpdateFrom(props) {
         setFormDataForUpdate(true)
     }, [dispatch, formLoading])
 
-    useEffect(() => {
-
+    const handleReset = () => {
         form.setValues({
             mother_account_id: entityEditData.mother_account_id ? entityEditData.mother_account_id : '',
             name: entityEditData.name ? entityEditData.name : '',
             code: entityEditData.code ? entityEditData.code : '',
-            status: entityEditData.status ? entityEditData.status : ''
+            status: entityEditData.status ? entityEditData.status : '',
+            head_group : entityEditData.head_group ? entityEditData.head_group : 'head',
+        })
+    }
+
+    useEffect(() => {
+        form.setValues({
+            mother_account_id: entityEditData.mother_account_id ? entityEditData.mother_account_id : '',
+            name: entityEditData.name ? entityEditData.name : '',
+            code: entityEditData.code ? entityEditData.code : '',
+            status: entityEditData.status ? entityEditData.status : '',
+            head_group : entityEditData.head_group ? entityEditData.head_group : 'head',
         })
 
         dispatch(setFormLoading(false))
@@ -87,11 +98,11 @@ function HeadGroupUpdateFrom(props) {
     }, [entityEditData, dispatch, setFormData])
 
     useHotkeys([['alt+n', () => {
-        document.getElementById('parent_name').click()
+        document.getElementById('mother_account_id').click()
     }]], []);
 
     useHotkeys([['alt+r', () => {
-        form.reset()
+        handleReset()
     }]], []);
 
     useHotkeys([['alt+s', () => {
@@ -114,7 +125,7 @@ function HeadGroupUpdateFrom(props) {
                         setSaveCreateLoading(true)
                         const value = {
                             url: 'accounting/account-head/' + entityEditData.id,
-                            data: values
+                            data: form.values
                         }
                         dispatch(updateEntityData(value))
                         notifications.show({

@@ -127,7 +127,7 @@ const crudSlice = createSlice({
         entityDataDelete: null,
         openingInlineUpdateStatus: null,
         productFilterData: { name: '', alternative_name: '', sku: '', sales_price: '' },
-        categoryFilterData: { name: '', parentName: '' },
+        categoryFilterData: { name: '', parent_name: '' },
         salesFilterData: { customer_id: '',start_date:'',end_date:'',searchKeyword:''},
         invoiceBatchFilterData: { customer_id: '',start_date:'',end_date:'',searchKeyword:''},
         purchaseItemsFilterData: { start_date:'',end_date:'',searchKeyword:''},
@@ -173,7 +173,7 @@ const crudSlice = createSlice({
         },
         setCategoryFilterData: (state, action) => {
             state.categoryFilterData.name = action.payload.name
-            state.categoryFilterData.parentName = action.payload.parentName
+            state.categoryFilterData.parent_name = action.payload.parent_name
         },
         setSalesFilterData: (state, action) => {
             state.salesFilterData.customer_id = action.payload.customer_id

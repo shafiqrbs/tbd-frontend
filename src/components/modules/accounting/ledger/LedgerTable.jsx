@@ -37,12 +37,12 @@ function LedgerTable(props) {
     const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword)
     const indexData = useSelector((state) => state.crudSlice.indexEntityData)
 
-
     useEffect(() => {
         const value = {
             url: 'accounting/account-head',
             param: {
-                mode: 'mother-account',
+                group: 'ledger',
+                term: searchKeyword,
                 page: page,
                 offset: perPage
             }
@@ -79,6 +79,7 @@ function LedgerTable(props) {
                         { accessor: 'parent_name', title: t('ParentHead') },
                         { accessor: 'name', title: t('Name') },
                         { accessor: 'code', title: t('AccountCode') },
+                        { accessor: 'amount', title: t('Amount') },
                         {
                             accessor: "action",
                             title: t("Action"),
@@ -96,7 +97,7 @@ function LedgerTable(props) {
                                                 // href={`/inventory/sales/edit/${data.id}`}
                                                 onClick={() => {
                                                     dispatch(setInsertType('update'))
-                                                    dispatch(editEntityData('accounting/transaction-mode/' + data.id))
+                                                    dispatch(editEntityData('accounting/account-head/' + data.id))
                                                     dispatch(setFormLoading(true))
                                                     navigate(`/accounting/ledger/${data.id}`)
                                                 }}

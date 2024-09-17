@@ -15,6 +15,7 @@ import LedgerTable from "./LedgerTable";
 import { useNavigate, useParams } from "react-router-dom";
 import { editEntityData, setEntityNewData } from "../../../../store/accounting/crudSlice.js";
 import LedgerUpdateFrom from "./LedgerUpdateFrom";
+import getSettingMotherAccountDropdownData from "../../../global-hook/dropdown/getSettingMotherAccountDropdownData.js";
 
 
 function LedgerIndex() {
@@ -44,6 +45,8 @@ function LedgerIndex() {
         );
     }, [id, dispatch, navigate])
 
+    const accountDropdown = getSettingMotherAccountDropdownData()
+
 
 
 
@@ -69,7 +72,7 @@ function LedgerIndex() {
                                 </Grid.Col>
                                 <Grid.Col span={9}>
                                     {
-                                        insertType === 'create' ? <LedgerForm /> : <LedgerUpdateFrom />
+                                        insertType === 'create' ? <LedgerForm accountDropdown={accountDropdown} /> : <LedgerUpdateFrom accountDropdown={accountDropdown} />
                                     }
                                 </Grid.Col>
                             </Grid>

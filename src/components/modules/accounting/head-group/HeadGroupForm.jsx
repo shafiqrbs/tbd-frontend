@@ -34,25 +34,21 @@ function HeadGroupForm(props) {
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
     const height = mainAreaHeight - 100; //TabList height 104
-    const [opened, { open, close }] = useDisclosure(false);
 
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
     const [motherData, setMotherData] = useState(null);
-
-    const validationMessage = useSelector((state) => state.crudSlice.validationMessage)
-    const validation = useSelector((state) => state.crudSlice.validation)
-    const entityNewData = useSelector((state) => state.crudSlice.entityNewData)
 
     const accountDropdown = getSettingMotherAccountDropdownData()
 
 
     const form = useForm({
         initialValues: {
-            mother_account_id: '', name: '', code: '', status: true
+            mother_account_id: '', name: '', code: '', status: true, head_group : 'head'
         },
         validate: {
             mother_account_id: isNotEmpty(),
-            name: isNotEmpty()
+            name: isNotEmpty(),
+            code : isNotEmpty()
         }
     });
 
@@ -72,8 +68,7 @@ function HeadGroupForm(props) {
     return (
         <Box>
             <form onSubmit={form.onSubmit((values) => {
-                console.log(values)
-                form.values['head_group'] = 'account-head'
+                // form.values['head_group'] = 'head'
                 dispatch(setValidationData(false))
                 modals.openConfirmModal({
                     title: (

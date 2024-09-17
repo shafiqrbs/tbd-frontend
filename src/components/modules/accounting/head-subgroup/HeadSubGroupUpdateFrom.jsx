@@ -55,13 +55,24 @@ function HeadSubGroupUpdateFrom(props) {
     const accountDropdown = getSettingMotherAccountDropdownData()
     const [methodData, setMethodData] = useState(null);
 
+    const handleReset= () => {
+        form.setValues({
+            mother_account_id: entityEditData.mother_account_id ? entityEditData.mother_account_id : '',
+            name: entityEditData.name ? entityEditData.name : '',
+            code: entityEditData.code ? entityEditData.code : '',
+            status: entityEditData.status ? entityEditData.status : '',
+            head_group: entityEditData.head_group ? entityEditData.head_group : ''
+        })
+    }
+
     const form = useForm({
         initialValues: {
-            mother_account_id: '', name: '', code: '', status: ''
+            mother_account_id: '', name: '', code: '', status: '', head_group : 'sub-head'
         },
         validate: {
             mother_account_id: isNotEmpty(),
-            name: isNotEmpty()
+            name: isNotEmpty(),
+            code : isNotEmpty()
         }
     });
 
@@ -76,7 +87,8 @@ function HeadSubGroupUpdateFrom(props) {
             mother_account_id: entityEditData.mother_account_id ? entityEditData.mother_account_id : '',
             name: entityEditData.name ? entityEditData.name : '',
             code: entityEditData.code ? entityEditData.code : '',
-            status: entityEditData.status ? entityEditData.status : ''
+            status: entityEditData.status ? entityEditData.status : '',
+            head_group: entityEditData.head_group ? entityEditData.head_group : 'sub-head'
         })
 
         dispatch(setFormLoading(false))
@@ -88,11 +100,11 @@ function HeadSubGroupUpdateFrom(props) {
     }, [entityEditData, dispatch, setFormData])
 
     useHotkeys([['alt+n', () => {
-        document.getElementById('parent_name').click()
+        document.getElementById('mother_account_id').click()
     }]], []);
 
     useHotkeys([['alt+r', () => {
-        form.reset()
+        handleReset()
     }]], []);
 
     useHotkeys([['alt+s', () => {
