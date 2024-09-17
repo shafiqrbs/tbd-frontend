@@ -68,7 +68,7 @@ function CategoryTable() {
             param: {
                 term: searchKeyword,
                 name: categoryFilterData.name,
-                parent: categoryFilterData.parentName,
+                parent: categoryFilterData.parent_name,
                 type: 'category',
                 page: page,
                 offset: perPage

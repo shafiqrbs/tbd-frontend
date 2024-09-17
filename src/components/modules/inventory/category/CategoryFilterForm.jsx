@@ -25,8 +25,8 @@ function CategoryFilterForm(props) {
                 label={t("ParentName")}
                 placeHolder={t("ParentName")}
                 nextField={"submit"}
-                id={"parentName"}
-                name={"parentName"}
+                id={"parent_name"}
+                name={"parent_name"}
                 module={props.module}
             />
 

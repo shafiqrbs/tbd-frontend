@@ -22,7 +22,7 @@ import {
     setVendorFilterData
 } from "../../../store/core/crudSlice.js";
 import FilterModel from "./FilterModel.jsx";
-import { setProductFilterData } from "../../../store/inventory/crudSlice.js";
+import { setProductFilterData, setCategoryFilterData } from "../../../store/inventory/crudSlice.js";
 import { setProductionSettingFilterData } from "../../../store/production/crudSlice.js";
 
 function KeywordSearch(props) {
@@ -35,6 +35,7 @@ function KeywordSearch(props) {
 
     const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword)
     const customerFilterData = useSelector((state) => state.crudSlice.customerFilterData)
+    const categoryFilterData = useSelector((state) => state.inventoryCrudSlice.categoryFilterData)
     const vendorFilterData = useSelector((state) => state.crudSlice.vendorFilterData)
     const userFilterData = useSelector((state) => state.crudSlice.userFilterData)
     const categoryGroupFilterData = useSelector((state) => state.crudSlice.categoryGroupFilterData)
@@ -222,6 +223,12 @@ function KeywordSearch(props) {
                                         dispatch(setProductionSettingFilterData({
                                             ...productionSettingFilterData,
                                             name: ''
+                                        }));
+                                    }else if (props.module === 'category') {
+                                        dispatch(setCategoryFilterData({
+                                            ...categoryFilterData,
+                                            name: '',
+                                            parent_name : ''
                                         }));
                                     }
                                 }} />
