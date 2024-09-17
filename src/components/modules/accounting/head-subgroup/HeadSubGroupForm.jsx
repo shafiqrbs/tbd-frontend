@@ -39,20 +39,17 @@ function HeadSubGroupForm(props) {
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
     const [motherData, setMotherData] = useState(null);
 
-    const validationMessage = useSelector((state) => state.crudSlice.validationMessage)
-    const validation = useSelector((state) => state.crudSlice.validation)
-    const entityNewData = useSelector((state) => state.crudSlice.entityNewData)
-
     const accountDropdown = getSettingMotherAccountDropdownData()
 
 
     const form = useForm({
         initialValues: {
-            mother_account_id: '', name: '', code: '', status: true
+            mother_account_id: '', name: '', code: '', status: true, head_group : 'sub-head'
         },
         validate: {
             mother_account_id: isNotEmpty(),
-            name: isNotEmpty()
+            name: isNotEmpty(),
+            code : isNotEmpty()
         }
     });
 
@@ -72,8 +69,6 @@ function HeadSubGroupForm(props) {
     return (
         <Box>
             <form onSubmit={form.onSubmit((values) => {
-                console.log(values)
-                form.values['head_group'] = 'account-head'
                 dispatch(setValidationData(false))
                 modals.openConfirmModal({
                     title: (

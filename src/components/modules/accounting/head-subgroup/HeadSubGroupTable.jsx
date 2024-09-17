@@ -41,7 +41,7 @@ function HeadSubGroupTable(props) {
         const value = {
             url: 'accounting/account-head',
             param: {
-                group: 'head',
+                group: 'sub-head',
                 term: searchKeyword,
                 page: page,
                 offset: perPage

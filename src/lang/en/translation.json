@@ -339,7 +339,7 @@
   "AccountCode": "Account Code",
   "OpeningBalanceValidateMessage": "Please provide Opening balance",
   "OpeningBalance": "Opening Balance",
-  "UpdateAccountHeadGroup": "Update Account Head Group",
+  "UpdateAccountHeadGroup": "Update Head Group",
   "ManageAccountHeadGroup": "Manage Account Head Group",
   "CreateNewAccountGroup": "Create New Account Group",
   "HeadGroup": "Head Group",
@@ -598,5 +598,8 @@
   "ChooseIcon" : "Choose Icon",
   "UrlName" : "Url Name",
   "Icon" : "Icon",
-  "Url" : "Url"
+  "Url" : "Url",
+  "MotherAccount" : "Mother Account",
+  "CreateHeadSubGroup" : "Create Head Sub-Group",
+  "UpdateAccountHeadSubGroup" : "Update Head Sub-Group"
 }

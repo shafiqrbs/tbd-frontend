@@ -48,11 +48,12 @@ function HeadGroupForm(props) {
 
     const form = useForm({
         initialValues: {
-            mother_account_id: '', name: '', code: '', status: true
+            mother_account_id: '', name: '', code: '', status: true, head_group : 'head'
         },
         validate: {
             mother_account_id: isNotEmpty(),
-            name: isNotEmpty()
+            name: isNotEmpty(),
+            code : isNotEmpty()
         }
     });
 
@@ -72,8 +73,7 @@ function HeadGroupForm(props) {
     return (
         <Box>
             <form onSubmit={form.onSubmit((values) => {
-                console.log(values)
-                form.values['head_group'] = 'account-head'
+                // form.values['head_group'] = 'head'
                 dispatch(setValidationData(false))
                 modals.openConfirmModal({
                     title: (
