@@ -163,18 +163,12 @@ export function PurchasePrintNormal(props) {
                                         <Text h={18} fw={'300'} fz={'12'}>
                                             {t('Mode')}
                                         </Text>
-                                        <Text fw={'300'} fz={'12'}>
-                                            {t('Process')}
-                                        </Text>
                                     </Stack>
                                     <Stack align="center"
                                         justify="center"
                                         gap="0">
                                         <Text h={18} fw={'300'} fz={'12'}
                                         >
-                                            :
-                                        </Text>
-                                        <Text h={18} fw={'300'} fz={'12'}>
                                             :
                                         </Text>
                                         <Text h={18} fw={'300'} fz={'12'}>
@@ -202,9 +196,6 @@ export function PurchasePrintNormal(props) {
                                         </Text>
                                         <Text h={18} fw={'300'} fz={'12'}>
                                             {purchaseViewData && purchaseViewData.mode_name && purchaseViewData.mode_name}
-                                        </Text>
-                                        <Text h={18} fw={'300'} fz={'12'}>
-                                            {purchaseViewData && purchaseViewData.process && purchaseViewData.process}
                                         </Text>
                                     </Stack>
                                 </Group>
