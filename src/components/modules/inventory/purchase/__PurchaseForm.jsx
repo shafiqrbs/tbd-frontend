@@ -17,7 +17,7 @@ import {
 
 } from "@tabler/icons-react";
 import { useHotkeys, useToggle } from "@mantine/hooks";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { isNotEmpty, useForm } from "@mantine/form";
 
 import SelectForm from "../../../form-builders/SelectForm";
@@ -31,6 +31,7 @@ import vendorDataStoreIntoLocalStorage from "../../../global-hook/local-storage/
 import DatePickerForm from "../../../form-builders/DatePicker.jsx";
 import AddVendorDrawer from "../sales/drawer-form/AddVendorDrawer.jsx";
 import VendorViewDrawer from "../../core/vendor/VendorViewDrawer.jsx";
+import _PurchaseDrawerForPrint from './print-drawer/_PurchaseDrawerForPrint.jsx'
 
 function __PurchaseForm(props) {
     const { currencySymbol } = props
@@ -38,6 +39,7 @@ function __PurchaseForm(props) {
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
     const transactionModeData = JSON.parse(localStorage.getItem('accounting-transaction-mode')) ? JSON.parse(localStorage.getItem('accounting-transaction-mode')) : [];
+    const entityNewData = useSelector((state) => state.inventoryCrudSlice.entityNewData);
 
     const [purchaseSubTotalAmount, setPurchaseSubTotalAmount] = useState(0);
     const [purchaseVatAmount, setPurchaseVatAmount] = useState(0);
@@ -51,6 +53,7 @@ function __PurchaseForm(props) {
     /*START GET VENDOR DATA BY ID FROM LOCAL STORAGE*/
     const [vendorData, setVendorData] = useState(null);
     const [vendorObject, setVendorObject] = useState({});
+    const [defaultVendorId, setDefaultVendorId] = useState(null)
     useEffect(() => {
         if (vendorData) {
             const coreVendors = JSON.parse(localStorage.getItem('core-vendors') || '[]');
@@ -84,6 +87,20 @@ function __PurchaseForm(props) {
     const [vendorDrawer, setVendorDrawer] = useState(false)
     const [viewDrawer, setViewDrawer,] = useState(false)
 
+    const [lastClicked, setLastClicked] = useState(null);
+    const [openInvoiceDrawerForPrint, setOpenInvoiceDrawerForPrint] = useState(false)
+    const handleClick = (event) => {
+        setLastClicked(event.currentTarget.name);
+    };
+
+    useEffect(() => {
+        if (entityNewData?.data?.id && (lastClicked === 'print' || lastClicked === 'pos')) {
+            setTimeout(() => {
+                setOpenInvoiceDrawerForPrint(true)
+            }, 400);
+        }
+    }, [entityNewData, dispatch, lastClicked]);
+
     useEffect(() => {
         const fetchVendors = async () => {
             await vendorDataStoreIntoLocalStorage()
@@ -101,6 +118,9 @@ function __PurchaseForm(props) {
         fetchVendors()
     }, [refreshVendorDropdown])
     /*END GET CUSTOMER DROPDOWN FROM LOCAL STORAGE*/
+
+    const isDefaultVendor = !vendorData || vendorData == defaultVendorId;
+    const isDisabled = isDefaultVendor;
 
 
     const form = useForm({
@@ -184,7 +204,7 @@ function __PurchaseForm(props) {
 
     const inputGroupCurrency = (
         <Text style={{ textAlign: 'right', width: '100%', paddingRight: 16 }}
-            color={'gray'}
+            c={'gray'}
         >
             {currencySymbol}
         </Text>
@@ -192,6 +212,15 @@ function __PurchaseForm(props) {
 
     return (
         <>
+            {
+                openInvoiceDrawerForPrint &&
+                <_PurchaseDrawerForPrint
+                    setOpenInvoiceDrawerForPrint={setOpenInvoiceDrawerForPrint}
+                    openInvoiceDrawerForPrint={openInvoiceDrawerForPrint}
+                    printType={lastClicked}
+                    mode="insert"
+                />
+            }
             <form onSubmit={form.onSubmit((values) => {
                 const tempProducts = localStorage.getItem('temp-purchase-products');
                 let items = tempProducts ? JSON.parse(tempProducts) : [];
@@ -564,15 +593,63 @@ function __PurchaseForm(props) {
 
                             </ScrollArea>
                             <Box>
-                                <Button.Group >
-                                    <Button fullWidth={true} variant="filled" leftSection={<IconPrinter size={14} />}
-                                        color="green.5">{t('Print')}</Button>
-                                    <Button fullWidth={true} variant="filled" leftSection={<IconReceipt size={14} />}
-                                        color="red.5">{t('Pos')}</Button>
-                                    <Button type={'submit'} fullWidth={true} variant="filled" leftSection={<IconDeviceFloppy size={14} />}
-                                        color="cyan.5">{t('Save')}</Button>
-                                    <Button fullWidth={true} variant="filled" leftSection={<IconStackPush size={14} />}
-                                        color="orange.5">{t('Hold')}</Button>
+                            <Button.Group  >
+                                    <Button
+                                        fullWidth={true}
+                                        variant="filled"
+                                        leftSection={<IconStackPush size={14} />}
+                                        color="orange.5"
+                                    >
+                                        {t('Hold')}
+                                    </Button>
+                                    <Button
+                                        fullWidth={true}
+                                        variant="filled"
+                                        type={'submit'}
+                                        onClick={handleClick}
+                                        name="print"
+                                        leftSection={<IconPrinter size={14} />}
+                                        color="green.5"
+                                        // disabled={isDisabled}
+                                        // style={{
+                                        //     transition: "all 0.3s ease",
+                                        //     backgroundColor: isDisabled ? "#f1f3f500" : ""
+                                        // }}
+                                    >
+                                        {t('Print')}
+                                    </Button>
+                                    <Button
+                                        fullWidth={true}
+                                        type={'submit'}
+                                        onClick={handleClick}
+                                        name="pos"
+                                        variant="filled"
+                                        leftSection={<IconReceipt size={14} />}
+                                        color="red.5"
+                                        // disabled={isDisabled}
+                                        // style={{
+                                        //     transition: "all 0.3s ease",
+                                        //     backgroundColor: isDisabled ? "#f1f3f500" : ""
+                                        // }}
+                                    >
+                                        {t('Pos')}
+                                    </Button>
+                                    <Button
+                                        fullWidth={true}
+                                        type={'submit'}
+                                        onClick={handleClick}
+                                        name="save"
+                                        variant="filled"
+                                        leftSection={<IconDeviceFloppy size={14} />}
+                                        color="cyan.5"
+                                        // disabled={isDisabled}
+                                        // style={{
+                                        //     transition: "all 0.3s ease",
+                                        //     backgroundColor: isDisabled ? "#f1f3f500" : ""
+                                        // }}
+                                    >
+                                        {t('Save')}
+                                    </Button>
                                 </Button.Group>
                             </Box>
                         </Box>

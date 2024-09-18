@@ -16,7 +16,7 @@ import {
 
 } from "@tabler/icons-react";
 import { useHotkeys } from "@mantine/hooks";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { isNotEmpty, useForm } from "@mantine/form";
 
 import SelectForm from "../../../form-builders/SelectForm";
@@ -28,6 +28,7 @@ import InputButtonForm from "../../../form-builders/InputButtonForm";
 import { notifications } from "@mantine/notifications";
 import _VendorViewModel from "../../core/vendor/_VendorViewModel.jsx";
 import vendorDataStoreIntoLocalStorage from "../../../global-hook/local-storage/vendorDataStoreIntoLocalStorage.js";
+import _PurchaseDrawerForPrint from './print-drawer/_PurchaseDrawerForPrint.jsx'
 
 function __UpdateInvoiceForm(props) {
     let { id } = useParams();
@@ -181,9 +182,29 @@ function __UpdateInvoiceForm(props) {
             {currencySymbol}
         </Text>
     );
+    const [openInvoiceDrawerForPrint, setOpenInvoiceDrawerForPrint] = useState(false)
+    const entityUpdateData = useSelector((state) => state.inventoryCrudSlice.entityUpdateData);
+
+    useEffect(() => {
+        if (entityUpdateData?.data?.id && (lastClicked === 'print' || lastClicked === 'pos')) {
+            setTimeout(() => {
+                setOpenInvoiceDrawerForPrint(true)
+            }, 400);
+        }
+    }, [entityUpdateData, dispatch, lastClicked]);
 
     return (
         <>
+
+                {
+                openInvoiceDrawerForPrint &&
+                <_PurchaseDrawerForPrint
+                    setOpenInvoiceDrawerForPrint={setOpenInvoiceDrawerForPrint}
+                    openInvoiceDrawerForPrint={openInvoiceDrawerForPrint}
+                    printType={lastClicked}
+                    mode="update"
+                />
+            }
             <form onSubmit={form.onSubmit((values) => {
                 let createdBy = JSON.parse(localStorage.getItem('user'));
                 let transformedArray = tempCardProducts.map(product => {
