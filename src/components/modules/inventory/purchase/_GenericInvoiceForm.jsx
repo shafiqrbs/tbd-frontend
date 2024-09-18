@@ -256,7 +256,7 @@ function _GenericInvoiceForm(props) {
     }]], []);
 
     const inputGroupText = (
-        <Text style={{ textAlign: 'right', width: '100%', paddingRight: 16 }}
+        <Text ta={'right'} style={{ width: '100%', paddingRight: 16 }}
             color={'gray'}
         >
             {selectProductDetails && selectProductDetails.unit_name}
@@ -264,7 +264,7 @@ function _GenericInvoiceForm(props) {
     );
 
     const inputGroupCurrency = (
-        <Text style={{ textAlign: 'right', width: '100%', paddingRight: 16 }}
+        <Text ta={'right'} style={{ width: '100%', paddingRight: 16 }}
             color={'gray'}
         >
             {currencySymbol}
@@ -444,7 +444,7 @@ function _GenericInvoiceForm(props) {
                                     {
                                         accessor: 'index',
                                         title: t('S/N'),
-                                        textAlignment: 'right',
+                                        textAlign: 'right',
                                         render: (item) => (tempCardProducts.indexOf(item) + 1)
                                     },
                                     {

@@ -75,9 +75,16 @@
     padding: 2px;
     font-weight: 400;
     font-size: 9px;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
 }
 .text-width{
     width: 50mm;
+}
+.text-width-two{
+    width: 78mm;
+    padding-left: 1px;
+    padding-right: 1px;
 }
 .invoice-details{
     margin: 0px;
@@ -128,6 +135,8 @@
     justify-content: space-between;
 }
 .footer-company{
+    margin: 0px;
+    padding: 0px;
     display: flex;
     width: 100%;
     text-align: center;
