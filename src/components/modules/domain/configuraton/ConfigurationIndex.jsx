@@ -13,7 +13,6 @@ function ConfigurationIndex() {
     const { t, i18n } = useTranslation();
 
     const {id } = useParams();
-    console.log(id);
 
     const progress = getLoadingProgress()
 
