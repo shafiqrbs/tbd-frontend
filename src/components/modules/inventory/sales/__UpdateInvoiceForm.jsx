@@ -35,7 +35,6 @@ import _CustomerViewModel from "./modal/_CustomerViewModel.jsx";
 import customerDataStoreIntoLocalStorage from "../../../global-hook/local-storage/customerDataStoreIntoLocalStorage.js";
 import _addCustomer from "../../popover-form/_addCustomer.jsx";
 import _InvoiceDrawerForPrint from "./print-drawer/_InvoiceDrawerForPrint.jsx";
-import AddCustomerDrawer from "./drawer-form/AddCustomerDrawer.jsx";
 
 function __UpdateInvoiceForm(props) {
     let { id } = useParams();
@@ -739,14 +738,6 @@ function __UpdateInvoiceForm(props) {
                     </Grid>
                 </Box>
             </form>
-            {/* {customerDrawer &&
-                <AddCustomerDrawer
-                    setRefreshCustomerDropdown={setRefreshCustomerDropdown}
-                    focusField={'customer_id'}
-                    fieldPrefix="sales_"
-                    customerDrawer={customerDrawer}
-                    setCustomerDrawer={setCustomerDrawer}
-                />} */}
             {isShowSMSPackageModel &&
                 <_SmsPurchaseModel
                     isShowSMSPackageModel={isShowSMSPackageModel}
