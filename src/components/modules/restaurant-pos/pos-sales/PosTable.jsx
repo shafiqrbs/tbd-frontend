@@ -18,7 +18,7 @@ function PosTable() {
     const dispatch = useDispatch();
     const { t, i18n } = useTranslation();
     const { isOnline, mainAreaHeight } = useOutletContext();
-    const height = mainAreaHeight - 202; //TabList height 104
+    const height = mainAreaHeight - 190; //TabList height 104
     const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword)
 
     const [tc, setTc] = useState('#333333')
@@ -204,7 +204,7 @@ function PosTable() {
                                         pb={4}
                                         src={product.img}
                                         height={180}
-                                        w={'80%'}
+                                        w={180}
                                         alt={product.name}
                                         fit="cover"
                                         radius="lg"
@@ -230,7 +230,7 @@ function PosTable() {
                 </Grid.Col>
             </Grid>
             <Box bg="white" w={'100%'}  mt={8} style={{ borderRadius: 8 }} >
-                <Group grow gap={4} h={54} justify="center" align="center" pl={8} pr={8}>
+                <Group grow gap={4} h={54} justify="center" align="center" pl={8} pr={8} className="divider">
                     <Button bg={bg} onClick={()=>{
                         bg === '#E6F5ED' ? setBg('green.8') : setBg('#E6F5ED'),
                         tc === '#333333' ? setTc('white') : setTc('#333333')

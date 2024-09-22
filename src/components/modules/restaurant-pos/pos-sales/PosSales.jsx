@@ -6,7 +6,8 @@ import {
     ActionIcon, Text, Menu, rem,
     TextInput, Center,
     Button, Grid, Flex, ScrollArea, Divider, Image, Select, SimpleGrid,Badge,
-    Checkbox, Paper, Switch
+    Checkbox, Paper, Switch,
+    Stack
 } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import { IconChevronRight, IconChevronLeft, IconCheck, IconSearch, IconChevronDown, IconX, IconPlus, IconMinus, IconTrash, IconSum, IconUserFilled, IconPrinter, IconDeviceFloppy } from "@tabler/icons-react";
@@ -22,7 +23,7 @@ function PosSales() {
     const dispatch = useDispatch();
     const { t, i18n } = useTranslation();
     const { isOnline, mainAreaHeight } = useOutletContext();
-    const height = mainAreaHeight - 202; //TabList height 104 
+    const height = mainAreaHeight - 190; //TabList height 104 
     const heightHalf = height /2;
 
     const navigate = useNavigate();
@@ -129,7 +130,7 @@ function PosSales() {
 
     return (
         <>
-
+        <Box w={'100%'} h={height + 72} className={classes['box-white']}>
             <Box pl={10} m={0} pr={10}>
                 <Group  preventGrowOverflow={false} grow align="flex-start" wrap="nowrap" gap={10} mb={8}>
                     <Select
@@ -173,7 +174,7 @@ function PosSales() {
                 </Group>
                 <Box>
 
-                    <ScrollArea h={heightHalf - 20} type="never" scrollbars="y">
+                    <ScrollArea h={heightHalf - 48} type="never" scrollbars="y">
                         <Paper p="8" radius="md" style={{ backgroundColor: checked ? '#4CAF50' : '#E8F5E9' }}>
                             <Grid align="center">
                                 <Grid.Col span={11}>
@@ -289,215 +290,207 @@ function PosSales() {
                                                 }
                                                 loaderSize="xs"
                                                 loaderColor="grape"
-                                                height={248}
+                                                height={220}
                                                 scrollAreaProps={{ type: 'never' }}
                         /> 
                         </Box>
-                        
-
                     </ScrollArea>
                 </Box>
-                <Box className={classes['box-border']} h={heightHalf + 26} mt={'4'} p={'4'}>
-                    <TextInput
-                        p={'4'}
-                        size={'sm'}
-                        placeholder={t('CustomerMobileNumber')}
-                        leftSection={<IconSearch height={18} width={18} stroke={2} />}
-                        rightSection={<IconUserFilled height={18} width={18} stroke={2} />}
-                    ></TextInput>
-                    <Box className={classes['box-white']} ml={4} mr={4} h={76}>
-                        <Grid columns={12} gutter={0} pt={4} pl={12} pr={12} pb={4}>
-                            <Grid.Col span={6} >
-                                <Grid columns={12} gutter={0} >
-                                    <Grid.Col span={2} >
-                                        <Text fw={500} c={'#333333'}>
-                                        {t('VAT')}
-                                        </Text>
-                                    </Grid.Col>
-                                    <Grid.Col span={'auto'} >
-                                        <Text  fw={800} c={'#333333'}>
-                                        {t('$')} {price}
-                                        </Text>
-                                    </Grid.Col>
-                                </Grid>
-                                <Grid columns={12} gutter={0} pt={0}>
-                                    <Grid.Col span={2} >
-                                        <Text fw={500} c={'#333333'}>
-                                        {t('SD')}
-                                        </Text>
-                                    </Grid.Col>
-                                    <Grid.Col span={'auto'} >
-                                        <Text  fw={800} c={'#333333'}>
-                                        {t('$')} {price}
-                                        </Text>
-                                    </Grid.Col>
-                                </Grid>
-                                <Grid columns={12} gutter={0} pt={0}>
-                                    <Grid.Col span={2} >
-                                        <Text fw={500} c={'#333333'}>
-                                        {t('DIS.')}
-                                        </Text>
-                                    </Grid.Col>
-                                    <Grid.Col span={'auto'} >
-                                        <Text  fw={800} c={'#333333'}>
-                                        {t('$')} {price}
-                                        </Text>
-                                    </Grid.Col>
-                                </Grid>
-                            </Grid.Col>
-                            <Grid.Col span={6}>
-                                <Box className={classes['box-border']} p={6}>
-                                    <Flex direction={'column'} justify={'center'} align={'center'} h={"100%"} p={2}>
-                                        <Text fw={500} c={'#333333'} size={'md'}>
-                                            {t('Total')}
-                                        </Text>
-                                        <Text fw={800} c={'#00542B'} size={'lg'}>
-                                            $ {price}
-                                        </Text>
-                                    </Flex>
-                                </Box>
-                            </Grid.Col>
-                        </Grid>
-                    </Box>
-                    <Box className={classes['box-white']} ml={4} mr={4} mt={4}>
-                    <Box style={{position : 'relative'}}>
-                <ScrollArea
-                        type="never"
-                        pl={'sm'}
-                        pr={'sm'}
-                        viewportRef={scrollRef}
-                        onScrollPositionChange={handleScroll}
-                        >
-                            <Group m={0} p={0} justify="flex-start" align="flex-start" gap="4" wrap="nowrap">
-                            {paymentPartners.map((partners) => (
-                                <Box
-                                    onClick={() => {
-                                        console.log("Clicked on Table -", partners.id),
-                                        clicked(partners.id)
-                                    }
-                                }
-                                mb={'2'}
-                                key={partners.id}
-                                style={{
-                                    position: 'relative',
-                                    cursor: 'pointer'
-                                }}
-                                >
-                                <Flex
-                                    bg={partners.id === id ? '#E6F5ED' : 'white'}
-                                    mt={2}
-                                    direction="column"
-                                    align="center"
-                                    justify="center"
-                                    style={{
-                                    height: '84px',
-                                    width: '98px',
-                                    borderRadius: '8px',
-                                    }}
-                                >
-                                    <Image h={'70%'} w={'70%'} fit="contain" src={partners.img} ></Image>
-                                    <Text pt={'4'} c={'#333333'} fw={500}>{partners.name}</Text>
-                                </Flex>
-                                </Box>
-                            ))}
-                            </Group>
-                    </ScrollArea>
-                    {showLeftArrow && (
-                            <ActionIcon
-                            variant="filled"
-                            color="#EAECED"
-                            radius="xl"
-                            size="lg"
-                            h={24}
-                            w={24}
-                            style={{
-                                position: 'absolute',
-                                left: 5,
-                                top: '50%',
-                                transform: 'translateY(-50%)'
-                            }}
-                            onClick={() => scroll('left')}
-                            >
-                            <IconChevronLeft height={18} width={18} stroke={2} color="#30444F"/>
-                            </ActionIcon>
-                    )}
-                    {showRightArrow && (
-                            <ActionIcon
-                            variant="filled"
-                            color="#EAECED"
-                            radius="xl"
-                            size="lg"
-                            h={24}
-                            w={24}
-                            style={{
-                                position: 'absolute',
-                                right: 5,
-                                top: '50%',
-                                transform: 'translateY(-50%)'
-                            }}
-                            onClick={() => scroll('right')}
-                            >
-                            <IconChevronRight height={18} width={18} stroke={2} color="#30444F"/>
-                            </ActionIcon>
-                    )}
-                    </Box>
-                    </Box>
-                    <Box mt={4} ml={4} mr={4}>
-                        <Group  justify="center" grow gap={'xs'} preventGrowOverflow={true}>
-                        {/* <Switch
-                        bg={'yellow'}
-                                                    size="lg"
-                                                    w={30}
-                                                    color={'#006d38'}
-                                                    mt={'2'}
-                                                    onLabel={t('Flat')}
-                                                    offLabel={t('Hide')}
-                                                    radius="xs"
-                                                    onChange={(event) => setProfitShow(event.currentTarget.checked)}
-                        /> */}
-                        <Box h={'40'} className={classes['box-green']}>
-                            <Grid columns={12} gutter={0}>
-                                <Grid.Col span={4}>
-                                    <Flex h={40} justify={'center'} align={'center'}   >
-                                        <Checkbox color="lime" size="lg">
-
-                                        </Checkbox>
-                                    </Flex>
-                                </Grid.Col>
-                                <Grid.Col span={8}>
-                                    <Flex h={40} justify={'center'} align={'center'} >
-                                        <Text>
-                                            {t('Flat')}
-                                        </Text>
-                                    </Flex>
-                                </Grid.Col>
-                            </Grid>
-                        </Box>
+                <Box className={classes['box-border']} h={heightHalf + 52 } pl={4} pr={4} pb={4} pt={2} mt={6}>
+                    <Box>
+                        <Flex h={heightHalf - 142} direction={'column'} w={'100%'}  justify={'center'} gap={0} pl={4} pr={4} mb={8}>
                             <TextInput
-                            type="number"
-                            placeholder="0"
-                            size={rem(40)}classNames={{input : classes.input}}>
-
-                            </TextInput>
-                            <TextInput 
-                            type="number"
-                            placeholder="0" size={rem(40)} classNames={{input : classes.input}}>
-
-                            </TextInput>
-                        </Group>
-                        <Divider mt={'xs'} classNames={{ root: classes.divider}} my="md" mb={0}/> 
-                    <Group grow gap={'xs'} p={4}>
-                        <Button bg={'#30444F'} size={'md'} fullWidth={true} leftSection={<IconPrinter />}>
-                            {t('POS Print')}
-                        </Button>
-                        <Button size={'md'} bg={'#00994f'} fullWidth={true} leftSection={<IconDeviceFloppy />}>
-                        {t('Save')}
-                        </Button>
-                    </Group>
+                                pb={4}
+                                size={'sm'}
+                                w={'100%'}
+                                pt={'xs'}
+                                placeholder={t('CustomerMobileNumber')}
+                                leftSection={<IconSearch height={18} width={18} stroke={2} />}
+                                rightSection={<IconUserFilled height={18} width={18} stroke={2} />}
+                            ></TextInput>
+                            <Box className={classes['box-white']} p={'4'} 
+                                w={'100%'}>
+                                <Grid columns={12} gutter={0} pt={4} pl={12} pr={12}>
+                                    <Grid.Col span={6} >
+                                        <Grid columns={12} gutter={0} >
+                                            <Grid.Col span={2} >
+                                                <Text fw={500} c={'#333333'}>
+                                                {t('VAT')}
+                                                </Text>
+                                            </Grid.Col>
+                                            <Grid.Col span={'auto'} >
+                                                <Text  fw={800} c={'#333333'}>
+                                                {t('$')} {price}
+                                                </Text>
+                                            </Grid.Col>
+                                        </Grid>
+                                        <Grid columns={12} gutter={0} pt={0}>
+                                            <Grid.Col span={2} >
+                                                <Text fw={500} c={'#333333'}>
+                                                {t('SD')}
+                                                </Text>
+                                            </Grid.Col>
+                                            <Grid.Col span={'auto'} >
+                                                <Text  fw={800} c={'#333333'}>
+                                                {t('$')} {price}
+                                                </Text>
+                                            </Grid.Col>
+                                        </Grid>
+                                        <Grid columns={12} gutter={0} pt={0}>
+                                            <Grid.Col span={2} >
+                                                <Text fw={500} c={'#333333'}>
+                                                {t('DIS.')}
+                                                </Text>
+                                            </Grid.Col>
+                                            <Grid.Col span={'auto'} >
+                                                <Text  fw={800} c={'#333333'}>
+                                                {t('$')} {price}
+                                                </Text>
+                                            </Grid.Col>
+                                        </Grid>
+                                    </Grid.Col>
+                                    <Grid.Col span={6}>
+                                        <Box className={classes['box-border']} p={6}>
+                                            <Flex direction={'column'} justify={'center'} align={'center'} h={"100%"} p={2}>
+                                                <Text fw={500} c={'#333333'} size={'md'}>
+                                                    {t('Total')}
+                                                </Text>
+                                                <Text fw={800} c={'#00542B'} size={'lg'}>
+                                                    $ {price}
+                                                </Text>
+                                            </Flex>
+                                        </Box>
+                                    </Grid.Col>
+                                </Grid>
+                            </Box>
+                        </Flex>
                     </Box>
-                    
+                    <Box className={classes['box-white']} ml={4} mr={4}>
+                                <Box style={{position : 'relative'}}>
+                                    <ScrollArea
+                                            type="never"
+                                            pl={'sm'}
+                                            pr={'sm'}
+                                            viewportRef={scrollRef}
+                                            onScrollPositionChange={handleScroll}
+                                            >
+                                                <Group m={0} p={0} justify="flex-start" align="flex-start" gap="0" wrap="nowrap">
+                                                {paymentPartners.map((partners) => (
+                                                    <Box
+                                                        onClick={() => {
+                                                            console.log("Clicked on Table -", partners.id),
+                                                            clicked(partners.id)
+                                                        }
+                                                    }
+                                                    key={partners.id}
+                                                    p={4}
+                                                    style={{
+                                                        position: 'relative',
+                                                        cursor: 'pointer'
+                                                    }}
+                                                    >
+                                                    <Flex
+                                                        bg={partners.id === id ? '#E6F5ED' : 'white'}
+                                                        direction="column"
+                                                        align="center"
+                                                        justify="center"
+                                                        p={4}
+                                                        style={{
+                                                        width: '100px',
+                                                        borderRadius: '8px',
+                                                        }}
+                                                    >
+                                                        <Image h={'60%'} w={'60%'} fit="contain" src={partners.img} ></Image>
+                                                        <Text pt={'4'} c={'#333333'} fw={500}>{partners.name}</Text>
+                                                    </Flex>
+                                                    </Box>
+                                                ))}
+                                                </Group>
+                                        </ScrollArea>
+                                {showLeftArrow && (
+                                        <ActionIcon
+                                        variant="filled"
+                                        color="#EAECED"
+                                        radius="xl"
+                                        size="lg"
+                                        h={24}
+                                        w={24}
+                                        style={{
+                                            position: 'absolute',
+                                            left: 5,
+                                            top: '50%',
+                                            transform: 'translateY(-50%)'
+                                        }}
+                                        onClick={() => scroll('left')}
+                                        >
+                                        <IconChevronLeft height={18} width={18} stroke={2} color="#30444F"/>
+                                        </ActionIcon>
+                                )}
+                                {showRightArrow && (
+                                        <ActionIcon
+                                        variant="filled"
+                                        color="#EAECED"
+                                        radius="xl"
+                                        size="lg"
+                                        h={24}
+                                        w={24}
+                                        style={{
+                                            position: 'absolute',
+                                            right: 5,
+                                            top: '50%',
+                                            transform: 'translateY(-50%)'
+                                        }}
+                                        onClick={() => scroll('right')}
+                                        >
+                                        <IconChevronRight height={18} width={18} stroke={2} color="#30444F"/>
+                                        </ActionIcon>
+                                )}
+                                </Box>
+                            </Box>
+                    <Box m={8}>
+                                <Group  justify="center" grow gap={'xs'} preventGrowOverflow={true}>
+                                    <Box className={classes['box-green']}>
+                                        <Grid columns={12} gutter={0}>
+                                            <Grid.Col span={4}>
+                                                <Flex h={40} justify={'center'} align={'center'}   >
+                                                    <Checkbox color="lime" size="lg" onClick={''}/>
+                                                </Flex>
+                                            </Grid.Col>
+                                            <Grid.Col span={8}>
+                                                <Flex h={40} justify={'center'} align={'center'} >
+                                                    <Text>
+                                                        {t('Flat')}
+                                                    </Text>
+                                                </Flex>
+                                            </Grid.Col>
+                                        </Grid>
+                                    </Box>
+                                    <TextInput
+                                        type="number"
+                                        placeholder="0"
+                                        size={rem(40)} 
+                                        classNames={{input : classes.input}} 
+                                    />
+                                    <TextInput 
+                                        type="number"
+                                        placeholder="0" size={rem(40)} classNames={{input : classes.input}}
+                                    />
+                                </Group>
+                            </Box>
+                    <Group grow gap={'xs'} p={8} mb={'0'} pt={6} style={{ borderTop: '#c0c0c0 solid 2px' }} className="divider" >
+                                <Button bg={'#30444F'} size={'sm'} fullWidth={true} leftSection={<IconPrinter />}>
+                                    {t('POS Print')}
+                                </Button>
+                                <Button size={'sm'} bg={'#00994f'} fullWidth={true} leftSection={<IconDeviceFloppy />}>
+                                    {t('Save')}
+                                </Button>
+                    </Group>
                 </Box>
+                
             </Box>
+        </Box>
+
+            
 
         </>
     );
