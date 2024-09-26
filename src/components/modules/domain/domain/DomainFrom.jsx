@@ -62,9 +62,6 @@ function DomainForm(props) {
                     return false;
                 }
             },
-            name : isNotEmpty(),
-            username : isNotEmpty()
-
         }
     });
 
