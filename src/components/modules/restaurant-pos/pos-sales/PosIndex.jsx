@@ -85,7 +85,7 @@ function PosIndex() {
                                 <PosTable />
                             </Grid.Col>
                             <Grid.Col span={8}>
-                                <Box bg="white" w={'100%'} h={height} style={{ borderRadius: 8 }}>
+                                <Box  style={{ borderRadius: 8 }}>
                                     <PosSales />
                                 </Box>
                             </Grid.Col>

@@ -6,6 +6,7 @@
     padding: 0px;
     margin: auto;
     background-color: white;
+    width: 148mm;
 }
 .invoice-header-contents{
     display: flex;
@@ -129,35 +130,26 @@
 .invoice-footer{
     margin-top: 10px;
 }
-.invoice-footer-contents{
-    display: flex;
-    justify-content: space-between;
-}
+
 .footer-right-section{
     display: flex;
-    justify-content: space-between;
-    gap: 1px;
+    align-items: flex-end;
+    gap: 0px;
 }
 .footer-border-bottom{
     padding-bottom: 5px;
     border-bottom: 1px solid #F1F3F5;
 }
-.footer-name-section{
-    display: flex;
-    text-align: left;
-    width: 200px;
-}
 .invoice-footer-text-two{
-    font-weight: 300;
+    font-weight: 400;
     font-size: 12px;
-    margin-right: 30px;
+    margin: 0px;
 }
 .footer-right-section{
     margin-top: 20px;
-    margin-right: 10px;
 }
 .invoice-footer-img{
-    margin: 12px 0px 0px 10px;
-    height: 200px;
-    width: 200px;
+    height: 140px;
+    width: 140px;
+    object-fit: contain;
 }

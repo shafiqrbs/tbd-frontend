@@ -4,11 +4,11 @@ import { useTranslation } from 'react-i18next';
 import { useSelector } from "react-redux";
 import { IconReceipt } from "@tabler/icons-react";
 import { ReactToPrint } from "react-to-print";
-import classes from './_InvoiceForDomain359Custom.module.css'
+import classes from './_PurchaseInvoiceDomain359Custom.module.css'
 import barCode from '../../../../../assets/images/frame.png';
 import { useNavigate, useOutletContext } from "react-router-dom";
 
-function _InvoiceForDomain359Custom(props) {
+function _PurchaseInvoiceDomain359Custom(props) {
 
     let invoicePrintData;
     if (props.mode === 'insert') {
@@ -369,4 +369,4 @@ function _InvoiceForDomain359Custom(props) {
     );
 }
 
-export default _InvoiceForDomain359Custom;
+export default _PurchaseInvoiceDomain359Custom;

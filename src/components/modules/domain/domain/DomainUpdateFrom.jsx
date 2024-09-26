@@ -61,8 +61,6 @@ function DomainUpdateForm(props) {
                     return false;
                 }
             },
-            name : isNotEmpty(),
-            username : isNotEmpty()
         }
     });
 

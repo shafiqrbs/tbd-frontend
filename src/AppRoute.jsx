@@ -43,6 +43,7 @@ import StockIndex from './components/modules/inventory/stock/StockIndex.jsx';
 import ConfigurationIndex from './components/modules/domain/configuraton/ConfigurationIndex.jsx';
 import PosIndex from './components/modules/restaurant-pos/pos-sales/PosIndex.jsx';
 import SitemapIndex from './components/modules/domain/sitemap/SitemapIndex.jsx';
+import BatchIndex from './components/modules/production/batch/BatchIndex.jsx';
 
 
 function AppRoute() {
@@ -104,6 +105,7 @@ function AppRoute() {
                     <Route path="config" element={<ProductionConfigurationIndex />} />
                     <Route path="batch" element={<InhouseIndex />} />
                     <Route path="batch/:id" element={<InhouseIndex />} />
+                    <Route path="production-batch" element={<BatchIndex />} />
                 </Route>
 
                 <Route path="/domain/">

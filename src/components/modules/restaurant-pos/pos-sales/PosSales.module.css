@@ -23,7 +23,5 @@
   outline-offset: -2px;
 }
 .divider {
-  border-color: #c0c0c0; /* Divider line color */
-  border-width: 2px; /* Divider thickness */
-  height: 10px;
+  border-top: #c0c0c0 solid 2px;
 }

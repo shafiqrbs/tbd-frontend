@@ -4,11 +4,11 @@ import { useTranslation } from 'react-i18next';
 import { useSelector } from "react-redux";
 import { IconReceipt } from "@tabler/icons-react";
 import { ReactToPrint } from "react-to-print";
-import classes from './_InvoiceForDomain359Custom.module.css'
+import classes from './PurchaseInvoiceDomain359Normal.module.css'
 import barCode from '../../../../../assets/images/frame.png';
 import { useNavigate, useOutletContext } from "react-router-dom";
 
-function _InvoiceForDomain359Custom(props) {
+function PurchaseInvoiceDomain359Normal(props) {
 
     let invoicePrintData;
     if (props.mode === 'insert') {
@@ -85,7 +85,6 @@ function _InvoiceForDomain359Custom(props) {
         };
     }, [])
 
-
     return (
         <>
             <Box>
@@ -94,49 +93,63 @@ function _InvoiceForDomain359Custom(props) {
                         <ScrollArea h={height - 36} type='never'>
                             <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} id={"printElement"} ref={printRef}>
                                 <div className={classes['invoice-body']}>
-                                    <Box bg={'#E9ECEF'} pl={10} pr={10} pt={10}>
+                                    <Box bg={'#E9ECEF'} p={10}>
                                         <Box >
                                             <Grid columns={24} gutter={0} >
-                                                <Grid.Col span={6}>
-                                                    <Box pl={2}>
+                                                <Grid.Col span={8} >
+                                                    <Box mt={'2'} ml={'2'}>
+                                                        {/* <Space h="40"></Space> */}
                                                         <img src={imageSrc} alt="" className={classes['invoice-header-img']} />
                                                     </Box>
                                                 </Grid.Col>
-                                                <Grid.Col span={4}>
-                                                    <Flex
-                                                        mih={50}
-                                                        justify="flex-end"
-                                                        align="center"
-                                                        direction="row"
-                                                        wrap="wrap"
-                                                        w={'100%'}
-                                                    >
-                                                        <Text fw={600} fz={18}>
-                                                            {t('Invoice')}
-                                                        </Text>
-                                                    </Flex>
-                                                </Grid.Col>
-                                                <Grid.Col span={14} >
-                                                    <Stack justify="flex-start" gap={0} >
-                                                        <Text fw={400} fz={11} ta="right" mb={4}>
-                                                            {configData.domain.name}
-                                                            {/* SUNDAR PLASTIC & RUBBER INDUSTRIES */}
-                                                        </Text>
-                                                        <Group gap={4} justify="flex-end" >
-                                                            <Text fw={400} fz={10}>
-                                                                {t('Email')}:
+                                                <Grid.Col span={16} >
+                                                    <Group justify="space-between" gap="0">
+                                                        <Flex h={80} justify="center"
+                                                            ml={'48'}
+                                                            align="flex-start"
+                                                            direction="row" pt={6}>
+                                                            <Text fw={'800'} fz={'19'} mr={'sm'} mb={'xs'}>
+                                                                {t('Invoice')}
                                                             </Text>
-                                                            <Text fz={10} >
-                                                                {configData.domain.email}
-                                                            </Text>
-                                                        </Group>
-                                                        <Group gap={4} justify="flex-end">
-                                                            <Text fw={400} fz={10}>
-                                                                {t('Mobile')}:
-                                                            </Text>
-                                                            <Text fz={10}>{configData.domain.mobile}</Text>
-                                                        </Group>
-                                                    </Stack>
+                                                        </Flex>
+                                                        <Stack justify="center" gap={0}>
+                                                            <Flex justify={'flex-end'} mt={'0'}>
+                                                                <Text fw={'600'} fz={'16'} mr={'sm'}>
+                                                                    {configData.domain.name}
+                                                                </Text>
+                                                            </Flex>
+                                                            <Stack justify="flex-end" gap={0} mt={'4'}>
+                                                                <Group justify="flex-start" gap={0}>
+                                                                    <p className={classes['invoice-text-title']}
+                                                                    >
+                                                                        {t('Email')}
+                                                                    </p>
+                                                                    <p className={classes['invoice-text']}
+                                                                    >
+                                                                        :
+                                                                    </p>
+                                                                    <p className={classes['padding-left']}
+                                                                    >
+                                                                        {configData.domain.email}
+                                                                    </p>
+                                                                </Group>
+                                                                <Group justify="flex-start" gap={0}>
+                                                                    <p className={classes['invoice-text-title']}
+                                                                    >
+                                                                        {t('Mobile')}
+                                                                    </p>
+                                                                    <p className={classes['invoice-text']}
+                                                                    >
+                                                                        :
+                                                                    </p>
+                                                                    <p className={classes['padding-left']}
+                                                                    >
+                                                                        {configData.domain.mobile}
+                                                                    </p>
+                                                                </Group>
+                                                            </Stack>
+                                                        </Stack>
+                                                    </Group>
                                                 </Grid.Col>
                                             </Grid>
                                         </Box>
@@ -309,45 +322,44 @@ function _InvoiceForDomain359Custom(props) {
                                         </div>
                                     </main>
                                     <footer className={classes['invoice-footer']}>
-                                        <Group justify="space-between" gap={0}>
-                                            <Box >
+                                        <div className={classes['invoice-footer-contents']}>
+                                            <div className={classes['invoice-footer-one']}>
                                                 <Center>
                                                     <img src={barCode} alt="" className={classes['invoice-footer-img']} />
                                                 </Center>
-                                            </Box>
-                                            <Box>
-                                                <Grid columns={12} gutter={0}>
-                                                    <Grid.Col span={4} >
-                                                        <Box mr={'xs'} pr={'xs'} w={100} >
-                                                            <Text p={2} className={classes['invoice-footer-text-two']}>{t('SubTotal')}</Text>
-                                                            <Text p={2} className={classes['invoice-footer-text-two']}>{t('Discount')}</Text>
-                                                            <Text p={2} className={classes['invoice-footer-text-two']}>{t('Total')}</Text>
-                                                            <Text p={2} className={`${classes['invoice-footer-text-two']} ${classes['footer-border-bottom']}`}>{t('Receive')}</Text>
-                                                            <Text p={2} className={`${classes['invoice-footer-text-two']} ${classes['footer-border-bottom']}`}>{t('Due')}</Text>
-                                                        </Box>
-                                                    </Grid.Col>
-                                                    <Grid.Col span={2}></Grid.Col>
-                                                    <Grid.Col span={6}>
-                                                        <Box mr={'xs'} >
-                                                            <Text p={2} className={classes['invoice-footer-text-two']}>{invoicePrintData && invoicePrintData.sub_total && Number(invoicePrintData.sub_total).toFixed(2)}
-                                                            </Text>
-                                                            <Text p={2} className={classes['invoice-footer-text-two']}>
-                                                                {invoicePrintData && invoicePrintData.discount && Number(invoicePrintData.discount).toFixed(2)}
-                                                            </Text>
-                                                            <Text p={2} className={classes['invoice-footer-text-two']}>
-                                                                {invoicePrintData && invoicePrintData.total && Number(invoicePrintData.total).toFixed(2)}
-                                                            </Text>
-                                                            <Text p={2} className={`${classes['invoice-footer-text-two']} ${classes['footer-border-bottom']}`}>
-                                                                {invoicePrintData && invoicePrintData.payment && Number(invoicePrintData.payment).toFixed(2)}
-                                                            </Text>
-                                                            <Text p={2} className={`${classes['invoice-footer-text-two']} ${classes['footer-border-bottom']}`}>
-                                                                {invoicePrintData && invoicePrintData.total && (Number(invoicePrintData.total) - Number(invoicePrintData.payment)).toFixed(2)}
-                                                            </Text>
-                                                        </Box>
-                                                    </Grid.Col>
-                                                </Grid>
-                                            </Box>
-                                        </Group>
+                                            </div>
+                                            <div className={classes['footer-right-section']}>
+                                                <div className={classes['footer-name-section']}>
+                                                    <div className={classes['invoice-footer-two-left']}>
+                                                        <p className={classes['invoice-footer-text-two']}>{t('SubTotal')}</p>
+                                                        <p className={classes['invoice-footer-text-two']}>{t('Discount')}</p>
+                                                        <p className={classes['invoice-footer-text-two']}>{t('Total')}</p>
+                                                        <p className={`${classes['invoice-footer-text-two']} ${classes['footer-border-bottom']}`}>{t('Receive')}</p>
+                                                        <p className={`${classes['invoice-footer-text-two']} ${classes['footer-border-bottom']}`}>{t('Due')}</p>
+                                                        {/* <p className={classes['invoice-footer-text-two']}>Grand Total</p> */}
+                                                    </div>
+                                                </div>
+                                                <div className={classes['footer-data-section']}>
+                                                    <div className={classes['invoice-footer-two-right']}>
+                                                        <p className={classes['invoice-footer-text-two']}>{invoicePrintData && invoicePrintData.sub_total && Number(invoicePrintData.sub_total).toFixed(2)}
+                                                        </p>
+                                                        <p className={classes['invoice-footer-text-two']}>
+                                                            {invoicePrintData && invoicePrintData.discount && Number(invoicePrintData.discount).toFixed(2)}
+                                                        </p>
+                                                        <p className={classes['invoice-footer-text-two']}>
+                                                            {invoicePrintData && invoicePrintData.total && Number(invoicePrintData.total).toFixed(2)}
+                                                        </p>
+                                                        <p className={`${classes['invoice-footer-text-two']} ${classes['footer-border-bottom']}`}>
+                                                            {invoicePrintData && invoicePrintData.payment && Number(invoicePrintData.payment).toFixed(2)}
+                                                        </p>
+                                                        <p className={classes['invoice-footer-text-two']}>
+                                                            {invoicePrintData && invoicePrintData.total && (Number(invoicePrintData.total) - Number(invoicePrintData.payment)).toFixed(2)}
+                                                        </p>
+                                                        {/* <p className={`${classes['invoice-footer-text-two']} ${classes['footer-border-bottom']}`}>{data2[0].coupon_discount}</p> */}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </footer>
                                 </div>
                             </Box>
@@ -363,10 +375,10 @@ function _InvoiceForDomain359Custom(props) {
                         />
 
                     </Grid.Col>
-                </Grid >
+                </Grid>
             </Box >
         </>
     );
 }
 
-export default _InvoiceForDomain359Custom;
+export default PurchaseInvoiceDomain359Normal;

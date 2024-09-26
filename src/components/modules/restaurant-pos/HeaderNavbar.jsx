@@ -1,15 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
 import {
     Box, Button,
-    Grid, Progress, Title, Group, Burger, Menu, rem, ActionIcon, Text, NavLink, Card, Image,Badge,
+    Grid, Progress, Title, Group, ActionIcon, Text,Badge,
     Flex,
     Stack,
     Center,
     ScrollArea
 } from "@mantine/core";
-import { getHotkeyHandler, useDisclosure, useHotkeys, useToggle } from "@mantine/hooks";
 import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from "react-redux";
 import {
     IconChevronRight,
     IconChevronLeft
@@ -79,7 +77,6 @@ function HeaderNavbar(props) {
                 style={{
                     position: 'relative',
                     width: '120px',
-                    height: '124px',
                     cursor: 'pointer'
                 }}
                 >
@@ -109,14 +106,14 @@ function HeaderNavbar(props) {
                     align="center"
                     justify="center"
                     style={{
-                    height: '112px',
+                    height: '100px',
                     width: '120px',
                     borderRadius: '8px',
                     border: '1px solid #BFC5C8',
                     }}
                 >
                     <Center>
-                    <Text mt={'sm'} size="md" weight={900} mb={5} c={table.id === id ? 'white' : 'black'}>
+                    <Text mt={'4'} size="md" weight={900} mb={4} c={table.id === id ? 'white' : 'black'}>
                         Table - {table.id}
                     </Text>
                     </Center>
