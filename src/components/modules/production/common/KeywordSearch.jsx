@@ -18,7 +18,7 @@ import {
     setFetching,
     setSearchKeyword,
     setProductionSettingFilterData,
-    setRecipeItemFilterData
+    setRecipeItemFilterData, setProductionBatchFilterData
 } from "../../../../store/production/crudSlice.js";
 import FilterDrawer from "./FilterDrawer.jsx";
 
@@ -33,6 +33,8 @@ function KeywordSearch(props) {
     const searchKeyword = useSelector((state) => state.productionCrudSlice.searchKeyword)
     const productionSettingFilterData = useSelector((state) => state.productionCrudSlice.productionSettingFilterData)
     const recipeItemFilterData = useSelector((state) => state.productionCrudSlice.recipeItemFilterData)
+    const productionBatchFilterData = useSelector((state) => state.productionCrudSlice.productionBatchFilterData);
+
 
     useHotkeys(
         [['alt+F', () => {
@@ -173,6 +175,11 @@ function KeywordSearch(props) {
                                             ...productionSettingFilterData,
                                             name:'',
                                             setting_type_id:''
+                                        }));
+                                    }else if (props.module === 'production-batch') {
+                                        dispatch(setProductionBatchFilterData({
+                                            ...productionBatchFilterData,
+                                            invoice:'',
                                         }));
                                     }else if (props.module === 'recipe-item') {
                                         dispatch(setRecipeItemFilterData({

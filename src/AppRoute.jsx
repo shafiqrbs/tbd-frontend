@@ -103,9 +103,8 @@ function AppRoute() {
                     <Route path="setting" element={<ProductionSettingIndex />} />
                     <Route path="setting/:id" element={<ProductionSettingIndex />} />
                     <Route path="config" element={<ProductionConfigurationIndex />} />
-                    <Route path="batch" element={<InhouseIndex />} />
+                    <Route path="batch" element={<BatchIndex />} />
                     <Route path="batch/:id" element={<InhouseIndex />} />
-                    <Route path="production-batch" element={<BatchIndex />} />
                 </Route>
 
                 <Route path="/domain/">

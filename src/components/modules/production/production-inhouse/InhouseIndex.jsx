@@ -5,8 +5,8 @@ import {
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from "react-redux";
 
-import InhouseTable from "./InhouseTable.jsx";
-import InhouseForm from "./InhouseForm.jsx";
+import _InhouseTable from "./_InhouseTable.jsx";
+import _InhouseForm from "./_InhouseForm.jsx";
 import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress.js";
 import ProductionHeaderNavbar from "../common/ProductionHeaderNavbar.jsx";
 import {useNavigate, useParams} from "react-router-dom";
@@ -25,6 +25,7 @@ function InhouseIndex() {
     const dataStatus = useSelector((state) => state.productionCrudSlice.dataStatus);
 
     const [batchData, setBatchData] = useState({});
+    const [reloadBatchItemTable, setReloadBatchItemTable] = useState(false);
 
     useEffect(() => {
         if (!id){
@@ -45,6 +46,7 @@ function InhouseIndex() {
                 .then(res => {
                     if (res.data.status === 200) {
                         navigate('/production/batch/' + res.data.data.id)
+                        setReloadBatchItemTable(false)
                     }
                 })
                 .catch(function (error) {
@@ -54,11 +56,12 @@ function InhouseIndex() {
         }
         if (id) {
             dispatch(editEntityData(`production/batch/${id}`))
+            setReloadBatchItemTable(false)
         }
         if (dataStatus === 200) {
             setBatchData(editedData);
         }
-    }, [id,dataStatus]);
+    }, [id,dataStatus,reloadBatchItemTable]);
 
     return (
         <>
@@ -75,12 +78,12 @@ function InhouseIndex() {
                                 <Grid columns={24} gutter={{ base: 8 }}>
                                     <Grid.Col span={15} >
                                         <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
-                                            <InhouseTable batchData={batchData}/>
+                                            <_InhouseTable setReloadBatchItemTable={setReloadBatchItemTable}/>
                                         </Box>
                                     </Grid.Col>
                                     <Grid.Col span={9}>
                                         {
-                                            <InhouseForm batchData={batchData} />
+                                            <_InhouseForm batchData={batchData} />
                                         }
                                     </Grid.Col>
                                 </Grid>
