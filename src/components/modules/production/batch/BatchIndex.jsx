@@ -1,17 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom"
 import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress";
 import { Progress, Box } from "@mantine/core";
 import ProductionHeaderNavbar from "../common/ProductionHeaderNavbar";
 import BatchTable from './BatchTable'
 
-export default function BatchIndex(props){
-
-    const navigate = useNavigate()
+export default function BatchIndex(){
     const progress = getLoadingProgress()
-    const dispatch = useDispatch()
     const { t, i18n } = useTranslation();
 
     return (

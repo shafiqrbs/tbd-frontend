@@ -601,5 +601,7 @@
   "Url" : "Url",
   "MotherAccount" : "Mother Account",
   "CreateHeadSubGroup" : "Create Head Sub-Group",
-  "UpdateAccountHeadSubGroup" : "Update Head Sub-Group"
+  "UpdateAccountHeadSubGroup" : "Update Head Sub-Group",
+  "NewBatch" : "New Batch",
+  "": ""
 }

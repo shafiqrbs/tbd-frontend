@@ -16,32 +16,6 @@ function SearchModal({ onClose }) {
     const scrollRef = useRef(null);
     const [selectedIndex, setSelectedIndex] = useState(-1);
 
-    const CallInhouseCreateApi = () => {
-        axios({
-            method: 'POST',
-            url: `${import.meta.env.VITE_API_GATEWAY_URL+'production/batch'}`,
-            headers: {
-                "Accept": `application/json`,
-                "Content-Type": `application/json`,
-                "Access-Control-Allow-Origin": '*',
-                "X-Api-Key": import.meta.env.VITE_API_KEY,
-                "X-Api-User": JSON.parse(localStorage.getItem('user')).id
-            },
-            data : {
-                mode : 'in-house'
-            }
-        })
-        .then(res => {
-            if (res.data.status === 200){
-                navigate('production/batch/'+res.data.data.id)
-            }
-        })
-        .catch(function (error) {
-            console.log(error)
-            alert(error)
-        })
-    }
-
     useHotkeys([['alt+c', () => {
         setValue('');
         filterList('');
@@ -199,19 +173,14 @@ function SearchModal({ onClose }) {
                                                 )}
 
                                                 onClick={(e) => {
-                                                    e.preventDefault();
-                                                    if (action.id === 'batch') {
-                                                        CallInhouseCreateApi();
-                                                    } else {
-                                                        navigate(
-                                                            (action.group === 'Production' || action.group === 'প্রোডাকশন') ? `production/${action.id}`
-                                                                : (action.group === 'Core' || action.group === 'কেন্দ্র') ? `core/${action.id}`
-                                                                    : (action.group === 'Inventory' || action.group === 'ইনভেন্টরি') ? `inventory/${action.id}`
-                                                                        : (action.group === 'Domain' || action.group === 'ডোমেইন') ? `domain/${action.id}`
-                                                                            : (action.group === 'Accounting' || action.group === 'একাউন্টিং') ? `accounting/${action.id}`
-                                                                                : `/sitemap`
-                                                        );
-                                                    }
+                                                    navigate(
+                                                        (action.group === 'Production' || action.group === 'প্রোডাকশন') ? `production/${action.id}`
+                                                            : (action.group === 'Core' || action.group === 'কেন্দ্র') ? `core/${action.id}`
+                                                                : (action.group === 'Inventory' || action.group === 'ইনভেন্টরি') ? `inventory/${action.id}`
+                                                                    : (action.group === 'Domain' || action.group === 'ডোমেইন') ? `domain/${action.id}`
+                                                                        : (action.group === 'Accounting' || action.group === 'একাউন্টিং') ? `accounting/${action.id}`
+                                                                            : `/sitemap`
+                                                    );
                                                     onClose();
                                                 }}
 

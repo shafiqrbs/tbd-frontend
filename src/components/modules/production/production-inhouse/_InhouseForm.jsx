@@ -18,7 +18,7 @@ import SelectForm from "../../../form-builders/SelectForm";
 
 import { DateInput } from "@mantine/dates";
 
-function InhouseForm(Props) {
+function _InhouseForm(Props) {
     const {batchData} = Props
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
@@ -182,7 +182,7 @@ function InhouseForm(Props) {
                                                 </Grid.Col>
                                                 <Grid.Col span={12}>
                                                     <Box mt={'xs'}>
-                                                        {/*<DateInput
+                                                        <DateInput
                                                             value={issueDate}
                                                             valueFormat="DD-MM-YYYY"
                                                             onChange={setIssueDate}
@@ -212,7 +212,7 @@ function InhouseForm(Props) {
                                                                         style={{ width: '100%', height: '70%' }} stroke={1.5} />
                                                                 </Tooltip>
                                                             }
-                                                        />*/}
+                                                        />
                                                     </Box>
                                                 </Grid.Col>
                                             </Grid>
@@ -238,7 +238,7 @@ function InhouseForm(Props) {
                                                 </Grid.Col>
                                                 <Grid.Col span={12}>
                                                     <Box mt={'xs'}>
-                                                        {/*<DateInput
+                                                        <DateInput
                                                             value={receiveDate}
                                                             valueFormat="DD-MM-YYYY "
                                                             onChange={setReceiveDate}
@@ -268,7 +268,7 @@ function InhouseForm(Props) {
                                                                         style={{ width: '100%', height: '70%' }} stroke={1.5} />
                                                                 </Tooltip>
                                                             }
-                                                        />*/}
+                                                        />
                                                     </Box>
                                                 </Grid.Col>
                                             </Grid>
@@ -370,4 +370,4 @@ function InhouseForm(Props) {
     );
 }
 
-export default InhouseForm;
+export default _InhouseForm;
