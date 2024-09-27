@@ -869,7 +869,7 @@ function UserUpdateForm() {
                             tooltip={t("RequiredAndInvalidEmail")}
                             label={t("AlternativeEmail")}
                             placeholder={t("Email")}
-                            required={true}
+                            required={false}
                             name={"email"}
                             id={"email"}
                             nextField={"mobile"}
