@@ -124,8 +124,6 @@ const getSpotlightDropdownData = (t) => {
                     id: 'items',
                     label: t('ProductionReceipeN'),
                     description: t('WhereWePresentTheProductionReceipeInformationN'),
-
-
                 },
                 {
                     id: 'setting',
@@ -144,8 +142,6 @@ const getSpotlightDropdownData = (t) => {
                     id: 'batch',
                     label: t('ProductionInhouseN'),
                     description: t('WhereWePresentTheProductionInhouseInformationN'),
-
-
                 },
 
             ],

@@ -149,6 +149,7 @@ const crudSlice = createSlice({
         insertType: 'create',
         entityDataDelete: null,
         openingInlineUpdateStatus: null,
+        productionBatchFilterData: { invoice: '',},
         productionSettingFilterData: { setting_type_id: '',name:''},
         recipeItemFilterData: { setting_type_id: '',product_name:''},
         measurementInputData:[],
@@ -189,6 +190,9 @@ const crudSlice = createSlice({
         setProductionSettingFilterData: (state, action) => {
             state.productionSettingFilterData.setting_type_id = action.payload.setting_type_id
             state.productionSettingFilterData.name = action.payload.name
+        },
+        setProductionBatchFilterData: (state, action) => {
+            state.productionBatchFilterData.invoice = action.payload.invoice
         },
         setRecipeItemFilterData: (state, action) => {
             state.recipeItemFilterData.setting_type_id = action.payload.setting_type_id
@@ -278,6 +282,6 @@ const crudSlice = createSlice({
     }
 })
 
-export const { setFetching, setEntityNewData, setDropdownLoad, setEditEntityData, setFormLoading, setInsertType, setSearchKeyword, setDeleteMessage, setValidationData ,setProductFilterData,setProductionSettingFilterData,setValidationMessage,setRecipeItemFilterData,setUpdateMeasurementData} = crudSlice.actions
+export const { setFetching, setEntityNewData, setDropdownLoad, setEditEntityData, setFormLoading, setInsertType, setSearchKeyword, setDeleteMessage, setValidationData ,setProductFilterData,setProductionSettingFilterData,setValidationMessage,setRecipeItemFilterData,setUpdateMeasurementData,setProductionBatchFilterData} = crudSlice.actions
 
 export default crudSlice.reducer;

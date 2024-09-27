@@ -19,17 +19,17 @@ import {
 import { DataTable } from 'mantine-datatable';
 import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from 'react-i18next';
-import InhouseAddItem from "./InhouseAddItem.jsx";
+import __InhouseAddItem from "./__InhouseAddItem.jsx";
 import clsx from "clsx";
 import classes from "./NestedTablesExample.module.css";
 
-function InhouseTable(props) {
-    const {batchData} = props
+function _InhouseTable(props) {
+    const {setReloadBatchItemTable} = props
     const dispatch = useDispatch();
     const { t, i18n } = useTranslation();
     const { isOnline, mainAreaHeight } = useOutletContext();
     const height = mainAreaHeight - 120; //TabList height 104
-
+    const editedData = useSelector((state) => state.productionCrudSlice.entityEditData);
 
     const [expandedCompanyIds, setExpandedCompanyIds] = useState([]);
     const [expandedDepartmentIds, setExpandedDepartmentIds] = useState([]);
@@ -38,7 +38,7 @@ function InhouseTable(props) {
         <>
 
             <Box pb={'xs'} >
-                <InhouseAddItem />
+                <__InhouseAddItem setReloadBatchItemTable={setReloadBatchItemTable} />
             </Box>
             <Box className={'borderRadiusAll'}>
 
@@ -72,7 +72,7 @@ function InhouseTable(props) {
                         { accessor: 'status', title: t('Status') },
                         { accessor: 'action', title: t('Action') }
                     ]}
-                    records={batchData.batch_items}
+                    records={editedData.batch_items}
                     rowExpansion={{
                         allowMultiple: true,
                         expanded: { recordIds: expandedCompanyIds, onRecordIdsChange: setExpandedCompanyIds },
@@ -114,4 +114,4 @@ function InhouseTable(props) {
                             ;
                         }
 
-                        export default InhouseTable;
+                        export default _InhouseTable;

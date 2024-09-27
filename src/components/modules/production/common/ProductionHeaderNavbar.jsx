@@ -10,34 +10,74 @@ import classes from '../../../../assets/css/HeaderSearch.module.css';
 import {
     IconInfoCircle, IconTrash, IconSearch, IconSettings,IconRestore
 } from "@tabler/icons-react";
-import { useNavigate } from "react-router-dom";
+import {useLocation, useNavigate, useParams} from "react-router-dom";
 import {getIndexEntityData, getRestoreData} from "../../../../store/production/crudSlice";
+import axios from "axios";
 
 
 function ProductionHeaderNavbar(props) {
+    let { id } = useParams();
     const { pageTitle,roles } = props
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const [opened, { toggle }] = useDisclosure(false);
     const navigate = useNavigate();
+    const location = useLocation();
+    const currentRoute = location.pathname;
+    const CallProductionBatchCreateApi = (event) => {
+        event.preventDefault();
+        axios({
+            method: 'POST',
+            url: `${import.meta.env.VITE_API_GATEWAY_URL+'production/batch'}`,
+            headers: {
+                "Accept": `application/json`,
+                "Content-Type": `application/json`,
+                "Access-Control-Allow-Origin": '*',
+                "X-Api-Key": import.meta.env.VITE_API_KEY,
+                "X-Api-User": JSON.parse(localStorage.getItem('user')).id
+            },
+            data : {
+                mode : 'in-house'
+            }
+        })
+            .then(res => {
+                if (res.data.status === 200){
+                    navigate('/production/batch/'+res.data.data.id)
+                }
+            })
+            .catch(function (error) {
+                console.log(error)
+                alert(error)
+            })
+    }
+
     const links = [
-        { link: '/production/items', label: t('ProductionItems') },
-        { link: '/production/setting', label: t('ProductionSetting') },
-        { link: '/production/config', label: t('ProductionConfiguration') },
+        { link: '/production/batch/new', label: t('NewBatch'), show: currentRoute !== '/production/batch/'+id, onClick: CallProductionBatchCreateApi },
+        { link: '/production/batch', label: t('ProductionBatch'), show: currentRoute !== '/production/batch' },
+        { link: '/production/items', label: t('ProductionItems'),show: true },
+        { link: '/production/setting', label: t('ProductionSetting'),show: true },
+        { link: '/production/config', label: t('ProductionConfiguration'),show: true },
     ];
-    const items = links.map((link) => (
-        <a
-            key={link.label}
-            href={link.link}
-            className={classes.link}
-            onClick={(event) => {
-                event.preventDefault();
-                navigate(link.link)
-            }}
-        >
-            {link.label}
-        </a>
-    ));
+
+    const items = links
+        .filter(link => link.show)
+        .map((link) => (
+            <a
+                key={link.link}
+                href={link.link}
+                className={classes.link}
+                onClick={(event) => {
+                    if (link.label === t('NewBatch') && link.onClick) {
+                        link.onClick(event);  // Trigger custom click for NewBatch
+                    } else {
+                        event.preventDefault();
+                        navigate(link.link);  // Regular navigation for other links
+                    }
+                }}
+            >
+                {link.label}
+            </a>
+        ));
 
     const dataRestore = () => {
         dispatch(getRestoreData('production/restore/item'))

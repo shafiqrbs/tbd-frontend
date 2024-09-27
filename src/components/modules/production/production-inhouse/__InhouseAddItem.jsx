@@ -17,7 +17,8 @@ import {IconCheck} from "@tabler/icons-react";
 import {storeEntityData} from "../../../../store/production/crudSlice.js";
 import {useDispatch} from "react-redux";
 
-function InhouseAddItem() {
+function __InhouseAddItem(props) {
+    const {setReloadBatchItemTable} = props
     let { id } = useParams();
     const dispatch = useDispatch()
     const { t, i18n } = useTranslation();
@@ -67,7 +68,6 @@ function InhouseAddItem() {
                                         data: values
                                     }
                                     dispatch(storeEntityData(data))
-
                                     notifications.show({
                                         color: 'teal',
                                         title: t('CreateSuccessfully'),
@@ -78,7 +78,7 @@ function InhouseAddItem() {
                                     });
                                     setProductionItemData(null)
                                     form.reset()
-
+                                    setReloadBatchItemTable(true)
                                 } else {
                                     notifications.show({
                                         color: 'red',
@@ -178,4 +178,4 @@ function InhouseAddItem() {
     );
 }
 
-export default InhouseAddItem;
+export default __InhouseAddItem;
