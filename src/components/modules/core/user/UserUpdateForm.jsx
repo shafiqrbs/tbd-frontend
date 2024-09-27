@@ -12,13 +12,13 @@ import {
   Flex,
   Stack,
   Tooltip,
-  Image,
+  Image, ActionIcon,
 } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import {
   IconArrowsExchange,
   IconCheck,
-  IconDeviceFloppy,
+  IconDeviceFloppy, IconUsersGroup,
 } from "@tabler/icons-react";
 import { useHotkeys } from "@mantine/hooks";
 import InputForm from "../../../form-builders/InputForm";
@@ -41,6 +41,9 @@ import SelectForm from "../../../form-builders/SelectForm.jsx";
 import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
 import getLocationDropdownData from "../../../global-hook/dropdown/getLocationDropdownData.js";
 import TextAreaForm from "../../../form-builders/TextAreaForm.jsx";
+import {coreSettingDropdown} from "../../../../store/core/utilitySlice";
+import {setDropdownLoad} from "../../../../store/inventory/crudSlice";
+
 function UserUpdateForm() {
   const { t, i18n } = useTranslation();
   const dispatch = useDispatch();
@@ -52,10 +55,41 @@ function UserUpdateForm() {
   const entityEditData = useSelector((state) => state.crudSlice.entityEditData);
   const formLoading = useSelector((state) => state.crudSlice.formLoading);
   const locationDropdown = getLocationDropdownData();
-  console.log(locationDropdown);
+//  console.log(locationDropdown);
   const [locationData, setLocationData] = useState(null);
 
   const navigate = useNavigate();
+
+  const dropdownData = useSelector((state) => state.utilitySlice.customerGroupDropdownData);
+  const [customerGroupData, setCustomerGroupData] = useState(null);
+
+  let groupDropdownData = dropdownData && dropdownData.length > 0 ?
+      dropdownData.map((type, index) => {
+        return ({ 'label': type.name, 'value': String(type.id) })
+      }) : []
+  useEffect(() => {
+    const value = {
+      url: 'core/select/setting',
+      param: { 'dropdown-type': 'customer-group' }
+    }
+    dispatch(coreSettingDropdown(value))
+    dispatch(setDropdownLoad(false))
+  }, [dropdownData]);
+
+  let departmentDropdownData = dropdownData && dropdownData.length > 0 ?
+      dropdownData.map((type, index) => {
+        return ({ 'label': type.name, 'value': String(type.id) })
+      }) : []
+  useEffect(() => {
+    const value = {
+      url: 'core/select/setting',
+      param: { 'dropdown-type': 'department' }
+    }
+    dispatch(coreSettingDropdown(value))
+    dispatch(setDropdownLoad(false))
+  }, [dropdownData]);
+
+
 
   const form = useForm({
     initialValues: {
@@ -320,7 +354,7 @@ function UserUpdateForm() {
       >
         <Box>
           <Grid columns={24} gutter={{ base: 8 }}>
-            <Grid.Col span={7}>
+            <Grid.Col span={8}>
               <Box bg={"white"} p={"xs"} className={"borderRadiusAll"}>
                 <Box bg={"white"}>
                   <Box
@@ -355,6 +389,48 @@ function UserUpdateForm() {
                           overlayProps={{ radius: "sm", blur: 2 }}
                           loaderProps={{ color: "red.6" }}
                         />
+                        <Box>
+                          <Grid gutter={{ base: 6 }}>
+                            <Grid.Col span={11} >
+                              <Box mt={'8'}>
+                                <SelectForm
+                                    tooltip={t('CustomerGroup')}
+                                    label={t('EmployeeGroup')}
+                                    placeholder={t('ChooseCustomerGroup')}
+                                    required={true}
+                                    nextField={'name'}
+                                    name={'employee_group_id'}
+                                    form={form}
+                                    dropdownValue={groupDropdownData}
+                                    mt={8}
+                                    id={'employee_group_id'}
+                                    searchable={false}
+                                    value={customerGroupData}
+                                    changeValue={setCustomerGroupData}
+                                />
+                              </Box>
+                            </Grid.Col>
+                            <Grid.Col span={1}>
+                              <Box pt={'xl'}>
+                                <Tooltip
+                                    ta="center"
+                                    multiline
+                                    bg={'orange.8'}
+                                    offset={{ crossAxis: '-110', mainAxis: '5' }}
+                                    withArrow
+                                    transitionProps={{ duration: 200 }}
+                                    label={t('QuickCustomerGroup')}
+                                >
+                                  <ActionIcon variant="outline" bg={'white'} size={'lg'} color="red.5" mt={'1'} aria-label="Settings" onClick={() => {
+                                    setGroupDrawer(true)
+                                  }}>
+                                    <IconUsersGroup style={{ width: '100%', height: '70%' }} stroke={1.5} />
+                                  </ActionIcon>
+                                </Tooltip>
+                              </Box>
+                            </Grid.Col>
+                          </Grid>
+                        </Box>
                         <Box mt={"xs"}>
                           <InputForm
                             tooltip={t("UserNameValidateMessage")}
@@ -444,7 +520,7 @@ function UserUpdateForm() {
               </Box>
             </Grid.Col>
             {/* 2nd Box ----->  */}
-            <Grid.Col span={8}>
+            <Grid.Col span={7}>
               <Box bg={"white"} p={"xs"} className={"borderRadiusAll"}>
                 <Box bg={"white"}>
                   <Box
@@ -493,19 +569,6 @@ function UserUpdateForm() {
                               {t("Enabled")}
                             </Grid.Col>
                           </Grid>
-                        </Box>
-                      </Grid.Col>
-                      <Grid.Col span={6}>
-                        <Box mt={"xs"}>
-                          <InputForm
-                            tooltip={t("RequiredAndInvalidEmail")}
-                            placeholder={t("Email")}
-                            // required={true}
-                            name={"code"}
-                            form={form}
-                            id={"code"}
-                            nextField={"status"}
-                          />
                         </Box>
                       </Grid.Col>
                     </Grid>
@@ -799,34 +862,172 @@ function UserUpdateForm() {
                     type="never"
                   >
                     <Box>
+
                       <Box mt={"xs"}>
-                        <SelectForm
-                          tooltip={t("Location")}
-                          label={t("Location")}
-                          placeholder={t("ChooseLocation")}
-                          required={true}
-                          nextField={"about_me"}
-                          name={"location_id"}
+                        <InputForm
+                            form={form}
+                            tooltip={t("RequiredAndInvalidEmail")}
+                            label={t("AlternativeEmail")}
+                            placeholder={t("Email")}
+                            required={true}
+                            name={"email"}
+                            id={"email"}
+                            nextField={"mobile"}
+                            mt={8}
+                        />
+                      </Box>
+                      <Box>
+                        <Grid gutter={{ base: 6 }}>
+                          <Grid.Col span={11} >
+                            <Box mt={'8'}>
+                              <SelectForm
+                                  tooltip={t('CustomerGroup')}
+                                  label={t('Designation')}
+                                  placeholder={t('ChooseCustomerGroup')}
+                                  required={false}
+                                  nextField={'name'}
+                                  name={'designation_id'}
+                                  form={form}
+                                  dropdownValue={groupDropdownData}
+                                  mt={8}
+                                  id={'designation_id'}
+                                  searchable={false}
+                                  value={customerGroupData}
+                                  changeValue={setCustomerGroupData}
+                              />
+                            </Box>
+                          </Grid.Col>
+                          <Grid.Col span={1}>
+                            <Box pt={'xl'}>
+                              <Tooltip
+                                  ta="center"
+                                  multiline
+                                  bg={'orange.8'}
+                                  offset={{ crossAxis: '-110', mainAxis: '5' }}
+                                  withArrow
+                                  transitionProps={{ duration: 200 }}
+                                  label={t('QuickCustomerGroup')}
+                              >
+                                <ActionIcon variant="outline" bg={'white'} size={'lg'} color="red.5" mt={'1'} aria-label="Settings" onClick={() => {
+                                  setGroupDrawer(true)
+                                }}>
+                                  <IconUsersGroup style={{ width: '100%', height: '70%' }} stroke={1.5} />
+                                </ActionIcon>
+                              </Tooltip>
+                            </Box>
+                          </Grid.Col>
+                        </Grid>
+                      </Box>
+                      <Box>
+                        <Grid gutter={{ base: 6 }}>
+                          <Grid.Col span={11} >
+                            <Box mt={'8'}>
+                              <SelectForm
+                                  tooltip={t('CustomerGroup')}
+                                  label={t('Department')}
+                                  placeholder={t('ChooseCustomerGroup')}
+                                  required={false}
+                                  nextField={'name'}
+                                  name={'department_id'}
+                                  form={form}
+                                  dropdownValue={groupDropdownData}
+                                  mt={8}
+                                  id={'department_id'}
+                                  searchable={false}
+                                  value={customerGroupData}
+                                  changeValue={setCustomerGroupData}
+                              />
+                            </Box>
+                          </Grid.Col>
+                          <Grid.Col span={1}>
+                            <Box pt={'xl'}>
+                              <Tooltip
+                                  ta="center"
+                                  multiline
+                                  bg={'orange.8'}
+                                  offset={{ crossAxis: '-110', mainAxis: '5' }}
+                                  withArrow
+                                  transitionProps={{ duration: 200 }}
+                                  label={t('QuickCustomerGroup')}
+                              >
+                                <ActionIcon variant="outline" bg={'white'} size={'lg'} color="red.5" mt={'1'} aria-label="Settings" onClick={() => {
+                                  setGroupDrawer(true)
+                                }}>
+                                  <IconUsersGroup style={{ width: '100%', height: '70%' }} stroke={1.5} />
+                                </ActionIcon>
+                              </Tooltip>
+                            </Box>
+                          </Grid.Col>
+                        </Grid>
+                      </Box>
+
+                      <Box>
+                        <Grid gutter={{ base: 6 }}>
+                          <Grid.Col span={11} >
+                            <Box mt={'8'}>
+                              <SelectForm
+                                  tooltip={t('CustomerGroup')}
+                                  label={t('Location')}
+                                  placeholder={t('ChooseCustomerGroup')}
+                                  required={false}
+                                  nextField={'name'}
+                                  name={'location_id'}
+                                  form={form}
+                                  dropdownValue={groupDropdownData}
+                                  mt={8}
+                                  id={'location_id'}
+                                  searchable={false}
+                                  value={customerGroupData}
+                                  changeValue={setCustomerGroupData}
+                              />
+                            </Box>
+                          </Grid.Col>
+                          <Grid.Col span={1}>
+                            <Box pt={'xl'}>
+                              <Tooltip
+                                  ta="center"
+                                  multiline
+                                  bg={'orange.8'}
+                                  offset={{ crossAxis: '-110', mainAxis: '5' }}
+                                  withArrow
+                                  transitionProps={{ duration: 200 }}
+                                  label={t('QuickCustomerGroup')}
+                              >
+                                <ActionIcon variant="outline" bg={'white'} size={'lg'} color="red.5" mt={'1'} aria-label="Settings" onClick={() => {
+                                  setGroupDrawer(true)
+                                }}>
+                                  <IconUsersGroup style={{ width: '100%', height: '70%' }} stroke={1.5} />
+                                </ActionIcon>
+                              </Tooltip>
+                            </Box>
+                          </Grid.Col>
+                        </Grid>
+                      </Box>
+
+                      <Box mt={"xs"}>
+                        <TextAreaForm
+                          tooltip={t("Address")}
+                          label={t("Address")}
+                          placeholder={t("Address")}
+                          required={false}
+                          nextField={"is_selected"}
+                          name={"address"}
                           form={form}
-                          dropdownValue={locationDropdown}
                           mt={8}
-                          id={"location_id"}
-                          searchable={false}
-                          value={locationData}
-                          changeValue={setLocationData}
+                          id={"address"}
                         />
                       </Box>
                       <Box mt={"xs"}>
                         <TextAreaForm
-                          tooltip={t("AboutMe")}
-                          label={t("AboutMe")}
-                          placeholder={t("AboutMe")}
-                          required={false}
-                          nextField={"is_selected"}
-                          name={"about_me"}
-                          form={form}
-                          mt={8}
-                          id={"about_me"}
+                            tooltip={t("AboutMe")}
+                            label={t("AboutMe")}
+                            placeholder={t("AboutMe")}
+                            required={false}
+                            nextField={"is_selected"}
+                            name={"about_me"}
+                            form={form}
+                            mt={8}
+                            id={"about_me"}
                         />
                       </Box>
                       <Box mt={"sm"}>
