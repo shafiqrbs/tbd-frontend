@@ -603,5 +603,18 @@
   "CreateHeadSubGroup" : "Create Head Sub-Group",
   "UpdateAccountHeadSubGroup" : "Update Head Sub-Group",
   "NewBatch" : "New Batch",
+  "EmployeeGroup" : "Employee Group",
+  "ChooseEmployeeGroup" : "Choose employee group",
+  "Email&ACLInformation" : "Email & ACL Information",
+  "AccessControlRole" : "Access Control Role",
+  "AndroidControlRoles" : "Android Control Role",
+  "Address&Others" : "Address & Others",
+  "ChooseDesignation" : "Choose designation",
+  "Department" : "Department",
+  "ChooseDepartment" : "Choose department",
+  "AboutMe" : "About Me",
+  "ProfileImage" : "Profile Image",
+  "DigitalSignature" : "Digital Signature",
+  "AlternativeEmail" : "Alternative Email",
   "": ""
 }

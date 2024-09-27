@@ -1,0 +1,23 @@
+[
+  {
+    "Group": "Accounting",
+    "actions": [
+      { "id": "condition_account", "label": "Condition Account" },
+      { "id": "expenditure", "label": "Expenditure" },
+      { "id": "purchase", "label": "Purchase" },
+      { "id": "sales", "label": "Sales" },
+      { "id": "expenditure_purchase", "label": "Expenditure Purchase" },
+      { "id": "account_cash", "label": "Account Cash" },
+      { "id": "journal", "label": "Journal" }
+    ]
+  },
+  {
+    "Group": "HR & Payroll",
+    "actions": [
+      { "id": "human_resource", "label": "Human Resource" },
+      { "id": "hr_emplyment", "label": "HR Employment" },
+      { "id": "payroll", "label": "Payroll" },
+      { "id": "payroll_salary", "label": "Payroll Salary" }
+    ]
+  }
+]

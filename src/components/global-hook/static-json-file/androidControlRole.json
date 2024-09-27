@@ -1,0 +1,23 @@
+[
+  {
+    "Group": "Android Accounting",
+    "actions": [
+      { "id": "android_condition_account", "label": "Android Condition Account" },
+      { "id": "android_expenditure", "label": "Android Expenditure" },
+      { "id": "android_purchase", "label": "Android Purchase" },
+      { "id": "android_sales", "label": "Android Sales" },
+      { "id": "android_expenditure_purchase", "label": "Android Expenditure Purchase" },
+      { "id": "android_account_cash", "label": "Android Account Cash" },
+      { "id": "android_journal", "label": "Android Journal" }
+    ]
+  },
+  {
+    "Group": "Android HR & Payroll",
+    "actions": [
+      { "id": "android_human_resource", "label": "Android Human Resource" },
+      { "id": "android_hr_employment", "label": "Android HR Employment" },
+      { "id": "android_payroll", "label": "Android Payroll" },
+      { "id": "android_payroll_salary", "label": "Android Payroll Salary" }
+    ]
+  }
+]

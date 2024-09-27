@@ -116,6 +116,10 @@ const utilitySlice = createSlice({
         locationDropdownData : [],
         executiveDropdownData : [],
         customerGroupDropdownData : [],
+        employeeGroupDropdownData : [],
+        coreLocationDropdownData : [],
+        coreDesignationDropdownData : [],
+        coreDepartmentDropdownData : [],
     },
     reducers : {
         setFetching : (state,action) => {
@@ -160,6 +164,18 @@ const utilitySlice = createSlice({
         builder.addCase(coreSettingDropdown.fulfilled, (state, action) => {
             if (action.payload.type == 'customer-group'){
                 state.customerGroupDropdownData = action.payload.data.data
+            }
+            if (action.payload.type == 'employee-group'){
+                state.employeeGroupDropdownData = action.payload.data.data
+            }
+            if (action.payload.type == 'location'){
+                state.coreLocationDropdownData = action.payload.data.data
+            }
+            if (action.payload.type == 'designation'){
+                state.coreDesignationDropdownData = action.payload.data.data
+            }
+            if (action.payload.type == 'department'){
+                state.coreDepartmentDropdownData = action.payload.data.data
             }
         })
 
