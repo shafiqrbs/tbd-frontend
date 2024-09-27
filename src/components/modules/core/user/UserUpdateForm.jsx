@@ -11,9 +11,8 @@ import {
   Title,
   Flex,
   Stack,
-  ActionIcon,
-  Group,
-  List,
+  Tooltip,
+  Image,
 } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import {
@@ -24,7 +23,7 @@ import {
 import { useHotkeys } from "@mantine/hooks";
 import InputForm from "../../../form-builders/InputForm";
 import { useDispatch, useSelector } from "react-redux";
-import { hasLength, isEmail, isNotEmpty, useForm } from "@mantine/form";
+import { useForm } from "@mantine/form";
 import { modals } from "@mantine/modals";
 import {
   setEditEntityData,
@@ -38,6 +37,10 @@ import PasswordInputForm from "../../../form-builders/PasswordInputForm";
 import PhoneNumber from "../../../form-builders/PhoneNumberInput.jsx";
 import Shortcut from "../../shortcut/Shortcut.jsx";
 import SwitchForm from "../../../form-builders/SwitchForm.jsx";
+import SelectForm from "../../../form-builders/SelectForm.jsx";
+import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
+import getLocationDropdownData from "../../../global-hook/dropdown/getLocationDropdownData.js";
+import TextAreaForm from "../../../form-builders/TextAreaForm.jsx";
 function UserUpdateForm() {
   const { t, i18n } = useTranslation();
   const dispatch = useDispatch();
@@ -48,6 +51,9 @@ function UserUpdateForm() {
   const [formLoad, setFormLoad] = useState(true);
   const entityEditData = useSelector((state) => state.crudSlice.entityEditData);
   const formLoading = useSelector((state) => state.crudSlice.formLoading);
+  const locationDropdown = getLocationDropdownData();
+  console.log(locationDropdown);
+  const [locationData, setLocationData] = useState(null);
 
   const navigate = useNavigate();
 
@@ -252,6 +258,26 @@ function UserUpdateForm() {
     setAvailableData(newAvailableData);
   };
 
+  const [files, setFiles] = useState([]);
+
+  const previews = files.map((file, index) => {
+    const imageUrl = URL.createObjectURL(file);
+    return (
+      <>
+        <Flex h={150} justify={"center"} align={"center"} mt={"xs"}>
+          <Image
+            h={150}
+            w={150}
+            fit="cover"
+            key={index}
+            src={imageUrl}
+            onLoad={() => URL.revokeObjectURL(imageUrl)}
+          />
+        </Flex>
+      </>
+    );
+  });
+
   return (
     <Box>
       <form
@@ -307,30 +333,11 @@ function UserUpdateForm() {
                   >
                     <Grid>
                       <Grid.Col span={6}>
-                        <Title order={6} pt={"6"}>
+                        <Title order={6} pt={"6"} pb={4}>
                           {t("UpdateUser")}
                         </Title>
                       </Grid.Col>
                       <Grid.Col span={6}>
-                        <Stack right align="flex-end">
-                          <>
-                            {!saveCreateLoading && isOnline && (
-                              <Button
-                                size="xs"
-                                color={`green.8`}
-                                type="submit"
-                                id="EntityFormSubmit"
-                                leftSection={<IconDeviceFloppy size={16} />}
-                              >
-                                <Flex direction={`column`} gap={0}>
-                                  <Text fz={14} fw={400}>
-                                    {t("UpdateAndSave")}
-                                  </Text>
-                                </Flex>
-                              </Button>
-                            )}
-                          </>
-                        </Stack>
                       </Grid.Col>
                     </Grid>
                   </Box>
@@ -564,10 +571,10 @@ function UserUpdateForm() {
                           align={"center"}
                           justify={"center"}
                         >
-                            <IconArrowsExchange
-                              style={{ width: "70%", height: "70%" }}
-                              stroke={1}
-                            />
+                          <IconArrowsExchange
+                            style={{ width: "70%", height: "70%" }}
+                            stroke={1}
+                          />
                         </Flex>
                       </Grid.Col>
                       <Grid.Col span={11}>
@@ -584,7 +591,7 @@ function UserUpdateForm() {
                             pb={"xs"}
                           >
                             {selectedData
-                              .filter((group) => group.actions.length > 0) 
+                              .filter((group) => group.actions.length > 0)
                               .map((group) => (
                                 <Box key={group.Group} p={"sm"}>
                                   <Text fz={"14"} fw={400} c={"dimmed"}>
@@ -682,10 +689,10 @@ function UserUpdateForm() {
                           align={"center"}
                           justify={"center"}
                         >
-                            <IconArrowsExchange
-                              style={{ width: "70%", height: "70%" }}
-                              stroke={1}
-                            />
+                          <IconArrowsExchange
+                            style={{ width: "70%", height: "70%" }}
+                            stroke={1}
+                          />
                         </Flex>
                       </Grid.Col>
                       <Grid.Col span={11}>
@@ -702,7 +709,7 @@ function UserUpdateForm() {
                             pb={"xs"}
                           >
                             {selectedData
-                              .filter((group) => group.actions.length > 0) 
+                              .filter((group) => group.actions.length > 0)
                               .map((group) => (
                                 <Box key={group.Group} p={"sm"}>
                                   <Text fz={"14"} fw={400} c={"dimmed"}>
@@ -790,7 +797,128 @@ function UserUpdateForm() {
                     scrollbarSize={2}
                     scrollbars="y"
                     type="never"
-                  ></ScrollArea>
+                  >
+                    <Box>
+                      <Box mt={"xs"}>
+                        <SelectForm
+                          tooltip={t("Location")}
+                          label={t("Location")}
+                          placeholder={t("ChooseLocation")}
+                          required={true}
+                          nextField={"about_me"}
+                          name={"location_id"}
+                          form={form}
+                          dropdownValue={locationDropdown}
+                          mt={8}
+                          id={"location_id"}
+                          searchable={false}
+                          value={locationData}
+                          changeValue={setLocationData}
+                        />
+                      </Box>
+                      <Box mt={"xs"}>
+                        <TextAreaForm
+                          tooltip={t("AboutMe")}
+                          label={t("AboutMe")}
+                          placeholder={t("AboutMe")}
+                          required={false}
+                          nextField={"is_selected"}
+                          name={"about_me"}
+                          form={form}
+                          mt={8}
+                          id={"about_me"}
+                        />
+                      </Box>
+                      <Box mt={"sm"}>
+                        <Text fz={14} fw={400} mb={2}>
+                          {t("ProfileImage")}
+                        </Text>
+                        <Tooltip
+                          label={t("ChooseImage")}
+                          opened={
+                            "path" in form.errors && !!form.errors["path"]
+                          }
+                          px={16}
+                          py={2}
+                          position="top-end"
+                          color="red"
+                          withArrow
+                          offset={2}
+                          zIndex={999}
+                          transitionProps={{
+                            transition: "pop-bottom-left",
+                            duration: 500,
+                          }}
+                        >
+                          <Dropzone
+                            label={t("ChooseImage")}
+                            accept={IMAGE_MIME_TYPE}
+                            onDrop={(e) => {
+                              setFiles(e);
+                              form.setFieldError("path", false);
+                              form.setFieldValue("path", true);
+                            }}
+                          >
+                            <Text ta="center">
+                              {files && files.length > 0 && files[0].path ? (
+                                files[0].path
+                              ) : (
+                                <span>
+                                  Drop Profile Image Here (150 * 150){" "}
+                                  <span style={{ color: "red" }}>*</span>
+                                </span>
+                              )}
+                            </Text>
+                          </Dropzone>
+                        </Tooltip>
+                        {previews}
+                      </Box>
+                      <Box mt={"sm"}>
+                        <Text fz={14} fw={400} mb={2}>
+                          {t("DigitalSignature")}
+                        </Text>
+                        <Tooltip
+                          label={t("ChooseImage")}
+                          opened={
+                            "path" in form.errors && !!form.errors["path"]
+                          }
+                          px={16}
+                          py={2}
+                          position="top-end"
+                          color="red"
+                          withArrow
+                          offset={2}
+                          zIndex={999}
+                          transitionProps={{
+                            transition: "pop-bottom-left",
+                            duration: 500,
+                          }}
+                        >
+                          <Dropzone
+                            label={t("ChooseImage")}
+                            accept={IMAGE_MIME_TYPE}
+                            onDrop={(e) => {
+                              setFiles(e);
+                              form.setFieldError("path", false);
+                              form.setFieldValue("path", true);
+                            }}
+                          >
+                            <Text ta="center">
+                              {files && files.length > 0 && files[0].path ? (
+                                files[0].path
+                              ) : (
+                                <span>
+                                  Drop Digital Signature Here (150 * 150){" "}
+                                  <span style={{ color: "red" }}>*</span>
+                                </span>
+                              )}
+                            </Text>
+                          </Dropzone>
+                        </Tooltip>
+                        {previews}
+                      </Box>
+                    </Box>
+                  </ScrollArea>
                 </Box>
               </Box>
             </Grid.Col>
