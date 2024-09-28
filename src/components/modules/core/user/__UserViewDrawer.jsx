@@ -15,7 +15,7 @@ import { useSelector } from "react-redux";
 
 
 
-function UserViewDrawer(props) {
+function __UserViewDrawer(props) {
 
     const entityEditData = useSelector((state => state.crudSlice.entityEditData))
 
@@ -84,4 +84,4 @@ function UserViewDrawer(props) {
     );
 }
 
-export default UserViewDrawer;
+export default __UserViewDrawer;

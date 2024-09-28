@@ -5,7 +5,7 @@ import {
     editData,
     getDataWithoutParam,
     getDataWithParam, inlineStatusUpdateData, showData,
-    updateData
+    updateData, updateDataWithFile
 } from "../../services/apiService";
 
 export const getIndexEntityData = createAsyncThunk("index", async (value) => {
@@ -61,6 +61,16 @@ export const editEntityData = createAsyncThunk("edit", async (value) => {
 export const updateEntityData = createAsyncThunk("update", async (value) => {
     try {
         const response = updateData(value);
+        return response;
+    } catch (error) {
+        console.log('error', error.message);
+        throw error;
+    }
+});
+
+export const updateEntityDataWithFile = createAsyncThunk("update-with-file", async (value) => {
+    try {
+        const response = updateDataWithFile(value);
         return response;
     } catch (error) {
         console.log('error', error.message);
@@ -186,6 +196,10 @@ const crudSlice = createSlice({
         })
 
         builder.addCase(updateEntityData.fulfilled, (state, action) => {
+            state.updateEntityData = action.payload.data.data
+        })
+
+        builder.addCase(updateEntityDataWithFile.fulfilled, (state, action) => {
             state.updateEntityData = action.payload.data.data
         })
 

@@ -30,7 +30,7 @@ import {
     setFetching,
     setFormLoading,
     setInsertType,
-    updateEntityData,
+    updateEntityData, updateEntityDataWithFile,
 } from "../../../../store/core/crudSlice.js";
 import {notifications} from "@mantine/notifications";
 import PasswordInputForm from "../../../form-builders/PasswordInputForm";
@@ -39,10 +39,7 @@ import Shortcut from "../../shortcut/Shortcut.jsx";
 import SwitchForm from "../../../form-builders/SwitchForm.jsx";
 import SelectForm from "../../../form-builders/SelectForm.jsx";
 import {Dropzone, IMAGE_MIME_TYPE} from "@mantine/dropzone";
-import getLocationDropdownData from "../../../global-hook/dropdown/getLocationDropdownData.js";
 import TextAreaForm from "../../../form-builders/TextAreaForm.jsx";
-import {coreSettingDropdown} from "../../../../store/core/utilitySlice";
-import {setDropdownLoad} from "../../../../store/inventory/crudSlice";
 import getCoreSettingEmployeeGroupDropdownData
     from "../../../global-hook/dropdown/core/getCoreSettingEmployeeGroupDropdownData.js";
 import getCoreSettingLocationDropdownData
@@ -55,7 +52,7 @@ import getCoreSettingDepartmentDropdownData
 import accessControlRoleStaticData from "../../../global-hook/static-json-file/accessControlRole.json"
 import androidControlRoleStaticData from "../../../global-hook/static-json-file/androidControlRole.json"
 
-function UserUpdateForm() {
+function _UserUpdateForm() {
     const {t, i18n} = useTranslation();
     const dispatch = useDispatch();
     const {isOnline, mainAreaHeight} = useOutletContext();
@@ -67,22 +64,25 @@ function UserUpdateForm() {
     const formLoading = useSelector((state) => state.crudSlice.formLoading);
     const navigate = useNavigate();
 
-
-    const dropdownData = useSelector((state) => state.utilitySlice.customerGroupDropdownData);
     const [employeeGroupData, setEmployeeGroupData] = useState(null);
     const [departmentData, setDepartmentData] = useState(null);
     const [designationData, setDesignationData] = useState(null);
     const [locationData, setLocationData] = useState(null);
 
-
     const form = useForm({
         initialValues: {
+            employee_group_id: entityEditData?.employee_group_id || "",
             name: entityEditData?.name || "",
             username: entityEditData?.username || "",
             email: entityEditData?.email || "",
             mobile: entityEditData?.mobile || "",
-            password: "",
-            confirm_password: "",
+            enabled: entityEditData?.enabled || 0,
+            alternative_email: entityEditData?.alternative_email || null,
+            designation_id: entityEditData?.designation_id || null,
+            department_id: entityEditData?.department_id || null,
+            location_id: entityEditData?.location_id || null,
+            address: entityEditData?.address || null,
+            about_me: entityEditData?.about_me || null,
         },
         validate: {
             name: (value) => {
@@ -144,12 +144,18 @@ function UserUpdateForm() {
     useEffect(() => {
         if (entityEditData) {
             form.setValues({
+                employee_group_id: entityEditData?.employee_group_id || "",
                 name: entityEditData?.name || "",
                 username: entityEditData?.username || "",
                 email: entityEditData?.email || "",
                 mobile: entityEditData?.mobile || "",
-                password: "",
-                confirm_password: "",
+                enabled: entityEditData?.enabled || 0,
+                alternative_email: entityEditData?.alternative_email || null,
+                designation_id: entityEditData?.designation_id || null,
+                department_id: entityEditData?.department_id || null,
+                location_id: entityEditData?.location_id || null,
+                address: entityEditData?.address || null,
+                about_me: entityEditData?.about_me || null,
             });
         }
         dispatch(setFormLoading(false));
@@ -195,18 +201,57 @@ function UserUpdateForm() {
         []
     );
 
-    const [accessControlRole, setAccessControlRole] = useState(accessControlRoleStaticData?accessControlRoleStaticData:[]);
-    const [selectedAccessControlRoleData, setSelectedAccessControlRoleData] = useState([
-        {Group: "Accounting", actions: []},
-        {Group: "HR & Payroll", actions: []},
+    //start access control role
+    const [accessControlRole, setAccessControlRole] = useState(
+        accessControlRoleStaticData ? accessControlRoleStaticData : []
+    );
+
+    const [defaultGroupData] = useState([
+        { Group: "Accounting", actions: [] },
+        { Group: "HR & Payroll", actions: [] },
     ]);
+
+    const [selectedAccessControlRoleData, setSelectedAccessControlRoleData] = useState(defaultGroupData);
+
+    useEffect(() => {
+        if (entityEditData && Array.isArray(entityEditData.access_control_roles)) {
+            if (entityEditData.access_control_roles.length > 0) {
+                setSelectedAccessControlRoleData(entityEditData.access_control_roles);
+            } else {
+                setSelectedAccessControlRoleData(defaultGroupData);
+            }
+        }
+    }, [entityEditData]);
+
+    useEffect(() => {
+        if (selectedAccessControlRoleData.length > 0) {
+            function removeMatchingData(data1, data2) {
+                return data1.map(group1 => {
+                    const matchingGroup = data2.find(group2 => group2.Group === group1.Group);
+
+                    if (matchingGroup) {
+                        return {
+                            ...group1,
+                            actions: group1.actions.filter(action1 => {
+                                return !matchingGroup.actions.some(action2 => action2.id === action1.id);
+                            }),
+                        };
+                    }
+                    return group1;
+                });
+            }
+
+            const result = removeMatchingData([...accessControlRole], selectedAccessControlRoleData);
+            setAccessControlRole(result);
+        }
+    }, [selectedAccessControlRoleData]);
 
     const handleSelectAccessControlRoleData = (group, action) => {
-        const newAvailableData = accessControlRole.map((g) => {
+        const newAvailableData = accessControlRole.map(g => {
             if (g.Group === group.Group) {
                 return {
                     ...g,
-                    actions: g.actions.filter((a) => a.id !== action.id),
+                    actions: g.actions.filter(a => a.id !== action.id),
                 };
             }
             return g;
@@ -214,7 +259,7 @@ function UserUpdateForm() {
 
         setAccessControlRole(newAvailableData);
 
-        const newSelectedData = selectedAccessControlRoleData.map((g) => {
+        const newSelectedData = selectedAccessControlRoleData.map(g => {
             if (g.Group === group.Group) {
                 return {
                     ...g,
@@ -226,12 +271,13 @@ function UserUpdateForm() {
 
         setSelectedAccessControlRoleData(newSelectedData);
     };
+
     const handleDeselectAccessControlRoleData = (group, action) => {
-        const newSelectedData = selectedAccessControlRoleData.map((g) => {
+        const newSelectedData = selectedAccessControlRoleData.map(g => {
             if (g.Group === group.Group) {
                 return {
                     ...g,
-                    actions: g.actions.filter((a) => a.id !== action.id),
+                    actions: g.actions.filter(a => a.id !== action.id),
                 };
             }
             return g;
@@ -239,7 +285,7 @@ function UserUpdateForm() {
 
         setSelectedAccessControlRoleData(newSelectedData);
 
-        const newAvailableData = accessControlRole.map((g) => {
+        const newAvailableData = accessControlRole.map(g => {
             if (g.Group === group.Group) {
                 return {
                     ...g,
@@ -252,12 +298,53 @@ function UserUpdateForm() {
         setAccessControlRole(newAvailableData);
     };
 
-    const [androidControlRole, setAndroidControlRole] = useState(androidControlRoleStaticData?androidControlRoleStaticData:[]);
-    const [selectedAndroidControlRoleData, setSelectedAndroidControlRoleData] = useState([
-        {Group: "Android Accounting", actions: []},
-        {Group: "Android HR & Payroll", actions: []},
+    // end access control role
+
+    // start android control roles
+    const [androidControlRole, setAndroidControlRole] = useState(
+        androidControlRoleStaticData ? androidControlRoleStaticData : []
+    );
+
+    const [defaultAndroidGroupData] = useState([
+        { Group: "Android Accounting", actions: [] },
+        { Group: "Android HR & Payroll", actions: [] },
     ]);
 
+    const [selectedAndroidControlRoleData, setSelectedAndroidControlRoleData] = useState(defaultAndroidGroupData);
+
+    useEffect(() => {
+        if (entityEditData && Array.isArray(entityEditData.android_control_role)) {
+            if (entityEditData.android_control_role.length > 0) {
+                setSelectedAndroidControlRoleData(entityEditData.android_control_role);
+            } else {
+                setSelectedAndroidControlRoleData(defaultAndroidGroupData);
+            }
+        }
+    }, [entityEditData]);
+
+    useEffect(() => {
+        if (selectedAndroidControlRoleData.length > 0) {
+            function removeMatchingData(data1, data2) {
+                return data1.map((group1) => {
+                    const matchingGroup = data2.find((group2) => group2.Group === group1.Group);
+
+                    if (matchingGroup) {
+                        return {
+                            ...group1,
+                            actions: group1.actions.filter((action1) => {
+                                return !matchingGroup.actions.some((action2) => action2.id === action1.id);
+                            }),
+                        };
+                    }
+
+                    return group1;
+                });
+            }
+
+            const result = removeMatchingData([...androidControlRole], selectedAndroidControlRoleData);
+            setAndroidControlRole(result);
+        }
+    }, [selectedAndroidControlRoleData]);
     const handleSelectAndroidControlRoleData = (group, action) => {
         const newAvailableData = androidControlRole.map((g) => {
             if (g.Group === group.Group) {
@@ -270,7 +357,6 @@ function UserUpdateForm() {
         });
 
         setAndroidControlRole(newAvailableData);
-
         const newSelectedData = selectedAndroidControlRoleData.map((g) => {
             if (g.Group === group.Group) {
                 return {
@@ -295,12 +381,11 @@ function UserUpdateForm() {
         });
 
         setSelectedAndroidControlRoleData(newSelectedData);
-
-        const newAvailableData = accessControlRole.map((g) => {
+        const newAvailableData = androidControlRole.map((g) => {
             if (g.Group === group.Group) {
                 return {
                     ...g,
-                    actions: [...g.actions, action],
+                    actions: [...g.actions, action], // Re-add the deselected action
                 };
             }
             return g;
@@ -308,6 +393,8 @@ function UserUpdateForm() {
 
         setAndroidControlRole(newAvailableData);
     };
+    // end andriod access role
+
 
     const [profileImage, setProfileImage] = useState([]);
     const [digitalSignature, setDigitalSignature] = useState([]);
@@ -329,7 +416,7 @@ function UserUpdateForm() {
             </>
         );
     });
-    const previewsdigitalSignature = digitalSignature.map((file, index) => {
+    const previewsDigitalSignature = digitalSignature.map((file, index) => {
         const imageUrl = URL.createObjectURL(file);
         return (
             <>
@@ -353,10 +440,8 @@ function UserUpdateForm() {
                 onSubmit={form.onSubmit((values) => {
                     form.values['access_control_role'] = selectedAccessControlRoleData
                     form.values['android_control_role'] = selectedAndroidControlRoleData
-                    form.values['profile_image'] = profileImage[0]
-                    form.values['digital_signature'] = digitalSignature[0]
-                    console.log(values)
-                    /*modals.openConfirmModal({
+
+                    modals.openConfirmModal({
                       title: <Text size="md"> {t("FormConfirmationTitle")}</Text>,
                       children: <Text size="sm"> {t("FormConfirmationMessage")}</Text>,
                       labels: { confirm: t("Submit"), cancel: t("Cancel") },
@@ -389,7 +474,7 @@ function UserUpdateForm() {
                           navigate("/core/user", { replace: true });
                         }, 700);
                       },
-                    });*/
+                    });
                 })}
             >
                 <Box>
@@ -446,7 +531,7 @@ function UserUpdateForm() {
                                                                     mt={8}
                                                                     id={'employee_group_id'}
                                                                     searchable={false}
-                                                                    value={employeeGroupData}
+                                                                    value={employeeGroupData?employeeGroupData:String(entityEditData.employee_group_id)}
                                                                     changeValue={setEmployeeGroupData}
                                                                 />
                                                             </Box>
@@ -598,6 +683,12 @@ function UserUpdateForm() {
                                         <Grid columns={12} gutter={0}>
                                             <Grid.Col span={6}>
                                                 <Box mt={"md"} ml={"xs"}>
+                                                    <LoadingOverlay
+                                                        visible={formLoad}
+                                                        zIndex={1000}
+                                                        overlayProps={{radius: "sm", blur: 2}}
+                                                        loaderProps={{color: "red.6"}}
+                                                    />
                                                     <Grid gutter={{base: 1}}>
                                                         <Grid.Col span={2}>
                                                             <SwitchForm
@@ -609,7 +700,7 @@ function UserUpdateForm() {
                                                                 color="red"
                                                                 id={"enabled"}
                                                                 position={"left"}
-                                                                defaultChecked={1}
+                                                                checked={entityEditData.enabled || false}
                                                             />
                                                         </Grid.Col>
                                                         <Grid.Col ml={"xs"} span={6} fz={"sm"} pt={"1"}>
@@ -911,7 +1002,12 @@ function UserUpdateForm() {
                                         type="never"
                                     >
                                         <Box>
-
+                                            <LoadingOverlay
+                                                visible={formLoad}
+                                                zIndex={1000}
+                                                overlayProps={{radius: "sm", blur: 2}}
+                                                loaderProps={{color: "red.6"}}
+                                            />
                                             <Box mt={"xs"}>
                                                 <InputForm
                                                     form={form}
@@ -941,7 +1037,7 @@ function UserUpdateForm() {
                                                                 mt={8}
                                                                 id={'designation_id'}
                                                                 searchable={false}
-                                                                value={designationData}
+                                                                value={designationData?designationData:String(entityEditData.designation_id)}
                                                                 changeValue={setDesignationData}
                                                             />
                                                         </Box>
@@ -987,7 +1083,7 @@ function UserUpdateForm() {
                                                                 mt={8}
                                                                 id={'department_id'}
                                                                 searchable={false}
-                                                                value={departmentData}
+                                                                value={departmentData?designationData:String(entityEditData.department_id)}
                                                                 changeValue={setDepartmentData}
                                                             />
                                                         </Box>
@@ -1034,7 +1130,7 @@ function UserUpdateForm() {
                                                                 mt={8}
                                                                 id={'location_id'}
                                                                 searchable={false}
-                                                                value={locationData}
+                                                                value={locationData?locationData:String(entityEditData.location_id)}
                                                                 changeValue={setLocationData}
                                                             />
                                                         </Box>
@@ -1116,9 +1212,14 @@ function UserUpdateForm() {
                                                         label={t("ChooseImage")}
                                                         accept={IMAGE_MIME_TYPE}
                                                         onDrop={(e) => {
+                                                            const value = {
+                                                                url: "core/user/image-inline/" + entityEditData.id,
+                                                                data: {
+                                                                    profile_image :e[0]
+                                                                },
+                                                            };
+                                                            dispatch(updateEntityDataWithFile(value))
                                                             setProfileImage(e);
-                                                            form.setFieldError("path", false);
-                                                            form.setFieldValue("path", true);
                                                         }}
                                                     >
                                                         <Text ta="center">
@@ -1130,7 +1231,17 @@ function UserUpdateForm() {
                                                         </Text>
                                                     </Dropzone>
                                                 </Tooltip>
-                                                {previewsProfile}
+                                                {profileImage.length > 0?previewsProfile:
+                                                    <Flex h={150} justify={"center"} align={"center"} mt={"xs"}>
+                                                        <Image
+                                                            h={150}
+                                                            w={150}
+                                                            fit="cover"
+                                                            key={9999}
+                                                            src={entityEditData.path}
+                                                        />
+                                                    </Flex>
+                                                }
                                             </Box>
                                             <Box mt={"sm"}>
                                                 <Text fz={14} fw={400} mb={2}>
@@ -1157,9 +1268,14 @@ function UserUpdateForm() {
                                                         label={t("ChooseImage")}
                                                         accept={IMAGE_MIME_TYPE}
                                                         onDrop={(e) => {
+                                                            const value = {
+                                                                url: "core/user/image-inline/" + entityEditData.id,
+                                                                data: {
+                                                                    digital_signature :e[0]
+                                                                },
+                                                            };
+                                                            dispatch(updateEntityDataWithFile(value))
                                                             setDigitalSignature(e);
-                                                            form.setFieldError("path", false);
-                                                            form.setFieldValue("path", true);
                                                         }}
                                                     >
                                                         <Text ta="center">
@@ -1171,7 +1287,17 @@ function UserUpdateForm() {
                                                         </Text>
                                                     </Dropzone>
                                                 </Tooltip>
-                                                {previewsdigitalSignature}
+                                                {digitalSignature.length > 0?previewsDigitalSignature:
+                                                    <Flex h={150} justify={"center"} align={"center"} mt={"xs"}>
+                                                        <Image
+                                                            h={150}
+                                                            w={150}
+                                                            fit="cover"
+                                                            key={9999}
+                                                            src={entityEditData.signature_path}
+                                                        />
+                                                    </Flex>
+                                                }
                                             </Box>
                                         </Box>
                                     </ScrollArea>
@@ -1201,4 +1327,4 @@ function UserUpdateForm() {
     );
 }
 
-export default UserUpdateForm;
+export default _UserUpdateForm;

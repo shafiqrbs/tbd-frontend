@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
 import { Box, Grid, Progress } from "@mantine/core";
 import { useDispatch, useSelector } from "react-redux";
-import UserTable from "./UserTable.jsx";
-import UserForm from "./UserForm.jsx";
-import UserUpdateForm from "./UserUpdateForm.jsx";
+import _UserTable from "./_UserTable.jsx";
+import _UserForm from "./_UserForm.jsx";
+import _UserUpdateForm from "./_UserUpdateForm.jsx";
 import { useTranslation } from "react-i18next";
 import {
   editEntityData,
@@ -69,12 +69,12 @@ function UserIndex() {
               {insertType === "create" && (
                 <Grid.Col span={15}>
                   <Box bg={"white"} p={"xs"} className={"borderRadiusAll"}>
-                    <UserTable />
+                    <_UserTable />
                   </Box>
                 </Grid.Col>
               )}
               <Grid.Col span={insertType === 'create' ? 9 : 24}>
-                {insertType === "create" ? <UserForm /> : <UserUpdateForm />}
+                {insertType === "create" ? <_UserForm /> : <_UserUpdateForm />}
               </Grid.Col>
             </Grid>
           </Box>

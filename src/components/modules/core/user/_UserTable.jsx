@@ -24,10 +24,10 @@ import {
 import { modals } from "@mantine/modals";
 import KeywordSearch from "../../filter/KeywordSearch.jsx";
 import tableCss from "../../../../assets/css/Table.module.css";
-import UserViewDrawer from "./UserViewDrawer.jsx";
+import __UserViewDrawer from "./__UserViewDrawer.jsx";
 import { notifications } from "@mantine/notifications";
 
-function UserTable() {
+function _UserTable() {
     const dispatch = useDispatch();
     const { t, i18n } = useTranslation();
     const { isOnline, mainAreaHeight } = useOutletContext();
@@ -192,11 +192,11 @@ function UserTable() {
                 />
             </Box>
             {
-                viewDrawer && <UserViewDrawer viewDrawer={viewDrawer} setViewDrawer={setViewDrawer} />
+                viewDrawer && <__UserViewDrawer viewDrawer={viewDrawer} setViewDrawer={setViewDrawer} />
             }
 
         </>
     );
 }
 
-export default UserTable;
+export default _UserTable;

@@ -24,7 +24,7 @@ import { notifications } from "@mantine/notifications";
 import PhoneNumber from "../../../form-builders/PhoneNumberInput.jsx";
 import Shortcut from "../../shortcut/Shortcut.jsx";
 
-function UserForm() {
+function _UserForm() {
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
@@ -258,4 +258,4 @@ function UserForm() {
         </Box>
     )
 }
-export default UserForm;
+export default _UserForm;
