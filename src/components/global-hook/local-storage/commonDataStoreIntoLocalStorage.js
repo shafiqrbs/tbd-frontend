@@ -7,6 +7,7 @@ const commonDataStoreIntoLocalStorage = async (user_id) => {
         'core/vendor/local-storage',
         'core/user/local-storage',
         'accounting/transaction-mode/local-storage',
+        'inventory/config',
     ];
     const localStorageKeys = [
         'core-products',
@@ -14,6 +15,7 @@ const commonDataStoreIntoLocalStorage = async (user_id) => {
         'core-vendors',
         'core-users',
         'accounting-transaction-mode',
+        'config-data',
     ];
 
     for (let i = 0; i < apiBackendRoutes.length; i++) {

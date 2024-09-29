@@ -27,19 +27,14 @@ import getConfigData from "./global-hook/config-data/getConfigData.js";
 
 export default function Login() {
 
-    const dispatch = useDispatch();
     const { t, i18n } = useTranslation();
     const navigate = useNavigate()
-    const { height, width } = useViewportSize()
-    const configData = getConfigData()
-
     const icon = <IconInfoCircle />;
 
     const [spinner, setSpinner] = useState(false);
     const [errorMessage, setErrorMessage] = useState('')
 
     const user = localStorage.getItem("user");
-
 
     if (user) {
         return <Navigate replace to="/" />;
@@ -71,12 +66,9 @@ export default function Login() {
             .then(res => {
                 setTimeout(() => {
                     if (res.data.status === 200) {
-
                         localStorage.setItem("user", JSON.stringify(res.data.data));
                         const allLocal = commonDataStoreIntoLocalStorage(res.data.data.id)
                         const orderProcess = orderProcessDropdownLocalDataStore(res.data.data.id)
-
-                        localStorage.setItem('config-data', JSON.stringify(configData));
 
                         setErrorMessage('')
                         setSpinner(false)

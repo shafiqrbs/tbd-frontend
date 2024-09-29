@@ -39,6 +39,7 @@ import { hasLength, isNotEmpty, useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
 
 import {
+  getIndexEntityData,
   setEditEntityData,
   setFetching,
   setFormLoading,
@@ -53,19 +54,22 @@ import getSettingProductTypeDropdownData from "../../../global-hook/dropdown/get
 import getSettingProductUnitDropdownData from "../../../global-hook/dropdown/getSettingProductUnitDropdownData.js";
 import InputButtonForm from "../../../form-builders/InputButtonForm";
 import {
-  deleteEntityData,
+  deleteEntityData, setDropdownLoad,getIndexEntityData as getIndexEntityDataForInventory,
   storeEntityData,
 } from "../../../../store/inventory/crudSlice.js";
 import { modals } from "@mantine/modals";
 import { Dropzone } from "@mantine/dropzone";
 import productsDataStoreIntoLocalStorage from "../../../global-hook/local-storage/productsDataStoreIntoLocalStorage.js";
+import {getCategoryDropdown} from "../../../../store/inventory/utilitySlice.js";
 
 function ProductUpdateForm(props) {
   const { categoryDropdown } = props;
+  const { id } = useParams()
   const { t, i18n } = useTranslation();
   const dispatch = useDispatch();
   const { isOnline, mainAreaHeight } = useOutletContext();
   const height = mainAreaHeight / 2; //TabList height 104
+  const configData = localStorage.getItem('config-data') ? JSON.parse(localStorage.getItem('config-data')) : []
 
   const [saveCreateLoading, setSaveCreateLoading] = useState(false);
   const [setFormData, setFormDataForUpdate] = useState(false);
@@ -73,6 +77,8 @@ function ProductUpdateForm(props) {
 
   const entityEditData = useSelector((state) => state.crudSlice.entityEditData);
   const formLoading = useSelector((state) => state.crudSlice.formLoading);
+  // const measurementValidationMessage = useSelector((state) => state.inventoryCrudSlice.validationMessage);
+  // console.log(measurementValidationMessage)
 
   const [categoryData, setCategoryData] = useState(null);
   const [productTypeData, setProductTypeData] = useState(null);
@@ -93,8 +99,9 @@ function ProductUpdateForm(props) {
 
   // forms enable disable comes from config
 
-  const [loadMeasurment, setLoadMeasurment] = useState(true);
-  const [loadGallery, setLoadGallery] = useState(true);
+  const [loadMeasurement, setLoadMeasurement] = useState(!!(configData?.is_measurement === 1));
+  const [loadGallery, setLoadGallery] = useState(!!(configData?.is_product_gallery === 1));
+
   const [loadSku, setLoadSku] = useState(true);
   const [vat_integration, setVat_integration] = useState(true);
 
@@ -163,10 +170,50 @@ function ProductUpdateForm(props) {
     (skuForm.values["product_id"] = "124"),
       console.log("Child form sku values:", skuForm.values);
   };
-  const handlemeasurementFormSubmit = (values) => {
-    measurementForm.values["product_id"] = "123";
-    console.log("Child form measurement values:", values);
+
+  /*product measurement data handle*/
+  const measurementData = useSelector((state) => state.inventoryCrudSlice.indexEntityData)
+  const [reloadMeasurementData,setReloadMeasurementData] = useState(false)
+  const HandleMeasurementFormSubmit = (values) => {
+    const isUnitIdExists = measurementData.data.some(unit => unit.unit_id == values.unit_id);
+
+    if (isUnitIdExists) {
+      notifications.show({
+        loading: true,
+        color: 'red',
+        title: 'Unit already exists',
+        message: 'Data will be loaded in 3 seconds, you cannot close this yet',
+        autoClose: 1000,
+        withCloseButton: true,
+      });
+      return;
+    }
+
+    measurementForm.values.product_id = id;
+
+    dispatch(storeEntityData({
+      url: 'inventory/product/measurement',
+      data: values
+    }));
+    setReloadMeasurementData(true);
+    setMeasurmentUnitData(null)
+    measurementForm.reset()
   };
+
+
+  /*get product measurement*/
+  useEffect(() => {
+    const value = {
+      url: 'inventory/product/measurement/'+id,
+      param: {
+        test: 1
+      }
+    }
+    dispatch(getIndexEntityDataForInventory(value))
+    setReloadMeasurementData(false)
+  }, [reloadMeasurementData]);
+
+
 
   const [featureImage, setFeatureImage] = useState(null);
   const [additionalImages, setAdditionalImages] = useState(Array(4).fill(null));
@@ -652,8 +699,10 @@ function ProductUpdateForm(props) {
                 </Box>
               </Box>
             </Grid.Col>
+
+             {/*masurement start*/}
             <Grid.Col span={8}>
-              {loadMeasurment && (
+              {loadMeasurement && (
                 <Box bg={"white"} p={"xs"} className={"borderRadiusAll"}>
                   <Box
                     pl={`4`}
@@ -709,7 +758,7 @@ function ProductUpdateForm(props) {
                                 size="xs"
                                 color={`red.3`}
                                 onClick={() => {
-                                  handlemeasurementFormSubmit(
+                                  HandleMeasurementFormSubmit(
                                     measurementForm.values
                                   );
                                 }}
@@ -755,121 +804,45 @@ function ProductUpdateForm(props) {
                               <Table.Th fz="xs" ta="center" w={"60"}>
                                 {t("QTY")}
                               </Table.Th>
-                              <Table.Th ta="right" fz="xs" w={"80"}>
-                                {t("Unit")}
-                              </Table.Th>
                               <Table.Th ta="right" fz="xs" w={"80"}></Table.Th>
                             </Table.Tr>
                           </Table.Thead>
                           <Table.Tbody>
-                            <Table.Tr>
-                              <Table.Th fz="xs" w={"20"}>
-                                1
-                              </Table.Th>
-                              <Table.Th fz="xs" ta="left" w={"300"}>
-                                Pcs
-                              </Table.Th>
-                              <Table.Th fz="xs" ta="center" w={"60"}>
-                                20
-                              </Table.Th>
-                              <Table.Th ta="right" fz="xs" w={"80"}>
-                                Box
-                              </Table.Th>
-                              <Table.Th ta="right" fz="xs" w={"80"}>
-                                <ActionIcon
-                                  size="sm"
-                                  variant="transparent"
-                                  color="red"
-                                >
-                                  <IconX
-                                    height={"18"}
-                                    width={"18"}
-                                    stroke={1.5}
-                                  />
-                                </ActionIcon>
-                              </Table.Th>
-                            </Table.Tr>
-                            <Table.Tr>
-                              <Table.Th fz="xs" w={"20"}>
-                                1
-                              </Table.Th>
-                              <Table.Th fz="xs" ta="left" w={"300"}>
-                                Pcs
-                              </Table.Th>
-                              <Table.Th fz="xs" ta="center" w={"60"}>
-                                20
-                              </Table.Th>
-                              <Table.Th ta="right" fz="xs" w={"80"}>
-                                Box
-                              </Table.Th>
-                              <Table.Th ta="right" fz="xs" w={"80"}>
-                                <ActionIcon
-                                  size="sm"
-                                  variant="transparent"
-                                  color="red"
-                                >
-                                  <IconX
-                                    height={"18"}
-                                    width={"18"}
-                                    stroke={1.5}
-                                  />
-                                </ActionIcon>
-                              </Table.Th>
-                            </Table.Tr>
-                            <Table.Tr>
-                              <Table.Th fz="xs" w={"20"}>
-                                1
-                              </Table.Th>
-                              <Table.Th fz="xs" ta="left" w={"300"}>
-                                Pcs
-                              </Table.Th>
-                              <Table.Th fz="xs" ta="center" w={"60"}>
-                                20
-                              </Table.Th>
-                              <Table.Th ta="right" fz="xs" w={"80"}>
-                                Box
-                              </Table.Th>
-                              <Table.Th ta="right" fz="xs" w={"80"}>
-                                <ActionIcon
-                                  size="sm"
-                                  variant="transparent"
-                                  color="red"
-                                >
-                                  <IconX
-                                    height={"18"}
-                                    width={"18"}
-                                    stroke={1.5}
-                                  />
-                                </ActionIcon>
-                              </Table.Th>
-                            </Table.Tr>
-                            <Table.Tr>
-                              <Table.Th fz="xs" w={"20"}>
-                                1
-                              </Table.Th>
-                              <Table.Th fz="xs" ta="left" w={"300"}>
-                                Pcs
-                              </Table.Th>
-                              <Table.Th fz="xs" ta="center" w={"60"}>
-                                20
-                              </Table.Th>
-                              <Table.Th ta="right" fz="xs" w={"80"}>
-                                Box
-                              </Table.Th>
-                              <Table.Th ta="right" fz="xs" w={"80"}>
-                                <ActionIcon
-                                  size="sm"
-                                  variant="transparent"
-                                  color="red"
-                                >
-                                  <IconX
-                                    height={"18"}
-                                    width={"18"}
-                                    stroke={1.5}
-                                  />
-                                </ActionIcon>
-                              </Table.Th>
-                            </Table.Tr>
+                            {measurementData?.data?.length > 0 ? (
+                                measurementData.data.map((unit, index) => (
+                                    <Table.Tr key={unit.id}>
+                                      <Table.Th fz="xs" w={"20"}>
+                                        {index + 1}
+                                      </Table.Th>
+                                      <Table.Th fz="xs" ta="left" w={"300"}>
+                                        {unit.unit_name}
+                                      </Table.Th>
+                                      <Table.Th fz="xs" ta="center" w={"60"}>
+                                        {unit.quantity}
+                                      </Table.Th>
+                                      <Table.Th ta="right" fz="xs" w={"80"}>
+                                        <ActionIcon
+                                            size="sm"
+                                            variant="transparent"
+                                            color="red"
+                                            onClick={() => {
+                                              dispatch(deleteEntityData('inventory/product/measurement/'+unit.id))
+                                              setReloadMeasurementData(true)
+                                            }}
+                                        >
+                                          <IconX height={"18"} width={"18"} stroke={1.5} />
+                                        </ActionIcon>
+                                      </Table.Th>
+                                    </Table.Tr>
+                                ))
+                            ) : (
+                                <Table.Tr>
+                                  <Table.Th colSpan="4" fz="xs" ta="center">
+                                    No data available
+                                  </Table.Th>
+                                </Table.Tr>
+                            )}
+
                           </Table.Tbody>
                         </Table>
                       </Box>
@@ -922,6 +895,9 @@ function ProductUpdateForm(props) {
                 </Box>
               )}
             </Grid.Col>
+            {/*masurement end*/}
+
+
             <Grid.Col span={8}>
               {loadGallery && (
                 <Box bg={"white"} p={"xs"} className={"borderRadiusAll"}>
