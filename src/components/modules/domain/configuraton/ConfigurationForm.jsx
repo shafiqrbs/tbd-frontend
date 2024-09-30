@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useOutletContext } from "react-router-dom";
+import {useNavigate, useOutletContext, useParams} from "react-router-dom";
 import { Button, rem, Flex, Grid, Box, ScrollArea, Text, Title, Stack } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
 import { IconCheck, IconDeviceFloppy } from "@tabler/icons-react";
@@ -17,11 +17,12 @@ import getSettingBusinessModelDropdownData from "../../../global-hook/dropdown/g
 import SwitchForm from "../../../form-builders/SwitchForm.jsx";
 import ImageUploadDropzone from "../../../form-builders/ImageUploadDropzone.jsx";
 import InputNumberForm from "../../../form-builders/InputNumberForm.jsx";
-import getConfigData from "../../../global-hook/config-data/getConfigData.js";
 import getCountryDropdownData from "../../../global-hook/dropdown/getCountryDropdownData.js";
 import getCurrencyDropdownData from "../../../global-hook/dropdown/getCurrencyDropdownData.js";
 
 function ConfigurationForm() {
+    const {id} = useParams()
+    console.log(id)
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
@@ -39,8 +40,6 @@ function ConfigurationForm() {
     const [formLoad, setFormLoad] = useState(true);
 
     const [files, setFiles] = useState([]);
-
-    localStorage.setItem('config-data', JSON.stringify(getConfigData()));
 
     const configData = localStorage.getItem('config-data') ? JSON.parse(localStorage.getItem('config-data')) : []
     const [businessModelId, setBusinessModelId] = useState(configData.business_model_id ? configData.business_model_id.toString() : null)
@@ -194,7 +193,7 @@ function ConfigurationForm() {
                     onCancel: () => console.log('Cancel'),
                     onConfirm: () => {
                         const value = {
-                            url: 'inventory/config-update',
+                            url: 'inventory/config-update/'+id,
                             data: values
                         }
                         dispatch(updateEntityData(value))

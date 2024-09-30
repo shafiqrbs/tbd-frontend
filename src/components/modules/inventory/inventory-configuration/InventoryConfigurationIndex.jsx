@@ -7,11 +7,14 @@ import { useTranslation } from 'react-i18next';
 import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress.js";
 import InventoryHeaderNavbar from "../../domain/configuraton/InventoryHeaderNavbar.jsx";
 import InventoryConfigurationForm from "./InventoryConfigurationForm.jsx";
+import getConfigData from "../../../global-hook/config-data/getConfigData.js";
+import getInventoryConfigData from "../../../global-hook/config-data/getInventoryConfigData.js";
 
 function InventoryConfigurationIndex() {
     const { t, i18n } = useTranslation();
 
     const progress = getLoadingProgress()
+    localStorage.setItem('config-data', JSON.stringify(getConfigData()));
 
     return (
 

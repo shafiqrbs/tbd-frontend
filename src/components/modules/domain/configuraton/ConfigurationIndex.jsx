@@ -8,6 +8,7 @@ import ConfigurationForm from "./ConfigurationForm.jsx";
 import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress.js";
 import DomainHeaderNavbar from "../DomainHeaderNavbar.jsx";
 import { useParams } from "react-router-dom";
+import getConfigData from "../../../global-hook/config-data/getConfigData.js";
 
 function ConfigurationIndex() {
     const { t, i18n } = useTranslation();
@@ -15,6 +16,7 @@ function ConfigurationIndex() {
     const {id } = useParams();
 
     const progress = getLoadingProgress()
+    localStorage.setItem('config-data', JSON.stringify(getConfigData()));
 
     return (
 
