@@ -617,5 +617,7 @@
   "DigitalSignature" : "Digital Signature",
   "AlternativeEmail" : "Alternative Email",
   "ChooseProductGrade" : "Choose Product Grade",
-  "": ""
+  "VatManagement" : "Vat Management",
+  "SKUItem" : "SKU Item",
+  "ChooseHS" : "Choose HS"
 }
