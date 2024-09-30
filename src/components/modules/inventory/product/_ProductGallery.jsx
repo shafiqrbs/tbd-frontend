@@ -9,16 +9,13 @@ import {
     LoadingOverlay,
     Card,
     Image,
-    Center, Flex,
+    Center
 } from "@mantine/core";
 import {useTranslation} from "react-i18next";
 import {useDispatch, useSelector} from "react-redux";
-import {notifications} from "@mantine/notifications";
 
-import {editEntityData, setFormLoading} from "../../../../store/core/crudSlice.js";
+import {setFormLoading} from "../../../../store/core/crudSlice.js";
 import {Dropzone} from "@mantine/dropzone";
-import _UpdateProduct from "./_UpdateProduct.jsx";
-import _ProductMeasurement from "./_ProductMeasurement.jsx";
 import {createEntityDataWithMedia} from "../../../../store/inventory/crudSlice.js";
 
 function _ProductGallery(props) {
@@ -27,14 +24,10 @@ function _ProductGallery(props) {
     const dispatch = useDispatch();
     const {isOnline, mainAreaHeight} = useOutletContext();
     const height = mainAreaHeight / 2; //TabList height 104
-    const configData = localStorage.getItem("config-data") ? JSON.parse(localStorage.getItem("config-data")) : [];
     const [setFormData, setFormDataForUpdate] = useState(false);
     const [formLoad, setFormLoad] = useState(true);
 
     const entityEditData = useSelector((state) => state.crudSlice.entityEditData);
-
-    console.log(entityEditData)
-    const [loadGallery, setLoadGallery] = useState(false);
 
     const [featureImage, setFeatureImage] = useState(null);
     const [additionalImages, setAdditionalImages] = useState(Array(4).fill(null));
@@ -48,7 +41,6 @@ function _ProductGallery(props) {
     };
 
     const handleAdditionalImageDrop = (e, index) => {
-        setLoadGallery(true)
         if (e[0]) {
             const newAdditionalImages = [...additionalImages];
             newAdditionalImages[index] = e[0];
@@ -60,7 +52,7 @@ function _ProductGallery(props) {
         setFormLoad(true);
         setFormDataForUpdate(true);
     }, [dispatch]);
-    //console.log(entityEditData);
+
     useEffect(() => {
         dispatch(setFormLoading(false));
         setTimeout(() => {
@@ -68,13 +60,6 @@ function _ProductGallery(props) {
             setFormDataForUpdate(false);
         }, 500);
     }, [entityEditData, dispatch]);
-
-    /*useEffect(()=>{
-        if (loadGallery){
-            dispatch(editEntityData('inventory/product/' + id))
-            setLoadGallery(false)
-        }
-    },[loadGallery])*/
 
     return (
         <Box>
