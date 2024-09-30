@@ -47,15 +47,18 @@ function ProductUpdateForm(props) {
             <_UpdateProduct categoryDropdown={categoryDropdown} />
           </Grid.Col>
 
+
+          {/*masurement form*/}
           {is_measurement && (
             <Grid.Col span={8}>
-              {/*masurement form*/}
               <_ProductMeasurement id={id} />
             </Grid.Col>
           )}
+
+
+          {/* gallery */}
           {is_product_gallery && (
             <Grid.Col span={8}>
-              {/* gallery */}
               <_ProductGallery id={id} />
             </Grid.Col>
           )}
@@ -70,7 +73,7 @@ function ProductUpdateForm(props) {
           )}
 
           <Grid.Col span={vat_integration ? 16 : 24}>
-            {is_sku && (
+            {/*{is_sku && (*/}
               <_SkuManagement
                 id={id}
                 is_brand={is_brand}
@@ -78,7 +81,7 @@ function ProductUpdateForm(props) {
                 is_grade={is_grade}
                 is_size={is_size}
               />
-            )}
+            {/*)}*/}
           </Grid.Col>
         </Grid>
       </Stack>
