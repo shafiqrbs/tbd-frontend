@@ -14,7 +14,7 @@ function ProductUpdateForm(props) {
   const configData = localStorage.getItem("config-data")
     ? JSON.parse(localStorage.getItem("config-data"))
     : [];
-  console.log(configData);
+
   const [vat_integration, setVat_integration] = useState(
     !!(configData?.vat_integration === 1)
   );
@@ -48,7 +48,7 @@ function ProductUpdateForm(props) {
           </Grid.Col>
 
 
-          {/*masurement form*/}
+          {/*measurement form*/}
           {is_measurement && (
             <Grid.Col span={8}>
               <_ProductMeasurement id={id} />

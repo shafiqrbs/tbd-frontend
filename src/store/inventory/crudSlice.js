@@ -107,6 +107,16 @@ export const inlineUpdateEntityData = createAsyncThunk("inline-update", async (v
     }
 });
 
+export const createEntityDataWithMedia = createAsyncThunk("create-with-media", async (value) => {
+    try {
+        const response = createDataWithFile(value);
+        return response;
+    } catch (error) {
+        console.log('error', error.message);
+        throw error;
+    }
+});
+
 const crudSlice = createSlice({
     name: "crud",
     initialState: {
@@ -208,6 +218,18 @@ const crudSlice = createSlice({
         })
 
         builder.addCase(storeEntityData.fulfilled, (state, action) => {
+            if ('success' === action.payload.data.message) {
+                state.entityNewData = action.payload.data
+                state.validationMessage = []
+                state.validation = false
+            } else {
+                state.validationMessage = action.payload.data.data
+                state.validation = true
+                state.entityNewData = []
+            }
+        })
+
+        builder.addCase(createEntityDataWithMedia.fulfilled, (state, action) => {
             if ('success' === action.payload.data.message) {
                 state.entityNewData = action.payload.data
                 state.validationMessage = []

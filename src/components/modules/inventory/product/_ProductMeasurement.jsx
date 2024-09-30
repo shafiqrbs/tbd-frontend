@@ -45,9 +45,6 @@ function _ProductMeasurement(props) {
     const dispatch = useDispatch();
     const {isOnline, mainAreaHeight} = useOutletContext();
     const height = mainAreaHeight / 2; //TabList height 104
-    const configData = localStorage.getItem("config-data")
-        ? JSON.parse(localStorage.getItem("config-data"))
-        : [];
 
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
     const [setFormData, setFormDataForUpdate] = useState(false);
