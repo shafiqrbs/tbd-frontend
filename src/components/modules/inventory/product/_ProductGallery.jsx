@@ -23,7 +23,7 @@ function _ProductGallery(props) {
     const {t, i18n} = useTranslation();
     const dispatch = useDispatch();
     const {isOnline, mainAreaHeight} = useOutletContext();
-    const height = mainAreaHeight / 2; //TabList height 104
+    const height = mainAreaHeight / 2 + 30; //TabList height 104
     const [setFormData, setFormDataForUpdate] = useState(false);
     const [formLoad, setFormLoad] = useState(true);
 

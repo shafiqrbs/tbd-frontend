@@ -7,7 +7,7 @@ import _ProductGallery from "./_ProductGallery.jsx";
 import _VatManagement from "./_VatManagement.jsx";
 import _SkuManagement from "./_SkuManagement.jsx";
 
-function ProductUpdateForm(props) {
+function  ProductUpdateForm(props) {
   const { id } = useParams();
   const { categoryDropdown } = props;
 
@@ -34,20 +34,31 @@ function ProductUpdateForm(props) {
     <Box>
       <Stack gap={0}>
         <Grid columns={24} gutter={{ base: 8 }} mb={"6"}>
-          <Grid.Col
-            span={
-              is_measurement && is_product_gallery
-                ? 8
-                : is_measurement || is_product_gallery
-                ? 16
-                : 24
-            }
-          >
+          <Grid.Col span={8}>
             {/* update product form  */}
             <_UpdateProduct categoryDropdown={categoryDropdown} />
           </Grid.Col>
 
+          <Grid.Col span={16}>
+            {/*{is_sku && (*/}
+            <_SkuManagement
+              id={id}
+              is_brand={is_brand}
+              is_color={is_color}
+              is_grade={is_grade}
+              is_size={is_size}
+            />
+            {/*)}*/}
+          </Grid.Col>
+        </Grid>
 
+        <Grid columns={24} gutter={8}>
+          {1 && (
+            <Grid.Col span={8}>
+              {/* vat integration  */}
+              <_VatManagement id={id} />
+            </Grid.Col>
+          )}
           {/*measurement form*/}
           {is_measurement && (
             <Grid.Col span={8}>
@@ -55,34 +66,12 @@ function ProductUpdateForm(props) {
             </Grid.Col>
           )}
 
-
           {/* gallery */}
           {is_product_gallery && (
             <Grid.Col span={8}>
               <_ProductGallery id={id} />
             </Grid.Col>
           )}
-        </Grid>
-
-        <Grid columns={24} gutter={8}>
-          {vat_integration && (
-            <Grid.Col span={8}>
-              {/* vat integration  */}
-              <_VatManagement id={id} />
-            </Grid.Col>
-          )}
-
-          <Grid.Col span={vat_integration ? 16 : 24}>
-            {/*{is_sku && (*/}
-              <_SkuManagement
-                id={id}
-                is_brand={is_brand}
-                is_color={is_color}
-                is_grade={is_grade}
-                is_size={is_size}
-              />
-            {/*)}*/}
-          </Grid.Col>
         </Grid>
       </Stack>
     </Box>

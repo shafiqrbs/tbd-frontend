@@ -1,100 +1,106 @@
-import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
-import {getDataWithParam, getDataWithParamForSettingDropdown} from "../../services/utilityApiService.js";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import {
+  getDataWithParam,
+  getDataWithParamForSettingDropdown,
+} from "../../services/utilityApiService.js";
 
-
-export const getSettingDropdown = createAsyncThunk("setting/select", async (value) => {
+export const getSettingDropdown = createAsyncThunk(
+  "setting/select",
+  async (value) => {
     try {
-        const response = getDataWithParamForSettingDropdown(value);
-        return response;
+      const response = getDataWithParamForSettingDropdown(value);
+      console.log("response", response);
+      return response;
     } catch (error) {
-        console.log('error', error.message);
-        throw error;
+      console.log("error", error.message);
+      throw error;
     }
-});
+  }
+);
 
-export const getProductUnitDropdown = createAsyncThunk("product-unit/select", async (value) => {
+export const getProductUnitDropdown = createAsyncThunk(
+  "product-unit/select",
+  async (value) => {
     try {
-        const response = getDataWithParam(value);
-        return response;
+      const response = getDataWithParam(value);
+      return response;
     } catch (error) {
-        console.log('error', error.message);
-        throw error;
+      console.log("error", error.message);
+      throw error;
     }
-});
+  }
+);
 
-export const getCurrencyDropdown = createAsyncThunk("currency/select", async (value) => {
+export const getCurrencyDropdown = createAsyncThunk(
+  "currency/select",
+  async (value) => {
     try {
-        const response = getDataWithParam(value);
-        return response;
+      const response = getDataWithParam(value);
+      return response;
     } catch (error) {
-        console.log('error', error.message);
-        throw error;
+      console.log("error", error.message);
+      throw error;
     }
-});
-
+  }
+);
 
 const utilitySlice = createSlice({
-    name : "utility",
-    initialState : {
-        isLoading : true,
-        fetching : true,
-        productDropdownData : [],
-        accountDropdownData : [],
-        motherAccountDropdownData : [],
-        accountHeadDropdownData : [],
-        authorizedDropdownData : [],
-        businessModelDropdownData : [],
-        salesProcessTypeDropdownData : [],
-        currencyDropdown : [],
-        productUnitDropdown : [],
+  name: "utility",
+  initialState: {
+    isLoading: true,
+    fetching: true,
+    productDropdownData: [],
+    accountDropdownData: [],
+    motherAccountDropdownData: [],
+    accountHeadDropdownData: [],
+    authorizedDropdownData: [],
+    businessModelDropdownData: [],
+    salesProcessTypeDropdownData: [],
+    currencyDropdown: [],
+    productUnitDropdown: [],
+  },
+  reducers: {
+    setFetching: (state, action) => {
+      state.fetching = action.payload;
     },
-    reducers : {
-        setFetching : (state,action) => {
-            state.fetching = action.payload
-        },
-    },
+  },
 
-    extraReducers : (builder) => {
+  extraReducers: (builder) => {
+    builder.addCase(getSettingDropdown.fulfilled, (state, action) => {
+      if (action.payload.type === "product-type") {
+        state.productDropdownData = action.payload.data.data;
+      }
 
-        builder.addCase(getSettingDropdown.fulfilled, (state, action) => {
+      if (action.payload.type === "account-type") {
+        state.accountDropdownData = action.payload.data.data;
+      }
+      if (action.payload.type === "authorised-type") {
+        state.authorizedDropdownData = action.payload.data.data;
+      }
+      if (action.payload.type === "mother-account") {
+        state.motherAccountDropdownData = action.payload.data.data;
+      }
+      if (action.payload.type === "account-head") {
+        state.accountHeadDropdownData = action.payload.data.data;
+      }
+      if (action.payload.type === "business-model") {
+        state.businessModelDropdownData = action.payload.data.data;
+      }
+      if (action.payload.type === "sales-process-type") {
+        state.salesProcessTypeDropdownData = action.payload.data.data;
+      }
+    });
 
-            if (action.payload.type === 'product-type'){
-                state.productDropdownData = action.payload.data.data
-            }
+    builder.addCase(getProductUnitDropdown.fulfilled, (state, action) => {
+      state.productUnitDropdown = action.payload.data;
+    });
 
-            if (action.payload.type === 'account-type'){
-                state.accountDropdownData = action.payload.data.data
-            }
-            if (action.payload.type === 'authorised-type'){
-                state.authorizedDropdownData = action.payload.data.data
-            }
-            if (action.payload.type === 'mother-account'){
-                state.motherAccountDropdownData = action.payload.data.data
-            }
-            if (action.payload.type === 'account-head'){
-                state.accountHeadDropdownData = action.payload.data.data
-            }
-            if (action.payload.type === 'business-model'){
-                state.businessModelDropdownData = action.payload.data.data
-            }
-            if (action.payload.type === 'sales-process-type'){
-                state.salesProcessTypeDropdownData = action.payload.data.data
-            }
-        })
+    builder.addCase(getCurrencyDropdown.fulfilled, (state, action) => {
+      state.currencyDropdown = action.payload.data;
+    });
+  },
+});
 
-        builder.addCase(getProductUnitDropdown.fulfilled, (state, action) => {
-            state.productUnitDropdown = action.payload.data
-        })
-
-
-        builder.addCase(getCurrencyDropdown.fulfilled, (state, action) => {
-            state.currencyDropdown = action.payload.data
-        })
-
-
-    }
-})
-
-export const { setFetching ,setSettingDropdownEmpty} = utilitySlice.actions
+export const { setFetching, setSettingDropdownEmpty } = utilitySlice.actions;
 
 export default utilitySlice.reducer;
