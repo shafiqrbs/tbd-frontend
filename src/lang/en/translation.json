@@ -619,5 +619,6 @@
   "ChooseProductGrade" : "Choose Product Grade",
   "VatManagement" : "Vat Management",
   "SKUItem" : "SKU Item",
-  "ChooseHS" : "Choose HS"
+  "ChooseHS" : "Choose HS",
+  "SkuItem" : "Sku Item"
 }

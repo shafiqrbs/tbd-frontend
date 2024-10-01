@@ -802,7 +802,7 @@ function _SkuManagement(props) {
                   // }}
                   loaderSize="xs"
                   loaderColor="grape"
-                  height={height - 154}
+                  height={height - 184}
                   scrollAreaProps={{ type: "never" }}
                 />
               </Box>

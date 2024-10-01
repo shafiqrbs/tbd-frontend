@@ -58,7 +58,7 @@ function InventoryHeaderNavbar(props) {
                             </Menu.Target>
                             <Menu.Dropdown>
                                 <Menu.Item
-                                    component="button" onClick={(e) => { navigate('/inventory/product-settings') }} leftSection={<IconBrandProducthunt style={{ width: rem(14), height: rem(14) }} />}>
+                                    component="button" onClick={(e) => { navigate('/inventory/particular') }} leftSection={<IconBrandProducthunt style={{ width: rem(14), height: rem(14) }} />}>
                                     {t('ProductSetting')}
                                 </Menu.Item>
                                 <Menu.Item

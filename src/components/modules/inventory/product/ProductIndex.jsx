@@ -15,7 +15,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { editEntityData, setDropdownLoad, setEntityNewData, setFormLoading, setInsertType, setSearchKeyword } from "../../../../store/inventory/crudSlice.js";
 import { getCategoryDropdown } from "../../../../store/inventory/utilitySlice.js";
 
-function ProductIndex() {
+function  ProductIndex() {
     const { t, i18n } = useTranslation();
     const insertType = useSelector((state) => state.crudSlice.insertType)
 

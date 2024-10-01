@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useOutletContext, useParams } from "react-router-dom";
+import { useOutletContext } from "react-router-dom";
 import {
   Button,
   rem,
@@ -11,37 +11,22 @@ import {
   Title,
   Flex,
   Stack,
-  ActionIcon,
   LoadingOverlay,
-  Menu,
   TextInput,
 } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import {
-  IconCheck,
   IconDeviceFloppy,
-  IconDotsVertical,
-  IconTrashX,
 } from "@tabler/icons-react";
-import { useDisclosure, useHotkeys } from "@mantine/hooks";
-import InputForm from "../../../form-builders/InputForm";
 import { useDispatch, useSelector } from "react-redux";
-import { hasLength, isNotEmpty, useForm } from "@mantine/form";
-import { notifications } from "@mantine/notifications";
+import {  useForm } from "@mantine/form";
 
 import {
-  setFetching,
   setFormLoading,
-  setInsertType,
 } from "../../../../store/core/crudSlice.js";
 import { DataTable } from "mantine-datatable";
 import tableCss from "../../../../assets/css/Table.module.css";
 import SelectForm from "../../../form-builders/SelectForm.jsx";
-import {
-  deleteEntityData,
-  getIndexEntityData as getIndexEntityDataForInventory,
-  storeEntityData,
-} from "../../../../store/inventory/crudSlice.js";
 import { modals } from "@mantine/modals";
 import _UpdateProduct from "./_UpdateProduct.jsx";
 import _ProductMeasurement from "./_ProductMeasurement.jsx";
@@ -52,7 +37,7 @@ function _VatManagement(props) {
   const { t, i18n } = useTranslation();
   const dispatch = useDispatch();
   const { isOnline, mainAreaHeight } = useOutletContext();
-  const height = mainAreaHeight / 2; //TabList height 104
+  const height = mainAreaHeight / 2 + 1; //TabList height 104
   const configData = localStorage.getItem("config-data")
     ? JSON.parse(localStorage.getItem("config-data"))
     : [];
@@ -419,7 +404,7 @@ function _VatManagement(props) {
                     // }}
                     loaderSize="xs"
                     loaderColor="grape"
-                    height={height - 154}
+                    height={height - 158}
                     scrollAreaProps={{ type: "never" }}
                   />
                 </Box>
