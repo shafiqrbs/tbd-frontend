@@ -21,7 +21,7 @@ import SelectForm from "../../../form-builders/SelectForm";
 import SwitchForm from "../../../form-builders/SwitchForm";
 import { setFetching, storeEntityData } from "../../../../store/inventory/crudSlice.js";
 import getSettingProductTypeDropdownData from "../../../global-hook/dropdown/getSettingProductTypeDropdownData.js";
-import getSettingProductUnitDropdownData from "../../../global-hook/dropdown/getSettingProductUnitDropdownData.js";
+import getSettingParticularDropdownData from "../../../global-hook/dropdown/getSettingParticularDropdownData.js";
 import ProductCategoryDrawer from "./ProductCategoryDrawer.jsx";
 import productsDataStoreIntoLocalStorage from "../../../global-hook/local-storage/productsDataStoreIntoLocalStorage.js";
 
@@ -318,7 +318,7 @@ function ProductForm(props) {
                                                             required={true}
                                                             name={'unit_id'}
                                                             form={form}
-                                                            dropdownValue={getSettingProductUnitDropdownData()}
+                                                            dropdownValue={getSettingParticularDropdownData('size')}
                                                             mt={8}
                                                             id={'unit_id'}
                                                             nextField={'reorder_quantity'}

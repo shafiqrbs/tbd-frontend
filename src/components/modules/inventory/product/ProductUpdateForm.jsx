@@ -21,11 +21,11 @@ function  ProductUpdateForm(props) {
   const [is_measurement, setIs_measurement] = useState(
     !!(configData?.is_measurement === 1)
   );
-  const [is_brand, setIs_brand] = useState(!!(configData?.is_brand === 1));
-  const [is_color, setIs_color] = useState(!!(configData?.is_color === 1));
-  const [is_grade, setIs_grade] = useState(!!(configData?.is_grade === 1));
-  const [is_size, setIs_size] = useState(!!(configData?.is_size === 1));
-  const [is_sku, setIs_sku] = useState(!!(configData?.is_sku === 1));
+  const [isBrand, setIsBrand] = useState(!!(configData?.is_brand === 1));
+  const [isColor, setIsColor] = useState(!!(configData?.is_color === 1));
+  const [isGrade, setIsGrade] = useState(!!(configData?.is_grade === 1));
+  const [isSize, setIsSize] = useState(!!(configData?.is_size === 1));
+  const [is_sku, setIsSku] = useState(!!(configData?.is_sku === 1));
   const [is_product_gallery, setIs_product_gallery] = useState(
     !!(configData?.is_product_gallery === 1)
   );
@@ -40,15 +40,15 @@ function  ProductUpdateForm(props) {
           </Grid.Col>
 
           <Grid.Col span={16}>
-            {/*{is_sku && (*/}
+            {is_sku && (
             <_SkuManagement
               id={id}
-              is_brand={is_brand}
-              is_color={is_color}
-              is_grade={is_grade}
-              is_size={is_size}
+              isBrand={isBrand}
+              isColor={isColor}
+              isGrade={isGrade}
+              isSize={isSize}
             />
-            {/*)}*/}
+            )}
           </Grid.Col>
         </Grid>
 

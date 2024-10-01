@@ -30,7 +30,7 @@ import {
 import SelectForm from "../../../form-builders/SelectForm.jsx";
 import SwitchForm from "../../../form-builders/SwitchForm.jsx";
 import getSettingProductTypeDropdownData from "../../../global-hook/dropdown/getSettingProductTypeDropdownData.js";
-import getSettingProductUnitDropdownData from "../../../global-hook/dropdown/getSettingProductUnitDropdownData.js";
+import getSettingParticularDropdownData from "../../../global-hook/dropdown/getSettingParticularDropdownData.js";
 import { modals } from "@mantine/modals";
 import productsDataStoreIntoLocalStorage from "../../../global-hook/local-storage/productsDataStoreIntoLocalStorage.js";
 
@@ -417,7 +417,7 @@ function _UpdateProduct(props) {
                         required={true}
                         name={"unit_id"}
                         form={form}
-                        dropdownValue={getSettingProductUnitDropdownData()}
+                        dropdownValue={getSettingParticularDropdownData('size')}
                         mt={8}
                         id={"unit_id"}
                         nextField={"min_quantity"}

@@ -9,7 +9,7 @@ const getSettingPriceModeData = () => {
     useEffect(() => {
         const value = {
             url: 'inventory/select/setting',
-            param: { 'dropdown-type': 'sales-mode' }
+            param: { 'dropdown-type': 'price-mode' }
         }
         dispatch(getSettingDropdown(value))
     }, [dispatch]);

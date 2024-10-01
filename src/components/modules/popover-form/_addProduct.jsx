@@ -4,7 +4,7 @@ import SelectForm from "../../form-builders/SelectForm.jsx";
 import getSettingProductTypeDropdownData from "../../global-hook/dropdown/getSettingProductTypeDropdownData.js";
 import getSettingCategoryDropdownData from "../../global-hook/dropdown/getSettingCategoryDropdownData.js";
 import InputForm from "../../form-builders/InputForm.jsx";
-import getSettingProductUnitDropdownData from "../../global-hook/dropdown/getSettingProductUnitDropdownData.js";
+import getSettingParticularDropdownData from "../../global-hook/dropdown/getSettingParticularDropdownData.js";
 import InputNumberForm from "../../form-builders/InputNumberForm.jsx";
 import {storeEntityData} from "../../../store/inventory/crudSlice.js";
 import React, {useState} from "react";
@@ -134,7 +134,7 @@ function _addProduct(props) {
                                 required={true}
                                 name={'unit_id'}
                                 form={productAddedForm}
-                                dropdownValue={getSettingProductUnitDropdownData()}
+                                dropdownValue={getSettingParticularDropdownData('size')}
                                 mt={8}
                                 id={fieldPrefix+'unit_id'}
                                 nextField={fieldPrefix+'purchase_price'}

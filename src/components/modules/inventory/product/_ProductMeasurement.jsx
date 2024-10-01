@@ -30,7 +30,7 @@ import {
     setFormLoading,
 } from "../../../../store/core/crudSlice.js";
 import SelectForm from "../../../form-builders/SelectForm.jsx";
-import getSettingProductUnitDropdownData from "../../../global-hook/dropdown/getSettingProductUnitDropdownData.js";
+import getSettingParticularDropdownData from "../../../global-hook/dropdown/getSettingParticularDropdownData.js";
 import InputButtonForm from "../../../form-builders/InputButtonForm";
 import {
     deleteEntityData,
@@ -211,7 +211,7 @@ function _ProductMeasurement(props) {
                                     required={true}
                                     name={"unit_id"}
                                     form={form}
-                                    dropdownValue={getSettingProductUnitDropdownData()}
+                                    dropdownValue={getSettingParticularDropdownData('product-unit')}
                                     id={"unit_id"}
                                     nextField={"quantity"}
                                     searchable={true}

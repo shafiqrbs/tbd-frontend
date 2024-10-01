@@ -46,9 +46,10 @@ import _UpdateProduct from "./_UpdateProduct.jsx";
 import _ProductMeasurement from "./_ProductMeasurement.jsx";
 import _ProductGallery from "./_ProductGallery.jsx";
 import _VatManagement from "./_VatManagement.jsx";
+import getSettingParticularDropdownData from "../../../global-hook/dropdown/getSettingParticularDropdownData.js";
 
 function _SkuManagement(props) {
-  const { id, is_brand, is_color, is_grade, is_size } = props;
+  const { id, isBrand, isColor, isGrade, isSize } = props;
   const { t, i18n } = useTranslation();
   const dispatch = useDispatch();
   const { isOnline, mainAreaHeight } = useOutletContext();
@@ -257,15 +258,14 @@ function _SkuManagement(props) {
                     <Grid columns={11}>
                       <Grid.Col span={10}>
                         <Grid gutter={{ base: 2 }}>
-                          {is_color && (
+                          {isColor && (
                             <Grid.Col span={"auto"}>
                               <SelectForm
                                 tooltip={t("ChooseProdcutColor")}
                                 placeholder={t("ChooseColor")}
-                                // required={true}
                                 name={"color"}
                                 form={form}
-                                dropdownValue={color}
+                                dropdownValue={getSettingParticularDropdownData('color')}
                                 mt={0}
                                 id={"color"}
                                 nextField={"size"}
@@ -275,15 +275,14 @@ function _SkuManagement(props) {
                               />
                             </Grid.Col>
                           )}
-                          {is_size && (
+                          {isSize && (
                             <Grid.Col span={"auto"}>
                               <SelectForm
                                 tooltip={t("ChooseProductUpdateFormize")}
                                 placeholder={t("ChooseSize")}
-                                // required={true}
                                 name={"size"}
                                 form={form}
-                                dropdownValue={size}
+                                dropdownValue={getSettingParticularDropdownData('size')}
                                 mt={0}
                                 id={"size"}
                                 nextField={"brand"}
@@ -293,15 +292,14 @@ function _SkuManagement(props) {
                               />
                             </Grid.Col>
                           )}
-                          {is_brand && (
+                          {isBrand && (
                             <Grid.Col span={"auto"}>
                               <SelectForm
                                 tooltip={t("ChooseProductBrand")}
                                 placeholder={t("ChooseBrand")}
-                                // required={true}
                                 name={"brand"}
                                 form={form}
-                                dropdownValue={brand}
+                                dropdownValue={getSettingParticularDropdownData('brand')}
                                 mt={0}
                                 id={"brand"}
                                 nextField={"grade_id"}
@@ -311,15 +309,14 @@ function _SkuManagement(props) {
                               />
                             </Grid.Col>
                           )}
-                          {is_grade && (
+                          {isGrade && (
                             <Grid.Col span={"auto"}>
                               <SelectForm
                                 tooltip={t("ChooseProductGrade")}
                                 placeholder={t("ChooseProductGrade")}
-                                // required={true}
                                 name={"grade_id"}
                                 form={form}
-                                dropdownValue={title}
+                                dropdownValue={getSettingParticularDropdownData('product-grade')}
                                 mt={0}
                                 id={"grade_id"}
                                 nextField={"EntityFormSubmit"}
@@ -380,7 +377,7 @@ function _SkuManagement(props) {
                       title: t("Name"),
                       width: 120,
                     },
-                    ...(is_size
+                    ...(isSize
                       ? [
                           {
                             accessor: "size",
@@ -389,7 +386,7 @@ function _SkuManagement(props) {
                           },
                         ]
                       : []),
-                    ...(is_color
+                    ...(isColor
                       ? [
                           {
                             accessor: "color",
@@ -398,7 +395,7 @@ function _SkuManagement(props) {
                           },
                         ]
                       : []),
-                    ...(is_brand
+                    ...(isBrand
                       ? [
                           {
                             accessor: "brand",
@@ -407,7 +404,7 @@ function _SkuManagement(props) {
                           },
                         ]
                       : []),
-                    ...(is_grade
+                    ...(isGrade
                       ? [
                           {
                             accessor: "title",
@@ -596,7 +593,7 @@ function _SkuManagement(props) {
                         );
                       },
                     },
-                    ...(is_grade
+                    ...(isGrade
                       ? [
                           {
                             accessor: "retail_price",
@@ -636,7 +633,7 @@ function _SkuManagement(props) {
                           },
                         ]
                       : []),
-                    ...(is_grade
+                    ...(isGrade
                       ? [
                           {
                             accessor: "promo_price",

@@ -58,6 +58,10 @@ const utilitySlice = createSlice({
     salesProcessTypeDropdownData: [],
     currencyDropdown: [],
     productUnitDropdown: [],
+    productColorDropdown: [],
+    productGradeDropdown: [],
+    productBrandDropdown: [],
+    productSizeDropdown: [],
   },
   reducers: {
     setFetching: (state, action) => {
@@ -69,6 +73,21 @@ const utilitySlice = createSlice({
     builder.addCase(getSettingDropdown.fulfilled, (state, action) => {
       if (action.payload.type === "product-type") {
         state.productDropdownData = action.payload.data.data;
+      }
+      if (action.payload.type === "product-unit") {
+        state.productUnitDropdown = action.payload.data.data;
+      }
+      if (action.payload.type === "color") {
+        state.productColorDropdown = action.payload.data.data;
+      }
+      if (action.payload.type === "product-grade") {
+        state.productGradeDropdown = action.payload.data.data;
+      }
+      if (action.payload.type === "brand") {
+        state.productBrandDropdown = action.payload.data.data;
+      }
+      if (action.payload.type === "size") {
+        state.productSizeDropdown = action.payload.data.data;
       }
 
       if (action.payload.type === "account-type") {

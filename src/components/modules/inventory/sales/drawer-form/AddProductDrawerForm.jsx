@@ -22,7 +22,7 @@ import SelectForm from "../../../../form-builders/SelectForm.jsx";
 import InputNumberForm from "../../../../form-builders/InputNumberForm.jsx";
 import getSettingProductTypeDropdownData from "../../../../global-hook/dropdown/getSettingProductTypeDropdownData.js";
 import getSettingCategoryDropdownData from "../../../../global-hook/dropdown/getSettingCategoryDropdownData.js";
-import getSettingProductUnitDropdownData from "../../../../global-hook/dropdown/getSettingProductUnitDropdownData.js";
+import getSettingParticularDropdownData from "../../../../global-hook/dropdown/getSettingParticularDropdownData.js";
 
 function AddProductDrawerForm(props) {
     const { t } = useTranslation();
@@ -188,7 +188,7 @@ function AddProductDrawerForm(props) {
                                                         required={true}
                                                         name={'unit_id'}
                                                         form={productAddedForm}
-                                                        dropdownValue={getSettingProductUnitDropdownData()}
+                                                        dropdownValue={getSettingParticularDropdownData('size')}
                                                         id={fieldPrefix + 'unit_id'}
                                                         nextField={fieldPrefix + 'purchase_price'}
                                                         searchable={true}
