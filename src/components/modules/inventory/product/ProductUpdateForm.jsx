@@ -25,7 +25,8 @@ function  ProductUpdateForm(props) {
   const [isColor, setIsColor] = useState(!!(configData?.is_color === 1));
   const [isGrade, setIsGrade] = useState(!!(configData?.is_grade === 1));
   const [isSize, setIsSize] = useState(!!(configData?.is_size === 1));
-  const [is_sku, setIsSku] = useState(!!(configData?.is_sku === 1));
+  const [isSku, setIsSku] = useState(!!(configData?.is_sku === 1));
+  const [isMultiPrice, setIsMultiPrice] = useState(!!(configData?.is_multi_price === 1));
   const [is_product_gallery, setIs_product_gallery] = useState(
     !!(configData?.is_product_gallery === 1)
   );
@@ -40,13 +41,14 @@ function  ProductUpdateForm(props) {
           </Grid.Col>
 
           <Grid.Col span={16}>
-            {is_sku && (
+            {isSku && (
             <_SkuManagement
               id={id}
               isBrand={isBrand}
               isColor={isColor}
               isGrade={isGrade}
               isSize={isSize}
+              isMultiPrice={isMultiPrice}
             />
             )}
           </Grid.Col>
