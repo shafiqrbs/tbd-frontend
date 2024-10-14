@@ -49,11 +49,16 @@ function InventoryConfigurationForm() {
     ? JSON.parse(localStorage.getItem("config-data"))
     : [];
 
+  console.log(inventoryConfigData)
+
   const form = useForm({
     initialValues: {
       is_brand: inventoryConfigData.is_brand
         ? inventoryConfigData.is_brand
         : "",
+      is_grade: inventoryConfigData.is_grade
+          ? inventoryConfigData.is_grade
+          : "",
       is_color: inventoryConfigData.is_color
         ? inventoryConfigData.is_color
         : "",
@@ -162,6 +167,8 @@ function InventoryConfigurationForm() {
         onSubmit={form.onSubmit((values) => {
           form.values["is_brand"] =
             values.is_brand === true || values.is_brand == 1 ? 1 : 0;
+          form.values["is_grade"] =
+            values.is_grade === true || values.is_grade == 1 ? 1 : 0;
           form.values["is_color"] =
             values.is_color === true || values.is_color == 1 ? 1 : 0;
           form.values["is_size"] =
@@ -297,6 +304,26 @@ function InventoryConfigurationForm() {
                           </Grid.Col>
                           <Grid.Col span={6} fz={"sm"} pt={"1"}>
                             {t("Brand")}
+                          </Grid.Col>
+                        </Grid>
+                      </Box>
+                      <Box mt={"xs"}>
+                        <Grid gutter={{ base: 1 }}>
+                          <Grid.Col span={2}>
+                            <SwitchForm
+                              tooltip={t("isGrade")}
+                              label=""
+                              nextField={"is_color"}
+                              name={"is_grade"}
+                              form={form}
+                              color="red"
+                              id={"is_grade"}
+                              position={"left"}
+                              defaultChecked={inventoryConfigData.is_grade}
+                            />
+                          </Grid.Col>
+                          <Grid.Col span={6} fz={"sm"} pt={"1"}>
+                            {t("Grade")}
                           </Grid.Col>
                         </Grid>
                       </Box>
@@ -685,7 +712,7 @@ function InventoryConfigurationForm() {
                               id={"is_sku"}
                               position={"left"}
                               defaultChecked={
-                                inventoryConfigData.is_multi_price
+                                inventoryConfigData.is_sku
                               }
                             />
                           </Grid.Col>

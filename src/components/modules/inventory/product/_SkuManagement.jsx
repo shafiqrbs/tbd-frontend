@@ -1,864 +1,502 @@
-import React, { useEffect, useState } from "react";
-import { useOutletContext, useParams } from "react-router-dom";
+import React, {useEffect, useState} from "react";
+import {useOutletContext} from "react-router-dom";
 import {
-  Button,
-  rem,
-  Grid,
-  Box,
-  ScrollArea,
-  Group,
-  Text,
-  Title,
-  Flex,
-  Stack,
-  ActionIcon,
-  LoadingOverlay,
-  Menu,
-  TextInput,
+    Button,
+    rem,
+    Grid,
+    Box,
+    ScrollArea,
+    Text,
+    Title,
+    Flex,
+    Stack,
+    LoadingOverlay,
+    TextInput, Table,
 } from "@mantine/core";
-import { useTranslation } from "react-i18next";
+import {useTranslation} from "react-i18next";
 import {
+  IconCheck,
   IconDeviceFloppy,
-  IconDotsVertical,
-  IconTrashX,
 } from "@tabler/icons-react";
-import { useDisclosure, useHotkeys } from "@mantine/hooks";
-import InputForm from "../../../form-builders/InputForm";
-import { useDispatch, useSelector } from "react-redux";
-import { hasLength, isNotEmpty, useForm } from "@mantine/form";
-import { notifications } from "@mantine/notifications";
+import {useDispatch, useSelector} from "react-redux";
+import {isNotEmpty, useForm} from "@mantine/form";
+import {notifications} from "@mantine/notifications";
 
 import {
-  setFetching,
-  setFormLoading,
-  setInsertType,
+    setFormLoading,
 } from "../../../../store/core/crudSlice.js";
-import { DataTable } from "mantine-datatable";
-import tableCss from "../../../../assets/css/Table.module.css";
 import SelectForm from "../../../form-builders/SelectForm.jsx";
 import {
-  deleteEntityData,
-  getIndexEntityData as getIndexEntityDataForInventory,
-  storeEntityData,
+getProductSkuItemIndexEntityData, inlineUpdateEntityData, storeEntityData,
 } from "../../../../store/inventory/crudSlice.js";
-import { modals } from "@mantine/modals";
-import _UpdateProduct from "./_UpdateProduct.jsx";
-import _ProductMeasurement from "./_ProductMeasurement.jsx";
-import _ProductGallery from "./_ProductGallery.jsx";
-import _VatManagement from "./_VatManagement.jsx";
+import {modals} from "@mantine/modals";
 import getSettingParticularDropdownData from "../../../global-hook/dropdown/getSettingParticularDropdownData.js";
 
 function _SkuManagement(props) {
-  const { id, isBrand, isColor, isGrade, isSize } = props;
-  const { t, i18n } = useTranslation();
-  const dispatch = useDispatch();
-  const { isOnline, mainAreaHeight } = useOutletContext();
-  const height = mainAreaHeight / 2; //TabList height 104
-  const configData = localStorage.getItem("config-data")
-    ? JSON.parse(localStorage.getItem("config-data"))
-    : [];
+    const {id, isBrand, isColor, isGrade, isSize, isMultiPrice} = props;
+    const {t, i18n} = useTranslation();
+    const dispatch = useDispatch();
+    const {isOnline, mainAreaHeight} = useOutletContext();
+    const height = mainAreaHeight / 2; //TabList height 104
 
-  const [saveCreateLoading, setSaveCreateLoading] = useState(false);
-  const [setFormData, setFormDataForUpdate] = useState(false);
-  const [formLoad, setFormLoad] = useState(true);
+    const [saveCreateLoading, setSaveCreateLoading] = useState(false);
+    const [setFormData, setFormDataForUpdate] = useState(false);
+    const [formLoad, setFormLoad] = useState(true);
 
-  const entityEditData = useSelector((state) => state.crudSlice.entityEditData);
-  const formLoading = useSelector((state) => state.crudSlice.formLoading);
+    const entityEditData = useSelector((state) => state.crudSlice.entityEditData);
+    const formLoading = useSelector((state) => state.crudSlice.formLoading);
 
-  // Table input fields edit enable disable comes from config
+    const form = useForm({
+        initialValues: {
+            product_id: "",
+            color_id: "",
+            brand_id: "",
+            size_id: "",
+            grade_id: "",
+        },
+        validate: {
+          color_id: isColor ? isNotEmpty() : undefined,
+          brand_id: isBrand ? isNotEmpty() : undefined,
+          size_id: isSize ? isNotEmpty() : undefined,
+          grade_id: isGrade ? isNotEmpty() : undefined,
+        },
+    });
 
-  const [priceInput, setPriceInput] = useState(true);
-  const [vatInput, setVatInput] = useState(true);
-  const [attInput, setAttInput] = useState(true);
+    useEffect(() => {
+        setFormLoad(true);
+        setFormDataForUpdate(true);
+    }, [dispatch, formLoading]);
 
-  const [loadSku, setLoadSku] = useState(true);
+    useEffect(() => {
+        form.setValues({});
 
-  // const [loadSku, setLoadSku] = useState(
-  //   !!(configData?.vat_integration === 1)
-  // );
+        dispatch(setFormLoading(false));
+        setTimeout(() => {
+            setFormLoad(false);
+            setFormDataForUpdate(false);
+        }, 500);
+    }, [entityEditData, dispatch, setFormData]);
 
-  const form = useForm({
-    initialValues: {
-      product_id: "",
-      color: "",
-      brand: "",
-      size: "",
-      grade_id: "",
-    },
-    validate: {
-      color: isNotEmpty(),
-      brand: isNotEmpty(),
-      size: isNotEmpty(),
-      grade_id: isNotEmpty(),
-    },
-  });
+    const productSkuIndexEntityData = useSelector((state) => state.inventoryCrudSlice.productSkuIndexEntityData);
+  const [reloadSkuItemData, setReloadSkuItemData] = useState(false);
 
-  useEffect(() => {
-    setFormLoad(true);
-    setFormDataForUpdate(true);
-  }, [dispatch, formLoading]);
-  //console.log(entityEditData);
-  useEffect(() => {
-    form.setValues({});
+    useEffect(() => {
+        const value = {
+            url: 'inventory/product/stock/sku/' + id,
+            param: {
+                term: null,
+            }
+        }
+        dispatch(getProductSkuItemIndexEntityData(value))
+        setReloadSkuItemData(false)
+    }, [reloadSkuItemData]);
 
-    dispatch(setFormLoading(false));
-    setTimeout(() => {
-      setFormLoad(false);
-      setFormDataForUpdate(false);
-    }, 500);
-  }, [entityEditData, dispatch, setFormData]);
+    const [brandData, setBrandData] = useState(null);
+    const [colorData, setColorData] = useState(null);
+    const [sizeData, setSizeData] = useState(null);
+    const [gradeData, setGradeData] = useState(null);
 
-  const data = [
-    {
-      name: "Foysal Mahmud hasan Rafi Babul",
-      color: "red",
-      size: "xl",
-      stock: "100",
-      brand: "Apex",
-      title: "title",
-    },
-    {
-      name: "shoe",
-      color: "red",
-      size: "xl",
-      stock: "100",
-      brand: "Apex",
-      title: "title",
-    },
-    {
-      name: "shoe",
-      color: "red",
-      size: "xl",
-      stock: "100",
-      brand: "Apex",
-      title: "title",
-    },
-    {
-      name: "shoe",
-      color: "red",
-      size: "xl",
-      stock: "100",
-      brand: "Apex",
-      title: "title",
-    },
-    {
-      name: "shoe",
-      color: "red",
-      size: "xl",
-      stock: "100",
-      brand: "Apex",
-      title: "title",
-    },
-    {
-      name: "shoe",
-      color: "red",
-      size: "xl",
-      stock: "100",
-      brand: "Apex",
-      title: "title",
-    },
-    {
-      name: "shoe",
-      color: "red",
-      size: "xl",
-      stock: "100",
-      brand: "Apex",
-      title: "title",
-    },
-    {
-      name: "shoe",
-      color: "red",
-      size: "xl",
-      stock: "100",
-      brand: "Apex",
-      title: "title",
-    },
-    {
-      name: "shoe",
-      color: "red",
-      size: "xl",
-      stock: "100",
-      brand: "Apex",
-      title: "title",
-    },
-    {
-      name: "shoe",
-      color: "red",
-      size: "xl",
-      stock: "100",
-      brand: "Apex",
-      title: "title",
-    },
-  ];
-  const brand = ["apex", "bata", "pegasus"];
-  const color = ["black", "white", "yellow"];
-  const size = ["small", "medium", "large"];
-  const title = ["title1", "title2", "title3"];
+    const [priceData, setPriceData] = useState([]);
+    const [multiplePriceFieldName, setMultiplePriceFieldName] = useState([]);
 
-  const [brandData, setBrandData] = useState(null);
-  const [colorData, setColorData] = useState(null);
-  const [sizeData, setSizeData] = useState(null);
-  const [titleData, setTitleData] = useState(null);
+    useEffect(() => {
+        if (productSkuIndexEntityData?.data) {
+            setPriceData(productSkuIndexEntityData.data.map((sku) => sku?.price || ''));
+            isMultiPrice && setMultiplePriceFieldName(productSkuIndexEntityData?.data[0]?.price_field_array);
+        }
+    }, [productSkuIndexEntityData]);
 
-  return (
-    <Box>
-      <Box bg={"white"} p={"xs"} className={"borderRadiusAll"}>
-        <Box
-          pl={`xs`}
-          pb={"6"}
-          pr={8}
-          pt={"6"}
-          mb={"4"}
-          className={"boxBackground borderRadiusAll"}
-        >
-          <Grid>
-            <Grid.Col span={6}>
-              <Title order={6} pt={"6"}>
-                {t("SKUItem")}
-              </Title>
-            </Grid.Col>
-            <Grid.Col span={6}></Grid.Col>
-          </Grid>
-        </Box>
-        <Box className={"borderRadiusAll"}>
-          <ScrollArea scrollbars="y" type="never">
-            <Box>
-              <LoadingOverlay
-                visible={formLoad}
-                zIndex={1000}
-                overlayProps={{ radius: "sm", blur: 2 }}
-              />
-            </Box>
-            <Box>
-              <form
-                onSubmit={form.onSubmit((values) => {
-                  form.values.product_id = id;
-                  modals.openConfirmModal({
-                    title: <Text size="md"> {t("FormConfirmationTitle")}</Text>,
-                    children: (
-                      <Text size="sm"> {t("FormConfirmationMessage")}</Text>
-                    ),
-                    labels: { confirm: t("Submit"), cancel: t("Cancel") },
-                    confirmProps: { color: "red" },
-                    onCancel: () => console.log("Cancel"),
-                    onConfirm: () => {
-                      console.log(values);
-                    },
-                  });
-                })}
-              >
-                <>
-                  <Box
-                    pl={4}
-                    pr={4}
-                    pt={"4"}
-                    pb={2}
-                    className={"boxBackground  border-bottom-none"}
-                  >
-                    <Grid columns={11}>
-                      <Grid.Col span={10}>
-                        <Grid gutter={{ base: 2 }}>
-                          {isColor && (
-                            <Grid.Col span={"auto"}>
-                              <SelectForm
-                                tooltip={t("ChooseProdcutColor")}
-                                placeholder={t("ChooseColor")}
-                                name={"color"}
-                                form={form}
-                                dropdownValue={getSettingParticularDropdownData('color')}
-                                mt={0}
-                                id={"color"}
-                                nextField={"size"}
-                                searchable={true}
-                                value={colorData}
-                                changeValue={setColorData}
-                              />
-                            </Grid.Col>
-                          )}
-                          {isSize && (
-                            <Grid.Col span={"auto"}>
-                              <SelectForm
-                                tooltip={t("ChooseProductUpdateFormize")}
-                                placeholder={t("ChooseSize")}
-                                name={"size"}
-                                form={form}
-                                dropdownValue={getSettingParticularDropdownData('size')}
-                                mt={0}
-                                id={"size"}
-                                nextField={"brand"}
-                                searchable={true}
-                                value={sizeData}
-                                changeValue={setSizeData}
-                              />
-                            </Grid.Col>
-                          )}
-                          {isBrand && (
-                            <Grid.Col span={"auto"}>
-                              <SelectForm
-                                tooltip={t("ChooseProductBrand")}
-                                placeholder={t("ChooseBrand")}
-                                name={"brand"}
-                                form={form}
-                                dropdownValue={getSettingParticularDropdownData('brand')}
-                                mt={0}
-                                id={"brand"}
-                                nextField={"grade_id"}
-                                searchable={true}
-                                value={brandData}
-                                changeValue={setBrandData}
-                              />
-                            </Grid.Col>
-                          )}
-                          {isGrade && (
-                            <Grid.Col span={"auto"}>
-                              <SelectForm
-                                tooltip={t("ChooseProductGrade")}
-                                placeholder={t("ChooseProductGrade")}
-                                name={"grade_id"}
-                                form={form}
-                                dropdownValue={getSettingParticularDropdownData('product-grade')}
-                                mt={0}
-                                id={"grade_id"}
-                                nextField={"EntityFormSubmit"}
-                                searchable={true}
-                                value={titleData}
-                                changeValue={setTitleData}
-                              />
-                            </Grid.Col>
-                          )}
-                        </Grid>
-                      </Grid.Col>
-                      <Grid.Col span={1}>
-                        <Stack right align="flex-end" pt={"3"}>
-                          <>
-                            {!saveCreateLoading && isOnline && (
-                              <Button
-                                size="xs"
-                                color={`green.8`}
-                                type="submit"
-                                id="EntityFormSubmit"
-                                leftSection={<IconDeviceFloppy size={16} />}
-                              >
-                                <Flex direction={`column`} gap={0}>
-                                  <Text fz={14} fw={400}>
-                                    {t("Add")}
-                                  </Text>
-                                </Flex>
-                              </Button>
-                            )}
-                          </>
-                        </Stack>
-                      </Grid.Col>
+    const [wholesalePriceData, setWholesalePriceData] = useState([]);
+    useEffect(() => {
+        if (productSkuIndexEntityData?.data?.length > 0) {
+            const initialPriceData = productSkuIndexEntityData.data.map((sku) => {
+                return sku.price_field.map((field) => ({
+                    id: field.id,
+                    slug: field.price_field_slug,
+                    price: field.price !== null ? field.price : ''
+                }));
+            });
+            setWholesalePriceData(initialPriceData);
+        }
+    }, [productSkuIndexEntityData]);
+
+    const handleSkuData = (value, stockId, priceFieldSlug, skuIndex, fieldIndex,settingId) => {
+        if (priceFieldSlug != 'price') {
+            const updatedPriceData = [...wholesalePriceData];
+            updatedPriceData[skuIndex][fieldIndex].price = value;
+            setWholesalePriceData(updatedPriceData);
+
+            const updateData = {
+                url: 'inventory/product/stock/sku/inline-update/' + stockId,
+                data: {
+                    value: value,
+                    field: priceFieldSlug,
+                    setting_id: settingId,
+                }
+            }
+            setTimeout(() => {
+                dispatch(inlineUpdateEntityData(updateData))
+            }, 500)
+        }
+
+        if (priceFieldSlug === 'price') {
+            const newPriceData = [...priceData];
+            newPriceData[skuIndex] = value;
+            setPriceData(newPriceData);
+            const updateData = {
+                url: 'inventory/product/stock/sku/inline-update/' + stockId,
+                data: {
+                    value: value,
+                    field: priceFieldSlug,
+                }
+            }
+            setTimeout(() => {
+                dispatch(inlineUpdateEntityData(updateData))
+            }, 500)
+        }
+    };
+
+    return (
+        <Box>
+            <Box bg={"white"} p={"xs"} className={"borderRadiusAll"}>
+                <Box
+                    pl={`xs`}
+                    pb={"6"}
+                    pr={8}
+                    pt={"6"}
+                    mb={"4"}
+                    className={"boxBackground borderRadiusAll"}
+                >
+                    <Grid>
+                        <Grid.Col span={6}>
+                            <Title order={6} pt={"6"}>
+                                {t("SKUItem")}
+                            </Title>
+                        </Grid.Col>
+                        <Grid.Col span={6}></Grid.Col>
                     </Grid>
-                  </Box>
-                </>
-              </form>
-
-              <Box className={"border-top-none"}>
-                <DataTable
-                  classNames={{
-                    root: tableCss.root,
-                    table: tableCss.table,
-                    header: tableCss.header,
-                    footer: tableCss.footer,
-                    pagination: tableCss.pagination,
-                  }}
-                  records={data}
-                  columns={[
-                    {
-                      accessor: "index",
-                      title: t("S/N"),
-                      textAlignment: "right   ",
-                      render: (item) => data.indexOf(item) + 1,
-                      width: 50,
-                    },
-                    {
-                      accessor: "name",
-                      title: t("Name"),
-                      width: 120,
-                    },
-                    ...(isSize
-                      ? [
-                          {
-                            accessor: "size",
-                            title: t("Size"),
-                            width: 60,
-                          },
-                        ]
-                      : []),
-                    ...(isColor
-                      ? [
-                          {
-                            accessor: "color",
-                            title: t("Color"),
-                            width: 80,
-                          },
-                        ]
-                      : []),
-                    ...(isBrand
-                      ? [
-                          {
-                            accessor: "brand",
-                            title: t("Brand"),
-                            width: 80,
-                          },
-                        ]
-                      : []),
-                    ...(isGrade
-                      ? [
-                          {
-                            accessor: "title",
-                            title: t("Title"),
-                            width: 80,
-                          },
-                        ]
-                      : []),
-                    {
-                      accessor: "price",
-                      title: t("Price"),
-                      textAlign: "center",
-                      width: "100px",
-                      render: (item) => {
-                        const [editedPrice, setEditedPrice] = useState(
-                          item.price
-                        );
-
-                        const handlPriceChange = (e) => {
-                          const editedPrice = e.currentTarget.value;
-                          setEditedPrice(editedPrice);
-                          console.log(editedPrice);
-                        };
-
-                        return priceInput ? (
-                          <>
-                            <TextInput
-                              type="number"
-                              label=""
-                              size="xs"
-                              value={editedPrice}
-                              onChange={handlPriceChange}
-                              // onKeyDown={getHotkeyHandler([
-                              //     ['Enter', (e) => {
-                              //         document.getElementById('inline-update-quantity-' + item.product_id).focus();
-                              //     }],
-                              // ])}
+                </Box>
+                <Box className={"borderRadiusAll"}>
+                    <ScrollArea scrollbars="y" type="never">
+                        <Box>
+                            <LoadingOverlay
+                                visible={formLoad}
+                                zIndex={1000}
+                                overlayProps={{radius: "sm", blur: 2}}
                             />
-                          </>
-                        ) : (
-                          1000
-                        );
-                      },
-                    },
-                    //   {
-                    //     accessor: "vat",
-                    //     title: t("Vat"),
-                    //     textAlign: "center",
-                    //     width: "100px",
-                    //     render: (item) => {
-                    //       const [editedVat, setEditedVat] = useState(
-                    //         item.vat
-                    //       );
+                        </Box>
+                        <Box>
+                            <form
+                                onSubmit={form.onSubmit((values) => {
+                                    form.values.product_id = id;
 
-                    //       const handlVatChange = (e) => {
-                    //         const editedVat = e.currentTarget.value;
-                    //         setEditedVat(editedVat);
-                    //         console.log(editedVat);
-                    //       };
-
-                    //       return !vatInput ? (
-                    //         <>
-                    //           <TextInput
-                    //             type="number"
-                    //             label=""
-                    //             size="xs"
-                    //             value={editedVat}
-                    //             onChange={handlVatChange}
-                    //             // onKeyDown={getHotkeyHandler([
-                    //             //     ['Enter', (e) => {
-                    //             //         document.getElementById('inline-update-quantity-' + item.product_id).focus();
-                    //             //     }],
-                    //             // ])}
-                    //           />
-                    //         </>
-                    //       ) : (
-                    //         "10%"
-                    //       );
-                    //     },
-                    //   },
-                    //   {
-                    //     accessor: "att",
-                    //     title: t("ATT"),
-                    //     textAlign: "center",
-                    //     width: "100px",
-                    //     render: (item) => {
-                    //       const [editedAtt, setEditedAtt] = useState(
-                    //         item.att
-                    //       );
-
-                    //       const handlAttChange = (e) => {
-                    //         const editedAtt = e.currentTarget.value;
-                    //         setEditedAtt(editedAtt);
-                    //         console.log(editedAtt);
-                    //       };
-
-                    //       return attInput ? (
-                    //         <>
-                    //           <TextInput
-                    //             type="number"
-                    //             label=""
-                    //             size="xs"
-                    //             value={editedAtt}
-                    //             onChange={handlAttChange}
-                    //             // onKeyDown={getHotkeyHandler([
-                    //             //     ['Enter', (e) => {
-                    //             //         document.getElementById('inline-update-quantity-' + item.product_id).focus();
-                    //             //     }],
-                    //             // ])}
-                    //           />
-                    //         </>
-                    //       ) : (
-                    //         10
-                    //       );
-                    //     },
-                    //   },
-                    {
-                      accessor: "wholesale_price",
-                      title: t("Wholesale Price"),
-                      textAlign: "center",
-                      width: "120px",
-                      render: (item) => {
-                        const [editedAtt, setEditedAtt] = useState(
-                          item.wholesale_price
-                        );
-
-                        const handlAttChange = (e) => {
-                          const editedAtt = e.currentTarget.value;
-                          setEditedAtt(editedAtt);
-                          console.log(editedAtt);
-                        };
-
-                        return attInput ? (
-                          <>
-                            <TextInput
-                              type="number"
-                              label=""
-                              size="xs"
-                              value={editedAtt}
-                              onChange={handlAttChange}
-                              // onKeyDown={getHotkeyHandler([
-                              //     ['Enter', (e) => {
-                              //         document.getElementById('inline-update-quantity-' + item.product_id).focus();
-                              //     }],
-                              // ])}
-                            />
-                          </>
-                        ) : (
-                          10
-                        );
-                      },
-                    },
-                    {
-                      accessor: "branch_price",
-                      title: t("Branch Price"),
-                      textAlign: "center",
-                      width: "120px",
-                      render: (item) => {
-                        const [editedAtt, setEditedAtt] = useState(
-                          item.branch_price
-                        );
-
-                        const handlAttChange = (e) => {
-                          const editedAtt = e.currentTarget.value;
-                          setEditedAtt(editedAtt);
-                          console.log(editedAtt);
-                        };
-
-                        return attInput ? (
-                          <>
-                            <TextInput
-                              type="number"
-                              label=""
-                              size="xs"
-                              value={editedAtt}
-                              onChange={handlAttChange}
-                              // onKeyDown={getHotkeyHandler([
-                              //     ['Enter', (e) => {
-                              //         document.getElementById('inline-update-quantity-' + item.product_id).focus();
-                              //     }],
-                              // ])}
-                            />
-                          </>
-                        ) : (
-                          10
-                        );
-                      },
-                    },
-                    ...(isGrade
-                      ? [
-                          {
-                            accessor: "retail_price",
-                            title: t("Retail Price"),
-                            textAlign: "center",
-                            width: "120px",
-                            render: (item) => {
-                              const [editedPrice, setEditedPrice] = useState(
-                                item.retail_price
-                              );
-
-                              const handlPriceChange = (e) => {
-                                const editedPrice = e.currentTarget.value;
-                                setEditedPrice(editedPrice);
-                                console.log(editedPrice);
-                              };
-
-                              return priceInput ? (
-                                <>
-                                  <TextInput
-                                    type="number"
-                                    label=""
-                                    size="xs"
-                                    value={editedPrice}
-                                    onChange={handlPriceChange}
-                                    // onKeyDown={getHotkeyHandler([
-                                    //     ['Enter', (e) => {
-                                    //         document.getElementById('inline-update-quantity-' + item.product_id).focus();
-                                    //     }],
-                                    // ])}
-                                  />
-                                </>
-                              ) : (
-                                1000
-                              );
-                            },
-                          },
-                        ]
-                      : []),
-                    ...(isGrade
-                      ? [
-                          {
-                            accessor: "promo_price",
-                            title: t("Promo Price"),
-                            textAlign: "center",
-                            width: "120px",
-                            render: (item) => {
-                              const [editedPrice, setEditedPrice] = useState(
-                                item.promo_price
-                              );
-
-                              const handlPriceChange = (e) => {
-                                const editedPrice = e.currentTarget.value;
-                                setEditedPrice(editedPrice);
-                                console.log(editedPrice);
-                              };
-
-                              return priceInput ? (
-                                <>
-                                  <TextInput
-                                    type="number"
-                                    label=""
-                                    size="xs"
-                                    value={editedPrice}
-                                    onChange={handlPriceChange}
-                                    // onKeyDown={getHotkeyHandler([
-                                    //     ['Enter', (e) => {
-                                    //         document.getElementById('inline-update-quantity-' + item.product_id).focus();
-                                    //     }],
-                                    // ])}
-                                  />
-                                </>
-                              ) : (
-                                1000
-                              );
-                            },
-                          },
-                        ]
-                      : []),
-                    {
-                      accessor: "action",
-                      title: t("Action"),
-                      textAlign: "right",
-                      render: (data) => (
-                        <Group gap={4} justify="right" wrap="nowrap">
-                          <Menu
-                            position="bottom-end"
-                            offset={3}
-                            withArrow
-                            trigger="hover"
-                            openDelay={100}
-                            closeDelay={400}
-                          >
-                            <Menu.Target>
-                              <ActionIcon
-                                size="sm"
-                                variant="outline"
-                                color="red"
-                                radius="xl"
-                                aria-label="Settings"
-                              >
-                                <IconDotsVertical
-                                  height={"18"}
-                                  width={"18"}
-                                  stroke={1.5}
-                                />
-                              </ActionIcon>
-                            </Menu.Target>
-                            <Menu.Dropdown>
-                              <Menu.Item
-                                // href={`/inventory/sales/edit/${data.id}`}
-                                onClick={() => {
-                                  dispatch(setInsertType("update"));
-                                  dispatch(
-                                    editEntityData(
-                                      "inventory/product/" + data.id
-                                    )
+                                  const existingProductItem = productSkuIndexEntityData.data.find(item =>
+                                      Number(item.color_id) === Number(values.color_id) &&
+                                      Number(item.brand_id) === Number(values.brand_id) &&
+                                      Number(item.size_id) === Number(values.size_id) &&
+                                      Number(item.grade_id) === Number(values.grade_id)
                                   );
-                                  dispatch(setFormLoading(true));
-                                  navigate(`/inventory/product/${data.id}`);
-                                }}
-                              >
-                                {t("Edit")}
-                              </Menu.Item>
 
-                              <Menu.Item
-                                onClick={() => {
-                                  setViewDrawer(true);
-                                  dispatch(
-                                    showEntityData(
-                                      "inventory/product/" + data.id
-                                    )
-                                  );
-                                }}
-                                target="_blank"
-                                component="a"
-                                w={"200"}
-                              >
-                                {t("Show")}
-                              </Menu.Item>
-                              <Menu.Item
-                                // href={``}
-                                target="_blank"
-                                component="a"
-                                w={"200"}
-                                mt={"2"}
-                                bg={"red.1"}
-                                c={"red.6"}
-                                onClick={() => {
-                                  modals.openConfirmModal({
-                                    title: (
-                                      <Text size="md">
-                                        {" "}
-                                        {t("FormConfirmationTitle")}
-                                      </Text>
-                                    ),
-                                    children: (
-                                      <Text size="sm">
-                                        {" "}
-                                        {t("FormConfirmationMessage")}
-                                      </Text>
-                                    ),
-                                    labels: {
-                                      confirm: "Confirm",
-                                      cancel: "Cancel",
-                                    },
-                                    confirmProps: { color: "red.6" },
-                                    onCancel: () => console.log("Cancel"),
-                                    onConfirm: () => {
-                                      dispatch(
-                                        deleteEntityData(
-                                          "inventory/product/" + data.id
-                                        )
-                                      );
-                                      dispatch(setFetching(true));
-                                    },
-                                  });
-                                }}
-                                rightSection={
-                                  <IconTrashX
-                                    style={{
-                                      width: rem(14),
-                                      height: rem(14),
-                                    }}
-                                  />
-                                }
-                              >
-                                {t("Delete")}
-                              </Menu.Item>
-                            </Menu.Dropdown>
-                          </Menu>
-                        </Group>
-                      ),
-                    },
-                  ]}
-                  // fetching={fetching}
-                  // totalRecords={indexData.total}
-                  // recordsPerPage={perPage}
-                  // page={page}
-                  // onPageChange={(p) => {
-                  //     setPage(p)
-                  //     dispatch(setFetching(true))
-                  // }}
-                  loaderSize="xs"
-                  loaderColor="grape"
-                  height={height - 184}
-                  scrollAreaProps={{ type: "never" }}
-                />
-              </Box>
+                                  if (existingProductItem){
+                                    notifications.show({
+                                      loading: true,
+                                      color: "red",
+                                      title: "Already exists",
+                                      message:
+                                          "Data will be loaded in 3 seconds, you cannot close this yet",
+                                      autoClose: 1000,
+                                      withCloseButton: true,
+                                    });
+                                    return;
+                                  }
+                                    modals.openConfirmModal({
+                                      title: <Text size="md"> {t("FormConfirmationTitle")}</Text>,
+                                      children: (
+                                          <Text size="sm"> {t("FormConfirmationMessage")}</Text>
+                                      ),
+                                      labels: {confirm: t("Submit"), cancel: t("Cancel")},
+                                      confirmProps: {color: "red"},
+                                      onCancel: () => console.log("Cancel"),
+                                      onConfirm: () => {
+                                        const value = {
+                                          url: "inventory/product/stock/sku",
+                                          data: values,
+                                        };
+                                        dispatch(storeEntityData(value));
+
+                                        notifications.show({
+                                          color: "teal",
+                                          title: t("UpdateSuccessfully"),
+                                          icon: <IconCheck style={{width: rem(18), height: rem(18)}}/>,
+                                          loading: false,
+                                          autoClose: 700,
+                                          style: {backgroundColor: "lightgray"},
+                                        });
+
+                                        setTimeout(() => {
+                                          form.reset();
+                                          setColorData(null)
+                                          setBrandData(null)
+                                          setSizeData(null)
+                                          setGradeData(null)
+                                          setReloadSkuItemData(true);
+                                          setSaveCreateLoading(true);
+                                        }, 500);
+                                      },
+                                    });
+
+                                })}
+                            >
+                                <>
+                                    <Box
+                                        pl={4}
+                                        pr={4}
+                                        pt={"4"}
+                                        pb={2}
+                                        className={"boxBackground  border-bottom-none"}
+                                    >
+                                        <Grid columns={11}>
+                                            <Grid.Col span={10}>
+                                                <Grid gutter={{base: 2}}>
+                                                    {isColor && (
+                                                        <Grid.Col span={"auto"}>
+                                                            <SelectForm
+                                                                tooltip={t("ChooseColor")}
+                                                                placeholder={t("ChooseColor")}
+                                                                name={"color_id"}
+                                                                form={form}
+                                                                dropdownValue={getSettingParticularDropdownData('color')}
+                                                                mt={0}
+                                                                id={"color_id"}
+                                                                nextField={"size_id"}
+                                                                searchable={true}
+                                                                value={colorData}
+                                                                changeValue={setColorData}
+                                                            />
+                                                        </Grid.Col>
+                                                    )}
+                                                    {isSize && (
+                                                        <Grid.Col span={"auto"}>
+                                                            <SelectForm
+                                                                tooltip={t("ChooseSize")}
+                                                                placeholder={t("ChooseSize")}
+                                                                name={"size_id"}
+                                                                form={form}
+                                                                dropdownValue={getSettingParticularDropdownData('size')}
+                                                                mt={0}
+                                                                id={"size_id"}
+                                                                nextField={"brand_id"}
+                                                                searchable={true}
+                                                                value={sizeData}
+                                                                changeValue={setSizeData}
+                                                            />
+                                                        </Grid.Col>
+                                                    )}
+                                                    {isBrand && (
+                                                        <Grid.Col span={"auto"}>
+                                                            <SelectForm
+                                                                tooltip={t("ChooseBrand")}
+                                                                placeholder={t("ChooseBrand")}
+                                                                name={"brand_id"}
+                                                                form={form}
+                                                                dropdownValue={getSettingParticularDropdownData('brand')}
+                                                                mt={0}
+                                                                id={"brand_id"}
+                                                                nextField={"grade_id"}
+                                                                searchable={true}
+                                                                value={brandData}
+                                                                changeValue={setBrandData}
+                                                            />
+                                                        </Grid.Col>
+                                                    )}
+                                                    {isGrade && (
+                                                        <Grid.Col span={"auto"}>
+                                                            <SelectForm
+                                                                tooltip={t("ChooseProductGrade")}
+                                                                placeholder={t("ChooseProductGrade")}
+                                                                name={"grade_id"}
+                                                                form={form}
+                                                                dropdownValue={getSettingParticularDropdownData('product-grade')}
+                                                                mt={0}
+                                                                id={"grade_id"}
+                                                                nextField={"EntityFormSubmitSkuItem"}
+                                                                searchable={true}
+                                                                value={gradeData}
+                                                                changeValue={setGradeData}
+                                                            />
+                                                        </Grid.Col>
+                                                    )}
+                                                </Grid>
+                                            </Grid.Col>
+                                            <Grid.Col span={1}>
+                                                <Stack right align="flex-end" pt={"3"}>
+                                                    <>
+                                                        {isOnline && (
+                                                            <Button
+                                                                size="xs"
+                                                                color={`green.8`}
+                                                                type="submit"
+                                                                id="EntityFormSubmitSkuItem"
+                                                                leftSection={<IconDeviceFloppy size={16}/>}
+                                                            >
+                                                                <Flex direction={`column`} gap={0}>
+                                                                    <Text fz={14} fw={400}>
+                                                                        {t("Add")}
+                                                                    </Text>
+                                                                </Flex>
+                                                            </Button>
+                                                        )}
+                                                    </>
+                                                </Stack>
+                                            </Grid.Col>
+                                        </Grid>
+                                    </Box>
+                                </>
+                            </form>
+
+                            <Box pl={`xs`} pr={"xs"} className={"borderRadiusAll"}>
+                                <ScrollArea
+                                    h={height - 105}
+                                    scrollbarSize={2}
+                                    scrollbars="y"
+                                    type="never"
+                                >
+                                    <Box>
+                                        <Table stickyHeader>
+                                            <Table.Thead>
+                                                <Table.Tr>
+                                                    <Table.Th fz="xs">
+                                                        {t("S/N")}
+                                                    </Table.Th>
+                                                    <Table.Th fz="xs">
+                                                        {t("Name")}
+                                                    </Table.Th>
+
+                                                    {
+                                                        isColor &&
+                                                        <Table.Th fz="xs" ta="center">
+                                                            {t("Color")}
+                                                        </Table.Th>
+                                                    }
+
+                                                    {
+                                                        isSize &&
+                                                        <Table.Th fz="xs" ta="center">
+                                                            {t("Size")}
+                                                        </Table.Th>
+                                                    }
+
+                                                    {
+                                                        isBrand &&
+                                                        <Table.Th fz="xs" ta="center">
+                                                            {t("Brand")}
+                                                        </Table.Th>
+                                                    }
+
+                                                    {
+                                                        isGrade &&
+                                                        <Table.Th fz="xs" ta="center">
+                                                            {t("Grade")}
+                                                        </Table.Th>
+                                                    }
+
+                                                    <Table.Th fz="xs" ta="center">
+                                                        {t("Price")}
+                                                    </Table.Th>
+                                                    {
+                                                        isMultiPrice && multiplePriceFieldName?.length > 0 &&
+                                                        multiplePriceFieldName.map((priceFieldName, index) => (
+                                                            <Table.Th fz="xs" ta="center" key={index}>
+                                                                {priceFieldName}
+                                                            </Table.Th>
+                                                        ))
+                                                    }
+                                                </Table.Tr>
+                                            </Table.Thead>
+                                            <Table.Tbody>
+                                                {productSkuIndexEntityData?.data?.length > 0 ? (
+                                                    productSkuIndexEntityData.data.map((sku, index) => {
+                                                        return (
+                                                            <Table.Tr key={sku.id}>
+                                                                <Table.Th fz="xs">
+                                                                    {index + 1}
+                                                                </Table.Th>
+                                                                <Table.Th fz="xs">
+                                                                    {sku.name}
+                                                                </Table.Th>
+                                                                {
+                                                                    isColor &&
+                                                                    <Table.Th fz="xs" ta="center">
+                                                                        {sku.color_name}
+                                                                    </Table.Th>
+                                                                }
+                                                                {
+                                                                    isSize &&
+                                                                    <Table.Th fz="xs" ta="center">
+                                                                        {sku.size_name}
+                                                                    </Table.Th>
+                                                                }
+                                                                {
+                                                                    isBrand &&
+                                                                    <Table.Th fz="xs" ta="center">
+                                                                        {sku.brand_name}
+                                                                    </Table.Th>
+                                                                }
+                                                                {
+                                                                    isGrade &&
+                                                                    <Table.Th fz="xs" ta="center">
+                                                                        {sku.grade_name}
+                                                                    </Table.Th>
+                                                                }
+
+                                                                <Table.Th fz="xs" ta="center">
+                                                                    <TextInput
+                                                                        type="number"
+                                                                        label=""
+                                                                        size="xs"
+                                                                        id={'inline-update-price-' + sku.stock_id}
+                                                                        value={priceData[index]}
+                                                                        onChange={(e) => {
+                                                                            handleSkuData(e.target.value, sku.stock_id, 'price', index, null, null)
+                                                                        }}
+                                                                    />
+                                                                </Table.Th>
+
+                                                                {sku.price_field?.map((field, fieldIndex) => (
+                                                                    <Table.Th fz="xs" ta="center" key={field.id}>
+                                                                        <TextInput
+                                                                            type="number"
+                                                                            label=""
+                                                                            size="xs"
+                                                                            id={`inline-update-${field.price_field_slug}-${sku.stock_id}`}
+                                                                            value={wholesalePriceData[index]?.[fieldIndex]?.price || ''}
+                                                                            onChange={(e) =>
+                                                                                handleSkuData(e.target.value, sku.stock_id, field.price_field_slug, index, fieldIndex,field.id)
+                                                                            }
+                                                                        />
+                                                                    </Table.Th>
+                                                                ))}
+                                                            </Table.Tr>
+                                                        )
+                                                    })
+                                                ) : (
+                                                    <Table.Tr>
+                                                        <Table.Th colSpan="4" fz="xs" ta="center">
+                                                            No data available
+                                                        </Table.Th>
+                                                    </Table.Tr>
+                                                )}
+                                            </Table.Tbody>
+                                        </Table>
+                                    </Box>
+                                </ScrollArea>
+                            </Box>
+                        </Box>
+                    </ScrollArea>
+                </Box>
             </Box>
-            <Box
-              pl={`xs`}
-              pb={"6"}
-              pr={8}
-              pt={"6"}
-              className={
-                "boxBackground borderRadiusAll border-left-none border-right-none border-bottom-none"
-              }
-            >
-              <Group justify="flex-end">
-                <Stack right align="flex-end">
-                  <>
-                    {!saveCreateLoading && isOnline && (
-                      <Button
-                        size="xs"
-                        color={`green.8`}
-                        // type="submit"
-                        // id="EntityFormSubmit"
-                        leftSection={<IconDeviceFloppy size={16} />}
-                      >
-                        <Flex direction={`column`} gap={0}>
-                          <Text fz={14} fw={400}>
-                            {t("Preview")}
-                          </Text>
-                        </Flex>
-                      </Button>
-                    )}
-                  </>
-                </Stack>
-                <Stack right align="flex-end">
-                  <>
-                    {!saveCreateLoading && isOnline && (
-                      <Button
-                        size="xs"
-                        color={`green.8`}
-                        type="submit"
-                        id="EntityFormSubmit"
-                        leftSection={<IconDeviceFloppy size={16} />}
-                      >
-                        <Flex direction={`column`} gap={0}>
-                          <Text fz={14} fw={400}>
-                            {t("UpdateAndSave")}
-                          </Text>
-                        </Flex>
-                      </Button>
-                    )}
-                  </>
-                </Stack>
-              </Group>
-            </Box>
-          </ScrollArea>
         </Box>
-      </Box>
-    </Box>
-  );
+    );
 }
 
 export default _SkuManagement;

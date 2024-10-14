@@ -17,6 +17,16 @@ export const getIndexEntityData = createAsyncThunk("index", async (value) => {
         throw error;
     }
 });
+
+export const getProductSkuItemIndexEntityData = createAsyncThunk("index-sku-item", async (value) => {
+    try {
+        const response = getDataWithParam(value);
+        return response;
+    } catch (error) {
+        console.log('error', error.message);
+        throw error;
+    }
+});
 export const storeEntityData = createAsyncThunk("store", async (value) => {
     try {
         const response = createData(value);
@@ -133,6 +143,7 @@ const crudSlice = createSlice({
         entityEditData: [],
         entityUpdateData: [],
         salesDetails: [],
+        productSkuIndexEntityData: [],
         insertType: 'create',
         entityDataDelete: null,
         openingInlineUpdateStatus: null,
@@ -214,6 +225,11 @@ const crudSlice = createSlice({
 
         builder.addCase(getIndexEntityData.fulfilled, (state, action) => {
             state.indexEntityData = action.payload
+            state.fetching = false
+        })
+
+        builder.addCase(getProductSkuItemIndexEntityData.fulfilled, (state, action) => {
+            state.productSkuIndexEntityData = action.payload
             state.fetching = false
         })
 
