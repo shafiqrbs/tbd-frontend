@@ -29,7 +29,7 @@ function SalesIndex() {
                         configData &&
                         <>
                             <_SalesPurchaseHeaderNavbar
-                                pageTitle={t('Sales')}
+                                pageTitle={t('ManageSales')}
                                 roles={t('Roles')}
                                 allowZeroPercentage={configData?.zero_stock}
                                 currancySymbol={configData?.currency?.symbol}
