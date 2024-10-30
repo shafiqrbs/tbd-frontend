@@ -45,7 +45,7 @@ import PosIndex from "./components/modules/restaurant-pos/pos-sales/PosIndex.jsx
 import SitemapIndex from "./components/modules/domain/sitemap/SitemapIndex.jsx";
 import BatchIndex from "./components/modules/production/batch/BatchIndex.jsx";
 import Requisition from "./components/modules/procurement/purchase-requisition/Requisition.jsx";
-import RequisitionIndex from "./components/modules/procurement/purchase-requisition/RequisitionIndex.jsx";
+import RequisitionInvoice from "./components/modules/procurement/purchase-requisition/RequisitionInvoice.jsx";
 
 function AppRoute() {
   return (
@@ -146,7 +146,7 @@ function AppRoute() {
         </Route>
         <Route path="/procurement">
           <Route path="requisition" element={<Requisition />} />
-          <Route path="new-requisition" element={<RequisitionIndex />} />
+          <Route path="new-requisition" element={<RequisitionInvoice />} />
         </Route>
         <Route path="sitemap" element={<Sitemap />} />
       </Route>

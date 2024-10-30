@@ -1,16 +1,15 @@
-import React, { useState, useRef, useEffect } from "react";
-import { useNavigate, useOutletContext } from "react-router-dom";
+import React, { useState } from "react";
+import { useOutletContext } from "react-router-dom";
 
 import tableCss from "../../../../assets/css/Table.module.css";
-import { useDispatch } from "react-redux";
 import { useTranslation } from "react-i18next";
-import { Box, Button } from "@mantine/core";
+import { ActionIcon, Box, Button, Menu, rem } from "@mantine/core";
 import KeywordSearch from "../../filter/KeywordSearch";
 import { DataTable } from "mantine-datatable";
+import { IconDotsVertical, IconPencil } from "@tabler/icons-react";
 
 export default function _RequisitionTable(props) {
-  const dispatch = useDispatch();
-  const { t } = useTranslation;
+  const { t } = useTranslation();
   const { isOnline, mainAreaHeight } = useOutletContext();
   const tableHeight = mainAreaHeight - 120;
   const perPage = 50;
@@ -56,26 +55,27 @@ export default function _RequisitionTable(props) {
             records={data}
             columns={[
               {
-                accessor: "index",
-                title: "S/N",
+                accessor: "id",
+                title: t("S/N"),
                 textAlign: "left",
                 render: (item) => data.indexOf(item) + 1,
               },
               {
                 accessor: "product",
-                title: "Product",
+                title: t("Product"),
               },
               {
                 accessor: "created",
-                title: "Created",
+                title: t("Created"),
               },
               {
                 accessor: "quantity",
-                title: "Quantity",
+                title: t("Quantity"),
+                textAlign: "center",
               },
               {
                 accessor: "status",
-                title: "Status",
+                title: t("Status"),
                 textAlign: "center",
                 render: (data) => (
                   <Button
@@ -93,9 +93,55 @@ export default function _RequisitionTable(props) {
                   </Button>
                 ),
               },
+              {
+                accessor: "action",
+                title: t("Action"),
+                textAlign: "right",
+                render: (data) => (
+                  <Box>
+                    <Menu
+                      position="bottom-end"
+                      offset={3}
+                      withArrow
+                      trigger="hover"
+                      openDelay={100}
+                      closeDelay={400}
+                    >
+                      <Menu.Target>
+                        <ActionIcon
+                          size="sm"
+                          variant="outline"
+                          color="red"
+                          radius="xl"
+                          aria-label="Settings"
+                        >
+                          <IconDotsVertical
+                            style={{ width: 12, height: 12 }}
+                            stroke={1.5}
+                          />
+                        </ActionIcon>
+                      </Menu.Target>
+                      <Menu.Dropdown>
+                        <Menu.Item
+                          onclick={""}
+                          w={200}
+                          component="a"
+                          leftSection={
+                            <IconPencil
+                              style={{ width: rem(14), height: rem(14) }}
+                            />
+                          }
+                        >
+                          {t("Edit")}
+                        </Menu.Item>
+                      </Menu.Dropdown>
+                    </Menu>
+                  </Box>
+                ),
+              },
             ]}
             // fetching={}
-            totalRecords={data.total}
+            totalRecords={data.length}
             recordsPerPage={perPage}
             page={page}
             onPageChange={(p) => {
@@ -103,7 +149,8 @@ export default function _RequisitionTable(props) {
             }}
             loaderSize="xs"
             loaderColor="grape"
-            height={tableHeight }
+            height={tableHeight}
+            scrollAreaProps={{ type: "never" }}
           />
         </Box>
       </Box>
