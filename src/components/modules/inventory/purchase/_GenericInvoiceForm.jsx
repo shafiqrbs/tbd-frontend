@@ -54,7 +54,7 @@ function _GenericInvoiceForm(props) {
         const tempProducts = localStorage.getItem('temp-purchase-products');
         setTempCardProducts(tempProducts ? JSON.parse(tempProducts) : [])
         setLoadCardProducts(false)
-    }, [loadCardProducts])
+    }, [loadCardProducts]);
 
     useEffect(() => {
         if (searchValue.length > 0) {
@@ -206,6 +206,7 @@ function _GenericInvoiceForm(props) {
             form.setFieldValue('price', '');
             form.setFieldValue('sales_price', '');
             form.setFieldValue('purchase_price', '');
+            form.setFieldValue('quantity', '');
         }
     }, [form.values.product_id]);
     /*END PRODUCT SELECTED BY PRODUCT ID*/
@@ -631,7 +632,7 @@ function _GenericInvoiceForm(props) {
                         <ShortcutInvoice
                             form={form}
                             FormSubmit={'EntityFormSubmit'}
-                            Name={'CompanyName'}
+                            Name={'product_id'}
                         />
                     </Box>
                 </Grid.Col>
