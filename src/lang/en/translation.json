@@ -621,5 +621,7 @@
   "SKUItem" : "SKU Item",
   "ChooseHS" : "Choose HS",
   "SkuItem" : "Sku Item",
-  "EnterQuantity" : "Enter Quantity"
+  "EnterQuantity" : "Enter Quantity",
+  "NewRequisition" : "New Requisition",
+  "SalesInvoice" : "Sales Invoice"
 }
