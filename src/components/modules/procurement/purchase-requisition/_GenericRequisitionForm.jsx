@@ -9,7 +9,7 @@ import {
   ActionIcon,
   Input,
 } from "@mantine/core";
-import { useForm } from "@mantine/form";
+import { isNotEmpty, useForm } from "@mantine/form";
 import { getHotkeyHandler, useHotkeys } from "@mantine/hooks";
 import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -22,6 +22,7 @@ import {
   IconX,
   IconPrinter,
   IconStackPush,
+  IconCalendar,
 } from "@tabler/icons-react";
 import SelectServerSideForm from "../../../form-builders/SelectServerSideForm";
 import InputButtonForm from "../../../form-builders/InputButtonForm";
@@ -31,6 +32,8 @@ import { notifications } from "@mantine/notifications";
 import { DataTable } from "mantine-datatable";
 import tableCss from "../../../../assets/css/Table.module.css";
 import ShortcutInvoice from "../../shortcut/ShortcutInvoice";
+import TextAreaForm from "../../../form-builders/TextAreaForm";
+import DatePickerForm from "../../../form-builders/DatePicker";
 
 export default function _GenericRequisitionForm(props) {
   const { currencySymbol, allowZeroPercentage, isPurchaseByPurchasePrice } =
@@ -42,7 +45,7 @@ export default function _GenericRequisitionForm(props) {
 
   // form variables
 
-  const form = useForm({
+  const productForm = useForm({
     initialValues: {
       product_id: "",
       price: "",
@@ -77,6 +80,21 @@ export default function _GenericRequisitionForm(props) {
         }
         return null;
       },
+    },
+  });
+
+  //second form
+
+  const secondForm = useForm({
+    initialValues: {
+      order_process: "",
+      narration: "",
+      expected_date: "",
+      // invoice_date: "",
+    },
+    validate: {
+      expected_date: isNotEmpty(),
+      invoice_date: isNotEmpty(),
     },
   });
 
@@ -139,25 +157,28 @@ export default function _GenericRequisitionForm(props) {
     const localProducts = storedProducts ? JSON.parse(storedProducts) : [];
 
     const filteredProducts = localProducts.filter(
-      (product) => product.id === Number(form.values.product_id)
+      (product) => product.id === Number(productForm.values.product_id)
     );
     if (filteredProducts.length > 0) {
       const selectedProduct = filteredProducts[0];
       setSelectProductDetails(selectedProduct);
 
-      form.setFieldValue("price", selectedProduct.sales_price);
-      form.setFieldValue("sales_price", selectedProduct.sales_price);
-      form.setFieldValue("purchase_price", selectedProduct.purchase_price);
+      productForm.setFieldValue("price", selectedProduct.sales_price);
+      productForm.setFieldValue("sales_price", selectedProduct.sales_price);
+      productForm.setFieldValue(
+        "purchase_price",
+        selectedProduct.purchase_price
+      );
       document.getElementById("quantity").focus();
     } else {
       setSelectProductDetails(null);
-      form.setFieldValue("price", "");
-      form.setFieldValue("sales_price", "");
-      form.setFieldValue("purchase_price", "");
-      form.setFieldValue("quantity", "");
-      form.setFieldValue("sub_total", "");
+      productForm.setFieldValue("price", "");
+      productForm.setFieldValue("sales_price", "");
+      productForm.setFieldValue("purchase_price", "");
+      productForm.setFieldValue("quantity", "");
+      productForm.setFieldValue("sub_total", "");
     }
-  }, [form.values.product_id]);
+  }, [productForm.values.product_id]);
 
   const [tempCardProducts, setTempCardProducts] = useState([]);
   const [loadCardProducts, setLoadCardProducts] = useState(false);
@@ -179,7 +200,7 @@ export default function _GenericRequisitionForm(props) {
 
   const changeSubTotalbyQuantity = (event) => {
     const quantity = Number(event.target.value);
-    const purchase_price = Number(form.values.purchase_price);
+    const purchase_price = Number(productForm.values.purchase_price);
     if (
       !isNaN(quantity) &&
       !isNaN(purchase_price) &&
@@ -190,12 +211,12 @@ export default function _GenericRequisitionForm(props) {
         ...prevDetails,
         sub_total: quantity * purchase_price,
       }));
-      form.setFieldValue("sub_total", quantity * purchase_price);
+      productForm.setFieldValue("sub_total", quantity * purchase_price);
     }
   };
   const changeSubTotalbyPrice = (event) => {
     const purchase_price = Number(event.target.value);
-    const quantity = Number(form.values.quantity);
+    const quantity = Number(productForm.values.quantity);
     if (
       !isNaN(quantity) &&
       !isNaN(purchase_price) &&
@@ -206,20 +227,20 @@ export default function _GenericRequisitionForm(props) {
         ...prevDetails,
         sub_total: quantity * purchase_price,
       }));
-      form.setFieldValue("sub_total", quantity * purchase_price);
+      productForm.setFieldValue("sub_total", quantity * purchase_price);
     }
   };
 
   const changePricebySubtotal = (event) => {
     const subTotal = Number(event.target.value);
-    const quantity = Number(form.values.quantity);
+    const quantity = Number(productForm.values.quantity);
 
     if (!isNaN(quantity) && !isNaN(subTotal) && quantity > 0 && subTotal >= 0) {
       setSelectProductDetails((prevDetails) => ({
         ...prevDetails,
         purchase_price: subTotal / quantity,
       }));
-      form.setFieldValue("purchase_price", subTotal / quantity);
+      productForm.setFieldValue("purchase_price", subTotal / quantity);
     }
   };
 
@@ -231,7 +252,7 @@ export default function _GenericRequisitionForm(props) {
       JSON.stringify(addProducts)
     );
     setSearchValue("");
-    form.reset();
+    productForm.reset();
     setLoadCardProducts(true);
     if (type == "productId") {
       document.getElementById("product_id").focus();
@@ -303,7 +324,8 @@ export default function _GenericRequisitionForm(props) {
       [
         "alt+r",
         () => {
-          form.reset();
+          productForm.reset();
+          secondForm.reset();
         },
       ],
     ],
@@ -364,7 +386,7 @@ export default function _GenericRequisitionForm(props) {
                         required={false}
                         nextField={"barcode"}
                         name={"vendor_id"}
-                        form={form}
+                        form={productForm}
                         dropdownValue={vendorsDropdownData}
                         id={"purchase_vendor_id"}
                         mt={1}
@@ -373,10 +395,10 @@ export default function _GenericRequisitionForm(props) {
                         changeValue={setVendorData}
                       />
                       <form
-                        onSubmit={form.onSubmit((values) => {
+                        onSubmit={productForm.onSubmit((values) => {
                           if (!values.barcode && !values.product_id) {
-                            form.setFieldError("barcode", true);
-                            form.setFieldError("product_id", true);
+                            productForm.setFieldError("barcode", true);
+                            productForm.setFieldError("product_id", true);
                             setTimeout(() => {}, 1000);
                           } else {
                             const cardProducts = localStorage.getItem(
@@ -417,7 +439,7 @@ export default function _GenericRequisitionForm(props) {
                                   placeholder={t("Barcode")}
                                   required={true}
                                   nextfield={t("EntityFormSubmit")}
-                                  form={form}
+                                  form={productForm}
                                   name={"barcode"}
                                   id={"barcode"}
                                   leftSection={
@@ -433,7 +455,7 @@ export default function _GenericRequisitionForm(props) {
                                   required={true}
                                   nextfield={"quantity"}
                                   name={"product_id"}
-                                  form={form}
+                                  form={productForm}
                                   id={"product_id"}
                                   searchable={true}
                                   searchValue={searchValue}
@@ -447,12 +469,8 @@ export default function _GenericRequisitionForm(props) {
                                   label=""
                                   placeholder={t("Quantity")}
                                   required={true}
-                                  nextField={
-                                    !isPurchaseByPurchasePrice
-                                      ? "sub_total"
-                                      : "purchase_price"
-                                  }
-                                  form={form}
+                                  nextField={"EntityFormSubmit"}
+                                  form={productForm}
                                   name={"quantity"}
                                   id={"quantity"}
                                   type={"number"}
@@ -467,16 +485,12 @@ export default function _GenericRequisitionForm(props) {
                                   label=""
                                   placeholder={t("PurchasePrice")}
                                   required={true}
-                                  nextField={
-                                    isPurchaseByPurchasePrice &&
-                                    "EntityFormSubmit"
-                                  }
-                                  form={form}
+                                  form={productForm}
                                   name={"purchase_price"}
                                   id={"purchase_price"}
                                   rightSection={inputGroupCurrency}
                                   closeIcon={true}
-                                  disabled={!isPurchaseByPurchasePrice}
+                                  disabled={true}
                                   onChange={changeSubTotalbyPrice}
                                 />
                               </Grid.Col>
@@ -486,17 +500,15 @@ export default function _GenericRequisitionForm(props) {
                                   label=""
                                   placeholder={t("SubTotal")}
                                   required={true}
-                                  nextField={"EntityFormSubmit"}
-                                  form={form}
+                                  // nextField={"EntityFormSubmit"}
+                                  form={productForm}
                                   name={"sub_total"}
                                   id={"sub_total"}
                                   type={"number"}
                                   rightSection={inputGroupCurrency}
                                   onChange={changePricebySubtotal}
                                   closeIcon={false}
-                                  disabled={
-                                    isPurchaseByPurchasePrice ? true : false
-                                  }
+                                  disabled={true}
                                 />
                               </Grid.Col>
                               <Grid.Col span={2}>
@@ -525,7 +537,90 @@ export default function _GenericRequisitionForm(props) {
                     </Box>
                   </Grid.Col>
                   <Grid.Col span={8} pb="14">
-                    <Box h={"100%"} className="borderRadiusAll">
+                    <Box h={"100%"} className="borderRadiusAll boxBackground">
+                      <form
+                        id="secondForm"
+                        onSubmit={secondForm.onSubmit((values) => {
+                          const options = {
+                            year: "numeric",
+                            month: "2-digit",
+                            day: "2-digit",
+                          };
+                          const formValue = {};
+                          formValue["invoice_date"] =
+                            secondForm.values.invoice_date &&
+                            new Date(
+                              secondForm.values.invoice_date
+                            ).toLocaleDateString("en-CA", options);
+                          formValue["expected_date"] =
+                            secondForm.values.expected_date &&
+                            new Date(
+                              secondForm.values.expected_date
+                            ).toLocaleDateString("en-CA", options);
+                          formValue["narration"] = secondForm.values.narration;
+                          console.log(formValue);
+                        })}
+                      >
+                        <Grid columns={12} gutter={0}>
+                          <Grid.Col span={6}>
+                            <Box pt={"xs"} pl="xs" pr="xs">
+                              <DatePickerForm
+                                tooltip={t("SelectInvoiceDate")}
+                                label=""
+                                placeholder={t("InvoiceDate")}
+                                required={true}
+                                nextField={"expected_date"}
+                                form={secondForm}
+                                name={"invoice_date"}
+                                id={"invoice_date"}
+                                leftSection={
+                                  <IconCalendar size={16} opacity={0.5} />
+                                }
+                                rightSection={
+                                  <IconCalendar size={16} opacity={0.5} />
+                                }
+                                rightSectionWidth={30}
+                                closeIcon={true}
+                              />
+                            </Box>
+                          </Grid.Col>
+                          <Grid.Col span={6}>
+                            <Box pt={"xs"} pr="xs">
+                              <DatePickerForm
+                                tooltip={t("SelectExpectedDate")}
+                                label=""
+                                placeholder={t("ExpectedDate")}
+                                required={true}
+                                nextField={"narration"}
+                                form={secondForm}
+                                name={"expected_date"}
+                                id={"expected_date"}
+                                leftSection={
+                                  <IconCalendar size={16} opacity={0.5} />
+                                }
+                                rightSection={
+                                  <IconCalendar size={16} opacity={0.5} />
+                                }
+                                rightSectionWidth={30}
+                                closeIcon={true}
+                              />
+                            </Box>
+                          </Grid.Col>
+                        </Grid>
+                        <Box pt={"xs"} pr="xs" pl="xs">
+                          <TextAreaForm
+                            tooltip={t("Narration")}
+                            label=""
+                            style={"style"}
+                            placeholder={t("Narration")}
+                            required={false}
+                            nextField={"SecondFormSubmit"}
+                            name={"narration"}
+                            form={secondForm}
+                            id={"narration"}
+                          />
+                        </Box>
+                      </form>
                     </Box>
                   </Grid.Col>
                 </Grid>
@@ -628,62 +723,63 @@ export default function _GenericRequisitionForm(props) {
                         accessor: "purchase_price",
                         title: t("Price"),
                         width: "10%",
-                        render: (item) => {
-                          const [editedPurchasePrice, setEditedPurchasePrice] =
-                            useState(item.purchase_price);
-                          const handlePurchasePriceChange = (e) => {
-                            const newSalesPrice = e.currentTarget.value;
-                            setEditedPurchasePrice(newSalesPrice);
-                          };
-                          useEffect(() => {
-                            const timeoutId = setTimeout(() => {
-                              const tempCardProducts = localStorage.getItem(
-                                "temp-requisition-products"
-                              );
-                              const cardProducts = tempCardProducts
-                                ? JSON.parse(tempCardProducts)
-                                : [];
-                              const updatedProducts = cardProducts.map(
-                                (product) => {
-                                  if (product.product_id === item.product_id) {
-                                    return {
-                                      ...product,
-                                      purchase_price: editedPurchasePrice,
-                                      sub_total:
-                                        editedPurchasePrice * item.quantity,
-                                    };
-                                  }
-                                  return product;
-                                }
-                              );
+                        textAlign: "center",
+                        // render: (item) => {
+                        //   const [editedPurchasePrice, setEditedPurchasePrice] =
+                        //     useState(item.purchase_price);
+                        //   const handlePurchasePriceChange = (e) => {
+                        //     const newSalesPrice = e.currentTarget.value;
+                        //     setEditedPurchasePrice(newSalesPrice);
+                        //   };
+                        //   useEffect(() => {
+                        //     const timeoutId = setTimeout(() => {
+                        //       const tempCardProducts = localStorage.getItem(
+                        //         "temp-requisition-products"
+                        //       );
+                        //       const cardProducts = tempCardProducts
+                        //         ? JSON.parse(tempCardProducts)
+                        //         : [];
+                        //       const updatedProducts = cardProducts.map(
+                        //         (product) => {
+                        //           if (product.product_id === item.product_id) {
+                        //             return {
+                        //               ...product,
+                        //               purchase_price: editedPurchasePrice,
+                        //               sub_total:
+                        //                 editedPurchasePrice * item.quantity,
+                        //             };
+                        //           }
+                        //           return product;
+                        //         }
+                        //       );
 
-                              localStorage.setItem(
-                                "temp-requisition-products",
-                                JSON.stringify(updatedProducts)
-                              );
-                              setLoadCardProducts(true);
-                            }, 1000);
+                        //       localStorage.setItem(
+                        //         "temp-requisition-products",
+                        //         JSON.stringify(updatedProducts)
+                        //       );
+                        //       setLoadCardProducts(true);
+                        //     }, 1000);
 
-                            return () => clearTimeout(timeoutId);
-                          }, [
-                            editedPurchasePrice,
-                            item.product_id,
-                            item.quantity,
-                          ]);
+                        //     return () => clearTimeout(timeoutId);
+                        //   }, [
+                        //     editedPurchasePrice,
+                        //     item.product_id,
+                        //     item.quantity,
+                        //   ]);
 
-                          return (
-                            <>
-                              <TextInput
-                                type="number"
-                                label=""
-                                size="xs"
-                                id={"inline-update-quantity-" + item.product_id}
-                                value={editedPurchasePrice}
-                                onChange={handlePurchasePriceChange}
-                              />
-                            </>
-                          );
-                        },
+                        //   return (
+                        //     <>
+                        //       <TextInput
+                        //         type="number"
+                        //         label=""
+                        //         size="xs"
+                        //         id={"inline-update-quantity-" + item.product_id}
+                        //         value={editedPurchasePrice}
+                        //         onChange={handlePurchasePriceChange}
+                        //       />
+                        //     </>
+                        //   );
+                        // },
                       },
 
                       {
@@ -791,9 +887,10 @@ export default function _GenericRequisitionForm(props) {
 
                         <Button
                           fullWidth={true}
-                          type={"submit"}
-                          onClick={handleClick}
+                          type="submit"
+                          form="secondForm"
                           name="save"
+                          id="SecondFormSubmit"
                           variant="filled"
                           leftSection={<IconDeviceFloppy size={14} />}
                           color="cyan.5"
@@ -816,7 +913,7 @@ export default function _GenericRequisitionForm(props) {
         <Grid.Col span={1}>
           <Box bg={"white"} pt={16} className={"borderRadiusAll"}>
             <ShortcutInvoice
-              form={form}
+              form={productForm}
               FormSubmit={"EntityFormSubmit"}
               Name={"product_id"}
             />

@@ -623,5 +623,9 @@
   "SkuItem" : "Sku Item",
   "EnterQuantity" : "Enter Quantity",
   "NewRequisition" : "New Requisition",
-  "SalesInvoice" : "Sales Invoice"
+  "SalesInvoice" : "Sales Invoice",
+  "InvoiceDate" : "Invoice Date",
+  "ExpectedDate" : "Expected Date",
+  "SelectInvoiceDate" : "Select Invoice Date",
+  "SelectExpectedDate" : "Select Expected Date"
 }
