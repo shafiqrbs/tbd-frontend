@@ -47,6 +47,7 @@ export default function _GenericRequisitionForm(props) {
 
   const productForm = useForm({
     initialValues: {
+      vendor_id: "",
       product_id: "",
       price: "",
       purchase_price: "",
@@ -379,21 +380,6 @@ export default function _GenericRequisitionForm(props) {
                       mb={"xs"}
                       className="borderRadiusAll boxBackground"
                     >
-                      <SelectForm
-                        tooltip={t("PurchaseValidateMessage")}
-                        label=""
-                        placeholder={t("Vendor")}
-                        required={false}
-                        nextField={"barcode"}
-                        name={"vendor_id"}
-                        form={productForm}
-                        dropdownValue={vendorsDropdownData}
-                        id={"purchase_vendor_id"}
-                        mt={1}
-                        searchable={true}
-                        value={vendorData}
-                        changeValue={setVendorData}
-                      />
                       <form
                         onSubmit={productForm.onSubmit((values) => {
                           if (!values.barcode && !values.product_id) {
@@ -429,6 +415,21 @@ export default function _GenericRequisitionForm(props) {
                           }
                         })}
                       >
+                        <SelectForm
+                          tooltip={t("PurchaseValidateMessage")}
+                          label=""
+                          placeholder={t("Vendor")}
+                          required={false}
+                          nextField={"barcode"}
+                          name={"vendor_id"}
+                          form={productForm}
+                          dropdownValue={vendorsDropdownData}
+                          id={"purchase_vendor_id"}
+                          mt={1}
+                          searchable={true}
+                          value={vendorData}
+                          changeValue={setVendorData}
+                        />
                         <Box pt={"xs"}>
                           <Box pb="xs">
                             <Grid columns={24} gutter={{ base: 6 }}>
@@ -541,12 +542,32 @@ export default function _GenericRequisitionForm(props) {
                       <form
                         id="secondForm"
                         onSubmit={secondForm.onSubmit((values) => {
+                          const tempProducts = localStorage.getItem(
+                            "temp-requisition-products"
+                          );
+                          let items = tempProducts
+                            ? JSON.parse(tempProducts)
+                            : [];
+                          let createdBy = JSON.parse(
+                            localStorage.getItem("user")
+                          );
+                          let transformedArray = items.map((product) => {
+                            return {
+                              product_id: product.product_id,
+                              quantity: product.quantity,
+                              purchase_price: product.purchase_price,
+                              sales_price: product.sales_price,
+                              sub_total: product.sub_total,
+                            };
+                          });
+
                           const options = {
                             year: "numeric",
                             month: "2-digit",
                             day: "2-digit",
                           };
                           const formValue = {};
+                          formValue["vendor_id"] = productForm.values.vendor_id;
                           formValue["invoice_date"] =
                             secondForm.values.invoice_date &&
                             new Date(
@@ -558,7 +579,38 @@ export default function _GenericRequisitionForm(props) {
                               secondForm.values.expected_date
                             ).toLocaleDateString("en-CA", options);
                           formValue["narration"] = secondForm.values.narration;
+                          formValue["created_by_id"] = Number(createdBy["id"]);
+                          formValue["items"] = transformedArray
+                            ? transformedArray
+                            : [];
                           console.log(formValue);
+                          // const data = {
+                          //   url: "inventory/purchase",
+                          //   data: formValue,
+                          // };
+
+                          // dispatch(storeEntityData(data));
+                          // notifications.show({
+                          //   color: "teal",
+                          //   title: t("CreateSuccessfully"),
+                          //   icon: (
+                          //     <IconCheck
+                          //       style={{ width: rem(18), height: rem(18) }}
+                          //     />
+                          //   ),
+                          //   loading: false,
+                          //   autoClose: 700,
+                          //   style: { backgroundColor: "lightgray" },
+                          // });
+
+                          // setTimeout(() => {
+                          //   localStorage.removeItem(
+                          //     "temp-requisition-products"
+                          //   );
+                          //   productForm.reset();
+                          //   secondForm.reset();
+                          //   setVendorData(null);
+                          // }, 700);
                         })}
                       >
                         <Grid columns={12} gutter={0}>
