@@ -12,7 +12,15 @@ function InputButtonForm(props) {
     const {label, placeholder, required, nextField, name, form, tooltip, mt, id, disabled} = props
 
     const {t, i18n} = useTranslation();
-
+    const handleChange = (event) => {
+        // Handle form state update
+        form?.getInputProps(name).onChange(event);
+    
+        // Call custom onChange if provided
+        if (props.onChange) {
+          props.onChange(event);
+        }
+      };
     return (
         <>
             {
@@ -39,6 +47,7 @@ function InputButtonForm(props) {
                         disabled={disabled}
                         autoComplete="off"
                         {...form.getInputProps(name)}
+                        onChange={handleChange}
                         onKeyDown={getHotkeyHandler([
                             ['Enter', (e) => {
                                 nextField === 'EntityFormSubmit'?
