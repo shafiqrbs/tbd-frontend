@@ -193,11 +193,11 @@ export default function _GenericRequisitionForm(props) {
   let purchaseSubTotalAmount =
     tempCardProducts?.reduce((total, item) => total + item.sub_total, 0) || 0;
 
-  let totalPurchaseAmount =
-    tempCardProducts?.reduce(
-      (total, item) => total + item.purchase_price * item.quantity,
-      0
-    ) || 0;
+  // let totalPurchaseAmount =
+  //   tempCardProducts?.reduce(
+  //     (total, item) => total + item.purchase_price * item.quantity,
+  //     0
+  //   ) || 0;
 
   const changeSubTotalbyQuantity = (event) => {
     const quantity = Number(event.target.value);
