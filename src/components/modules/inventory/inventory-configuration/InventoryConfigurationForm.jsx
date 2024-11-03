@@ -256,31 +256,37 @@ function InventoryConfigurationForm() {
                     scrollbars="y"
                     type="never"
                   >
-                    <Box pl={"xs"} pt={"xs"}>
-                      {stock_management.map((index) => {
-                        return (
-                          <Box mt={"xs"} key={index.value}>
-                            <Grid gutter={{ base: 1 }}>
-                              <Grid.Col span={2}>
-                                <SwitchForm
-                                  tooltip={t("Model")}
-                                  label=""
-                                  nextField={"zero_stock"}
-                                  name={"is_model"}
-                                  form={form}
-                                  color="red"
-                                  id={"is_model"}
-                                  position={"left"}
-                                  defaultChecked={inventoryConfigData.is_model}
-                                />
-                              </Grid.Col>
-                              <Grid.Col span={6} fz={"sm"} pt={"1"}>
-                                {index.label}
-                              </Grid.Col>
-                            </Grid>
-                          </Box>
-                        );
-                      })}
+                    <Box pl={"xs"}>
+                      {stock_management.length > 0 && (
+                        <Text fw={500} fz={"md"} mt={"xs"}>
+                          {t("Stock Management")}
+                        </Text>
+                      )}
+                      {stock_management.map((index) => (
+                        <Box mt={"xs"} key={index.value}>
+                          <Grid gutter={{ base: 1 }}>
+                            <Grid.Col span={2}>
+                              <SwitchForm
+                                tooltip={t("Model")}
+                                label=""
+                                nextField={"zero_stock"}
+                                name={"is_model"}
+                                form={form}
+                                color="red"
+                                id={"is_model"}
+                                position={"left"}
+                                defaultChecked={inventoryConfigData.is_model}
+                              />
+                            </Grid.Col>
+                            <Grid.Col span={6} fz={"sm"} pt={"1"}>
+                              {index.label}
+                            </Grid.Col>
+                          </Grid>
+                        </Box>
+                      ))}
+                      <Text fw={500} fz={"md"} mt={"lg"}>
+                        {t("Item Management")}
+                      </Text>
                       <Box mt={"xs"}>
                         <Grid gutter={{ base: 1 }}>
                           <Grid.Col span={2}>

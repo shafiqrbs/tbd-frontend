@@ -196,7 +196,7 @@ function PurchaseInvoiceDomain359Pos(props) {
                                         <div className={classes['main-address']}>
                                             <Grid columns={24} gutter={0} className={`${classes['invoice-text']} ${classes['text-width-two']}`}>
                                                 <Grid.Col span={6}>
-                                                    {t('Customer')}
+                                                    {t('Vendor')}
                                                 </Grid.Col>
                                                 <Grid.Col span={2}>
                                                     :

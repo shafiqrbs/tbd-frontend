@@ -56,7 +56,6 @@ function _UpdateProduct(props) {
   const [productTypeData, setProductTypeData] = useState(null);
   const [productUnitData, setProductUnitData] = useState(null);
 
-
   const form = useForm({
     initialValues: {
       product_type_id: "",
@@ -261,9 +260,9 @@ function _UpdateProduct(props) {
           <Box pl={`xs`} pr={"xs"} className={"borderRadiusAll"}>
             <ScrollArea
               h={height - 102}
-              scrollbarSize={2}
+              scrollbarSize={1}
               scrollbars="y"
-              type="never"
+              // type="never"
             >
               <Box>
                 <LoadingOverlay
@@ -417,7 +416,7 @@ function _UpdateProduct(props) {
                         required={true}
                         name={"unit_id"}
                         form={form}
-                        dropdownValue={getSettingParticularDropdownData('size')}
+                        dropdownValue={getSettingParticularDropdownData("size")}
                         mt={8}
                         id={"unit_id"}
                         nextField={"min_quantity"}

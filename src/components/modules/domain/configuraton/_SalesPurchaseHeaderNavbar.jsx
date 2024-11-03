@@ -43,7 +43,7 @@ function _SalesPurchaseHeaderNavbar(props) {
         <>
             <header className={classes.header}>
                 <div className={classes.inner}>
-                    <Group><Text>{pageTitle}</Text></Group>
+                    <Group ml={10}><Text>{pageTitle}</Text></Group>
                     <Group>
                         <Group ml={50} gap={5} className={classes.links} visibleFrom="sm" mt={'2'}>
                             {items}

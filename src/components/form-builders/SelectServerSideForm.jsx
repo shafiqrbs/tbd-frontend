@@ -15,7 +15,8 @@ const SelectServerSideForm = forwardRef((props, ref) => {
         dropdownValue,
         searchable,
         searchValue,
-        setSearchValue
+        setSearchValue,
+        disabled
     } = props;
 
     const { t } = useTranslation();
@@ -50,6 +51,7 @@ const SelectServerSideForm = forwardRef((props, ref) => {
                         searchable={searchable}
                         {...form.getInputProps(name)}
                         withAsterisk={required}
+                        disabled={disabled}
                     />
                 </Tooltip>
             )}
