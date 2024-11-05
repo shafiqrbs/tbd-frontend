@@ -46,6 +46,7 @@ import SitemapIndex from "./components/modules/domain/sitemap/SitemapIndex.jsx";
 import BatchIndex from "./components/modules/production/batch/BatchIndex.jsx";
 import Requisition from "./components/modules/procurement/purchase-requisition/Requisition.jsx";
 import RequisitionInvoice from "./components/modules/procurement/purchase-requisition/RequisitionInvoice.jsx";
+import BranchManagementIndex from "./components/modules/inventory/branch-management/BranchManagementIndex.jsx";
 
 function AppRoute() {
   return (
@@ -106,6 +107,7 @@ function AppRoute() {
           />
           <Route path="config" element={<InventoryConfigurationIndex />} />
           <Route path="stock" element={<StockIndex />} />
+          <Route path="branch-management" element={<BranchManagementIndex />} />
         </Route>
 
         <Route path="/production/">
