@@ -49,7 +49,7 @@ function InventoryConfigurationForm() {
     ? JSON.parse(localStorage.getItem("config-data"))
     : [];
 
-  console.log(inventoryConfigData)
+  // console.log(inventoryConfigData)
 
   const form = useForm({
     initialValues: {

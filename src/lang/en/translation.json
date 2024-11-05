@@ -627,5 +627,8 @@
   "InvoiceDate" : "Invoice Date",
   "ExpectedDate" : "Expected Date",
   "SelectInvoiceDate" : "Select Invoice Date",
-  "SelectExpectedDate" : "Select Expected Date"
+  "SelectExpectedDate" : "Select Expected Date",
+  "AdvanceSearch" : "Advance Search",
+  "InventoryConfiguration" : "Inventory Configuration",
+  "BranchManagement" : "Branch Management"
 }
