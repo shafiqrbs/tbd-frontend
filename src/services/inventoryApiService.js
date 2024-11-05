@@ -161,12 +161,13 @@ export const editData = async (value) => {
 
 export const updateData = async (value) => {
     let data = []
+    const id = value.url.split('/').pop();
     await axios({
-        method: value.url==='inventory/config-update'?'POST':'PATCH',
+        method: value.url==='inventory/config-update/'+id?'POST':'PATCH',
         url: `${import.meta.env.VITE_API_GATEWAY_URL+value.url}`,
         headers: {
             "Accept": `application/json`,
-            "Content-Type": value.url==='inventory/config-update'?`multipart/form-data`:`application/json`,
+            "Content-Type": value.url==='inventory/config-update/'+id?`multipart/form-data`:`application/json`,
             "Access-Control-Allow-Origin": '*',
             "X-Api-Key": import.meta.env.VITE_API_KEY,
             "X-Api-User": JSON.parse(localStorage.getItem('user')).id

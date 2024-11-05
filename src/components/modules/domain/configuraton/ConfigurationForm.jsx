@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {useNavigate, useOutletContext, useParams} from "react-router-dom";
+import {useOutletContext, useParams} from "react-router-dom";
 import { Button, rem, Flex, Grid, Box, ScrollArea, Text, Title, Stack } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
 import { IconCheck, IconDeviceFloppy } from "@tabler/icons-react";
@@ -19,16 +19,36 @@ import ImageUploadDropzone from "../../../form-builders/ImageUploadDropzone.jsx"
 import InputNumberForm from "../../../form-builders/InputNumberForm.jsx";
 import getCountryDropdownData from "../../../global-hook/dropdown/getCountryDropdownData.js";
 import getCurrencyDropdownData from "../../../global-hook/dropdown/getCurrencyDropdownData.js";
+import axios from "axios";
 
 function ConfigurationForm() {
     const {id} = useParams()
-    console.log(id)
+    const [configDataLoad, setConfigDataLoad] = useState(false);
+    useEffect(() => {
+        axios({
+            method: 'get',
+            url: `${import.meta.env.VITE_API_GATEWAY_URL + 'inventory/config/'+id}`,
+            headers: {
+                "Accept": `application/json`,
+                "Content-Type": `application/json`,
+                "Access-Control-Allow-Origin": '*',
+                "X-Api-Key": import.meta.env.VITE_API_KEY
+            }
+        })
+            .then(res => {
+                localStorage.setItem('config-data-'+id, JSON.stringify(res.data.data));
+                setConfigDataLoad(false)
+            })
+            .catch(function (error) {
+                console.log(error)
+            })
+    }, [id,configDataLoad]);
+
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
     const height = mainAreaHeight - 100; //TabList height 104
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
-
     const validationMessage = useSelector((state) => state.inventoryCrudSlice.validationMessage)
     const validation = useSelector((state) => state.inventoryCrudSlice.validation)
 
@@ -41,7 +61,7 @@ function ConfigurationForm() {
 
     const [files, setFiles] = useState([]);
 
-    const configData = localStorage.getItem('config-data') ? JSON.parse(localStorage.getItem('config-data')) : []
+    const configData = localStorage.getItem('config-data-'+id) ? JSON.parse(localStorage.getItem('config-data-'+id)) : []
     const [businessModelId, setBusinessModelId] = useState(configData.business_model_id ? configData.business_model_id.toString() : null)
     const [countryId, setCountryId] = useState(configData.country_id ? configData.country_id.toString() : null)
     const [currencyId, setCurrencyId] = useState(configData.currency_id ? configData.currency_id.toString() : null)
@@ -120,6 +140,7 @@ function ConfigurationForm() {
 
             setTimeout(() => {
                 setSaveCreateLoading(false)
+                setConfigDataLoad(true)
             }, 700)
         }
     }, [validation, validationMessage]);
