@@ -28,14 +28,14 @@ const getSpotlightDropdownData = (t) => {
           label: t("CoreLocation"),
           description: t("WhereWePresentTheVendorInformationN"),
         },
-        {
+        /*{
           id: "marketing-executive",
           label: t("MarketingExecutiveN"),
           description: t("WhereWePresentTheVendorInformationN"),
-        },
+        },*/
       ],
     },
-    {
+   /* {
       group: "Sales & Purchase",
       actions: [
         {
@@ -59,7 +59,7 @@ const getSpotlightDropdownData = (t) => {
           description: t("WhereWePresentThePurchaseInvoiceInformationN"),
         },
       ],
-    },
+    },*/
     {
       group: "Inventory",
       actions: [
@@ -100,7 +100,7 @@ const getSpotlightDropdownData = (t) => {
         },
       ],
     },
-    {
+    /*{
       group: "Production",
       actions: [
         {
@@ -124,8 +124,8 @@ const getSpotlightDropdownData = (t) => {
           description: t("WhereWePresentTheProductionInhouseInformationN"),
         },
       ],
-    },
-    {
+    },*/
+    /*{
       group: "Domain",
       actions: [
         {
@@ -140,8 +140,8 @@ const getSpotlightDropdownData = (t) => {
 
         // },
       ],
-    },
-    {
+    },*/
+    /*{
       group: "Accounting",
       actions: [
         {
@@ -170,8 +170,8 @@ const getSpotlightDropdownData = (t) => {
           description: t("WhereWePresentTheHeadSubGroupInformationN"),
         },
       ],
-    },
-    {
+    },*/
+    /*{
       group: "Procurement",
       actions: [
         {
@@ -185,7 +185,7 @@ const getSpotlightDropdownData = (t) => {
           description: t("WhereWePresentTheTransactionModeInformationN"),
         },
       ],
-    },
+    },*/
   ];
 };
 export default getSpotlightDropdownData;
