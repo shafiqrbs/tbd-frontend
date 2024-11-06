@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import {
     Button,
     rem, Flex,
-    Grid, Box, ScrollArea, Group, Text, Title, Alert, List, Stack,
+    Grid, Box, ScrollArea, Group, Text, Title, Stack, Checkbox,Tooltip
 } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
 import {
@@ -11,7 +11,7 @@ import {
     IconDeviceFloppy, IconInfoCircle, IconPlus,
 } from "@tabler/icons-react";
 import { useDisclosure, useHotkeys } from "@mantine/hooks";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { hasLength, isNotEmpty, useForm } from "@mantine/form";
 import { modals } from "@mantine/modals";
 import { notifications } from "@mantine/notifications";
@@ -21,6 +21,9 @@ import Shortcut from "../../shortcut/Shortcut";
 import InputForm from "../../../form-builders/InputForm";
 import TextAreaForm from "../../../form-builders/TextAreaForm";
 import InputNumberForm from "../../../form-builders/InputNumberForm";
+import SelectForm from "../../../form-builders/SelectForm.jsx";
+import getSettingBusinessModelDropdownData from "../../../global-hook/dropdown/getSettingBusinessModelDropdownData.js";
+import getSettingModulesDropdownData from "../../../global-hook/dropdown/getSettingModulesDropdownData.js";
 
 function DomainForm(props) {
     const { t, i18n } = useTranslation();
@@ -30,12 +33,27 @@ function DomainForm(props) {
     const [opened, { open, close }] = useDisclosure(false);
 
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
+    const businessModelDropdown = getSettingBusinessModelDropdownData()
+    const modulesData = getSettingModulesDropdownData()
+
+    const [businessModelId, setBusinessModelId] = useState(null)
+    const [moduleChecked, setModuleChecked] = useState([])
+    const controlledModuleCheckBox = (type, value) => {
+        if (type) {
+            setModuleChecked(prevChecked => [...prevChecked, value]);
+        } else {
+            setModuleChecked(prevChecked =>
+                prevChecked.filter(checkedValue => checkedValue !== value)
+            );
+        }
+    };
 
     const form = useForm({
         initialValues: {
-            company_name: '', mobile: '', alternative_mobile: '', name: '', username: '', address: '', email: ''
+            business_model_id:'',company_name: '', mobile: '', alternative_mobile: '', name: '', username: '', address: '', email: ''
         },
         validate: {
+            business_model_id: isNotEmpty(),
             company_name: hasLength({ min: 2, max: 20 }),
             name: hasLength({ min: 2, max: 20 }),
             username: hasLength({ min: 2, max: 20 }),
@@ -83,6 +101,7 @@ function DomainForm(props) {
             <Grid columns={9} gutter={{ base: 8 }}>
                 <Grid.Col span={8} >
                     <form onSubmit={form.onSubmit((values) => {
+                        form.values['modules'] = moduleChecked
                         dispatch(setValidationData(false))
                         modals.openConfirmModal({
                             centered: true,
@@ -111,6 +130,8 @@ function DomainForm(props) {
 
                                 setTimeout(() => {
                                     form.reset()
+                                    setBusinessModelId(null)
+                                    setModuleChecked([])
                                     dispatch(setFetching(true))
                                 }, 700)
                             },
@@ -153,6 +174,25 @@ function DomainForm(props) {
                                         <Grid.Col span={'auto'} >
                                             <ScrollArea h={height} scrollbarSize={2} scrollbars="y" type="never">
                                                 <Box pb={'md'}>
+                                                    <Box mt={'xs'}>
+                                                        <SelectForm
+                                                            tooltip={t('BusinessModel')}
+                                                            label={t('BusinessModel')}
+                                                            placeholder={t('ChooseBusinessModel')}
+                                                            required={true}
+                                                            nextField={'company_name'}
+                                                            name={'business_model_id'}
+                                                            form={form}
+                                                            dropdownValue={businessModelDropdown}
+                                                            mt={8}
+                                                            id={'business_model_id'}
+                                                            searchable={false}
+                                                            value={businessModelId}
+                                                            changeValue={setBusinessModelId}
+                                                            clearable={false}
+                                                            allowDeselect={false}
+                                                        />
+                                                    </Box>
                                                     <Box mt={'8'}>
                                                         <InputForm
                                                             tooltip={t('CompanyStoreNameValidateMessage')}
@@ -245,6 +285,27 @@ function DomainForm(props) {
                                                         />
                                                     </Box>
 
+                                                        <Box mt={'8'}>
+                                                            <Checkbox.Group
+                                                                label={t('Modules')}
+                                                                description={t('selectModulesForAccess')}
+                                                                value={moduleChecked}
+                                                                onChange={setModuleChecked}
+                                                            >
+                                                                <Group mt="xs">
+                                                                    {
+                                                                        modulesData.map((module, index) => (
+                                                                            <Tooltip key={index} mt={'8'} label={module.name}>
+                                                                                <Checkbox
+                                                                                    value={module.slug}
+                                                                                    label={module.name}
+                                                                                />
+                                                                            </Tooltip>
+                                                                        ))
+                                                                    }
+                                                                </Group>
+                                                            </Checkbox.Group>
+                                                        </Box>
                                                 </Box>
                                             </ScrollArea>
                                         </Grid.Col>

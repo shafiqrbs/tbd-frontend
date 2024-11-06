@@ -9,10 +9,8 @@ export const getSettingDropdown = createAsyncThunk(
   async (value) => {
     try {
       const response = getDataWithParamForSettingDropdown(value);
-      console.log("response", response);
       return response;
     } catch (error) {
-      console.log("error", error.message);
       throw error;
     }
   }
@@ -62,6 +60,7 @@ const utilitySlice = createSlice({
     productGradeDropdown: [],
     productBrandDropdown: [],
     productSizeDropdown: [],
+    moduleDropdownData: [],
   },
   reducers: {
     setFetching: (state, action) => {
@@ -104,6 +103,9 @@ const utilitySlice = createSlice({
       }
       if (action.payload.type === "business-model") {
         state.businessModelDropdownData = action.payload.data.data;
+      }
+      if (action.payload.type === "module") {
+        state.moduleDropdownData = action.payload.data.data;
       }
       if (action.payload.type === "sales-process-type") {
         state.salesProcessTypeDropdownData = action.payload.data.data;

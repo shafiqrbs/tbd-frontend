@@ -630,5 +630,6 @@
   "SelectExpectedDate" : "Select Expected Date",
   "AdvanceSearch" : "Advance Search",
   "InventoryConfiguration" : "Inventory Configuration",
-  "BranchManagement" : "Branch Management"
+  "BranchManagement" : "Branch Management",
+  "selectModulesForAccess" : "Select modules for access"
 }

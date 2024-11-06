@@ -21,6 +21,9 @@ function MainDashboard(props) {
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
     const [isFormSubmit, setFormSubmit] = useState(false);
     const [formSubmitData, setFormSubmitData] = useState([]);
+    const configData = localStorage.getItem('config-data') ? JSON.parse(localStorage.getItem('config-data')) : []
+    console.log(configData.domain.modules)
+
     const height = props.height - 105; //TabList height 104
     const navigate = useNavigate()
     const theme = useMantineTheme();
@@ -52,7 +55,7 @@ function MainDashboard(props) {
                 </SimpleGrid>
                 <ScrollArea h={height} scrollbarSize={2} type="never">
                     <SimpleGrid cols={{ base: 1, md: 4 }} spacing="xs">
-                        {/*<Card shadow="md" radius="md" className={classes.card} padding="lg">
+                        <Card shadow="md" radius="md" className={classes.card} padding="lg">
                             <Grid gutter={{ base: 2 }}>
                                 <Grid.Col span={2}>
                                     <IconBuildingStore style={{ width: rem(42), height: rem(42) }} stroke={2} color={theme.colors.teal[6]}
@@ -99,7 +102,77 @@ function MainDashboard(props) {
                                     </List.Item>
                                 </List>
                             </Box>
-                        </Card>*/}
+                        </Card>
+                        <Card shadow="md" radius="md" className={classes.card} padding="lg">
+                            <Grid gutter={{ base: 2 }}>
+                                <Grid.Col span={2}>
+                                    <IconMoneybag style={{ width: rem(42), height: rem(42) }} stroke={2} color={theme.colors.blue[6]}
+                                    /></Grid.Col>
+                                <Grid.Col span={10}>
+                                    <Text fz="md" fw={500} className={classes.cardTitle} >{t('AccountingandFinancial')}</Text>
+                                </Grid.Col>
+                            </Grid>
+                            <Box fz="sm" c="dimmed" mt="sm">
+                                <List spacing="ms" size="sm" center>
+                                    <List.Item pl={'xs'} icon={<ThemeIcon color="blue.6" size={20} radius="xl" variant="outline" ><IconBasket /></ThemeIcon>}>
+                                        <NavLink pl={'md'} href="accounting/voucher-entry" label={t('VoucherEntry')} component="button" onClick={(e) => { navigate('/accounting/voucher-entry') }} onAuxClick={(e) => {
+                                            // Handle middle mouse button click for browsers that support it
+                                            if (e.button === 1) {
+                                                window.open('/accounting/voucher-entry', '_blank');
+                                            }
+                                        }} />
+                                    </List.Item>
+
+                                    {/*
+                                <List.Item pl={'xs'} icon={<ThemeIcon color="blue.6" size={20} radius="xl" variant="outline" ><IconShoppingBagSearch/></ThemeIcon>}>
+                                    <NavLink pl={'md'} href="accounting/sales-invoice" label={t('NewSales')} component="button" onClick={(e)=>{navigate('inventory/sales')}}  />
+                                </List.Item>
+                                <List.Item pl={'xs'} icon={<ThemeIcon color="blue.6" size={20} radius="xl" variant="outline" ><IconShoppingBagPlus/></ThemeIcon>}>
+                                    <NavLink pl={'md'} href="accounting/purchase" label={t('ManagePurchase')} component="button" onClick={(e)=>{navigate('inventory/sales')}}  />
+                                </List.Item>*/}
+                                    <List.Item pl={'xs'} icon={<ThemeIcon color="blue.6" size={20} radius="xl" variant="outline" ><IconCurrencyMonero /></ThemeIcon>}>
+                                        <NavLink pl={'md'} href="/accounting/transaction-mode" label={t('TransactionMode')} component="button" onClick={(e) => { navigate('accounting/transaction-mode') }} onAuxClick={(e) => {
+                                            // Handle middle mouse button click for browsers that support it
+                                            if (e.button === 1) {
+                                                window.open('/accounting/transaction-mode', '_blank');
+                                            }
+                                        }} />
+                                    </List.Item>
+                                    <List.Item pl={'xs'} icon={<ThemeIcon color="blue.6" size={20} radius="xl" variant="outline" ><IconBasket /></ThemeIcon>}>
+                                        <NavLink pl={'md'} href="accounting/ledger" label={t('Ledger')} component="button" onClick={(e) => { navigate('/accounting/ledger') }} onAuxClick={(e) => {
+                                            // Handle middle mouse button click for browsers that support it
+                                            if (e.button === 1) {
+                                                window.open('/accounting/ledger', '_blank');
+                                            }
+                                        }} />
+                                    </List.Item>
+                                    <List.Item pl={'xs'} icon={<ThemeIcon color="blue.6" size={20} radius="xl" variant="outline" ><IconBasket /></ThemeIcon>}>
+                                        <NavLink pl={'md'} href="accounting/head-group" label={t('HeadGroup')} component="button" onClick={(e) => { navigate('/accounting/head-group') }} onAuxClick={(e) => {
+                                            // Handle middle mouse button click for browsers that support it
+                                            if (e.button === 1) {
+                                                window.open('/accounting/head-group', '_blank');
+                                            }
+                                        }} />
+                                    </List.Item>
+                                    <List.Item pl={'xs'} icon={<ThemeIcon color="blue.6" size={20} radius="xl" variant="outline" ><IconBasket /></ThemeIcon>}>
+                                        <NavLink pl={'md'} href="accounting/head-subgroup" label={t('HeadSubGroup')} component="button" onClick={(e) => { navigate('/accounting/head-subgroup') }} onAuxClick={(e) => {
+                                            // Handle middle mouse button click for browsers that support it
+                                            if (e.button === 1) {
+                                                window.open('/accounting/head-subgroup', '_blank');
+                                            }
+                                        }} />
+                                    </List.Item>
+                                    {/* <List.Item pl={'xs'} icon={<ThemeIcon color="blue.6" size={20} radius="xl" variant="outline" ><IconBasket /></ThemeIcon>}>
+                                        <NavLink pl={'md'} href="accounting/voucher-entry" label={t('SampleModal')} component="button" onClick={(e) => { navigate('/accounting/modalIndex') }} onAuxClick={(e) => {
+                                            // Handle middle mouse button click for browsers that support it
+                                            if (e.button === 1) {
+                                                window.open('/accounting/voucher-entry', '_blank');
+                                            }
+                                        }} />
+                                    </List.Item> */}
+                                </List>
+                            </Box>
+                        </Card>
                         <Card shadow="md" radius="md" className={classes.card} padding="lg">
                             <Grid gutter={{ base: 2 }}>
                                 <Grid.Col span={2}>
@@ -170,6 +243,37 @@ function MainDashboard(props) {
                                             // Handle middle mouse button click for browsers that support it
                                             if (e.button === 1) {
                                                 window.open('/core/user', '_blank');
+                                            }
+                                        }} />
+                                    </List.Item>
+                                </List>
+                            </Box>
+                        </Card>
+                        <Card shadow="md" radius="md" className={classes.card} padding="lg">
+                            <Grid gutter={{ base: 2 }}>
+                                <Grid.Col span={2}>
+                                    <IconMoneybag style={{ width: rem(42), height: rem(42) }} stroke={2} color={theme.colors.blue[6]}
+                                    /></Grid.Col>
+                                <Grid.Col span={10}>
+                                    <Text fz="md" fw={500} className={classes.cardTitle} >{t('AccountingandFinancial')}</Text>
+                                </Grid.Col>
+                            </Grid>
+                            <Box fz="sm" c="dimmed" mt="sm">
+                                <List spacing="ms" size="sm" center>
+                                    {/*<List.Item pl={'xs'} icon={<ThemeIcon color="blue.6" size={20} radius="xl" variant="outline" ><IconBasket/></ThemeIcon>}>
+                                    <NavLink pl={'md'} href="accounting/sales" label={t('ManageSales')} component="button" onClick={(e)=>{navigate('inventory/sales')}}  />
+                                </List.Item>
+                                <List.Item pl={'xs'} icon={<ThemeIcon color="blue.6" size={20} radius="xl" variant="outline" ><IconShoppingBagSearch/></ThemeIcon>}>
+                                    <NavLink pl={'md'} href="accounting/sales-invoice" label={t('NewSales')} component="button" onClick={(e)=>{navigate('inventory/sales')}}  />
+                                </List.Item>
+                                <List.Item pl={'xs'} icon={<ThemeIcon color="blue.6" size={20} radius="xl" variant="outline" ><IconShoppingBagPlus/></ThemeIcon>}>
+                                    <NavLink pl={'md'} href="accounting/purchase" label={t('ManagePurchase')} component="button" onClick={(e)=>{navigate('inventory/sales')}}  />
+                                </List.Item>*/}
+                                    <List.Item pl={'xs'} icon={<ThemeIcon color="blue.6" size={20} radius="xl" variant="outline" ><IconCurrencyMonero /></ThemeIcon>}>
+                                        <NavLink pl={'md'} href="/domain/domain-index" label={t('ManageDomain')} component="button" onClick={(e) => { navigate('/domain/domain-index') }} onAuxClick={(e) => {
+                                            // Handle middle mouse button click for browsers that support it
+                                            if (e.button === 1) {
+                                                window.open('/domain/domain-index', '_blank');
                                             }
                                         }} />
                                     </List.Item>

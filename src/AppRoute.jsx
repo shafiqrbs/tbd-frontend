@@ -103,6 +103,20 @@ function AppRoute() {
           <Route path="config" element={<InventoryConfigurationIndex />} />
           <Route path="stock" element={<StockIndex />} />
           <Route path="branch-management" element={<BranchManagementIndex />} />
+
+          <Route path="sales/">
+            <Route path="edit/:id" element={<SalesEdit />} />
+            <Route path="" element={<SalesIndex />} />
+            <Route path="sales-invoice" element={<SalesInvoice />} />
+            <Route path="invoice-batch" element={<InvoiceBatchIndex />} />
+          </Route>
+
+          <Route path="purchase/">
+            <Route path="edit/:id" element={<PurchaseEdit />} />
+            <Route path="" element={<PurchaseIndex />} />
+            <Route path="purchase-invoice" element={<PurchaseInvoice />} />
+            <Route path="invoice-batch" element={<InvoiceBatchIndex />} />
+          </Route>
         </Route>
 
         <Route path="/production/">
@@ -115,15 +129,6 @@ function AppRoute() {
           <Route path="batch/:id" element={<InhouseIndex />} />
         </Route>
 
-        <Route path="/sales&purchase/">
-          <Route path="sales/edit/:id" element={<SalesEdit />} />
-          <Route path="sales" element={<SalesIndex />} />
-          <Route path="sales-invoice" element={<SalesInvoice />} />
-          <Route path="purchase/edit/:id" element={<PurchaseEdit />} />
-          <Route path="purchase" element={<PurchaseIndex />} />
-          <Route path="purchase-invoice" element={<PurchaseInvoice />} />
-          <Route path="invoice-batch" element={<InvoiceBatchIndex />} />
-        </Route>
         <Route path="/domain/">
           <Route path="domain-index" element={<DomainIndex />} />
           <Route path="domain-index/:id" element={<DomainIndex />} />
