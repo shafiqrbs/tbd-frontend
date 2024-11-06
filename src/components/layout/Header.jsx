@@ -99,10 +99,20 @@ export default function Header({
     const [languageSelected, setLanguageSelected] = useState(
         languages.find((item) => item.value === i18n.language)
     );
-    const [configData,setconfigData]=useState([])
-    useEffect(()=>{
-        setconfigData(localStorage.getItem('config-data') ? JSON.parse(localStorage.getItem('config-data')) : [])
-    },[configData,isOnline])
+
+    const [configData, setConfigData] = useState([]);
+
+    useEffect(() => {
+        const storedConfigData = localStorage.getItem('config-data');
+        if (storedConfigData) {
+            const parsedData = JSON.parse(storedConfigData);
+            if (JSON.stringify(parsedData) !== JSON.stringify(configData)) {
+                setConfigData(parsedData);
+            }
+        } else {
+            setConfigData([]);
+        }
+    }, [isOnline]);
 
     function logout() {
         localStorage.clear();

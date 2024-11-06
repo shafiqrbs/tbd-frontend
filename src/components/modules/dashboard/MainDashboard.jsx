@@ -22,7 +22,6 @@ function MainDashboard(props) {
     const [isFormSubmit, setFormSubmit] = useState(false);
     const [formSubmitData, setFormSubmitData] = useState([]);
     const configData = localStorage.getItem('config-data') ? JSON.parse(localStorage.getItem('config-data')) : []
-    console.log(configData.domain.modules)
 
     const height = props.height - 105; //TabList height 104
     const navigate = useNavigate()
