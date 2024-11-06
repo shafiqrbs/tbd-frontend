@@ -39,6 +39,7 @@ import InventoryConfigurationIndex from "./components/modules/inventory/inventor
 import ParticularIndex from "./components/modules/inventory/particular/ParticularIndex";
 import InhouseIndex from "./components/modules/production/production-inhouse/InhouseIndex.jsx";
 import SettingsIndex from "./components/modules/core/settings/SettingsIndex";
+
 import StockIndex from "./components/modules/inventory/stock/StockIndex.jsx";
 import ConfigurationIndex from "./components/modules/domain/configuraton/ConfigurationIndex.jsx";
 import PosIndex from "./components/modules/restaurant-pos/pos-sales/PosIndex.jsx";
@@ -47,6 +48,9 @@ import BatchIndex from "./components/modules/production/batch/BatchIndex.jsx";
 import Requisition from "./components/modules/procurement/purchase-requisition/Requisition.jsx";
 import RequisitionInvoice from "./components/modules/procurement/purchase-requisition/RequisitionInvoice.jsx";
 import BranchManagementIndex from "./components/modules/inventory/branch-management/BranchManagementIndex.jsx";
+import AccountingConfig from "./components/modules/accounting/config/ConfigIndex";
+
+
 
 function AppRoute() {
   return (
@@ -120,6 +124,7 @@ function AppRoute() {
           <Route path="batch/:id" element={<InhouseIndex />} />
         </Route>
 
+
         <Route path="/domain/">
           <Route path="domain-index" element={<DomainIndex />} />
           <Route path="domain-index/:id" element={<DomainIndex />} />
@@ -128,31 +133,30 @@ function AppRoute() {
           <Route path="sitemap/:id" element={<SitemapIndex />} />
         </Route>
 
-        <Route path="/accounting/">
-          <Route path="voucher-entry" element={<VoucherIndex />} />
-          <Route path="ledger" element={<LedgerIndex />} />
-          <Route path="ledger/:id" element={<LedgerIndex />} />
-          <Route path="head-group" element={<HeadGroupIndex />} />
-          <Route path="head-group/:id" element={<HeadGroupIndex />} />
-          <Route path="head-subgroup" element={<HeadSubGroupIndex />} />
-          <Route path="head-subgroup/:id" element={<HeadSubGroupIndex />} />
-          <Route path="transaction-mode" element={<TransactionModeIndex />} />
-          <Route
-            path="transaction-mode/:id"
-            element={<TransactionModeIndex />}
-          />
-          <Route path="modalIndex" element={<SampleModalIndex />} />
-        </Route>
-        <Route path="/pos/">
-          <Route path="pos-index" element={<PosIndex />} />
-        </Route>
-        <Route path="/procurement">
-          <Route path="requisition" element={<Requisition />} />
-          <Route path="new-requisition" element={<RequisitionInvoice />} />
-        </Route>
-        <Route path="sitemap" element={<Sitemap />} />
-      </Route>
-    </Routes>
+          <Route path="/accounting/">
+                    <Route path="voucher-entry" element={<VoucherIndex />} />
+                    <Route path="ledger" element={<LedgerIndex />} />
+                    <Route path="ledger/:id" element={<LedgerIndex />} />
+                    <Route path="head-group" element={<HeadGroupIndex />} />
+                    <Route path="head-group/:id" element={<HeadGroupIndex />} />
+                    <Route path="head-subgroup" element={<HeadSubGroupIndex />} />
+                    <Route path="head-subgroup/:id" element={<HeadSubGroupIndex />} />
+                    <Route path="transaction-mode" element={<TransactionModeIndex />} />
+                    <Route path="transaction-mode/:id" element={<TransactionModeIndex />} />
+                    <Route path="config" element={<AccountingConfig />} />
+                    <Route path="modalIndex" element={<SampleModalIndex />} />
+                </Route>
+          <Route path="/procurement/">
+              <Route path="requisition" element={<Requisition />} />
+              <Route path="new-requisition" element={<RequisitionInvoice />} />
+          </Route>
+          <Route path="sitemap" element={<Sitemap />} />
+                <Route path="/pos/">
+                    <Route path="pos-index" element={<PosIndex />} />
+                </Route>
+                <Route path="sitemap" element={<Sitemap />} />
+            </Route>
+        </Routes>
   );
 }
 
