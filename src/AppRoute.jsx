@@ -50,8 +50,6 @@ import RequisitionInvoice from "./components/modules/procurement/purchase-requis
 import BranchManagementIndex from "./components/modules/inventory/branch-management/BranchManagementIndex.jsx";
 import AccountingConfig from "./components/modules/accounting/config/ConfigIndex";
 
-
-
 function AppRoute() {
   return (
     <Routes>
@@ -83,12 +81,6 @@ function AppRoute() {
           />
         </Route>
         <Route path="/inventory/">
-          <Route path="sales/edit/:id" element={<SalesEdit />} />
-          <Route path="sales" element={<SalesIndex />} />
-          <Route path="sales-invoice" element={<SalesInvoice />} />
-          <Route path="purchase/edit/:id" element={<PurchaseEdit />} />
-          <Route path="purchase" element={<PurchaseIndex />} />
-          <Route path="purchase-invoice" element={<PurchaseInvoice />} />
           <Route path="opening-stock" element={<OpeningStockIndex />} />
           <Route
             path="opening-approve-stock"
@@ -101,7 +93,6 @@ function AppRoute() {
           <Route path="category-group" element={<CategoryGroupIndex />} />
           <Route path="category-group/:id" element={<CategoryGroupIndex />} />
           <Route path="config" element={<InventoryConfigurationIndex />} />
-          <Route path="invoice-batch" element={<InvoiceBatchIndex />} />
           <Route path="particular" element={<ParticularIndex />} />
           <Route path="particular/:id" element={<ParticularIndex />} />
           <Route path="product-settings" element={<ProductSettingsIndex />} />
@@ -124,7 +115,15 @@ function AppRoute() {
           <Route path="batch/:id" element={<InhouseIndex />} />
         </Route>
 
-
+        <Route path="/sales&purchase/">
+          <Route path="sales/edit/:id" element={<SalesEdit />} />
+          <Route path="sales" element={<SalesIndex />} />
+          <Route path="sales-invoice" element={<SalesInvoice />} />
+          <Route path="purchase/edit/:id" element={<PurchaseEdit />} />
+          <Route path="purchase" element={<PurchaseIndex />} />
+          <Route path="purchase-invoice" element={<PurchaseInvoice />} />
+          <Route path="invoice-batch" element={<InvoiceBatchIndex />} />
+        </Route>
         <Route path="/domain/">
           <Route path="domain-index" element={<DomainIndex />} />
           <Route path="domain-index/:id" element={<DomainIndex />} />
@@ -133,30 +132,33 @@ function AppRoute() {
           <Route path="sitemap/:id" element={<SitemapIndex />} />
         </Route>
 
-          <Route path="/accounting/">
-                    <Route path="voucher-entry" element={<VoucherIndex />} />
-                    <Route path="ledger" element={<LedgerIndex />} />
-                    <Route path="ledger/:id" element={<LedgerIndex />} />
-                    <Route path="head-group" element={<HeadGroupIndex />} />
-                    <Route path="head-group/:id" element={<HeadGroupIndex />} />
-                    <Route path="head-subgroup" element={<HeadSubGroupIndex />} />
-                    <Route path="head-subgroup/:id" element={<HeadSubGroupIndex />} />
-                    <Route path="transaction-mode" element={<TransactionModeIndex />} />
-                    <Route path="transaction-mode/:id" element={<TransactionModeIndex />} />
-                    <Route path="config" element={<AccountingConfig />} />
-                    <Route path="modalIndex" element={<SampleModalIndex />} />
-                </Route>
-          <Route path="/procurement/">
-              <Route path="requisition" element={<Requisition />} />
-              <Route path="new-requisition" element={<RequisitionInvoice />} />
-          </Route>
-          <Route path="sitemap" element={<Sitemap />} />
-                <Route path="/pos/">
-                    <Route path="pos-index" element={<PosIndex />} />
-                </Route>
-                <Route path="sitemap" element={<Sitemap />} />
-            </Route>
-        </Routes>
+        <Route path="/accounting/">
+          <Route path="voucher-entry" element={<VoucherIndex />} />
+          <Route path="ledger" element={<LedgerIndex />} />
+          <Route path="ledger/:id" element={<LedgerIndex />} />
+          <Route path="head-group" element={<HeadGroupIndex />} />
+          <Route path="head-group/:id" element={<HeadGroupIndex />} />
+          <Route path="head-subgroup" element={<HeadSubGroupIndex />} />
+          <Route path="head-subgroup/:id" element={<HeadSubGroupIndex />} />
+          <Route path="transaction-mode" element={<TransactionModeIndex />} />
+          <Route
+            path="transaction-mode/:id"
+            element={<TransactionModeIndex />}
+          />
+          <Route path="config" element={<AccountingConfig />} />
+          <Route path="modalIndex" element={<SampleModalIndex />} />
+        </Route>
+        <Route path="/procurement/">
+          <Route path="requisition" element={<Requisition />} />
+          <Route path="new-requisition" element={<RequisitionInvoice />} />
+        </Route>
+        <Route path="sitemap" element={<Sitemap />} />
+        <Route path="/pos/">
+          <Route path="pos-index" element={<PosIndex />} />
+        </Route>
+        <Route path="sitemap" element={<Sitemap />} />
+      </Route>
+    </Routes>
   );
 }
 
