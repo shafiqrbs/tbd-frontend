@@ -88,11 +88,7 @@ const languages = [
 ];
 
 export default function Header({
-                                   isOnline,
-                                   navbarOpened,
-                                   toggleNavbar,
-                                   rightSidebarOpened,
-                                   toggleRightSideBar,
+                                   isOnline
                                }) {
     const [opened, { open, close }] = useDisclosure(false);
     const { t, i18n } = useTranslation();
@@ -103,8 +99,10 @@ export default function Header({
     const [languageSelected, setLanguageSelected] = useState(
         languages.find((item) => item.value === i18n.language)
     );
-
-    const configData = localStorage.getItem('config-data') ? JSON.parse(localStorage.getItem('config-data')) : []
+    const [configData,setconfigData]=useState([])
+    useEffect(()=>{
+        setconfigData(localStorage.getItem('config-data') ? JSON.parse(localStorage.getItem('config-data')) : [])
+    },[configData,isOnline])
 
     function logout() {
         localStorage.clear();
@@ -148,7 +146,7 @@ export default function Header({
             <Modal.Overlay />
             <Modal.Content p={'xs'}>
                 <Modal.Header ml={'xs'}>
-                    <Modal.Title>{configData && configData.domain ? configData.domain.name : 'Store Name'}</Modal.Title>
+                    <Modal.Title>{configData && configData.domain ? configData.domain.name : ''}</Modal.Title>
                     <Modal.CloseButton />
                 </Modal.Header>
                 <Modal.Body>
@@ -164,7 +162,7 @@ export default function Header({
                         c={'red'}
                         fw={'800'}
                         component="button"
-                        label={configData && configData.domain ? configData.domain.name : 'Store Name'}
+                        label={configData && configData.domain ? configData.domain.name : ''}
                         onClick={(e) => { navigate('/') }}
                     />
                 </Grid.Col>
