@@ -69,17 +69,14 @@ const mockdata = [
 
 function Sitemap() {
   const { t, i18n } = useTranslation();
-  //   const iconStyle = { width: rem(12), height: rem(12) };
-  //   const [activeTab, setActiveTab] = useState("ThreeGrid");
-  //   const [saveCreateLoading, setSaveCreateLoading] = useState(false);
-  //   const [isFormSubmit, setFormSubmit] = useState(false);
-  //   const [formSubmitData, setFormSubmitData] = useState([]);
+  const iconStyle = { width: rem(12), height: rem(12) };
+  const [activeTab, setActiveTab] = useState("ThreeGrid");
+  const [saveCreateLoading, setSaveCreateLoading] = useState(false);
+  const [isFormSubmit, setFormSubmit] = useState(false);
+  const [formSubmitData, setFormSubmitData] = useState([]);
   const { isOnline, mainAreaHeight } = useOutletContext();
   const height = mainAreaHeight - 80; //TabList height 104
   const theme = useMantineTheme();
-
-  // enable disable accounting module
-  const [enableAccounting, setEnableAccounting] = useState(false);
   const navigate = useNavigate();
   const features = mockdata.map((feature) => (
     <Card
@@ -103,13 +100,13 @@ function Sitemap() {
     </Card>
   ));
 
-  //   const form = useForm({
-  //     initialValues: {},
-  //     validate: {
-  //       name: hasLength({ min: 2, max: 10 }),
-  //       email: isEmail(),
-  //     },
-  //   });
+  const form = useForm({
+    initialValues: {},
+    validate: {
+      name: hasLength({ min: 2, max: 10 }),
+      email: isEmail(),
+    },
+  });
   return (
     <>
       <Container fluid pt="xs">
@@ -235,126 +232,118 @@ function Sitemap() {
                 </List>
               </Text>
             </Card>
-            {enableAccounting && (
-              <Card
-                shadow="md"
-                radius="md"
-                className={classes.card}
-                padding="lg"
-              >
-                <Grid gutter={{ base: 2 }}>
-                  <Grid.Col span={2}>
-                    <IconMoneybag
-                      style={{ width: rem(42), height: rem(42) }}
-                      stroke={2}
-                      color={theme.colors.blue[6]}
+            <Card shadow="md" radius="md" className={classes.card} padding="lg">
+              <Grid gutter={{ base: 2 }}>
+                <Grid.Col span={2}>
+                  <IconMoneybag
+                    style={{ width: rem(42), height: rem(42) }}
+                    stroke={2}
+                    color={theme.colors.blue[6]}
+                  />
+                </Grid.Col>
+                <Grid.Col span={10}>
+                  <Text fz="md" fw={500} className={classes.cardTitle}>
+                    {t("AccountingandFinancial")}
+                  </Text>
+                </Grid.Col>
+              </Grid>
+              <Text fz="sm" c="dimmed" mt="sm">
+                <List spacing="ms" size="sm" center>
+                  <List.Item
+                    pl={"xs"}
+                    icon={
+                      <ThemeIcon
+                        color="blue.6"
+                        size={20}
+                        radius="xl"
+                        variant="outline"
+                      >
+                        <IconBasket />
+                      </ThemeIcon>
+                    }
+                  >
+                    <NavLink
+                      pl={"md"}
+                      href="accounting/sales"
+                      label={t("ManageSales")}
+                      component="button"
+                      onClick={(e) => {
+                        navigate("/inventory/sales");
+                      }}
                     />
-                  </Grid.Col>
-                  <Grid.Col span={10}>
-                    <Text fz="md" fw={500} className={classes.cardTitle}>
-                      {t("AccountingandFinancial")}
-                    </Text>
-                  </Grid.Col>
-                </Grid>
-                <Text fz="sm" c="dimmed" mt="sm">
-                  <List spacing="ms" size="sm" center>
-                    <List.Item
-                      pl={"xs"}
-                      icon={
-                        <ThemeIcon
-                          color="blue.6"
-                          size={20}
-                          radius="xl"
-                          variant="outline"
-                        >
-                          <IconBasket />
-                        </ThemeIcon>
-                      }
-                    >
-                      <NavLink
-                        pl={"md"}
-                        href="accounting/sales"
-                        label={t("ManageSales")}
-                        component="button"
-                        onClick={(e) => {
-                          navigate("/inventory/sales");
-                        }}
-                      />
-                    </List.Item>
-                    <List.Item
-                      pl={"xs"}
-                      icon={
-                        <ThemeIcon
-                          color="blue.6"
-                          size={20}
-                          radius="xl"
-                          variant="outline"
-                        >
-                          <IconShoppingBagSearch />
-                        </ThemeIcon>
-                      }
-                    >
-                      <NavLink
-                        pl={"md"}
-                        href="accounting/sales-invoice"
-                        label={t("NewSales")}
-                        component="button"
-                        onClick={(e) => {
-                          navigate("/inventory/sales");
-                        }}
-                      />
-                    </List.Item>
-                    <List.Item
-                      pl={"xs"}
-                      icon={
-                        <ThemeIcon
-                          color="blue.6"
-                          size={20}
-                          radius="xl"
-                          variant="outline"
-                        >
-                          <IconShoppingBagPlus />
-                        </ThemeIcon>
-                      }
-                    >
-                      <NavLink
-                        pl={"md"}
-                        href="accounting/purchase"
-                        label={t("ManagePurchase")}
-                        component="button"
-                        onClick={(e) => {
-                          navigate("/inventory/sales");
-                        }}
-                      />
-                    </List.Item>
-                    <List.Item
-                      pl={"xs"}
-                      icon={
-                        <ThemeIcon
-                          color="blue.6"
-                          size={20}
-                          radius="xl"
-                          variant="outline"
-                        >
-                          <IconShoppingCartUp />
-                        </ThemeIcon>
-                      }
-                    >
-                      <NavLink
-                        pl={"md"}
-                        href="accounting/purchase-invoice"
-                        label={t("NewPurchase")}
-                        component="button"
-                        onClick={(e) => {
-                          navigate("/inventory/sales");
-                        }}
-                      />
-                    </List.Item>
-                  </List>
-                </Text>
-              </Card>
-            )}
-
+                  </List.Item>
+                  <List.Item
+                    pl={"xs"}
+                    icon={
+                      <ThemeIcon
+                        color="blue.6"
+                        size={20}
+                        radius="xl"
+                        variant="outline"
+                      >
+                        <IconShoppingBagSearch />
+                      </ThemeIcon>
+                    }
+                  >
+                    <NavLink
+                      pl={"md"}
+                      href="accounting/sales-invoice"
+                      label={t("NewSales")}
+                      component="button"
+                      onClick={(e) => {
+                        navigate("/inventory/sales");
+                      }}
+                    />
+                  </List.Item>
+                  <List.Item
+                    pl={"xs"}
+                    icon={
+                      <ThemeIcon
+                        color="blue.6"
+                        size={20}
+                        radius="xl"
+                        variant="outline"
+                      >
+                        <IconShoppingBagPlus />
+                      </ThemeIcon>
+                    }
+                  >
+                    <NavLink
+                      pl={"md"}
+                      href="accounting/purchase"
+                      label={t("ManagePurchase")}
+                      component="button"
+                      onClick={(e) => {
+                        navigate("/inventory/sales");
+                      }}
+                    />
+                  </List.Item>
+                  <List.Item
+                    pl={"xs"}
+                    icon={
+                      <ThemeIcon
+                        color="blue.6"
+                        size={20}
+                        radius="xl"
+                        variant="outline"
+                      >
+                        <IconShoppingCartUp />
+                      </ThemeIcon>
+                    }
+                  >
+                    <NavLink
+                      pl={"md"}
+                      href="accounting/purchase-invoice"
+                      label={t("NewPurchase")}
+                      component="button"
+                      onClick={(e) => {
+                        navigate("/inventory/sales");
+                      }}
+                    />
+                  </List.Item>
+                </List>
+              </Text>
+            </Card>
             <Card shadow="md" radius="md" className={classes.card} padding="lg">
               <Grid gutter={{ base: 2 }}>
                 <Grid.Col span={2}>

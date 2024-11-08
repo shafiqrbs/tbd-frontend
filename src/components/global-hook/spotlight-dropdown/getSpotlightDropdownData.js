@@ -35,9 +35,26 @@ const getSpotlightDropdownData = (t) => {
         },
       ],
     },
+
     {
-      group: "Sales & Purchase",
+      group: "Inventory",
       actions: [
+        {
+          id: "category",
+          label: t("CategoryN"),
+          description: t("WhereWePresentTheCategoryInformationN"),
+        },
+        {
+          id: "category-group",
+          label: t("CategoryGroupnN"),
+          description: t("WhereWePresentTheCategoryGroupInformationN"),
+        },
+        {
+          id: "product",
+          label: t("ProductN"),
+          description: t("WhereWePresentTheProductInformationN"),
+        },
+
         {
           id: "sales",
           label: t("SalesN"),
@@ -57,26 +74,6 @@ const getSpotlightDropdownData = (t) => {
           id: "purchase-invoice",
           label: t("NewPurchaseN"),
           description: t("WhereWePresentThePurchaseInvoiceInformationN"),
-        },
-      ],
-    },
-    {
-      group: "Inventory",
-      actions: [
-        {
-          id: "category",
-          label: t("CategoryN"),
-          description: t("WhereWePresentTheCategoryInformationN"),
-        },
-        {
-          id: "category-group",
-          label: t("CategoryGroupnN"),
-          description: t("WhereWePresentTheCategoryGroupInformationN"),
-        },
-        {
-          id: "product",
-          label: t("ProductN"),
-          description: t("WhereWePresentTheProductInformationN"),
         },
         {
           id: "invoice-batch",

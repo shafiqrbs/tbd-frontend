@@ -33,11 +33,11 @@ import { useNavigate } from "react-router-dom";
 function _SalesPurchaseHeaderNavbar(props) {
   const { t, i18n } = useTranslation();
   const links = [
-    { link: "/sales&purchase/invoice-batch", label: t("InvoiceBatch") },
-    { link: "/sales&purchase/sales", label: t("Sales") },
-    { link: "/sales&purchase/sales-invoice", label: t("NewSales") },
-    { link: "/sales&purchase/purchase", label: t("Purchase") },
-    { link: "/sales&purchase/purchase-invoice", label: t("NewPurchase") },
+    { link: "/inventory/invoice-batch", label: t("InvoiceBatch") },
+    { link: "/inventory/sales", label: t("Sales") },
+    { link: "/inventory/sales-invoice", label: t("NewSales") },
+    { link: "/inventory/purchase", label: t("Purchase") },
+    { link: "/inventory/purchase-invoice", label: t("NewPurchase") },
   ];
   const { pageTitle } = props;
   const dispatch = useDispatch();

@@ -81,6 +81,12 @@ function AppRoute() {
           />
         </Route>
         <Route path="/inventory/">
+          <Route path="sales/edit/:id" element={<SalesEdit />} />
+          <Route path="sales" element={<SalesIndex />} />
+          <Route path="sales-invoice" element={<SalesInvoice />} />
+          <Route path="purchase/edit/:id" element={<PurchaseEdit />} />
+          <Route path="purchase" element={<PurchaseIndex />} />
+          <Route path="purchase-invoice" element={<PurchaseInvoice />} />
           <Route path="opening-stock" element={<OpeningStockIndex />} />
           <Route
             path="opening-approve-stock"
@@ -93,6 +99,7 @@ function AppRoute() {
           <Route path="category-group" element={<CategoryGroupIndex />} />
           <Route path="category-group/:id" element={<CategoryGroupIndex />} />
           <Route path="config" element={<InventoryConfigurationIndex />} />
+          <Route path="invoice-batch" element={<InvoiceBatchIndex />} />
           <Route path="particular" element={<ParticularIndex />} />
           <Route path="particular/:id" element={<ParticularIndex />} />
           <Route path="product-settings" element={<ProductSettingsIndex />} />
@@ -103,20 +110,6 @@ function AppRoute() {
           <Route path="config" element={<InventoryConfigurationIndex />} />
           <Route path="stock" element={<StockIndex />} />
           <Route path="branch-management" element={<BranchManagementIndex />} />
-
-          <Route path="sales/">
-            <Route path="edit/:id" element={<SalesEdit />} />
-            <Route path="" element={<SalesIndex />} />
-            <Route path="sales-invoice" element={<SalesInvoice />} />
-            <Route path="invoice-batch" element={<InvoiceBatchIndex />} />
-          </Route>
-
-          <Route path="purchase/">
-            <Route path="edit/:id" element={<PurchaseEdit />} />
-            <Route path="" element={<PurchaseIndex />} />
-            <Route path="purchase-invoice" element={<PurchaseInvoice />} />
-            <Route path="invoice-batch" element={<InvoiceBatchIndex />} />
-          </Route>
         </Route>
 
         <Route path="/production/">
