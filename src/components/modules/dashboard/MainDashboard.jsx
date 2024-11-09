@@ -36,6 +36,7 @@ import {
   IconCategory2,
   IconShoppingCart,
   IconShoppingBag,
+  IconList,
 } from "@tabler/icons-react";
 import { useTranslation } from "react-i18next";
 import classes from "../../../assets/css/FeaturesCards.module.css";
@@ -213,6 +214,35 @@ function MainDashboard(props) {
                         // Handle middle mouse button click for browsers that support it
                         if (e.button === 1) {
                           window.open("/inventory/purchase-invoice", "_blank");
+                        }
+                      }}
+                    />
+                  </List.Item>
+                  <List.Item
+                    pl={"xs"}
+                    icon={
+                      <ThemeIcon
+                        color="teal.6"
+                        size={20}
+                        radius="xl"
+                        variant="outline"
+                      >
+                        <IconList />
+                      </ThemeIcon>
+                    }
+                  >
+                    <NavLink
+                      pl={"md"}
+                      href="/inventory/invoice-batch"
+                      label={t("InvoiceBatch")}
+                      component="button"
+                      onClick={(e) => {
+                        navigate("inventory/invoice-batch");
+                      }}
+                      onAuxClick={(e) => {
+                        // Handle middle mouse button click for browsers that support it
+                        if (e.button === 1) {
+                          window.open("/inventory/invoice-batch", "_blank");
                         }
                       }}
                     />
