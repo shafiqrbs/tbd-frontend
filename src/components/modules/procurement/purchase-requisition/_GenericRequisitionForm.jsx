@@ -56,6 +56,7 @@ export default function _GenericRequisitionForm(props) {
       quantity: "",
     },
     validate: {
+      vendor_id: isNotEmpty(),
       product_id: (value, values) => {
         const isDigitsOnly = /^\d+$/.test(value);
         if (!isDigitsOnly && values.product_id) {
@@ -86,16 +87,14 @@ export default function _GenericRequisitionForm(props) {
 
   //second form
 
-  const secondForm = useForm({
+  const requisitionForm = useForm({
     initialValues: {
       order_process: "",
       narration: "",
       expected_date: "",
-      // invoice_date: "",
     },
     validate: {
       expected_date: isNotEmpty(),
-      invoice_date: isNotEmpty(),
     },
   });
 
@@ -245,6 +244,24 @@ export default function _GenericRequisitionForm(props) {
     }
   };
 
+  // temporary requisition invoice create later remove
+
+  if (!localStorage.getItem("temp-requistion-invoice")) {
+    localStorage.setItem("temp-requistion-invoice", JSON.stringify([]));
+  }
+  // if (localStorage.getItem("temp-requistion-invoice")) {
+  //   localStorage.removeItem("temp-requistion-invoice");
+  // }
+  function tempLocalRequisitionInvoice(addInvoice) {
+    const existingInvoices = localStorage.getItem("temp-requistion-invoice");
+    const invoices = existingInvoices ? JSON.parse(existingInvoices) : [];
+
+    invoices.push(addInvoice);
+    localStorage.setItem("temp-requistion-invoice", JSON.stringify(invoices));
+  }
+
+  // function tempLocalInvoice()
+
   // updates local stroage ,resets form, sets focus to product search
 
   function updateLocalStorageAndResetForm(addProducts, type) {
@@ -275,15 +292,26 @@ export default function _GenericRequisitionForm(props) {
           purchase_price: Number(values.purchase_price),
           sub_total: Number(values.sub_total),
           sales_price: Number(product.sales_price),
+          vendor_id: productForm.values.vendor_id,
         });
       }
       return acc;
     }, myCardProducts);
+    setVendorData(null);
     updateLocalStorageAndResetForm(addProducts, "productId");
   }
 
   // add product based on barcode
-
+  function createProductFromValues(product) {
+    return {
+      product_id: product.product_id,
+      quantity: product.quantity,
+      purchase_price: product.purchase_price,
+      sales_price: product.sales_price,
+      sub_total: product.sub_total,
+      vendor_id: product.vendorId,
+    };
+  }
   function handleAddProductByBarcode(values, myCardProducts, localProducts) {
     const barcodeExists = localProducts.some(
       (product) => product.barcode === values.barcode
@@ -326,7 +354,7 @@ export default function _GenericRequisitionForm(props) {
         "alt+r",
         () => {
           productForm.reset();
-          secondForm.reset();
+          requisitionForm.reset();
         },
       ],
     ],
@@ -416,7 +444,7 @@ export default function _GenericRequisitionForm(props) {
                         })}
                       >
                         <SelectForm
-                          tooltip={t("PurchaseValidateMessage")}
+                          tooltip={t("ChooseVendor")}
                           label=""
                           placeholder={t("Vendor")}
                           required={false}
@@ -540,8 +568,8 @@ export default function _GenericRequisitionForm(props) {
                   <Grid.Col span={8} pb="14">
                     <Box h={"100%"} className="borderRadiusAll boxBackground">
                       <form
-                        id="secondForm"
-                        onSubmit={secondForm.onSubmit((values) => {
+                        id="requisitionForm"
+                        onSubmit={requisitionForm.onSubmit((values) => {
                           const tempProducts = localStorage.getItem(
                             "temp-requisition-products"
                           );
@@ -558,32 +586,40 @@ export default function _GenericRequisitionForm(props) {
                               purchase_price: product.purchase_price,
                               sales_price: product.sales_price,
                               sub_total: product.sub_total,
+                              vendor_id: product.vendor_id,
                             };
                           });
-
                           const options = {
                             year: "numeric",
                             month: "2-digit",
                             day: "2-digit",
                           };
                           const formValue = {};
-                          formValue["vendor_id"] = productForm.values.vendor_id;
+                          formValue["invoice_id"] =
+                            Math.floor(Math.random() * (999999 - 100000 + 1)) +
+                            100000;
                           formValue["invoice_date"] =
-                            secondForm.values.invoice_date &&
-                            new Date(
-                              secondForm.values.invoice_date
-                            ).toLocaleDateString("en-CA", options);
+                            new Date().toLocaleDateString("en-CA");
                           formValue["expected_date"] =
-                            secondForm.values.expected_date &&
+                            requisitionForm.values.expected_date &&
                             new Date(
-                              secondForm.values.expected_date
+                              requisitionForm.values.expected_date
                             ).toLocaleDateString("en-CA", options);
-                          formValue["narration"] = secondForm.values.narration;
+                          formValue["narration"] =
+                            requisitionForm.values.narration;
                           formValue["created_by_id"] = Number(createdBy["id"]);
                           formValue["items"] = transformedArray
                             ? transformedArray
                             : [];
+                          formValue["status"] = "New";
+
                           console.log(formValue);
+                          tempLocalRequisitionInvoice(formValue);
+                          localStorage.removeItem("temp-requisition-products");
+                          productForm.reset();
+                          requisitionForm.reset();
+                          setVendorData(null);
+                          setLoadCardProducts(true);
                           // const data = {
                           //   url: "inventory/purchase",
                           //   data: formValue,
@@ -608,7 +644,7 @@ export default function _GenericRequisitionForm(props) {
                           //     "temp-requisition-products"
                           //   );
                           //   productForm.reset();
-                          //   secondForm.reset();
+                          //   requisitionForm.reset();
                           //   setVendorData(null);
                           // }, 700);
                         })}
@@ -622,7 +658,7 @@ export default function _GenericRequisitionForm(props) {
                                 placeholder={t("InvoiceDate")}
                                 required={true}
                                 nextField={"expected_date"}
-                                form={secondForm}
+                                form={requisitionForm}
                                 name={"invoice_date"}
                                 id={"invoice_date"}
                                 leftSection={
@@ -644,7 +680,7 @@ export default function _GenericRequisitionForm(props) {
                                 placeholder={t("ExpectedDate")}
                                 required={true}
                                 nextField={"narration"}
-                                form={secondForm}
+                                form={requisitionForm}
                                 name={"expected_date"}
                                 id={"expected_date"}
                                 leftSection={
@@ -666,9 +702,9 @@ export default function _GenericRequisitionForm(props) {
                             style={"style"}
                             placeholder={t("Narration")}
                             required={false}
-                            nextField={"SecondFormSubmit"}
+                            nextField={"requisitionFormSubmit"}
                             name={"narration"}
-                            form={secondForm}
+                            form={requisitionForm}
                             id={"narration"}
                           />
                         </Box>
@@ -940,9 +976,9 @@ export default function _GenericRequisitionForm(props) {
                         <Button
                           fullWidth={true}
                           type="submit"
-                          form="secondForm"
+                          form="requisitionForm"
                           name="save"
-                          id="SecondFormSubmit"
+                          id="requisitionFormSubmit"
                           variant="filled"
                           leftSection={<IconDeviceFloppy size={14} />}
                           color="cyan.5"

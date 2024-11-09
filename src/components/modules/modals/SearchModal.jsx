@@ -118,6 +118,8 @@ function SearchModal({ onClose }) {
             ? `accounting/${selectedAction.id}`
             : selectedAction.group === "Procurement"
             ? `procurement/${selectedAction.id}`
+            : selectedAction.group === "Sales & Purchase"
+            ? `inventory/${selectedAction.id}`
             : `/sitemap`;
         navigate(path);
         onClose();
@@ -245,6 +247,8 @@ function SearchModal({ onClose }) {
                               ? `accounting/${action.id}`
                               : action.group === "Procurement"
                               ? `procurement/${action.id}`
+                              : action.group === "Sales & Purchase"
+                              ? `inventory/${action.id}`
                               : `/sitemap`
                           }
                           onClick={(e) => {
@@ -264,8 +268,8 @@ function SearchModal({ onClose }) {
                                 : action.group === "Accounting" ||
                                   action.group === "একাউন্টিং"
                                 ? `accounting/${action.id}`
-                                : action.group === "Procurement"
-                                ? `procurement/${action.id}`
+                                : action.group === "Sales & Purchase"
+                                ? `inventory/${action.id}`
                                 : `/sitemap`
                             );
                             onClose();

@@ -90,7 +90,7 @@ function AccountingConfig() {
                 <>
                     <Box>
                         <AccountingHeaderNavbar
-                            pageTitle={t('ManageLedger')}
+                            pageTitle={t('ManageCongifuration')}
                             roles={t('Roles')}
                             allowZeroPercentage=''
                             currencySymbol=''
@@ -109,16 +109,13 @@ function AccountingConfig() {
                                                 <List spacing="ms" size="sm" center>
                                                     <List.Item pl={'xs'} icon={<ThemeIcon color="blue.6" size={20} radius="xl" variant="outline" ><IconCurrencyMonero /></ThemeIcon>}>
                                                         <NavLink pl={'md'} pt={2}  label={t('ResetHead')} component="button" onClick={
-                                                            ()=>{AccountingDataProcess('accounting/account-head-generate')}
+                                                            ()=>{AccountingDataProcess('accounting/account-head-reset')}
                                                         } />
                                                     </List.Item>
                                                     <List.Item pl={'xs'} icon={<ThemeIcon color="blue.6" size={20} radius="xl" variant="outline" ><IconCurrencyMonero /></ThemeIcon>}>
-                                                        <NavLink pl={'md'} pt={2} href="/domain/domain-index" label={t('RegenerateHead')} component="button" onClick={(e) => { navigate('/domain/domain-index') }} onAuxClick={(e) => {
-                                                            // Handle middle mouse button click for browsers that support it
-                                                            if (e.button === 1) {
-                                                                window.open('/domain/domain-index');
-                                                            }
-                                                        }} />
+                                                        <NavLink pl={'md'} pt={2}  label={t('RegenerateHead')} component="button" onClick={
+                                                            ()=>{AccountingDataProcess('accounting/account-head-generate')}
+                                                        } />
                                                     </List.Item>
                                                 </List>
                                             </Box>
