@@ -145,7 +145,6 @@ export default function __FilterPopover(props) {
           <Box>
             <form
               onSubmit={advanceSearchForm.onSubmit((values) => {
-                console.log("ok");
                 console.log(advanceSearchForm.values);
               })}
             >
@@ -174,13 +173,29 @@ export default function __FilterPopover(props) {
                             {t("Name")}
                           </Text>
                         </Grid.Col>
+
+                        <Grid.Col span={5}>
+                          <SelectForm
+                            tooltip={t("SelectSearchLikeValue")}
+                            form={advanceSearchForm}
+                            searchable
+                            name="name_dropdown"
+                            id="name_dropdown"
+                            label=""
+                            nextField="name"
+                            placeholder="Search Like"
+                            dropdownValue={name_drop_data}
+                            changeValue={setNameDropdown}
+                            data={["React", "Angular", "Vue", "Svelte"]}
+                          />
+                        </Grid.Col>
                         <Grid.Col span={7}>
                           <Box>
                             <InputForm
                               tooltip={t("NameValidateMessage")}
                               label=""
                               placeholder={t("Name")}
-                              nextField={"name_dropdown"}
+                              nextField={"mobile_dropdown"}
                               form={advanceSearchForm}
                               name={"name"}
                               id={"name"}
@@ -191,21 +206,6 @@ export default function __FilterPopover(props) {
                             />
                           </Box>
                         </Grid.Col>
-                        <Grid.Col span={5}>
-                          <SelectForm
-                            tooltip={t("SelectSearchLikeValue")}
-                            form={advanceSearchForm}
-                            searchable
-                            name="name_dropdown"
-                            id="name_dropdown"
-                            label=""
-                            nextField="mobile"
-                            placeholder="Search Like"
-                            dropdownValue={name_drop_data}
-                            changeValue={setNameDropdown}
-                            data={["React", "Angular", "Vue", "Svelte"]}
-                          />
-                        </Grid.Col>
                       </Grid>
                     </Box>
                     <Box p={"xs"}>
@@ -215,13 +215,29 @@ export default function __FilterPopover(props) {
                             {t("Mobile")}
                           </Text>
                         </Grid.Col>
+
+                        <Grid.Col span={5}>
+                          <SelectForm
+                            tooltip={t("SelectSearchLikeValue")}
+                            form={advanceSearchForm}
+                            searchable
+                            name="mobile_dropdown"
+                            id="mobile_dropdown"
+                            nextField="mobile"
+                            label=""
+                            placeholder="Search Like"
+                            dropdownValue={mobile_drop_data}
+                            value={mobileDropdown}
+                            changeValue={setMobileDropdown}
+                          />
+                        </Grid.Col>
                         <Grid.Col span={7}>
                           <Box>
                             <InputForm
                               tooltip={t("MobileValidateMessage")}
                               label=""
                               placeholder={t("Mobile")}
-                              nextField={"mobile_dropdown"}
+                              nextField={"invoice_dropdown"}
                               form={advanceSearchForm}
                               name={"mobile"}
                               id={"mobile"}
@@ -232,21 +248,6 @@ export default function __FilterPopover(props) {
                             />
                           </Box>
                         </Grid.Col>
-                        <Grid.Col span={5}>
-                          <SelectForm
-                            tooltip={t("SelectSearchLikeValue")}
-                            form={advanceSearchForm}
-                            searchable
-                            name="mobile_dropdown"
-                            id="mobile_dropdown"
-                            nextField="invoice"
-                            label=""
-                            placeholder="Search Like"
-                            dropdownValue={mobile_drop_data}
-                            value={mobileDropdown}
-                            changeValue={setMobileDropdown}
-                          />
-                        </Grid.Col>
                       </Grid>
                     </Box>
                     <Box p={"xs"}>
@@ -256,13 +257,29 @@ export default function __FilterPopover(props) {
                             {t("Invoice")}
                           </Text>
                         </Grid.Col>
+
+                        <Grid.Col span={5}>
+                          <SelectForm
+                            tooltip={t("SelectSearchLikeValue")}
+                            form={advanceSearchForm}
+                            searchable
+                            name="invoice_dropdown"
+                            id="invoice_dropdown"
+                            nextField="invoice"
+                            label=""
+                            placeholder="Search Like"
+                            dropdownValue={invoice_drop_data}
+                            value={invoiceDropdown}
+                            changeValue={setInvoiceDropdown}
+                          />
+                        </Grid.Col>
                         <Grid.Col span={7}>
                           <Box>
                             <InputForm
                               tooltip={t("InvoiceValidateMessage")}
                               label=""
                               placeholder={t("Invoice")}
-                              nextField={"invoice_dropdown"}
+                              nextField={"EntityFormSubmit"}
                               form={advanceSearchForm}
                               name={"invoice"}
                               id={"invoice"}
@@ -272,21 +289,6 @@ export default function __FilterPopover(props) {
                               rightIcon={""}
                             />
                           </Box>
-                        </Grid.Col>
-                        <Grid.Col span={5}>
-                          <SelectForm
-                            tooltip={t("SelectSearchLikeValue")}
-                            form={advanceSearchForm}
-                            searchable
-                            name="invoice_dropdown"
-                            id="invoice_dropdown"
-                            nextField="EntityFormSubmit"
-                            label=""
-                            placeholder="Search Like"
-                            dropdownValue={invoice_drop_data}
-                            value={invoiceDropdown}
-                            changeValue={setInvoiceDropdown}
-                          />
                         </Grid.Col>
                       </Grid>
                     </Box>
