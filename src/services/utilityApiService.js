@@ -63,6 +63,7 @@ export const getDataWithParamForSettingDropdown = async (value) => {
         .then(res => {
             data['data'] = res.data
             data['type'] = value.param["dropdown-type"]
+            data['url'] = value.url
         })
         .catch(function (error) {
             console.log(error)

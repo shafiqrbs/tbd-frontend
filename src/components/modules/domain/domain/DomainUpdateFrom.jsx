@@ -1,43 +1,95 @@
 import React, { useEffect, useState } from "react";
-import { useOutletContext } from "react-router-dom";
+import {useNavigate, useOutletContext} from "react-router-dom";
 import {
-    Button,
-    rem, Flex,
-    Grid, Box, ScrollArea, Group, Text, Title, Alert, List, Stack,
+    Button, rem, Flex, Grid, Box, ScrollArea, Group, Text, Title, Stack, Checkbox, Tooltip,
 } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
-import {
-    IconCheck,
-    IconDeviceFloppy, IconInfoCircle, IconPlus,
-} from "@tabler/icons-react";
-import { useDisclosure, useHotkeys } from "@mantine/hooks";
+import {IconCheck, IconDeviceFloppy} from "@tabler/icons-react";
+import { useHotkeys } from "@mantine/hooks";
 import { useDispatch, useSelector } from "react-redux";
 import { hasLength, isNotEmpty, useForm } from "@mantine/form";
 import { modals } from "@mantine/modals";
 import { notifications } from "@mantine/notifications";
-import { setEntityNewData, setFetching, setValidationData, storeEntityData } from "../../../../store/core/crudSlice.js";
+import {
+    setEditEntityData,
+    setFetching, setInsertType,
+    updateEntityData
+} from "../../../../store/core/crudSlice.js";
 
 import Shortcut from "../../shortcut/Shortcut";
 import InputForm from "../../../form-builders/InputForm";
 import TextAreaForm from "../../../form-builders/TextAreaForm";
 import InputNumberForm from "../../../form-builders/InputNumberForm";
+import SelectForm from "../../../form-builders/SelectForm.jsx";
+import getSettingBusinessModelDropdownData from "../../../global-hook/dropdown/getSettingBusinessModelDropdownData.js";
+import getSettingModulesDropdownData from "../../../global-hook/dropdown/getSettingModulesDropdownData.js";
+import {setFormLoading} from "../../../../store/inventory/crudSlice.js";
+import getUtilityProductTypeDropdownData from "../../../global-hook/dropdown/getUtilityProductTypeDropdownData.js";
 
 function DomainUpdateForm(props) {
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
     const height = mainAreaHeight - 100; //TabList height 104
+    const navigate = useNavigate();
+
+
+    const [setFormData, setFormDataForUpdate] = useState(false);
+    const [formLoad, setFormLoad] = useState(true);
 
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
+    const entityEditData = useSelector((state) => state.crudSlice.entityEditData)
+    const formLoading = useSelector((state) => state.crudSlice.formLoading)
+
+    const businessModelDropdown = getSettingBusinessModelDropdownData()
+    const modulesData = getSettingModulesDropdownData()
+
+    const [businessModelId, setBusinessModelId] = useState(null)
+
+    /*product type*/
+    const productType = getUtilityProductTypeDropdownData()
+    const [productTypeChecked, setProductTypeChecked] = useState(
+        Array.isArray(entityEditData?.product_types) ? entityEditData.product_types : JSON.parse( entityEditData.product_types || '[]')
+    );
+
+    // Assuming entityEditData.modules is expected to be a valid JSON array of strings like ["module1", "module2"]
+    const [moduleChecked, setModuleChecked] = useState(
+        Array.isArray(entityEditData?.modules) ? entityEditData.modules : JSON.parse(entityEditData?.modules || '[]')
+    );
+
+    useEffect(() => {
+        // Whenever your entityEditData changes (like when fetching entity data), reset the checkbox states
+        if (entityEditData?.modules) {
+            const parsedModules = Array.isArray(entityEditData.modules)
+                ? entityEditData.modules
+                : JSON.parse(entityEditData?.modules || '[]');
+
+            setModuleChecked(parsedModules);
+        }
+
+        if (entityEditData?.product_types) {
+            const parsedModulesProductType = Array.isArray(entityEditData.product_types)
+                ? entityEditData.product_types
+                : JSON.parse(entityEditData?.product_types || '[]');
+
+            setProductTypeChecked(parsedModulesProductType);
+        }
+    }, [entityEditData]);
 
     const form = useForm({
         initialValues: {
-            company_name: '', mobile: '', alternative_mobile: '', name: '', username: '', address: '', email: ''
+            business_model_id: entityEditData?.business_model_id || '',
+            company_name: entityEditData?.company_name || '',
+            mobile: entityEditData?.mobile || '',
+            alternative_mobile: entityEditData?.alternative_mobile || '',
+            name: entityEditData?.name || '',
+            address: entityEditData?.address || '',
+            email: entityEditData?.email || ''
         },
         validate: {
+            business_model_id: isNotEmpty(),
             company_name: hasLength({ min: 2, max: 20 }),
             name: hasLength({ min: 2, max: 20 }),
-            username: hasLength({ min: 2, max: 20 }),
             mobile: (value) => {
                 const isNotEmpty = !    !value.trim().length;
                 const isDigitsOnly = /^\d+$/.test(value.trim());
@@ -64,6 +116,31 @@ function DomainUpdateForm(props) {
         }
     });
 
+    useEffect(() => {
+        setFormLoad(true)
+        setFormDataForUpdate(true)
+    }, [dispatch, formLoading])
+
+    useEffect(() => {
+        if (entityEditData) {
+            form.setValues({
+                business_model_id: entityEditData?.business_model_id || '',
+                company_name: entityEditData?.company_name || '',
+                mobile: entityEditData?.mobile || '',
+                alternative_mobile: entityEditData?.alternative_mobile || '',
+                name: entityEditData?.name || '',
+                address: entityEditData?.address || '',
+                email: entityEditData?.email || '',
+            })
+        }
+        dispatch(setFormLoading(false))
+        setTimeout(() => {
+            setFormLoad(false)
+            setFormDataForUpdate(false)
+        }, 500)
+
+    }, [entityEditData, dispatch])
+
     useHotkeys([['alt+n', () => {
         document.getElementById('company_name').focus()
     }]], []);
@@ -82,6 +159,8 @@ function DomainUpdateForm(props) {
             <Grid columns={9} gutter={{ base: 8 }}>
                 <Grid.Col span={8} >
                     <form onSubmit={form.onSubmit((values) => {
+                        values['modules'] = moduleChecked
+                        values['product_types'] = productTypeChecked
                         modals.openConfirmModal({
                             title: (
                                 <Text size="md"> {t("FormConfirmationTitle")}</Text>
@@ -92,29 +171,29 @@ function DomainUpdateForm(props) {
                             labels: { confirm: t('Submit'), cancel: t('Cancel') }, confirmProps: { color: 'red.6' },
                             onCancel: () => console.log('Cancel'),
                             onConfirm: () => {
-                                // setSaveCreateLoading(true)
-                                // const value = {
-                                //     url: 'domain/domain-index/' + entityEditData.id,
-                                //     data: values
-                                // }
-                                // dispatch(updateEntityData(value))
-                                // notifications.show({
-                                //     color: 'teal',
-                                //     title: t('UpdateSuccessfully'),
-                                //     icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
-                                //     loading: false,
-                                //     autoClose: 700,
-                                //     style: { backgroundColor: 'lightgray' },
-                                // });
+                                setSaveCreateLoading(true)
+                                const value = {
+                                    url: 'domain/global/' + entityEditData.id,
+                                    data: values
+                                }
+                                dispatch(updateEntityData(value))
+                                notifications.show({
+                                    color: 'teal',
+                                    title: t('UpdateSuccessfully'),
+                                    icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
+                                    loading: false,
+                                    autoClose: 700,
+                                    style: { backgroundColor: 'lightgray' },
+                                });
 
-                                // setTimeout(() => {
-                                //     form.reset()
-                                //     dispatch(setInsertType('create'))
-                                //     dispatch(setEditEntityData([]))
-                                //     dispatch(setFetching(true))
-                                //     setSaveCreateLoading(false)
-                                //     navigate('/domain/domain-index', { replace: true });
-                                // }, 700)
+                                setTimeout(() => {
+                                    form.reset()
+                                    dispatch(setInsertType('create'))
+                                    dispatch(setEditEntityData([]))
+                                    dispatch(setFetching(true))
+                                    setSaveCreateLoading(false)
+                                    navigate('/domain/domain-index', { replace: true });
+                                }, 700)
                             },
                         });
                     })}>
@@ -155,6 +234,25 @@ function DomainUpdateForm(props) {
                                         <Grid.Col span={'auto'} >
                                             <ScrollArea h={height} scrollbarSize={2} scrollbars="y" type="never">
                                                 <Box pb={'md'}>
+                                                    <Box mt={'xs'}>
+                                                        <SelectForm
+                                                            tooltip={t('BusinessModel')}
+                                                            label={t('BusinessModel')}
+                                                            placeholder={t('ChooseBusinessModel')}
+                                                            required={true}
+                                                            nextField={'company_name'}
+                                                            name={'business_model_id'}
+                                                            form={form}
+                                                            dropdownValue={businessModelDropdown}
+                                                            mt={8}
+                                                            id={'business_model_id'}
+                                                            searchable={false}
+                                                            value={businessModelId ? String(businessModelId) : (entityEditData.business_model_id ? String(entityEditData.business_model_id) : null)}
+                                                            changeValue={setBusinessModelId}
+                                                            clearable={false}
+                                                            allowDeselect={false}
+                                                        />
+                                                    </Box>
                                                     <Box mt={'8'}>
                                                         <InputForm
                                                             tooltip={t('CompanyStoreNameValidateMessage')}
@@ -177,7 +275,6 @@ function DomainUpdateForm(props) {
                                                             nextField={'alternative_mobile'}
                                                             name={'mobile'}
                                                             form={form}
-                                                            mt={8}
                                                             id={'mobile'}
                                                         />
                                                     </Box>
@@ -216,31 +313,18 @@ function DomainUpdateForm(props) {
                                                             nextField={'username'}
                                                             name={'name'}
                                                             form={form}
-                                                            mt={8}
                                                             id={'name'}
-                                                        />
-                                                    </Box>
-                                                    <Box mt={'xs'}>
-
-                                                        <InputForm
-                                                            tooltip={t('DomainUserValidateMessage')}
-                                                            label={t('DomainUser')}
-                                                            placeholder={t('DomainUser')}
-                                                            required={true}
-                                                            nextField={'address'}
-                                                            name={'username'}
-                                                            form={form}
                                                             mt={8}
-                                                            id={'username'}
                                                         />
                                                     </Box>
+
                                                     <Box mt={'xs'}>
                                                         <TextAreaForm
                                                             tooltip={t('Address')}
                                                             label={t('Address')}
                                                             placeholder={t('Address')}
                                                             required={false}
-                                                            nextField={'EntityFormSubmit'}
+                                                            nextField={'isNotEmpty'}
                                                             name={'address'}
                                                             form={form}
                                                             mt={8}
@@ -248,6 +332,49 @@ function DomainUpdateForm(props) {
                                                         />
                                                     </Box>
 
+                                                    <Box mt={'8'}>
+                                                        <Checkbox.Group
+                                                            label={t('Modules')}
+                                                            description={t('selectModulesForAccess')}
+                                                            value={moduleChecked || []}
+                                                            onChange={setModuleChecked}
+                                                        >
+                                                            <Group mt="xs">
+                                                                {
+                                                                    modulesData.map((module, index) => (
+                                                                        <Tooltip key={index} mt={'8'} label={module.name}>
+                                                                            <Checkbox
+                                                                                value={module.slug}
+                                                                                label={module.name}
+                                                                            />
+                                                                        </Tooltip>
+                                                                    ))
+                                                                }
+                                                            </Group>
+                                                        </Checkbox.Group>
+                                                    </Box>
+
+                                                    <Box mt={'8'}>
+                                                        <Checkbox.Group
+                                                            label={t('ProductType')}
+                                                            description={t('selectProductType')}
+                                                            value={productTypeChecked || []}
+                                                            onChange={setProductTypeChecked}
+                                                        >
+                                                            <Group mt="xs">
+                                                                {
+                                                                    productType.map((type, index) => (
+                                                                        <Tooltip key={index} mt={'8'} label={type.label}>
+                                                                            <Checkbox
+                                                                                value={type.value}
+                                                                                label={type.label}
+                                                                            />
+                                                                        </Tooltip>
+                                                                    ))
+                                                                }
+                                                            </Group>
+                                                        </Checkbox.Group>
+                                                    </Box>
                                                 </Box>
                                             </ScrollArea>
                                         </Grid.Col>

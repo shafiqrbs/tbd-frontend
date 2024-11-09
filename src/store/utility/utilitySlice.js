@@ -61,6 +61,7 @@ const utilitySlice = createSlice({
     productBrandDropdown: [],
     productSizeDropdown: [],
     moduleDropdownData: [],
+    utilityProductTypeDropdownData: [],
   },
   reducers: {
     setFetching: (state, action) => {
@@ -72,6 +73,9 @@ const utilitySlice = createSlice({
     builder.addCase(getSettingDropdown.fulfilled, (state, action) => {
       if (action.payload.type === "product-type") {
         state.productDropdownData = action.payload.data.data;
+        if (action.payload.url=='utility/select/setting'){
+          state.utilityProductTypeDropdownData = action.payload.data.data;
+        }
       }
       if (action.payload.type === "product-unit") {
         state.productUnitDropdown = action.payload.data.data;

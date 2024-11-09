@@ -1,14 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import {
-    Box, Button,
-    Grid, Progress, Title, Group, Burger, Menu, rem, ActionIcon
+    Box, Grid, Progress
 } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from "react-redux";
 import { setInsertType } from "../../../../store/inventory/crudSlice";
 import { editEntityData, setSearchKeyword } from "../../../../store/core/crudSlice";
 import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress.js";
-import getConfigData from "../../../global-hook/config-data/getConfigData.js";
 import DomainTable from "./DomainTable";
 import DomainHeaderNavbar from "../DomainHeaderNavbar";
 import DomainUpdateForm from "./DomainUpdateFrom";
@@ -22,7 +20,6 @@ function DomainIndex() {
     const insertType = useSelector((state) => state.crudSlice.insertType)
 
     const progress = getLoadingProgress()
-    const configData = getConfigData()
 
     const { id } = useParams();
     const navigate = useNavigate();
@@ -30,7 +27,7 @@ function DomainIndex() {
     useEffect(() => {
         if (id) {
             dispatch(setInsertType('update'));
-            // dispatch(editEntityData(`domain/domain-index/${id}`));
+            dispatch(editEntityData(`domain/global/${id}`));
             dispatch(setFormLoading(true));
         } else if (!id) {
             dispatch(setInsertType('create'));
@@ -38,7 +35,6 @@ function DomainIndex() {
             navigate('/domain/domain-index');
         }
     }, [id, dispatch, navigate]);
-
 
     return (
         <>
