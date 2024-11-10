@@ -480,7 +480,7 @@ export default function BranchManagementForm() {
                   {/* Settings Column */}
                   <Grid.Col span={8} key={`branch-${index}-settings`}>
                     <Box bg="white" p="" className="">
-                      <Box pl="xs" pr="xs" className="borderRadiusAll">
+                      <Box  className="borderRadiusAll">
                         <ScrollArea
                           pb={"xs"}
                           pt={"xs"}
@@ -490,9 +490,17 @@ export default function BranchManagementForm() {
                           type="never"
                           // viewportRef={settingScrollRef}
                         >
+                          {!checkedStates[branch.branch_id] && (
+                            <Overlay
+                              color="#ffe3e3"
+                              backgroundOpacity={0.8}
+                              zIndex={1}
+                              // blur={10}
+                            />
+                          )}
                           {branch.settings.map((setting, settingIndex) => (
                             <Box key={settingIndex} p="xs">
-                              <Grid gutter={{ base: 1 }}>
+                              <Grid gutter={{ base: 1 }} pl="xs" pr="xs">
                                 <Grid.Col span={2}>
                                   <SwitchForm
                                     tooltip={t(setting.label)}
