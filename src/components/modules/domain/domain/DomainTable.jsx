@@ -95,7 +95,7 @@ function DomainTable(props) {
                                                     dispatch(setInsertType('update'))
                                                     dispatch(editEntityData('domain/global/' + data.id))
                                                     dispatch(setFormLoading(true))
-                                                    navigate(`/domain/domain-index/${data.id}`);
+                                                    navigate(`/domain/edit/${data.id}`);
                                                 }}
                                             >
                                                 {t('Edit')}
@@ -104,7 +104,7 @@ function DomainTable(props) {
                                             <Menu.Item
                                                 onClick={() => {
                                                     //code to show data
-                                                    // dispatch(showEntityData('domain/domain-index/' + data.id))
+                                                    // dispatch(showEntityData('domain/edit/' + data.id))
                                                 }}
                                                 target="_blank"
                                                 component="a"

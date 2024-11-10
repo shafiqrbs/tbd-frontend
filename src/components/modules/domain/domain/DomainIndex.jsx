@@ -32,7 +32,7 @@ function DomainIndex() {
         } else if (!id) {
             dispatch(setInsertType('create'));
             dispatch(setSearchKeyword(''));
-            navigate('/domain/domain-index');
+            navigate('/domain');
         }
     }, [id, dispatch, navigate]);
 

@@ -20,7 +20,7 @@ function DomainHeaderNavbar(props) {
     const [opened, { toggle }] = useDisclosure(false);
     const navigate = useNavigate();
     const links = [
-        { link: '/domain/domain-index', label: t('Domains') },
+        { link: '/domain', label: t('Domains') },
     ];
     const items = links.map((link) => (
         <a

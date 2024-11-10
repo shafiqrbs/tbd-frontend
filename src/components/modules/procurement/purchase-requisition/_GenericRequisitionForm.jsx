@@ -11,7 +11,7 @@ import {
 } from "@mantine/core";
 import { isNotEmpty, useForm } from "@mantine/form";
 import { getHotkeyHandler, useHotkeys } from "@mantine/hooks";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useOutletContext } from "react-router-dom";
 import InputNumberForm from "../../../form-builders/InputNumberForm";
@@ -347,6 +347,14 @@ export default function _GenericRequisitionForm(props) {
     ],
     []
   );
+
+  // focus on choose product on mount
+  useEffect(() => {
+    const inputElement = document.getElementById("product_id");
+    if (inputElement) {
+      inputElement.focus();
+    }
+  }, []);
 
   useHotkeys(
     [
