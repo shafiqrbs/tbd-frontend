@@ -686,16 +686,16 @@ function MainDashboard(props) {
                   >
                     <NavLink
                       pl={"md"}
-                      href="/domain/domain-index"
+                      href="/domain"
                       label={t("ManageDomain")}
                       component="button"
                       onClick={(e) => {
-                        navigate("/domain/domain-index");
+                        navigate("/domain");
                       }}
                       onAuxClick={(e) => {
                         // Handle middle mouse button click for browsers that support it
                         if (e.button === 1) {
-                          window.open("/domain/domain-index", "_blank");
+                          window.open("/domain", "_blank");
                         }
                       }}
                     />

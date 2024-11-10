@@ -129,7 +129,7 @@ const getSpotlightDropdownData = (t) => {
       group: "Domain",
       actions: [
         {
-          id: "domain-index",
+          id: "",
           label: t("DomainN"),
           description: t("WhereWePresentTheDomainInformationN"),
         },

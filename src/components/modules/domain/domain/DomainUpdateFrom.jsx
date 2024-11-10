@@ -192,7 +192,7 @@ function DomainUpdateForm(props) {
                                     dispatch(setEditEntityData([]))
                                     dispatch(setFetching(true))
                                     setSaveCreateLoading(false)
-                                    navigate('/domain/domain-index', { replace: true });
+                                    navigate('/domain', { replace: true });
                                 }, 700)
                             },
                         });

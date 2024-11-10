@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useOutletContext } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 
 import tableCss from "../../../../assets/css/Table.module.css";
 import { useTranslation } from "react-i18next";
@@ -28,6 +28,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { setFetching } from "../../../../store/core/crudSlice";
 import _ShortcutTable from "../../shortcut/_ShortcutTable";
+import { useHotkeys } from "@mantine/hooks";
 
 export default function _RequisitionTable(props) {
   const { t } = useTranslation();
@@ -43,6 +44,7 @@ export default function _RequisitionTable(props) {
   const [selectedRow, setSelectedRow] = useState("");
   const [loading, setLoading] = useState(true);
   const [selectedInvoice, setSelectedInvoice] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     dispatch(setFetching(true));
@@ -71,6 +73,18 @@ export default function _RequisitionTable(props) {
     setSelectedInvoice(selectedInvoice);
     setLoading(false);
   }, [selectedRow]);
+
+  useHotkeys(
+    [
+      [
+        "alt+n",
+        () => {
+          navigate("/procurement/new-requisition");
+        },
+      ],
+    ],
+    []
+  );
 
   const rows =
     selectedInvoice &&
