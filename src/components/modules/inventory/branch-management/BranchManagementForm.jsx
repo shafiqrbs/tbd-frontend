@@ -428,10 +428,10 @@ export default function BranchManagementForm() {
                             const currentFieldId = `branches.${index}.prices.${priceIndex}.price`;
                             const nextFieldId =
                               priceIndex < branch.prices.length - 1
-                                ? `branch_${branch.branch_id}_price_${
-                                    branch.prices[priceIndex + 1].id
-                                  }`
-                                : `branch_${branch.branch_id}_setting_${branch.settings[0]?.id}`;
+                                ? `branches.${index}.prices.${
+                                    priceIndex + 1
+                                  }.price`
+                                : `branch-${index}-setting-${branch.settings[0]?.id}`;
                             return (
                               <Box key={`price-${price.id}`}>
                                 <Box key={priceIndex} p="xs">
@@ -501,6 +501,13 @@ export default function BranchManagementForm() {
                                     name={`branches.${index}.settings.${settingIndex}.isChecked`}
                                     color="red"
                                     id={`branch-${index}-setting-${setting.id}`}
+                                    nextField={
+                                      branch.settings[settingIndex + 1]
+                                        ? `branch-${index}-setting-${
+                                            branch.settings[settingIndex + 1].id
+                                          }`
+                                        : "EntityFormSubmit"
+                                    }
                                     position="left"
                                     defaultChecked={setting.isChecked}
                                     onChange={() =>
