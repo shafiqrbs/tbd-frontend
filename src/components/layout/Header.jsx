@@ -88,7 +88,7 @@ const languages = [
 ];
 
 export default function Header({
-                                   isOnline
+                                   isOnline , configData
                                }) {
     const [opened, { open, close }] = useDisclosure(false);
     const { t, i18n } = useTranslation();
@@ -99,20 +99,6 @@ export default function Header({
     const [languageSelected, setLanguageSelected] = useState(
         languages.find((item) => item.value === i18n.language)
     );
-
-    const [configData, setConfigData] = useState([]);
-
-    useEffect(() => {
-        const storedConfigData = localStorage.getItem('config-data');
-        if (storedConfigData) {
-            const parsedData = JSON.parse(storedConfigData);
-            if (JSON.stringify(parsedData) !== JSON.stringify(configData)) {
-                setConfigData(parsedData);
-            }
-        } else {
-            setConfigData([]);
-        }
-    }, [isOnline]);
 
     function logout() {
         localStorage.clear();
@@ -156,7 +142,7 @@ export default function Header({
             <Modal.Overlay />
             <Modal.Content p={'xs'}>
                 <Modal.Header ml={'xs'}>
-                    <Modal.Title>{configData && configData.domain ? configData.domain.name : ''}</Modal.Title>
+                    <Modal.Title>{configData && configData?.domain ? configData.domain?.name : ''}</Modal.Title>
                     <Modal.CloseButton />
                 </Modal.Header>
                 <Modal.Body>

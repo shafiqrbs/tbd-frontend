@@ -46,10 +46,27 @@ const Layout = () => {
     const padding = 0;
     const mainAreaHeight = height - headerHeight - footerHeight - padding;
 
+    const [configData, setConfigData] = useState(null);
+    useEffect(() => {
+        const checkConfigData = () => {
+            const storedConfigData = localStorage.getItem('config-data');
+            if (storedConfigData) {
+                setConfigData(JSON.parse(storedConfigData));
+            } else {
+                navigate("/login");
+            }
+        };
+
+        // Adding a short delay before checking localStorage (e.g., 500ms)
+        const timeoutId = setTimeout(checkConfigData, 500);
+
+        return () => clearTimeout(timeoutId); // Clear the timeout if the component unmounts
+    }, [navigate]);  // Notice we're also adding `navigate` dependency here
+
     return (
         <AppShell padding="0">
             <AppShell.Header height={headerHeight} bg='gray.0'>
-                <Header isOnline={isOnline} />
+                <Header isOnline={isOnline} configData={configData}/>
             </AppShell.Header>
             <AppShell.Main>
                 {paramPath !== '/' ? <Outlet context={{isOnline, mainAreaHeight}}/> : <MainDashboard height={mainAreaHeight} />}
