@@ -127,8 +127,8 @@ function AppRoute() {
         </Route>
 
         <Route path="/domain/">
-          <Route path="domain-index" element={<DomainIndex />} />
-          <Route path="domain-index/:id" element={<DomainIndex />} />
+          <Route path="" element={<DomainIndex />} />
+          <Route path="edit/:id" element={<DomainIndex />} />
           <Route path="config/:id" element={<ConfigurationIndex />} />
           <Route path="sitemap" element={<SitemapIndex />} />
           <Route path="sitemap/:id" element={<SitemapIndex />} />
