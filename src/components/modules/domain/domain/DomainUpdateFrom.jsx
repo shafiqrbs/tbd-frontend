@@ -25,6 +25,7 @@ import getSettingBusinessModelDropdownData from "../../../global-hook/dropdown/g
 import getSettingModulesDropdownData from "../../../global-hook/dropdown/getSettingModulesDropdownData.js";
 import {setFormLoading} from "../../../../store/inventory/crudSlice.js";
 import getUtilityProductTypeDropdownData from "../../../global-hook/dropdown/getUtilityProductTypeDropdownData.js";
+import getSettingProductTypeDropdownData from "../../../global-hook/dropdown/getSettingProductTypeDropdownData.js";
 
 function DomainUpdateForm(props) {
     const { t, i18n } = useTranslation();
@@ -45,9 +46,8 @@ function DomainUpdateForm(props) {
     const modulesData = getSettingModulesDropdownData()
 
     const [businessModelId, setBusinessModelId] = useState(null)
+    const [productTypeCheckbox, setProductTypeCheckbox] = useState([])
 
-    /*product type*/
-    const productType = getUtilityProductTypeDropdownData()
     const [productTypeChecked, setProductTypeChecked] = useState(
         Array.isArray(entityEditData?.product_types) ? entityEditData.product_types : JSON.parse( entityEditData.product_types || '[]')
     );
@@ -58,6 +58,9 @@ function DomainUpdateForm(props) {
     );
 
     useEffect(() => {
+        // set product type checkbox data
+        setProductTypeCheckbox(entityEditData?.product_types_checkbox || [])
+
         // Whenever your entityEditData changes (like when fetching entity data), reset the checkbox states
         if (entityEditData?.modules) {
             const parsedModules = Array.isArray(entityEditData.modules)
@@ -176,6 +179,7 @@ function DomainUpdateForm(props) {
                                     url: 'domain/global/' + entityEditData.id,
                                     data: values
                                 }
+
                                 dispatch(updateEntityData(value))
                                 notifications.show({
                                     color: 'teal',
@@ -363,11 +367,11 @@ function DomainUpdateForm(props) {
                                                         >
                                                             <Group mt="xs">
                                                                 {
-                                                                    productType.map((type, index) => (
-                                                                        <Tooltip key={index} mt={'8'} label={type.label}>
+                                                                    productTypeCheckbox.map((type, index) => (
+                                                                        <Tooltip key={index} mt={'8'} label={type.name}>
                                                                             <Checkbox
-                                                                                value={type.value}
-                                                                                label={type.label}
+                                                                                value={String(type.id)}
+                                                                                label={type.name}
                                                                             />
                                                                         </Tooltip>
                                                                     ))
