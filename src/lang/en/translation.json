@@ -631,5 +631,14 @@
   "AdvanceSearch" : "Advance Search",
   "InventoryConfiguration" : "Inventory Configuration",
   "BranchManagement" : "Branch Management",
-  "selectModulesForAccess" : "Select modules for access"
+  "selectModulesForAccess" : "Select modules for access",
+  "ChooseExcelType" : "Choose type",
+  "ChooseFile" : "Choose file",
+  "SelectCsvFile" : "Choose csv",
+  "CreateFile" : "Create File",
+  "ManageFile" : "Manage File",
+  "FileType" : "File type",
+  "FileName" : "File name",
+  "WhereWePresentTheFileInformation" : "Manage file upload information for bulk process data",
+  "": ""
 }

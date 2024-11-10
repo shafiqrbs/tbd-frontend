@@ -33,6 +33,11 @@ const getSpotlightDropdownData = (t) => {
           label: t("MarketingExecutiveN"),
           description: t("WhereWePresentTheVendorInformationN"),
         },
+        {
+          id: "file-upload",
+          label: t("ManageFile"),
+          description: t("WhereWePresentTheFileInformation"),
+        },
       ],
     },
     {

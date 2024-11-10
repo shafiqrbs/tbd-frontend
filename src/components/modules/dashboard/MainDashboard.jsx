@@ -642,6 +642,36 @@ function MainDashboard(props) {
                       }}
                     />
                   </List.Item>
+
+                  <List.Item
+                      pl={"xs"}
+                      icon={
+                        <ThemeIcon
+                            color="cyan.6"
+                            size={20}
+                            radius="xl"
+                            variant="outline"
+                        >
+                          <IconUsers />
+                        </ThemeIcon>
+                      }
+                  >
+                    <NavLink
+                        pl={"md"}
+                        href="core/file-upload"
+                        label={t("ManageFile")}
+                        component="button"
+                        onClick={(e) => {
+                          navigate("core/file-upload");
+                        }}
+                        onAuxClick={(e) => {
+                          // Handle middle mouse button click for browsers that support it
+                          if (e.button === 1) {
+                            window.open("/core/file-upload", "_blank");
+                          }
+                        }}
+                    />
+                  </List.Item>
                 </List>
               </Box>
             </Card>

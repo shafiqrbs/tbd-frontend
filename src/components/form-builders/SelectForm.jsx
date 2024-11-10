@@ -56,7 +56,7 @@ function SelectForm(props) {
                         onChange={(e) => {
                             changeValue(e)
                             form.setFieldValue(name, e)
-                            document.getElementById(nextField).focus();
+                            nextField && document.getElementById(nextField).focus();
                         }}
                         withAsterisk={required}
                         comboboxProps={props.comboboxProps}

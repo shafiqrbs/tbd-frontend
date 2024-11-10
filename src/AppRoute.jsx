@@ -49,6 +49,7 @@ import Requisition from "./components/modules/procurement/purchase-requisition/R
 import RequisitionInvoice from "./components/modules/procurement/purchase-requisition/RequisitionInvoice.jsx";
 import BranchManagementIndex from "./components/modules/inventory/branch-management/BranchManagementIndex.jsx";
 import AccountingConfig from "./components/modules/accounting/config/ConfigIndex";
+import FileUploadIndex from "./components/modules/core/file-upload/FileUploadIndex.jsx";
 
 function AppRoute() {
   return (
@@ -61,6 +62,9 @@ function AppRoute() {
           <Route path="index" element={<SampleIndex />} />
         </Route>
         <Route path="core/">
+          <Route path="file-upload/">
+            <Route path="" element={<FileUploadIndex />} />
+          </Route>
           <Route path="customer" element={<CustomerIndex />} />
           <Route path="customer/:id" element={<CustomerIndex />} />
           <Route path="user" element={<UserIndex />} />
