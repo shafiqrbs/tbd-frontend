@@ -24,6 +24,8 @@ import InputNumberForm from "../../../form-builders/InputNumberForm";
 import SelectForm from "../../../form-builders/SelectForm.jsx";
 import getSettingBusinessModelDropdownData from "../../../global-hook/dropdown/getSettingBusinessModelDropdownData.js";
 import getSettingModulesDropdownData from "../../../global-hook/dropdown/getSettingModulesDropdownData.js";
+import commonDataStoreIntoLocalStorage from "../../../global-hook/local-storage/commonDataStoreIntoLocalStorage.js";
+import getConfigData from "../../../global-hook/config-data/getConfigData.js";
 
 function DomainForm(props) {
     const { t, i18n } = useTranslation();
@@ -38,15 +40,6 @@ function DomainForm(props) {
 
     const [businessModelId, setBusinessModelId] = useState(null)
     const [moduleChecked, setModuleChecked] = useState([])
-    const controlledModuleCheckBox = (type, value) => {
-        if (type) {
-            setModuleChecked(prevChecked => [...prevChecked, value]);
-        } else {
-            setModuleChecked(prevChecked =>
-                prevChecked.filter(checkedValue => checkedValue !== value)
-            );
-        }
-    };
 
     const form = useForm({
         initialValues: {

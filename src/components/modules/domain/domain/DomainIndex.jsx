@@ -13,6 +13,7 @@ import DomainUpdateForm from "./DomainUpdateFrom";
 import { useNavigate, useParams } from "react-router-dom";
 import { setFormLoading } from "../../../../store/generic/crudSlice.js";
 import DomainForm from './DomainFrom.jsx'
+import getConfigData from "../../../global-hook/config-data/getConfigData.js";
 
 function DomainIndex() {
     const { t, i18n } = useTranslation();
@@ -23,6 +24,8 @@ function DomainIndex() {
 
     const { id } = useParams();
     const navigate = useNavigate();
+
+    localStorage.setItem('config-data', JSON.stringify(getConfigData()));
 
     useEffect(() => {
         if (id) {
