@@ -99,7 +99,7 @@ function UpdateForm() {
         }) : []
     useEffect(() => {
         const value = {
-            url: 'utility/select/product-unit'
+            url: 'inventory/select/product-unit'
         }
         dispatch(getProductUnitDropdown(value))
     }, []); let customerDropdown = customerDropdownData && customerDropdownData.length > 0 ?
@@ -110,7 +110,6 @@ function UpdateForm() {
     useEffect(() => {
         dispatch(getCustomerDropdown('core/select/customer'))
     }, []);
-
 
     const form = useForm({
         initialValues: {

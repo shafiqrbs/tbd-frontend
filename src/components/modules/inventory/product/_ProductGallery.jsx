@@ -73,12 +73,11 @@ function _ProductGallery(props) {
                     className={"boxBackground borderRadiusAll"}
                 >
                     <Grid>
-                        <Grid.Col span={6}>
+                        <Grid.Col span={12}>
                             <Title order={6} pt={"4"} pb={4}>
                                 {t("Gallery")}
                             </Title>
                         </Grid.Col>
-                        <Grid.Col span={6}></Grid.Col>
                     </Grid>
                 </Box>
                 <Box className={"borderRadiusAll"}>
@@ -111,7 +110,7 @@ function _ProductGallery(props) {
                                         setFeatureImage(e[0]);
                                     }}
                                     accept={["image/*"]}
-                                    h={178}
+                                    h={210}
                                     p={0}
                                     styles={(theme) => ({
                                         root: {
@@ -122,7 +121,7 @@ function _ProductGallery(props) {
                                     {featureImage ? (
                                         <Image
                                             src={handleFeatureImage()}
-                                            height={178}
+                                            height={190}
                                             fit="cover"
                                             alt="Feature image"
                                         />
@@ -130,11 +129,11 @@ function _ProductGallery(props) {
                                         entityEditData.feature_image?
                                         <Image
                                             src={entityEditData.feature_image}
-                                            height={178}
+                                            height={190}
                                             fit="cover"
                                             alt="Feature image"
                                         /> :
-                                            <Center h={178}>
+                                            <Center h={190}>
                                                 <Text>{t("SelectFeatureImage")}</Text>
                                             </Center>
                                     )}

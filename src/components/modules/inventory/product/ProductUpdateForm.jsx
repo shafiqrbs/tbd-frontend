@@ -6,11 +6,13 @@ import _ProductMeasurement from "./_ProductMeasurement.jsx";
 import _ProductGallery from "./_ProductGallery.jsx";
 import _VatManagement from "./_VatManagement.jsx";
 import _SkuManagement from "./_SkuManagement.jsx";
+import getConfigData from "../../../global-hook/config-data/getConfigData";
 
 function  ProductUpdateForm(props) {
   const { id } = useParams();
   const { categoryDropdown } = props;
 
+  localStorage.setItem('config-data', JSON.stringify(getConfigData()));
   const configData = localStorage.getItem("config-data")
     ? JSON.parse(localStorage.getItem("config-data"))
     : [];
@@ -53,7 +55,6 @@ function  ProductUpdateForm(props) {
             )}
           </Grid.Col>
         </Grid>
-
         <Grid columns={24} gutter={8}>
           {1 && (
             <Grid.Col span={8}>

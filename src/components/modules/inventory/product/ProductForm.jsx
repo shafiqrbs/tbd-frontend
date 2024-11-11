@@ -318,7 +318,7 @@ function ProductForm(props) {
                                                             required={true}
                                                             name={'unit_id'}
                                                             form={form}
-                                                            dropdownValue={getSettingParticularDropdownData('size')}
+                                                            dropdownValue={getSettingParticularDropdownData('product-unit')}
                                                             mt={8}
                                                             id={'unit_id'}
                                                             nextField={'reorder_quantity'}

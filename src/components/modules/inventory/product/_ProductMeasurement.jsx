@@ -11,7 +11,7 @@ import {
     Stack,
     ActionIcon,
     LoadingOverlay,
-    Table,
+    Table, Title,
 } from "@mantine/core";
 import {useTranslation} from "react-i18next";
 import {
@@ -195,7 +195,23 @@ function _ProductMeasurement(props) {
             <Box>
                 <Box bg={"white"} p={"xs"} className={"borderRadiusAll"}>
                     <Box
-                        pl={`4`}
+                        pl={`xs`}
+                        pb={"6"}
+                        pr={8}
+                        pt={"6"}
+                        mb={"4"}
+                        className={"boxBackground borderRadiusAll"}
+                    >
+                        <Grid>
+                            <Grid.Col span={12}>
+                                <Title order={6} pt={"6"}>
+                                    {t("UnitMeasurement")}
+                                </Title>
+                            </Grid.Col>
+                        </Grid>
+                    </Box>
+                    <Box
+                        pl={8}
                         pb={"3"}
                         pr={8}
                         pt={"3"}
@@ -265,7 +281,7 @@ function _ProductMeasurement(props) {
                     </Box>
                     <Box pl={`xs`} pr={"xs"} className={"borderRadiusAll"}>
                         <ScrollArea
-                            h={height - 105}
+                            h={height - 152}
                             scrollbarSize={2}
                             scrollbars="y"
                             type="never"

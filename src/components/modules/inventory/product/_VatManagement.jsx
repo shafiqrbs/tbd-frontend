@@ -103,87 +103,43 @@ function _VatManagement(props) {
     }, 500);
   }, [entityEditData, dispatch, setFormData]);
 
+  // customs_duty: isNotEmpty(),
+  // supplementary_duty: isNotEmpty(),
+  // value_added_tax: isNotEmpty(),
+  // advance_tax: isNotEmpty(),
+  // advance_income_tax: isNotEmpty(),
+  // recurring_deposit: isNotEmpty(),
+  // advance_trade_vat: isNotEmpty(),
+  // rebate: isNotEmpty(),
+  // total_tax_incidence: isNotEmpty(),
+
   const data = [
     {
-      name: "Foysal Mahmud hasan Rafi Babul",
-      color: "red",
-      size: "xl",
-      stock: "100",
-      brand: "Apex",
-      title: "title",
+      name: "Customs Duty",
+      field_name: "customs_duty",
+      field_value: "customs_duty",
     },
     {
-      name: "shoe",
-      color: "red",
-      size: "xl",
-      stock: "100",
-      brand: "Apex",
-      title: "title",
+      name: "SupplementaryDuty",
+      field_name: "supplementary_duty",
+      field_value: "customs_duty",
     },
     {
-      name: "shoe",
-      color: "red",
-      size: "xl",
-      stock: "100",
-      brand: "Apex",
-      title: "title",
+      name: "ValueAddedTax",
+      field_name: "value_added_tax",
+      field_value: "customs_duty",
     },
     {
-      name: "shoe",
-      color: "red",
-      size: "xl",
-      stock: "100",
-      brand: "Apex",
-      title: "title",
+      name: "AdvanceTax",
+      field_name: "advance_tax",
+      field_value: "customs_duty",
     },
     {
-      name: "shoe",
-      color: "red",
-      size: "xl",
-      stock: "100",
-      brand: "Apex",
-      title: "title",
+      name: "AdvanceIncomeTax",
+      field_name: "advance_income_tax",
+      field_value: "customs_duty",
     },
-    {
-      name: "shoe",
-      color: "red",
-      size: "xl",
-      stock: "100",
-      brand: "Apex",
-      title: "title",
-    },
-    {
-      name: "shoe",
-      color: "red",
-      size: "xl",
-      stock: "100",
-      brand: "Apex",
-      title: "title",
-    },
-    {
-      name: "shoe",
-      color: "red",
-      size: "xl",
-      stock: "100",
-      brand: "Apex",
-      title: "title",
-    },
-    {
-      name: "shoe",
-      color: "red",
-      size: "xl",
-      stock: "100",
-      brand: "Apex",
-      title: "title",
-    },
-    {
-      name: "shoe",
-      color: "red",
-      size: "xl",
-      stock: "100",
-      brand: "Apex",
-      title: "title",
-    },
+
   ];
 
   return (
@@ -213,12 +169,11 @@ function _VatManagement(props) {
             className={"boxBackground borderRadiusAll"}
           >
             <Grid>
-              <Grid.Col span={6}>
+              <Grid.Col span={12}>
                 <Title order={6} pt={"6"}>
                   {t("VatManagement")}
                 </Title>
               </Grid.Col>
-              <Grid.Col span={6}></Grid.Col>
             </Grid>
           </Box>
           <Box className={"borderRadiusAll"}>
@@ -234,8 +189,8 @@ function _VatManagement(props) {
                 <form>
                   <>
                     <Box
-                      pl={4}
-                      pr={4}
+                      pl={8}
+                      pr={8}
                       pt={"4"}
                       pb={2}
                       className={"boxBackground  border-bottom-none"}
@@ -275,27 +230,19 @@ function _VatManagement(props) {
                     records={data}
                     columns={[
                       {
-                        accessor: "index",
-                        title: t("S/N"),
-                        textAlignment: "right   ",
-                        render: (item) => data.indexOf(item) + 1,
-                        width: 50,
-                      },
-                      {
                         accessor: "name",
                         title: t("Name"),
                         width: 100,
                       },
                       {
-                        accessor: "customs_duty",
-                        title: t("CustomsDuty"),
+                        accessor: "name",
+                        title: t("Percent(%)"),
                         textAlign: "center",
                         width: "40px",
                         render: (item) => {
                           const [edited_customs, setEdited_customs] = useState(
                             item.customs_duty
                           );
-
                           const handleCustomsChange = (e) => {
                             const edited_customs = e.currentTarget.value;
                             setEdited_customs(edited_customs);
@@ -308,7 +255,9 @@ function _VatManagement(props) {
                                 type="number"
                                 label=""
                                 size="xs"
-                                value={edited_customs}
+                                name={item.field_name}
+                                id={item.field_name}
+                                value={item.customs_duty}
                                 onChange={handleCustomsChange}
                                 // onKeyDown={getHotkeyHandler([
                                 //     ['Enter', (e) => {
@@ -322,76 +271,7 @@ function _VatManagement(props) {
                           );
                         },
                       },
-                      {
-                        accessor: "supplementary_duty",
-                        title: t("SupplementaryDuty"),
-                        textAlign: "center",
-                        width: "60px",
-                        render: (item) => {
-                          const [supplementary_duty, setSupplementary_duty] =
-                            useState(item.supplementary_duty);
 
-                          const handleSupplementaryChange = (e) => {
-                            const supplementary_duty = e.currentTarget.value;
-                            setSupplementary_duty(supplementary_duty);
-                            console.log(supplementary_duty);
-                          };
-
-                          return priceInput ? (
-                            <>
-                              <TextInput
-                                type="number"
-                                label=""
-                                size="xs"
-                                value={supplementary_duty}
-                                onChange={handleSupplementaryChange}
-                                // onKeyDown={getHotkeyHandler([
-                                //     ['Enter', (e) => {
-                                //         document.getElementById('inline-update-quantity-' + item.product_id).focus();
-                                //     }],
-                                // ])}
-                              />
-                            </>
-                          ) : (
-                            1000
-                          );
-                        },
-                      },
-                      {
-                        accessor: "price",
-                        title: t("Price"),
-                        textAlign: "center",
-                        render: (item) => {
-                          const [editedPrice, setEditedPrice] = useState(
-                            item.price
-                          );
-
-                          const handlPriceChange = (e) => {
-                            const editedPrice = e.currentTarget.value;
-                            setEditedPrice(editedPrice);
-                            console.log(editedPrice);
-                          };
-
-                          return priceInput ? (
-                            <>
-                              <TextInput
-                                type="number"
-                                label=""
-                                size="xs"
-                                value={editedPrice}
-                                onChange={handlPriceChange}
-                                // onKeyDown={getHotkeyHandler([
-                                //     ['Enter', (e) => {
-                                //         document.getElementById('inline-update-quantity-' + item.product_id).focus();
-                                //     }],
-                                // ])}
-                              />
-                            </>
-                          ) : (
-                            1000
-                          );
-                        },
-                      },
                       // more in form. havent added all .
                     ]}
                     // fetching={fetching}
@@ -404,7 +284,7 @@ function _VatManagement(props) {
                     // }}
                     loaderSize="xs"
                     loaderColor="grape"
-                    height={height - 158}
+                    height={height - 160}
                     scrollAreaProps={{ type: "never" }}
                   />
                 </Box>

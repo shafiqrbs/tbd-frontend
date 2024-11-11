@@ -416,7 +416,7 @@ function _UpdateProduct(props) {
                         required={true}
                         name={"unit_id"}
                         form={form}
-                        dropdownValue={getSettingParticularDropdownData("size")}
+                        dropdownValue={getSettingParticularDropdownData("product-unitt")}
                         mt={8}
                         id={"unit_id"}
                         nextField={"min_quantity"}
