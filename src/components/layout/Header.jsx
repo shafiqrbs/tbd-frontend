@@ -46,7 +46,7 @@ import flagBD from "../../assets/images/flags/bd.svg";
 import flagGB from "../../assets/images/flags/gb.svg";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import SearchModal from "../modules/modals/SearchModal.jsx";
+import SpotLightSearchModal from "../modules/modals/SpotLightSearchModal.jsx";
 
 const mockdata = [
     {
@@ -146,7 +146,7 @@ export default function Header({
                     <Modal.CloseButton />
                 </Modal.Header>
                 <Modal.Body>
-                    <SearchModal onClose={close} />
+                    <SpotLightSearchModal onClose={close} configData={configData} />
                 </Modal.Body>
             </Modal.Content>
         </Modal.Root>
