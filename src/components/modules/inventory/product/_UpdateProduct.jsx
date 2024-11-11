@@ -416,7 +416,7 @@ function _UpdateProduct(props) {
                         required={true}
                         name={"unit_id"}
                         form={form}
-                        dropdownValue={getSettingParticularDropdownData("product-unitt")}
+                        dropdownValue={getSettingParticularDropdownData("product-unit")}
                         mt={8}
                         id={"unit_id"}
                         nextField={"min_quantity"}
@@ -425,9 +425,9 @@ function _UpdateProduct(props) {
                         value={
                           productUnitData
                             ? String(productUnitData)
-                            : entityEditData.unit_id
+                            : (entityEditData.unit_id
                             ? String(entityEditData.unit_id)
-                            : null
+                            : null)
                         }
                       />
                     </Grid.Col>

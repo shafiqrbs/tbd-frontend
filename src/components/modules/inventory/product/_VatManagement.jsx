@@ -115,26 +115,31 @@ function _VatManagement(props) {
 
   const data = [
     {
+      id : 1,
       name: "Customs Duty",
       field_name: "customs_duty",
       field_value: "customs_duty",
     },
     {
+      id : 2,
       name: "SupplementaryDuty",
       field_name: "supplementary_duty",
       field_value: "customs_duty",
     },
     {
+      id : 3,
       name: "ValueAddedTax",
       field_name: "value_added_tax",
       field_value: "customs_duty",
     },
     {
+      id : 4,
       name: "AdvanceTax",
       field_name: "advance_tax",
       field_value: "customs_duty",
     },
     {
+      id : 5,
       name: "AdvanceIncomeTax",
       field_name: "advance_income_tax",
       field_value: "customs_duty",
@@ -229,13 +234,14 @@ function _VatManagement(props) {
                     }}
                     records={data}
                     columns={[
+
                       {
                         accessor: "name",
                         title: t("Name"),
                         width: 100,
                       },
                       {
-                        accessor: "name",
+                        accessor: "percent",
                         title: t("Percent(%)"),
                         textAlign: "center",
                         width: "40px",
@@ -259,11 +265,6 @@ function _VatManagement(props) {
                                 id={item.field_name}
                                 value={item.customs_duty}
                                 onChange={handleCustomsChange}
-                                // onKeyDown={getHotkeyHandler([
-                                //     ['Enter', (e) => {
-                                //         document.getElementById('inline-update-quantity-' + item.product_id).focus();
-                                //     }],
-                                // ])}
                               />
                             </>
                           ) : (
@@ -271,17 +272,7 @@ function _VatManagement(props) {
                           );
                         },
                       },
-
-                      // more in form. havent added all .
                     ]}
-                    // fetching={fetching}
-                    // totalRecords={indexData.total}
-                    // recordsPerPage={perPage}
-                    // page={page}
-                    // onPageChange={(p) => {
-                    //     setPage(p)
-                    //     dispatch(setFetching(true))
-                    // }}
                     loaderSize="xs"
                     loaderColor="grape"
                     height={height - 160}
