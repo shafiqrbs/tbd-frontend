@@ -321,7 +321,7 @@ function ProductForm(props) {
                                                             dropdownValue={getSettingParticularDropdownData('product-unit')}
                                                             mt={8}
                                                             id={'unit_id'}
-                                                            nextField={'reorder_quantity'}
+                                                            nextField={'min_quantity'}
                                                             searchable={true}
                                                             value={productUnitData}
                                                             changeValue={setProductUnitData}
@@ -335,7 +335,7 @@ function ProductForm(props) {
                                                             label={t('MinimumQuantity')}
                                                             placeholder={t('MinimumQuantity')}
                                                             required={false}
-                                                            nextField={'reorder_quantity'}
+                                                            nextField={''}
                                                             form={form}
                                                             name={'min_quantity'}
                                                             id={'min_quantity'}

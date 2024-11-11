@@ -41,7 +41,7 @@ function InputForm(props) {
                         {...form.getInputProps(name)}
                         onKeyDown={getHotkeyHandler([
                             ['Enter', (e) => {
-                                nextField === 'EntityFormSubmit' ?
+                                nextField && nextField === 'EntityFormSubmit' ?
                                     document.getElementById(nextField).click() :
                                     document.getElementById(nextField).focus()
                             }],
