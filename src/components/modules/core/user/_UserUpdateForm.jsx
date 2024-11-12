@@ -480,7 +480,7 @@ function _UserUpdateForm() {
                 <Box>
                     <Grid columns={24} gutter={{base: 8}}>
                         {/* start 1st Box */}
-                        <Grid.Col span={8}>
+                        <Grid.Col span={7}>
                             <Box bg={"white"} p={"xs"} className={"borderRadiusAll"}>
                                 <Box bg={"white"}>
                                     <Box
@@ -516,7 +516,7 @@ function _UserUpdateForm() {
                                                     loaderProps={{color: "red.6"}}
                                                 />
                                                 <Box>
-                                                    <Grid gutter={{base: 6}}>
+                                                    <Grid gutter={{base: 2}}>
                                                         <Grid.Col span={11}>
                                                             <Box mt={'8'}>
                                                                 <SelectForm
@@ -652,7 +652,7 @@ function _UserUpdateForm() {
                         {/* end 1st Box */}
 
                         {/* start 2nd Box */}
-                        <Grid.Col span={7}>
+                        <Grid.Col span={9}>
                             <Box bg={"white"} p={"xs"} className={"borderRadiusAll"}>
                                 <Box bg={"white"}>
                                     <Box
@@ -953,7 +953,7 @@ function _UserUpdateForm() {
                         {/* end 2nd Box */}
 
                         {/* start 3rd Box */}
-                        <Grid.Col span={8}>
+                        <Grid.Col span={7}>
                             <Box bg={"white"} p={"xs"} className={"borderRadiusAll"}>
                                 <Box bg={"white"}>
                                     <Box
@@ -1022,7 +1022,7 @@ function _UserUpdateForm() {
                                                 />
                                             </Box>
                                             <Box>
-                                                <Grid gutter={{base: 6}}>
+                                                <Grid gutter={{base:2}}>
                                                     <Grid.Col span={11}>
                                                         <Box mt={'8'}>
                                                             <SelectForm
@@ -1068,7 +1068,7 @@ function _UserUpdateForm() {
                                                 </Grid>
                                             </Box>
                                             <Box>
-                                                <Grid gutter={{base: 6}}>
+                                                <Grid gutter={{base: 2}}>
                                                     <Grid.Col span={11}>
                                                         <Box mt={'8'}>
                                                             <SelectForm
@@ -1115,7 +1115,7 @@ function _UserUpdateForm() {
                                             </Box>
 
                                             <Box>
-                                                <Grid gutter={{base: 6}}>
+                                                <Grid gutter={{base: 2}}>
                                                     <Grid.Col span={11}>
                                                         <Box mt={'8'}>
                                                             <SelectForm

@@ -142,7 +142,7 @@ export default function Header({
             <Modal.Overlay />
             <Modal.Content p={'xs'}>
                 <Modal.Header ml={'xs'}>
-                    <Modal.Title>{configData && configData?.domain ? configData.domain?.name : ''}</Modal.Title>
+                    <Modal.Title>{configData && configData?.domain ? configData.domain?.company_name : ''}</Modal.Title>
                     <Modal.CloseButton />
                 </Modal.Header>
                 <Modal.Body>

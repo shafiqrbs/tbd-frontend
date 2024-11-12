@@ -47,8 +47,8 @@ function DomainForm(props) {
         },
         validate: {
             business_model_id: isNotEmpty(),
-            company_name: hasLength({ min: 2, max: 20 }),
-            name: hasLength({ min: 2, max: 20 }),
+            company_name: hasLength({ min: 2}),
+            name: hasLength({ min: 2}),
             username: hasLength({ min: 2, max: 20 }),
             mobile: (value) => {
                 const isNotEmpty = !    !value.trim().length;
@@ -63,7 +63,6 @@ function DomainForm(props) {
                 if (value) {
                     const isNotEmpty = !!value.trim().length;
                     const isDigitsOnly = /^\d+$/.test(value.trim());
-
                     if (isNotEmpty && isDigitsOnly) {
                         return false;
                     } else {

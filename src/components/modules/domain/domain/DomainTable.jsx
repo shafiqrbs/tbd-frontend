@@ -73,7 +73,8 @@ function DomainTable(props) {
                             textAlignment: 'right',
                             render: (item) => (indexData.data.indexOf(item) + 1)
                         },
-                        { accessor: 'name', title: t('CompanyName') },
+                        { accessor: 'company_name', title: t('CompanyName') },
+                        { accessor: 'name', title: t('ClientName') },
                         { accessor: 'mobile', title: t('Mobile') },
                         { accessor: 'email', title: t("Email") },
                         { accessor: 'unique_code', title: t("LicenseNo") },
