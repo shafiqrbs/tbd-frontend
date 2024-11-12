@@ -23,7 +23,7 @@ import {
 import {useHotkeys} from "@mantine/hooks";
 import InputForm from "../../../form-builders/InputForm";
 import {useDispatch, useSelector} from "react-redux";
-import {useForm} from "@mantine/form";
+import {isNotEmpty, useForm} from "@mantine/form";
 import {modals} from "@mantine/modals";
 import {
     setEditEntityData,
@@ -42,6 +42,7 @@ import {Dropzone, IMAGE_MIME_TYPE} from "@mantine/dropzone";
 import TextAreaForm from "../../../form-builders/TextAreaForm.jsx";
 import getCoreSettingEmployeeGroupDropdownData
     from "../../../global-hook/dropdown/core/getCoreSettingEmployeeGroupDropdownData.js";
+
 import getCoreSettingLocationDropdownData
     from "../../../global-hook/dropdown/core/getCoreSettingLocationDropdownData.js";
 import getCoreSettingDesignationDropdownData
@@ -85,9 +86,10 @@ function _UserUpdateForm() {
             about_me: entityEditData?.about_me || null,
         },
         validate: {
+            employee_group_id:isNotEmpty(),
             name: (value) => {
                 if (!value) return t("NameRequiredMessage");
-                if (value.length < 2 || value.length > 20)
+                if (value.length < 2)
                     return t("NameLengthMessage");
                 return null;
             },
@@ -107,7 +109,6 @@ function _UserUpdateForm() {
             },
             mobile: (value) => {
                 if (!value) return t("MobileValidationRequired");
-                if (!/^\d{13}$/.test(value)) return t("MobileValidationDigitCount");
                 return null;
             },
             password: (value) => {
@@ -1113,7 +1114,6 @@ function _UserUpdateForm() {
                                                     </Grid.Col>
                                                 </Grid>
                                             </Box>
-
                                             <Box>
                                                 <Grid gutter={{base: 2}}>
                                                     <Grid.Col span={11}>

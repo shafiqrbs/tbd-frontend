@@ -3,12 +3,12 @@ import { useOutletContext } from "react-router-dom";
 import {
     Button,
     rem,
-    Grid, Box, ScrollArea, Text, Title, Flex, Stack,
+    Grid, Box, ScrollArea, Text, Title, Flex, Stack, Tooltip, ActionIcon,
 } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
 import {
     IconCheck,
-    IconDeviceFloppy,
+    IconDeviceFloppy, IconUsersGroup,
 } from "@tabler/icons-react";
 import { useHotkeys } from "@mantine/hooks";
 import InputForm from "../../../form-builders/InputForm";
@@ -23,6 +23,9 @@ import {
 import { notifications } from "@mantine/notifications";
 import PhoneNumber from "../../../form-builders/PhoneNumberInput.jsx";
 import Shortcut from "../../shortcut/Shortcut.jsx";
+import SelectForm from "../../../form-builders/SelectForm";
+import getCoreSettingEmployeeGroupDropdownData
+    from "../../../global-hook/dropdown/core/getCoreSettingEmployeeGroupDropdownData.js";
 
 function _UserForm() {
     const { t, i18n } = useTranslation();
@@ -30,16 +33,17 @@ function _UserForm() {
     const { isOnline, mainAreaHeight } = useOutletContext();
     const height = mainAreaHeight - 100; //TabList height 104
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
-
+    const [employeeGroupData, setEmployeeGroupData] = useState(null);
 
     const form = useForm({
         initialValues: {
-            name: '', username: '', email: '', password: '', confirm_password: '', mobile: ''
+            name: '', username: '', email: '', password: '', confirm_password: '', mobile: '', employee_group_id: '',
         },
         validate: {
+            employee_group_id:isNotEmpty(),
             name: (value) => {
                 if (!value) return t('NameRequiredMessage');
-                if (value.length < 2 || value.length > 20) return t('NameLengthMessage');
+                if (value.length < 2) return t('NameLengthMessage');
                 return null;
             },
             username: (value) => {
@@ -157,7 +161,51 @@ function _UserForm() {
                                 <Box pl={`xs`} pr={'xs'} className={'borderRadiusAll'}>
                                     <ScrollArea h={height} scrollbarSize={2} scrollbars="y" type="never">
                                         <Box>
-
+                                            <Box>
+                                                <Grid gutter={{base: 2}}>
+                                                    <Grid.Col span={11}>
+                                                        <Box mt={'8'}>
+                                                            <SelectForm
+                                                                tooltip={t('EmployeeGroup')}
+                                                                label={t('EmployeeGroup')}
+                                                                placeholder={t('ChooseEmployeeGroup')}
+                                                                required={true}
+                                                                nextField={'name'}
+                                                                name={'employee_group_id'}
+                                                                form={form}
+                                                                dropdownValue={getCoreSettingEmployeeGroupDropdownData()}
+                                                                mt={8}
+                                                                id={'employee_group_id'}
+                                                                searchable={false}
+                                                                changeValue={setEmployeeGroupData}
+                                                            />
+                                                        </Box>
+                                                    </Grid.Col>
+                                                    <Grid.Col span={1}>
+                                                        <Box pt={'xl'}>
+                                                            <Tooltip
+                                                                ta="center"
+                                                                multiline
+                                                                bg={'orange.8'}
+                                                                offset={{crossAxis: '-110', mainAxis: '5'}}
+                                                                withArrow
+                                                                transitionProps={{duration: 200}}
+                                                                label={t('QuickCustomerGroup')}
+                                                            >
+                                                                <ActionIcon variant="outline" bg={'white'}
+                                                                            size={'lg'} color="red.5" mt={'1'}
+                                                                            aria-label="Settings" onClick={() => {
+                                                                    setGroupDrawer(true)
+                                                                }}>
+                                                                    <IconUsersGroup
+                                                                        style={{width: '100%', height: '70%'}}
+                                                                        stroke={1.5}/>
+                                                                </ActionIcon>
+                                                            </Tooltip>
+                                                        </Box>
+                                                    </Grid.Col>
+                                                </Grid>
+                                            </Box>
                                             <Box mt={'xs'}>
                                                 <InputForm
                                                     tooltip={t('UserNameValidateMessage')}
