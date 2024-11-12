@@ -77,29 +77,43 @@ function VendorForm(props) {
                     ),
                     labels: { confirm: t('Submit'), cancel: t('Cancel') }, confirmProps: { color: 'red' },
                     onCancel: () => console.log('Cancel'),
-                    onConfirm: () => {
+                    onConfirm: async () => {
 
                         const value = {
                             url: 'core/vendor',
                             data: values
                         }
 
-                        dispatch(storeEntityData(value))
+                        const resultAction = await dispatch(storeEntityData(value));
 
-                        notifications.show({
-                            color: 'teal',
-                            title: t('CreateSuccessfully'),
-                            icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
-                            loading: false,
-                            autoClose: 700,
-                            style: { backgroundColor: 'lightgray' },
-                        });
+                        if (storeEntityData.rejected.match(resultAction)) {
+                            const fieldErrors = resultAction.payload.errors;
 
-                        setTimeout(() => {
-                            form.reset()
-                            setCustomerData(null)
-                            dispatch(setFetching(true))
-                        }, 700)
+                            // Check if there are field validation errors and dynamically set them
+                            if (fieldErrors) {
+                                const errorObject = {};
+                                Object.keys(fieldErrors).forEach(key => {
+                                    errorObject[key] = fieldErrors[key][0]; // Assign the first error message for each field
+                                });
+                                // Display the errors using your form's `setErrors` function dynamically
+                                form.setErrors(errorObject);
+                            }
+                        } else if (storeEntityData.fulfilled.match(resultAction)) {
+                            notifications.show({
+                                color: 'teal',
+                                title: t('CreateSuccessfully'),
+                                icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
+                                loading: false,
+                                autoClose: 700,
+                                style: { backgroundColor: 'lightgray' },
+                            });
+
+                            setTimeout(() => {
+                                form.reset()
+                                setCustomerData(null)
+                                dispatch(setFetching(true))
+                            }, 700)
+                        }
                     },
                 });
             })}>

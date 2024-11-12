@@ -17,8 +17,9 @@ import PasswordInputForm from "../../../form-builders/PasswordInputForm";
 import { hasLength, isEmail, isNotEmpty, useForm } from "@mantine/form";
 import { modals } from "@mantine/modals";
 import {
-    setFetching,
-    storeEntityData,
+    setEditEntityData,
+    setFetching, setInsertType,
+    storeEntityData, updateEntityData,
 } from "../../../../store/core/crudSlice.js";
 import { notifications } from "@mantine/notifications";
 import PhoneNumber from "../../../form-builders/PhoneNumberInput.jsx";
@@ -40,7 +41,9 @@ function _UserForm() {
             name: '', username: '', email: '', password: '', confirm_password: '', mobile: '', employee_group_id: '',
         },
         validate: {
-            employee_group_id:isNotEmpty(),
+            employee_group_id: (value) => {
+                if (!value) return t('ChooseEmployeeGroup');
+            },
             name: (value) => {
                 if (!value) return t('NameRequiredMessage');
                 if (value.length < 2) return t('NameLengthMessage');
@@ -52,7 +55,7 @@ function _UserForm() {
                 return null;
             },
             email: (value) => {
-                if (!value) return true;
+                if (!value) return t('EnterEmail');
 
                 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                 if (!emailRegex.test(value)) return t('EmailValidationInvalid');
@@ -64,12 +67,12 @@ function _UserForm() {
                 return null;
             },
             password: (value) => {
-                if (!value) return true;
-                if ((value.length < 6)) return true;
+                if (!value) return t('PasswordRequiredMessage');
+                if ((value.length < 6)) return t('PasswordValidateMessage');
                 return null;
             },
             confirm_password: (value, values) => {
-                if (values.password && value !== values.password) return true;
+                if (values.password && value !== values.password) return t('PasswordNotMatch');
                 return null;
             }
         }
@@ -101,28 +104,42 @@ function _UserForm() {
                     ),
                     labels: { confirm: t('Submit'), cancel: t('Cancel') }, confirmProps: { color: 'red' },
                     onCancel: () => console.log('Cancel'),
-                    onConfirm: () => {
+                    onConfirm: async () => {
 
                         const value = {
                             url: 'core/user',
                             data: values
                         }
 
-                        dispatch(storeEntityData(value))
+                        const resultAction = await dispatch(storeEntityData(value));
 
-                        notifications.show({
-                            color: 'teal',
-                            title: t('CreateSuccessfully'),
-                            icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
-                            loading: false,
-                            autoClose: 700,
-                            style: { backgroundColor: 'lightgray' },
-                        });
+                        if (storeEntityData.rejected.match(resultAction)) {
+                            const fieldErrors = resultAction.payload.errors;
 
-                        setTimeout(() => {
-                            form.reset()
-                            dispatch(setFetching(true))
-                        }, 700)
+                            // Check if there are field validation errors and dynamically set them
+                            if (fieldErrors) {
+                                const errorObject = {};
+                                Object.keys(fieldErrors).forEach(key => {
+                                    errorObject[key] = fieldErrors[key][0]; // Assign the first error message for each field
+                                });
+                                // Display the errors using your form's `setErrors` function dynamically
+                                form.setErrors(errorObject);
+                            }
+                        } else if (storeEntityData.fulfilled.match(resultAction)) {
+                            notifications.show({
+                                color: 'teal',
+                                title: t('CreateSuccessfully'),
+                                icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
+                                loading: false,
+                                autoClose: 700,
+                                style: { backgroundColor: 'lightgray' },
+                            });
+
+                            setTimeout(() => {
+                                form.reset()
+                                dispatch(setFetching(true))
+                            }, 700)
+                        }
                     },
                 });
             })}>
@@ -166,7 +183,7 @@ function _UserForm() {
                                                     <Grid.Col span={11}>
                                                         <Box mt={'8'}>
                                                             <SelectForm
-                                                                tooltip={t('EmployeeGroup')}
+                                                                tooltip={form.errors.employee_group_id ? form.errors.employee_group_id : t('EmployeeGroup')}
                                                                 label={t('EmployeeGroup')}
                                                                 placeholder={t('ChooseEmployeeGroup')}
                                                                 required={true}
@@ -208,7 +225,7 @@ function _UserForm() {
                                             </Box>
                                             <Box mt={'xs'}>
                                                 <InputForm
-                                                    tooltip={t('UserNameValidateMessage')}
+                                                    tooltip={form.errors.name ? form.errors.name : t('UserNameValidateMessage')}
                                                     label={t('Name')}
                                                     placeholder={t('Name')}
                                                     required={true}
@@ -222,7 +239,7 @@ function _UserForm() {
                                             <Box mt={'xs'}>
                                                 <InputForm
                                                     form={form}
-                                                    tooltip={t('UserNameValidateMessage')}
+                                                    tooltip={form.errors.username ? form.errors.username : t('UserNameValidateMessage')}
                                                     label={t('UserName')}
                                                     placeholder={t('UserName')}
                                                     required={true}
@@ -235,7 +252,7 @@ function _UserForm() {
                                             <Box mt={'xs'}>
                                                 <InputForm
                                                     form={form}
-                                                    tooltip={t('RequiredAndInvalidEmail')}
+                                                    tooltip={form.errors.email ? form.errors.email : t('RequiredAndInvalidEmail')}
                                                     label={t('Email')}
                                                     placeholder={t('Email')}
                                                     required={true}
@@ -260,7 +277,7 @@ function _UserForm() {
                                             </Box>
                                             <Box mt={'xs'}>
                                                 <PasswordInputForm
-                                                    tooltip={t('RequiredPassword')}
+                                                    tooltip={form.errors.password ? form.errors.password : t('RequiredPassword')}
                                                     form={form}
                                                     label={t('Password')}
                                                     placeholder={t('Password')}
@@ -274,7 +291,7 @@ function _UserForm() {
                                             <Box mt={'xs'}>
                                                 <PasswordInputForm
                                                     form={form}
-                                                    tooltip={t('ConfirmPasswordValidateMessage')}
+                                                    tooltip={form.errors.confirm_password ? form.errors.confirm_password : t('ConfirmPasswordValidateMessage')}
                                                     label={t('ConfirmPassword')}
                                                     placeholder={t('ConfirmPassword')}
                                                     required={true}

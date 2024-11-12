@@ -38,7 +38,7 @@ export const getStatusInlineUpdateData = createAsyncThunk("status-update", async
     }
 });
 
-export const storeEntityData = createAsyncThunk("store", async (value) => {
+/*export const storeEntityData = createAsyncThunk("store", async (value) => {
     try {
         const response = createData(value);
         return response;
@@ -46,6 +46,19 @@ export const storeEntityData = createAsyncThunk("store", async (value) => {
         console.log('error', error.message);
         throw error;
     }
+});*/
+
+export const storeEntityData = createAsyncThunk('store', async (value, { rejectWithValue }) => {
+    const response = await createData(value);
+
+    if (response.success === false) {
+        return rejectWithValue({
+            message: response.message,
+            errors: response.errors,
+        });
+    }
+
+    return response;
 });
 
 export const editEntityData = createAsyncThunk("edit", async (value) => {
@@ -58,7 +71,7 @@ export const editEntityData = createAsyncThunk("edit", async (value) => {
     }
 });
 
-export const updateEntityData = createAsyncThunk("update", async (value) => {
+/*export const updateEntityData = createAsyncThunk("update", async (value) => {
     try {
         const response = updateData(value);
         return response;
@@ -66,6 +79,19 @@ export const updateEntityData = createAsyncThunk("update", async (value) => {
         console.log('error', error.message);
         throw error;
     }
+});*/
+
+export const updateEntityData = createAsyncThunk('update', async (value, { rejectWithValue }) => {
+    const response = await updateData(value);
+
+    if (response.success === false) {
+        return rejectWithValue({
+            message: response.message,
+            errors: response.errors,
+        });
+    }
+
+    return response;
 });
 
 export const updateEntityDataWithFile = createAsyncThunk("update-with-file", async (value) => {
@@ -113,6 +139,7 @@ const crudSlice = createSlice({
         showEntityData: [],
         customerIndexData: [],
         entityDataDelete: [],
+        updateUserError: [],
         formLoading: false,
         insertType: 'create',
         searchKeyword: '',
@@ -182,6 +209,24 @@ const crudSlice = createSlice({
             state.fetching = false
         })
 
+        /*builder.addCase(storeEntityData.fulfilled, (state, action) => {
+            if ('success' === action.payload.data.message) {
+                state.entityNewData = action.payload.data
+            } else {
+                state.validationMessage = action.payload.data.data
+                state.validation = true
+            }
+        })*/
+
+        /*builder.addCase(storeEntityData.fulfilled, (state, action) => {
+            if ('success' === action.payload.data.message) {
+                state.entityNewData = action.payload.data
+            } else {
+                state.validationMessage = action.payload.data.data
+                state.validation = true
+            }
+        })*/
+
         builder.addCase(storeEntityData.fulfilled, (state, action) => {
             if ('success' === action.payload.data.message) {
                 state.entityNewData = action.payload.data
@@ -189,15 +234,26 @@ const crudSlice = createSlice({
                 state.validationMessage = action.payload.data.data
                 state.validation = true
             }
-        })
+        });
+
+        builder.addCase(storeEntityData.rejected, (state, action) => {
+            state.updateEntityDataForUser = action.payload; // Save or log the error data
+        });
 
         builder.addCase(editEntityData.fulfilled, (state, action) => {
             state.entityEditData = action.payload.data.data
         })
 
-        builder.addCase(updateEntityData.fulfilled, (state, action) => {
+        /*builder.addCase(updateEntityData.fulfilled, (state, action) => {
             state.updateEntityData = action.payload.data.data
-        })
+        })*/
+        builder.addCase(updateEntityData.fulfilled, (state, action) => {
+            state.updateEntityDataForUser = action.payload.data.data;
+        });
+
+        builder.addCase(updateEntityData.rejected, (state, action) => {
+            state.updateEntityDataForUser = action.payload; // Save or log the error data
+        });
 
         builder.addCase(updateEntityDataWithFile.fulfilled, (state, action) => {
             state.updateEntityData = action.payload.data.data

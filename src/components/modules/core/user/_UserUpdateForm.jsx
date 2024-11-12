@@ -448,32 +448,45 @@ function _UserUpdateForm() {
                       labels: { confirm: t("Submit"), cancel: t("Cancel") },
                       confirmProps: { color: "red" },
                       onCancel: () => console.log("Cancel"),
-                      onConfirm: () => {
-                        setSaveCreateLoading(true);
-                        const value = {
-                          url: "core/user/" + entityEditData.id,
-                          data: values,
-                        };
+                      onConfirm: async () => {
+                          const value = {
+                              url: "core/user/" + entityEditData.id,
+                              data: values,
+                          };
 
-                        dispatch(updateEntityData(value));
+                          const resultAction = await dispatch(updateEntityData(value));
 
-                        notifications.show({
-                          color: "teal",
-                          title: t("UpdateSuccessfully"),
-                          icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
-                          loading: false,
-                          autoClose: 700,
-                          style: { backgroundColor: "lightgray" },
-                        });
+                          if (updateEntityData.rejected.match(resultAction)) {
+                              const fieldErrors = resultAction.payload.errors;
 
-                        setTimeout(() => {
-                          form.reset();
-                          dispatch(setInsertType("create"));
-                          dispatch(setEditEntityData([]));
-                          dispatch(setFetching(true));
-                          setSaveCreateLoading(false);
-                          navigate("/core/user", { replace: true });
-                        }, 700);
+                              // Check if there are field validation errors and dynamically set them
+                              if (fieldErrors) {
+                                  const errorObject = {};
+                                  Object.keys(fieldErrors).forEach(key => {
+                                      errorObject[key] = fieldErrors[key][0]; // Assign the first error message for each field
+                                  });
+                                  // Display the errors using your form's `setErrors` function dynamically
+                                  form.setErrors(errorObject);
+                              }
+                          } else if (updateEntityData.fulfilled.match(resultAction)) {
+                              notifications.show({
+                                  color: "teal",
+                                  title: t("UpdateSuccessfully"),
+                                  icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
+                                  loading: false,
+                                  autoClose: 700,
+                                  style: { backgroundColor: "lightgray" },
+                              });
+
+                              setTimeout(() => {
+                                  form.reset();
+                                  dispatch(setInsertType("create"));
+                                  dispatch(setEditEntityData([]));
+                                  dispatch(setFetching(true));
+                                  setSaveCreateLoading(false);
+                                  navigate("/core/user", { replace: true });
+                              }, 700);
+                          }
                       },
                     });
                 })}
@@ -578,7 +591,11 @@ function _UserUpdateForm() {
                                                 <Box mt={"xs"}>
                                                     <InputForm
                                                         form={form}
-                                                        tooltip={t("UserNameValidateMessage")}
+                                                        tooltip={
+                                                            form.errors.username
+                                                                ? form.errors.username
+                                                                : t("UserNameValidateMessage")
+                                                        }
                                                         label={t("UserName")}
                                                         placeholder={t("UserName")}
                                                         required={true}
@@ -591,7 +608,11 @@ function _UserUpdateForm() {
                                                 <Box mt={"xs"}>
                                                     <InputForm
                                                         form={form}
-                                                        tooltip={t("RequiredAndInvalidEmail")}
+                                                        tooltip={
+                                                            form.errors.email
+                                                                ? form.errors.email
+                                                                : t("RequiredAndInvalidEmail")
+                                                        }
                                                         label={t("Email")}
                                                         placeholder={t("Email")}
                                                         required={true}
@@ -1012,7 +1033,11 @@ function _UserUpdateForm() {
                                             <Box mt={"xs"}>
                                                 <InputForm
                                                     form={form}
-                                                    tooltip={t("RequiredAndInvalidEmail")}
+                                                    tooltip={
+                                                        form.errors.email
+                                                            ? form.errors.email
+                                                            : t("RequiredAndInvalidEmail")
+                                                    }
                                                     label={t("AlternativeEmail")}
                                                     placeholder={t("AlternativeEmail")}
                                                     required={false}
