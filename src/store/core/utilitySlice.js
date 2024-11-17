@@ -162,6 +162,7 @@ const utilitySlice = createSlice({
         })
 
         builder.addCase(coreSettingDropdown.fulfilled, (state, action) => {
+
             if (action.payload.type == 'customer-group'){
                 state.customerGroupDropdownData = action.payload.data.data
             }
