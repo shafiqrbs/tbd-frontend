@@ -636,7 +636,7 @@
   "selectModulesForAccess" : "Select modules for access",
   "ChooseExcelType" : "Choose type",
   "ChooseFile" : "Choose file",
-  "SelectCsvFile" : "Choose csv",
+  "SelectCsvFile" : "Choose csv or xlxs file",
   "CreateFile" : "Create File",
   "ManageFile" : "Manage File",
   "FileType" : "File type",

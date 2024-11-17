@@ -3,10 +3,18 @@ import { useOutletContext } from "react-router-dom";
 import {
     Group,
     Box,
-    ActionIcon, Menu, rem
+    ActionIcon, Menu, rem, Button, LoadingOverlay
 } from "@mantine/core";
 import { useTranslation } from "react-i18next";
-import { IconCheck, IconDotsVertical } from "@tabler/icons-react";
+import {
+    IconArrowRight,
+    IconCheck,
+    IconDotsVertical,
+    IconDownload,
+    IconGitBranchDeleted, IconHttpDelete,
+    IconPhoto, IconSquareArrowLeftFilled,
+    IconTrashX
+} from "@tabler/icons-react";
 import { DataTable } from 'mantine-datatable';
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -18,6 +26,10 @@ import KeywordSearch from "../../filter/KeywordSearch";
 import { deleteEntityData } from "../../../../store/core/crudSlice";
 import tableCss from "../../../../assets/css/Table.module.css";
 import { notifications } from "@mantine/notifications";
+import axios from "axios";
+import commonDataStoreIntoLocalStorage from "../../../global-hook/local-storage/commonDataStoreIntoLocalStorage.js";
+import orderProcessDropdownLocalDataStore
+    from "../../../global-hook/local-storage/orderProcessDropdownLocalDataStore.js";
 function FileUploadTable() {
 
     const dispatch = useDispatch();
@@ -27,6 +39,7 @@ function FileUploadTable() {
 
     const perPage = 50;
     const [page, setPage] = useState(1);
+    const [loading,setLoading] = useState(false)
 
     const fetching = useSelector((state) => state.crudSlice.fetching)
     const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword)
@@ -62,13 +75,54 @@ function FileUploadTable() {
             }
         }
         dispatch(getIndexEntityData(value))
-    }, [fetching]);
+    }, [fetching,loading]);
+
+    const processUploadFile = (id) => {
+        setLoading(true)
+        axios({
+            method: 'get',
+            url: `${import.meta.env.VITE_API_GATEWAY_URL + 'core/file-upload/process'}`,
+            headers: {
+                "Accept": `application/json`,
+                "Content-Type": `application/json`,
+                "Access-Control-Allow-Origin": '*',
+                "X-Api-Key": import.meta.env.VITE_API_KEY,
+                "X-Api-User": JSON.parse(localStorage.getItem('user')).id
+            },
+            params: {
+                file_id : id
+            }
+        })
+            .then(res => {
+                if (res.data.status == 200){
+                    setLoading(false)
+                    setTimeout(() => {
+                        notifications.show({
+                            color: 'teal',
+                            title: 'Process '+res.data.row+' rows successfully',
+                            icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
+                            loading: false,
+                            autoClose: 700,
+                            style: { backgroundColor: 'lightgray' },
+                        },300);
+                    })
+                }
+            })
+            .catch(function (error) {
+                setTimeout(() => {
+                    console.log(error)
+                }, 500)
+            })
+    }
 
     return (
         <>
             <Box pl={`xs`} pr={8} pt={'6'} pb={'4'} className={'boxBackground borderRadiusAll border-bottom-none'} >
                 <KeywordSearch module={'file-upload'} />
             </Box>
+
+            <LoadingOverlay visible={loading} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />
+
             <Box className={'borderRadiusAll border-top-none'}>
                 <DataTable
                     classNames={{
@@ -94,43 +148,21 @@ function FileUploadTable() {
                             title: t("Action"),
                             textAlign: "right",
                             render: (data) => (
-                                <Group gap={4} justify="right" wrap="nowrap">
-                                    <Menu position="bottom-end" offset={3} withArrow trigger="hover" openDelay={100} closeDelay={400}>
-                                        <Menu.Target>
-                                            <ActionIcon size="sm" variant="outline" color="red" radius="xl" aria-label="Settings">
-                                                <IconDotsVertical height={'18'} width={'18'} stroke={1.5} />
-                                            </ActionIcon>
-                                        </Menu.Target>
-                                        <Menu.Dropdown>
-                                            {/*<Menu.Item
-                                                target="_blank"
-                                                component="a"
-                                                w={'200'}
-                                                mt={'2'}
-                                                bg={'red.1'}
-                                                c={'red.6'}
-                                                onClick={() => {
-                                                    modals.openConfirmModal({
-                                                        title: (
-                                                            <Text size="md"> {t("FormConfirmationTitle")}</Text>
-                                                        ),
-                                                        children: (
-                                                            <Text size="sm"> {t("FormConfirmationMessage")}</Text>
-                                                        ),
-                                                        labels: { confirm: 'Confirm', cancel: 'Cancel' },
-                                                        confirmProps: { color: 'red.6' },
-                                                        onCancel: () => console.log('Cancel'),
-                                                        onConfirm: () => {
-                                                            dispatch(deleteEntityData('core/vendor/' + data.id))
-                                                        },
-                                                    });
+                                <Group position="center">
+                                    {
+                                        !data.is_process &&
+                                        <Button leftSection={<IconSquareArrowLeftFilled size={18} />}
+                                                onClick={(e) => {
+                                                    processUploadFile(data.id)
                                                 }}
-                                                rightSection={<IconTrashX style={{ width: rem(14), height: rem(14) }} />}
-                                            >
-                                                {t('Delete')}
-                                            </Menu.Item>*/}
-                                        </Menu.Dropdown>
-                                    </Menu>
+                                        >
+                                            Process
+                                        </Button>
+                                    }
+
+                                    <Button rightSection={<IconHttpDelete size={18} />} style={{ backgroundColor: 'red' }}>
+                                        <IconTrashX style={{ width: rem(18), height: rem(18) }} />
+                                    </Button>
                                 </Group>
                             ),
                         },

@@ -84,23 +84,33 @@ function FileUploadForm() {
                                 data: values
                             }
 
-                            dispatch(updateEntityDataWithFile(value))
+                            // dispatch(updateEntityDataWithFile(value))
+                            const dispatchUpdateEntityDataWithFile = async (value) => {
+                                const dispatchResult = await dispatch(updateEntityDataWithFile(value));
+                                return dispatchResult;
+                            };
 
-                            notifications.show({
-                                color: 'teal',
-                                title: t('CreateSuccessfully'),
-                                icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
-                                loading: false,
-                                autoClose: 700,
-                                style: { backgroundColor: 'lightgray' },
+                            dispatchUpdateEntityDataWithFile(value).then(response => {
+                                if (response.payload.data.status==200){
+                                    notifications.show({
+                                        color: 'teal',
+                                        title: t('CreateSuccessfully'),
+                                        icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
+                                        loading: false,
+                                        autoClose: 700,
+                                        style: { backgroundColor: 'lightgray' },
+                                    });
+
+                                    setTimeout(() => {
+                                        form.reset()
+                                        setExcelFileType(null)
+                                        setExcelFile(null)
+                                        dispatch(setFetching(true))
+                                    }, 700)
+                                }
+                            }).catch(error => {
+                                console.error('Dispatch error:', error);
                             });
-
-                            setTimeout(() => {
-                                form.reset()
-                                setExcelFileType(null)
-                                setExcelFile(null)
-                                dispatch(setFetching(true))
-                            }, 700)
                         },
                     });
                 }
@@ -167,7 +177,7 @@ function FileUploadForm() {
                                                     onDrop={(e) => {
                                                         setExcelFile(e[0])
                                                     }}
-                                                    accept={[MIME_TYPES.csv]}
+                                                    accept={[MIME_TYPES.csv,MIME_TYPES.xlsx]}
                                                     h={100}
                                                     p={0}
                                                 >
