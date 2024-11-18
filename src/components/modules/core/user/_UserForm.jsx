@@ -27,6 +27,7 @@ import Shortcut from "../../shortcut/Shortcut.jsx";
 import SelectForm from "../../../form-builders/SelectForm";
 import getCoreSettingEmployeeGroupDropdownData
     from "../../../global-hook/dropdown/core/getCoreSettingEmployeeGroupDropdownData.js";
+import CustomerGroupDrawer from "../customer/CustomerGroupDrawer.jsx";
 
 function _UserForm() {
     const { t, i18n } = useTranslation();
@@ -78,8 +79,10 @@ function _UserForm() {
         }
     });
 
+    const [groupDrawer, setGroupDrawer] = useState(false)
+
     useHotkeys([['alt+n', () => {
-        document.getElementById('name').focus()
+        !groupDrawer && document.getElementById('name').focus()
     }]], []);
 
     useHotkeys([['alt+r', () => {
@@ -87,7 +90,7 @@ function _UserForm() {
     }]], []);
 
     useHotkeys([['alt+s', () => {
-        document.getElementById('EntityFormSubmit').click()
+        !groupDrawer && document.getElementById('EntityFormSubmit').click()
     }]], []);
 
 
@@ -320,6 +323,9 @@ function _UserForm() {
                     </Grid.Col>
                 </Grid>
             </form>
+            {groupDrawer &&
+                <CustomerGroupDrawer groupDrawer={groupDrawer} setGroupDrawer={setGroupDrawer} saveId={'EntityDrawerSubmit'} />
+            }
         </Box>
     )
 }
