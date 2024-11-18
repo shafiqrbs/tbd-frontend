@@ -52,6 +52,7 @@ import getCoreSettingDepartmentDropdownData
 
 import accessControlRoleStaticData from "../../../global-hook/static-json-file/accessControlRole.json"
 import androidControlRoleStaticData from "../../../global-hook/static-json-file/androidControlRole.json"
+import CustomerGroupDrawer from "../customer/CustomerGroupDrawer.jsx";
 
 function _UserUpdateForm() {
     const {t, i18n} = useTranslation();
@@ -166,41 +167,19 @@ function _UserUpdateForm() {
         }, 500);
     }, [dispatch, entityEditData]);
 
-    useHotkeys(
-        [
-            [
-                "alt+n",
-                () => {
-                    document.getElementById("name").focus();
-                },
-            ],
-        ],
-        []
-    );
+    const [groupDrawer, setGroupDrawer] = useState(false)
 
-    useHotkeys(
-        [
-            [
-                "alt+r",
-                () => {
-                    handleFormReset();
-                },
-            ],
-        ],
-        []
-    );
+    useHotkeys([['alt+n', () => {
+        !groupDrawer && document.getElementById('name').focus()
+    }]], []);
 
-    useHotkeys(
-        [
-            [
-                "alt+s",
-                () => {
-                    document.getElementById("EntityFormSubmit").click();
-                },
-            ],
-        ],
-        []
-    );
+    useHotkeys([['alt+r', () => {
+        form.reset()
+    }]], []);
+
+    useHotkeys([['alt+s', () => {
+        !groupDrawer && document.getElementById('EntityFormSubmit').click()
+    }]], []);
 
     //start access control role
     const [accessControlRole, setAccessControlRole] = useState(
@@ -1348,6 +1327,9 @@ function _UserUpdateForm() {
                     </Grid>
                 </Box>
             </form>
+            {groupDrawer &&
+                <CustomerGroupDrawer groupDrawer={groupDrawer} setGroupDrawer={setGroupDrawer} saveId={'EntityDrawerSubmit'} />
+            }
         </Box>
     );
 }
