@@ -34,7 +34,7 @@ function ProductViewDrawer(props) {
                     <Drawer.Header>
                         <Drawer.Title>
                             <Text fw={'600'} fz={'16'}>
-                                {t('UserDetails')}
+                                {t('ProductDetails')}
                             </Text>
                         </Drawer.Title>
                         <ActionIcon

@@ -643,5 +643,6 @@
   "FileName" : "File name",
   "WhereWePresentTheFileInformation" : "Manage file upload information for bulk process data",
   "NoResultsFoundTryDifferentSearchTerm" : "No result",
-  "": ""
+  "ProductDetails" : "Product Details",
+  "" : ""
 }
