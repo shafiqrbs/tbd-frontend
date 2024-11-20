@@ -211,7 +211,11 @@ function VendorForm(props) {
                                             </Box>
                                             <Box mt={'xs'}>
                                                 <SelectForm
-                                                    tooltip={t('ChooseCustomer')}
+                                                    tooltip={
+                                                        form.errors.customer_id
+                                                            ? form.errors.customer_id
+                                                            : t("ChooseCustomer")
+                                                    }
                                                     label={t('ChooseCustomer')}
                                                     placeholder={t('ChooseCustomer')}
                                                     required={false}
