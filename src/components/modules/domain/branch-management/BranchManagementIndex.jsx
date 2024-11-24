@@ -1,9 +1,10 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress";
+import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress.js";
 import { Box, Progress } from "@mantine/core";
-import InventoryHeaderNavbar from "../../domain/configuraton/InventoryHeaderNavbar";
-import BranchManagementForm from "./BranchManagementForm";
+import InventoryHeaderNavbar from "../configuraton/InventoryHeaderNavbar.jsx";
+import BranchManagementForm from "./BranchManagementForm.jsx";
+import DomainHeaderNavbar from "../DomainHeaderNavbar.jsx";
 
 export default function BranchManagementIndex() {
   const { t } = useTranslation();
@@ -15,7 +16,7 @@ export default function BranchManagementIndex() {
       )}
       {progress === 100 && (
         <>
-          <InventoryHeaderNavbar
+          <DomainHeaderNavbar
             pageTitle={t("BranchManagement")}
             roles={t("Roles")}
             allowZeroPercentage=""

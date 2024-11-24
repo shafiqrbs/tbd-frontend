@@ -16,15 +16,15 @@ import {
 import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useOutletContext } from "react-router-dom";
-import Shortcut from "../../shortcut/Shortcut";
-import SwitchForm from "../../../form-builders/SwitchForm";
+import Shortcut from "../../shortcut/Shortcut.jsx";
+import SwitchForm from "../../../form-builders/SwitchForm.jsx";
 import { useForm } from "@mantine/form";
 import {
   IconCurrency,
   IconCurrencyDollar,
   IconDeviceFloppy,
 } from "@tabler/icons-react";
-import InputForm from "../../../form-builders/InputForm";
+import InputForm from "../../../form-builders/InputForm.jsx";
 
 export default function BranchManagementForm() {
   const { t } = useTranslation();

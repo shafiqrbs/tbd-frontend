@@ -47,7 +47,7 @@ import SitemapIndex from "./components/modules/domain/sitemap/SitemapIndex.jsx";
 import BatchIndex from "./components/modules/production/batch/BatchIndex.jsx";
 import Requisition from "./components/modules/procurement/purchase-requisition/Requisition.jsx";
 import RequisitionInvoice from "./components/modules/procurement/purchase-requisition/RequisitionInvoice.jsx";
-import BranchManagementIndex from "./components/modules/inventory/branch-management/BranchManagementIndex.jsx";
+import BranchManagementIndex from "./components/modules/domain/branch-management/BranchManagementIndex.jsx";
 import AccountingConfig from "./components/modules/accounting/config/ConfigIndex";
 import FileUploadIndex from "./components/modules/core/file-upload/FileUploadIndex.jsx";
 
@@ -113,7 +113,6 @@ function AppRoute() {
           />
           <Route path="config" element={<InventoryConfigurationIndex />} />
           <Route path="stock" element={<StockIndex />} />
-          <Route path="branch-management" element={<BranchManagementIndex />} />
         </Route>
 
         <Route path="/production/">
@@ -132,6 +131,7 @@ function AppRoute() {
           <Route path="config/:id" element={<ConfigurationIndex />} />
           <Route path="sitemap" element={<SitemapIndex />} />
           <Route path="sitemap/:id" element={<SitemapIndex />} />
+          <Route path="branch-management" element={<BranchManagementIndex />} />
         </Route>
 
         <Route path="/accounting/">

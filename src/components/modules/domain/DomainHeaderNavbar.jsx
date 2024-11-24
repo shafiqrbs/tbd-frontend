@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from "react-redux";
 import classes from '../../../assets/css/HeaderSearch.module.css';
 import {
+    IconBuildingStore,
     IconInfoCircle, IconMap2, IconSearch, IconSettings
 } from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
@@ -35,6 +36,21 @@ function DomainHeaderNavbar(props) {
             {link.label}
         </a>
     ));
+
+    const menuItems = [
+        {
+            label: 'Sitemap',
+            path: '/domain/sitemap',
+            icon: <IconMap2 style={{ width: rem(14), height: rem(14) }} />,
+        },
+        {
+            label: 'BranchManagement',
+            path: '/domain/branch-management',
+            icon: <IconBuildingStore style={{ width: rem(14), height: rem(14) }} />,
+        },
+    ];
+
+
     return (
         <>
             <header className={classes.header}>
@@ -51,10 +67,16 @@ function DomainHeaderNavbar(props) {
                                 </ActionIcon>
                             </Menu.Target>
                             <Menu.Dropdown>
-                                <Menu.Item
-                                    component="button" onClick={(e) => { navigate('/domain/sitemap') }} leftSection={<IconMap2 style={{ width: rem(14), height: rem(14) }} />}>
-                                    {t('Sitemap')}
-                                </Menu.Item>
+                                {menuItems.map((item, index) => (
+                                    <Menu.Item
+                                        key={index}
+                                        component="button"
+                                        onClick={() => navigate(item.path)}
+                                        leftSection={item.icon}
+                                    >
+                                        {t(item.label)}
+                                    </Menu.Item>
+                                ))}
                             </Menu.Dropdown>
                         </Menu>
                     </Group>
