@@ -4,224 +4,69 @@ import {
   Title,
   ScrollArea,
   Text,
-  Button,
   Flex,
-  Stack,
-  Affix,
   Checkbox,
-  rem,
-  Center,
-  Overlay,
+  Overlay, LoadingOverlay, Group, Tooltip,
 } from "@mantine/core";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useOutletContext } from "react-router-dom";
 import Shortcut from "../../shortcut/Shortcut.jsx";
-import SwitchForm from "../../../form-builders/SwitchForm.jsx";
 import { useForm } from "@mantine/form";
 import {
-  IconCurrency,
   IconCurrencyDollar,
-  IconDeviceFloppy,
 } from "@tabler/icons-react";
 import InputForm from "../../../form-builders/InputForm.jsx";
+import {getIndexEntityData} from "../../../../store/core/crudSlice.js";
+import {useDispatch, useSelector} from "react-redux";
 
 export default function BranchManagementForm() {
   const { t } = useTranslation();
   const { mainAreaHeight, isOnline } = useOutletContext();
   const height = mainAreaHeight - 26;
+  const dispatch = useDispatch();
   const [saveCreateLoading, setSaveCreateLoading] = useState(false);
-  const savedData = JSON.parse(localStorage.getItem("branchFormData")) || {
-    branches: [
-      {
-        branch_name: "Branch 1",
-        branch_id: 1,
-        prices: [
-          { id: "1", label: "Price 1", price: "" },
-          { id: "2", label: "Price 2", price: "" },
-          { id: "3", label: "Price 3", price: "" },
-        ],
-        settings: [
-          { id: "1", label: "Setting 1", isChecked: false },
-          { id: "2", label: "Setting 2", isChecked: true },
-          { id: "3", label: "Setting 3", isChecked: false },
-          { id: "4", label: "Setting 4", isChecked: true },
-          { id: "5", label: "Setting 5", isChecked: false },
-          { id: "6", label: "Setting 6", isChecked: false },
-        ],
+
+  const configData = localStorage.getItem('config-data') ? JSON.parse(localStorage.getItem('config-data')) : [];
+
+  // Assuming entityEditData.modules is expected to be a valid JSON array of strings like ["module1", "module2"]
+  /*const [moduleChecked, setModuleChecked] = useState(
+      Array.isArray(indexEntityData?.category) ? entityEditData.modules : JSON.parse(entityEditData?.modules || '[]')
+  );*/
+
+  const [moduleChecked, setModuleChecked] = useState([]);
+
+  // Select data, error, and fetching state from Redux
+  const indexEntityData = useSelector((state) => state.crudSlice.indexEntityData);
+  // const error = useSelector((state) => state.crudSlice.error);
+  const fetching = useSelector((state) => state.crudSlice.fetching);
+
+  // Safely handle the case where indexEntityData or indexEntityData.data is undefined
+  const domainsData = indexEntityData?.data
+      ? indexEntityData.data.filter(item => item.id !== configData.domain_id)
+      : []; // Provide an empty array as a fallback
+
+  useEffect(() => {
+    const value = {
+      url: 'domain/manage/branch',
+      param: {
+        term: null,
+        page: null,
+        offset: null,
       },
-      {
-        branch_name: "Branch 2",
-        branch_id: 2,
-        prices: [
-          { id: "1", label: "Price 1", price: "" },
-          { id: "2", label: "Price 2", price: "" },
-          { id: "3", label: "Price 3", price: "" },
-        ],
-        settings: [
-          { id: "1", label: "Setting 1", isChecked: false },
-          { id: "2", label: "Setting 2", isChecked: true },
-          { id: "3", label: "Setting 3", isChecked: false },
-          { id: "4", label: "Setting 4", isChecked: true },
-          { id: "5", label: "Setting 5", isChecked: false },
-          { id: "6", label: "Setting 6", isChecked: false },
-        ],
-      },
-      {
-        branch_name: "Branch 3",
-        branch_id: 3,
-        prices: [
-          { id: "1", label: "Price 1", price: "" },
-          { id: "2", label: "Price 2", price: "" },
-          { id: "3", label: "Price 3", price: "" },
-        ],
-        settings: [
-          { id: "1", label: "Setting 1", isChecked: false },
-          { id: "2", label: "Setting 2", isChecked: true },
-          { id: "3", label: "Setting 3", isChecked: false },
-          { id: "4", label: "Setting 4", isChecked: true },
-          { id: "5", label: "Setting 5", isChecked: false },
-          { id: "6", label: "Setting 6", isChecked: false },
-        ],
-      },
-      {
-        branch_name: "Branch 4",
-        branch_id: 4,
-        prices: [
-          { id: "1", label: "Price 1", price: "" },
-          { id: "2", label: "Price 2", price: "" },
-          { id: "3", label: "Price 3", price: "" },
-        ],
-        settings: [
-          { id: "1", label: "Setting 1", isChecked: false },
-          { id: "2", label: "Setting 2", isChecked: true },
-          { id: "3", label: "Setting 3", isChecked: false },
-          { id: "4", label: "Setting 4", isChecked: true },
-          { id: "5", label: "Setting 5", isChecked: false },
-          { id: "6", label: "Setting 6", isChecked: false },
-        ],
-      },
-      {
-        branch_name: "Branch 5",
-        branch_id: 5,
-        prices: [
-          { id: "1", label: "Price 1", price: "" },
-          { id: "2", label: "Price 2", price: "" },
-          { id: "3", label: "Price 3", price: "" },
-        ],
-        settings: [
-          { id: "1", label: "Setting 1", isChecked: false },
-          { id: "2", label: "Setting 2", isChecked: true },
-          { id: "3", label: "Setting 3", isChecked: false },
-          { id: "4", label: "Setting 4", isChecked: true },
-          { id: "5", label: "Setting 5", isChecked: false },
-          { id: "6", label: "Setting 6", isChecked: false },
-        ],
-      },
-      {
-        branch_name: "Branch 6",
-        branch_id: 6,
-        prices: [
-          { id: "1", label: "Price 1", price: "" },
-          { id: "2", label: "Price 2", price: "" },
-          { id: "3", label: "Price 3", price: "" },
-        ],
-        settings: [
-          { id: "1", label: "Setting 1", isChecked: false },
-          { id: "2", label: "Setting 2", isChecked: true },
-          { id: "3", label: "Setting 3", isChecked: false },
-          { id: "4", label: "Setting 4", isChecked: true },
-          { id: "5", label: "Setting 5", isChecked: false },
-          { id: "6", label: "Setting 6", isChecked: false },
-        ],
-      },
-    ],
-  };
+    };
+    dispatch(getIndexEntityData(value)); // Dispatch thunk on mount
+  }, [dispatch]);
 
   const form = useForm({
-    initialValues: savedData,
+    initialValues: [],
   });
-  useEffect(() => {
-    localStorage.setItem("branchFormData", JSON.stringify(form.values));
-  }, [form.values]);
+
   const maxSwitchesInBox = Math.max(
-    ...form.values.branches.map((branch) =>
-      Math.max(branch.prices.length, branch.settings.length)
-    )
+      ...domainsData.map((domain) =>
+          Math.max(domain.prices.length, 5)
+      )
   );
-
-  // const handlePriceSwitch = (branchIndex, priceIndex) => {
-  //   form.setFieldValue(
-  //     `branches.${branchIndex}.prices.${priceIndex}.isChecked`,
-  //     !form.values.branches[branchIndex].prices[priceIndex].isChecked
-  //   );
-  // };
-
-  const handleSettingSwitch = (branchIndex, settingIndex) => {
-    form.setFieldValue(
-      `branches.${branchIndex}.settings.${settingIndex}.isChecked`,
-      !form.values.branches[branchIndex].settings[settingIndex].isChecked
-    );
-  };
-
-  // const branchScrollRef = useRef(null);
-  // const priceScrollRef = useRef(null);
-  // const settingScrollRef = useRef(null);
-
-  // useEffect(() => {
-  //   // Synchronize branch scroll position
-  //   const handleBranchScroll = () => {
-  //     const branchScrollTop = branchScrollRef.current.scrollTop;
-  //     priceScrollRef.current.scrollTop = branchScrollTop;
-  //     settingScrollRef.current.scrollTop = branchScrollTop;
-  //   };
-
-  //   // Synchronize price scroll position
-  //   const handlePriceScroll = () => {
-  //     const priceScrollTop = priceScrollRef.current.scrollTop;
-  //     branchScrollRef.current.scrollTop = priceScrollTop;
-  //     settingScrollRef.current.scrollTop = priceScrollTop;
-  //   };
-
-  //   // Synchronize setting scroll position
-  //   const handleSettingScroll = () => {
-  //     const settingScrollTop = settingScrollRef.current.scrollTop;
-  //     branchScrollRef.current.scrollTop = settingScrollTop;
-  //     priceScrollRef.current.scrollTop = settingScrollTop;
-  //   };
-
-  //   // Attach scroll event listeners
-  //   if (branchScrollRef.current) {
-  //     branchScrollRef.current.addEventListener("scroll", handleBranchScroll);
-  //   }
-
-  //   if (priceScrollRef.current) {
-  //     priceScrollRef.current.addEventListener("scroll", handlePriceScroll);
-  //   }
-
-  //   if (settingScrollRef.current) {
-  //     settingScrollRef.current.addEventListener("scroll", handleSettingScroll);
-  //   }
-
-  //   // Cleanup event listeners on component unmount
-  //   return () => {
-  //     if (branchScrollRef.current) {
-  //       branchScrollRef.current.removeEventListener(
-  //         "scroll",
-  //         handleBranchScroll
-  //       );
-  //     }
-  //     if (priceScrollRef.current) {
-  //       priceScrollRef.current.removeEventListener("scroll", handlePriceScroll);
-  //     }
-  //     if (settingScrollRef.current) {
-  //       settingScrollRef.current.removeEventListener(
-  //         "scroll",
-  //         handleSettingScroll
-  //       );
-  //     }
-  //   };
-  // }, []);
 
   const [checkedStates, setCheckedStates] = useState({});
 
@@ -230,14 +75,10 @@ export default function BranchManagementForm() {
       ...prevStates,
       [branch_id]: isChecked,
     }));
+    console.log(branch_id,isChecked)
   };
 
   return (
-    <form
-      onSubmit={form.onSubmit((values) => {
-        console.log(values);
-      })}
-    >
       <Grid columns={24} gutter={{ base: 8 }}>
         <Grid.Col span={23}>
           <ScrollArea
@@ -252,6 +93,8 @@ export default function BranchManagementForm() {
             pb="8"
             pt={6}
           >
+            <LoadingOverlay visible={fetching} zIndex={1000} overlayProps={{ radius: "sm", blur: .5, color:"grape" }} />
+
             <Box
               style={{
                 position: "sticky",
@@ -282,6 +125,7 @@ export default function BranchManagementForm() {
                     </Grid>
                   </Box>
                 </Grid.Col>
+
 
                 {/* Prices Header */}
                 <Grid.Col span={8}>
@@ -316,27 +160,8 @@ export default function BranchManagementForm() {
                     <Grid>
                       <Grid.Col span={6}>
                         <Title order={6} pt="4">
-                          {t("Product")}
+                          {t("CategoryForProduct")}
                         </Title>
-                      </Grid.Col>
-                      <Grid.Col span={6}>
-                        <Stack right align="flex-end" pt={2}>
-                          {!saveCreateLoading && isOnline && (
-                            <Button
-                              size="compact-xs"
-                              color="green.8"
-                              type="submit"
-                              id="EntityFormSubmit"
-                              leftSection={<IconDeviceFloppy size={16} />}
-                            >
-                              <Flex direction="column" gap={0}>
-                                <Text fz={12} fw={400}>
-                                  {t("UpdateAndSave")}
-                                </Text>
-                              </Flex>
-                            </Button>
-                          )}
-                        </Stack>
                       </Grid.Col>
                     </Grid>
                   </Box>
@@ -346,8 +171,8 @@ export default function BranchManagementForm() {
 
             {/* Branches Content */}
             <Grid columns={23} gutter={{ base: 8 }}>
-              {form.values.branches.map((branch, index) => (
-                <React.Fragment key={`branch-container-${branch.branch_id}`}>
+              {domainsData.map((branch, index) => (
+                <React.Fragment key={`branch-container-${branch.id}`}>
                   {/* Branches Column */}
                   <Grid.Col span={7}>
                     <Box bg="white" className="borderRadiusAll">
@@ -368,12 +193,12 @@ export default function BranchManagementForm() {
                           >
                             <Checkbox
                               pr="xs"
-                              checked={!!checkedStates[branch.branch_id]}
+                              checked={!!checkedStates[branch.id]}
                               color="red"
                               form={form}
                               onChange={(event) =>
                                 handleCheckboxChange(
-                                  branch.branch_id,
+                                  branch.id,
                                   event.currentTarget.checked
                                 )
                               }
@@ -395,7 +220,7 @@ export default function BranchManagementForm() {
                             wrap="wrap"
                           >
                             <Text fz="16" fw={600} pt="3">
-                              {branch.branch_name}
+                              {branch.name}
                             </Text>
                           </Flex>
                         </Grid.Col>
@@ -416,7 +241,7 @@ export default function BranchManagementForm() {
                           type="never"
                           // viewportRef={priceScrollRef}
                         >
-                          {!checkedStates[branch.branch_id] && (
+                          {!checkedStates[branch.id] && (
                             <Overlay
                               color="#ffe3e3"
                               backgroundOpacity={0.8}
@@ -431,9 +256,9 @@ export default function BranchManagementForm() {
                                 ? `branches.${index}.prices.${
                                     priceIndex + 1
                                   }.price`
-                                : `branch-${index}-setting-${branch.settings[0]?.id}`;
+                                : `branch-${index}-setting-${branch.categories[0]?.id}`;
                             return (
-                              <Box key={`price-${price.id}`}>
+                              <Box key={`price-${priceIndex}-${index}`}>
                                 <Box key={priceIndex} p="xs">
                                   <Grid columns={12} gutter={{ base: 8 }}>
                                     <Grid.Col span={4}>
@@ -488,47 +313,41 @@ export default function BranchManagementForm() {
                           scrollbarSize={2}
                           scrollbars="y"
                           type="never"
-                          // viewportRef={settingScrollRef}
                         >
-                          {!checkedStates[branch.branch_id] && (
+                          {!checkedStates[branch.id] && (
                             <Overlay
                               color="#ffe3e3"
                               backgroundOpacity={0.8}
                               zIndex={1}
-                              // blur={10}
                             />
                           )}
-                          {branch.settings.map((setting, settingIndex) => (
-                            <Box key={settingIndex} p="xs">
-                              <Grid gutter={{ base: 1 }} pl="xs" pr="xs">
-                                <Grid.Col span={2}>
-                                  <SwitchForm
-                                    tooltip={t(setting.label)}
-                                    label=""
-                                    form={form}
-                                    name={`branches.${index}.settings.${settingIndex}.isChecked`}
-                                    color="red"
-                                    id={`branch-${index}-setting-${setting.id}`}
-                                    nextField={
-                                      branch.settings[settingIndex + 1]
-                                        ? `branch-${index}-setting-${
-                                            branch.settings[settingIndex + 1].id
-                                          }`
-                                        : "EntityFormSubmit"
-                                    }
-                                    position="left"
-                                    defaultChecked={setting.isChecked}
-                                    onChange={() =>
-                                      handleSettingSwitch(index, settingIndex)
-                                    }
-                                  />
-                                </Grid.Col>
-                                <Grid.Col span={6} fz="sm" pt="1">
-                                  {setting.label}
-                                </Grid.Col>
-                              </Grid>
-                            </Box>
-                          ))}
+
+                          <Checkbox.Group
+                              label={''}
+                              description={''}
+                              value={moduleChecked || []}
+                              onChange={setModuleChecked}
+                          >
+                            <Group mt="xs" spacing="md" style={{ flexWrap: 'wrap', gap: '1rem' }}>
+                              {branch.categories.map((category, categoryIndex) => (
+                                  <Tooltip key={categoryIndex} mt="8" label={category.name}>
+                                    <Checkbox
+                                        pr="xs"
+                                        value={category.slug+index+categoryIndex}
+                                        label={category.name}
+                                        color="red"
+                                        style={{
+                                          paddingLeft: categoryIndex % 3 === 0 ? '16px' : '0px', // Apply left padding for the first column
+                                          flex: '1 1 calc(33.33% - 16px)',
+                                          input: {
+                                            borderColor: "red",
+                                          },
+                                        }}
+                                    />
+                                  </Tooltip>
+                              ))}
+                            </Group>
+                          </Checkbox.Group>
                         </ScrollArea>
                       </Box>
                     </Box>
@@ -549,6 +368,5 @@ export default function BranchManagementForm() {
           </Box>
         </Grid.Col>
       </Grid>
-    </form>
   );
 }

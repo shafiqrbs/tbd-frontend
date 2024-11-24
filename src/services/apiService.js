@@ -23,7 +23,7 @@ export const getSelectDataWithParam = async (value) => {
     return data
 };
 
-export const getDataWithParam = async (value) => {
+/*export const getDataWithParam = async (value) => {
     let data = []
     await axios({
         method: 'get',
@@ -44,7 +44,30 @@ export const getDataWithParam = async (value) => {
             console.log(error)
         })
     return data
+};*/
+
+export const getDataWithParam = async (value) => {
+    try {
+        const response = await axios({
+            method: 'get',
+            url: `${import.meta.env.VITE_API_GATEWAY_URL + value.url}`,
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Origin": "*",
+                "X-Api-Key": import.meta.env.VITE_API_KEY,
+                "X-Api-User": JSON.parse(localStorage.getItem('user')).id,
+            },
+            params: value.param,
+        });
+        return response.data; // Return the `data` part of the response
+    } catch (error) {
+        // Log the error and throw it so it can be caught by `createAsyncThunk`
+        console.error('Error in getDataWithParam:', error);
+        throw error;
+    }
 };
+
 
 export const getDataWithoutParam = async (value) => {
     let data = []

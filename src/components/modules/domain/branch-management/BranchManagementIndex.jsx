@@ -2,7 +2,6 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress.js";
 import { Box, Progress } from "@mantine/core";
-import InventoryHeaderNavbar from "../configuraton/InventoryHeaderNavbar.jsx";
 import BranchManagementForm from "./BranchManagementForm.jsx";
 import DomainHeaderNavbar from "../DomainHeaderNavbar.jsx";
 
