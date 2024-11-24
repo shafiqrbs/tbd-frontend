@@ -24,6 +24,7 @@ import TextAreaForm from "../../../form-builders/TextAreaForm";
 import PhoneNumber from "../../../form-builders/PhoneNumberInput.jsx";
 import CustomerGroupDrawer from "./CustomerGroupDrawer.jsx";
 import Shortcut from "../../shortcut/Shortcut.jsx";
+import customerDataStoreIntoLocalStorage from "../../../global-hook/local-storage/customerDataStoreIntoLocalStorage.js";
 
 
 function CustomerForm(props) {
