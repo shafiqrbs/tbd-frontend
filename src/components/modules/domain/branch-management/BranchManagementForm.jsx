@@ -13,53 +13,186 @@ import {useTranslation} from "react-i18next";
 import {useOutletContext} from "react-router-dom";
 import Shortcut from "../../shortcut/Shortcut.jsx";
 import {useForm} from "@mantine/form";
-import {
-    IconCheck,
-    IconCurrencyDollar, IconInfoCircle, IconX,
-} from "@tabler/icons-react";
-import InputForm from "../../../form-builders/InputForm.jsx";
-import {getIndexEntityData, setFetching, storeEntityData} from "../../../../store/core/crudSlice.js";
+import {IconCheck, IconCurrencyDollar} from "@tabler/icons-react";
+import {getIndexEntityData, storeEntityData} from "../../../../store/core/crudSlice.js";
 import {useDispatch, useSelector} from "react-redux";
 import {notifications} from "@mantine/notifications";
-import {getHotkeyHandler} from "@mantine/hooks";
 
 export default function BranchManagementForm() {
     const {t} = useTranslation();
     const {mainAreaHeight, isOnline} = useOutletContext();
     const height = mainAreaHeight - 26;
     const dispatch = useDispatch();
-    const [saveCreateLoading, setSaveCreateLoading] = useState(false);
 
     const configData = localStorage.getItem('config-data') ? JSON.parse(localStorage.getItem('config-data')) : [];
-
-    // Assuming entityEditData.modules is expected to be a valid JSON array of strings like ["module1", "module2"]
-    /*const [moduleChecked, setModuleChecked] = useState(
-        Array.isArray(indexEntityData?.category) ? entityEditData.modules : JSON.parse(entityEditData?.modules || '[]')
-    );*/
-
     const [moduleChecked, setModuleChecked] = useState([]);
+
 
     // Select data, error, and fetching state from Redux
     const indexEntityData = useSelector((state) => state.crudSlice.indexEntityData);
-    // const error = useSelector((state) => state.crudSlice.error);
     const fetching = useSelector((state) => state.crudSlice.fetching);
+    const [reloadDomainData, setReloadDomainData] = useState(false)
 
-    // Safely handle the case where indexEntityData or indexEntityData.data is undefined
+    // Filtered domainsData excluding the `configData.domain_id`
     const domainsData = indexEntityData?.data
-        ? indexEntityData.data.filter(item => item.id !== configData.domain_id)
-        : []; // Provide an empty array as a fallback
+        ? indexEntityData.data.filter((item) => item.id !== configData.domain_id)
+        : []; // Default to empty array
 
+    // Merge all check_category values when branches change
+    useEffect(() => {
+        // Flatten all check_category arrays from all branches
+        const mergedCategories = domainsData.flatMap((branch) => branch?.check_category || []);
+        setModuleChecked(mergedCategories); // Set the merged values
+    }, [domainsData]);
+
+    const [checkedStates, setCheckedStates] = useState({});
+    const [customer, setCustomer] = useState({});
+    const [checkboxDisable, setCheckboxDisable] = useState({}); // Track loading for each checkbox
+
+    // Fetch domains on component mount and when `reloadDomainData` changes
     useEffect(() => {
         const value = {
-            url: 'domain/manage/branch',
+            url: "domain/manage/branch",
             param: {
                 term: null,
                 page: null,
                 offset: null,
             },
         };
-        dispatch(getIndexEntityData(value)); // Dispatch thunk on mount
-    }, [dispatch]);
+        dispatch(getIndexEntityData(value)); // Dispatch thunk
+        setReloadDomainData(false);
+    }, [dispatch, reloadDomainData]);
+
+    // Initialize checked states based on `domainsData`
+    useEffect(() => {
+        if (domainsData?.length > 0) {
+            const newState = domainsData.reduce((state, item) => {
+                if (item?.is_sub_domain) {
+                    state[item.id] = true;
+                }
+                return state;
+            }, {});
+            setCheckedStates(newState);
+        }
+    }, [domainsData]);
+
+    const handleCheckboxChange = async (branch_id, isChecked) => {
+        const previousState = checkedStates[branch_id];
+
+        // Set the checkbox to loading (disabled)
+        setCheckboxDisable((prevStates) => ({
+            ...prevStates,
+            [branch_id]: true,
+        }));
+
+        if (!isChecked) {
+            // Optimistically update the checked state
+            setCheckedStates((prevStates) => ({
+                ...prevStates,
+                [branch_id]: isChecked,
+            }));
+            return
+        } // Exit early if unchecked
+
+        const payload = {
+            url: "domain/manage/branch/create",
+            data: {
+                child_domain_id: branch_id,
+                checked: isChecked,
+                parent_domain_id: configData?.domain?.id,
+            },
+        };
+
+        try {
+            const resultAction = await dispatch(storeEntityData(payload));
+
+            if (storeEntityData.rejected.match(resultAction)) {
+                console.log(resultAction.payload.errors);
+
+                // Revert the optimistic update if the API call fails
+                setCheckedStates((prevStates) => ({
+                    ...prevStates,
+                    [branch_id]: previousState,
+                }));
+            } else if (storeEntityData.fulfilled.match(resultAction)) {
+                setCustomer(resultAction.payload.data.data);
+                notifications.show({
+                    color: "teal",
+                    title: t("CreateSuccessfully"),
+                    icon: <IconCheck style={{width: "1em", height: "1em"}}/>,
+                    loading: false,
+                    autoClose: 700,
+                    style: {backgroundColor: "lightgray"},
+                });
+            }
+            // Force reload to ensure data is accurate
+            setReloadDomainData(true);
+        } catch (error) {
+            console.error("An error occurred:", error);
+            // Revert the change in case of unexpected errors
+            setCheckedStates((prevStates) => ({
+                ...prevStates,
+                [branch_id]: previousState,
+            }));
+        } finally {
+            // Clear the loading state regardless of success or failure
+            setCheckboxDisable((prevStates) => ({
+                ...prevStates,
+                [branch_id]: false,
+            }));
+        }
+    };
+
+
+    const [amounts, setAmounts] = useState({}); // Dynamic state object for tracking all amounts
+    const handlePriceData = async (fieldId, value, index, customer_id) => {
+        const fieldNames = ['discount_percent', 'bonus_percent', 'monthly_target_amount'];
+        const fieldName = fieldNames[index] || 'discount_percent'; // Optionally handle out-of-bounds indices
+
+        if (!value || value <= 0) return; // Exit early if unchecked
+
+        const data = {
+            url: 'domain/manage/branch/price/update',
+            data: {
+                field_name: fieldName,
+                customer_id: customer_id,
+                value: value,
+            },
+        };
+
+        const resultAction = await dispatch(storeEntityData(data));
+        if (storeEntityData.rejected.match(resultAction)) {
+            console.log(resultAction.payload.errors);
+        } else if (storeEntityData.fulfilled.match(resultAction)) {
+            // console.log(resultAction.payload.data.data)
+        }
+    };
+
+    const [shadowOverlay, setShadowOverlay] = useState({})
+    const handleCategoryData = async (value, slug) => {
+        setShadowOverlay((prevStates) => ({
+            ...prevStates,
+            [slug]: slug,
+        }));
+        const data = {
+            url: 'domain/manage/branch/category/update',
+            data: {
+                value: value,
+            },
+        };
+
+        const resultAction = await dispatch(storeEntityData(data));
+        if (storeEntityData.rejected.match(resultAction)) {
+            console.log(resultAction.payload.errors);
+        } else if (storeEntityData.fulfilled.match(resultAction)) {
+            // console.log(resultAction.payload.data.data)
+            setReloadDomainData(true)
+            setTimeout(() => {
+                setShadowOverlay({})
+            }, 500)
+        }
+    }
+
 
     const form = useForm({
         initialValues: {
@@ -71,81 +204,9 @@ export default function BranchManagementForm() {
 
     const maxSwitchesInBox = Math.max(
         ...domainsData.map((domain) =>
-            Math.max(domain.prices.length, 5)
+            Math.max((domain?.prices?.length || 0), 5)
         )
     );
-
-    const [checkedStates, setCheckedStates] = useState({});
-
-
-    const [customer, setCustomer] = useState({})
-    const handleCheckboxChange = async (branch_id, isChecked) => {
-        // Optimistically update the checked state
-        const previousState = checkedStates[branch_id];
-        setCheckedStates((prevStates) => ({
-            ...prevStates,
-            [branch_id]: isChecked,
-        }));
-
-        if (!isChecked) return; // Exit early if unchecked
-
-        const value = {
-            url: 'domain/manage/branch/create',
-            data: {
-                child_domain_id: branch_id,
-                checked: isChecked,
-                parent_domain_id: configData?.domain?.id,
-            },
-        };
-
-        const resultAction = await dispatch(storeEntityData(value));
-
-        if (storeEntityData.rejected.match(resultAction)) {
-            console.log(resultAction.payload.errors);
-
-            // Revert the optimistic state update if API call fails
-            setCheckedStates((prevStates) => ({
-                ...prevStates,
-                [branch_id]: previousState,
-            }));
-        } else if (storeEntityData.fulfilled.match(resultAction)) {
-            setCustomer(resultAction.payload.data.data)
-            notifications.show({
-                color: 'teal',
-                title: t('CreateSuccessfully'),
-                icon: <IconCheck style={{width: rem(18), height: rem(18)}}/>,
-                loading: false,
-                autoClose: 700,
-                style: {backgroundColor: 'lightgray'},
-            });
-        }
-    };
-
-
-    const [amounts, setAmounts] = useState({}); // Dynamic state object for tracking all amounts
-
-  const handleBlur = async (fieldId, value, index) => {
-    const fieldNames = ['discount_percent', 'bonus_percent', 'monthly_target_amount'];
-    const fieldName = fieldNames[index] || 'discount_percent'; // Optionally handle out-of-bounds indices
-
-    if (!value || value <= 0) return; // Exit early if unchecked
-
-    const data = {
-      url: 'domain/manage/branch/price/update',
-      data: {
-        field_name: fieldName,
-        customer_id: customer.id,
-        value: value,
-      },
-    };
-
-    const resultAction = await dispatch(storeEntityData(data));
-    if (storeEntityData.rejected.match(resultAction)) {
-      console.log(resultAction.payload.errors);
-    } else if (storeEntityData.fulfilled.match(resultAction)) {
-      console.log(resultAction.payload.data.data)
-    }
-  };
 
     return (
         <Grid columns={24} gutter={{base: 8}}>
@@ -266,6 +327,7 @@ export default function BranchManagementForm() {
                                                         checked={!!checkedStates[branch.id]}
                                                         color="red"
                                                         form={form}
+                                                        disabled={!!checkboxDisable[branch.id]} // Disable if loading
                                                         onChange={(event) =>
                                                             handleCheckboxChange(
                                                                 branch.id,
@@ -320,13 +382,13 @@ export default function BranchManagementForm() {
                                                 )}
 
 
-                                                {branch.prices.map((price, priceIndex) => {
+                                                {branch?.prices?.map((price, priceIndex) => {
                                                     // Unique field identifiers
                                                     const currentFieldId = `branches.${index}.prices.${priceIndex}.price`;
                                                     const nextFieldId =
-                                                        priceIndex < branch.prices.length - 1
+                                                        priceIndex < branch?.prices.length - 1
                                                             ? `branches.${index}.prices.${priceIndex + 1}.price`
-                                                            : `branch-${index}-setting-${branch.categories[0]?.id}`;
+                                                            : `branch-${index}-setting-${branch?.categories[0]?.id}`;
 
                                                     return (
                                                         <Box key={`price-${priceIndex}-${index}`}>
@@ -351,7 +413,7 @@ export default function BranchManagementForm() {
                                                                                 size="sm"
                                                                                 placeholder={price.label}
                                                                                 autoComplete="off"
-                                                                                value={amounts[`${index}-${priceIndex}`] || ""} // Ensure value is derived dynamically
+                                                                                value={amounts[`${index}-${priceIndex}`] || (priceIndex == 0 ? price.discount_percent : (priceIndex == 1 ? price.bonus_percent : price.monthly_target_amount))} // Ensure value is derived dynamically
                                                                                 onChange={(e) => {
                                                                                     // Dynamically update the specific field state
                                                                                     setAmounts((prev) => ({
@@ -359,19 +421,9 @@ export default function BranchManagementForm() {
                                                                                         [`${index}-${priceIndex}`]: e.target.value,
                                                                                     }));
                                                                                 }}
-                                                                                /*onKeyDown={(e) => {
-                                                                                  if (priceIndex === 2) {
-                                                                                    e.preventDefault();
-                                                                                    return; // Prevent focusing the next field but still allow the input handling
-                                                                                  }
-                                                                                  if (e.key === "Enter") {
-                                                                                    e.preventDefault();
-                                                                                    document.getElementById(nextFieldId)?.focus(); // Proceed to the next field when Enter is pressed
-                                                                                  }
-                                                                                }}*/
                                                                                 onBlur={(e) => {
                                                                                     // Handle value when the input loses focus
-                                                                                    handleBlur(currentFieldId, e.target.value, priceIndex);
+                                                                                    handlePriceData(currentFieldId, e.target.value, priceIndex, branch.customer_id);
                                                                                 }}
                                                                                 leftSection={<IconCurrencyDollar
                                                                                     size={16} opacity={0.5}/>}
@@ -385,135 +437,6 @@ export default function BranchManagementForm() {
                                                         </Box>
                                                     );
                                                 })}
-
-                                                {/*{branch.prices.map((price, priceIndex) => {
-                            const currentFieldId = `branches.${index}.prices.${priceIndex}.price`;
-                            const nextFieldId =
-                                priceIndex < branch.prices.length - 1
-                                    ? `branches.${index}.prices.${priceIndex + 1}.price`
-                                    : `branch-${index}-setting-${branch.categories[0]?.id}`;
-
-                            return (
-                                <Box key={`price-${priceIndex}-${index}`}>
-                                  <Box key={priceIndex} p="xs">
-                                    <Grid columns={12} gutter={{ base: 8 }}>
-                                      <Grid.Col span={4}>
-                                        <Text
-                                            fw={600}
-                                            fz={"sm"}
-                                            mt={"8"}
-                                            ta={"left"}
-                                            pl={"xs"}
-                                        >
-                                          {price.label}
-                                        </Text>
-                                      </Grid.Col>
-                                      <Grid.Col span={8}>
-                                        <Box pr={"xs"}>
-                                          <TextInput
-                                              id={currentFieldId}
-                                              size="sm"
-                                              placeholder={price.label}
-                                              autoComplete="off"
-                                              {...form.getInputProps(Object.keys(price)[0])}
-                                              onKeyDown={(e) => {
-                                                if (priceIndex === 2) {
-                                                  e.preventDefault();
-                                                  return;
-                                                }
-                                                if (e.key === 'Enter') {
-                                                  e.preventDefault();
-                                                  document.getElementById(nextFieldId)?.focus();
-                                                }
-                                              }}
-                                              value={amounts[priceIndex] || ""} // Fetch value from amounts state
-                                              onChange={(e) =>
-                                                  setAmounts((prev) => ({
-                                                    ...prev,
-                                                    [priceIndex]: e.target.value,
-                                                  }))
-                                              }
-                                              onBlur={(e) =>
-                                                  handleBlur(currentFieldId, e.target.value, priceIndex)
-                                              }
-                                              leftSection={
-                                                <IconCurrencyDollar size={16} opacity={0.5} />
-                                              }
-                                              inputWrapperOrder={['label', 'input', 'description']}
-                                          />
-                                        </Box>
-                                      </Grid.Col>
-                                    </Grid>
-                                  </Box>
-                                </Box>
-                            );
-                          })}*/}
-
-                                                {/*{branch.prices.map((price, priceIndex) => {
-                            const currentFieldId = `branches.${index}.prices.${priceIndex}.price`;
-                            const nextFieldId =
-                              priceIndex < branch.prices.length - 1
-                                ? `branches.${index}.prices.${
-                                    priceIndex + 1
-                                  }.price`
-                                : `branch-${index}-setting-${branch.categories[0]?.id}`;
-
-
-                            const [amount,setAmount] = useState(0)
-                            const handleBlur = async (fieldId, value) => {
-                              setAmount(value)
-                              console.log(`Input with id ${fieldId} lost focus with value: ${value}`);
-                            };
-
-                            return (
-                              <Box key={`price-${priceIndex}-${index}`}>
-                                <Box key={priceIndex} p="xs">
-                                  <Grid columns={12} gutter={{ base: 8 }}>
-                                    <Grid.Col span={4}>
-                                      <Text
-                                        fw={600}
-                                        fz={"sm"}
-                                        mt={"8"}
-                                        ta={"left"}
-                                        pl={"xs"}
-                                      >
-                                        {price.label}
-                                      </Text>
-                                    </Grid.Col>
-                                    <Grid.Col span={8}>
-                                      <Box pr={"xs"}>
-                                            <TextInput
-                                                id={currentFieldId}
-                                                size="sm"
-                                                placeholder={price.label}
-                                                autoComplete="off"
-                                                {...form.getInputProps(Object.keys(price)[0])}
-                                                onKeyDown={(e) => {
-                                                  if (priceIndex === 2) {
-                                                    e.preventDefault();
-                                                    return;
-                                                  }
-                                                  if (e.key === 'Enter') {
-                                                    e.preventDefault();
-                                                    document.getElementById(nextFieldId)?.focus();
-                                                  }
-                                                }}
-                                                value={amount}
-                                                onChange={(e) => handleBlur(currentFieldId, e.target.value)}
-                                                // onBlur={(e) => handleBlur(currentFieldId, e.target.value)}
-                                                leftSection={
-                                                  <IconCurrencyDollar size={16} opacity={0.5} />
-                                                }
-                                                inputWrapperOrder={['label', 'input', 'description']}
-                                            />
-
-                                      </Box>
-                                    </Grid.Col>
-                                  </Grid>
-                                </Box>
-                              </Box>
-                            );
-                          })}*/}
                                             </ScrollArea>
                                         </Box>
                                     </Box>
@@ -531,7 +454,7 @@ export default function BranchManagementForm() {
                                                 scrollbars="y"
                                                 type="never"
                                             >
-                                                {!checkedStates[branch.id] && (
+                                                {(!checkedStates[branch.id] || shadowOverlay[branch.id]) && (
                                                     <Overlay
                                                         color="#ffe3e3"
                                                         backgroundOpacity={0.8}
@@ -546,13 +469,16 @@ export default function BranchManagementForm() {
                                                     onChange={setModuleChecked}
                                                 >
                                                     <Group mt="xs" spacing="md" style={{flexWrap: 'wrap', gap: '1rem'}}>
-                                                        {branch.categories.map((category, categoryIndex) => (
+                                                        {branch?.categories?.map((category, categoryIndex) => (
                                                             <Tooltip key={categoryIndex} mt="8" label={category.name}>
                                                                 <Checkbox
                                                                     pr="xs"
-                                                                    value={category.slug + index + categoryIndex}
+                                                                    value={category.id + '#' + branch.id}
                                                                     label={category.name}
                                                                     color="red"
+                                                                    onChange={(e) => {
+                                                                        handleCategoryData(e.currentTarget.value, branch.id)
+                                                                    }}
                                                                     style={{
                                                                         paddingLeft: categoryIndex % 3 === 0 ? '16px' : '0px', // Apply left padding for the first column
                                                                         flex: '1 1 calc(33.33% - 16px)',
