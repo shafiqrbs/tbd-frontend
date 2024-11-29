@@ -91,7 +91,7 @@ export default function BranchManagementForm() {
                 ...prevStates,
                 [branch_id]: isChecked,
             }));
-            return
+            // return
         } // Exit early if unchecked
 
         const payload = {
@@ -169,7 +169,7 @@ export default function BranchManagementForm() {
     };
 
     const [shadowOverlay, setShadowOverlay] = useState({})
-    const handleCategoryData = async (value, slug) => {
+    const handleCategoryData = async (value, slug,isChecked) => {
         setShadowOverlay((prevStates) => ({
             ...prevStates,
             [slug]: slug,
@@ -178,6 +178,7 @@ export default function BranchManagementForm() {
             url: 'domain/manage/branch/category/update',
             data: {
                 value: value,
+                check : isChecked
             },
         };
 
@@ -477,7 +478,7 @@ export default function BranchManagementForm() {
                                                                     label={category.name}
                                                                     color="red"
                                                                     onChange={(e) => {
-                                                                        handleCategoryData(e.currentTarget.value, branch.id)
+                                                                        handleCategoryData(e.currentTarget.value, branch.id,e.currentTarget.checked)
                                                                     }}
                                                                     style={{
                                                                         paddingLeft: categoryIndex % 3 === 0 ? '16px' : '0px', // Apply left padding for the first column
