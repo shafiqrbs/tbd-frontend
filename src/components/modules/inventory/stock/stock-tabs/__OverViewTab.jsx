@@ -32,7 +32,7 @@ function __OverViewTab(props) {
                                 <Grid.Col span={8} >
                                     <Box h={160} bg={'white'} pl={`xs`} pr={8} pt={'xs'} className={' borderRadiusAll'} >
                                         <Stack>
-                                            <Text fw={900} pl={'sm'} fz={'md'}>{t('Product Details')}</Text>
+                                            <Text fw={900} pl={'sm'} fz={'md'}>{t('ProductDetails')}</Text>
                                             <Grid columns={24} gutter={0} pl={'12'}>
                                                 <Grid.Col span={14}>
                                                     <Grid columns={12} gutter={0}>
@@ -43,7 +43,7 @@ function __OverViewTab(props) {
                                                             <Text fz="xs" fw={600} >:</Text>
                                                         </Grid.Col>
                                                         <Grid.Col span={7}>
-                                                            <Text fz="xs" fw={600} pl={'16'} >{showEntityData?.product_name}</Text>
+                                                            <Text fz="xs" fw={600} pl={0} >{showEntityData?.product_name}</Text>
                                                         </Grid.Col>
                                                     </Grid>
                                                     <Grid columns={12} gutter={0} pt={'6'}>
@@ -54,7 +54,7 @@ function __OverViewTab(props) {
                                                             <Text fz="xs" fw={600} >:</Text>
                                                         </Grid.Col>
                                                         <Grid.Col span={7}>
-                                                            <Text fz="xs" fw={600} pl={'16'}>{showEntityData?.alternative_name}</Text>
+                                                            <Text fz="xs" fw={600} pl={0}>{showEntityData?.alternative_name}</Text>
                                                         </Grid.Col>
                                                     </Grid>
                                                     <Grid columns={12} gutter={0} pt={'4'}>
@@ -121,7 +121,7 @@ function __OverViewTab(props) {
                                 <Grid.Col span={8} >
                                     <Box h={160} bg={'white'} pl={`xs`} pr={8} pt={'xs'} className={' borderRadiusAll'} >
                                         <Stack>
-                                            <Text fw={900} pl={'sm'} fz={'md'}>{t('Stock Information')}</Text>
+                                            <Text fw={900} pl={'sm'} fz={'md'}>{t('StockInformation')}</Text>
                                             <Grid columns={24} gutter={0} >
                                                 <Grid.Col span={12} pl={'12'}>
                                                     <Grid columns={12} gutter={0}>
@@ -195,7 +195,7 @@ function __OverViewTab(props) {
                                             <Grid columns={12} gutter={0}>
                                                 <Grid.Col span={6}>
                                                     <Stack>
-                                                        <Text fw={900} pl={'sm'} fz={'md'}>{t('Additional Information')}</Text>
+                                                        <Text fw={900} pl={'sm'} fz={'md'}>{t('AdditionalInformation')}</Text>
                                                         <Grid columns={24} gutter={0} >
                                                             <Grid.Col span={24} pl={'12'}>
                                                                 <Grid columns={12} gutter={0}>
@@ -252,31 +252,31 @@ function __OverViewTab(props) {
                                         <Box p={'md'} className="boxBackground borderRadiusAll" h={height - 146}>
                                             <ScrollArea h={height - 176} type='never'>
                                                 <Grid columns={24}>
-                                                    <Grid.Col span={10} align={'left'} fw={'600'} fz={'14'}>{t('Unit Name')}</Grid.Col>
+                                                    <Grid.Col span={10} align={'left'} fw={'600'} fz={'14'}>{t('UnitName')}</Grid.Col>
                                                     <Grid.Col span={1}>:</Grid.Col>
                                                     <Grid.Col span={'13'}>{showEntityData && showEntityData?.unit_name && showEntityData?.unit_name}</Grid.Col>
                                                 </Grid>
 
                                                 <Grid columns={24}>
-                                                    <Grid.Col span={10} align={'left'} fw={'600'} fz={'14'}>{t('Unit Symbol')}</Grid.Col>
+                                                    <Grid.Col span={10} align={'left'} fw={'600'} fz={'14'}>{t('UnitSymbol')}</Grid.Col>
                                                     <Grid.Col span={1}>:</Grid.Col>
                                                     <Grid.Col span={'13'}>{showEntityData && showEntityData?.unit_symbol && showEntityData?.unit_symbol}</Grid.Col>
                                                 </Grid>
 
                                                 <Grid columns={24}>
-                                                    <Grid.Col span={10} align={'left'} fw={'600'} fz={'14'}>{t('Conversion Rate')}</Grid.Col>
+                                                    <Grid.Col span={10} align={'left'} fw={'600'} fz={'14'}>{t('ConversionRate')}</Grid.Col>
                                                     <Grid.Col span={1}>:</Grid.Col>
                                                     <Grid.Col span={'13'}>{showEntityData && showEntityData?.conversion_rate && showEntityData?.conversion_rate}</Grid.Col>
                                                 </Grid>
 
                                                 <Grid columns={24}>
-                                                    <Grid.Col span={10} align={'left'} fw={'600'} fz={'14'}>{t('Base Unit')}</Grid.Col>
+                                                    <Grid.Col span={10} align={'left'} fw={'600'} fz={'14'}>{t('BaseUnit')}</Grid.Col>
                                                     <Grid.Col span={1}>:</Grid.Col>
                                                     <Grid.Col span={'13'}>{showEntityData && showEntityData?.base_unit && showEntityData?.base_unit}</Grid.Col>
                                                 </Grid>
 
                                                 <Grid columns={24}>
-                                                    <Grid.Col span={10} align={'left'} fw={'600'} fz={'14'}>{t('Fractional Quantity Allowed')}</Grid.Col>
+                                                    <Grid.Col span={10} align={'left'} fw={'600'} fz={'14'}>{t('FractionalQuantityAllowed')}</Grid.Col>
                                                     <Grid.Col span={1}>:</Grid.Col>
                                                     <Grid.Col span={'13'}>{showEntityData && showEntityData?.fractional_quantity_allowed && showEntityData?.fractional_quantity_allowed}</Grid.Col>
                                                 </Grid>
