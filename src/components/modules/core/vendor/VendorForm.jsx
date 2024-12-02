@@ -12,7 +12,7 @@ import {
 } from "@tabler/icons-react";
 import { useHotkeys } from "@mantine/hooks";
 import { useDispatch, useSelector } from "react-redux";
-import { hasLength, useForm } from "@mantine/form";
+import { hasLength, isNotEmpty, useForm } from "@mantine/form";
 import { modals } from "@mantine/modals";
 import { notifications } from "@mantine/notifications";
 
@@ -23,6 +23,7 @@ import SelectForm from "../../../form-builders/SelectForm";
 import TextAreaForm from "../../../form-builders/TextAreaForm";
 import PhoneNumber from "../../../form-builders/PhoneNumberInput.jsx";
 import Shortcut from "../../shortcut/Shortcut.jsx";
+import vendorDataStoreIntoLocalStorage from "../../../global-hook/local-storage/vendorDataStoreIntoLocalStorage.js";
 
 function VendorForm(props) {
     const { customerDropDownData } = props
@@ -49,6 +50,7 @@ function VendorForm(props) {
                 }
                 return null;
             },
+            customer_id : isNotEmpty()
         }
     });
 
@@ -109,6 +111,7 @@ function VendorForm(props) {
                             });
 
                             setTimeout(() => {
+                                vendorDataStoreIntoLocalStorage()
                                 form.reset()
                                 setCustomerData(null)
                                 dispatch(setFetching(true))
@@ -211,11 +214,7 @@ function VendorForm(props) {
                                             </Box>
                                             <Box mt={'xs'}>
                                                 <SelectForm
-                                                    tooltip={
-                                                        form.errors.customer_id
-                                                            ? form.errors.customer_id
-                                                            : t("ChooseCustomer")
-                                                    }
+                                                    tooltip={ t("ChooseCustomer")}
                                                     label={t('ChooseCustomer')}
                                                     placeholder={t('ChooseCustomer')}
                                                     required={false}
