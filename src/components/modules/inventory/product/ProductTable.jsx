@@ -22,7 +22,7 @@ import {
     getIndexEntityData,
     setFetching, setFormLoading,
     setInsertType,
-    showEntityData, deleteEntityData
+    showEntityData, deleteEntityData, getStatusInlineUpdateData
 } from "../../../../store/core/crudSlice.js";
 import KeywordSearch from "../../filter/KeywordSearch";
 import { modals } from "@mantine/modals";
@@ -48,15 +48,14 @@ function ProductTable() {
     const productFilterData = useSelector((state) => state.inventoryCrudSlice.productFilterData)
     const entityDataDelete = useSelector((state) => state.inventoryCrudSlice.entityDataDelete)
 
-    const [swtichEnable, setSwitchEnable] = useState({});
+    const [switchEnable, setSwitchEnable] = useState({});
 
-    const handleSwtich = (event, item) => {
+    const handleSwitch = (event, item) => {
         setSwitchEnable(prev => ({ ...prev, [item.id]: true }));
-        // const value = {
-        //     url: 'core/setting/inline-status/' + item.id
-        // }
-        // dispatch(getStatusInlineUpdateData(value))
-        // dispatch(setFetching(true))
+        const value = {
+            url: 'inventory/product/status/inline-update/' + item.id
+        }
+        dispatch(getStatusInlineUpdateData(value))
         setTimeout(() => {
             setSwitchEnable(prev => ({ ...prev, [item.id]: false }));
         }, 3000)
@@ -134,7 +133,7 @@ function ProductTable() {
                             render: (item) => (
                                 <Flex justify="center" align="center">
                                     <Switch
-                                        disabled={swtichEnable[item.id] || false}
+                                        disabled={switchEnable[item.id] || false}
                                         defaultChecked={item.status == 1 ? true : false}
                                         color="red"
                                         radius="xs"
@@ -142,7 +141,7 @@ function ProductTable() {
                                         onLabel="Enable"
                                         offLabel="Disable"
                                         onChange={(event) => {
-                                            handleSwtich(event, item);
+                                            handleSwitch(event.currentTarget.checked, item);
                                         }}
                                     />
                                 </Flex>

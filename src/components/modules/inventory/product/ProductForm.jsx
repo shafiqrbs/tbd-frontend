@@ -59,7 +59,7 @@ function ProductForm(props) {
             product_type_id: isNotEmpty(),
             category_id: isNotEmpty(),
             unit_id: isNotEmpty(),
-            name: hasLength({ min: 2, max: 20 }),
+            name: isNotEmpty(),
             sales_price: (value) => {
                 const isNumberOrFractional = /^-?\d+(\.\d+)?$/.test(value);
                 if (!isNumberOrFractional) {
