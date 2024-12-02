@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress.js";
 import getConfigData from "../../../global-hook/config-data/getConfigData.js";
 import _GenericInvoiceForm from "./_GenericInvoiceForm.jsx";
+import _WholeSaleGenericInvoiceForm from "./whole-sale/_GenericInvoiceForm.jsx";
 import _SalesPurchaseHeaderNavbar from "../../domain/configuraton/_SalesPurchaseHeaderNavbar.jsx";
 
 function SalesInvoice() {
@@ -36,6 +37,16 @@ function SalesInvoice() {
                                 {
                                     insertType === 'create' && configData?.business_model?.slug === 'general' &&
                                     <_GenericInvoiceForm
+                                        allowZeroPercentage={configData?.zero_stock}
+                                        currencySymbol={configData?.currency?.symbol}
+                                        domainId={configData?.domain_id}
+                                        isSMSActive={configData?.is_active_sms}
+                                        isZeroReceiveAllow={configData?.is_zero_receive_allow}
+                                    />
+                                }
+                                {
+                                    insertType === 'create' && configData?.business_model?.slug === 'Distribution' &&
+                                    <_WholeSaleGenericInvoiceForm
                                         allowZeroPercentage={configData?.zero_stock}
                                         currencySymbol={configData?.currency?.symbol}
                                         domainId={configData?.domain_id}

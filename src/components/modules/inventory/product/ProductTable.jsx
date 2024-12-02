@@ -160,16 +160,20 @@ function ProductTable() {
                                             </ActionIcon>
                                         </Menu.Target>
                                         <Menu.Dropdown>
-                                            <Menu.Item
-                                                onClick={() => {
-                                                    dispatch(setInsertType('update'))
-                                                    dispatch(editEntityData('inventory/product/' + data.id))
-                                                    dispatch(setFormLoading(true))
-                                                    navigate(`/inventory/product/${data.id}`)
-                                                }}
-                                            >
-                                                {t('Edit')}
-                                            </Menu.Item>
+                                            {
+                                                !data.parent_id &&
+                                                <Menu.Item
+                                                    onClick={() => {
+                                                        dispatch(setInsertType('update'))
+                                                        dispatch(editEntityData('inventory/product/' + data.id))
+                                                        dispatch(setFormLoading(true))
+                                                        navigate(`/inventory/product/${data.id}`)
+                                                    }}
+                                                >
+                                                    {t('Edit')}
+                                                </Menu.Item>
+                                            }
+
 
                                             <Menu.Item
                                                 onClick={() => {
@@ -182,34 +186,38 @@ function ProductTable() {
                                             >
                                                 {t('Show')}
                                             </Menu.Item>
-                                            <Menu.Item
-                                                // href={``}
-                                                target="_blank"
-                                                component="a"
-                                                w={'200'}
-                                                mt={'2'}
-                                                bg={'red.1'}
-                                                c={'red.6'}
-                                                onClick={() => {
-                                                    modals.openConfirmModal({
-                                                        title: (
-                                                            <Text size="md"> {t("FormConfirmationTitle")}</Text>
-                                                        ),
-                                                        children: (
-                                                            <Text size="sm"> {t("FormConfirmationMessage")}</Text>
-                                                        ),
-                                                        labels: { confirm: 'Confirm', cancel: 'Cancel' },
-                                                        confirmProps: { color: 'red.6' },
-                                                        onCancel: () => console.log('Cancel'),
-                                                        onConfirm: () => {
-                                                            dispatch(deleteEntityData('inventory/product/' + data.id))
-                                                        },
-                                                    });
-                                                }}
-                                                rightSection={<IconTrashX style={{ width: rem(14), height: rem(14) }} />}
-                                            >
-                                                {t('Delete')}
-                                            </Menu.Item>
+
+                                            {
+                                                !data.parent_id &&
+                                                <Menu.Item
+                                                    // href={``}
+                                                    target="_blank"
+                                                    component="a"
+                                                    w={'200'}
+                                                    mt={'2'}
+                                                    bg={'red.1'}
+                                                    c={'red.6'}
+                                                    onClick={() => {
+                                                        modals.openConfirmModal({
+                                                            title: (
+                                                                <Text size="md"> {t("FormConfirmationTitle")}</Text>
+                                                            ),
+                                                            children: (
+                                                                <Text size="sm"> {t("FormConfirmationMessage")}</Text>
+                                                            ),
+                                                            labels: { confirm: 'Confirm', cancel: 'Cancel' },
+                                                            confirmProps: { color: 'red.6' },
+                                                            onCancel: () => console.log('Cancel'),
+                                                            onConfirm: () => {
+                                                                dispatch(deleteEntityData('inventory/product/' + data.id))
+                                                            },
+                                                        });
+                                                    }}
+                                                    rightSection={<IconTrashX style={{ width: rem(14), height: rem(14) }} />}
+                                                >
+                                                    {t('Delete')}
+                                                </Menu.Item>
+                                            }
                                         </Menu.Dropdown>
                                     </Menu>
                                 </Group>
