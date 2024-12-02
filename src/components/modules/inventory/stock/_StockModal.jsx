@@ -64,7 +64,7 @@ export default function _StockModal(props) {
                                     </Tabs.Panel>
                                     <Tabs.Panel value="Details" >
                                         <Box >
-                                            uyfgcbh
+                                            
                                         </Box>
                                     </Tabs.Panel>
                                 </Tabs>

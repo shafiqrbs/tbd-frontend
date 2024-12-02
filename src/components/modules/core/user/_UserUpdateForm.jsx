@@ -1230,7 +1230,7 @@ function _UserUpdateForm() {
                                                             {profileImage && profileImage.length > 0 && profileImage[0].path ? (
                                                                 profileImage[0].path
                                                             ) : (
-                                                                <span>Drop Profile Image Here (150 * 150){" "}<span style={{color: "red"}}>*</span></span>
+                                                                <span>{t("DropProfileImageHere")} (150 * 150){" "}<span style={{color: "red"}}>*</span></span>
                                                             )}
                                                         </Text>
                                                     </Dropzone>
@@ -1286,7 +1286,7 @@ function _UserUpdateForm() {
                                                             {digitalSignature && digitalSignature.length > 0 && digitalSignature[0].path ? (
                                                                 digitalSignature[0].path
                                                             ) : (
-                                                                <span>Drop Digital Signature Here (150 * 150){" "}<span style={{color: "red"}}>*</span></span>
+                                                                <span>{t("DropDigitalSignatureHere")} (150 * 150){" "}<span style={{color: "red"}}>*</span></span>
                                                             )}
                                                         </Text>
                                                     </Dropzone>

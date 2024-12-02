@@ -614,7 +614,7 @@
   "ChooseDesignation" : "Choose designation",
   "Department" : "Department",
   "ChooseDepartment" : "Choose department",
-  "AboutMe" : "About Me",
+  "c" : "About Me",
   "ProfileImage" : "Profile Image",
   "DigitalSignature" : "Digital Signature",
   "AlternativeEmail" : "Alternative Email",
@@ -645,5 +645,17 @@
   "NoResultsFoundTryDifferentSearchTerm" : "No result",
   "ProductDetails" : "Product Details",
   "CategoryForProduct" : "Check category for product",
-  "" : ""
+  "DropProfileImageHere" : "Drop Profile Image Here",
+  "DropDigitalSignatureHere" : "Drop Digital Signature Here",
+  "UnitMeasurement" : "Unit Measurement",
+  "AddProvision" : "Add Provision",
+  "StockDetails" : "Stock Details",
+  "StockOverview" : "Stock Overview",
+  "StockInformation" : "Stock Information",
+  "AdditionalInformation" : "Additional Information",
+  "UnitName" : "Unit Name",
+  "UnitSymbol" : "Unit Symbol",
+  "ConversionRate" : "Conversion Rate",
+  "BaseUnit" : "Base Unit",
+  "FractionalQuantityAllowed" : "Fractional Quantity Allowed"
 }
