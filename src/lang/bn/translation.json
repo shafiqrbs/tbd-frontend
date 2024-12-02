@@ -438,5 +438,6 @@
   "CreateHeadSubGroup" : "হেড সাব-গ্রুপ তৈরী",
   "UpdateAccountHeadSubGroup" : "আপডেট হেড সাব-গ্রুপ",
   "CreateHeadGroup" : "হেড গ্রুপ তৈরী",
-  "ProductDetails" : "পণ্যের বিবরণ"
+  "ProductDetails" : "পণ্যের বিবরণ",
+  "EmployeeGroup" : "এমপ্লয়ি গ্রুপ"
 }
