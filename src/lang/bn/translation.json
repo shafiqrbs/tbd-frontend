@@ -466,5 +466,6 @@
   "UnitName" : "ইউনিটের নাম",
   "UnitSymbol" : "ইউনিট প্রতীক",
   "ConversionRate" : "রূপান্তর হার",
-  "BaseUnit" : "বেস ইউনিট"
+  "BaseUnit" : "বেস ইউনিট",
+  "SettingsDetailsData" : "সেটিংসের বিস্তারিত"
 }
