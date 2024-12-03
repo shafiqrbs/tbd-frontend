@@ -12,7 +12,7 @@ import {
 } from "@tabler/icons-react";
 import { useHotkeys } from "@mantine/hooks";
 import { useDispatch, useSelector } from "react-redux";
-import { hasLength, isNotEmpty, useForm } from "@mantine/form";
+import { hasLength, useForm } from "@mantine/form";
 import { modals } from "@mantine/modals";
 import { notifications } from "@mantine/notifications";
 
@@ -50,7 +50,6 @@ function VendorForm(props) {
                 }
                 return null;
             },
-            customer_id : isNotEmpty()
         }
     });
 
@@ -214,7 +213,11 @@ function VendorForm(props) {
                                             </Box>
                                             <Box mt={'xs'}>
                                                 <SelectForm
-                                                    tooltip={ t("ChooseCustomer")}
+                                                    tooltip={
+                                                        form.errors.customer_id
+                                                            ? form.errors.customer_id
+                                                            : t("ChooseCustomer")
+                                                    }
                                                     label={t('ChooseCustomer')}
                                                     placeholder={t('ChooseCustomer')}
                                                     required={false}
