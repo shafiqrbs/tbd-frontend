@@ -6,7 +6,7 @@ import {
     ActionIcon, Text, Menu, rem,
 } from "@mantine/core";
 import { useTranslation } from "react-i18next";
-import { IconTrashX, IconDotsVertical, IconCheck } from "@tabler/icons-react";
+import { IconTrashX, IconDotsVertical, IconCheck, IconAlertCircle } from "@tabler/icons-react";
 import { DataTable } from 'mantine-datatable';
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -30,6 +30,7 @@ function CustomerTable() {
     const { t, i18n } = useTranslation();
     const { isOnline, mainAreaHeight } = useOutletContext();
     const height = mainAreaHeight - 98; //TabList height 104
+    const coreCustomers = JSON.parse(localStorage.getItem('core-customers') || '[]');
 
     const perPage = 50;
     const [page, setPage] = useState(1);
@@ -143,12 +144,22 @@ function CustomerTable() {
                                             </Menu.Item>
                                             <Menu.Item
                                                 onClick={() => {
-                                                    setViewDrawer(true)
-                                                    const coreCustomers = JSON.parse(localStorage.getItem('core-customers') || '[]');
                                                     const foundCustomers = coreCustomers.find(type => type.id == data.id);
                                                     if (foundCustomers) {
                                                         setCustomerObject(foundCustomers);
+                                                        // console.log(foundCustomers)
+                                                        setViewDrawer(true)
+                                                    } else {
+                                                        notifications.show({
+                                                            color: 'red',
+                                                            title: t('Something Went wrong , please try again'),
+                                                            icon: <IconAlertCircle style={{ width: rem(18), height: rem(18) }} />,
+                                                            loading: false,
+                                                            autoClose: 900,
+                                                            style: { backgroundColor: 'lightgray' },
+                                                        });
                                                     }
+                                                    // 
                                                 }}
                                                 target="_blank"
                                                 component="a"
