@@ -17,9 +17,7 @@ import { useSelector } from "react-redux";
 
 function __UserViewDrawer(props) {
 
-    const entityEditData = useSelector((state => state.crudSlice.entityEditData))
-
-    const { viewDrawer, setViewDrawer } = props
+    const { viewDrawer, setViewDrawer,userObject } = props
     const { isOnline, mainAreaHeight } = useOutletContext();
     const { t, i18n } = useTranslation();
     const height = mainAreaHeight; //TabList height 104
@@ -55,23 +53,23 @@ function __UserViewDrawer(props) {
                                 <Grid columns={24}>
                                     <Grid.Col span={'8'} align={'left'} fw={'600'} fz={'14'}>{t('Name')}</Grid.Col>
                                     <Grid.Col span={'1'}>:</Grid.Col>
-                                    <Grid.Col span={'auto'}>{entityEditData && entityEditData.name && entityEditData.name}</Grid.Col>
+                                    <Grid.Col span={'auto'}>{userObject && userObject.name && userObject.name}</Grid.Col>
                                 </Grid>
                                 <Grid columns={24}>
                                     <Grid.Col span={'8'} align={'left'} fw={'600'} fz={'14'}>{t('UserName')}</Grid.Col>
                                     <Grid.Col span={'1'}>:</Grid.Col>
-                                    <Grid.Col span={'auto'}>{entityEditData && entityEditData.username && entityEditData.username}</Grid.Col>
+                                    <Grid.Col span={'auto'}>{userObject && userObject.username && userObject.username}</Grid.Col>
                                 </Grid>
                                 <Grid columns={24}>
                                     <Grid.Col span={'8'} align={'left'} fw={'600'} fz={'14'}>{t('Mobile')}</Grid.Col>
                                     <Grid.Col span={'1'}>:</Grid.Col>
-                                    <Grid.Col span={'auto'}>{entityEditData && entityEditData.mobile && entityEditData.mobile}</Grid.Col>
+                                    <Grid.Col span={'auto'}>{userObject && userObject.mobile && userObject.mobile}</Grid.Col>
                                 </Grid>
 
                                 <Grid columns={24}>
                                     <Grid.Col span={'8'} align={'left'} fw={'600'} fz={'14'}>{t('Email')}</Grid.Col>
                                     <Grid.Col span={'1'}>:</Grid.Col>
-                                    <Grid.Col span={'auto'}>{entityEditData && entityEditData.email && entityEditData.email}</Grid.Col>
+                                    <Grid.Col span={'auto'}>{userObject && userObject.email && userObject.email}</Grid.Col>
                                 </Grid>
                             </Box>
 

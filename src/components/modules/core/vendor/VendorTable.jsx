@@ -6,7 +6,7 @@ import {
     ActionIcon, Text, Menu, rem
 } from "@mantine/core";
 import { useTranslation } from "react-i18next";
-import { IconCheck, IconDotsVertical, IconTrashX } from "@tabler/icons-react";
+import { IconCheck, IconDotsVertical, IconTrashX, IconAlertCircle } from "@tabler/icons-react";
 import { DataTable } from 'mantine-datatable';
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -37,6 +37,7 @@ function VendorTable() {
     const indexData = useSelector((state) => state.crudSlice.indexEntityData)
     const vendorFilterData = useSelector((state) => state.crudSlice.vendorFilterData)
     const entityDataDelete = useSelector((state) => state.crudSlice.entityDataDelete)
+    const coreVendors = JSON.parse(localStorage.getItem('core-vendors') || '[]');
 
     const [vendorObject, setVendorObject] = useState({});
     const navigate = useNavigate();
@@ -133,12 +134,27 @@ function VendorTable() {
 
                                             <Menu.Item
                                                 onClick={() => {
-                                                    setViewDrawer(true)
-                                                    const coreVendors = JSON.parse(localStorage.getItem('core-vendors') || '[]');
                                                     const foundVendors = coreVendors.find(type => type.id == data.id);
                                                     if (foundVendors) {
                                                         setVendorObject(foundVendors);
+                                                        setViewDrawer(true)
                                                     }
+                                                    else {
+                                                        notifications.show({
+                                                          color: "red",
+                                                          title: t(
+                                                            "Something Went wrong , please try again"
+                                                          ),
+                                                          icon: (
+                                                            <IconAlertCircle
+                                                              style={{ width: rem(18), height: rem(18) }}
+                                                            />
+                                                          ),
+                                                          loading: false,
+                                                          autoClose: 900,
+                                                          style: { backgroundColor: "lightgray" },
+                                                        });
+                                                      }
                                                     // dispatch(showEntityData('core/vendor/' + data.id))
                                                 }}
                                                 target="_blank"
