@@ -29,6 +29,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { setFetching } from "../../../../store/core/crudSlice";
 import _ShortcutTable from "../../shortcut/_ShortcutTable";
 import { useHotkeys } from "@mantine/hooks";
+import { InvoiceBatchPrintA4 } from "../../inventory/invoice-batch/invoice-batch-print/InvoiceBatchPrintA4";
+import { InvoiceBatchPrintPos } from "../../inventory/invoice-batch/invoice-batch-print/InvoiceBatchPrintPos";
 
 export default function _RequisitionTable(props) {
   const { t } = useTranslation();
@@ -45,6 +47,8 @@ export default function _RequisitionTable(props) {
   const [loading, setLoading] = useState(true);
   const [selectedInvoice, setSelectedInvoice] = useState(null);
   const navigate = useNavigate();
+  const [printA4, setPrintA4] = useState(false)
+  const [printPos, setPrintPos] = useState(false)
 
   useEffect(() => {
     dispatch(setFetching(true));
@@ -73,7 +77,6 @@ export default function _RequisitionTable(props) {
     setSelectedInvoice(selectedInvoice);
     setLoading(false);
   }, [selectedRow]);
-
   useHotkeys(
     [
       [
@@ -111,7 +114,6 @@ export default function _RequisitionTable(props) {
         </Table.Td>
       </Table.Tr>
     ));
-
   return (
     <>
       <Box>
@@ -550,6 +552,12 @@ export default function _RequisitionTable(props) {
           </Grid.Col>
         </Grid>
       </Box>
+      {printA4 && <div style={{ display: "none" }}>
+                <InvoiceBatchPrintA4 invoiceBatchData={selectedInvoice} setPrintA4={setPrintA4} />
+            </div>}
+            {printPos && <div style={{ display: "none" }}>
+                <InvoiceBatchPrintPos invoiceBatchData={selectedInvoice} setPrintPos={setPrintPos} />
+            </div>}
     </>
   );
 }
