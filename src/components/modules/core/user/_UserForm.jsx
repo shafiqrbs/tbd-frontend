@@ -28,6 +28,7 @@ import SelectForm from "../../../form-builders/SelectForm";
 import getCoreSettingEmployeeGroupDropdownData
     from "../../../global-hook/dropdown/core/getCoreSettingEmployeeGroupDropdownData.js";
 import CustomerGroupDrawer from "../customer/CustomerGroupDrawer.jsx";
+import userDataStoreIntoLocalStorage from "../../../global-hook/local-storage/userDataStoreIntoLocalStorage.js";
 
 function _UserForm() {
     const { t, i18n } = useTranslation();
@@ -53,6 +54,7 @@ function _UserForm() {
             username: (value) => {
                 if (!value) return t('UserNameRequiredMessage');
                 if (value.length < 2 || value.length > 20) return t('NameLengthMessage');
+                if (/[A-Z]/.test(value)) return t('NoUppercaseAllowedMessage');
                 return null;
             },
             email: (value) => {
@@ -82,7 +84,7 @@ function _UserForm() {
     const [groupDrawer, setGroupDrawer] = useState(false)
 
     useHotkeys([['alt+n', () => {
-        !groupDrawer && document.getElementById('name').focus()
+        !groupDrawer && document.getElementById('employee_group_id').click()
     }]], []);
 
     useHotkeys([['alt+r', () => {
@@ -137,8 +139,9 @@ function _UserForm() {
                                 autoClose: 700,
                                 style: { backgroundColor: 'lightgray' },
                             });
-
+                            
                             setTimeout(() => {
+                                userDataStoreIntoLocalStorage()
                                 form.reset()
                                 dispatch(setFetching(true))
                             }, 700)

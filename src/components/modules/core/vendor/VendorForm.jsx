@@ -23,6 +23,7 @@ import SelectForm from "../../../form-builders/SelectForm";
 import TextAreaForm from "../../../form-builders/TextAreaForm";
 import PhoneNumber from "../../../form-builders/PhoneNumberInput.jsx";
 import Shortcut from "../../shortcut/Shortcut.jsx";
+import vendorDataStoreIntoLocalStorage from "../../../global-hook/local-storage/vendorDataStoreIntoLocalStorage.js";
 
 function VendorForm(props) {
     const { customerDropDownData } = props
@@ -109,6 +110,7 @@ function VendorForm(props) {
                             });
 
                             setTimeout(() => {
+                                vendorDataStoreIntoLocalStorage()
                                 form.reset()
                                 setCustomerData(null)
                                 dispatch(setFetching(true))
