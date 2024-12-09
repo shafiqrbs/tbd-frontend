@@ -33,7 +33,7 @@ import {modals} from "@mantine/modals";
 import getSettingParticularDropdownData from "../../../global-hook/dropdown/getSettingParticularDropdownData.js";
 
 function _SkuManagement(props) {
-    const {id, isBrand, isColor, isGrade, isSize, isMultiPrice} = props;
+    const {id, isBrand, isColor, isGrade, isSize, isMultiPrice,isModel} = props;
     const {t, i18n} = useTranslation();
     const dispatch = useDispatch();
     const {isOnline, mainAreaHeight} = useOutletContext();
@@ -45,6 +45,12 @@ function _SkuManagement(props) {
 
     const entityEditData = useSelector((state) => state.crudSlice.entityEditData);
     const formLoading = useSelector((state) => state.crudSlice.formLoading);
+
+    const colorDropDown = getSettingParticularDropdownData('color')
+    const sizeDropDown = getSettingParticularDropdownData('size')
+    const brandDropDown = getSettingParticularDropdownData('brand')
+    const gradeDropDown = getSettingParticularDropdownData('product-grade')
+    const modelDropDown = getSettingParticularDropdownData('model')
 
     const form = useForm({
         initialValues: {
@@ -265,7 +271,7 @@ function _SkuManagement(props) {
                                                                 placeholder={t("ChooseColor")}
                                                                 name={"color_id"}
                                                                 form={form}
-                                                                dropdownValue={getSettingParticularDropdownData('color')}
+                                                                dropdownValue={colorDropDown}
                                                                 mt={0}
                                                                 id={"color_id"}
                                                                 nextField={"size_id"}
@@ -282,7 +288,7 @@ function _SkuManagement(props) {
                                                                 placeholder={t("ChooseSize")}
                                                                 name={"size_id"}
                                                                 form={form}
-                                                                dropdownValue={getSettingParticularDropdownData('size')}
+                                                                dropdownValue={sizeDropDown}
                                                                 mt={0}
                                                                 id={"size_id"}
                                                                 nextField={"brand_id"}
@@ -299,7 +305,7 @@ function _SkuManagement(props) {
                                                                 placeholder={t("ChooseBrand")}
                                                                 name={"brand_id"}
                                                                 form={form}
-                                                                dropdownValue={getSettingParticularDropdownData('brand')}
+                                                                dropdownValue={brandDropDown}
                                                                 mt={0}
                                                                 id={"brand_id"}
                                                                 nextField={"grade_id"}
@@ -316,9 +322,26 @@ function _SkuManagement(props) {
                                                                 placeholder={t("ChooseProductGrade")}
                                                                 name={"grade_id"}
                                                                 form={form}
-                                                                dropdownValue={getSettingParticularDropdownData('product-grade')}
+                                                                dropdownValue={gradeDropDown}
                                                                 mt={0}
                                                                 id={"grade_id"}
+                                                                nextField={"model_id"}
+                                                                searchable={true}
+                                                                value={gradeData}
+                                                                changeValue={setGradeData}
+                                                            />
+                                                        </Grid.Col>
+                                                    )}
+                                                    {isModel && (
+                                                        <Grid.Col span={"auto"}>
+                                                            <SelectForm
+                                                                tooltip={t("ChooseModel")}
+                                                                placeholder={t("ChooseModel")}
+                                                                name={"model_id"}
+                                                                form={form}
+                                                                dropdownValue={modelDropDown}
+                                                                mt={0}
+                                                                id={"model_id"}
                                                                 nextField={"EntityFormSubmitSkuItem"}
                                                                 searchable={true}
                                                                 value={gradeData}

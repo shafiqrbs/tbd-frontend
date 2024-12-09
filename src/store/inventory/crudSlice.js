@@ -77,6 +77,18 @@ export const showEntityData = createAsyncThunk("show", async (value) => {
     }
 });
 
+export const showInstantEntityData = createAsyncThunk(
+    "show-instant", // Unique action type
+    async (value, { rejectWithValue }) => {
+        try {
+            const data = await showData(value); // Wait for the API response
+            return data; // Return data (will trigger `fulfilled` case)
+        } catch (error) {
+            return rejectWithValue(error.response?.data || "Failed to fetch data"); // Return error details to `rejected` case
+        }
+    }
+);
+
 export const updateEntityData = createAsyncThunk("update", async (value) => {
     try {
         const response = updateData(value);
@@ -272,6 +284,10 @@ const crudSlice = createSlice({
         })
 
         builder.addCase(showEntityData.fulfilled, (state, action) => {
+            state.showEntityData = action.payload.data.data
+        })
+
+        builder.addCase(showInstantEntityData.fulfilled, (state, action) => {
             state.showEntityData = action.payload.data.data
         })
 
