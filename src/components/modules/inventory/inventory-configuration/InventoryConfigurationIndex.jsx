@@ -8,7 +8,6 @@ import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoa
 import InventoryHeaderNavbar from "../../domain/configuraton/InventoryHeaderNavbar.jsx";
 import InventoryConfigurationForm from "./InventoryConfigurationForm.jsx";
 import getConfigData from "../../../global-hook/config-data/getConfigData.js";
-import getInventoryConfigData from "../../../global-hook/config-data/getInventoryConfigData.js";
 
 function InventoryConfigurationIndex() {
     const { t, i18n } = useTranslation();

@@ -36,8 +36,6 @@ function InventoryConfigurationForm() {
     const [formLoad, setFormLoad] = useState(true);
     const [setFormData, setFormDataForUpdate] = useState(false);
 
-    const stock_management = getSettingProductTypeDropdownData();
-
     const inventoryConfigData = localStorage.getItem("config-data")
         ? JSON.parse(localStorage.getItem("config-data"))
         : [];
@@ -62,6 +60,11 @@ function InventoryConfigurationForm() {
             is_batch_invoice: inventoryConfigData.is_batch_invoice || "",
             is_provision: inventoryConfigData.is_provision || "",
             is_sku: inventoryConfigData.is_sku || "",
+            raw_materials: inventoryConfigData.raw_materials || "",
+            stockable: inventoryConfigData.stockable || "",
+            post_production: inventoryConfigData.post_production || "",
+            mid_production: inventoryConfigData.mid_production || "",
+            pre_production: inventoryConfigData.pre_production || ""
         },
     });
 
@@ -142,6 +145,11 @@ function InventoryConfigurationForm() {
             "purchase_price",
             "is_batch_invoice",
             "is_provision",
+            "raw_materials",
+            "stockable",
+            "post_production",
+            "mid_production",
+            "pre_production",
             "is_sku"
         ];
 
@@ -225,33 +233,111 @@ function InventoryConfigurationForm() {
                                         type="never"
                                     >
                                         <Box pl={"xs"}>
-                                            {stock_management.length > 0 && (
-                                                <Text fw={500} fz={"md"} mt={"xs"}>
-                                                    {t("Stock Management")}
-                                                </Text>
-                                            )}
-                                            {stock_management.map((index, stockIndex) => (
-                                                <Box mt={"xs"} key={index.value + stockIndex}>
-                                                    <Grid gutter={{base: 1}}>
-                                                        <Grid.Col span={2}>
-                                                            <SwitchForm
-                                                                tooltip={t("Model")}
-                                                                label=""
-                                                                nextField={"zero_stock"}
-                                                                name={"is_stock_item"}
-                                                                form={form}
-                                                                color="red"
-                                                                id={"is_stock_item"}
-                                                                position={"left"}
-                                                                // defaultChecked={inventoryConfigData.is_model}
-                                                            />
-                                                        </Grid.Col>
-                                                        <Grid.Col span={6} fz={"sm"} pt={"1"}>
-                                                            {index.label}
-                                                        </Grid.Col>
-                                                    </Grid>
-                                                </Box>
-                                            ))}
+                                            <Text fw={500} fz={"md"} mt={"xs"}>
+                                                {t("Stock Management")}
+                                            </Text>
+                                            <Box mt={"xs"}>
+                                                <Grid gutter={{base: 1}}>
+                                                    <Grid.Col span={2}>
+                                                        <SwitchForm
+                                                            tooltip={t("raw_materials")}
+                                                            label=""
+                                                            nextField={"is_color"}
+                                                            name={"raw_materials"}
+                                                            form={form}
+                                                            color="red"
+                                                            id={"raw_materials"}
+                                                            position={"left"}
+                                                            defaultChecked={inventoryConfigData.raw_materials}
+                                                        />
+                                                    </Grid.Col>
+                                                    <Grid.Col span={6} fz={"sm"} pt={"1"}>
+                                                        {t("RawMaterials")}
+                                                    </Grid.Col>
+                                                </Grid>
+                                            </Box>
+                                            <Box mt={"xs"}>
+                                                <Grid gutter={{base: 1}}>
+                                                    <Grid.Col span={2}>
+                                                        <SwitchForm
+                                                            tooltip={t("stockable")}
+                                                            label=""
+                                                            nextField={"is_color"}
+                                                            name={"stockable"}
+                                                            form={form}
+                                                            color="red"
+                                                            id={"stockable"}
+                                                            position={"left"}
+                                                            defaultChecked={inventoryConfigData.stockable}
+                                                        />
+                                                    </Grid.Col>
+                                                    <Grid.Col span={6} fz={"sm"} pt={"1"}>
+                                                        {t("Stockable")}
+                                                    </Grid.Col>
+                                                </Grid>
+                                            </Box>
+                                            <Box mt={"xs"}>
+                                                <Grid gutter={{base: 1}}>
+                                                    <Grid.Col span={2}>
+                                                        <SwitchForm
+                                                            tooltip={t("post_production")}
+                                                            label=""
+                                                            nextField={"is_color"}
+                                                            name={"post_production"}
+                                                            form={form}
+                                                            color="red"
+                                                            id={"post_production"}
+                                                            position={"left"}
+                                                            defaultChecked={inventoryConfigData.post_production}
+                                                        />
+                                                    </Grid.Col>
+                                                    <Grid.Col span={6} fz={"sm"} pt={"1"}>
+                                                        {t("PostProduction")}
+                                                    </Grid.Col>
+                                                </Grid>
+                                            </Box>
+                                            <Box mt={"xs"}>
+                                                <Grid gutter={{base: 1}}>
+                                                    <Grid.Col span={2}>
+                                                        <SwitchForm
+                                                            tooltip={t("mid_production")}
+                                                            label=""
+                                                            nextField={"is_color"}
+                                                            name={"mid_production"}
+                                                            form={form}
+                                                            color="red"
+                                                            id={"mid_production"}
+                                                            position={"left"}
+                                                            defaultChecked={inventoryConfigData.mid_production}
+                                                        />
+                                                    </Grid.Col>
+                                                    <Grid.Col span={6} fz={"sm"} pt={"1"}>
+                                                        {t("MidProduction")}
+                                                    </Grid.Col>
+                                                </Grid>
+                                            </Box>
+                                            <Box mt={"xs"}>
+                                                <Grid gutter={{base: 1}}>
+                                                    <Grid.Col span={2}>
+                                                        <SwitchForm
+                                                            tooltip={t("pre_production")}
+                                                            label=""
+                                                            nextField={"is_color"}
+                                                            name={"pre_production"}
+                                                            form={form}
+                                                            color="red"
+                                                            id={"pre_production"}
+                                                            position={"left"}
+                                                            defaultChecked={inventoryConfigData.pre_production}
+                                                        />
+                                                    </Grid.Col>
+                                                    <Grid.Col span={6} fz={"sm"} pt={"1"}>
+                                                        {t("PreProduction")}
+                                                    </Grid.Col>
+                                                </Grid>
+                                            </Box>
+
+
                                             <Text fw={500} fz={"md"} mt={"lg"}>
                                                 {t("Item Management")}
                                             </Text>

@@ -659,5 +659,11 @@
   "BaseUnit" : "Base Unit",
   "FractionalQuantityAllowed" : "Fractional Quantity Allowed",
   "SettingsDetailsData" : "Settings Details Data",
-  "NoUppercaseAllowedMessage" : "No Uppercase Allowed"
+  "NoUppercaseAllowedMessage" : "No Uppercase Allowed",
+  "RawMaterials" : "Raw Materials",
+  "Stockable" : "Stockable",
+  "PreProduction" : "Pre Production",
+  "MidProduction" : "Mid Production",
+  "PostProduction" : "Post Production",
+  "": ""
 }
