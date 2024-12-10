@@ -22,7 +22,7 @@ import {
     getIndexEntityData,
     setFetching, setFormLoading,
     setInsertType,
-    showEntityData, deleteEntityData, getStatusInlineUpdateData
+    showEntityData, deleteEntityData, getStatusInlineUpdateData, storeEntityData
 } from "../../../../store/core/crudSlice.js";
 import KeywordSearch from "../../filter/KeywordSearch";
 import { modals } from "@mantine/modals";
@@ -30,6 +30,7 @@ import tableCss from "../../../../assets/css/Table.module.css";
 import ProductViewDrawer from "./ProductViewDrawer.jsx";
 import { notifications } from "@mantine/notifications";
 import { setDeleteMessage } from "../../../../store/inventory/crudSlice.js";
+import vendorDataStoreIntoLocalStorage from "../../../global-hook/local-storage/vendorDataStoreIntoLocalStorage.js";
 
 function ProductTable() {
 
@@ -42,9 +43,10 @@ function ProductTable() {
     const [page, setPage] = useState(1);
     const [viewDrawer, setViewDrawer] = useState(false)
 
-    const fetching = useSelector((state) => state.crudSlice.fetching)
+    const [fetching,setFetching] = useState(true)
+    // const fetching = useSelector((state) => state.crudSlice.fetching)
     const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword)
-    const indexData = useSelector((state) => state.crudSlice.indexEntityData)
+    // const indexData = useSelector((state) => state.crudSlice.indexEntityData)
     const productFilterData = useSelector((state) => state.inventoryCrudSlice.productFilterData)
     const entityDataDelete = useSelector((state) => state.inventoryCrudSlice.entityDataDelete)
 
@@ -63,22 +65,39 @@ function ProductTable() {
 
     const navigate = useNavigate()
 
-
+    const [indexData,setIndexData] = useState([])
     useEffect(() => {
-        const value = {
-            url: 'inventory/product',
-            param: {
-                term: searchKeyword,
-                name: productFilterData.name,
-                alternative_name: productFilterData.alternative_name,
-                sku: productFilterData.sku,
-                sales_price: productFilterData.sales_price,
-                page: page,
-                offset: perPage
+        const fetchData = async () => {
+            setFetching(true)
+            const value = {
+                url: 'inventory/product',
+                param: {
+                    term: searchKeyword,
+                    name: productFilterData.name,
+                    alternative_name: productFilterData.alternative_name,
+                    sku: productFilterData.sku,
+                    sales_price: productFilterData.sales_price,
+                    page: page,
+                    offset: perPage,
+                },
+            };
+
+            try {
+                const resultAction = await dispatch(getIndexEntityData(value));
+
+                if (getIndexEntityData.rejected.match(resultAction)) {
+                    console.error('Error:', resultAction);
+                } else if (getIndexEntityData.fulfilled.match(resultAction)) {
+                    setIndexData(resultAction.payload);
+                    setFetching(false)
+                }
+            } catch (err) {
+                console.error('Unexpected error:', err);
             }
-        }
-        dispatch(getIndexEntityData(value))
-    }, [fetching]);
+        };
+
+        fetchData();
+    }, [dispatch, searchKeyword, productFilterData, page, perPage, fetching]);
 
     useEffect(() => {
         dispatch(setDeleteMessage(''))

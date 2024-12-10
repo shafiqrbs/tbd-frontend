@@ -19,11 +19,14 @@ import Shortcut from "../../shortcut/Shortcut";
 import InputForm from "../../../form-builders/InputForm";
 import SelectForm from "../../../form-builders/SelectForm";
 import SwitchForm from "../../../form-builders/SwitchForm";
-import { setFetching, storeEntityData } from "../../../../store/inventory/crudSlice.js";
+import { setFetching } from "../../../../store/inventory/crudSlice.js";
+import { storeEntityData } from "../../../../store/core/crudSlice.js";
 import getSettingProductTypeDropdownData from "../../../global-hook/dropdown/getSettingProductTypeDropdownData.js";
 import getSettingParticularDropdownData from "../../../global-hook/dropdown/getSettingParticularDropdownData.js";
 import ProductCategoryDrawer from "./ProductCategoryDrawer.jsx";
 import productsDataStoreIntoLocalStorage from "../../../global-hook/local-storage/productsDataStoreIntoLocalStorage.js";
+import TextAreaForm from "../../../form-builders/TextAreaForm.jsx";
+import vendorDataStoreIntoLocalStorage from "../../../global-hook/local-storage/vendorDataStoreIntoLocalStorage.js";
 
 function ProductForm(props) {
     const { categoryDropdown } = props
@@ -40,6 +43,8 @@ function ProductForm(props) {
 
     const [groupDrawer, setGroupDrawer] = useState(false)
 
+    const navigate = useNavigate()
+
 
     const form = useForm({
         initialValues: {
@@ -53,6 +58,7 @@ function ProductForm(props) {
             sales_price: '',
             purchase_price: '',
             min_quantity: '',
+            description: '',
             status: true
         },
         validate: {
@@ -99,28 +105,46 @@ function ProductForm(props) {
                     ),
                     labels: { confirm: t('Submit'), cancel: t('Cancel') }, confirmProps: { color: 'red' },
                     onCancel: () => console.log('Cancel'),
-                    onConfirm: () => {
+                    onConfirm: async () => {
                         const value = {
                             url: 'inventory/product',
                             data: values
                         }
-                        dispatch(storeEntityData(value))
-                        notifications.show({
-                            color: 'teal',
-                            title: t('CreateSuccessfully'),
-                            icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
-                            loading: false,
-                            autoClose: 700,
-                            style: { backgroundColor: 'lightgray' },
-                        });
-                        setTimeout(() => {
-                            productsDataStoreIntoLocalStorage()
-                            form.reset()
-                            setCategoryData(null)
-                            setProductTypeData(null)
-                            setProductUnitData(null)
-                            dispatch(setFetching(true))
-                        }, 700)
+
+                        const resultAction = await dispatch(storeEntityData(value));
+
+                        if (storeEntityData.rejected.match(resultAction)) {
+                            const fieldErrors = resultAction.payload.errors;
+
+                            // Check if there are field validation errors and dynamically set them
+                            if (fieldErrors) {
+                                const errorObject = {};
+                                Object.keys(fieldErrors).forEach(key => {
+                                    errorObject[key] = fieldErrors[key][0]; // Assign the first error message for each field
+                                });
+                                // Display the errors using your form's `setErrors` function dynamically
+                                form.setErrors(errorObject);
+                            }
+                        } else if (storeEntityData.fulfilled.match(resultAction)) {
+                            notifications.show({
+                                color: 'teal',
+                                title: t('CreateSuccessfully'),
+                                icon: <IconCheck style={{width: rem(18), height: rem(18)}}/>,
+                                loading: false,
+                                autoClose: 700,
+                                style: {backgroundColor: 'lightgray'},
+                            });
+
+                            setTimeout(() => {
+                                productsDataStoreIntoLocalStorage()
+                                form.reset()
+                                setCategoryData(null)
+                                setProductTypeData(null)
+                                setProductUnitData(null)
+                                dispatch(setFetching(true))
+                                navigate('/inventory/product/'+resultAction.payload.data.data.id)
+                            }, 700)
+                        }
                     },
                 });
             })}>
@@ -335,7 +359,7 @@ function ProductForm(props) {
                                                             label={t('MinimumQuantity')}
                                                             placeholder={t('MinimumQuantity')}
                                                             required={false}
-                                                            nextField={''}
+                                                            nextField={'description'}
                                                             form={form}
                                                             name={'min_quantity'}
                                                             id={'min_quantity'}
@@ -348,21 +372,19 @@ function ProductForm(props) {
                                         <Box mt={'md'} mb={'md'}>
                                             <Box mt={'xs'}>
                                                 <Grid columns={12} gutter={{ base: 1 }}>
-                                                    <Grid.Col span={2}>
-                                                        <SwitchForm
-                                                            tooltip={t('PrintLogo')}
-                                                            label=''
-                                                            nextField=''
-                                                            name={'status'}
+                                                    <Grid.Col span={12}>
+                                                        <TextAreaForm
+                                                            tooltip={t('Description')}
+                                                            label={t('Description')}
+                                                            placeholder={t('Description')}
+                                                            required={false}
+                                                            nextField={'EntityFormSubmit'}
+                                                            name={'description'}
                                                             form={form}
-                                                            color="red"
-                                                            id={'status'}
-                                                            position={'left'}
-                                                            defaultChecked={1}
+                                                            mt={8}
+                                                            id={'description'}
                                                         />
                                                     </Grid.Col>
-                                                    <Grid.Col span={4} fz={'sm'} pt={'1'}>{t('Status')}</Grid.Col>
-                                                    <Grid.Col span={6} fz={'sm'} pt={'1'}></Grid.Col>
                                                 </Grid>
                                             </Box>
                                         </Box>
