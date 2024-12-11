@@ -18,15 +18,12 @@ import { notifications } from "@mantine/notifications";
 import Shortcut from "../../shortcut/Shortcut";
 import InputForm from "../../../form-builders/InputForm";
 import SelectForm from "../../../form-builders/SelectForm";
-import SwitchForm from "../../../form-builders/SwitchForm";
-import { setFetching } from "../../../../store/inventory/crudSlice.js";
-import { storeEntityData } from "../../../../store/core/crudSlice.js";
+import { setFetching,storeEntityData } from "../../../../store/inventory/crudSlice.js";
 import getSettingProductTypeDropdownData from "../../../global-hook/dropdown/getSettingProductTypeDropdownData.js";
 import getSettingParticularDropdownData from "../../../global-hook/dropdown/getSettingParticularDropdownData.js";
 import ProductCategoryDrawer from "./ProductCategoryDrawer.jsx";
 import productsDataStoreIntoLocalStorage from "../../../global-hook/local-storage/productsDataStoreIntoLocalStorage.js";
 import TextAreaForm from "../../../form-builders/TextAreaForm.jsx";
-import vendorDataStoreIntoLocalStorage from "../../../global-hook/local-storage/vendorDataStoreIntoLocalStorage.js";
 
 function ProductForm(props) {
     const { categoryDropdown } = props

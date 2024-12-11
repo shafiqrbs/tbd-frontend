@@ -27,7 +27,7 @@ export const getProductSkuItemIndexEntityData = createAsyncThunk("index-sku-item
         throw error;
     }
 });
-export const storeEntityData = createAsyncThunk("store", async (value) => {
+/*export const storeEntityData = createAsyncThunk("store", async (value) => {
     try {
         const response = createData(value);
         return response;
@@ -35,6 +35,19 @@ export const storeEntityData = createAsyncThunk("store", async (value) => {
         console.log('error', error.message);
         throw error;
     }
+});*/
+
+export const storeEntityData = createAsyncThunk('store', async (value, { rejectWithValue }) => {
+    const response = await createData(value);
+
+    if (response.success === false) {
+        return rejectWithValue({
+            message: response.message,
+            errors: response.errors,
+        });
+    }
+
+    return response;
 });
 
 export const editEntityData = createAsyncThunk("edit", async (value) => {
@@ -245,7 +258,7 @@ const crudSlice = createSlice({
             state.fetching = false
         })
 
-        builder.addCase(storeEntityData.fulfilled, (state, action) => {
+        /*builder.addCase(storeEntityData.fulfilled, (state, action) => {
             if ('success' === action.payload.data.message) {
                 state.entityNewData = action.payload.data
                 state.validationMessage = []
@@ -255,7 +268,23 @@ const crudSlice = createSlice({
                 state.validation = true
                 state.entityNewData = []
             }
-        })
+        })*/
+
+        builder.addCase(storeEntityData.fulfilled, (state, action) => {
+            if ('success' === action.payload.data.message) {
+                state.entityNewData = action.payload.data
+                state.validationMessage = []
+                state.validation = false
+            } /*else {
+                state.validationMessage = action.payload.data.data
+                state.validation = true
+            }*/
+        });
+
+        builder.addCase(storeEntityData.rejected, (state, action) => {
+            state.validationMessage = action.payload; // Save or log the error data
+            state.validation = true
+        });
 
         builder.addCase(createEntityDataWithMedia.fulfilled, (state, action) => {
             if ('success' === action.payload.data.message) {

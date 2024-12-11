@@ -62,6 +62,7 @@ const utilitySlice = createSlice({
     productSizeDropdown: [],
     moduleDropdownData: [],
     utilityProductTypeDropdownData: [],
+    productModelDropdown: [],
   },
   reducers: {
     setFetching: (state, action) => {
@@ -91,6 +92,9 @@ const utilitySlice = createSlice({
       }
       if (action.payload.type === "size") {
         state.productSizeDropdown = action.payload.data.data;
+      }
+      if (action.payload.type === "model") {
+        state.productModelDropdown = action.payload.data.data;
       }
 
       if (action.payload.type === "account-type") {

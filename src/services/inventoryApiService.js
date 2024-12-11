@@ -68,7 +68,7 @@ export const getDataWithoutParam = async (value) => {
     return data
 };
 
-export const createData = async (value) => {
+/*export const createData = async (value) => {
     let data = []
     await axios({
         method: 'POST',
@@ -89,7 +89,41 @@ export const createData = async (value) => {
             console.log(error)
         })
     return data
+};*/
+
+export const createData = async (value) => {
+    try {
+        const response = await axios({
+            method: 'POST',
+            url: `${import.meta.env.VITE_API_GATEWAY_URL+value.url}`,
+            headers: {
+                "Accept": `application/json`,
+                "Content-Type": `application/json`,
+                "Access-Control-Allow-Origin": '*',
+                "X-Api-Key": import.meta.env.VITE_API_KEY,
+                "X-Api-User": JSON.parse(localStorage.getItem('user')).id
+            },
+            data : value.data
+        });
+        return response;
+    } catch (error) {
+        // Return both the message and validation errors
+        if (error.response) {
+            return {
+                success: false,
+                message: error.response.data.message,
+                errors: error.response.data.errors,
+            };
+        } else {
+            return {
+                success: false,
+                message: error.message,
+                errors: {},
+            };
+        }
+    }
 };
+
 export const createDataWithFile = async (value) => {
     let data = []
     await axios({

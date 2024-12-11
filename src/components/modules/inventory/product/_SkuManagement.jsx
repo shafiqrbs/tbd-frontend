@@ -11,18 +11,19 @@ import {
     Flex,
     Stack,
     LoadingOverlay,
-    TextInput, Table,
+    TextInput, Table, Menu,
 } from "@mantine/core";
 import {useTranslation} from "react-i18next";
 import {
-  IconCheck,
-  IconDeviceFloppy,
+    IconCheck,
+    IconDeviceFloppy, IconTrashX,
 } from "@tabler/icons-react";
 import {useDispatch, useSelector} from "react-redux";
 import {isNotEmpty, useForm} from "@mantine/form";
 import {notifications} from "@mantine/notifications";
 
 import {
+    deleteEntityData,
     setFormLoading,
 } from "../../../../store/core/crudSlice.js";
 import SelectForm from "../../../form-builders/SelectForm.jsx";
@@ -59,13 +60,8 @@ function _SkuManagement(props) {
             brand_id: "",
             size_id: "",
             grade_id: "",
-        },
-        validate: {
-          color_id: isColor ? isNotEmpty() : undefined,
-          brand_id: isBrand ? isNotEmpty() : undefined,
-          size_id: isSize ? isNotEmpty() : undefined,
-          grade_id: isGrade ? isNotEmpty() : undefined,
-        },
+            model_id: "",
+        }
     });
 
     useEffect(() => {
@@ -107,7 +103,7 @@ function _SkuManagement(props) {
 
     useEffect(() => {
         if (productSkuIndexEntityData?.data) {
-            setPriceData(productSkuIndexEntityData.data.map((sku) => sku?.price || ''));
+            setPriceData(productSkuIndexEntityData?.data.map((sku) => sku?.price || ''));
             isMultiPrice && setMultiplePriceFieldName(productSkuIndexEntityData?.data[0]?.price_field_array);
         }
     }, [productSkuIndexEntityData]);
@@ -115,7 +111,7 @@ function _SkuManagement(props) {
     const [wholesalePriceData, setWholesalePriceData] = useState([]);
     useEffect(() => {
         if (productSkuIndexEntityData?.data?.length > 0) {
-            const initialPriceData = productSkuIndexEntityData.data.map((sku) => {
+            const initialPriceData = productSkuIndexEntityData?.data.map((sku) => {
                 return sku.price_field.map((field) => ({
                     id: field.id,
                     slug: field.price_field_slug,
@@ -196,11 +192,25 @@ function _SkuManagement(props) {
                                 onSubmit={form.onSubmit((values) => {
                                     form.values.product_id = id;
 
-                                  const existingProductItem = productSkuIndexEntityData.data.find(item =>
+                                    if (!values.grade_id && !values.model_id && !values.color_id && !values.brand_id && !values.size_id){
+                                        notifications.show({
+                                            loading: true,
+                                            color: "red",
+                                            title: "At least one value required",
+                                            message:
+                                                "Data will be loaded in 3 seconds, you cannot close this yet",
+                                            autoClose: 2000,
+                                            withCloseButton: true,
+                                        });
+                                        return;
+                                    }
+
+                                  const existingProductItem = productSkuIndexEntityData?.data.find(item =>
                                       Number(item.color_id) === Number(values.color_id) &&
                                       Number(item.brand_id) === Number(values.brand_id) &&
                                       Number(item.size_id) === Number(values.size_id) &&
-                                      Number(item.grade_id) === Number(values.grade_id)
+                                      Number(item.grade_id) === Number(values.grade_id) &&
+                                      Number(item.model_id) === Number(values.model_id)
                                   );
 
                                   if (existingProductItem){
@@ -210,7 +220,7 @@ function _SkuManagement(props) {
                                       title: "Already exists",
                                       message:
                                           "Data will be loaded in 3 seconds, you cannot close this yet",
-                                      autoClose: 1000,
+                                      autoClose: 2000,
                                       withCloseButton: true,
                                     });
                                     return;
@@ -223,33 +233,47 @@ function _SkuManagement(props) {
                                       labels: {confirm: t("Submit"), cancel: t("Cancel")},
                                       confirmProps: {color: "red"},
                                       onCancel: () => console.log("Cancel"),
-                                      onConfirm: () => {
-                                        const value = {
-                                          url: "inventory/product/stock/sku",
-                                          data: values,
-                                        };
-                                        dispatch(storeEntityData(value));
+                                      onConfirm: async () => {
+                                          const value = {
+                                              url: "inventory/product/stock/sku",
+                                              data: values,
+                                          };
 
-                                        notifications.show({
-                                          color: "teal",
-                                          title: t("UpdateSuccessfully"),
-                                          icon: <IconCheck style={{width: rem(18), height: rem(18)}}/>,
-                                          loading: false,
-                                          autoClose: 700,
-                                          style: {backgroundColor: "lightgray"},
-                                        });
+                                          const resultAction = await dispatch(storeEntityData(value));
 
-                                        setTimeout(() => {
-                                          form.reset();
-                                          setColorData(null)
-                                          setBrandData(null)
-                                          setSizeData(null)
-                                          setGradeData(null)
-                                          setReloadSkuItemData(true);
-                                          setSaveCreateLoading(true);
-                                        }, 500);
-                                      },
-                                    });
+                                          if (storeEntityData.rejected.match(resultAction)) {
+                                              console.log(resultAction.payload.message)
+                                              notifications.show({
+                                                  color: 'red',
+                                                  title: resultAction.payload.message,
+                                                  icon: <IconCheck style={{width: rem(18), height: rem(18)}}/>,
+                                                  loading: false,
+                                                  autoClose: 2000,
+                                                  style: {backgroundColor: 'lightgray'},
+                                              });
+                                          } else if (storeEntityData.fulfilled.match(resultAction)) {
+                                              notifications.show({
+                                                  color: 'teal',
+                                                  title: t('CreateSuccessfully'),
+                                                  icon: <IconCheck style={{width: rem(18), height: rem(18)}}/>,
+                                                  loading: false,
+                                                  autoClose: 2000,
+                                                  style: {backgroundColor: 'lightgray'},
+                                              });
+
+                                              setTimeout(() => {
+                                                  form.reset();
+                                                  setColorData(null)
+                                                  setBrandData(null)
+                                                  setSizeData(null)
+                                                  setGradeData(null)
+                                                  setReloadSkuItemData(true);
+                                                  setSaveCreateLoading(true);
+                                              }, 500);
+                                          }
+                                          }
+                                      ,
+                                      });
 
                                 })}
                             >
@@ -423,6 +447,13 @@ function _SkuManagement(props) {
                                                         </Table.Th>
                                                     }
 
+                                                    {
+                                                        isModel &&
+                                                        <Table.Th fz="xs" ta="center">
+                                                            {t("Model")}
+                                                        </Table.Th>
+                                                    }
+
                                                     <Table.Th fz="xs" ta="center">
                                                         {t("Price")}
                                                     </Table.Th>
@@ -434,6 +465,16 @@ function _SkuManagement(props) {
                                                             </Table.Th>
                                                         ))
                                                     }
+                                                    <Table.Th fz="xs" ta="center">
+                                                        <IconTrashX
+                                                            style={{
+                                                                width: rem(14),
+                                                                height: rem(14),
+                                                                cursor: 'pointer',
+                                                                transition: 'color 0.2s ease-in-out'
+                                                            }}
+                                                        />
+                                                    </Table.Th>
                                                 </Table.Tr>
                                             </Table.Thead>
                                             <Table.Tbody>
@@ -471,6 +512,12 @@ function _SkuManagement(props) {
                                                                         {sku.grade_name}
                                                                     </Table.Th>
                                                                 }
+                                                                {
+                                                                    isModel &&
+                                                                    <Table.Th fz="xs" ta="center">
+                                                                        {sku.model_name}
+                                                                    </Table.Th>
+                                                                }
 
                                                                 <Table.Th fz="xs" ta="center">
                                                                     <TextInput
@@ -499,6 +546,43 @@ function _SkuManagement(props) {
                                                                         />
                                                                     </Table.Th>
                                                                 ))}
+                                                                <Table.Th fz="xs" ta="center">
+                                                                    {
+                                                                        !sku.is_master &&
+                                                                        <IconTrashX
+                                                                            component="a"
+                                                                            bg={'red.1'}
+                                                                            c={'red.6'}
+                                                                            style={{
+                                                                                width: rem(14),
+                                                                                height: rem(14),
+                                                                                cursor: 'pointer',
+                                                                                transition: 'color 0.2s ease-in-out'
+                                                                            }}
+                                                                            onMouseEnter={(e) => e.currentTarget.style.color = 'red'}
+                                                                            onMouseLeave={(e) => e.currentTarget.style.color = 'red.6'}
+                                                                            onClick={() => {
+                                                                                modals.openConfirmModal({
+                                                                                    title: (
+                                                                                        <Text size="md"> {t("FormConfirmationTitle")}</Text>
+                                                                                    ),
+                                                                                    children: (
+                                                                                        <Text size="sm"> {t("FormConfirmationMessage")}</Text>
+                                                                                    ),
+                                                                                    labels: { confirm: 'Confirm', cancel: 'Cancel' },
+                                                                                    confirmProps: { color: 'red.6' },
+                                                                                    onCancel: () => console.log('Cancel'),
+                                                                                    onConfirm: () => {
+                                                                                        dispatch(deleteEntityData('inventory/product/stock/sku/' + sku.stock_id))
+                                                                                        setTimeout(() => {
+                                                                                            setReloadSkuItemData(true);
+                                                                                        }, 500);
+                                                                                    },
+                                                                                });
+                                                                            }}
+                                                                        />
+                                                                    }
+                                                                </Table.Th>
                                                             </Table.Tr>
                                                         )
                                                     })
