@@ -17,6 +17,7 @@ import { setDeleteMessage } from "../../../../store/inventory/crudSlice.js";
 import _StockModal from './_StockModal.jsx';
 import { IconCheck, IconDotsVertical, IconTrashX } from "@tabler/icons-react";
 import { showEntityData } from "../../../../store/core/crudSlice.js";
+import {notifications} from "@mantine/notifications";
 
 function StockTable() {
     const dispatch = useDispatch();
@@ -32,6 +33,12 @@ function StockTable() {
     const indexData = useSelector((state) => state.crudSlice.indexEntityData)
     const productFilterData = useSelector((state) => state.inventoryCrudSlice.productFilterData)
     const entityDataDelete = useSelector((state) => state.inventoryCrudSlice.entityDataDelete)
+
+    // Sync `configData` with localStorage
+    const [configData, setConfigData] = useState(() => {
+        const storedConfigData = localStorage.getItem("config-data");
+        return storedConfigData ? JSON.parse(storedConfigData) : [];
+    });
 
     const [viewModal, setViewModal] = useState(false);
 
@@ -92,6 +99,13 @@ function StockTable() {
         }
     }, [entityDataDelete]);
 
+
+    const [isColor, setColor] = useState((configData?.is_color === 1));
+    const [isGrade, setGrade] = useState((configData?.is_grade === 1));
+    const [isSize, setSize] = useState((configData?.is_size === 1));
+    const [isModel, setModel] = useState((configData?.is_model === 1));
+    const [isBrand, setBrand] = useState((configData?.is_brand === 1));
+
     return (
         <>
 
@@ -121,6 +135,11 @@ function StockTable() {
                         { accessor: 'alternative_name', title: t("AlternativeName") },
                         { accessor: 'unit_name', title: t("Unit") },
                         { accessor: 'quantity', title: t("Quantity") },
+                        { accessor: 'brand_name', title: t("Brand"),hidden: !isBrand},
+                        { accessor: 'grade_name', title: t("Grade") ,hidden: !isGrade},
+                        { accessor: 'color_name', title: t("Color") ,hidden: !isColor},
+                        { accessor: 'size_name', title: t("Size") ,hidden: !isSize},
+                        { accessor: 'model_name', title: t("Model") ,hidden: !isModel},
                         {
                             accessor: 'status',
                             title: t("Status"),

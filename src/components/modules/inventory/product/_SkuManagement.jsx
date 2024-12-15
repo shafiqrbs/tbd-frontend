@@ -19,7 +19,7 @@ import {
     IconDeviceFloppy, IconTrashX,
 } from "@tabler/icons-react";
 import {useDispatch, useSelector} from "react-redux";
-import {isNotEmpty, useForm} from "@mantine/form";
+import {useForm} from "@mantine/form";
 import {notifications} from "@mantine/notifications";
 
 import {
@@ -28,13 +28,13 @@ import {
 } from "../../../../store/core/crudSlice.js";
 import SelectForm from "../../../form-builders/SelectForm.jsx";
 import {
-getProductSkuItemIndexEntityData, inlineUpdateEntityData, storeEntityData,
+    getProductSkuItemIndexEntityData, inlineUpdateEntityData, storeEntityData,
 } from "../../../../store/inventory/crudSlice.js";
 import {modals} from "@mantine/modals";
 import getSettingParticularDropdownData from "../../../global-hook/dropdown/getSettingParticularDropdownData.js";
 
 function _SkuManagement(props) {
-    const {id, isBrand, isColor, isGrade, isSize, isMultiPrice,isModel} = props;
+    const {id, isBrand, isColor, isGrade, isSize, isMultiPrice, isModel} = props;
     const {t, i18n} = useTranslation();
     const dispatch = useDispatch();
     const {isOnline, mainAreaHeight} = useOutletContext();
@@ -69,6 +69,8 @@ function _SkuManagement(props) {
         setFormDataForUpdate(true);
     }, [dispatch, formLoading]);
 
+    const productSkuIndexEntityData = useSelector((state) => state.inventoryCrudSlice.productSkuIndexEntityData);
+
     useEffect(() => {
         form.setValues({});
 
@@ -77,10 +79,9 @@ function _SkuManagement(props) {
             setFormLoad(false);
             setFormDataForUpdate(false);
         }, 500);
-    }, [entityEditData, dispatch, setFormData]);
+    }, [entityEditData, dispatch, setFormData, productSkuIndexEntityData]);
 
-    const productSkuIndexEntityData = useSelector((state) => state.inventoryCrudSlice.productSkuIndexEntityData);
-  const [reloadSkuItemData, setReloadSkuItemData] = useState(false);
+    const [reloadSkuItemData, setReloadSkuItemData] = useState(false);
 
     useEffect(() => {
         const value = {
@@ -99,22 +100,24 @@ function _SkuManagement(props) {
     const [gradeData, setGradeData] = useState(null);
 
     const [priceData, setPriceData] = useState([]);
+    const [purchasePriceData, setPurchasePriceData] = useState([]);
     const [multiplePriceFieldName, setMultiplePriceFieldName] = useState([]);
 
     useEffect(() => {
         if (productSkuIndexEntityData?.data) {
             setPriceData(productSkuIndexEntityData?.data.map((sku) => sku?.price || ''));
+            setPurchasePriceData(productSkuIndexEntityData?.data.map((sku) => sku?.purchase_price || ''));
             isMultiPrice && setMultiplePriceFieldName(productSkuIndexEntityData?.data[0]?.price_field_array);
         }
     }, [productSkuIndexEntityData]);
 
     const [wholesalePriceData, setWholesalePriceData] = useState([]);
     useEffect(() => {
-        if (productSkuIndexEntityData?.data?.length > 0) {
+        if (productSkuIndexEntityData?.data?.length > 0 && isMultiPrice) {
             const initialPriceData = productSkuIndexEntityData?.data.map((sku) => {
-                return sku.price_field.map((field) => ({
-                    id: field.id,
-                    slug: field.price_field_slug,
+                return sku?.price_field.map((field) => ({
+                    id: field?.id,
+                    slug: field?.price_field_slug,
                     price: field.price !== null ? field.price : ''
                 }));
             });
@@ -122,8 +125,8 @@ function _SkuManagement(props) {
         }
     }, [productSkuIndexEntityData]);
 
-    const handleSkuData = (value, stockId, priceFieldSlug, skuIndex, fieldIndex,settingId) => {
-        if (priceFieldSlug != 'price') {
+    const handleSkuData = (value, stockId, priceFieldSlug, skuIndex, fieldIndex, settingId) => {
+        if (priceFieldSlug != 'price' && priceFieldSlug != 'purchase_price') {
             const updatedPriceData = [...wholesalePriceData];
             updatedPriceData[skuIndex][fieldIndex].price = value;
             setWholesalePriceData(updatedPriceData);
@@ -145,6 +148,22 @@ function _SkuManagement(props) {
             const newPriceData = [...priceData];
             newPriceData[skuIndex] = value;
             setPriceData(newPriceData);
+            const updateData = {
+                url: 'inventory/product/stock/sku/inline-update/' + stockId,
+                data: {
+                    value: value,
+                    field: priceFieldSlug,
+                }
+            }
+            setTimeout(() => {
+                dispatch(inlineUpdateEntityData(updateData))
+            }, 500)
+        }
+
+        if (priceFieldSlug === 'purchase_price') {
+            const newPurchasePriceData = [...purchasePriceData];
+            newPurchasePriceData[skuIndex] = value;
+            setPurchasePriceData(newPurchasePriceData);
             const updateData = {
                 url: 'inventory/product/stock/sku/inline-update/' + stockId,
                 data: {
@@ -192,7 +211,7 @@ function _SkuManagement(props) {
                                 onSubmit={form.onSubmit((values) => {
                                     form.values.product_id = id;
 
-                                    if (!values.grade_id && !values.model_id && !values.color_id && !values.brand_id && !values.size_id){
+                                    if (!values.grade_id && !values.model_id && !values.color_id && !values.brand_id && !values.size_id) {
                                         notifications.show({
                                             loading: true,
                                             color: "red",
@@ -205,75 +224,75 @@ function _SkuManagement(props) {
                                         return;
                                     }
 
-                                  const existingProductItem = productSkuIndexEntityData?.data.find(item =>
-                                      Number(item.color_id) === Number(values.color_id) &&
-                                      Number(item.brand_id) === Number(values.brand_id) &&
-                                      Number(item.size_id) === Number(values.size_id) &&
-                                      Number(item.grade_id) === Number(values.grade_id) &&
-                                      Number(item.model_id) === Number(values.model_id)
-                                  );
+                                    const existingProductItem = productSkuIndexEntityData?.data.find(item =>
+                                        Number(item.color_id) === Number(values.color_id) &&
+                                        Number(item.brand_id) === Number(values.brand_id) &&
+                                        Number(item.size_id) === Number(values.size_id) &&
+                                        Number(item.grade_id) === Number(values.grade_id) &&
+                                        Number(item.model_id) === Number(values.model_id)
+                                    );
 
-                                  if (existingProductItem){
-                                    notifications.show({
-                                      loading: true,
-                                      color: "red",
-                                      title: "Already exists",
-                                      message:
-                                          "Data will be loaded in 3 seconds, you cannot close this yet",
-                                      autoClose: 2000,
-                                      withCloseButton: true,
-                                    });
-                                    return;
-                                  }
+                                    if (existingProductItem) {
+                                        notifications.show({
+                                            loading: true,
+                                            color: "red",
+                                            title: "Already exists",
+                                            message:
+                                                "Data will be loaded in 3 seconds, you cannot close this yet",
+                                            autoClose: 2000,
+                                            withCloseButton: true,
+                                        });
+                                        return;
+                                    }
                                     modals.openConfirmModal({
-                                      title: <Text size="md"> {t("FormConfirmationTitle")}</Text>,
-                                      children: (
-                                          <Text size="sm"> {t("FormConfirmationMessage")}</Text>
-                                      ),
-                                      labels: {confirm: t("Submit"), cancel: t("Cancel")},
-                                      confirmProps: {color: "red"},
-                                      onCancel: () => console.log("Cancel"),
-                                      onConfirm: async () => {
-                                          const value = {
-                                              url: "inventory/product/stock/sku",
-                                              data: values,
-                                          };
+                                        title: <Text size="md"> {t("FormConfirmationTitle")}</Text>,
+                                        children: (
+                                            <Text size="sm"> {t("FormConfirmationMessage")}</Text>
+                                        ),
+                                        labels: {confirm: t("Submit"), cancel: t("Cancel")},
+                                        confirmProps: {color: "red"},
+                                        onCancel: () => console.log("Cancel"),
+                                        onConfirm: async () => {
+                                            const value = {
+                                                url: "inventory/product/stock/sku",
+                                                data: values,
+                                            };
 
-                                          const resultAction = await dispatch(storeEntityData(value));
+                                            const resultAction = await dispatch(storeEntityData(value));
 
-                                          if (storeEntityData.rejected.match(resultAction)) {
-                                              console.log(resultAction.payload.message)
-                                              notifications.show({
-                                                  color: 'red',
-                                                  title: resultAction.payload.message,
-                                                  icon: <IconCheck style={{width: rem(18), height: rem(18)}}/>,
-                                                  loading: false,
-                                                  autoClose: 2000,
-                                                  style: {backgroundColor: 'lightgray'},
-                                              });
-                                          } else if (storeEntityData.fulfilled.match(resultAction)) {
-                                              notifications.show({
-                                                  color: 'teal',
-                                                  title: t('CreateSuccessfully'),
-                                                  icon: <IconCheck style={{width: rem(18), height: rem(18)}}/>,
-                                                  loading: false,
-                                                  autoClose: 2000,
-                                                  style: {backgroundColor: 'lightgray'},
-                                              });
+                                            if (storeEntityData.rejected.match(resultAction)) {
+                                                console.log(resultAction.payload.message)
+                                                notifications.show({
+                                                    color: 'red',
+                                                    title: resultAction.payload.message,
+                                                    icon: <IconCheck style={{width: rem(18), height: rem(18)}}/>,
+                                                    loading: false,
+                                                    autoClose: 2000,
+                                                    style: {backgroundColor: 'lightgray'},
+                                                });
+                                            } else if (storeEntityData.fulfilled.match(resultAction)) {
+                                                notifications.show({
+                                                    color: 'teal',
+                                                    title: t('CreateSuccessfully'),
+                                                    icon: <IconCheck style={{width: rem(18), height: rem(18)}}/>,
+                                                    loading: false,
+                                                    autoClose: 2000,
+                                                    style: {backgroundColor: 'lightgray'},
+                                                });
 
-                                              setTimeout(() => {
-                                                  form.reset();
-                                                  setColorData(null)
-                                                  setBrandData(null)
-                                                  setSizeData(null)
-                                                  setGradeData(null)
-                                                  setReloadSkuItemData(true);
-                                                  setSaveCreateLoading(true);
-                                              }, 500);
-                                          }
-                                          }
-                                      ,
-                                      });
+                                                setTimeout(() => {
+                                                    form.reset();
+                                                    setColorData(null)
+                                                    setBrandData(null)
+                                                    setSizeData(null)
+                                                    setGradeData(null)
+                                                    setReloadSkuItemData(true);
+                                                    setSaveCreateLoading(true);
+                                                }, 500);
+                                            }
+                                        }
+                                        ,
+                                    });
 
                                 })}
                             >
@@ -455,7 +474,11 @@ function _SkuManagement(props) {
                                                     }
 
                                                     <Table.Th fz="xs" ta="center">
-                                                        {t("Price")}
+                                                        {t("SalesPrice")}
+                                                    </Table.Th>
+
+                                                    <Table.Th fz="xs" ta="center">
+                                                        {t("PurchasePrice")}
                                                     </Table.Th>
                                                     {
                                                         isMultiPrice && multiplePriceFieldName?.length > 0 &&
@@ -532,6 +555,19 @@ function _SkuManagement(props) {
                                                                     />
                                                                 </Table.Th>
 
+                                                                <Table.Th fz="xs" ta="center">
+                                                                    <TextInput
+                                                                        type="number"
+                                                                        label=""
+                                                                        size="xs"
+                                                                        id={'inline-update-price-' + sku.stock_id}
+                                                                        value={purchasePriceData[index]}
+                                                                        onChange={(e) => {
+                                                                            handleSkuData(e.target.value, sku.stock_id, 'purchase_price', index, null, null)
+                                                                        }}
+                                                                    />
+                                                                </Table.Th>
+
                                                                 {sku.price_field?.map((field, fieldIndex) => (
                                                                     <Table.Th fz="xs" ta="center" key={field.id}>
                                                                         <TextInput
@@ -541,7 +577,7 @@ function _SkuManagement(props) {
                                                                             id={`inline-update-${field.price_field_slug}-${sku.stock_id}`}
                                                                             value={wholesalePriceData[index]?.[fieldIndex]?.price || ''}
                                                                             onChange={(e) =>
-                                                                                handleSkuData(e.target.value, sku.stock_id, field.price_field_slug, index, fieldIndex,field.id)
+                                                                                handleSkuData(e.target.value, sku.stock_id, field.price_field_slug, index, fieldIndex, field.id)
                                                                             }
                                                                         />
                                                                     </Table.Th>
@@ -564,13 +600,18 @@ function _SkuManagement(props) {
                                                                             onClick={() => {
                                                                                 modals.openConfirmModal({
                                                                                     title: (
-                                                                                        <Text size="md"> {t("FormConfirmationTitle")}</Text>
+                                                                                        <Text
+                                                                                            size="md"> {t("FormConfirmationTitle")}</Text>
                                                                                     ),
                                                                                     children: (
-                                                                                        <Text size="sm"> {t("FormConfirmationMessage")}</Text>
+                                                                                        <Text
+                                                                                            size="sm"> {t("FormConfirmationMessage")}</Text>
                                                                                     ),
-                                                                                    labels: { confirm: 'Confirm', cancel: 'Cancel' },
-                                                                                    confirmProps: { color: 'red.6' },
+                                                                                    labels: {
+                                                                                        confirm: 'Confirm',
+                                                                                        cancel: 'Cancel'
+                                                                                    },
+                                                                                    confirmProps: {color: 'red.6'},
                                                                                     onCancel: () => console.log('Cancel'),
                                                                                     onConfirm: () => {
                                                                                         dispatch(deleteEntityData('inventory/product/stock/sku/' + sku.stock_id))
