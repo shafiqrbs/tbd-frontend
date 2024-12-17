@@ -32,10 +32,9 @@ function MarketingExecutiveTable() {
     const height = mainAreaHeight - 98; //TabList height 104
     const perPage = 50;
     const [page, setPage] = useState(1);
+    const [fetching,setFetching] = useState(true)
 
-    const fetching = useSelector((state) => state.inventoryCrudSlice.fetching)
     const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword)
-    const indexData = useSelector((state) => state.inventoryCrudSlice.indexEntityData)
     const entityDataDelete = useSelector((state) => state.inventoryCrudSlice.entityDataDelete)
     const productCategoryFilterData = useSelector((state) => state.inventoryCrudSlice.productCategoryFilterData)
 
@@ -62,18 +61,37 @@ function MarketingExecutiveTable() {
     }, [entityDataDelete]);
 
 
+    const [indexData,setIndexData] = useState([])
+
     useEffect(() => {
-        const value = {
-            url: 'inventory/category-group',
-            param: {
-                term: searchKeyword,
-                type: 'category',
-                page: page,
-                offset: perPage
+        const fetchData = async () => {
+            setFetching(true)
+            const value = {
+                url: 'inventory/category-group',
+                param: {
+                    term: searchKeyword,
+                    type: 'category',
+                    page: page,
+                    offset: perPage
+                }
+            };
+
+            try {
+                const resultAction = await dispatch(getIndexEntityData(value));
+
+                if (getIndexEntityData.rejected.match(resultAction)) {
+                    console.error('Error:', resultAction);
+                } else if (getIndexEntityData.fulfilled.match(resultAction)) {
+                    setIndexData(resultAction.payload);
+                    setFetching(false)
+                }
+            } catch (err) {
+                console.error('Unexpected error:', err);
             }
-        }
-        dispatch(getIndexEntityData(value))
-    }, [fetching]);
+        };
+
+        fetchData();
+    }, [dispatch, searchKeyword, page]);
 
     return (
         <>
