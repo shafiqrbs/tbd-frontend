@@ -75,7 +75,8 @@ function StockTable() {
                 sku: productFilterData.sku,
                 sales_price: productFilterData.sales_price,
                 page: page,
-                offset: perPage
+                offset: perPage,
+                type:'stock'
             }
         }
         dispatch(getIndexEntityData(value))

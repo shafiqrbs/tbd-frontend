@@ -79,6 +79,7 @@ function ProductTable() {
                     sales_price: productFilterData.sales_price,
                     page: page,
                     offset: perPage,
+                    type:'product'
                 },
             };
 

@@ -43,19 +43,15 @@ import classes from "../../../assets/css/FeaturesCards.module.css";
 import getConfigData from "../../global-hook/config-data/getConfigData.js";
 
 function MainDashboard(props) {
+  const configData = getConfigData();
+
   const { t, i18n } = useTranslation();
   const height = props.height - 105; //TabList height 104
   const navigate = useNavigate();
   const theme = useMantineTheme();
-  localStorage.setItem('config-data', JSON.stringify(getConfigData()));
-
-  const [configData, setConfigData] = useState(null);
   useEffect(() => {
     const checkConfigData = () => {
-      const storedConfigData = localStorage.getItem('config-data');
-      if (storedConfigData) {
-        setConfigData(JSON.parse(storedConfigData));
-      } else {
+      if (!configData) {
         navigate("/login");
       }
     };
