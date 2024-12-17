@@ -56,13 +56,11 @@ function _PurchaseTable() {
   const [printPos, setPrintPos] = useState(false);
   const navigate = useNavigate();
   const [selectedRow, setSelectedRow] = useState("");
+  const [indexData,setIndexData] = useState([])
+  const [fetching,setFetching] = useState(true)
 
-  const fetching = useSelector((state) => state.inventoryCrudSlice.fetching);
   const purchaseFilterData = useSelector(
     (state) => state.inventoryCrudSlice.purchaseFilterData
-  );
-  const indexData = useSelector(
-    (state) => state.inventoryCrudSlice.indexEntityData
   );
   const entityDataDelete = useSelector(
     (state) => state.inventoryCrudSlice.entityDataDelete
@@ -113,35 +111,52 @@ function _PurchaseTable() {
     ));
 
   useEffect(() => {
-    const options = {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
+    const fetchData = async () => {
+      setFetching(true)
+      const options = {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+      };
+
+      const value = {
+        url: "inventory/purchase",
+        param: {
+          term: purchaseFilterData.searchKeyword,
+          vendor_id: purchaseFilterData.vendor_id,
+          start_date:
+              purchaseFilterData.start_date &&
+              new Date(purchaseFilterData.start_date).toLocaleDateString(
+                  "en-CA",
+                  options
+              ),
+          end_date:
+              purchaseFilterData.end_date &&
+              new Date(purchaseFilterData.end_date).toLocaleDateString(
+                  "en-CA",
+                  options
+              ),
+          page: page,
+          offset: perPage,
+        },
+      };
+
+      try {
+        const resultAction = await dispatch(getIndexEntityData(value));
+
+        if (getIndexEntityData.rejected.match(resultAction)) {
+          console.error('Error:', resultAction);
+        } else if (getIndexEntityData.fulfilled.match(resultAction)) {
+          setIndexData(resultAction.payload);
+          setFetching(false)
+        }
+      } catch (err) {
+        console.error('Unexpected error:', err);
+      }
     };
 
-    const value = {
-      url: "inventory/purchase",
-      param: {
-        term: purchaseFilterData.searchKeyword,
-        vendor_id: purchaseFilterData.vendor_id,
-        start_date:
-          purchaseFilterData.start_date &&
-          new Date(purchaseFilterData.start_date).toLocaleDateString(
-            "en-CA",
-            options
-          ),
-        end_date:
-          purchaseFilterData.end_date &&
-          new Date(purchaseFilterData.end_date).toLocaleDateString(
-            "en-CA",
-            options
-          ),
-        page: page,
-        offset: perPage,
-      },
-    };
-    dispatch(getIndexEntityData(value));
-  }, [fetching]);
+    fetchData();
+  }, [purchaseFilterData,page]);
 
   useEffect(() => {
     dispatch(setDeleteMessage(""));

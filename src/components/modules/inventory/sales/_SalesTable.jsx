@@ -51,14 +51,16 @@ function _SalesTable() {
     const [printA4, setPrintA4] = useState(false);
     const [printPos, setPrintPos] = useState(false);
     const [checked, setChecked] = useState(false);
+    const [indexData,setIndexData] = useState([])
+    const [fetching,setFetching] = useState(true)
+
+
 
     useEffect(() => {
         dispatch(setSearchKeyword(''))
     }, [])
 
-    const fetching = useSelector((state) => state.inventoryCrudSlice.fetching)
     const salesFilterData = useSelector((state) => state.inventoryCrudSlice.salesFilterData)
-    const indexData = useSelector((state) => state.inventoryCrudSlice.indexEntityData)
     const entityDataDelete = useSelector((state) => state.inventoryCrudSlice.entityDataDelete)
 
     const [loading, setLoading] = useState(true);
@@ -106,24 +108,41 @@ function _SalesTable() {
     }, [entityDataDelete]);
 
     useEffect(() => {
-        const options = {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit'
-        };
-        const value = {
-            url: 'inventory/sales',
-            param: {
-                term: salesFilterData.searchKeyword,
-                customer_id: salesFilterData.customer_id,
-                start_date: salesFilterData.start_date && new Date(salesFilterData.start_date).toLocaleDateString("en-CA", options),
-                end_date: salesFilterData.end_date && new Date(salesFilterData.end_date).toLocaleDateString("en-CA", options),
-                page: page,
-                offset: perPage
+        const fetchData = async () => {
+            setFetching(true)
+            const options = {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit'
+            };
+            const value = {
+                url: 'inventory/sales',
+                param: {
+                    term: salesFilterData.searchKeyword,
+                    customer_id: salesFilterData.customer_id,
+                    start_date: salesFilterData.start_date && new Date(salesFilterData.start_date).toLocaleDateString("en-CA", options),
+                    end_date: salesFilterData.end_date && new Date(salesFilterData.end_date).toLocaleDateString("en-CA", options),
+                    page: page,
+                    offset: perPage
+                }
             }
-        }
-        dispatch(getIndexEntityData(value))
-    }, [fetching]);
+
+            try {
+                const resultAction = await dispatch(getIndexEntityData(value));
+
+                if (getIndexEntityData.rejected.match(resultAction)) {
+                    console.error('Error:', resultAction);
+                } else if (getIndexEntityData.fulfilled.match(resultAction)) {
+                    setIndexData(resultAction.payload);
+                    setFetching(false)
+                }
+            } catch (err) {
+                console.error('Unexpected error:', err);
+            }
+        };
+
+        fetchData();
+    }, [salesFilterData,page]);
 
     const [checkList, setCheckList] = useState({});
     const CheckItemsHandel = (e, item) => {

@@ -49,11 +49,11 @@ function InvoiceBatchTable() {
     const [addTransactionDrawer, setAddTransactionDrawer] = useState(false);
     const perPage = 50;
     const [page, setPage] = useState(1);
+    const [indexData,setIndexData] = useState([])
+    const [fetching,setFetching] = useState(true)
 
-    const fetching = useSelector((state) => state.inventoryCrudSlice.fetching)
     const invoiceBatchFilterData = useSelector((state) => state.inventoryCrudSlice.invoiceBatchFilterData)
     const salesFilterData = useSelector((state) => state.inventoryCrudSlice.salesFilterData)
-    const indexData = useSelector((state) => state.inventoryCrudSlice.indexEntityData)
 
     useEffect(() => {
         dispatch(setSearchKeyword(''))
@@ -68,7 +68,7 @@ function InvoiceBatchTable() {
             ['end_date']: '',
             ['searchKeyword']: '',
         }));
-        dispatch(setFetching(true))
+        setFetching(true)
     }, [])
 
     const [selectedRow, setSelectedRow] = useState('');
@@ -103,25 +103,45 @@ function InvoiceBatchTable() {
             <Table.Td ta="right" fz="xs" width={'100'}>{element.sub_total}</Table.Td>
         </Table.Tr>
     ));
+
+
     useEffect(() => {
-        const options = {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit'
-        };
-        const value = {
-            url: 'inventory/invoice-batch',
-            param: {
-                term: invoiceBatchFilterData.searchKeyword,
-                customer_id: invoiceBatchFilterData.customer_id,
-                start_date: invoiceBatchFilterData.start_date && new Date(invoiceBatchFilterData.start_date).toLocaleDateString("en-CA", options),
-                end_date: invoiceBatchFilterData.end_date && new Date(invoiceBatchFilterData.end_date).toLocaleDateString("en-CA", options),
-                page: page,
-                offset: perPage
+        const fetchData = async () => {
+            setFetching(true)
+            const options = {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit'
+            };
+            const value = {
+                url: 'inventory/invoice-batch',
+                param: {
+                    term: invoiceBatchFilterData.searchKeyword,
+                    customer_id: invoiceBatchFilterData.customer_id,
+                    start_date: invoiceBatchFilterData.start_date && new Date(invoiceBatchFilterData.start_date).toLocaleDateString("en-CA", options),
+                    end_date: invoiceBatchFilterData.end_date && new Date(invoiceBatchFilterData.end_date).toLocaleDateString("en-CA", options),
+                    page: page,
+                    offset: perPage
+                }
             }
-        }
-        dispatch(getIndexEntityData(value))
-    }, [fetching]);
+
+            try {
+                const resultAction = await dispatch(getIndexEntityData(value));
+
+                if (getIndexEntityData.rejected.match(resultAction)) {
+                    console.error('Error:', resultAction);
+                } else if (getIndexEntityData.fulfilled.match(resultAction)) {
+                    setIndexData(resultAction.payload);
+                    setFetching(false)
+                }
+            } catch (err) {
+                console.error('Unexpected error:', err);
+            }
+        };
+
+        fetchData();
+    }, [invoiceBatchFilterData,page]);
+
 
 
     return (
