@@ -10,7 +10,7 @@ import classes from '../../../assets/css/HeaderSearch.module.css';
 import {
     IconInfoCircle, IconTrash, IconSearch, IconSettings
 } from "@tabler/icons-react";
-import { useNavigate } from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 
 
 function AccountingHeaderNavbar(props) {
@@ -19,16 +19,18 @@ function AccountingHeaderNavbar(props) {
     const dispatch = useDispatch();
     const [opened, { toggle }] = useDisclosure(false);
     const navigate = useNavigate();
+    const location = useLocation();
+
     const links = [
         { link: '/accounting/voucher-entry', label: t('VoucherEntry') },
-        { link: '/accounting/Ledger', label: t('AccountLedger') },
+        { link: '/accounting/ledger', label: t('AccountLedger') },
         { link: '/accounting/reports', label: t('AccountReports') },
     ];
     const items = links.map((link) => (
         <a
             key={link.label}
             href={link.link}
-            className={classes.link}
+            className={location.pathname==link.link ? classes.active :classes.link}
             onClick={(event) => {
                 event.preventDefault();
                 navigate(link.link)

@@ -11,7 +11,7 @@ import {
     IconBuildingStore,
     IconInfoCircle, IconMap2, IconSearch, IconSettings
 } from "@tabler/icons-react";
-import { useNavigate } from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 
 
 function DomainHeaderNavbar(props) {
@@ -20,6 +20,8 @@ function DomainHeaderNavbar(props) {
     const dispatch = useDispatch();
     const [opened, { toggle }] = useDisclosure(false);
     const navigate = useNavigate();
+    const location = useLocation();
+
     const links = [
         { link: '/domain', label: t('Domains') },
     ];
@@ -27,7 +29,7 @@ function DomainHeaderNavbar(props) {
         <a
             key={link.label}
             href={link.link}
-            className={classes.link}
+            className={location.pathname==link.link ? classes.active :classes.link}
             onClick={(event) => {
                 event.preventDefault();
                 navigate(link.link)

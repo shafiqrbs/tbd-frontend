@@ -28,7 +28,7 @@ import {
   IconSettings,
   IconTable,
 } from "@tabler/icons-react";
-import { useNavigate } from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 
 function _SalesPurchaseHeaderNavbar(props) {
   const { t, i18n } = useTranslation();
@@ -43,11 +43,13 @@ function _SalesPurchaseHeaderNavbar(props) {
   const dispatch = useDispatch();
   const [opened, { toggle }] = useDisclosure(false);
   const navigate = useNavigate();
+  const location = useLocation();
+
   const items = links.map((link) => (
     <a
       key={link.label}
       href={link.link}
-      className={classes.link}
+      className={location.pathname==link.link ? classes.active :classes.link}
       onClick={(event) => {
         event.preventDefault();
         navigate(link.link);

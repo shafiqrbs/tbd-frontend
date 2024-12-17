@@ -65,7 +65,7 @@ function ProductionHeaderNavbar(props) {
             <a
                 key={link.link}
                 href={link.link}
-                className={classes.link}
+                className={location.pathname==link.link ? classes.active :classes.link}
                 onClick={(event) => {
                     if (link.label === t('NewBatch') && link.onClick) {
                         link.onClick(event);  // Trigger custom click for NewBatch

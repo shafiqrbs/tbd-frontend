@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDisclosure } from "@mantine/hooks";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import { ActionIcon, Group, Menu, rem, Text } from "@mantine/core";
 import classes from "../../../assets/css/HeaderSearch.module.css";
 import { IconCreditCard, IconInfoCircle } from "@tabler/icons-react";
@@ -10,6 +10,8 @@ export default function ProcurementHeaderNavbar(props) {
   const { pageTitle, roles } = props;
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
+  const location = useLocation();
+
   const links = [
     {
       link: "/procurement/requisition",
@@ -24,7 +26,7 @@ export default function ProcurementHeaderNavbar(props) {
     <a
       key={link.label}
       href={link.link}
-      className={classes.link}
+      className={location.pathname==link.link ? classes.active :classes.link}
       onClick={(event) => {
         event.preventDefault();
         navigate(link.link, { replace: true });

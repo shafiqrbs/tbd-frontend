@@ -9,12 +9,14 @@ import {
   IconMap2,
   IconLetterMSmall,
 } from "@tabler/icons-react";
-import { useNavigate } from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 
 function CoreHeaderNavbar(props) {
   const { pageTitle, roles, currancySymbol, allowZeroPercentage } = props;
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
+  const location = useLocation();
+
   const links = [
     { link: "/core/customer", label: t("Customers") },
     { link: "/core/vendor", label: t("Vendors") },
@@ -24,7 +26,7 @@ function CoreHeaderNavbar(props) {
     <a
       key={link.label}
       href={link.link}
-      className={classes.link}
+      className={location.pathname==link.link ? classes.active :classes.link}
       onClick={(event) => {
         event.preventDefault();
         navigate(link.link, { replace: true });
