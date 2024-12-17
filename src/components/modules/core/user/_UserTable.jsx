@@ -25,10 +25,9 @@ function _UserTable() {
   const { t, i18n } = useTranslation();
   const { isOnline, mainAreaHeight } = useOutletContext();
   const height = mainAreaHeight - 98; //TabList height 104
+  const [fetching,setFetching] = useState(true)
 
-  const fetching = useSelector((state) => state.crudSlice.fetching);
   const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword);
-  const indexData = useSelector((state) => state.crudSlice.indexEntityData);
   const userFilterData = useSelector((state) => state.crudSlice.userFilterData);
   const entityDataDelete = useSelector(
     (state) => state.crudSlice.entityDataDelete
@@ -42,20 +41,39 @@ function _UserTable() {
   const users = JSON.parse(localStorage.getItem("core-users"));
   const [userObject, setUserObject] = useState(null);
 
+  const [indexData,setIndexData] = useState([])
+
   useEffect(() => {
-    const value = {
-      url: "core/user",
-      param: {
-        term: searchKeyword,
-        name: userFilterData.name,
-        mobile: userFilterData.mobile,
-        email: userFilterData.email,
-        page: page,
-        offset: perPage,
-      },
+    const fetchData = async () => {
+      setFetching(true)
+      const value = {
+        url: "core/user",
+        param: {
+          term: searchKeyword,
+          name: userFilterData.name,
+          mobile: userFilterData.mobile,
+          email: userFilterData.email,
+          page: page,
+          offset: perPage,
+        }
+      };
+
+      try {
+        const resultAction = await dispatch(getIndexEntityData(value));
+
+        if (getIndexEntityData.rejected.match(resultAction)) {
+          console.error('Error:', resultAction);
+        } else if (getIndexEntityData.fulfilled.match(resultAction)) {
+          setIndexData(resultAction.payload);
+          setFetching(false)
+        }
+      } catch (err) {
+        console.error('Unexpected error:', err);
+      }
     };
-    dispatch(getIndexEntityData(value));
-  }, [fetching]);
+
+    fetchData();
+  }, [dispatch, searchKeyword, userFilterData, page]);
 
   useEffect(() => {
     dispatch(setDeleteMessage(""));

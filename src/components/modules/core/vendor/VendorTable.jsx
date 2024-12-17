@@ -32,9 +32,8 @@ function VendorTable() {
     const perPage = 50;
     const [page, setPage] = useState(1);
 
-    const fetching = useSelector((state) => state.crudSlice.fetching)
+    const [fetching,setFetching] = useState(true)
     const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword)
-    const indexData = useSelector((state) => state.crudSlice.indexEntityData)
     const vendorFilterData = useSelector((state) => state.crudSlice.vendorFilterData)
     const entityDataDelete = useSelector((state) => state.crudSlice.entityDataDelete)
     const coreVendors = JSON.parse(localStorage.getItem('core-vendors') || '[]');
@@ -63,20 +62,39 @@ function VendorTable() {
     }, [entityDataDelete]);
 
 
+    const [indexData,setIndexData] = useState([])
+
     useEffect(() => {
-        const value = {
-            url: 'core/vendor',
-            param: {
-                term: searchKeyword,
-                name: vendorFilterData.name,
-                mobile: vendorFilterData.mobile,
-                company_name: vendorFilterData.company_name,
-                page: page,
-                offset: perPage
+        const fetchData = async () => {
+            setFetching(true)
+            const value = {
+                url: 'core/vendor',
+                param: {
+                    term: searchKeyword,
+                    name: vendorFilterData.name,
+                    mobile: vendorFilterData.mobile,
+                    company_name: vendorFilterData.company_name,
+                    page: page,
+                    offset: perPage
+                }
+            };
+
+            try {
+                const resultAction = await dispatch(getIndexEntityData(value));
+
+                if (getIndexEntityData.rejected.match(resultAction)) {
+                    console.error('Error:', resultAction);
+                } else if (getIndexEntityData.fulfilled.match(resultAction)) {
+                    setIndexData(resultAction.payload);
+                    setFetching(false)
+                }
+            } catch (err) {
+                console.error('Unexpected error:', err);
             }
-        }
-        dispatch(getIndexEntityData(value))
-    }, [fetching]);
+        };
+
+        fetchData();
+    }, [dispatch, searchKeyword, vendorFilterData, page]);
 
     return (
         <>

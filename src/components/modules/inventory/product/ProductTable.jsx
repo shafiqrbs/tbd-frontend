@@ -44,9 +44,7 @@ function ProductTable() {
     const [viewDrawer, setViewDrawer] = useState(false)
 
     const [fetching,setFetching] = useState(true)
-    // const fetching = useSelector((state) => state.crudSlice.fetching)
     const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword)
-    // const indexData = useSelector((state) => state.crudSlice.indexEntityData)
     const productFilterData = useSelector((state) => state.inventoryCrudSlice.productFilterData)
     const entityDataDelete = useSelector((state) => state.inventoryCrudSlice.entityDataDelete)
 

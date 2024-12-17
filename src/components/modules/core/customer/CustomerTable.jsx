@@ -13,7 +13,7 @@ import {
     editEntityData,
     getIndexEntityData,
     setDeleteMessage,
-    setFetching, setFormLoading,
+    setFormLoading,
     setInsertType,
 } from "../../../../store/core/crudSlice.js";
 import KeywordSearch from "../../filter/KeywordSearch";
@@ -32,12 +32,11 @@ function CustomerTable() {
     const height = mainAreaHeight - 98; //TabList height 104
     const coreCustomers = JSON.parse(localStorage.getItem('core-customers') || '[]');
 
-    const perPage = 50;
+    const perPage = 20;
     const [page, setPage] = useState(1);
 
-    const fetching = useSelector((state) => state.crudSlice.fetching)
+    const [fetching,setFetching] = useState(true)
     const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword)
-    const indexData = useSelector((state) => state.crudSlice.indexEntityData)
     const customerFilterData = useSelector((state) => state.crudSlice.customerFilterData)
     const [customerObject, setCustomerObject] = useState({});
 
@@ -60,24 +59,43 @@ function CustomerTable() {
             });
 
             setTimeout(() => {
-                dispatch(setFetching(true))
+                setFetching(true)
             }, 700)
         }
     }, [entityDataDelete]);
 
+    const [indexData,setIndexData] = useState([])
+
     useEffect(() => {
-        const value = {
-            url: 'core/customer',
-            param: {
-                term: searchKeyword,
-                name: customerFilterData.name,
-                mobile: customerFilterData.mobile,
-                page: page,
-                offset: perPage
+        const fetchData = async () => {
+            setFetching(true)
+            const value = {
+                url: 'core/customer',
+                param: {
+                    term: searchKeyword,
+                    name: customerFilterData.name,
+                    mobile: customerFilterData.mobile,
+                    page: page,
+                    offset: perPage
+                },
+            };
+
+            try {
+                const resultAction = await dispatch(getIndexEntityData(value));
+
+                if (getIndexEntityData.rejected.match(resultAction)) {
+                    console.error('Error:', resultAction);
+                } else if (getIndexEntityData.fulfilled.match(resultAction)) {
+                    setIndexData(resultAction.payload);
+                    setFetching(false)
+                }
+            } catch (err) {
+                console.error('Unexpected error:', err);
             }
-        }
-        dispatch(getIndexEntityData(value))
-    }, [fetching]);
+        };
+
+        fetchData();
+    }, [dispatch, searchKeyword, customerFilterData, page]);
 
     return (
         <>
@@ -208,7 +226,7 @@ function CustomerTable() {
                     page={page}
                     onPageChange={(p) => {
                         setPage(p)
-                        dispatch(setFetching(true))
+                        setFetching(true)
                     }}
                     loaderSize="xs"
                     loaderColor="grape"
