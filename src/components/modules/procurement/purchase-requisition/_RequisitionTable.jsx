@@ -47,8 +47,8 @@ export default function _RequisitionTable(props) {
   const [loading, setLoading] = useState(true);
   const [selectedInvoice, setSelectedInvoice] = useState(null);
   const navigate = useNavigate();
-  const [printA4, setPrintA4] = useState(false)
-  const [printPos, setPrintPos] = useState(false)
+  const [printA4, setPrintA4] = useState(false);
+  const [printPos, setPrintPos] = useState(false);
 
   useEffect(() => {
     dispatch(setFetching(true));
@@ -190,6 +190,7 @@ export default function _RequisitionTable(props) {
                       title: t("Total Items"),
                       render: (data) => data.items?.length ?? 0,
                       textAlign: "center",
+                      width: "300",
                     },
                     {
                       accessor: "expected_date",
@@ -552,12 +553,22 @@ export default function _RequisitionTable(props) {
           </Grid.Col>
         </Grid>
       </Box>
-      {printA4 && <div style={{ display: "none" }}>
-                <InvoiceBatchPrintA4 invoiceBatchData={selectedInvoice} setPrintA4={setPrintA4} />
-            </div>}
-            {printPos && <div style={{ display: "none" }}>
-                <InvoiceBatchPrintPos invoiceBatchData={selectedInvoice} setPrintPos={setPrintPos} />
-            </div>}
+      {printA4 && (
+        <div style={{ display: "none" }}>
+          <InvoiceBatchPrintA4
+            invoiceBatchData={selectedInvoice}
+            setPrintA4={setPrintA4}
+          />
+        </div>
+      )}
+      {printPos && (
+        <div style={{ display: "none" }}>
+          <InvoiceBatchPrintPos
+            invoiceBatchData={selectedInvoice}
+            setPrintPos={setPrintPos}
+          />
+        </div>
+      )}
     </>
   );
 }

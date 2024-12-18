@@ -50,6 +50,7 @@ import RequisitionInvoice from "./components/modules/procurement/purchase-requis
 import BranchManagementIndex from "./components/modules/domain/branch-management/BranchManagementIndex.jsx";
 import AccountingConfig from "./components/modules/accounting/config/ConfigIndex";
 import FileUploadIndex from "./components/modules/core/file-upload/FileUploadIndex.jsx";
+import MatrixIndex from "./components/modules/procurement/requistion-matrix/MatrixIndex.jsx";
 
 function AppRoute() {
   return (
@@ -153,6 +154,7 @@ function AppRoute() {
         <Route path="/procurement/">
           <Route path="requisition" element={<Requisition />} />
           <Route path="new-requisition" element={<RequisitionInvoice />} />
+          <Route path="requisition-matrix" element={<MatrixIndex />} />
         </Route>
         <Route path="sitemap" element={<Sitemap />} />
         <Route path="/pos/">
