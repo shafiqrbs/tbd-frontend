@@ -96,7 +96,7 @@ function ProductTable() {
         };
 
         fetchData();
-    }, [dispatch, searchKeyword, productFilterData, page, perPage, fetching]);
+    }, [dispatch, searchKeyword, productFilterData, page, perPage]);
 
     useEffect(() => {
         dispatch(setDeleteMessage(''))
