@@ -17,7 +17,7 @@ import PosTable from "./PosTable.jsx";
 import classes from "./PosTable.module.css";
 import PosSales from "./PosSales.jsx";
 
-function PosIndex() {
+function RestaurantIndex() {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const { id } = useParams();
@@ -47,14 +47,14 @@ function PosIndex() {
     { id: 18, time: "08:01:49 PM" },
   ]);
 
-  useEffect(() => {
-    if (id) {
-      dispatch(setInsertType("update"));
-    } else if (!id) {
-      dispatch(setInsertType("create"));
-      navigate("/pos/restaurent", { replace: true });
-    }
-  }, [id, dispatch, navigate]);
+  // useEffect(() => {
+  //   if (id) {
+  //     dispatch(setInsertType("update"));
+  //   } else if (!id) {
+  //     dispatch(setInsertType("create"));
+  //     navigate("/pos/bakery", { replace: true });
+  //   }
+  // }, [id, dispatch, navigate]);
 
   return (
     <>
@@ -99,4 +99,4 @@ function PosIndex() {
   );
 }
 
-export default PosIndex;
+export default RestaurantIndex;
