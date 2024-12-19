@@ -15,14 +15,15 @@ import _ShortcutTable from "../../shortcut/_ShortcutTable";
 import { DataTable } from "mantine-datatable";
 import matrixTable from "./Table.module.css";
 import { useSelector } from "react-redux";
-import { useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useOutletContext } from "react-router-dom";
 import { IconX, IconDeviceFloppy } from "@tabler/icons-react";
 
 const data = [
   {
-    product: "Peasdasdssfsdfdsfsdfdsfsdfsdfda sdasdsfsdfsdfaasdasdasdasdasdasdsdasdasdasd",
+    product:
+      "Peasdasdssfsdfdsfsdfdsfsdfsdfda sdasdsfsdfsdfaasdasdasdasdasdasdsdasdasdasd",
     agora: 10,
     shopno: 5,
     apex: 8,
@@ -75,6 +76,258 @@ const data = [
     akhtar_furniture: 8,
     opening_stock: 10,
   },
+  {
+    product: "asd",
+    agora: 7,
+    shop2: 9,
+    apex: 6,
+    bata: 8,
+    bay: 8,
+    apple: 8,
+    kfc: 8,
+    secret_receipe: 8,
+    tasty_treat: 8,
+    khanas: 8,
+    kakoli_furniture: 8,
+    hatil: 8,
+    paris_furniture: 8,
+    akhtar_furniture: 8,
+    opening_stock: 10,
+  },
+  {
+    product: "Rubasber",
+    agora: 7,
+    shop2: 9,
+    apex: 6,
+    bata: 8,
+    bay: 8,
+    apple: 8,
+    kfc: 8,
+    secret_receipe: 8,
+    tasty_treat: 8,
+    khanas: 8,
+    kakoli_furniture: 8,
+    hatil: 8,
+    paris_furniture: 8,
+    akhtar_furniture: 8,
+    opening_stock: 10,
+  },
+  {
+    product: "Rasubber",
+    agora: 7,
+    shop2: 9,
+    apex: 6,
+    bata: 8,
+    bay: 8,
+    apple: 8,
+    kfc: 8,
+    secret_receipe: 8,
+    tasty_treat: 8,
+    khanas: 8,
+    kakoli_furniture: 8,
+    hatil: 8,
+    paris_furniture: 8,
+    akhtar_furniture: 8,
+    opening_stock: 10,
+  },
+  {
+    product: "Russbber",
+    agora: 7,
+    shop2: 9,
+    apex: 6,
+    bata: 8,
+    bay: 8,
+    apple: 8,
+    kfc: 8,
+    secret_receipe: 8,
+    tasty_treat: 8,
+    khanas: 8,
+    kakoli_furniture: 8,
+    hatil: 8,
+    paris_furniture: 8,
+    akhtar_furniture: 8,
+    opening_stock: 10,
+  },
+  {
+    product: "Raubber",
+    agora: 7,
+    shop2: 9,
+    apex: 6,
+    bata: 8,
+    bay: 8,
+    apple: 8,
+    kfc: 8,
+    secret_receipe: 8,
+    tasty_treat: 8,
+    khanas: 8,
+    kakoli_furniture: 8,
+    hatil: 8,
+    paris_furniture: 8,
+    akhtar_furniture: 8,
+    opening_stock: 10,
+  },
+  {
+    product: "12ubber",
+    agora: 7,
+    shop2: 9,
+    apex: 6,
+    bata: 8,
+    bay: 8,
+    apple: 8,
+    kfc: 8,
+    secret_receipe: 8,
+    tasty_treat: 8,
+    khanas: 8,
+    kakoli_furniture: 8,
+    hatil: 8,
+    paris_furniture: 8,
+    akhtar_furniture: 8,
+    opening_stock: 10,
+  },
+  {
+    product: "Ru12bber",
+    agora: 7,
+    shop2: 9,
+    apex: 6,
+    bata: 8,
+    bay: 8,
+    apple: 8,
+    kfc: 8,
+    secret_receipe: 8,
+    tasty_treat: 8,
+    khanas: 8,
+    kakoli_furniture: 8,
+    hatil: 8,
+    paris_furniture: 8,
+    akhtar_furniture: 8,
+    opening_stock: 10,
+  },
+  {
+    product: "Rubasber",
+    agora: 7,
+    shop2: 9,
+    apex: 6,
+    bata: 8,
+    bay: 8,
+    apple: 8,
+    kfc: 8,
+    secret_receipe: 8,
+    tasty_treat: 8,
+    khanas: 8,
+    kakoli_furniture: 8,
+    hatil: 8,
+    paris_furniture: 8,
+    akhtar_furniture: 8,
+    opening_stock: 10,
+  },
+  {
+    product: "Rubreber",
+    agora: 7,
+    shop2: 9,
+    apex: 6,
+    bata: 8,
+    bay: 8,
+    apple: 8,
+    kfc: 8,
+    secret_receipe: 8,
+    tasty_treat: 8,
+    khanas: 8,
+    kakoli_furniture: 8,
+    hatil: 8,
+    paris_furniture: 8,
+    akhtar_furniture: 8,
+    opening_stock: 10,
+  },
+  {
+    product: "Ruasdbber",
+    agora: 7,
+    shop2: 9,
+    apex: 6,
+    bata: 8,
+    bay: 8,
+    apple: 8,
+    kfc: 8,
+    secret_receipe: 8,
+    tasty_treat: 8,
+    khanas: 8,
+    kakoli_furniture: 8,
+    hatil: 8,
+    paris_furniture: 8,
+    akhtar_furniture: 8,
+    opening_stock: 10,
+  },
+  {
+    product: "Rubbasder",
+    agora: 7,
+    shop2: 9,
+    apex: 6,
+    bata: 8,
+    bay: 8,
+    apple: 8,
+    kfc: 8,
+    secret_receipe: 8,
+    tasty_treat: 8,
+    khanas: 8,
+    kakoli_furniture: 8,
+    hatil: 8,
+    paris_furniture: 8,
+    akhtar_furniture: 8,
+    opening_stock: 10,
+  },
+  {
+    product: "Rubasdber",
+    agora: 7,
+    shop2: 9,
+    apex: 6,
+    bata: 8,
+    bay: 8,
+    apple: 8,
+    kfc: 8,
+    secret_receipe: 8,
+    tasty_treat: 8,
+    khanas: 8,
+    kakoli_furniture: 8,
+    hatil: 8,
+    paris_furniture: 8,
+    akhtar_furniture: 8,
+    opening_stock: 10,
+  },
+  {
+    product: "Rppubber",
+    agora: 7,
+    shop2: 9,
+    apex: 6,
+    bata: 8,
+    bay: 8,
+    apple: 8,
+    kfc: 8,
+    secret_receipe: 8,
+    tasty_treat: 8,
+    khanas: 8,
+    kakoli_furniture: 8,
+    hatil: 8,
+    paris_furniture: 8,
+    akhtar_furniture: 8,
+    opening_stock: 10,
+  },
+  {
+    product: "Rasdubber",
+    agora: 7,
+    shop2: 9,
+    apex: 6,
+    bata: 8,
+    bay: 8,
+    apple: 8,
+    kfc: 8,
+    secret_receipe: 8,
+    tasty_treat: 8,
+    khanas: 8,
+    kakoli_furniture: 8,
+    hatil: 8,
+    paris_furniture: 8,
+    akhtar_furniture: 8,
+    opening_stock: 10,
+  },
 ];
 const shops = [
   "Agora",
@@ -100,6 +353,50 @@ export default function MatrixTable(props) {
   const { isOnline, mainAreaHeight } = useOutletContext();
   const tableHeight = mainAreaHeight - 106;
   const [saveCreateLoading, setSaveCreateLoading] = useState(false);
+  const leftTableRef = useRef(null);
+  const centerTableRef = useRef(null);
+  const rightTableRef = useRef(null);
+
+  useEffect(() => {
+    const syncScroll = (sourceRef, targetRefs) => {
+      const handleScroll = () => {
+        targetRefs.forEach((ref) => {
+          if (ref.current) {
+            ref.current.scrollTop = sourceRef.current.scrollTop;
+          }
+        });
+      };
+
+      if (sourceRef.current) {
+        sourceRef.current.addEventListener("scroll", handleScroll);
+      }
+
+      return () => {
+        if (sourceRef.current) {
+          sourceRef.current.removeEventListener("scroll", handleScroll);
+        }
+      };
+    };
+
+    const cleanupLeft = syncScroll(leftTableRef, [
+      centerTableRef,
+      rightTableRef,
+    ]);
+    const cleanupCenter = syncScroll(centerTableRef, [
+      leftTableRef,
+      rightTableRef,
+    ]);
+    const cleanupRight = syncScroll(rightTableRef, [
+      leftTableRef,
+      centerTableRef,
+    ]);
+
+    return () => {
+      cleanupLeft();
+      cleanupCenter();
+      cleanupRight();
+    };
+  }, []);
   return (
     <>
       <Box>
@@ -130,6 +427,7 @@ export default function MatrixTable(props) {
                 <Grid columns={12} gutter={0}>
                   <Grid.Col span={2}>
                     <DataTable
+                      scrollViewportRef={leftTableRef}
                       classNames={{
                         root: matrixTable.root,
                         table: matrixTable.table,
@@ -142,7 +440,7 @@ export default function MatrixTable(props) {
                           accessor: "product",
                           title: "Product",
                           cellsClassName: matrixTable.idColumnCells,
-                          width : 100
+                          width: 100,
                         },
                       ]}
                       records={data}
@@ -150,10 +448,14 @@ export default function MatrixTable(props) {
                       loaderSize="xs"
                       loaderColor="grape"
                       height={tableHeight - 46}
+                      scrollAreaProps={{ type: "never" }}
                     />
                   </Grid.Col>
+
                   <Grid.Col span={8}>
                     <DataTable
+                      scrollAreaProps={{ type: "hover", scrollHideDelay: 1 }}
+                      scrollViewportRef={centerTableRef}
                       classNames={{
                         root: matrixTable.root,
                         table: matrixTable.table,
@@ -161,89 +463,59 @@ export default function MatrixTable(props) {
                         footer: matrixTable.footer,
                         pagination: matrixTable.pagination,
                       }}
-                      columns={[
-                        ...shops.map((shop) => ({
-                          accessor: shop.toLowerCase().replace(/\s+/g, "_"),
-                          title: shop,
-                          width: 150,
-                          render: (item) => {
-                            const shopKey = shop
-                              .toLowerCase()
-                              .replace(/\s+/g, "_"); // Dynamic key for shop
+                      columns={shops.map((shop) => ({
+                        accessor: shop.toLowerCase().replace(/\s+/g, "_"),
+                        title: shop,
+                        width: 150,
+                        render: (item) => {
+                          const shopKey = shop
+                            .toLowerCase()
+                            .replace(/\s+/g, "_");
+                          const [editedQuantity, setEditedQuantity] = useState(
+                            item[shopKey] || 0
+                          );
 
-                            const [editedQuantity, setEditedQuantity] =
-                              useState(item[shopKey] || 0); // Default quantity
+                          const handleQuantityChange = (e) => {
+                            const newQuantity = e.currentTarget.value;
+                            setEditedQuantity(newQuantity);
 
-                            const handleQuantityChange = (e) => {
-                              const newQuantity = e.currentTarget.value;
-                              setEditedQuantity(newQuantity);
-
-                              // Get the existing data
-                              const tempCardProducts = localStorage.getItem(
-                                "temp-sales-products"
-                              );
-                              const cardProducts = tempCardProducts
-                                ? JSON.parse(tempCardProducts)
-                                : [];
-
-                              // Update the relevant shop quantity
-                              const updatedProducts = cardProducts.map(
-                                (product) => {
-                                  if (product.product_id === item.product_id) {
-                                    return {
-                                      ...product,
-                                      [shopKey]: newQuantity, // Update specific shop quantity
-                                      sub_total:
-                                        newQuantity * (item.sales_price || 0), // Update sub-total
-                                    };
-                                  }
-                                  return product;
-                                }
-                              );
-                            };
-
-                            return (
-                              <TextInput
-                                type="number"
-                                size="xs"
-                                value={editedQuantity}
-                                onChange={handleQuantityChange}
-                              />
+                            const tempCardProducts = localStorage.getItem(
+                              "temp-sales-products"
                             );
-                          },
-                        })),
-                        // {
-                        //   accessor: "remaining_stock",
-                        //   title: "Remaining Stock",
-                        //   width: 150,
-                        //   pinned: true,
-                        // },
-                        // {
-                        //   accessor: "action",
-                        //   title: t("Action"),
-                        //   textAlign: "right",
-                        //   fixed: "right",
-                        //   render: (item) => (
-                        //     <Group gap={4} justify="right" wrap="nowrap">
-                        //       <Text fz={"xs"} fw={500}>
-                        //         8
-                        //       </Text>
-                        //       <ActionIcon
-                        //         size="sm"
-                        //         variant="subtle"
-                        //         color="red"
-                        //         onClick={() => {}}
-                        //       >
-                        //         <IconX
-                        //           size={16}
-                        //           style={{ width: "70%", height: "70%" }}
-                        //           stroke={1.5}
-                        //         />
-                        //       </ActionIcon>
-                        //     </Group>
-                        //   ),
-                        // },
-                      ]}
+                            const cardProducts = tempCardProducts
+                              ? JSON.parse(tempCardProducts)
+                              : [];
+
+                            const updatedProducts = cardProducts.map(
+                              (product) => {
+                                if (product.product_id === item.product_id) {
+                                  return {
+                                    ...product,
+                                    [shopKey]: newQuantity,
+                                    sub_total:
+                                      newQuantity * (item.sales_price || 0),
+                                  };
+                                }
+                                return product;
+                              }
+                            );
+
+                            localStorage.setItem(
+                              "temp-sales-products",
+                              JSON.stringify(updatedProducts)
+                            );
+                          };
+
+                          return (
+                            <TextInput
+                              type="number"
+                              size="xs"
+                              value={editedQuantity}
+                              onChange={handleQuantityChange}
+                            />
+                          );
+                        },
+                      }))}
                       records={data}
                       totalRecords={data.length}
                       loaderSize="xs"
@@ -251,8 +523,11 @@ export default function MatrixTable(props) {
                       height={tableHeight - 46}
                     />
                   </Grid.Col>
+
                   <Grid.Col span={2}>
                     <DataTable
+                      scrollAreaProps={{ type: "never" }}
+                      scrollViewportRef={rightTableRef}
                       classNames={{
                         root: matrixTable.root,
                         table: matrixTable.table,
@@ -269,34 +544,8 @@ export default function MatrixTable(props) {
                           accessor: "remaining_stock",
                           title: "Remaining Stock",
                         },
-                        // {
-                        //   accessor: "action",
-                        //   title: t("Action"),
-                        //   textAlign: "right",
-                        //   fixed: "right",
-                        //   render: (item) => (
-                        //     <Group gap={4} justify="right" wrap="nowrap">
-                        //       <Text fz={"xs"} fw={500}>
-                        //         8
-                        //       </Text>
-                        //       <ActionIcon
-                        //         size="sm"
-                        //         variant="subtle"
-                        //         color="red"
-                        //         onClick={() => {}}
-                        //       >
-                        //         <IconX
-                        //           size={16}
-                        //           style={{ width: "70%", height: "70%" }}
-                        //           stroke={1.5}
-                        //         />
-                        //       </ActionIcon>
-                        //     </Group>
-                        //   ),
-                        // },
                       ]}
                       records={data}
-                      pinFirstColumn
                       totalRecords={data.length}
                       loaderSize="xs"
                       loaderColor="grape"

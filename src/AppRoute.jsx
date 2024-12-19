@@ -154,11 +154,11 @@ function AppRoute() {
         <Route path="/procurement/">
           <Route path="requisition" element={<Requisition />} />
           <Route path="new-requisition" element={<RequisitionInvoice />} />
-          <Route path="requisition-matrix" element={<MatrixIndex />} />
+          <Route path="all" element={<MatrixIndex />} />
         </Route>
         <Route path="sitemap" element={<Sitemap />} />
         <Route path="/pos/">
-          <Route path="pos-index" element={<PosIndex />} />
+          <Route path="restaurent" element={<PosIndex />} />
         </Route>
         <Route path="sitemap" element={<Sitemap />} />
       </Route>
