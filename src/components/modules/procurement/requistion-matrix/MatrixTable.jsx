@@ -538,7 +538,7 @@ export default function MatrixTable(props) {
                       columns={[
                         {
                           accessor: "opening_stock",
-                          title: "Opening Stock",
+                          title: "Stock",
                         },
                         {
                           accessor: "remaining_stock",
