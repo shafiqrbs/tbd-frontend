@@ -102,13 +102,24 @@ export const showInstantEntityData = createAsyncThunk(
     }
 );
 
-export const updateEntityData = createAsyncThunk("update", async (value) => {
+/*export const updateEntityData = createAsyncThunk("update", async (value) => {
     try {
         const response = updateData(value);
         return response;
     } catch (error) {
         console.log('error', error.message);
         throw error;
+    }
+});*/
+
+// Thunk to update entity data
+export const updateEntityData = createAsyncThunk("update", async (value, { rejectWithValue }) => {
+    try {
+        const response = await updateData(value);
+        return response;
+    } catch (error) {
+        console.error('Error in updateEntityData:', error.message);
+        return rejectWithValue(error.response?.data || error.message);
     }
 });
 
@@ -320,7 +331,7 @@ const crudSlice = createSlice({
             state.showEntityData = action.payload.data.data
         })
 
-        builder.addCase(updateEntityData.fulfilled, (state, action) => {
+        /*builder.addCase(updateEntityData.fulfilled, (state, action) => {
             if ('success' === action.payload.data.message) {
                 state.validationMessage = action.payload.data
                 state.entityUpdateData = action.payload.data
@@ -328,7 +339,23 @@ const crudSlice = createSlice({
                 state.validationMessage = action.payload.data.data
                 state.validation = true
             }
-        })
+        })*/
+
+        // Handle the thunk response (fulfilled or otherwise) in your slice
+        builder.addCase(updateEntityData.fulfilled, (state, action) => {
+            if (action.payload.data && action.payload.data.message === 'success') {
+                state.validationMessage = action.payload.data;
+                state.entityUpdateData = action.payload.data;
+            } else {
+                state.validationMessage = action.payload.data?.data || 'Something went wrong';
+                state.validation = true;
+            }
+        });
+
+        builder.addCase(updateEntityData.rejected, (state, action) => {
+            state.validationMessage = action.payload || 'Failed to update entity data';
+            state.validation = true;
+        });
 
         builder.addCase(inlineUpdateEntityData.fulfilled,(state,action) => {
             /*if ( 404 === action.payload.data.status) {

@@ -30,6 +30,7 @@ function ProductUpdateForm(props) {
   const [isSize, setSize] = useState((configData?.is_size === 1));
   const [isModel, setModel] = useState((configData?.is_model === 1));
   const [isSku, setSku] = useState((configData?.is_sku === 1));
+  const [vatEnable, setVatEnable] = useState((configData.vat_enable === 1));
   const [isMultiPrice, setIsMultiPrice] = useState(
       (configData?.is_multi_price === 1)
   );
@@ -47,6 +48,7 @@ function ProductUpdateForm(props) {
     setSize((configData?.is_size === 1));
     setModel((configData?.is_model === 1));
     setSku((configData?.is_sku === 1));
+    setVatEnable((configData?.vat_enable === 1));
     setIsMultiPrice((configData?.is_multi_price === 1));
     setIs_product_gallery((configData?.is_product_gallery === 1));
   }, [configData]);
@@ -96,7 +98,12 @@ function ProductUpdateForm(props) {
           <Grid columns={24} gutter={8}>
             <Grid.Col span={8}>
               {/* vat integration */}
-              <_VatManagement id={id} />
+              {
+                vatEnable && (
+                      <_VatManagement id={id} />
+                  )
+              }
+
             </Grid.Col>
             {/* Measurement form */}
             {is_measurement && (

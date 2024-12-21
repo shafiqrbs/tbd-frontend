@@ -12,7 +12,7 @@ import Shortcut from "../../shortcut/Shortcut.jsx";
 import InputForm from "../../../form-builders/InputForm.jsx";
 import SelectForm from "../../../form-builders/SelectForm.jsx";
 import TextAreaForm from "../../../form-builders/TextAreaForm.jsx";
-import { setValidationData, updateEntityData } from "../../../../store/inventory/crudSlice.js";
+import {setValidationData, showInstantEntityData, updateEntityData} from "../../../../store/inventory/crudSlice.js";
 import getSettingBusinessModelDropdownData from "../../../global-hook/dropdown/getSettingBusinessModelDropdownData.js";
 import SwitchForm from "../../../form-builders/SwitchForm.jsx";
 import ImageUploadDropzone from "../../../form-builders/ImageUploadDropzone.jsx";
@@ -49,8 +49,6 @@ function ConfigurationForm() {
     const { isOnline, mainAreaHeight } = useOutletContext();
     const height = mainAreaHeight - 100; //TabList height 104
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
-    const validationMessage = useSelector((state) => state.inventoryCrudSlice.validationMessage)
-    const validation = useSelector((state) => state.inventoryCrudSlice.validation)
 
     const businessModelDropdown = getSettingBusinessModelDropdownData()
     const countryDropdown = getCountryDropdownData()
@@ -75,9 +73,6 @@ function ConfigurationForm() {
             sku_wearhouse: configData.sku_wearhouse,
             sku_category: configData.sku_category,
             vat_enable: configData.vat_enable,
-            vat_percent: configData.vat_percent,
-            ait_enable: configData.ait_enable,
-            ait_percent: configData.ait_percent,
             zakat_enable: configData.zakat_enable,
             zakat_percent: configData.zakat_percent,
             production_type: configData.production_type,
@@ -126,25 +121,6 @@ function ConfigurationForm() {
         }
     });
 
-
-    useEffect(() => {
-        if (validationMessage.message === 'success') {
-            notifications.show({
-                color: 'teal',
-                title: t('UpdateSuccessfully'),
-                icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
-                loading: false,
-                autoClose: 700,
-                style: { backgroundColor: 'lightgray' },
-            });
-
-            setTimeout(() => {
-                setSaveCreateLoading(false)
-                setConfigDataLoad(true)
-            }, 700)
-        }
-    }, [validation, validationMessage]);
-
     useEffect(() => {
         setFormLoad(true)
         setFormDataForUpdate(true)
@@ -173,7 +149,6 @@ function ConfigurationForm() {
                 form.values['sku_wearhouse'] = (values.sku_wearhouse === true || values.sku_wearhouse == 1) ? 1 : 0
                 form.values['sku_category'] = (values.sku_category === true || values.sku_category == 1) ? 1 : 0
                 form.values['vat_enable'] = (values.vat_enable === true || values.vat_enable == 1) ? 1 : 0
-                form.values['ait_enable'] = (values.ait_enable === true || values.ait_enable == 1) ? 1 : 0
                 form.values['zakat_enable'] = (values.zakat_enable === true || values.zakat_enable == 1) ? 1 : 0
                 form.values['remove_image'] = (values.remove_image === true || values.remove_image == 1) ? 1 : 0
                 form.values['invoice_print_logo'] = (values.invoice_print_logo === true || values.invoice_print_logo == 1) ? 1 : 0
@@ -212,12 +187,44 @@ function ConfigurationForm() {
                     ),
                     labels: { confirm: t('Submit'), cancel: t('Cancel') }, confirmProps: { color: 'red' },
                     onCancel: () => console.log('Cancel'),
-                    onConfirm: () => {
+                    onConfirm: async () => {
                         const value = {
-                            url: 'inventory/config-update/'+id,
+                            url: 'inventory/config-update/' + id,
                             data: values
                         }
                         dispatch(updateEntityData(value))
+                            .unwrap()
+                            .then(async (result) => {
+                                if (result.data.message === 'success') {
+                                    const resultAction = await dispatch(showInstantEntityData('inventory/config'));
+                                    if (showInstantEntityData.fulfilled.match(resultAction)) {
+                                        if (resultAction.payload.data.status === 200) {
+                                            localStorage.setItem('config-data', JSON.stringify(resultAction.payload.data.data));
+                                        }
+                                    }
+                                    console.log('Update successfully fulfilled:', result);
+                                    notifications.show({
+                                        color: 'teal',
+                                        title: t('UpdateSuccessfully'),
+                                        icon: <IconCheck style={{width: rem(18), height: rem(18)}}/>,
+                                        loading: false,
+                                        autoClose: 700,
+                                        style: {backgroundColor: 'lightgray'},
+                                    });
+
+                                    setTimeout(() => {
+                                        setSaveCreateLoading(false)
+                                        setConfigDataLoad(true)
+                                    }, 700)
+                                } else {
+                                    console.warn('Fulfilled but with validation error:', result.data);
+                                }
+                            })
+                            .catch((error) => {
+                                // REJECTED
+                                console.error('Update failed:', error);
+                                alert(`Failed to update entity: ${error.message}`);
+                            });
                     },
                 });
             })}>
@@ -347,82 +354,35 @@ function ConfigurationForm() {
                                                     <Grid.Col span={6} fz={'sm'} pt={'1'}>{t('Category')}</Grid.Col>
                                                 </Grid>
                                             </Box>
+
+                                            <Box mt={'xs'}>
+                                                <Text fz="sm">{t("Vat")}</Text>
+                                            </Box>
+
                                             <Box mt={'md'} mb={'md'}>
                                                 <Grid gutter={{ base: 6 }}>
                                                     <Grid.Col span={6}>
-                                                        <InputForm
-                                                            tooltip={t('VatPercent')}
-                                                            label={t('VatPercent')}
-                                                            placeholder={t('VatPercent')}
-                                                            required={false}
-                                                            nextField={'vat_enable'}
-                                                            name={'vat_percent'}
-                                                            form={form}
-                                                            mt={0}
-                                                            id={'vat_percent'}
-                                                        />
-                                                    </Grid.Col>
-                                                    <Grid.Col span={6} mt={'lg'}>
-                                                        <Box mt={'xs'}>
-                                                            <Grid columns={6} gutter={{ base: 1 }}>
-                                                                <Grid.Col span={2}>
-                                                                    <SwitchForm
-                                                                        tooltip={t('VatEnabled')}
-                                                                        label=''
-                                                                        nextField={'ait_percent'}
-                                                                        name={'vat_enable'}
-                                                                        form={form}
-                                                                        color="red"
-                                                                        id={'vat_enable'}
-                                                                        position={'left'}
-                                                                        defaultChecked={configData.vat_enable}
-                                                                    />
-                                                                </Grid.Col>
-                                                                <Grid.Col span={4} fz={'sm'} pt={'1'}>{t('VatEnabled')}
-                                                                </Grid.Col>
-                                                            </Grid>
-                                                        </Box>
+                                                        <Grid columns={6} gutter={{ base: 1 }}>
+                                                            <Grid.Col span={2}>
+                                                                <SwitchForm
+                                                                    tooltip={t('VatEnabled')}
+                                                                    label=''
+                                                                    nextField={'ait_percent'}
+                                                                    name={'vat_enable'}
+                                                                    form={form}
+                                                                    color="red"
+                                                                    id={'vat_enable'}
+                                                                    position={'left'}
+                                                                    defaultChecked={configData.vat_enable}
+                                                                />
+                                                            </Grid.Col>
+                                                            <Grid.Col span={4} fz={'sm'} pt={'1'}>{t('VatEnabled')}
+                                                            </Grid.Col>
+                                                        </Grid>
                                                     </Grid.Col>
                                                 </Grid>
                                             </Box>
-                                            <Box mt={'md'} mb={'md'}>
-                                                <Grid gutter={{ base: 6 }}>
-                                                    <Grid.Col span={6}>
-                                                        <InputForm
-                                                            tooltip={t('AITPercent')}
-                                                            label={t('AITPercent')}
-                                                            placeholder={t('AITPercent')}
-                                                            required={false}
-                                                            nextField={'ait_enable'}
-                                                            name={'ait_percent'}
-                                                            form={form}
-                                                            mt={0}
-                                                            id={'ait_percent'}
-                                                        />
-                                                    </Grid.Col>
-                                                    <Grid.Col span={6} mt={'lg'}>
-                                                        <Box mt={'xs'}>
-                                                            <Grid columns={6} gutter={{ base: 1 }}>
-                                                                <Grid.Col span={2}>
-                                                                    <SwitchForm
-                                                                        tooltip={t('AitEnabled')}
-                                                                        label=''
-                                                                        nextField={'zakat_percent'}
-                                                                        name={'ait_enable'}
-                                                                        form={form}
-                                                                        color="red"
-                                                                        id={'ait_enable'}
-                                                                        position={'left'}
-                                                                        defaultChecked={configData.ait_enable}
-                                                                    />
-                                                                </Grid.Col>
-                                                                <Grid.Col span={4} fz={'sm'} pt={'1'}>{t('AITEnabled')}
-                                                                </Grid.Col>
-                                                            </Grid>
-                                                        </Box>
-                                                    </Grid.Col>
-                                                </Grid>
-                                            </Box>
+
                                             <Box mt={'md'} mb={'md'}>
                                                 <Grid gutter={{ base: 6 }}>
                                                     <Grid.Col span={6}>

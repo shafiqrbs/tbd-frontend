@@ -9,6 +9,8 @@ import accountingUtilitySlice from './accounting/utilitySlice.js'
 import utilityUtilitySlice from './utility/utilitySlice.js'
 import productionCrudSlice from './production/crudSlice.js'
 import productionUtilitySlice from './production/utilitySlice.js'
+import nbrCrudSlice from './nbr/crudSlice.js'
+import nbrUtilitySlice from './nbr/utilitySlice.js'
 
 const rootReducer = (asyncReducers) => (state, action) => {
     const combinedReducer = combineReducers({
@@ -21,6 +23,8 @@ const rootReducer = (asyncReducers) => (state, action) => {
         accountingUtilitySlice,
         productionCrudSlice,
         productionUtilitySlice,
+        nbrCrudSlice,
+        nbrUtilitySlice,
         ...asyncReducers,
     })
     return combinedReducer(state, action)
