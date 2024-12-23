@@ -8,16 +8,6 @@ import {
     updateData, updateDataWithFile
 } from "../../services/apiService";
 
-/*export const getIndexEntityData = createAsyncThunk("index", async (value) => {
-    try {
-        const response = getDataWithParam(value);
-        return response;
-    } catch (error) {
-        console.log('error', error.message);
-        throw error;
-    }
-});*/
-
 // Thunk for fetching data
 export const getIndexEntityData = createAsyncThunk(
     "index", // Unique action type
@@ -51,15 +41,6 @@ export const getStatusInlineUpdateData = createAsyncThunk("status-update", async
     }
 });
 
-/*export const storeEntityData = createAsyncThunk("store", async (value) => {
-    try {
-        const response = createData(value);
-        return response;
-    } catch (error) {
-        console.log('error', error.message);
-        throw error;
-    }
-});*/
 
 export const storeEntityData = createAsyncThunk('store', async (value, { rejectWithValue }) => {
     const response = await createData(value);
@@ -84,15 +65,6 @@ export const editEntityData = createAsyncThunk("edit", async (value) => {
     }
 });
 
-/*export const updateEntityData = createAsyncThunk("update", async (value) => {
-    try {
-        const response = updateData(value);
-        return response;
-    } catch (error) {
-        console.log('error', error.message);
-        throw error;
-    }
-});*/
 
 export const updateEntityData = createAsyncThunk('update', async (value, { rejectWithValue }) => {
     const response = await updateData(value);
@@ -217,42 +189,13 @@ const crudSlice = createSlice({
 
     extraReducers: (builder) => {
 
-        builder
-            /*.addCase(getIndexEntityData.pending, (state) => {
-                state.fetching = true; // Start fetching
-                state.error = null; // Clear previous errors
-            })*/
-            .addCase(getIndexEntityData.fulfilled, (state, action) => {
+        builder.addCase(getIndexEntityData.fulfilled, (state, action) => {
                 state.indexEntityData = action.payload; // Store response data
                 state.fetching = false; // Turn off fetching state
             })
             .addCase(getIndexEntityData.rejected, (state, action) => {
-                // state.fetching = false; // Turn off fetching state
                 state.error = action.payload; // Save error
             });
-
-        /*builder.addCase(getIndexEntityData.fulfilled, (state, action) => {
-            state.indexEntityData = action.payload
-            state.fetching = false
-        })*/
-
-        /*builder.addCase(storeEntityData.fulfilled, (state, action) => {
-            if ('success' === action.payload.data.message) {
-                state.entityNewData = action.payload.data
-            } else {
-                state.validationMessage = action.payload.data.data
-                state.validation = true
-            }
-        })*/
-
-        /*builder.addCase(storeEntityData.fulfilled, (state, action) => {
-            if ('success' === action.payload.data.message) {
-                state.entityNewData = action.payload.data
-            } else {
-                state.validationMessage = action.payload.data.data
-                state.validation = true
-            }
-        })*/
 
         builder.addCase(storeEntityData.fulfilled, (state, action) => {
             if ('success' === action.payload.data.message) {

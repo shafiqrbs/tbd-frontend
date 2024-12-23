@@ -40,6 +40,9 @@ function _VatManagement(props) {
     const [tariffData, setTariffData] = useState(null);
 
     const tariffDropDown = getNbrTariffDropdownData('tariff')
+    const [editedValues, setEditedValues] = useState({}); // To store locally edited values
+    const [loadingFields, setLoadingFields] = useState({}); // Keep track of which fields are loading (e.g., during API update)
+    const [indexData, setIndexData] = useState([])
 
     const form = useForm({
         initialValues: {
@@ -61,11 +64,10 @@ function _VatManagement(props) {
         }, 500);
     }, [entityEditData, dispatch, setFormData]);
 
-
-    const [indexData, setIndexData] = useState([])
     useEffect(() => {
         const fetchData = async () => {
-            setFormLoad(true)
+            setFormLoad(true); // Start loading
+
             const value = {
                 url: 'inventory/product/nbr-tariff/' + props.id,
                 param: {
@@ -80,21 +82,18 @@ function _VatManagement(props) {
                     console.error('Error:', resultAction);
                 } else if (getIndexEntityData.fulfilled.match(resultAction)) {
                     setIndexData(resultAction.payload.data);
-                    setTariffData(String(resultAction?.payload?.data[0]?.hscode_id))
-                    setFormLoad(false)
+                    setTariffData(String(resultAction?.payload?.data[0]?.hscode_id));
                 }
             } catch (err) {
                 console.error('Unexpected error:', err);
+            } finally {
+                setFormLoad(false); // End loading
             }
         };
 
-        fetchData();
-    }, [dispatch]);
-
-
-    const [editedValues, setEditedValues] = useState({}); // To store locally edited values
-    const [loadingFields, setLoadingFields] = useState({}); // Keep track of which fields are loading (e.g., during API update)
-
+        fetchData(); // Call fetchData once on component mount
+        // No dependency on `formLoad` to avoid infinite loop
+    }, [dispatch, props.id,formLoad]); // Reload only when `dispatch` or `props.id` changes
     const handleInputChange = (e, fieldName) => {
         const value = e.currentTarget.value;
         setEditedValues((prev) => ({
@@ -105,7 +104,7 @@ function _VatManagement(props) {
 
     const handleBlur = async (e, fieldName, rowId) => {
         const newValue = editedValues[fieldName]; // The new value to persist
-        if (!tariffData) {
+        if (!tariffData || (typeof tariffData != "number" && isNaN(tariffData))) {
             // Validate HS Code selection
             notifications.show({
                 loading: true,
@@ -135,7 +134,10 @@ function _VatManagement(props) {
             dispatch(inlineUpdateEntityData(updateData));
 
             // Optionally, after success, clear loading state.
-        } catch (error) {
+        } catch (error) {if (isDev) {
+        return; // Skip unnecessary dev calls
+    }
+
             console.error("Error updating data:", error);
 
             notifications.show({
@@ -157,6 +159,39 @@ function _VatManagement(props) {
             setLoadingFields((prev) => ({...prev, [fieldName]: false}));
         }
     };
+
+    const handleHsCode = async (e) => {
+        setTariffData(e)
+        const updateData = {
+            url: `inventory/product/nbr-tariff/inline-update/${id}`, // Pass the correct id
+            data: {
+                field_name: 'hscode_id',
+                value: e,
+                hscode_id: e,
+            },
+        };
+
+        try {
+            // Optimistically update the UI without waiting for backend response.
+            dispatch(inlineUpdateEntityData(updateData));
+            setEditedValues({})
+            setIndexData([])
+            setFormLoad(true)
+
+            // Optionally, after success, clear loading state.
+        } catch (error) {
+            console.error("Error updating data:", error);
+
+            notifications.show({
+                loading: false,
+                color: "red",
+                title: "Error!",
+                message: "Failed to update inline value.",
+                autoClose: 2000,
+                withCloseButton: true,
+            });
+        }
+    }
 
     return (
         <Box>
@@ -210,7 +245,8 @@ function _VatManagement(props) {
                                                     nextField={""}
                                                     searchable={true}
                                                     value={tariffData}
-                                                    changeValue={setTariffData}
+                                                    changeValue={handleHsCode}
+                                                    clearable={false}
                                                 />
                                             </Grid.Col>
                                         </Grid>

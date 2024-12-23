@@ -8,15 +8,17 @@ import {
     updateData, updateDataWithFile
 } from "../../services/inventoryApiService.js";
 
-export const getIndexEntityData = createAsyncThunk("index", async (value) => {
-    try {
-        const response = getDataWithParam(value);
-        return response;
-    } catch (error) {
-        console.log('error', error.message);
-        throw error;
+export const getIndexEntityData = createAsyncThunk(
+    "index", // Unique action type
+    async (value, { rejectWithValue }) => {
+        try {
+            const data = await getDataWithParam(value); // Wait for the API response
+            return data; // Return data (will trigger `fulfilled` case)
+        } catch (error) {
+            return rejectWithValue(error.response?.data || "Failed to fetch data"); // Return error details to `rejected` case
+        }
     }
-});
+);
 
 export const getProductSkuItemIndexEntityData = createAsyncThunk("index-sku-item", async (value) => {
     try {
@@ -27,15 +29,6 @@ export const getProductSkuItemIndexEntityData = createAsyncThunk("index-sku-item
         throw error;
     }
 });
-/*export const storeEntityData = createAsyncThunk("store", async (value) => {
-    try {
-        const response = createData(value);
-        return response;
-    } catch (error) {
-        console.log('error', error.message);
-        throw error;
-    }
-});*/
 
 export const storeEntityData = createAsyncThunk('store', async (value, { rejectWithValue }) => {
     const response = await createData(value);
@@ -258,38 +251,32 @@ const crudSlice = createSlice({
     },
 
     extraReducers: (builder) => {
+        builder
+            .addCase(getIndexEntityData.fulfilled, (state, action) => {
+                state.indexEntityData = action.payload; // Store response data
+                state.fetching = false; // Turn off fetching state
+            })
+            .addCase(getIndexEntityData.rejected, (state, action) => {
+                // state.fetching = false; // Turn off fetching state
+                state.error = action.payload; // Save error
+            });
 
-        builder.addCase(getIndexEntityData.fulfilled, (state, action) => {
+        /*builder.addCase(getIndexEntityData.fulfilled, (state, action) => {
             state.indexEntityData = action.payload
             state.fetching = false
-        })
+        })*/
 
         builder.addCase(getProductSkuItemIndexEntityData.fulfilled, (state, action) => {
             state.productSkuIndexEntityData = action.payload
             state.fetching = false
         })
 
-        /*builder.addCase(storeEntityData.fulfilled, (state, action) => {
-            if ('success' === action.payload.data.message) {
-                state.entityNewData = action.payload.data
-                state.validationMessage = []
-                state.validation = false
-            } else {
-                state.validationMessage = action.payload.data.data
-                state.validation = true
-                state.entityNewData = []
-            }
-        })*/
-
         builder.addCase(storeEntityData.fulfilled, (state, action) => {
             if ('success' === action.payload.data.message) {
                 state.entityNewData = action.payload.data
                 state.validationMessage = []
                 state.validation = false
-            } /*else {
-                state.validationMessage = action.payload.data.data
-                state.validation = true
-            }*/
+            }
         });
 
         builder.addCase(storeEntityData.rejected, (state, action) => {

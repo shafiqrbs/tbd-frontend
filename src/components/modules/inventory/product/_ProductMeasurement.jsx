@@ -26,6 +26,7 @@ import {isNotEmpty, useForm} from "@mantine/form";
 import {notifications} from "@mantine/notifications";
 
 import {
+    getIndexEntityData,
     setFetching,
     setFormLoading,
 } from "../../../../store/core/crudSlice.js";
@@ -68,20 +69,60 @@ function _ProductMeasurement(props) {
     });
 
     /*product measurement data handle*/
-    const measurementData = useSelector((state) => state.inventoryCrudSlice.indexEntityData);
+    // const measurementData = useSelector((state) => state.inventoryCrudSlice.indexEntityData);
+    const [measurementData,setMeasurementData] = useState([]);
     const [reloadMeasurementData, setReloadMeasurementData] = useState(false);
 
     /*get product measurement*/
-    useEffect(() => {
+    /*useEffect(async () => {
         const value = {
             url: "inventory/product/measurement/" + id,
             param: {
                 test: 1,
             },
         };
-        dispatch(getIndexEntityDataForInventory(value));
-        setReloadMeasurementData(false);
-    }, [reloadMeasurementData]);
+        const resultAction = await dispatch(getIndexEntityDataForInventory(value));
+
+        if (getIndexEntityDataForInventory.rejected.match(resultAction)) {
+            console.error('Error:', resultAction);
+        } else if (getIndexEntityDataForInventory.fulfilled.match(resultAction)) {
+            console.log(resultAction.payload)
+        }
+        // dispatch(getIndexEntityDataForInventory(value));
+        // setReloadMeasurementData(false);
+    }, [reloadMeasurementData]);*/
+
+    useEffect(() => {
+        // Define an async function inside the effect
+        const fetchData = async () => {
+            const value = {
+                url: "inventory/product/measurement/" + id,
+                param: {
+                    test: 1,
+                },
+            };
+
+            try {
+                const resultAction = await dispatch(getIndexEntityDataForInventory(value));
+
+                // Handle rejected state
+                if (getIndexEntityDataForInventory.rejected.match(resultAction)) {
+                    console.error("Error:", resultAction);
+                }
+                // Handle fulfilled state
+                else if (getIndexEntityDataForInventory.fulfilled.match(resultAction)) {
+                    console.log(resultAction.payload.data);
+                    setMeasurementData(resultAction.payload.data)
+                }
+                setReloadMeasurementData(false);
+            } catch (error) {
+                console.error("Unexpected error in fetchData:", error);
+            }
+        };
+
+        // Call the async function
+        fetchData();
+    }, [dispatch, id, reloadMeasurementData]);
 
     useEffect(() => {
         setFormLoad(true);
@@ -143,7 +184,7 @@ function _ProductMeasurement(props) {
                     confirmProps: {color: "red"},
                     onCancel: () => console.log("Cancel"),
                     onConfirm: () => {
-                        const isUnitIdExists = measurementData.data.some(
+                        const isUnitIdExists = measurementData.some(
                             (unit) => unit.unit_id == values.unit_id
                         );
 
@@ -310,8 +351,8 @@ function _ProductMeasurement(props) {
                                         </Table.Tr>
                                     </Table.Thead>
                                     <Table.Tbody>
-                                        {measurementData?.data?.length > 0 ? (
-                                            measurementData.data.map((unit, index) => (
+                                        {measurementData.length > 0 ? (
+                                            measurementData.map((unit, index) => (
                                                 <Table.Tr key={unit.id}>
                                                     <Table.Th fz="xs" w={"20"}>
                                                         {index + 1}
