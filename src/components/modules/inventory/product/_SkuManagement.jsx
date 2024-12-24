@@ -11,12 +11,12 @@ import {
     Flex,
     Stack,
     LoadingOverlay,
-    TextInput, Table, Menu,
+    TextInput, Table, Menu, ActionIcon,
 } from "@mantine/core";
 import {useTranslation} from "react-i18next";
 import {
     IconCheck,
-    IconDeviceFloppy, IconTrashX,
+    IconDeviceFloppy, IconTrashX, IconX,
 } from "@tabler/icons-react";
 import {useDispatch, useSelector} from "react-redux";
 import {useForm} from "@mantine/form";
@@ -474,11 +474,11 @@ function _SkuManagement(props) {
                                                     }
 
                                                     <Table.Th fz="xs" ta="center">
-                                                        {t("SalesPrice")}
+                                                        {t("PurchasePrice")}
                                                     </Table.Th>
 
                                                     <Table.Th fz="xs" ta="center">
-                                                        {t("PurchasePrice")}
+                                                        {t("SalesPrice")}
                                                     </Table.Th>
                                                     {
                                                         isMultiPrice && multiplePriceFieldName?.length > 0 &&
@@ -489,14 +489,6 @@ function _SkuManagement(props) {
                                                         ))
                                                     }
                                                     <Table.Th fz="xs" ta="center">
-                                                        <IconTrashX
-                                                            style={{
-                                                                width: rem(14),
-                                                                height: rem(14),
-                                                                cursor: 'pointer',
-                                                                transition: 'color 0.2s ease-in-out'
-                                                            }}
-                                                        />
                                                     </Table.Th>
                                                 </Table.Tr>
                                             </Table.Thead>
@@ -548,9 +540,9 @@ function _SkuManagement(props) {
                                                                         label=""
                                                                         size="xs"
                                                                         id={'inline-update-price-' + sku.stock_id}
-                                                                        value={priceData[index]}
+                                                                        value={purchasePriceData[index]}
                                                                         onChange={(e) => {
-                                                                            handleSkuData(e.target.value, sku.stock_id, 'price', index, null, null)
+                                                                            handleSkuData(e.target.value, sku.stock_id, 'purchase_price', index, null, null)
                                                                         }}
                                                                     />
                                                                 </Table.Th>
@@ -561,9 +553,9 @@ function _SkuManagement(props) {
                                                                         label=""
                                                                         size="xs"
                                                                         id={'inline-update-price-' + sku.stock_id}
-                                                                        value={purchasePriceData[index]}
+                                                                        value={priceData[index]}
                                                                         onChange={(e) => {
-                                                                            handleSkuData(e.target.value, sku.stock_id, 'purchase_price', index, null, null)
+                                                                            handleSkuData(e.target.value, sku.stock_id, 'price', index, null, null)
                                                                         }}
                                                                     />
                                                                 </Table.Th>
@@ -585,43 +577,39 @@ function _SkuManagement(props) {
                                                                 <Table.Th fz="xs" ta="center">
                                                                     {
                                                                         !sku.is_master &&
-                                                                        <IconTrashX
-                                                                            component="a"
-                                                                            bg={'red.1'}
-                                                                            c={'red.6'}
-                                                                            style={{
-                                                                                width: rem(14),
-                                                                                height: rem(14),
-                                                                                cursor: 'pointer',
-                                                                                transition: 'color 0.2s ease-in-out'
-                                                                            }}
-                                                                            onMouseEnter={(e) => e.currentTarget.style.color = 'red'}
-                                                                            onMouseLeave={(e) => e.currentTarget.style.color = 'red.6'}
-                                                                            onClick={() => {
-                                                                                modals.openConfirmModal({
-                                                                                    title: (
-                                                                                        <Text
-                                                                                            size="md"> {t("FormConfirmationTitle")}</Text>
-                                                                                    ),
-                                                                                    children: (
-                                                                                        <Text
-                                                                                            size="sm"> {t("FormConfirmationMessage")}</Text>
-                                                                                    ),
-                                                                                    labels: {
-                                                                                        confirm: 'Confirm',
-                                                                                        cancel: 'Cancel'
-                                                                                    },
-                                                                                    confirmProps: {color: 'red.6'},
-                                                                                    onCancel: () => console.log('Cancel'),
-                                                                                    onConfirm: () => {
-                                                                                        dispatch(deleteEntityData('inventory/product/stock/sku/' + sku.stock_id))
-                                                                                        setTimeout(() => {
-                                                                                            setReloadSkuItemData(true);
-                                                                                        }, 500);
-                                                                                    },
-                                                                                });
-                                                                            }}
-                                                                        />
+                                                                            <ActionIcon
+                                                                                size="sm"
+                                                                                variant="transparent"
+                                                                                color="red"
+                                                                                onMouseEnter={(e) => e.currentTarget.style.color = 'red'}
+                                                                                onMouseLeave={(e) => e.currentTarget.style.color = 'red.6'}
+                                                                                onClick={() => {
+                                                                                    modals.openConfirmModal({
+                                                                                        title: (
+                                                                                            <Text
+                                                                                                size="md"> {t("FormConfirmationTitle")}</Text>
+                                                                                        ),
+                                                                                        children: (
+                                                                                            <Text
+                                                                                                size="sm"> {t("FormConfirmationMessage")}</Text>
+                                                                                        ),
+                                                                                        labels: {
+                                                                                            confirm: 'Confirm',
+                                                                                            cancel: 'Cancel'
+                                                                                        },
+                                                                                        confirmProps: {color: 'red.6'},
+                                                                                        onCancel: () => console.log('Cancel'),
+                                                                                        onConfirm: () => {
+                                                                                            dispatch(deleteEntityData('inventory/product/stock/sku/' + sku.stock_id))
+                                                                                            setTimeout(() => {
+                                                                                                setReloadSkuItemData(true);
+                                                                                            }, 500);
+                                                                                        },
+                                                                                    });
+                                                                                }}
+                                                                            >
+                                                                                <IconX height={"18"} width={"18"} stroke={1.5}/>
+                                                                            </ActionIcon>
                                                                     }
                                                                 </Table.Th>
                                                             </Table.Tr>

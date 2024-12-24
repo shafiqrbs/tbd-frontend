@@ -69,28 +69,9 @@ function _ProductMeasurement(props) {
     });
 
     /*product measurement data handle*/
-    // const measurementData = useSelector((state) => state.inventoryCrudSlice.indexEntityData);
     const [measurementData,setMeasurementData] = useState([]);
     const [reloadMeasurementData, setReloadMeasurementData] = useState(false);
 
-    /*get product measurement*/
-    /*useEffect(async () => {
-        const value = {
-            url: "inventory/product/measurement/" + id,
-            param: {
-                test: 1,
-            },
-        };
-        const resultAction = await dispatch(getIndexEntityDataForInventory(value));
-
-        if (getIndexEntityDataForInventory.rejected.match(resultAction)) {
-            console.error('Error:', resultAction);
-        } else if (getIndexEntityDataForInventory.fulfilled.match(resultAction)) {
-            console.log(resultAction.payload)
-        }
-        // dispatch(getIndexEntityDataForInventory(value));
-        // setReloadMeasurementData(false);
-    }, [reloadMeasurementData]);*/
 
     useEffect(() => {
         // Define an async function inside the effect
@@ -260,22 +241,6 @@ function _ProductMeasurement(props) {
                         className={"boxBackground borderRadiusAll"}
                     >
                         <Grid gutter={"4"}>
-                            <Grid.Col span={5}>
-                                <SelectForm
-                                    tooltip={t("ChooseProductUnit")}
-                                    label=""
-                                    placeholder={t("ChooseProductUnit")}
-                                    required={true}
-                                    name={"unit_id"}
-                                    form={form}
-                                    dropdownValue={getSettingParticularDropdownData('product-unit')}
-                                    id={"unit_id"}
-                                    nextField={"quantity"}
-                                    searchable={true}
-                                    value={measurementUnitData}
-                                    changeValue={setMeasurementUnitData}
-                                />
-                            </Grid.Col>
                             <Grid.Col span={3}>
                                 <InputButtonForm
                                     tooltip={t("EnterQuantity")}
@@ -295,6 +260,22 @@ function _ProductMeasurement(props) {
                                             : ""
                                     }
                                     closeIcon={false}
+                                />
+                            </Grid.Col>
+                            <Grid.Col span={5}>
+                                <SelectForm
+                                    tooltip={t("ChooseProductUnit")}
+                                    label=""
+                                    placeholder={t("ChooseProductUnit")}
+                                    required={true}
+                                    name={"unit_id"}
+                                    form={form}
+                                    dropdownValue={getSettingParticularDropdownData('product-unit')}
+                                    id={"unit_id"}
+                                    nextField={"quantity"}
+                                    searchable={true}
+                                    value={measurementUnitData}
+                                    changeValue={setMeasurementUnitData}
                                 />
                             </Grid.Col>
                             <Grid.Col span={4}>
@@ -341,11 +322,11 @@ function _ProductMeasurement(props) {
                                             <Table.Th fz="xs" w={"20"}>
                                                 {t("S/N")}
                                             </Table.Th>
-                                            <Table.Th fz="xs" ta="left" w={"300"}>
-                                                {t("Name")}
-                                            </Table.Th>
-                                            <Table.Th fz="xs" ta="center" w={"60"}>
+                                            <Table.Th fz="xs" ta="center" w={"300"}>
                                                 {t("QTY")}
+                                            </Table.Th>
+                                            <Table.Th fz="xs" ta="left" w={"300"}>
+                                                {t("Unit")}
                                             </Table.Th>
                                             <Table.Th ta="right" fz="xs" w={"80"}></Table.Th>
                                         </Table.Tr>
@@ -357,11 +338,11 @@ function _ProductMeasurement(props) {
                                                     <Table.Th fz="xs" w={"20"}>
                                                         {index + 1}
                                                     </Table.Th>
+                                                    <Table.Th fz="xs" ta="center" w={"60"}>
+                                                        {unit.quantity+' '+entityEditData?.unit_name}
+                                                    </Table.Th>
                                                     <Table.Th fz="xs" ta="left" w={"300"}>
                                                         {unit.unit_name}
-                                                    </Table.Th>
-                                                    <Table.Th fz="xs" ta="center" w={"60"}>
-                                                        {unit.quantity}
                                                     </Table.Th>
                                                     <Table.Th ta="right" fz="xs" w={"80"}>
                                                         <ActionIcon
