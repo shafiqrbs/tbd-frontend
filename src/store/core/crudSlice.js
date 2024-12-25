@@ -200,6 +200,7 @@ const crudSlice = createSlice({
         builder.addCase(storeEntityData.fulfilled, (state, action) => {
             if ('success' === action.payload.data.message) {
                 state.entityNewData = action.payload.data
+                state.fetching = true;
             } else {
                 state.validationMessage = action.payload.data.data
                 state.validation = true
@@ -235,6 +236,7 @@ const crudSlice = createSlice({
 
         builder.addCase(deleteEntityData.fulfilled, (state, action) => {
             state.entityDataDelete = action.payload.data.data
+            state.fetching = true
         })
 
         builder.addCase(getStatusInlineUpdateData.fulfilled, (state, action) => {

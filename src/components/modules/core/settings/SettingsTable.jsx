@@ -34,6 +34,7 @@ function SettingsTable() {
     const [fetching,setFetching] = useState(true)
 
     const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword)
+    const fetchingReload = useSelector((state) => state.crudSlice.fetching)
     const entityDataDelete = useSelector((state) => state.inventoryCrudSlice.entityDataDelete)
     const productionSettingFilterData = useSelector((state) => state.productionCrudSlice.productionSettingFilterData)
 
@@ -104,7 +105,7 @@ function SettingsTable() {
         };
 
         fetchData();
-    }, [dispatch, searchKeyword, productionSettingFilterData, page]);
+    }, [dispatch, searchKeyword, productionSettingFilterData, page, fetchingReload]);
 
 
     return (

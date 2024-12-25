@@ -29,6 +29,8 @@ function _UserTable() {
 
   const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword);
   const userFilterData = useSelector((state) => state.crudSlice.userFilterData);
+  const fetchingReload = useSelector((state) => state.crudSlice.fetching)
+
   const entityDataDelete = useSelector(
     (state) => state.crudSlice.entityDataDelete
   );
@@ -73,7 +75,7 @@ function _UserTable() {
     };
 
     fetchData();
-  }, [dispatch, searchKeyword, userFilterData, page]);
+  }, [dispatch, searchKeyword, userFilterData, page , fetchingReload]);
 
   useEffect(() => {
     dispatch(setDeleteMessage(""));

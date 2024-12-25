@@ -34,6 +34,7 @@ function VendorTable() {
 
     const [fetching,setFetching] = useState(true)
     const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword)
+    const fetchingReload = useSelector((state) => state.crudSlice.fetching)
     const vendorFilterData = useSelector((state) => state.crudSlice.vendorFilterData)
     const entityDataDelete = useSelector((state) => state.crudSlice.entityDataDelete)
     const coreVendors = JSON.parse(localStorage.getItem('core-vendors') || '[]');
@@ -94,7 +95,7 @@ function VendorTable() {
         };
 
         fetchData();
-    }, [dispatch, searchKeyword, vendorFilterData, page]);
+    }, [dispatch, searchKeyword, vendorFilterData, page,fetchingReload]);
 
     return (
         <>

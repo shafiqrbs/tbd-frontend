@@ -37,6 +37,7 @@ function CustomerTable() {
 
     const [fetching,setFetching] = useState(true)
     const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword)
+    const fetchingReload = useSelector((state) => state.crudSlice.fetching)
     const customerFilterData = useSelector((state) => state.crudSlice.customerFilterData)
     const [customerObject, setCustomerObject] = useState({});
 
@@ -95,7 +96,7 @@ function CustomerTable() {
         };
 
         fetchData();
-    }, [dispatch, searchKeyword, customerFilterData, page]);
+    }, [dispatch, searchKeyword, customerFilterData, page,fetchingReload]);
 
     return (
         <>
