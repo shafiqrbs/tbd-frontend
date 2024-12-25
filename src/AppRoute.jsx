@@ -42,7 +42,7 @@ import SettingsIndex from "./components/modules/core/settings/SettingsIndex";
 
 import StockIndex from "./components/modules/inventory/stock/StockIndex.jsx";
 import ConfigurationIndex from "./components/modules/domain/configuraton/ConfigurationIndex.jsx";
-import PosIndex from "./components/modules/restaurant-pos/pos-sales/PosIndex.jsx";
+import RestaurantIndex from "./components/modules/pos/restaurant/RestaurantIndex.jsx";
 import SitemapIndex from "./components/modules/domain/sitemap/SitemapIndex.jsx";
 import BatchIndex from "./components/modules/production/batch/BatchIndex.jsx";
 import Requisition from "./components/modules/procurement/purchase-requisition/Requisition.jsx";
@@ -50,6 +50,8 @@ import RequisitionInvoice from "./components/modules/procurement/purchase-requis
 import BranchManagementIndex from "./components/modules/domain/branch-management/BranchManagementIndex.jsx";
 import AccountingConfig from "./components/modules/accounting/config/ConfigIndex";
 import FileUploadIndex from "./components/modules/core/file-upload/FileUploadIndex.jsx";
+import MatrixIndex from "./components/modules/procurement/requistion-matrix/MatrixIndex.jsx";
+import BakeryIndex from "./components/modules/pos/bakery/BakeryIndex.jsx";
 
 function AppRoute() {
   return (
@@ -153,10 +155,12 @@ function AppRoute() {
         <Route path="/procurement/">
           <Route path="requisition" element={<Requisition />} />
           <Route path="new-requisition" element={<RequisitionInvoice />} />
+          <Route path="all" element={<MatrixIndex />} />
         </Route>
         <Route path="sitemap" element={<Sitemap />} />
         <Route path="/pos/">
-          <Route path="pos-index" element={<PosIndex />} />
+          <Route path="restaurant" element={<RestaurantIndex />} />
+          <Route path="bakery" element={<BakeryIndex />} />
         </Route>
         <Route path="sitemap" element={<Sitemap />} />
       </Route>
