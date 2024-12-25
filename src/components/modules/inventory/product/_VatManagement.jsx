@@ -66,7 +66,6 @@ function _VatManagement(props) {
 
     useEffect(() => {
         const fetchData = async () => {
-            setFormLoad(true); // Start loading
 
             const value = {
                 url: 'inventory/product/nbr-tariff/' + props.id,

@@ -47,6 +47,7 @@ function DomainForm(props) {
         },
         validate: {
             business_model_id: isNotEmpty(),
+            email: isNotEmpty(),
             company_name: hasLength({ min: 2}),
             name: hasLength({ min: 2}),
             username: hasLength({ min: 2, max: 20 }),
@@ -228,7 +229,7 @@ function DomainForm(props) {
                                                             tooltip={t('InvalidEmail')}
                                                             label={t('Email')}
                                                             placeholder={t('Email')}
-                                                            required={false}
+                                                            required={true}
                                                             nextField={'name'}
                                                             name={'email'}
                                                             form={form}

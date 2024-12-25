@@ -190,15 +190,15 @@ function _UpdateProduct(props) {
 
                             setTimeout(() => {
                                 productsDataStoreIntoLocalStorage();
-                                form.reset();
-                                dispatch(setInsertType("create"));
-                                dispatch(setEditEntityData([]));
-                                setProductTypeData(null);
-                                setCategoryData(null);
-                                setProductUnitData(null);
+                                // form.reset();
+                                // dispatch(setInsertType("create"));
+                                // dispatch(setEditEntityData([]));
+                                // setProductTypeData(null);
+                                // setCategoryData(null);
+                                // setProductUnitData(null);
                                 dispatch(setFetching(true));
                                 setSaveCreateLoading(false);
-                                navigate("/inventory/product", {replace: true});
+                                // navigate("/inventory/product", {replace: true});
                             }, 700);
                         },
                     });

@@ -27,6 +27,7 @@ import SelectForm from "../../../form-builders/SelectForm.jsx";
 import TextAreaForm from "../../../form-builders/TextAreaForm.jsx";
 import Shortcut from "../../shortcut/Shortcut.jsx";
 import PhoneNumber from "../../../form-builders/PhoneNumberInput.jsx";
+import vendorDataStoreIntoLocalStorage from "../../../global-hook/local-storage/vendorDataStoreIntoLocalStorage.js";
 
 function VendorUpdateForm(props) {
     const { customerDropDownData } = props
@@ -165,6 +166,7 @@ function VendorUpdateForm(props) {
                             });
 
                             setTimeout(() => {
+                                vendorDataStoreIntoLocalStorage()
                                 form.reset()
                                 dispatch(setInsertType('create'))
                                 dispatch(setEditEntityData([]))

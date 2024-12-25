@@ -247,6 +247,9 @@ const crudSlice = createSlice({
             state.purchaseFilterData.start_date = action.payload.start_date
             state.purchaseFilterData.end_date = action.payload.end_date
             state.purchaseFilterData.searchKeyword = action.payload.searchKeyword
+        },
+        setInventoryShowDataEmpty : (state,action) => {
+            state.showEntityData = []
         }
     },
 
@@ -364,6 +367,6 @@ const crudSlice = createSlice({
     }
 })
 
-export const { setFetching, setEntityNewData, setDropdownLoad, setEditEntityData, setFormLoading, setInsertType, setSearchKeyword, setDeleteMessage, setValidationData, setValidationMessage, setCategoryFilterData ,setProductFilterData,setSalesFilterData,setPurchaseFilterData,setPurchaseItemsFilterData,setInvoiceBatchFilterData} = crudSlice.actions
+export const { setFetching, setEntityNewData, setDropdownLoad, setEditEntityData, setFormLoading, setInsertType, setSearchKeyword, setDeleteMessage, setValidationData, setValidationMessage, setCategoryFilterData ,setProductFilterData,setSalesFilterData,setPurchaseFilterData,setPurchaseItemsFilterData,setInvoiceBatchFilterData,setInventoryShowDataEmpty} = crudSlice.actions
 
 export default crudSlice.reducer;

@@ -47,6 +47,8 @@ import flagGB from "../../assets/images/flags/gb.svg";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import SpotLightSearchModal from "../modules/modals/SpotLightSearchModal.jsx";
+import {useDispatch} from "react-redux";
+import {setInventoryShowDataEmpty} from "../../store/inventory/crudSlice.js";
 
 const mockdata = [
     {
@@ -93,6 +95,7 @@ export default function Header({
     const [opened, { open, close }] = useDisclosure(false);
     const { t, i18n } = useTranslation();
     const navigate = useNavigate();
+    const dispatch = useDispatch()
     const theme = useMantineTheme();
     const { toggle, fullscreen } = useFullscreen();
     const [languageOpened, setLanguageOpened] = useState(false);
@@ -101,6 +104,7 @@ export default function Header({
     );
 
     function logout() {
+        dispatch(setInventoryShowDataEmpty())
         localStorage.clear();
         navigate("/login");
     }

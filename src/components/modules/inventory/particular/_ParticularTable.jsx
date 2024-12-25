@@ -36,9 +36,9 @@ function _ParticularTable() {
     const perPage = 50;
     const [page, setPage] = useState(1);
 
-    const searchKeyword = useSelector((state) => state.productionCrudSlice.searchKeyword)
-    const fetching = useSelector((state) => state.productionCrudSlice.fetching)
-    const indexData = useSelector((state) => state.productionCrudSlice.indexEntityData)
+    const searchKeyword = useSelector((state) => state.inventoryCrudSlice.searchKeyword)
+    const fetching = useSelector((state) => state.inventoryCrudSlice.fetching)
+    const indexData = useSelector((state) => state.inventoryCrudSlice.indexEntityData)
     const productionSettingFilterData = useSelector((state) => state.productionCrudSlice.productionSettingFilterData)
 
     const [productionSettingView, setProductionSettingViewModal] = useState(false)
