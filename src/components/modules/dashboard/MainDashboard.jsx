@@ -48,7 +48,7 @@ function MainDashboard(props) {
   /* start for user role check */
     const [userRole, setUserRole] = useState(() => {
       const userRoleData = localStorage.getItem("user");
-      return userRoleData ? JSON.parse(JSON.parse(userRoleData)?.access_control_role) : [];
+      return userRoleData && userRoleData?.access_control_role ? JSON.parse(JSON.parse(userRoleData)?.access_control_role) : [];
     });
 
     // check all field exists
@@ -86,7 +86,7 @@ function MainDashboard(props) {
           <Card shadow="md" radius="md" className={classes.card} padding="lg">
             <Grid gutter={{ base: 2 }}>
               {/* demo role implement*/}
-              {
+              {/*{
                 ["condition_account", "expenditure", "purchase", "payroll_salary", "payroll"].some((value) => userRole.includes(value)) &&
                   (
                       <>
@@ -104,7 +104,20 @@ function MainDashboard(props) {
                         </Grid.Col>
                       </>
                   )
-              }
+              }*/}
+
+              <Grid.Col span={2}>
+                <IconMoneybag
+                    style={{ width: rem(42), height: rem(42) }}
+                    stroke={2}
+                    color={theme.colors.teal[6]}
+                />
+              </Grid.Col>
+              <Grid.Col span={10}>
+                <Text fz="md" fw={500} className={classes.cardTitle}>
+                  {t("Sales&PurchaseOverview")}
+                </Text>
+              </Grid.Col>
             </Grid>
           </Card>
           <Card shadow="md" radius="md" className={classes.card} padding="lg">
