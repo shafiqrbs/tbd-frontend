@@ -151,7 +151,7 @@ function ProductTable() {
                             render: (item) => (
                                 <Flex justify="center" align="center">
                                     <Switch
-                                        disabled={switchEnable[item.id] || false}
+                                        disabled={(switchEnable[item.id] || false) || item.parent_id}
                                         defaultChecked={item.status == 1 ? true : false}
                                         color="red"
                                         radius="xs"
@@ -162,6 +162,7 @@ function ProductTable() {
                                             handleSwitch(event.currentTarget.checked, item);
                                         }}
                                     />
+
                                 </Flex>
                             )
                         },
