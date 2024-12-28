@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress.js";
 import getConfigData from "../../../global-hook/config-data/getConfigData.js";
 import _SalesPurchaseHeaderNavbar from "../../domain/configuraton/_SalesPurchaseHeaderNavbar.jsx";
-import _ApproveTable from "./_ApproveTable";
+import _OpeningApproveTable from "./_OpeningApproveTable.jsx";
 
 function OpeningApproveIndex() {
     const { t, i18n } = useTranslation();
@@ -28,7 +28,7 @@ function OpeningApproveIndex() {
                                 currencySymbol={configData?.currency?.symbol}
                             />
                             <Box p={'8'}>
-                                <_ApproveTable
+                                <_OpeningApproveTable
                                     currencySymbol={configData?.currency?.symbol}
                                 />
                             </Box>
