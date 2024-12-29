@@ -53,10 +53,10 @@ function _InvoiceDrawerForPrint(props) {
                     </Drawer.Header>
                     <Box mb={0} bg={'gray.1'} >
                         <Box p={'md'} className="boxBackground borderRadiusAll" >
-                            {configData?.domain?.id == '359' && printType === 'pos' && <InvoiceDomain359Pos mode={mode} setOpenInvoiceDrawerForPrint={setOpenInvoiceDrawerForPrint} />}
+                            {(configData?.domain?.id == '359' || configData?.domain?.id == '379') && printType === 'pos' && <InvoiceDomain359Pos mode={mode} setOpenInvoiceDrawerForPrint={setOpenInvoiceDrawerForPrint} />}
                             {/* { configData?.domain?.id =='359' && printType==='print' && <_InvoiceForDomain359Normal  mode={mode}/> } */}
                             {/* {configData?.domain?.id == '359' && printType === 'print' && <InvoiceDomain359Normal mode={mode} setOpenInvoiceDrawerForPrint={setOpenInvoiceDrawerForPrint} />} */}
-                            {configData?.domain?.id == '359' && printType === 'print' && <_InvoiceForDomain359Custom mode={mode} setOpenInvoiceDrawerForPrint={setOpenInvoiceDrawerForPrint} />}
+                            {(configData?.domain?.id == '359' || configData?.domain?.id == '379') && <_InvoiceForDomain359Custom mode={mode} setOpenInvoiceDrawerForPrint={setOpenInvoiceDrawerForPrint} />}
                         </Box>
                     </Box>
                 </Drawer.Content>
