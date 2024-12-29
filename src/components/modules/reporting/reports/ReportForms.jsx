@@ -13,23 +13,11 @@ import InputForm from "../../../form-builders/InputForm";
 import { IconCalendar, IconUserCircle } from "@tabler/icons-react";
 import DatePickerForm from "../../../form-builders/DatePicker";
 
-const __InventoryReport = forwardRef((props, ref) => {
-  const { setEnableTable, setDataLimit } = props;
+const ReportForms = forwardRef((props, ref) => {
+  const { setEnableTable, setDataLimit, schema, formType, form } = props;
   const { mainAreaHeight, isOnline } = useOutletContext();
   const { t } = useTranslation();
   const height = mainAreaHeight - 98;
-  const form = useForm({
-    initialValues: {
-      report_type: "",
-      name_dropdown: "",
-      name: "",
-      start_date: "",
-      end_date: "",
-    },
-    validate: {
-      report_type: isNotEmpty(),
-    },
-  });
 
   const formRef = React.useRef(null);
 
@@ -38,17 +26,13 @@ const __InventoryReport = forwardRef((props, ref) => {
       formRef.current?.requestSubmit();
     },
   }));
-
-  const report_Type = [
+  const data = [
     { id: 1, value: "MonthlyReport" },
     { id: 2, value: "YearlyReport" },
   ];
-  const name_drop_data = [
-    { id: 1, value: "chiller" },
-    { id: 2, value: "party" },
-  ];
   const [nameDropdown, setNameDropdown] = useState(null);
 
+  const fields = schema[formType];
   const [reportType, setReportType] = useState(null);
   useEffect(() => {
     reportType === "YearlyReport"
@@ -58,14 +42,73 @@ const __InventoryReport = forwardRef((props, ref) => {
   return (
     <form
       ref={formRef}
-      onSubmit={form.onSubmit((values) => {
-        setEnableTable(true);
-        console.log("Form submits Inventory", values);
-      })}
+      onSubmit={form.onSubmit((values) =>
+        console.log(`${formType} Submitted`, values)
+      )}
     >
       <ScrollArea h={height - 46} scrollbarSize={2} scrollbars="y" type="never">
         <Box>
-          <Box mt={"8"}>
+          <Box>
+            {fields.map((field) => {
+              const dropdownOptions = Array.isArray(field.options)
+                ? field.options.map((option) => ({
+                    value: option,
+                    label: option,
+                  }))
+                : [];
+              if (field.type === "text") {
+                return (
+                  <Box mt={"8"}>
+                    <InputForm
+                      tooltip={t(`${field.label}`)}
+                      key={field.name}
+                      label={field.label}
+                      placeholder={field.label}
+                      required={field.required}
+                      name={field.name}
+                      id={field.name}
+                      form={form}
+                    />
+                  </Box>
+                );
+              }
+              if (field.type === "dropdown") {
+                if (!Array.isArray(field.options)) {
+                  console.error(
+                    `Expected an array for options in field "${field.name}", got:`,
+                    typeof field.options,
+                    field.options
+                  );
+                  return null; // Avoid rendering if options are invalid
+                }
+
+                const dropdownOptions = field.options.map((option) => ({
+                  value: option,
+                  label: option,
+                }));
+                const [value, setValue] = useState(null);
+                return (
+                  <Box mt={"8"}>
+                    <SelectForm
+                      tooltip={t(`${field.label}`)}
+                      key={field.name}
+                      label={field.label}
+                      placeholder={field.label}
+                      required={field.required}
+                      name={field.name}
+                      id={field.name}
+                      form={form}
+                      dropdownValue={dropdownOptions}
+                      value={value}
+                      changeValue={setValue}
+                    />
+                  </Box>
+                );
+              }
+              return null;
+            })}
+          </Box>
+          {/* <Box mt={"8"}>
             <SelectForm
               tooltip={t("ReportType")}
               label={t("ReportType")}
@@ -102,6 +145,7 @@ const __InventoryReport = forwardRef((props, ref) => {
                   placeholder="Search Like"
                   dropdownValue={name_drop_data}
                   changeValue={setNameDropdown}
+                  data={["React", "Angular", "Vue", "Svelte"]}
                 />
               </Grid.Col>
               <Grid.Col span={7}>
@@ -162,11 +206,11 @@ const __InventoryReport = forwardRef((props, ref) => {
                 />
               </Grid.Col>
             </Grid>
-          </Box>
+          </Box> */}
         </Box>
       </ScrollArea>
     </form>
   );
 });
 
-export default __InventoryReport;
+export default ReportForms;

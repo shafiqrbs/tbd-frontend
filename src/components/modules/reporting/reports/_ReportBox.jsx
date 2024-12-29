@@ -15,6 +15,9 @@ import __InventoryReport from "./__InventoryReport.jsx";
 import __SalesReport from "./__SalesReport";
 import __AccountingReport from "./__AccountingReport";
 import __PurchaseReport from "./__PurchaseReport";
+import DynamicForm from "./DynamicForm.jsx";
+import ReportForms from "./ReportForms.jsx";
+import { useForm } from "@mantine/form";
 
 export default function _ReportBox(props) {
   const {
@@ -46,6 +49,75 @@ export default function _ReportBox(props) {
       accountingSubmitRef.current.submitForm();
     }
   };
+  const schema = {
+    SalesReportForm: [
+      {
+        type: "text",
+        label: "My name",
+        name: "customer",
+        required: true,
+      },
+      {
+        type: "dropdown",
+        label: "Month",
+        name: "month",
+        options: ["January", "February", "March"],
+        required: true,
+      },
+      {
+        type: "dropdown",
+        label: "Year",
+        name: "year",
+        options: ["2021", "2022", "2023"],
+        required: true,
+      },
+      {
+        type: "dropdown",
+        label: "Format",
+        name: "format",
+        options: ["PDF", "Excel", "CSV"],
+        required: true,
+      },
+    ],
+    PurchaseReportForm: [
+      { type: "text", label: "Vendor Name", name: "vendor", required: true },
+      {
+        type: "dropdown",
+        label: "Month",
+        name: "month",
+        options: ["January", "February", "March"],
+        required: true,
+      },
+      {
+        type: "dropdown",
+        label: "Year",
+        name: "year",
+        options: ["2021", "2022", "2023"],
+        required: true,
+      },
+      {
+        type: "dropdown",
+        label: "Format",
+        name: "format",
+        options: ["PDF", "Excel", "CSV"],
+        required: true,
+      },
+    ],
+  };
+
+  const form = useForm({
+    initialValues: schema.SalesReportForm.reduce((acc, field) => {
+      acc[field.name] = ""; // Initialize each field to an empty string
+      return acc;
+    }, {}),
+    validate: schema.SalesReportForm.reduce((acc, field) => {
+      if (field.required) {
+        acc[field.name] = (value) =>
+          value ? null : `${field.label} is required`;
+      }
+      return acc;
+    }, {}),
+  });
   return (
     <>
       <Box p={"xs"} pt={"0"} className={"borderRadiusAll"}>
@@ -69,20 +141,37 @@ export default function _ReportBox(props) {
         <Box bg={"white"}>
           <Box pl={"xs"} pr={"xs"} className={"borderRadiusAll"}>
             {inventoryReport && (
-              <__InventoryReport
+              // <__InventoryReport
+              //   setDataLimit={setDataLimit}
+              //   ref={inventorySubmitRef}
+              //   setEnableTable={setEnableTable}
+              // />
+              // <DynamicForm schema={schema} formType="SalesReportForm" />
+              <ReportForms
                 setDataLimit={setDataLimit}
                 ref={inventorySubmitRef}
                 setEnableTable={setEnableTable}
+                schema={schema}
+                formType="SalesReportForm"
+                form={form}
               />
             )}
             {salesReport && (
-              <__SalesReport
-                ref={salesSubmitRef}
+              // <__SalesReport
+              //   ref={salesSubmitRef}
+              //   setDataLimit={setDataLimit}
+              //   setEnableTable={setEnableTable}
+              // />
+              <ReportForms
                 setDataLimit={setDataLimit}
+                ref={salesSubmitRef}
                 setEnableTable={setEnableTable}
+                schema={schema}
+                formType="PurchaseReportForm"
+                form={form}
               />
             )}
-            {accountingReport && (
+            {/* {accountingReport && (
               <__AccountingReport
                 ref={accountingSubmitRef}
                 setDataLimit={setDataLimit}
@@ -95,7 +184,7 @@ export default function _ReportBox(props) {
                 setDataLimit={setDataLimit}
                 setEnableTable={setEnableTable}
               />
-            )}
+            )} */}
           </Box>
           <Box mt={4}>
             <Box bg={"white"}>
