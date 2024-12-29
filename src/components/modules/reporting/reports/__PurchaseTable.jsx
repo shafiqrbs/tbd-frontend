@@ -15,7 +15,7 @@ import {
   import { IconDeviceFloppy, IconPlus } from "@tabler/icons-react";
   
   export default function __PurchaseTable(props) {
-    const { dataLimit } = props;
+    const { dataLimit, enableTable } = props;
     const { mainAreaHeight, isOnline } = useOutletContext();
     const height = mainAreaHeight - 98;
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
@@ -201,16 +201,6 @@ import {
                     accessor: "debit",
                     title: t("Debit"),
                     width: 130,
-                    render: (record, index) => (
-                      <NumberInput
-                        hideControls
-                        ta={"right"}
-                        value={record.debit}
-                        onChange={(e) =>
-                          handleInputChange(index, "debit", e.target.value)
-                        }
-                      />
-                    ),
                   },
                   {
                     accessor: "credit",
@@ -245,7 +235,7 @@ import {
                 className={"boxBackground borderRadiusAll"}
               >
                 <Flex h={28} direction={"row"} gap={"xs"} justify="flex-end">
-                  {!saveCreateLoading && isOnline && dataLimit && (
+                  {!saveCreateLoading && isOnline && enableTable && (
                     <>
                       <Button
                         size="xs"

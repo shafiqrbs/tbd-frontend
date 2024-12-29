@@ -342,11 +342,27 @@ function Reports() {
                 setDataLimit={setDataLimit}
               />
             )}
-            {salesReportTable && <__SalesTable dataLimit={dataLimit} />}
-            {accountingReportTable && (
-              <__AccountingTable dataLimit={dataLimit} />
+            {salesReportTable && (
+              <__SalesTable
+                dataLimit={dataLimit}
+                enableTable={enableTable}
+                setDataLimit={setDataLimit}
+              />
             )}
-            {purchaseReportTable && <__PurchaseTable dataLimit={dataLimit} />}
+            {accountingReportTable && (
+              <__AccountingTable
+                dataLimit={dataLimit}
+                enableTable={enableTable}
+                setDataLimit={setDataLimit}
+              />
+            )}
+            {purchaseReportTable && (
+              <__PurchaseTable
+                dataLimit={dataLimit}
+                enableTable={enableTable}
+                setDataLimit={setDataLimit}
+              />
+            )}
           </Grid.Col>
         </Grid>
       </Box>
