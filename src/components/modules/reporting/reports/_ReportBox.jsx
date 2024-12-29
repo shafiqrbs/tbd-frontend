@@ -33,6 +33,7 @@ export default function _ReportBox(props) {
   const salesSubmitRef = useRef();
   const purchaseSubmitRef = useRef();
   const accountingSubmitRef = useRef();
+  const { t } = useTranslation();
 
   const handleSubmit = () => {
     if (inventoryReport && inventorySubmitRef.current) {
@@ -45,8 +46,6 @@ export default function _ReportBox(props) {
       accountingSubmitRef.current.submitForm();
     }
   };
-
-  const { t } = useTranslation();
   return (
     <>
       <Box p={"xs"} pt={"0"} className={"borderRadiusAll"}>
@@ -77,18 +76,24 @@ export default function _ReportBox(props) {
               />
             )}
             {salesReport && (
-              <__SalesReport ref={salesSubmitRef} setDataLimit={setDataLimit} />
+              <__SalesReport
+                ref={salesSubmitRef}
+                setDataLimit={setDataLimit}
+                setEnableTable={setEnableTable}
+              />
             )}
             {accountingReport && (
               <__AccountingReport
                 ref={accountingSubmitRef}
                 setDataLimit={setDataLimit}
+                setEnableTable={setEnableTable}
               />
             )}
             {purchaseReport && (
               <__PurchaseReport
                 ref={purchaseSubmitRef}
                 setDataLimit={setDataLimit}
+                setEnableTable={setEnableTable}
               />
             )}
           </Box>
