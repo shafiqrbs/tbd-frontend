@@ -10,7 +10,8 @@ import SelectForm from "../../../form-builders/SelectForm";
 import { isNotEmpty, useForm } from "@mantine/form";
 import { useTranslation } from "react-i18next";
 import InputForm from "../../../form-builders/InputForm";
-import { IconUserCircle } from "@tabler/icons-react";
+import { IconCalendar, IconUserCircle } from "@tabler/icons-react";
+import DatePickerForm from "../../../form-builders/DatePicker";
 
 const __InventoryReport = forwardRef((props, ref) => {
   const { setEnableTable, setDataLimit } = props;
@@ -22,6 +23,8 @@ const __InventoryReport = forwardRef((props, ref) => {
       report_type: "",
       name_dropdown: "",
       name: "",
+      start_date: "",
+      end_date: "",
     },
     validate: {
       report_type: isNotEmpty(),
@@ -116,6 +119,48 @@ const __InventoryReport = forwardRef((props, ref) => {
                     rightIcon={""}
                   />
                 </Box>
+              </Grid.Col>
+            </Grid>
+          </Box>
+          <Box mt={"8"}>
+            <Grid columns={15} gutter={{ base: 8 }}>
+              <Grid.Col span={3}>
+                <Text ta={"left"} fw={600} fz={"sm"} mt={"8"}>
+                  {t("Date")}
+                </Text>
+              </Grid.Col>
+
+              <Grid.Col span={6}>
+                <DatePickerForm
+                  tooltip={t("SelectStartDate")}
+                  label=""
+                  placeholder={t("StartDate")}
+                  required={true}
+                  nextField={"end_date"}
+                  form={form}
+                  name={"start_date"}
+                  id={"start_date"}
+                  leftSection={<IconCalendar size={16} opacity={0.5} />}
+                  rightSection={<IconCalendar size={16} opacity={0.5} />}
+                  rightSectionWidth={30}
+                  closeIcon={true}
+                />
+              </Grid.Col>
+              <Grid.Col span={6}>
+                <DatePickerForm
+                  tooltip={t("SelectEndDate")}
+                  label=""
+                  placeholder={t("EndDate")}
+                  required={true}
+                  nextField={""}
+                  form={form}
+                  name={"end_date"}
+                  id={"end_date"}
+                  leftSection={<IconCalendar size={16} opacity={0.5} />}
+                  rightSection={<IconCalendar size={16} opacity={0.5} />}
+                  rightSectionWidth={30}
+                  closeIcon={true}
+                />
               </Grid.Col>
             </Grid>
           </Box>
