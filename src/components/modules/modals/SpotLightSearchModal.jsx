@@ -441,7 +441,7 @@ function SpotLightSearchModal({ onClose }) {
 
   // Get actions filtered from Spotlight based on configData
   const getActions = () => {
-    const actions = getSpotlightDropdownData(t, configData);
+    const actions = getSpotlightDropdownData(t, configData['configData']);
     let index = 0;
 
     // Assign an index to each action

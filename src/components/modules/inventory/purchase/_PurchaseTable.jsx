@@ -30,9 +30,9 @@ import {
 import {DataTable} from "mantine-datatable";
 import {useDispatch, useSelector} from "react-redux";
 import {
-  getIndexEntityData,
-  setDeleteMessage,
-  setFetching, setValidationData, showInstantEntityData, updateEntityData,
+    getIndexEntityData,
+    setDeleteMessage,
+    setFetching, setValidationData, showInstantEntityData, updateEntityData,
 } from "../../../../store/inventory/crudSlice.js";
 import {modals} from "@mantine/modals";
 import {deleteEntityData} from "../../../../store/core/crudSlice";
@@ -110,53 +110,50 @@ function _PurchaseTable() {
             </Table.Tr>
         ));
 
-    useEffect(() => {
-        const fetchData = async () => {
-            setFetching(true)
-            const options = {
-                year: "numeric",
-                month: "2-digit",
-                day: "2-digit",
-            };
 
-            const value = {
-                url: "inventory/purchase",
-                param: {
-                    term: purchaseFilterData.searchKeyword,
-                    vendor_id: purchaseFilterData.vendor_id,
-                    start_date:
-                        purchaseFilterData.start_date &&
-                        new Date(purchaseFilterData.start_date).toLocaleDateString(
-                            "en-CA",
-                            options
-                        ),
-                    end_date:
-                        purchaseFilterData.end_date &&
-                        new Date(purchaseFilterData.end_date).toLocaleDateString(
-                            "en-CA",
-                            options
-                        ),
-                    page: page,
-                    offset: perPage,
-                },
-            };
-
-            try {
-                const resultAction = await dispatch(getIndexEntityData(value));
-
-                if (getIndexEntityData.rejected.match(resultAction)) {
-                    console.error('Error:', resultAction);
-                } else if (getIndexEntityData.fulfilled.match(resultAction)) {
-                    setIndexData(resultAction.payload);
-                    setFetching(false)
-                }
-            } catch (err) {
-                console.error('Unexpected error:', err);
-            }
+    const fetchData = async () => {
+        setFetching(true);
+        const options = {
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
         };
 
+        const value = {
+            url: "inventory/purchase",
+            param: {
+                term: purchaseFilterData.searchKeyword,
+                vendor_id: purchaseFilterData.vendor_id,
+                start_date:
+                    purchaseFilterData.start_date &&
+                    new Date(purchaseFilterData.start_date).toLocaleDateString("en-CA", options),
+                end_date:
+                    purchaseFilterData.end_date &&
+                    new Date(purchaseFilterData.end_date).toLocaleDateString("en-CA", options),
+                page: page,
+                offset: perPage,
+            },
+        };
+
+        try {
+            const resultAction = await dispatch(getIndexEntityData(value));
+
+            if (getIndexEntityData.rejected.match(resultAction)) {
+                console.error('Error:', resultAction);
+            } else if (getIndexEntityData.fulfilled.match(resultAction)) {
+                setIndexData(resultAction.payload);
+                setFetching(false);
+            }
+        } catch (err) {
+            console.error('Unexpected error:', err);
+        }
+    };
+
+// useEffect now only calls fetchData based on dependencies
+    useEffect(() => {
         fetchData();
     }, [purchaseFilterData, page]);
+
 
     useEffect(() => {
         dispatch(setDeleteMessage(""));
@@ -176,54 +173,54 @@ function _PurchaseTable() {
         }
     }, [entityDataDelete]);
 
-  const handlePurchaseApprove = (id) => {
-    // Open confirmation modal
-    modals.openConfirmModal({
-      title: <Text size="md">{t("FormConfirmationTitle")}</Text>,
-      children: <Text size="sm">{t("FormConfirmationMessage")}</Text>,
-      labels: {confirm: t("Submit"), cancel: t("Cancel")},
-      confirmProps: {color: "red"},
-      onCancel: () => {
-        console.log("Cancel");
-      },
-      onConfirm: () => handleConfirmPurchaseApprove(id), // Separate function for "onConfirm"
-    });
-  };
-    const handleConfirmPurchaseApprove = async (id) => {
-      try {
-        const resultAction = await dispatch(showInstantEntityData('inventory/purchase/approve/'+id));
-        if (showInstantEntityData.fulfilled.match(resultAction)) {
-          if (resultAction.payload.data.status === 200) {
-            // Show success notification
-            notifications.show({
-              color: "teal",
-              title: t("ApprovedSuccessfully"),
-              icon: <IconCheck style={{width: rem(18), height: rem(18)}}/>,
-              loading: false,
-              autoClose: 700,
-              style: {backgroundColor: "lightgray"},
-            });
-          }
-        }
-
-        // Reset loading state
-        /*setTimeout(() => {
-          setPage(1);
-        }, 700);*/
-      } catch (error) {
-        console.error("Error updating entity:", error);
-
-        // Error notification
-        notifications.show({
-          color: "red",
-          title: t("UpdateFailed"),
-          icon: <IconX style={{width: rem(18), height: rem(18)}}/>,
-          loading: false,
-          autoClose: 700,
-          style: {backgroundColor: "lightgray"},
+    const handlePurchaseApprove = (id) => {
+        // Open confirmation modal
+        modals.openConfirmModal({
+            title: <Text size="md">{t("FormConfirmationTitle")}</Text>,
+            children: <Text size="sm">{t("FormConfirmationMessage")}</Text>,
+            labels: {confirm: t("Submit"), cancel: t("Cancel")},
+            confirmProps: {color: "red"},
+            onCancel: () => {
+                console.log("Cancel");
+            },
+            onConfirm: () => handleConfirmPurchaseApprove(id), // Separate function for "onConfirm"
         });
-      }
-    }
+    };
+
+    const handleConfirmPurchaseApprove = async (id) => {
+        try {
+            const resultAction = await dispatch(showInstantEntityData('inventory/purchase/approve/' + id));
+
+            if (showInstantEntityData.fulfilled.match(resultAction)) {
+                if (resultAction.payload.data.status === 200) {
+                    // Show success notification
+                    notifications.show({
+                        color: "teal",
+                        title: t("ApprovedSuccessfully"),
+                        icon: <IconCheck style={{width: rem(18), height: rem(18)}}/>,
+                        loading: false,
+                        autoClose: 700,
+                        style: {backgroundColor: "lightgray"},
+                    });
+
+                    // Refresh index data
+                    await fetchData(); // Ensure fetchData is available in scope
+                }
+            }
+        } catch (error) {
+            console.error("Error updating entity:", error);
+
+            // Error notification
+            notifications.show({
+                color: "red",
+                title: t("UpdateFailed"),
+                icon: <IconX style={{width: rem(18), height: rem(18)}}/>,
+                loading: false,
+                autoClose: 700,
+                style: {backgroundColor: "lightgray"},
+            });
+        }
+    };
 
     return (
         <>
@@ -326,22 +323,25 @@ function _PurchaseTable() {
                                                             </ActionIcon>
                                                         </Menu.Target>
                                                         <Menu.Dropdown>
-                                                            <Menu.Item
-                                                                onClick={(e) => {
-                                                                    e.preventDefault();
-                                                                    handlePurchaseApprove(data.id)
-                                                                }}
-                                                                target="_blank"
-                                                                color="green"
-                                                                component="a"
-                                                                w={"200"}
-                                                                leftSection={
-                                                                    <IconChevronsRight
-                                                                        style={{width: rem(14), height: rem(14)}}/>
-                                                                }
-                                                            >
-                                                                {t("Approve")}
-                                                            </Menu.Item>
+                                                            {
+                                                                !data.approved_by_id &&
+                                                                <Menu.Item
+                                                                    onClick={(e) => {
+                                                                        e.preventDefault();
+                                                                        handlePurchaseApprove(data.id)
+                                                                    }}
+                                                                    target="_blank"
+                                                                    color="green"
+                                                                    component="a"
+                                                                    w={"200"}
+                                                                    leftSection={
+                                                                        <IconChevronsRight
+                                                                            style={{width: rem(14), height: rem(14)}}/>
+                                                                    }
+                                                                >
+                                                                    {t("Approve")}
+                                                                </Menu.Item>
+                                                            }
                                                             <Menu.Item
                                                                 onClick={() => {
                                                                     navigate(
