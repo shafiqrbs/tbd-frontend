@@ -14,16 +14,11 @@ import { useViewportSize, getHotkeyHandler, useHotkeys } from '@mantine/hooks'
 import { IconInfoCircle, IconLogin, IconArrowLeft } from '@tabler/icons-react';
 import { isNotEmpty, useForm } from '@mantine/form';
 import { Navigate, useNavigate } from 'react-router-dom'
-import Logo from '../assets/images/logo.png'
-import TerminalbdBg from '../assets/images/terminalbd-bg.png'
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import axios from "axios";
-import { getIndexEntityData } from "../store/core/crudSlice.js";
-import { useDispatch, useSelector } from "react-redux";
 import commonDataStoreIntoLocalStorage from "./global-hook/local-storage/commonDataStoreIntoLocalStorage.js";
 import orderProcessDropdownLocalDataStore from "./global-hook/local-storage/orderProcessDropdownLocalDataStore.js";
-import getConfigData from "./global-hook/config-data/getConfigData.js";
 
 export default function Login() {
 

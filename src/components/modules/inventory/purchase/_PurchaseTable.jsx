@@ -325,40 +325,50 @@ function _PurchaseTable() {
                                                         <Menu.Dropdown>
                                                             {
                                                                 !data.approved_by_id &&
-                                                                <Menu.Item
-                                                                    onClick={(e) => {
-                                                                        e.preventDefault();
-                                                                        handlePurchaseApprove(data.id)
-                                                                    }}
-                                                                    target="_blank"
-                                                                    color="green"
-                                                                    component="a"
-                                                                    w={"200"}
-                                                                    leftSection={
-                                                                        <IconChevronsRight
-                                                                            style={{width: rem(14), height: rem(14)}}/>
-                                                                    }
-                                                                >
-                                                                    {t("Approve")}
-                                                                </Menu.Item>
+                                                                <>
+                                                                    <Menu.Item
+                                                                        onClick={(e) => {
+                                                                            e.preventDefault();
+                                                                            handlePurchaseApprove(data.id)
+                                                                        }}
+                                                                        target="_blank"
+                                                                        color="green"
+                                                                        component="a"
+                                                                        w={"200"}
+                                                                        leftSection={
+                                                                            <IconChevronsRight
+                                                                                style={{
+                                                                                    width: rem(14),
+                                                                                    height: rem(14)
+                                                                                }}/>
+                                                                        }
+                                                                    >
+                                                                        {t("Approve")}
+                                                                    </Menu.Item>
+
+                                                                    <Menu.Item
+                                                                        onClick={() => {
+                                                                            navigate(
+                                                                                `/inventory/purchase/edit/${data.id}`
+                                                                            );
+                                                                        }}
+                                                                        target="_blank"
+                                                                        component="a"
+                                                                        w={"200"}
+                                                                        leftSection={
+                                                                            <IconPencil
+                                                                                style={{
+                                                                                    width: rem(14),
+                                                                                    height: rem(14)
+                                                                                }}
+                                                                            />
+                                                                        }
+                                                                    >
+                                                                        {t("Edit")}
+                                                                    </Menu.Item>
+                                                                </>
                                                             }
-                                                            <Menu.Item
-                                                                onClick={() => {
-                                                                    navigate(
-                                                                        `/inventory/purchase/edit/${data.id}`
-                                                                    );
-                                                                }}
-                                                                target="_blank"
-                                                                component="a"
-                                                                w={"200"}
-                                                                leftSection={
-                                                                    <IconPencil
-                                                                        style={{width: rem(14), height: rem(14)}}
-                                                                    />
-                                                                }
-                                                            >
-                                                                {t("Edit")}
-                                                            </Menu.Item>
+
 
                                                             <Menu.Item
                                                                 onClick={(e) => {
@@ -379,51 +389,54 @@ function _PurchaseTable() {
                                                                 {t("Show")}
                                                             </Menu.Item>
 
-                                                            <Menu.Item
-                                                                target="_blank"
-                                                                component="a"
-                                                                bg={"red.1"}
-                                                                c={"red.6"}
-                                                                onClick={() => {
-                                                                    modals.openConfirmModal({
-                                                                        title: (
-                                                                            <Text size="md">
-                                                                                {" "}
-                                                                                {t("FormConfirmationTitle")}
-                                                                            </Text>
-                                                                        ),
-                                                                        children: (
-                                                                            <Text size="sm">
-                                                                                {" "}
-                                                                                {t("FormConfirmationMessage")}
-                                                                            </Text>
-                                                                        ),
-                                                                        labels: {
-                                                                            confirm: "Confirm",
-                                                                            cancel: "Cancel",
-                                                                        },
-                                                                        confirmProps: {color: "red.6"},
-                                                                        onCancel: () => console.log("Cancel"),
-                                                                        onConfirm: () => {
-                                                                            {
-                                                                                dispatch(
-                                                                                    deleteEntityData(
-                                                                                        "inventory/purchase/" + data.id
-                                                                                    )
-                                                                                );
-                                                                            }
-                                                                        },
-                                                                    });
-                                                                }}
-                                                                w={"200"}
-                                                                leftSection={
-                                                                    <IconTrashX
-                                                                        style={{width: rem(14), height: rem(14)}}
-                                                                    />
-                                                                }
-                                                            >
-                                                                {t("Delete")}
-                                                            </Menu.Item>
+                                                            {
+                                                                !data.approved_by_id &&
+                                                                <Menu.Item
+                                                                    target="_blank"
+                                                                    component="a"
+                                                                    bg={"red.1"}
+                                                                    c={"red.6"}
+                                                                    onClick={() => {
+                                                                        modals.openConfirmModal({
+                                                                            title: (
+                                                                                <Text size="md">
+                                                                                    {" "}
+                                                                                    {t("FormConfirmationTitle")}
+                                                                                </Text>
+                                                                            ),
+                                                                            children: (
+                                                                                <Text size="sm">
+                                                                                    {" "}
+                                                                                    {t("FormConfirmationMessage")}
+                                                                                </Text>
+                                                                            ),
+                                                                            labels: {
+                                                                                confirm: "Confirm",
+                                                                                cancel: "Cancel",
+                                                                            },
+                                                                            confirmProps: {color: "red.6"},
+                                                                            onCancel: () => console.log("Cancel"),
+                                                                            onConfirm: () => {
+                                                                                {
+                                                                                    dispatch(
+                                                                                        deleteEntityData(
+                                                                                            "inventory/purchase/" + data.id
+                                                                                        )
+                                                                                    );
+                                                                                }
+                                                                            },
+                                                                        });
+                                                                    }}
+                                                                    w={"200"}
+                                                                    leftSection={
+                                                                        <IconTrashX
+                                                                            style={{width: rem(14), height: rem(14)}}
+                                                                        />
+                                                                    }
+                                                                >
+                                                                    {t("Delete")}
+                                                                </Menu.Item>
+                                                            }
                                                         </Menu.Dropdown>
                                                     </Menu>
                                                 </Group>

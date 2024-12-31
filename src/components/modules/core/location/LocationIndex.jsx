@@ -27,7 +27,7 @@ function LocationIndex() {
     const insertType = useSelector((state) => state.inventoryCrudSlice.insertType)
 
     const progress = getLoadingProgress()
-    const configData = getConfigData()
+    const {configData,fetchData} = getConfigData()
     const navigate = useNavigate()
 
     const { id } = useParams();

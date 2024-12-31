@@ -21,11 +21,12 @@ function DomainIndex() {
     const insertType = useSelector((state) => state.crudSlice.insertType)
 
     const progress = getLoadingProgress()
+    const {configData,fetchData} = getConfigData()
 
     const { id } = useParams();
     const navigate = useNavigate();
 
-    localStorage.setItem('config-data', JSON.stringify(getConfigData()));
+    localStorage.setItem('config-data', JSON.stringify(configData));
 
     useEffect(() => {
         if (id) {

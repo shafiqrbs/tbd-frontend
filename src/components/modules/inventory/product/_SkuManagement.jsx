@@ -32,6 +32,7 @@ import {
 } from "../../../../store/inventory/crudSlice.js";
 import {modals} from "@mantine/modals";
 import getSettingParticularDropdownData from "../../../global-hook/dropdown/getSettingParticularDropdownData.js";
+import productsDataStoreIntoLocalStorage from "../../../global-hook/local-storage/productsDataStoreIntoLocalStorage.js";
 
 function _SkuManagement(props) {
     const {id, isBrand, isColor, isGrade, isSize, isMultiPrice, isModel} = props;
@@ -175,6 +176,7 @@ function _SkuManagement(props) {
                 dispatch(inlineUpdateEntityData(updateData))
             }, 500)
         }
+        productsDataStoreIntoLocalStorage()
     };
 
     return (
@@ -271,6 +273,7 @@ function _SkuManagement(props) {
                                                     style: {backgroundColor: 'lightgray'},
                                                 });
                                             } else if (storeEntityData.fulfilled.match(resultAction)) {
+                                                await productsDataStoreIntoLocalStorage()
                                                 notifications.show({
                                                     color: 'teal',
                                                     title: t('CreateSuccessfully'),

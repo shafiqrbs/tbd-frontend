@@ -43,7 +43,7 @@ import classes from "../../../assets/css/FeaturesCards.module.css";
 import getConfigData from "../../global-hook/config-data/getConfigData.js";
 
 function MainDashboard(props) {
-  const configData = getConfigData();
+  const {configData,fetchData} = getConfigData();
 
   /* start for user role check */
     const [userRole, setUserRole] = useState(() => {
@@ -77,7 +77,6 @@ function MainDashboard(props) {
 
     return () => clearTimeout(timeoutId); // Clear the timeout if the component unmounts
   }, [navigate]);  // Notice we're also adding `navigate` dependency here
-
 
   return (
     <>
