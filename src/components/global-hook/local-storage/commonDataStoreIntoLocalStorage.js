@@ -32,6 +32,9 @@ const commonDataStoreIntoLocalStorage = async (user_id) => {
                 }
             })
             if (response.data.data) {
+                if ('inventory/config' == apiBackendRoutes[i]){
+                    localStorage.setItem(localStorageKeys[i], JSON.stringify(response.data.data.configData));
+                }
                 localStorage.setItem(localStorageKeys[i], JSON.stringify(response.data.data));
             }
         } catch (error) {

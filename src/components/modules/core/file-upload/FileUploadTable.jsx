@@ -43,7 +43,6 @@ function FileUploadTable() {
 
     const fetching = useSelector((state) => state.crudSlice.fetching)
     const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword)
-    const indexData = useSelector((state) => state.crudSlice.indexEntityData)
     const entityDataDelete = useSelector((state) => state.crudSlice.entityDataDelete)
 
     useEffect(() => {
@@ -64,18 +63,39 @@ function FileUploadTable() {
         }
     }, [entityDataDelete]);
 
+    const [indexData,setIndexData] = useState([])
+    const fetchingReload = useSelector((state) => state.crudSlice.fetching)
+
 
     useEffect(() => {
-        const value = {
-            url: 'core/file-upload',
-            param: {
-                term: searchKeyword,
-                page: page,
-                offset: perPage
+        const fetchData = async () => {
+            setFetching(true)
+            const value = {
+                url: 'core/file-upload',
+                param: {
+                    term: searchKeyword,
+                    page: page,
+                    offset: perPage
+                }
             }
-        }
-        dispatch(getIndexEntityData(value))
-    }, [fetching,loading]);
+
+            try {
+                const resultAction = await dispatch(getIndexEntityData(value));
+
+                if (getIndexEntityData.rejected.match(resultAction)) {
+                    console.error('Error:', resultAction);
+                } else if (getIndexEntityData.fulfilled.match(resultAction)) {
+                    setIndexData(resultAction.payload);
+                    setFetching(false)
+                }
+            } catch (err) {
+                console.error('Unexpected error:', err);
+            }
+        };
+
+        fetchData();
+    }, [dispatch, searchKeyword, page , fetchingReload,loading]);
+
 
     const processUploadFile = (id) => {
         setLoading(true)
@@ -102,16 +122,25 @@ function FileUploadTable() {
                             title: 'Process '+res.data.row+' rows successfully',
                             icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
                             loading: false,
-                            autoClose: 700,
+                            autoClose: 2000,
                             style: { backgroundColor: 'lightgray' },
-                        },300);
+                        });
                     })
                 }
             })
             .catch(function (error) {
-                setTimeout(() => {
-                    console.log(error)
-                }, 500)
+                console.log(error.response.data.message)
+                setLoading(false)
+                if (error?.response?.data?.message){
+                    notifications.show({
+                        color: 'red',
+                        title: error.response.data.message,
+                        icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
+                        loading: false,
+                        autoClose: 2000,
+                        style: { backgroundColor: 'lightgray' },
+                    });
+                }
             })
     }
 
