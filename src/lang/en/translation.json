@@ -667,5 +667,7 @@
   "PostProduction" : "Post Production",
   "ChooseModel" : "Choose Model",
   "ApprovedSuccessfully" : "Approved successfully",
+  "ReserThisDomain" : "Reset this domain ?",
+  "ResetSuccessfully" : "Reset successfully",
   "": ""
 }

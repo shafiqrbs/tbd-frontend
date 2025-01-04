@@ -51,7 +51,8 @@ function  ProductIndex() {
         const value = {
             url: 'inventory/select/category',
             param: {
-                type: 'parent'
+                // type: 'parent'
+                type: 'all'
             }
         }
         dispatch(getCategoryDropdown(value))

@@ -6,7 +6,7 @@ import {
     ActionIcon, Text, Title, Stack, Menu, rem
 } from "@mantine/core";
 import { useTranslation } from "react-i18next";
-import { IconTrashX, IconDotsVertical } from "@tabler/icons-react";
+import {IconTrashX, IconDotsVertical, IconZoomReset, IconRestore, IconCheck, IconX} from "@tabler/icons-react";
 import { DataTable } from 'mantine-datatable';
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -19,18 +19,23 @@ import {
 import KeywordSearch from "../../filter/KeywordSearch";
 import { modals } from "@mantine/modals";
 import tableCss from "../../../../assets/css/Table.module.css";
-
-
+import {setInventoryShowDataEmpty, showInstantEntityData} from "../../../../store/inventory/crudSlice.js";
+import {notifications} from "@mantine/notifications";
+import commonDataStoreIntoLocalStorage from "../../../global-hook/local-storage/commonDataStoreIntoLocalStorage.js";
+import getConfigData from "../../../global-hook/config-data/getConfigData.js";
 
 function DomainTable(props) {
-
+    // const {configData} = props
     const dispatch = useDispatch();
     const { t, i18n } = useTranslation();
     const { isOnline, mainAreaHeight } = useOutletContext();
     const height = mainAreaHeight - 98; //TabList height 104
-
     const perPage = 50;
     const [page, setPage] = useState(1);
+
+    const {configData,fetchData} = getConfigData()
+    const [superadmin,setSuperadmin] = useState(configData?.domain?.modules?.includes(['superadmin']) || false)
+
 
     const fetching = useSelector((state) => state.crudSlice.fetching)
     const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword)
@@ -50,6 +55,43 @@ function DomainTable(props) {
         }
         dispatch(getIndexEntityData(value))
     }, [fetching]);
+
+
+    const handleConfirmDomainReset = async (id) => {
+        try {
+            const resultAction = await dispatch(showInstantEntityData('domain/restore/reset/' + id));
+            if (showInstantEntityData.fulfilled.match(resultAction)) {
+                if (resultAction.payload.data.status === 200) {
+                    // Show success notification
+                    notifications.show({
+                        color: "teal",
+                        title: t("ResetSuccessfully"),
+                        icon: <IconCheck style={{width: rem(18), height: rem(18)}}/>,
+                        loading: false,
+                        autoClose: 700,
+                        style: {backgroundColor: "lightgray"},
+                    });
+
+                    fetchData()
+
+                }
+            }
+        } catch (error) {
+            console.error("Error updating entity:", error);
+            // Error notification
+            notifications.show({
+                color: "red",
+                title: t("ResetFailed"),
+                icon: <IconX style={{width: rem(18), height: rem(18)}}/>,
+                loading: false,
+                autoClose: 700,
+                style: {backgroundColor: "lightgray"},
+            });
+        }
+        setSuperadmin(true)
+    };
+
+
     return (
 
         <>
@@ -123,6 +165,36 @@ function DomainTable(props) {
                                             >
                                                 {t('Configuration')}
                                             </Menu.Item>
+                                            {
+                                                superadmin && (
+                                                    <Menu.Item
+                                                        target="_blank"
+                                                        component="a"
+                                                        w={'200'}
+                                                        mt={'2'}
+                                                        bg={'red.1'}
+                                                        c={'red.6'}
+                                                        onClick={() => {
+                                                            modals.openConfirmModal({
+                                                                title: (
+                                                                    <Text size="md"> {t("ReserThisDomain")}</Text>
+                                                                ),
+                                                                children: (
+                                                                    <Text size="sm"> {t("FormConfirmationMessage")}</Text>
+                                                                ),
+                                                                labels: { confirm: 'Confirm', cancel: 'Cancel' },
+                                                                onCancel: () => console.log('Cancel'),
+                                                                onConfirm: () => {
+                                                                    handleConfirmDomainReset(data.id)
+                                                                },
+                                                            });
+                                                        }}
+                                                        rightSection={<IconRestore style={{ width: rem(14), height: rem(14) }} />}
+                                                    >
+                                                        {t('Reset')}
+                                                    </Menu.Item>
+                                                )
+                                            }
                                             <Menu.Item
                                                 target="_blank"
                                                 component="a"
