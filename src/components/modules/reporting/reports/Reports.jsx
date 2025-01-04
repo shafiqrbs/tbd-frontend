@@ -29,16 +29,50 @@ import __PurchaseTable from "./__PurchaseTable";
 import __SalesTable from "./__SalesTable.jsx";
 import __AccountingTable from "./__AccountingTable.jsx";
 
-function Reports() {
+const REPORT_TYPES = {
+  INVENTORY: "inventory",
+  SALES: "sales",
+  PURCHASE: "purchase",
+  ACCOUNTING: "accounting",
+};
+
+const REPORT_BUTTONS = [
+  {
+    id: REPORT_TYPES.INVENTORY,
+    icon: IconBuildingWarehouse,
+    label: "InventoryReport",
+  },
+  {
+    id: REPORT_TYPES.SALES,
+    icon: IconReportMoney,
+    label: "SalesReport",
+  },
+  {
+    id: REPORT_TYPES.PURCHASE,
+    icon: IconShoppingCart,
+    label: "PurchaseReport",
+  },
+  {
+    id: REPORT_TYPES.ACCOUNTING,
+    icon: IconFileInvoice,
+    label: "AccountingReport",
+  },
+];
+
+const Reports = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const { mainAreaHeight, isOnline } = useOutletContext();
   const height = mainAreaHeight - 98;
 
+  // Single state for active report type instead of multiple booleans
+  const [activeReport, setActiveReport] = useState(REPORT_TYPES.INVENTORY);
+  const [enableTable, setEnableTable] = useState(false);
+  const [dataLimit, setDataLimit] = useState(false);
+
   useEffect(() => {
     dispatch(setFetching(false));
   }, []);
-
   useHotkeys(
     [
       [
@@ -54,35 +88,104 @@ function Reports() {
   useHotkeys([["alt+r", () => {}]], []);
 
   useHotkeys([["alt+s", () => {}]], []);
-  const [enableTable, setEnableTable] = useState(false);
-  const [dataLimit, setDataLimit] = useState(false);
-  const [inventoryReport, setInventoryReport] = useState(false);
-  const [salesReport, setSalesReport] = useState(false);
-  const [purchaseReport, setPurchasereport] = useState(false);
-  const [accountingReport, setAccountingReport] = useState(false);
-  const [inventoryReportTable, setInventoryReportTable] = useState(false);
-  const [salesReportTable, setSalesReportTable] = useState(false);
-  const [purchaseReportTable, setPurchaseReportTable] = useState(false);
-  const [accountingReportTable, setAccountingReportTable] = useState(false);
-  useEffect(() => {
-    setInventoryReport(true);
-    setInventoryReportTable(true);
-  }, []);
+
+  // Reusable report button component
+  const ReportButton = ({ icon: Icon, label, id }) => (
+    <Center>
+      <Container fluid mb="8" mt={'xs'}>
+        <Flex justify="center" align="center" direction="column">
+          <Tooltip
+            label={t("AltTextNew")}
+            px={16}
+            py={2}
+            withArrow
+            position="left"
+            c="white"
+            bg="red.5"
+            transitionProps={{
+              transition: "pop-bottom-left",
+              duration: 500,
+            }}
+          >
+            <Button
+              size="md"
+              pl="12"
+              pr="12"
+              mb="xs"
+              bg={activeReport === id ? "red.5" : undefined}
+              variant={activeReport === id ? "filled" : "light"}
+              color="red.5"
+              radius="xl"
+              onClick={() => setActiveReport(id)}
+            >
+              <Flex direction="column" align="center">
+                <Icon size={16} />
+              </Flex>
+            </Button>
+          </Tooltip>
+          <Flex direction="column" align="center" fz="12" c="gray.5">
+            {t(label)}
+          </Flex>
+        </Flex>
+      </Container>
+    </Center>
+  );
+
+  // Component to render active report table
+  const ReportTable = () => {
+    switch (activeReport) {
+      case REPORT_TYPES.INVENTORY:
+        return (
+          <__InventoryTable
+            dataLimit={dataLimit}
+            enableTable={enableTable}
+            setDataLimit={setDataLimit}
+          />
+        );
+      case REPORT_TYPES.SALES:
+        return (
+          <__SalesTable
+            dataLimit={dataLimit}
+            enableTable={enableTable}
+            setDataLimit={setDataLimit}
+          />
+        );
+      case REPORT_TYPES.PURCHASE:
+        return (
+          <__PurchaseTable
+            dataLimit={dataLimit}
+            enableTable={enableTable}
+            setDataLimit={setDataLimit}
+          />
+        );
+      case REPORT_TYPES.ACCOUNTING:
+        return (
+          <__AccountingTable
+            dataLimit={dataLimit}
+            enableTable={enableTable}
+            setDataLimit={setDataLimit}
+          />
+        );
+      default:
+        return null;
+    }
+  };
+
   return (
     <Box>
       <Box>
         <Grid columns={48} gutter={{ base: 6 }}>
-          <Grid.Col span={5}>
-            <Box bg={"white"}>
-              <Box p={"xs"} pt={"0"} className={"borderRadiusAll"}>
+          <Grid.Col span={4}>
+            <Box bg="white">
+              <Box p="xs" className="borderRadiusAll">
                 <Box
-                  pl={`xs`}
+                  pl="xs"
                   pr={8}
-                  pt={"6"}
-                  pb={"6"}
-                  mb={"4"}
-                  mt={"xs"}
-                  className={"boxBackground borderRadiusAll"}
+                  pt="6"
+                  pb="6"
+                  mb="4"
+                  mt="xs"
+                  className="boxBackground borderRadiusAll"
                 >
                   <Center>
                     <Title order={6}>{t("Report")}</Title>
@@ -90,284 +193,42 @@ function Reports() {
                 </Box>
                 <Stack
                   className="borderRadiusAll"
-                  h={height + 10}
+                  h={height + 9}
                   bg="var(--mantine-color-body)"
                   align="center"
                 >
-                  <Center mt={"sm"} pt={"sm"}>
-                    <Container fluid mb={"8"}>
-                      <Flex
-                        justify={"center"}
-                        align={"center"}
-                        direction={"column"}
-                      >
-                        <Tooltip
-                          label={t("AltTextNew")}
-                          px={16}
-                          py={2}
-                          withArrow
-                          position={"left"}
-                          c={"white"}
-                          bg={`red.5`}
-                          transitionProps={{
-                            transition: "pop-bottom-left",
-                            duration: 500,
-                          }}
-                        >
-                          <Button
-                            size="md"
-                            pl={"12"}
-                            pr={"12"}
-                            mb={"xs"}
-                            bg={inventoryReport ? "red.5" : undefined}
-                            variant={inventoryReport ? "filled" : "light"}
-                            color="red.5"
-                            radius="xl"
-                            onClick={(e) => {
-                              setInventoryReport(true),
-                                setInventoryReportTable(true),
-                                setSalesReport(false),
-                                setPurchasereport(false),
-                                setAccountingReport(false),
-                                setSalesReportTable(false),
-                                setPurchaseReportTable(false),
-                                setAccountingReportTable(false);
-                            }}
-                          >
-                            <Flex direction={"column"} align={"center"}>
-                              <IconBuildingWarehouse size={16} />
-                            </Flex>
-                          </Button>
-                        </Tooltip>
-                        <Flex
-                          direction={"column"}
-                          align={"center"}
-                          fz={"12"}
-                          c={"gray.5"}
-                        >
-                          {t("InventoryReport")}
-                        </Flex>
-                      </Flex>
-                    </Container>
-                  </Center>
-                  <Center>
-                    <Container fluid mb={"8"}>
-                      <Flex
-                        justify={"center"}
-                        align={"center"}
-                        direction={"column"}
-                      >
-                        <Tooltip
-                          label={t("AltTextReset")}
-                          px={16}
-                          py={2}
-                          withArrow
-                          position={"left"}
-                          c={"white"}
-                          bg={`red.5`}
-                          transitionProps={{
-                            transition: "pop-bottom-left",
-                            duration: 500,
-                          }}
-                        >
-                          <Button
-                            size="md"
-                            pl={"12"}
-                            pr={"12"}
-                            mb={"xs"}
-                            bg={salesReport ? "red.5" : undefined}
-                            variant={salesReport ? "filled" : "light"}
-                            color="red.5"
-                            radius="xl"
-                            onClick={(e) => {
-                              setSalesReport(true),
-                                setSalesReportTable(true),
-                                setInventoryReport(false),
-                                setAccountingReport(false),
-                                setPurchasereport(false),
-                                setInventoryReportTable(false),
-                                setAccountingReportTable(false),
-                                setPurchaseReportTable(false);
-                            }}
-                          >
-                            <Flex direction={`column`} align={"center"}>
-                              <IconReportMoney size={16} />
-                            </Flex>
-                          </Button>
-                        </Tooltip>
-                        <Flex
-                          direction={`column`}
-                          align={"center"}
-                          fz={"12"}
-                          c={"gray.5"}
-                        >
-                          {t("SalesReport")}
-                        </Flex>
-                      </Flex>
-                    </Container>
-                  </Center>
-                  <Center>
-                    <Container fluid mb={"8"}>
-                      <Flex
-                        justify={"center"}
-                        align={"center"}
-                        direction={"column"}
-                      >
-                        <Tooltip
-                          label={t("AltTextReset")}
-                          px={16}
-                          py={2}
-                          withArrow
-                          position={"left"}
-                          c={"white"}
-                          bg={`red.5`}
-                          transitionProps={{
-                            transition: "pop-bottom-left",
-                            duration: 500,
-                          }}
-                        >
-                          <Button
-                            size="md"
-                            pl={"12"}
-                            pr={"12"}
-                            mb={"xs"}
-                            bg={purchaseReport ? "red.5" : undefined}
-                            variant={purchaseReport ? "filled" : "light"}
-                            color="red.5"
-                            radius="xl"
-                            onClick={(e) => {
-                              setPurchasereport(true),
-                                setPurchaseReportTable(true),
-                                setSalesReport(false),
-                                setInventoryReport(false),
-                                setAccountingReport(false),
-                                setInventoryReportTable(false),
-                                setSalesReportTable(false),
-                                setAccountingReportTable(false);
-                            }}
-                          >
-                            <Flex direction={`column`} align={"center"}>
-                              <IconShoppingCart size={16} />
-                            </Flex>
-                          </Button>
-                        </Tooltip>
-                        <Flex
-                          direction={`column`}
-                          align={"center"}
-                          fz={"12"}
-                          c={"gray.5"}
-                        >
-                          {t("PurchaseReport")}
-                        </Flex>
-                      </Flex>
-                    </Container>
-                  </Center>
-                  <Center>
-                    <Container fluid mb={"8"}>
-                      <Flex
-                        justify={"center"}
-                        align={"center"}
-                        direction={"column"}
-                      >
-                        <Tooltip
-                          label={t("AltTextReset")}
-                          px={16}
-                          py={2}
-                          withArrow
-                          position={"left"}
-                          c={"white"}
-                          bg={`red.5`}
-                          transitionProps={{
-                            transition: "pop-bottom-left",
-                            duration: 500,
-                          }}
-                        >
-                          <Button
-                            size="md"
-                            pl={"12"}
-                            pr={"12"}
-                            mb={"xs"}
-                            bg={accountingReport ? "red.5" : undefined}
-                            variant={accountingReport ? "filled" : "light"}
-                            color="red.5"
-                            radius="xl"
-                            onClick={(e) => {
-                              setAccountingReport(true),
-                                setAccountingReportTable(true),
-                                setSalesReport(false),
-                                setInventoryReport(false),
-                                setPurchasereport(false),
-                                setInventoryReportTable(false),
-                                setSalesReportTable(false),
-                                setPurchaseReportTable(false);
-                            }}
-                          >
-                            <Flex direction={`column`} align={"center"}>
-                              <IconFileInvoice size={16} />
-                            </Flex>
-                          </Button>
-                        </Tooltip>
-                        <Flex
-                          direction={`column`}
-                          align={"center"}
-                          fz={"12"}
-                          c={"gray.5"}
-                        >
-                          {t("AccountingReport")}
-                        </Flex>
-                      </Flex>
-                    </Container>
-                  </Center>
+                  {REPORT_BUTTONS.map((button) => (
+                    <ReportButton
+                      key={button.id}
+                      id={button.id}
+                      icon={button.icon}
+                      label={button.label}
+                    />
+                  ))}
                 </Stack>
               </Box>
             </Box>
           </Grid.Col>
-          <Grid.Col span={12}>
-            <Box bg={"white"}>
+
+          <Grid.Col span={14}>
+            <Box bg="white">
               <_ReportBox
                 setDataLimit={setDataLimit}
-                inventoryReport={inventoryReport}
-                salesReport={salesReport}
-                purchaseReport={purchaseReport}
-                accountingReport={accountingReport}
+                inventoryReport={activeReport === REPORT_TYPES.INVENTORY}
+                salesReport={activeReport === REPORT_TYPES.SALES}
+                purchaseReport={activeReport === REPORT_TYPES.PURCHASE}
+                accountingReport={activeReport === REPORT_TYPES.ACCOUNTING}
                 setEnableTable={setEnableTable}
               />
             </Box>
           </Grid.Col>
-          <Grid.Col span={31}>
-            {inventoryReportTable && (
-              <__InventoryTable
-                dataLimit={dataLimit}
-                enableTable={enableTable}
-                setDataLimit={setDataLimit}
-              />
-            )}
-            {salesReportTable && (
-              <__SalesTable
-                dataLimit={dataLimit}
-                enableTable={enableTable}
-                setDataLimit={setDataLimit}
-              />
-            )}
-            {accountingReportTable && (
-              <__AccountingTable
-                dataLimit={dataLimit}
-                enableTable={enableTable}
-                setDataLimit={setDataLimit}
-              />
-            )}
-            {purchaseReportTable && (
-              <__PurchaseTable
-                dataLimit={dataLimit}
-                enableTable={enableTable}
-                setDataLimit={setDataLimit}
-              />
-            )}
+
+          <Grid.Col span={30}>
+            <ReportTable />
           </Grid.Col>
         </Grid>
       </Box>
     </Box>
   );
-}
-
+};
 export default Reports;

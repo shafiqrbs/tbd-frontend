@@ -124,7 +124,7 @@ export default function __InventoryTable(props) {
   return (
     <>
       <Box p={"xs"} className={"borderRadiusAll"} bg={"white"}>
-        <Box className="borderRadiusAll" h={height - 6}>
+        <Box className="borderRadiusAll" h={height - 7}>
           {dataLimit ? (
             <Box>
               <Flex
@@ -218,7 +218,7 @@ export default function __InventoryTable(props) {
               key={"item_index"}
               loaderSize="xs"
               loaderColor="grape"
-              height={height - 8}
+              height={height - 10}
               scrollAreaProps={{ type: "never" }}
             />
           )}
