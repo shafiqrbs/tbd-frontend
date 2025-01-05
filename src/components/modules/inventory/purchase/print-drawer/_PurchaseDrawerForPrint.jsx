@@ -51,9 +51,15 @@ function _PurchaseDrawerForPrint(props) {
                     </Drawer.Header>
                     <Box mb={0} bg={'gray.1'} >
                         <Box p={'md'} className="boxBackground borderRadiusAll" >
-                            {configData?.domain?.id == '359' && printType === 'pos' && <PurchaseInvoiceDomain359Pos mode={mode} setOpenInvoiceDrawerForPrint={setOpenInvoiceDrawerForPrint} />}
+                            { printType === 'pos' && <PurchaseInvoiceDomain359Pos mode={mode} setOpenInvoiceDrawerForPrint={setOpenInvoiceDrawerForPrint} />}
+                            { printType === 'print' && <_PurchaseInvoiceDomain359Custom mode={mode} setOpenInvoiceDrawerForPrint={setOpenInvoiceDrawerForPrint} />}
+
+                            {/*demo*/}
+
+                            {/*{configData?.domain?.id == '359' && printType === 'pos' && <PurchaseInvoiceDomain359Pos mode={mode} setOpenInvoiceDrawerForPrint={setOpenInvoiceDrawerForPrint} />}
+                            {configData?.domain?.id == '359' && printType === 'print' && <_PurchaseInvoiceDomain359Custom mode={mode} setOpenInvoiceDrawerForPrint={setOpenInvoiceDrawerForPrint} />}*/}
+
                             {/* {configData?.domain?.id == '359' && printType === 'print' && <PurchaseInvoiceDomain359Normal mode={mode} setOpenInvoiceDrawerForPrint={setOpenInvoiceDrawerForPrint} />} */}
-                            {configData?.domain?.id == '359' && printType === 'print' && <_PurchaseInvoiceDomain359Custom mode={mode} setOpenInvoiceDrawerForPrint={setOpenInvoiceDrawerForPrint} />}
                         </Box>
                     </Box>
                 </Drawer.Content>

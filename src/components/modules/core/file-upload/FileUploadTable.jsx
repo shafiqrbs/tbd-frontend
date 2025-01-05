@@ -30,12 +30,15 @@ import axios from "axios";
 import commonDataStoreIntoLocalStorage from "../../../global-hook/local-storage/commonDataStoreIntoLocalStorage.js";
 import orderProcessDropdownLocalDataStore
     from "../../../global-hook/local-storage/orderProcessDropdownLocalDataStore.js";
+import getConfigData from "../../../global-hook/config-data/getConfigData.js";
+import productsDataStoreIntoLocalStorage from "../../../global-hook/local-storage/productsDataStoreIntoLocalStorage.js";
 function FileUploadTable() {
 
     const dispatch = useDispatch();
     const { t, i18n } = useTranslation();
     const { isOnline, mainAreaHeight } = useOutletContext();
     const height = mainAreaHeight - 98; //TabList height 104
+    const {configData,fetchData} = getConfigData()
 
     const perPage = 50;
     const [page, setPage] = useState(1);
@@ -68,7 +71,7 @@ function FileUploadTable() {
 
 
     useEffect(() => {
-        const fetchData = async () => {
+        const fetchFileData = async () => {
             setFetching(true)
             const value = {
                 url: 'core/file-upload',
@@ -93,7 +96,7 @@ function FileUploadTable() {
             }
         };
 
-        fetchData();
+        fetchFileData();
     }, [dispatch, searchKeyword, page , fetchingReload,loading]);
 
 
@@ -115,6 +118,7 @@ function FileUploadTable() {
         })
             .then(res => {
                 if (res.data.status == 200){
+                    productsDataStoreIntoLocalStorage()
                     setLoading(false)
                     setTimeout(() => {
                         notifications.show({

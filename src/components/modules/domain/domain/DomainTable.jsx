@@ -25,7 +25,6 @@ import commonDataStoreIntoLocalStorage from "../../../global-hook/local-storage/
 import getConfigData from "../../../global-hook/config-data/getConfigData.js";
 
 function DomainTable(props) {
-    // const {configData} = props
     const dispatch = useDispatch();
     const { t, i18n } = useTranslation();
     const { isOnline, mainAreaHeight } = useOutletContext();
