@@ -16,7 +16,6 @@ function ProductUpdateForm(props) {
     const storedConfigData = localStorage.getItem("config-data");
     return storedConfigData ? JSON.parse(storedConfigData) : [];
   });
-  console.log(configData)
 
   // Derived states based on `configData`
   const [isBrand, setBrand] = useState((configData?.is_brand === 1));

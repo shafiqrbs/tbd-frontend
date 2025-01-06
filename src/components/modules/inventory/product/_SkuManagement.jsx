@@ -127,7 +127,7 @@ function _SkuManagement(props) {
     }, [productSkuIndexEntityData]);
 
     const handleSkuData = (value, stockId, priceFieldSlug, skuIndex, fieldIndex, settingId) => {
-        if (priceFieldSlug != 'price' && priceFieldSlug != 'purchase_price') {
+        if (priceFieldSlug != 'sales_price' && priceFieldSlug != 'purchase_price') {
             const updatedPriceData = [...wholesalePriceData];
             updatedPriceData[skuIndex][fieldIndex].price = value;
             setWholesalePriceData(updatedPriceData);
@@ -145,7 +145,7 @@ function _SkuManagement(props) {
             }, 500)
         }
 
-        if (priceFieldSlug === 'price') {
+        if (priceFieldSlug === 'sales_price') {
             const newPriceData = [...priceData];
             newPriceData[skuIndex] = value;
             setPriceData(newPriceData);
@@ -558,7 +558,7 @@ function _SkuManagement(props) {
                                                                         id={'inline-update-price-' + sku.stock_id}
                                                                         value={priceData[index]}
                                                                         onChange={(e) => {
-                                                                            handleSkuData(e.target.value, sku.stock_id, 'price', index, null, null)
+                                                                            handleSkuData(e.target.value, sku.stock_id, 'sales_price', index, null, null)
                                                                         }}
                                                                     />
                                                                 </Table.Th>

@@ -406,9 +406,11 @@ function SpotLightSearchModal({ onClose }) {
   // Initialize the loading state as true
   const [visible, setVisible] = useState(true);
 
-  localStorage.setItem("config-data", JSON.stringify(getConfigData()));
+  const {configData,fetchData} = getConfigData()
 
-  const [configData, setConfigData] = useState(null);
+  localStorage.setItem("config-data", JSON.stringify(configData));
+
+  const [configDataSpot, setConfigData] = useState(null);
 
   // Fetch the configData from local storage and set loading
   useEffect(() => {
@@ -441,7 +443,7 @@ function SpotLightSearchModal({ onClose }) {
 
   // Get actions filtered from Spotlight based on configData
   const getActions = () => {
-    const actions = getSpotlightDropdownData(t, configData['configData']);
+    const actions = getSpotlightDropdownData(t, configDataSpot);
     let index = 0;
 
     // Assign an index to each action
@@ -470,7 +472,7 @@ function SpotLightSearchModal({ onClose }) {
 
   // Initialize the filtered list when component mounts
   useEffect(() => {
-    if (configData) {
+    if (configDataSpot) {
       const allActions = getActions().reduce(
           (acc, group) => [...acc, ...group.actions],
           []
@@ -478,7 +480,7 @@ function SpotLightSearchModal({ onClose }) {
       setFilteredItems(allActions);
       setVisible(false); // Hide the loader when data has been fetched
     }
-  }, [configData]);
+  }, [configDataSpot]);
 
   useEffect(() => {
     if (selectedIndex >= 0 && filteredItems.length > 0) {
