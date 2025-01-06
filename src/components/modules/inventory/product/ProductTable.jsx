@@ -47,6 +47,7 @@ function ProductTable() {
     const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword)
     const productFilterData = useSelector((state) => state.inventoryCrudSlice.productFilterData)
     const entityDataDelete = useSelector((state) => state.inventoryCrudSlice.entityDataDelete)
+    const fetchingReload = useSelector((state) => state.crudSlice.fetching)
 
     const [switchEnable, setSwitchEnable] = useState({});
 
@@ -66,7 +67,6 @@ function ProductTable() {
     const [indexData,setIndexData] = useState([])
     useEffect(() => {
         const fetchData = async () => {
-            setFetching(true)
             const value = {
                 url: 'inventory/product',
                 param: {
@@ -96,7 +96,7 @@ function ProductTable() {
         };
 
         fetchData();
-    }, [dispatch, searchKeyword, productFilterData, page, perPage]);
+    }, [dispatch, searchKeyword, productFilterData, page, perPage,fetchingReload]);
 
     useEffect(() => {
         dispatch(setDeleteMessage(''))
@@ -111,7 +111,7 @@ function ProductTable() {
             });
 
             setTimeout(() => {
-                dispatch(setFetching(true))
+                setFetching(true)
             }, 700)
         }
     }, [entityDataDelete]);
