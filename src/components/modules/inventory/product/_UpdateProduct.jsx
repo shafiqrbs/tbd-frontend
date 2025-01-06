@@ -62,6 +62,7 @@ function _UpdateProduct(props) {
             unit_id: "",
             name: "",
             alternative_name: "",
+            bangla_name: "",
             barcode: "",
             sku: "",
             min_quantity: "",
@@ -91,9 +92,8 @@ function _UpdateProduct(props) {
             category_id: entityEditData.category_id ? entityEditData.category_id : "",
             unit_id: entityEditData.unit_id ? entityEditData.unit_id : "",
             name: entityEditData.product_name ? entityEditData.product_name : "",
-            alternative_name: entityEditData.alternative_name
-                ? entityEditData.alternative_name
-                : "",
+            alternative_name: entityEditData.alternative_name ? entityEditData.alternative_name : "",
+            bangla_name: entityEditData.bangla_name ? entityEditData.bangla_name : "",
             barcode: entityEditData.barcode ? entityEditData.barcode : "",
             sku: entityEditData.sku ? entityEditData.sku : "",
             min_quantity: entityEditData.min_quantity
@@ -166,6 +166,7 @@ function _UpdateProduct(props) {
                                         ...product,
                                         product_name: values.name,
                                         alternative_name: values.alternative_name,
+                                        bangla_name: values.bangla_name,
                                     };
                                 }
                                 return product;
@@ -190,15 +191,8 @@ function _UpdateProduct(props) {
 
                             setTimeout(() => {
                                 productsDataStoreIntoLocalStorage();
-                                // form.reset();
-                                // dispatch(setInsertType("create"));
-                                // dispatch(setEditEntityData([]));
-                                // setProductTypeData(null);
-                                // setCategoryData(null);
-                                // setProductUnitData(null);
                                 dispatch(setFetching(true));
                                 setSaveCreateLoading(false);
-                                // navigate("/inventory/product", {replace: true});
                             }, 700);
                         },
                     });
@@ -323,11 +317,24 @@ function _UpdateProduct(props) {
                                         label={t("AlternativeProductName")}
                                         placeholder={t("AlternativeProductName")}
                                         required={false}
-                                        nextField={"sku"}
+                                        nextField={"bangla_name"}
                                         form={form}
                                         name={"alternative_name"}
                                         mt={8}
                                         id={"alternative_name"}
+                                    />
+                                </Box>
+                                <Box mt={"xs"}>
+                                    <InputForm
+                                        tooltip={t("BanglaName")}
+                                        label={t("BanglaName")}
+                                        placeholder={t("BanglaName")}
+                                        required={false}
+                                        nextField={"sku"}
+                                        form={form}
+                                        name={"bangla_name"}
+                                        mt={8}
+                                        id={"bangla_name"}
                                     />
                                 </Box>
                                 <Box mt={"xs"}>

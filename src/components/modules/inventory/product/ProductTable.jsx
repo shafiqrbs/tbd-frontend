@@ -143,7 +143,9 @@ function ProductTable() {
                         { accessor: 'category_name', title: t("Category") },
                         { accessor: 'product_name', title: t("Name") },
                         { accessor: 'alternative_name', title: t("AlternativeName") },
+                        { accessor: 'bangla_name', title: t("BanglaName") },
                         { accessor: 'unit_name', title: t("Unit") },
+                        { accessor: 'quantity', title: t("Quantity") },
                         {
                             accessor: 'status',
                             title: t("Status"),
