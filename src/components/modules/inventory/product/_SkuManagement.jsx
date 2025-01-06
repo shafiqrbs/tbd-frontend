@@ -142,6 +142,7 @@ function _SkuManagement(props) {
             }
             setTimeout(() => {
                 dispatch(inlineUpdateEntityData(updateData))
+                productsDataStoreIntoLocalStorage()
             }, 500)
         }
 
@@ -158,6 +159,7 @@ function _SkuManagement(props) {
             }
             setTimeout(() => {
                 dispatch(inlineUpdateEntityData(updateData))
+                productsDataStoreIntoLocalStorage()
             }, 500)
         }
 
@@ -174,9 +176,10 @@ function _SkuManagement(props) {
             }
             setTimeout(() => {
                 dispatch(inlineUpdateEntityData(updateData))
+                productsDataStoreIntoLocalStorage()
             }, 500)
         }
-        productsDataStoreIntoLocalStorage()
+
     };
 
     return (
