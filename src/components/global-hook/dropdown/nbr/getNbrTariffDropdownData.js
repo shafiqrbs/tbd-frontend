@@ -28,7 +28,7 @@ const getNbrTariffDropdownData = (type) => {
     useEffect(() => {
         if (dropdownData.length > 0) {
             const transformedData = dropdownData.map(item => ({
-                label: item.name,
+                label: item.name+' - '+item.label,
                 value: String(item.id),
             }));
             setSettingDropdown(transformedData);
