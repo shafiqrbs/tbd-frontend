@@ -183,14 +183,36 @@ export default function BranchManagementForm() {
         };
 
         const resultAction = await dispatch(storeEntityData(data));
+
+        if (resultAction?.payload?.message){
+            notifications.show({
+                loading: true,
+                color: "red",
+                title: resultAction?.payload?.message,
+                message:
+                    "Data will be loaded in 3 seconds, you cannot close this yet",
+                autoClose: 1000,
+                withCloseButton: true,
+            });
+        }
         if (storeEntityData.rejected.match(resultAction)) {
-            console.log(resultAction.payload.errors);
+            console.log(resultAction.payload);
         } else if (storeEntityData.fulfilled.match(resultAction)) {
             // console.log(resultAction.payload.data.data)
             setReloadDomainData(true)
             setTimeout(() => {
                 setShadowOverlay({})
             }, 500)
+        }else {
+            notifications.show({
+                loading: true,
+                color: "red",
+                title: "Something went wrong",
+                message:
+                    "Data will be loaded in 3 seconds, you cannot close this yet",
+                autoClose: 1000,
+                withCloseButton: true,
+            });
         }
     }
 

@@ -47,6 +47,7 @@ function ProductTable() {
     const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword)
     const productFilterData = useSelector((state) => state.inventoryCrudSlice.productFilterData)
     const entityDataDelete = useSelector((state) => state.inventoryCrudSlice.entityDataDelete)
+    const fetchingReload = useSelector((state) => state.crudSlice.fetching)
 
     const [switchEnable, setSwitchEnable] = useState({});
 
@@ -66,7 +67,6 @@ function ProductTable() {
     const [indexData,setIndexData] = useState([])
     useEffect(() => {
         const fetchData = async () => {
-            setFetching(true)
             const value = {
                 url: 'inventory/product',
                 param: {
@@ -96,7 +96,7 @@ function ProductTable() {
         };
 
         fetchData();
-    }, [dispatch, searchKeyword, productFilterData, page, perPage]);
+    }, [dispatch, searchKeyword, productFilterData, page, perPage,fetchingReload]);
 
     useEffect(() => {
         dispatch(setDeleteMessage(''))
@@ -111,7 +111,7 @@ function ProductTable() {
             });
 
             setTimeout(() => {
-                dispatch(setFetching(true))
+                setFetching(true)
             }, 700)
         }
     }, [entityDataDelete]);
@@ -143,7 +143,9 @@ function ProductTable() {
                         { accessor: 'category_name', title: t("Category") },
                         { accessor: 'product_name', title: t("Name") },
                         { accessor: 'alternative_name', title: t("AlternativeName") },
+                        { accessor: 'bangla_name', title: t("BanglaName") },
                         { accessor: 'unit_name', title: t("Unit") },
+                        { accessor: 'quantity', title: t("Quantity") },
                         {
                             accessor: 'status',
                             title: t("Status"),
@@ -151,7 +153,7 @@ function ProductTable() {
                             render: (item) => (
                                 <Flex justify="center" align="center">
                                     <Switch
-                                        disabled={switchEnable[item.id] || false}
+                                        disabled={(switchEnable[item.id] || false) || item.parent_id}
                                         defaultChecked={item.status == 1 ? true : false}
                                         color="red"
                                         radius="xs"
@@ -162,6 +164,7 @@ function ProductTable() {
                                             handleSwitch(event.currentTarget.checked, item);
                                         }}
                                     />
+
                                 </Flex>
                             )
                         },

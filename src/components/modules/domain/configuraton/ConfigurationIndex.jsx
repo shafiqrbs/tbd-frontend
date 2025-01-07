@@ -16,7 +16,8 @@ function ConfigurationIndex() {
     const {id } = useParams();
 
     const progress = getLoadingProgress()
-    localStorage.setItem('config-data', JSON.stringify(getConfigData()));
+    const {configData,fetchData} = getConfigData()
+    localStorage.setItem('config-data', JSON.stringify(configData));
 
     return (
 

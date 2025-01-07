@@ -20,7 +20,7 @@ function  ProductIndex() {
     const insertType = useSelector((state) => state.crudSlice.insertType)
 
     const progress = getLoadingProgress()
-    const configData = getConfigData()
+    const {configData,fetchData} = getConfigData()
     const dispatch = useDispatch()
 
     const navigate = useNavigate();
@@ -51,7 +51,8 @@ function  ProductIndex() {
         const value = {
             url: 'inventory/select/category',
             param: {
-                type: 'parent'
+                // type: 'parent'
+                type: 'all'
             }
         }
         dispatch(getCategoryDropdown(value))

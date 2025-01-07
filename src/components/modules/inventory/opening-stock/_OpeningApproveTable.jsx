@@ -12,45 +12,67 @@ import tableCss from "../../../../assets/css/Table.module.css";
 import _OpeningSearch from "./_OpeningSearch";
 import {getIndexEntityData} from "../../../../store/inventory/crudSlice";
 
-function _ApproveTable(props) {
-    const { currencySymbol} = props
+function _OpeningApproveTable(props) {
     const { t, i18n } = useTranslation();
     const { isOnline, mainAreaHeight } = useOutletContext();
     const height = mainAreaHeight - 130; //TabList height 104
-    const [fetching, setFetching] = useState(false);
+    const [fetching, setFetching] = useState(true);
     const dispatch = useDispatch();
 
     const perPage = 15;
     const [page, setPage] = useState(1);
-    const indexData = useSelector((state) => state.inventoryCrudSlice.indexEntityData)
     const purchaseItemsFilterData = useSelector((state) => state.inventoryCrudSlice.purchaseItemsFilterData)
     const invFetching = useSelector((state) => state.inventoryCrudSlice.fetching)
 
+
+    const [indexData,setIndexData] = useState([])
+
     useEffect(() => {
-        const options = {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit'
+        let isMounted = true; // To handle cleanup properly in `useEffect`
+
+        const fetchData = async () => {
+            const options = {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit'
+            };
+
+            const value = {
+                url: 'inventory/opening-stock',
+                param: {
+                    page: page,
+                    offset: perPage,
+                    mode:"opening",
+                    is_approved:1,
+                    term:purchaseItemsFilterData.searchKeyword,
+                    start_date: purchaseItemsFilterData.start_date && new Date(purchaseItemsFilterData.start_date).toLocaleDateString("en-CA", options),
+                    end_date: purchaseItemsFilterData.end_date && new Date(purchaseItemsFilterData.end_date).toLocaleDateString("en-CA", options)
+                }
+            }
+
+            try {
+                const resultAction = await dispatch(getIndexEntityData(value));
+
+                if (getIndexEntityData.rejected.match(resultAction)) {
+                    console.error('Error:', resultAction);
+                } else if (getIndexEntityData.fulfilled.match(resultAction)) {
+                    if (isMounted) {
+                        setIndexData(resultAction.payload);
+                    }
+                }
+            } catch (err) {
+                console.error('Unexpected error:', err);
+            } finally {
+                if (isMounted) setFetching(false);
+            }
         };
 
-        const value = {
-            url: 'inventory/opening-stock',
-            param: {
-                page: page,
-                offset: perPage,
-                mode:"opening",
-                is_approved:1,
-                term:purchaseItemsFilterData.searchKeyword,
-                start_date: purchaseItemsFilterData.start_date && new Date(purchaseItemsFilterData.start_date).toLocaleDateString("en-CA", options),
-                end_date: purchaseItemsFilterData.end_date && new Date(purchaseItemsFilterData.end_date).toLocaleDateString("en-CA", options)
-            }
-        }
-        dispatch(getIndexEntityData(value))
-        setTimeout(()=>{
-            setFetching(false)
-        },500)
-    }, [fetching,invFetching]);
+        fetchData();
 
+        return () => {
+            isMounted = false; // Cleanup the effect to prevent state updates on unmounted component
+        };
+    }, [fetching,invFetching,dispatch,page]);
 
     const form = useForm({
         initialValues: {
@@ -160,7 +182,7 @@ function _ApproveTable(props) {
                                         },
                                     ]
                                     }
-                                    fetching={fetching}
+                                    fetching={fetching || invFetching}
                                     totalRecords={indexData.total}
                                     recordsPerPage={perPage}
                                     page={page}
@@ -193,4 +215,4 @@ function _ApproveTable(props) {
     );
 }
 
-export default _ApproveTable;
+export default _OpeningApproveTable;

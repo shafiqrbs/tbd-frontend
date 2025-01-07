@@ -33,8 +33,13 @@ function ProductForm(props) {
     const height = mainAreaHeight - 100; //TabList height 104
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
 
-    const [categoryData, setCategoryData] = useState(null);
+    // Sync `configData` with localStorage
+    const [configData, setConfigData] = useState(() => {
+        const storedConfigData = localStorage.getItem("config-data");
+        return storedConfigData ? JSON.parse(storedConfigData) : [];
+    });
 
+    const [categoryData, setCategoryData] = useState(null);
     const [productTypeData, setProductTypeData] = useState(null);
     const [productUnitData, setProductUnitData] = useState(null);
 
@@ -42,6 +47,23 @@ function ProductForm(props) {
 
     const navigate = useNavigate()
 
+    const [isBrand, setBrand] = useState((configData?.is_brand === 1));
+    const [isColor, setColor] = useState((configData?.is_color === 1));
+    const [isGrade, setGrade] = useState((configData?.is_grade === 1));
+    const [isSize, setSize] = useState((configData?.is_size === 1));
+    const [isModel, setModel] = useState((configData?.is_model === 1));
+
+    const colorDropDown = getSettingParticularDropdownData('color')
+    const sizeDropDown = getSettingParticularDropdownData('size')
+    const brandDropDown = getSettingParticularDropdownData('brand')
+    const gradeDropDown = getSettingParticularDropdownData('product-grade')
+    const modelDropDown = getSettingParticularDropdownData('model')
+
+    const [brandData, setBrandData] = useState(null);
+    const [colorData, setColorData] = useState(null);
+    const [sizeData, setSizeData] = useState(null);
+    const [gradeData, setGradeData] = useState(null);
+    const [modelData, setModelData] = useState(null);
 
     const form = useForm({
         initialValues: {
@@ -50,12 +72,18 @@ function ProductForm(props) {
             unit_id: '',
             name: '',
             alternative_name: '',
+            bangla_name: '',
             barcode: '',
             sku: '',
             sales_price: '',
             purchase_price: '',
             min_quantity: '',
             description: '',
+            color_id: '',
+            brand_id: '',
+            size_id: '',
+            grade_id: '',
+            model_id: '',
             status: true
         },
         validate: {
@@ -264,6 +292,19 @@ function ProductForm(props) {
                                                 name={'alternative_name'}
                                                 mt={8}
                                                 id={'alternative_name'}
+                                                nextField={'bangla_name'}
+                                            />
+                                        </Box>
+                                        <Box mt={'xs'}>
+                                            <InputForm
+                                                tooltip={t('BanglaName')}
+                                                label={t('BanglaName')}
+                                                placeholder={t('BanglaName')}
+                                                required={false}
+                                                form={form}
+                                                name={'bangla_name'}
+                                                mt={8}
+                                                id={'bangla_name'}
                                                 nextField={'sku'}
                                             />
                                         </Box>
@@ -297,6 +338,7 @@ function ProductForm(props) {
                                                 </Grid.Col>
                                             </Grid>
                                         </Box>
+
                                         <Box mt={'xs'}>
                                             <Grid gutter={{ base: 6 }}>
                                                 <Grid.Col span={6}>
@@ -327,6 +369,7 @@ function ProductForm(props) {
                                                 </Grid.Col>
                                             </Grid>
                                         </Box>
+
                                         <Box mt={'xs'}>
                                             <Grid gutter={{ base: 6 }}>
                                                 <Grid.Col span={6}>
@@ -375,7 +418,7 @@ function ProductForm(props) {
                                                             label={t('Description')}
                                                             placeholder={t('Description')}
                                                             required={false}
-                                                            nextField={'EntityFormSubmit'}
+                                                            nextField={isColor ? 'color_id' :'EntityFormSubmit'}
                                                             name={'description'}
                                                             form={form}
                                                             mt={8}
@@ -385,6 +428,102 @@ function ProductForm(props) {
                                                 </Grid>
                                             </Box>
                                         </Box>
+
+                                        <Box mt={'xs'}>
+                                            <Grid gutter={{ base: 6 }}>
+                                                {isColor && (
+                                                    <Grid.Col span={6}>
+                                                        <SelectForm
+                                                            tooltip={t("ChooseColor")}
+                                                            label={t('ChooseColor')}
+                                                            placeholder={t("ChooseColor")}
+                                                            name={"color_id"}
+                                                            form={form}
+                                                            dropdownValue={colorDropDown}
+                                                            mt={0}
+                                                            id={"color_id"}
+                                                            nextField={isSize && "size_id"}
+                                                            searchable={true}
+                                                            value={colorData}
+                                                            changeValue={setColorData}
+                                                        />
+                                                    </Grid.Col>
+                                                )}
+                                                {isSize && (
+                                                    <Grid.Col span={6}>
+                                                        <SelectForm
+                                                            tooltip={t("ChooseSize")}
+                                                            label={t("ChooseSize")}
+                                                            placeholder={t("ChooseSize")}
+                                                            name={"size_id"}
+                                                            form={form}
+                                                            dropdownValue={sizeDropDown}
+                                                            mt={0}
+                                                            id={"size_id"}
+                                                            nextField={isBrand && "brand_id"}
+                                                            searchable={true}
+                                                            value={sizeData}
+                                                            changeValue={setSizeData}
+                                                        />
+                                                    </Grid.Col>
+                                                )}
+                                                {isBrand && (
+                                                    <Grid.Col span={6}>
+                                                        <SelectForm
+                                                            tooltip={t("ChooseBrand")}
+                                                            label={t("ChooseBrand")}
+                                                            placeholder={t("ChooseBrand")}
+                                                            name={"brand_id"}
+                                                            form={form}
+                                                            dropdownValue={brandDropDown}
+                                                            mt={0}
+                                                            id={"brand_id"}
+                                                            nextField={ isGrade && "grade_id"}
+                                                            searchable={true}
+                                                            value={brandData}
+                                                            changeValue={setBrandData}
+                                                        />
+                                                    </Grid.Col>
+                                                )}
+                                                {isGrade && (
+                                                    <Grid.Col span={6}>
+                                                        <SelectForm
+                                                            tooltip={t("ChooseProductGrade")}
+                                                            label={t("ChooseProductGrade")}
+                                                            placeholder={t("ChooseProductGrade")}
+                                                            name={"grade_id"}
+                                                            form={form}
+                                                            dropdownValue={gradeDropDown}
+                                                            mt={0}
+                                                            id={"grade_id"}
+                                                            nextField={ isModel && "model_id"}
+                                                            searchable={true}
+                                                            value={gradeData}
+                                                            changeValue={setGradeData}
+                                                        />
+                                                    </Grid.Col>
+                                                )}
+                                                {isModel && (
+                                                    <Grid.Col span={6}>
+                                                        <SelectForm
+                                                            tooltip={t("ChooseModel")}
+                                                            label={t("ChooseModel")}
+                                                            placeholder={t("ChooseModel")}
+                                                            name={"model_id"}
+                                                            form={form}
+                                                            dropdownValue={modelDropDown}
+                                                            mt={0}
+                                                            id={"model_id"}
+                                                            nextField={"EntityFormSubmit"}
+                                                            searchable={true}
+                                                            value={modelData}
+                                                            changeValue={setModelData}
+                                                        />
+                                                    </Grid.Col>
+                                                )}
+                                            </Grid>
+                                        </Box>
+
                                     </ScrollArea>
                                 </Box>
                             </Box>

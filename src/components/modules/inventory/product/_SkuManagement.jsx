@@ -32,6 +32,7 @@ import {
 } from "../../../../store/inventory/crudSlice.js";
 import {modals} from "@mantine/modals";
 import getSettingParticularDropdownData from "../../../global-hook/dropdown/getSettingParticularDropdownData.js";
+import productsDataStoreIntoLocalStorage from "../../../global-hook/local-storage/productsDataStoreIntoLocalStorage.js";
 
 function _SkuManagement(props) {
     const {id, isBrand, isColor, isGrade, isSize, isMultiPrice, isModel} = props;
@@ -126,7 +127,7 @@ function _SkuManagement(props) {
     }, [productSkuIndexEntityData]);
 
     const handleSkuData = (value, stockId, priceFieldSlug, skuIndex, fieldIndex, settingId) => {
-        if (priceFieldSlug != 'price' && priceFieldSlug != 'purchase_price') {
+        if (priceFieldSlug != 'sales_price' && priceFieldSlug != 'purchase_price') {
             const updatedPriceData = [...wholesalePriceData];
             updatedPriceData[skuIndex][fieldIndex].price = value;
             setWholesalePriceData(updatedPriceData);
@@ -141,10 +142,11 @@ function _SkuManagement(props) {
             }
             setTimeout(() => {
                 dispatch(inlineUpdateEntityData(updateData))
+                productsDataStoreIntoLocalStorage()
             }, 500)
         }
 
-        if (priceFieldSlug === 'price') {
+        if (priceFieldSlug === 'sales_price') {
             const newPriceData = [...priceData];
             newPriceData[skuIndex] = value;
             setPriceData(newPriceData);
@@ -157,6 +159,7 @@ function _SkuManagement(props) {
             }
             setTimeout(() => {
                 dispatch(inlineUpdateEntityData(updateData))
+                productsDataStoreIntoLocalStorage()
             }, 500)
         }
 
@@ -173,8 +176,10 @@ function _SkuManagement(props) {
             }
             setTimeout(() => {
                 dispatch(inlineUpdateEntityData(updateData))
+                productsDataStoreIntoLocalStorage()
             }, 500)
         }
+
     };
 
     return (
@@ -271,6 +276,7 @@ function _SkuManagement(props) {
                                                     style: {backgroundColor: 'lightgray'},
                                                 });
                                             } else if (storeEntityData.fulfilled.match(resultAction)) {
+                                                await productsDataStoreIntoLocalStorage()
                                                 notifications.show({
                                                     color: 'teal',
                                                     title: t('CreateSuccessfully'),
@@ -555,7 +561,7 @@ function _SkuManagement(props) {
                                                                         id={'inline-update-price-' + sku.stock_id}
                                                                         value={priceData[index]}
                                                                         onChange={(e) => {
-                                                                            handleSkuData(e.target.value, sku.stock_id, 'price', index, null, null)
+                                                                            handleSkuData(e.target.value, sku.stock_id, 'sales_price', index, null, null)
                                                                         }}
                                                                     />
                                                                 </Table.Th>

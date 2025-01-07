@@ -17,7 +17,7 @@ function SalesEdit() {
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const progress = getLoadingProgress()
-    const configData = getConfigData()
+    const {configData,fetchData} = getConfigData()
 
 
     const dataStatus = useSelector((state) => state.inventoryCrudSlice.dataStatus);

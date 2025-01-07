@@ -16,7 +16,10 @@ function PurchaseIndex() {
     const insertType = useSelector((state) => state.crudSlice.insertType)
 
     const progress = getLoadingProgress()
+
+    // Use the getConfigData hook
     const configData = getConfigData()
+
 
 
     return (

@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress.js";
 import getConfigData from "../../../global-hook/config-data/getConfigData.js";
 import _SalesPurchaseHeaderNavbar from "../../domain/configuraton/_SalesPurchaseHeaderNavbar.jsx";
-import _CreateStockForm from "./_CreateStockForm";
+import _CreateOpeningForm from "./_CreateOpeningForm.jsx";
 
 
 function OpeningStockIndex() {
@@ -28,7 +28,7 @@ function OpeningStockIndex() {
                                 roles={t('Roles')}
                             />
                             <Box p={'8'}>
-                                <_CreateStockForm
+                                <_CreateOpeningForm
                                     currencySymbol={configData?.currency?.symbol}
                                 />
                             </Box>

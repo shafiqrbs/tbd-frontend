@@ -20,48 +20,71 @@ import InputNumberForm from "../../../form-builders/InputNumberForm";
 import { DataTable } from "mantine-datatable";
 import ShortcutInvoice from "../../shortcut/ShortcutInvoice";
 import tableCss from "../../../../assets/css/Table.module.css";
-import _addProduct from "../../popover-form/_addProduct.jsx";
 import productsDataStoreIntoLocalStorage from "../../../global-hook/local-storage/productsDataStoreIntoLocalStorage.js";
 import {
     deleteEntityData,
     getIndexEntityData,
-    inlineUpdateEntityData,
+    inlineUpdateEntityData, setPurchaseItemsFilterData,
     storeEntityData
 } from "../../../../store/inventory/crudSlice.js";
 import AddProductDrawer from "../sales/drawer-form/AddProductDrawer.jsx";
+import {modals} from "@mantine/modals";
 
-function _CreateStockForm(props) {
+function _CreateOpeningForm(props) {
     const { currencySymbol } = props
     const { t, i18n } = useTranslation();
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
     const height = mainAreaHeight - 130; //TabList height 104
-    const [fetching, setFetching] = useState(false);
+    const [fetching, setFetching] = useState(true);
 
     const perPage = 15;
     const [page, setPage] = useState(1);
 
-    const indexData = useSelector((state) => state.inventoryCrudSlice.indexEntityData)
     const [searchValue, setSearchValue] = useState('');
     const [productDropdown, setProductDropdown] = useState([])
     const [productDrawer, setProductDrawer] = useState(false);
+    const [indexData,setIndexData] = useState([])
+    const purchaseItemsFilterData = useSelector((state) => state.inventoryCrudSlice.purchaseItemsFilterData)
 
     useEffect(() => {
-        const value = {
-            url: 'inventory/opening-stock',
-            param: {
-                page: page,
-                offset: perPage,
-                mode: "opening",
-                is_approved: 0
+        let isMounted = true; // To handle cleanup properly in `useEffect`
+
+        const fetchData = async () => {
+            const value = {
+                url: 'inventory/opening-stock',
+                param: {
+                    page: page,
+                    offset: perPage,
+                    mode: "opening",
+                    is_approved: 0,
+                },
+            };
+
+            try {
+                const resultAction = await dispatch(getIndexEntityData(value));
+
+                if (getIndexEntityData.rejected.match(resultAction)) {
+                    console.error('Error:', resultAction);
+                } else if (getIndexEntityData.fulfilled.match(resultAction)) {
+                    if (isMounted) {
+                        setIndexData(resultAction.payload);
+                    }
+                }
+            } catch (err) {
+                console.error('Unexpected error:', err);
+            } finally {
+                if (isMounted) setFetching(false);
             }
-        }
-        dispatch(getIndexEntityData(value))
-        setTimeout(() => {
-            setFetching(false)
-        }, 500)
-    }, [fetching]);
+        };
+
+        fetchData();
+
+        return () => {
+            isMounted = false; // Cleanup the effect to prevent state updates on unmounted component
+        };
+    }, [dispatch, fetching, page, perPage]);
 
     const [stockProductRestore, setStockProductRestore] = useState(false)
     useEffect(() => {
@@ -310,6 +333,7 @@ function _CreateStockForm(props) {
                                                     leftSection={<IconBarcode size={16} opacity={0.5} />}
                                                 />
                                             </Grid.Col>
+
                                             <Grid.Col span={8}>
                                                 <SelectServerSideForm
                                                     tooltip={t('ChooseStockProduct')}
@@ -425,7 +449,10 @@ function _CreateStockForm(props) {
                                                                     stroke={1.5} />
                                                             </ActionIcon>
                                                         </Tooltip>
-                                                        <Button onClick={(e) => { navigate('/inventory/opening-approve-stock') }}
+                                                        <Button onClick={(e) => {
+                                                            dispatch(setPurchaseItemsFilterData({...purchaseItemsFilterData, ['searchKeyword']: ''}))
+                                                            navigate('/inventory/opening-approve-stock')
+                                                        }}
                                                             size="sm"
                                                             color={`red.8`}
                                                             variant="outline"
@@ -622,16 +649,29 @@ function _CreateStockForm(props) {
                                                     size="xs"
                                                     radius="xs"
                                                     onClick={() => {
-                                                        const approveData = {
-                                                            url: 'inventory/opening-stock/inline-update',
-                                                            data: {
-                                                                field_name: "approve",
-                                                                value: 1,
-                                                                id: item.id
-                                                            }
-                                                        }
-                                                        dispatch(inlineUpdateEntityData(approveData))
-                                                        setFetching(true)
+                                                        modals.openConfirmModal({
+                                                            title: (
+                                                                <Text size="md"> {t("FormConfirmationTitle")}</Text>
+                                                            ),
+                                                            children: (
+                                                                <Text size="sm"> {t("FormConfirmationMessage")}</Text>
+                                                            ),
+                                                            labels: { confirm: 'Confirm', cancel: 'Cancel' },
+                                                            confirmProps: { color: 'red.6' },
+                                                            onCancel: () => console.log('Cancel'),
+                                                            onConfirm: () => {
+                                                                const approveData = {
+                                                                    url: 'inventory/opening-stock/inline-update',
+                                                                    data: {
+                                                                        field_name: "approve",
+                                                                        value: 1,
+                                                                        id: item.id
+                                                                    }
+                                                                }
+                                                                dispatch(inlineUpdateEntityData(approveData))
+                                                                setFetching(true)
+                                                            },
+                                                        });
                                                     }}
                                                 >
                                                     {t('Approve')}
@@ -641,8 +681,21 @@ function _CreateStockForm(props) {
                                                     variant="subtle"
                                                     color="red"
                                                     onClick={() => {
-                                                        dispatch(deleteEntityData('inventory/opening-stock/' + item.id))
-                                                        setFetching(true)
+                                                        modals.openConfirmModal({
+                                                            title: (
+                                                                <Text size="md"> {t("FormConfirmationTitle")}</Text>
+                                                            ),
+                                                            children: (
+                                                                <Text size="sm"> {t("FormConfirmationMessage")}</Text>
+                                                            ),
+                                                            labels: { confirm: 'Confirm', cancel: 'Cancel' },
+                                                            confirmProps: { color: 'red.6' },
+                                                            onCancel: () => console.log('Cancel'),
+                                                            onConfirm: () => {
+                                                                dispatch(deleteEntityData('inventory/opening-stock/' + item.id))
+                                                                setFetching(true)
+                                                            },
+                                                        });
                                                     }}
                                                 >
                                                     <IconX size={16} style={{ width: '70%', height: '70%' }}
@@ -696,4 +749,4 @@ function _CreateStockForm(props) {
     );
 }
 
-export default _CreateStockForm;
+export default _CreateOpeningForm;

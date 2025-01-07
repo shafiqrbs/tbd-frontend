@@ -13,7 +13,8 @@ function InventoryConfigurationIndex() {
     const { t, i18n } = useTranslation();
 
     const progress = getLoadingProgress()
-    localStorage.setItem('config-data', JSON.stringify(getConfigData()));
+    const {configData,fetchData} = getConfigData()
+    localStorage.setItem('config-data', JSON.stringify(configData));
 
     return (
 

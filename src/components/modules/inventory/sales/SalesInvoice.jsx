@@ -17,7 +17,7 @@ function SalesInvoice() {
     const dispatch = useDispatch();
     const insertType = useSelector((state) => state.crudSlice.insertType)
     const progress = getLoadingProgress()
-    const configData = getConfigData()
+    const {configData,fetchData} = getConfigData()
     return (
         <>
             {progress !== 100 &&
