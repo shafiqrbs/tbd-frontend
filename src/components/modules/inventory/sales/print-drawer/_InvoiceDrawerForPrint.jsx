@@ -54,6 +54,7 @@ function _InvoiceDrawerForPrint(props) {
                     <Box mb={0} bg={'gray.1'} >
                         <Box p={'md'} className="boxBackground borderRadiusAll" >
 
+
                             {printType === 'print' && <_InvoiceForDomain359Custom mode={mode} setOpenInvoiceDrawerForPrint={setOpenInvoiceDrawerForPrint} />}
                             { printType === 'pos' && <InvoiceDomain359Pos mode={mode} setOpenInvoiceDrawerForPrint={setOpenInvoiceDrawerForPrint} />}
 
