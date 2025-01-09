@@ -16,11 +16,11 @@ import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoa
 import getConfigData from "../../../global-hook/config-data/getConfigData.js";
 import { useNavigate, useParams } from "react-router-dom";
 import CoreHeaderNavbar from "../CoreHeaderNavbar.jsx";
-import LocationTable from "./LocationTable.jsx";
-import LocationForm from "./LocationForm.jsx";
-import LocationUpdateForm from "./LocationUpdateForm.jsx";
+import WarehouseTable from "./WarehouseTable.jsx";
+import WarehouseForm from "./WarehouseForm.jsx";
+import WarehouseUpdateForm from "./WarehouseUpdateForm.jsx";
 
-function LocationIndex() {
+function WarehouseIndex() {
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
 
@@ -36,13 +36,13 @@ function LocationIndex() {
     useEffect(() => {
         if (id) {
             dispatch(setInsertType('update'));
-            dispatch(editEntityData(`/core/location/${id}`));
+            dispatch(editEntityData(`/core/warehouse/${id}`));
             dispatch(setFormLoading(true));
         } else if (!id) {
             dispatch(setInsertType('create'));
             dispatch(setSearchKeyword(''));
             dispatch(setEntityNewData([]));
-            navigate('/core/location');
+            navigate('/core/warehouse');
         }
     }, [id, dispatch, navigate]);
 
@@ -56,7 +56,7 @@ function LocationIndex() {
                     {configData &&
                         <>
                             <CoreHeaderNavbar
-                                pageTitle={t('Location')}
+                                pageTitle={t('Warehouse')}
                                 roles={t('Roles')}
                                 allowZeroPercentage=''
                                 currencySymbol=''
@@ -65,14 +65,14 @@ function LocationIndex() {
                                 <Grid columns={24} gutter={{ base: 8 }}>
                                     <Grid.Col span={15} >
                                         <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
-                                            <LocationTable />
+                                            <WarehouseTable />
                                         </Box>
                                     </Grid.Col>
                                     <Grid.Col span={9}>
                                         {
                                             insertType === 'create'
-                                                ? <LocationForm />
-                                                : <LocationUpdateForm />
+                                                ? <WarehouseForm />
+                                                : <WarehouseUpdateForm />
                                         }
                                     </Grid.Col>
                                 </Grid>
@@ -86,4 +86,4 @@ function LocationIndex() {
     );
 }
 
-export default LocationIndex;
+export default WarehouseIndex;

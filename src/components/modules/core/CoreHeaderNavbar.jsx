@@ -88,13 +88,13 @@ function CoreHeaderNavbar(props) {
                 <Menu.Item
                   component="button"
                   onClick={(e) => {
-                    navigate("/core/location");
+                    navigate("/core/warehouse");
                   }}
                   leftSection={
                     <IconMap2 style={{ width: rem(14), height: rem(14) }} />
                   }
                 >
-                  {t("Location")}
+                  {t("Warehouse")}
                 </Menu.Item>
                 <Menu.Item
                   component="button"

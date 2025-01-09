@@ -64,7 +64,7 @@ export const getVendorDropdown = createAsyncThunk("vendor/select", async (value)
     }
 });
 
-export const getLocationDropdown = createAsyncThunk("location/select", async (value) => {
+export const getLocationDropdown = createAsyncThunk("warehouse/select", async (value) => {
     try {
         const response = getSelectDataWithParam(value);
         return response;
@@ -74,7 +74,7 @@ export const getLocationDropdown = createAsyncThunk("location/select", async (va
     }
 });
 
-export const getLocationProDropdown = createAsyncThunk("location/dropdown", async (value) => {
+export const getLocationProDropdown = createAsyncThunk("warehouse/dropdown", async (value) => {
     try {
         const response = getSelectDataWithParam(value);
         return response;

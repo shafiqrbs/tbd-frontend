@@ -133,6 +133,7 @@ function StockTable() {
                         { accessor: 'product_type', title: t("NatureOfProduct") },
                         { accessor: 'category_name', title: t("Category") },
                         { accessor: 'product_name', title: t("Name") },
+                        { accessor: 'barcode', title: t("Barcode") },
                         { accessor: 'alternative_name', title: t("AlternativeName") },
                         { accessor: 'unit_name', title: t("Unit") },
                         { accessor: 'purchase_price', title: t("PurchasePrice") },

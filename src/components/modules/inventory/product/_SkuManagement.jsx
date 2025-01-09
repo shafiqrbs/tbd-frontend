@@ -33,6 +33,7 @@ import {
 import {modals} from "@mantine/modals";
 import getSettingParticularDropdownData from "../../../global-hook/dropdown/getSettingParticularDropdownData.js";
 import productsDataStoreIntoLocalStorage from "../../../global-hook/local-storage/productsDataStoreIntoLocalStorage.js";
+import InputForm from "../../../form-builders/InputForm.jsx";
 
 function _SkuManagement(props) {
     const {id, isBrand, isColor, isGrade, isSize, isMultiPrice, isModel} = props;
@@ -62,6 +63,7 @@ function _SkuManagement(props) {
             size_id: "",
             grade_id: "",
             model_id: "",
+            barcode: "",
         }
     });
 
@@ -102,12 +104,14 @@ function _SkuManagement(props) {
 
     const [priceData, setPriceData] = useState([]);
     const [purchasePriceData, setPurchasePriceData] = useState([]);
+    const [barcodeData, setBarcodeData] = useState([]);
     const [multiplePriceFieldName, setMultiplePriceFieldName] = useState([]);
 
     useEffect(() => {
         if (productSkuIndexEntityData?.data) {
             setPriceData(productSkuIndexEntityData?.data.map((sku) => sku?.price || ''));
             setPurchasePriceData(productSkuIndexEntityData?.data.map((sku) => sku?.purchase_price || ''));
+            setBarcodeData(productSkuIndexEntityData?.data.map((sku) => sku?.barcode || ''));
             isMultiPrice && setMultiplePriceFieldName(productSkuIndexEntityData?.data[0]?.price_field_array);
         }
     }, [productSkuIndexEntityData]);
@@ -127,7 +131,7 @@ function _SkuManagement(props) {
     }, [productSkuIndexEntityData]);
 
     const handleSkuData = (value, stockId, priceFieldSlug, skuIndex, fieldIndex, settingId) => {
-        if (priceFieldSlug != 'sales_price' && priceFieldSlug != 'purchase_price') {
+        if (priceFieldSlug != 'sales_price' && priceFieldSlug != 'purchase_price' && priceFieldSlug != 'barcode') {
             const updatedPriceData = [...wholesalePriceData];
             updatedPriceData[skuIndex][fieldIndex].price = value;
             setWholesalePriceData(updatedPriceData);
@@ -167,6 +171,22 @@ function _SkuManagement(props) {
             const newPurchasePriceData = [...purchasePriceData];
             newPurchasePriceData[skuIndex] = value;
             setPurchasePriceData(newPurchasePriceData);
+            const updateData = {
+                url: 'inventory/product/stock/sku/inline-update/' + stockId,
+                data: {
+                    value: value,
+                    field: priceFieldSlug,
+                }
+            }
+            setTimeout(() => {
+                dispatch(inlineUpdateEntityData(updateData))
+                productsDataStoreIntoLocalStorage()
+            }, 500)
+        }
+        if (priceFieldSlug === 'barcode') {
+            const newBarcodeData = [...barcodeData];
+            newBarcodeData[skuIndex] = value;
+            setBarcodeData(newBarcodeData);
             const updateData = {
                 url: 'inventory/product/stock/sku/inline-update/' + stockId,
                 data: {
@@ -313,6 +333,18 @@ function _SkuManagement(props) {
                                         <Grid columns={11}>
                                             <Grid.Col span={10}>
                                                 <Grid gutter={{base: 2}}>
+                                                    <Grid.Col span={"auto"}>
+                                                        <InputForm
+                                                            tooltip={t('BarcodeValidateMessage')}
+                                                            placeholder={t('Barcode')}
+                                                            required={false}
+                                                            nextField={'sales_price'}
+                                                            form={form}
+                                                            name={'barcode'}
+                                                            mt={8}
+                                                            id={'barcode'}
+                                                        />
+                                                    </Grid.Col>
                                                     {isColor && (
                                                         <Grid.Col span={"auto"}>
                                                             <SelectForm
@@ -443,6 +475,9 @@ function _SkuManagement(props) {
                                                     <Table.Th fz="xs">
                                                         {t("Name")}
                                                     </Table.Th>
+                                                    <Table.Th fz="xs">
+                                                        {t("Barcode")}
+                                                    </Table.Th>
 
                                                     {
                                                         isColor &&
@@ -508,6 +543,18 @@ function _SkuManagement(props) {
                                                                 </Table.Th>
                                                                 <Table.Th fz="xs">
                                                                     {sku.name}
+                                                                </Table.Th>
+                                                                <Table.Th fz="xs">
+                                                                    <TextInput
+                                                                        type="number"
+                                                                        label=""
+                                                                        size="xs"
+                                                                        id={'inline-update-barcode-' + sku.stock_id}
+                                                                        value={barcodeData[index]}
+                                                                        onChange={(e) => {
+                                                                            handleSkuData(e.target.value, sku.stock_id, 'barcode', index, null, null)
+                                                                        }}
+                                                                    />
                                                                 </Table.Th>
                                                                 {
                                                                     isColor &&

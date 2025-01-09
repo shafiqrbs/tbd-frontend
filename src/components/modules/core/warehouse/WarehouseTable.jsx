@@ -9,7 +9,7 @@ import { useTranslation } from "react-i18next";
 import {
     IconEdit, IconTrash, IconCheck,
     IconDotsVertical,
-    IconTrashX
+    IconTrashX, IconAlertCircle
 } from "@tabler/icons-react";
 import { DataTable } from 'mantine-datatable';
 import { useDispatch, useSelector } from "react-redux";
@@ -21,30 +21,34 @@ import { modals } from "@mantine/modals";
 import { deleteEntityData } from "../../../../store/core/crudSlice";
 import { notifications } from "@mantine/notifications";
 import tableCss from "../../../../assets/css/Table.module.css";
-import LocationViewModal from "./LocationViewModal.jsx";
+import WarehouseViewModal from "./WarehouseViewModal.jsx";
+import VendorViewDrawer from "../vendor/VendorViewDrawer.jsx";
 
 
-function LocationTable() {
-
+function WarehouseTable() {
     const dispatch = useDispatch();
     const { t, i18n } = useTranslation();
     const { isOnline, mainAreaHeight } = useOutletContext();
     const height = mainAreaHeight - 98; //TabList height 104
+
     const perPage = 50;
     const [page, setPage] = useState(1);
+
     const [fetching,setFetching] = useState(true)
-
     const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword)
-    const entityDataDelete = useSelector((state) => state.inventoryCrudSlice.entityDataDelete)
-    const productCategoryFilterData = useSelector((state) => state.inventoryCrudSlice.productCategoryFilterData)
+    const fetchingReload = useSelector((state) => state.crudSlice.fetching)
+    const vendorFilterData = useSelector((state) => state.crudSlice.vendorFilterData)
+    const entityDataDelete = useSelector((state) => state.crudSlice.entityDataDelete)
+    const coreVendors = JSON.parse(localStorage.getItem('core-vendors') || '[]');
 
-    const [locationViewModal, setLocationViewModal] = useState(false)
+    const [vendorObject, setVendorObject] = useState({});
+    const navigate = useNavigate();
+    const [viewDrawer, setViewDrawer] = useState(false);
 
-    const navigate = useNavigate()
 
     useEffect(() => {
         dispatch(setDeleteMessage(''))
-        if (entityDataDelete === 'delete') {
+        if (entityDataDelete.message === 'delete') {
             notifications.show({
                 color: 'red',
                 title: t('DeleteSuccessfully'),
@@ -67,10 +71,12 @@ function LocationTable() {
         const fetchData = async () => {
             setFetching(true)
             const value = {
-                url: 'inventory/category-group',
+                url: 'core/warehouse',
                 param: {
                     term: searchKeyword,
-                    type: 'category',
+                    name: vendorFilterData.name,
+                    mobile: vendorFilterData.mobile,
+                    company_name: vendorFilterData.company_name,
                     page: page,
                     offset: perPage
                 }
@@ -91,12 +97,12 @@ function LocationTable() {
         };
 
         fetchData();
-    }, [dispatch, searchKeyword, page]);
+    }, [dispatch, searchKeyword, vendorFilterData, page,fetchingReload]);
 
     return (
         <>
             <Box pl={`xs`} pr={8} pt={'6'} pb={'4'} className={'boxBackground borderRadiusAll border-bottom-none'} >
-                <KeywordSearch module={'category'} />
+                <KeywordSearch module={'warehouse'} />
             </Box>
             <Box className={'borderRadiusAll border-top-none'}>
                 <DataTable
@@ -115,8 +121,12 @@ function LocationTable() {
                             textAlignment: 'right',
                             render: (item) => (indexData.data.indexOf(item) + 1)
                         },
-                        { accessor: 'name', title: t("LocationType") },
-                        { accessor: 'parent_name', title: t("LocationName") },
+                        { accessor: 'name', title: t("Name") },
+                        { accessor: 'location', title: t("Location") },
+                        { accessor: 'contract_person', title: t("ContractPerson") },
+                        { accessor: 'mobile', title: t("Mobile") },
+                        { accessor: 'email', title: t("Email") },
+                        { accessor: 'address', title: t("Address") },
                         {
                             accessor: "action",
                             title: t("Action"),
@@ -130,30 +140,53 @@ function LocationTable() {
                                             </ActionIcon>
                                         </Menu.Target>
                                         <Menu.Dropdown>
-                                            <Menu.Item
+                                            {/*<Menu.Item
                                                 onClick={() => {
                                                     dispatch(setInsertType('update'))
-                                                    dispatch(editEntityData('core/location/' + data.id))
+                                                    dispatch(editEntityData('core/vendor/' + data.id))
                                                     dispatch(setFormLoading(true))
-                                                    navigate(`/core/location/${data.id}`)
+                                                    navigate(`/core/vendor/${data.id}`)
                                                 }}
+
+                                                target="_blank"
+                                                component="a"
+                                                w={'200'}
                                             >
                                                 {t('Edit')}
-                                            </Menu.Item>
+                                            </Menu.Item>*/}
 
-                                            <Menu.Item
+                                            {/*<Menu.Item
                                                 onClick={() => {
-                                                    setLocationViewModal(true)
-                                                    // dispatch(editEntityData('inventory/category-group/' + data.id))
+                                                    const foundVendors = coreVendors.find(type => type.id == data.id);
+                                                    if (foundVendors) {
+                                                        setVendorObject(foundVendors);
+                                                        setViewDrawer(true)
+                                                    }
+                                                    else {
+                                                        notifications.show({
+                                                            color: "red",
+                                                            title: t(
+                                                                "Something Went wrong , please try again"
+                                                            ),
+                                                            icon: (
+                                                                <IconAlertCircle
+                                                                    style={{ width: rem(18), height: rem(18) }}
+                                                                />
+                                                            ),
+                                                            loading: false,
+                                                            autoClose: 900,
+                                                            style: { backgroundColor: "lightgray" },
+                                                        });
+                                                    }
+                                                    // dispatch(showEntityData('core/vendor/' + data.id))
                                                 }}
                                                 target="_blank"
                                                 component="a"
                                                 w={'200'}
                                             >
                                                 {t('Show')}
-                                            </Menu.Item>
-                                            <Menu.Item
-                                                // href={``}
+                                            </Menu.Item>*/}
+                                            {/*<Menu.Item
                                                 target="_blank"
                                                 component="a"
                                                 w={'200'}
@@ -172,14 +205,14 @@ function LocationTable() {
                                                         confirmProps: { color: 'red.6' },
                                                         onCancel: () => console.log('Cancel'),
                                                         onConfirm: () => {
-                                                            dispatch(deleteEntityData('inventory/category-group/' + data.id))
+                                                            dispatch(deleteEntityData('core/vendor/' + data.id))
                                                         },
                                                     });
                                                 }}
                                                 rightSection={<IconTrashX style={{ width: rem(14), height: rem(14) }} />}
                                             >
                                                 {t('Delete')}
-                                            </Menu.Item>
+                                            </Menu.Item>*/}
                                         </Menu.Dropdown>
                                     </Menu>
                                 </Group>
@@ -201,9 +234,16 @@ function LocationTable() {
                     scrollAreaProps={{ type: 'never' }}
                 />
             </Box>
-            {locationViewModal && <LocationViewModal locationViewModal={locationViewModal} setLocationViewModal={setLocationViewModal} />}
+            {
+                viewDrawer &&
+                <VendorViewDrawer
+                    viewDrawer={viewDrawer}
+                    setViewDrawer={setViewDrawer}
+                    vendorObject={vendorObject}
+                />
+            }
         </>
     );
 }
 
-export default LocationTable;
+export default WarehouseTable;

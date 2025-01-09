@@ -29,7 +29,7 @@ import SampleModalIndex from "./components/modules/sample3Grid/SampleModalIndex.
 import OpeningApproveIndex from "./components/modules/inventory/opening-stock/OpeningApproveIndex";
 import OpeningStockIndex from "./components/modules/inventory/opening-stock/OpeningStockIndex";
 import InvoiceBatchIndex from "./components/modules/inventory/invoice-batch/InvoiceBatchIndex.jsx";
-import LocationIndex from "./components/modules/core/location/LocationIndex.jsx";
+import WarehouseIndex from "./components/modules/core/warehouse/WarehouseIndex.jsx";
 import MarketingExecutiveIndex from "./components/modules/core/marketing-executive/MarketingExecutiveIndex.jsx";
 import ProductSettingsIndex from "./components/modules/inventory/product-settings/ProductSettingsIndex.jsx";
 import ProductionSettingIndex from "./components/modules/production/settings/ProductionSettingIndex.jsx";
@@ -76,8 +76,8 @@ function AppRoute() {
           <Route path="vendor/:id" element={<VendorIndex />} />
           <Route path="setting" element={<SettingsIndex />} />
           <Route path="setting/:id" element={<SettingsIndex />} />
-          <Route path="location" element={<LocationIndex />} />
-          <Route path="location/:id" element={<LocationIndex />} />
+          <Route path="warehouse" element={<WarehouseIndex />} />
+          <Route path="warehouse/:id" element={<WarehouseIndex />} />
           <Route
             path="marketing-executive"
             element={<MarketingExecutiveIndex />}
