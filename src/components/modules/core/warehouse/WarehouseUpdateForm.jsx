@@ -25,6 +25,8 @@ import Shortcut from "../../shortcut/Shortcut.jsx";
 import InputForm from "../../../form-builders/InputForm.jsx";
 import SelectForm from "../../../form-builders/SelectForm.jsx";
 import SwitchForm from "../../../form-builders/SwitchForm.jsx";
+import PhoneNumber from "../../../form-builders/PhoneNumberInput.jsx";
+import vendorDataStoreIntoLocalStorage from "../../../global-hook/local-storage/vendorDataStoreIntoLocalStorage.js";
 
 function WarehouseUpdateForm() {
     const { t, i18n } = useTranslation();
@@ -36,29 +38,26 @@ function WarehouseUpdateForm() {
     const [setFormData, setFormDataForUpdate] = useState(false);
     const [categoryGroupData, setCategoryGroupData] = useState(null);
 
-    const entityEditData = useSelector((state) => state.inventoryCrudSlice.entityEditData)
+    const entityEditData = useSelector((state) => state.crudSlice.entityEditData)
     const formLoading = useSelector((state) => state.crudSlice.formLoading)
     const [formLoad, setFormLoad] = useState('');
     const navigate = useNavigate();
 
-
-    // useEffect(() => {
-
-    //     const value = {
-    //         url: 'inventory/select/group-category',
-    //     }
-
-    //     dispatch(getCategoryDropdown(value))
-    //     dispatch(setDropdownLoad(false))
-    // }, [dropdownLoad]);
-
     const form = useForm({
         initialValues: {
-            location_type: '', location_name: '', status: ''
+            name: '', location: '', contract_person: '',mobile : '' , email : '' , address :''
         },
         validate: {
-            location_type: isNotEmpty(),
-            location_name: hasLength({ min: 2, max: 20 }),
+            name: isNotEmpty(),
+            location: isNotEmpty(),
+            contract_person: isNotEmpty(),
+            mobile: isNotEmpty(),
+            email: (value) => {
+                if (value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+                    return true;
+                }
+                return null;
+            },
         }
     });
 
@@ -70,9 +69,12 @@ function WarehouseUpdateForm() {
     useEffect(() => {
 
         form.setValues({
-            location_type: entityEditData.location_type ? entityEditData.location_type : '',
-            location_name: entityEditData.location_name ? entityEditData.location_name : '',
-            status: entityEditData.status ? entityEditData.status : ''
+            name: entityEditData.name ? entityEditData.name : '',
+            location: entityEditData.location ? entityEditData.location : '',
+            email: entityEditData.email ? entityEditData.email : '',
+            contract_person: entityEditData.contract_person ? entityEditData.contract_person : '',
+            mobile: entityEditData.mobile ? entityEditData.mobile : '',
+            address: entityEditData.address ? entityEditData.address : ''
         })
 
         dispatch(setFormLoading(false))
@@ -85,7 +87,7 @@ function WarehouseUpdateForm() {
 
 
     useHotkeys([['alt+n', () => {
-        document.getElementById('location_type').click()
+        document.getElementById('name').click()
     }]], []);
 
     useHotkeys([['alt+r', () => {
@@ -110,30 +112,46 @@ function WarehouseUpdateForm() {
                         ),
                         labels: { confirm: 'Submit', cancel: 'Cancel' }, confirmProps: { color: 'red' },
                         onCancel: () => console.log('Cancel'),
-                        onConfirm: () => {
-                            setSaveCreateLoading(true)
+                        onConfirm: async () => {
+                            // setSaveCreateLoading(true)
                             const value = {
-                                url: 'inventory/category-group/' + entityEditData.id,
+                                url: 'core/warehouse/' + entityEditData.id,
                                 data: values
                             }
-                            dispatch(updateEntityData(value))
-                            notifications.show({
-                                color: 'teal',
-                                title: t('UpdateSuccessfully'),
-                                icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
-                                loading: false,
-                                autoClose: 700,
-                                style: { backgroundColor: 'lightgray' },
-                            });
 
-                            setTimeout(() => {
-                                form.reset()
-                                dispatch(setInsertType('create'))
-                                dispatch(setEditEntityData([]))
-                                dispatch(setFetching(true))
-                                setSaveCreateLoading(false)
-                                navigate('/core/location', { replace: true });
-                            }, 700)
+                            const resultAction = await dispatch(updateEntityData(value));
+
+                            if (updateEntityData.rejected.match(resultAction)) {
+                                const fieldErrors = resultAction.payload.errors;
+
+                                // Check if there are field validation errors and dynamically set them
+                                if (fieldErrors) {
+                                    const errorObject = {};
+                                    Object.keys(fieldErrors).forEach(key => {
+                                        errorObject[key] = fieldErrors[key][0]; // Assign the first error message for each field
+                                    });
+                                    // Display the errors using your form's `setErrors` function dynamically
+                                    form.setErrors(errorObject);
+                                }
+                            } else if (updateEntityData.fulfilled.match(resultAction)) {
+                                notifications.show({
+                                    color: 'teal',
+                                    title: t('UpdateSuccessfully'),
+                                    icon: <IconCheck style={{width: rem(18), height: rem(18)}}/>,
+                                    loading: false,
+                                    autoClose: 700,
+                                    style: {backgroundColor: 'lightgray'},
+                                });
+
+                                setTimeout(() => {
+                                    form.reset()
+                                    dispatch(setInsertType('create'))
+                                    dispatch(setEditEntityData([]))
+                                    dispatch(setFetching(true))
+                                    setSaveCreateLoading(false)
+                                    navigate('/core/warehouse', {replace: true})
+                                }, 700)
+                            }
                         },
                     });
                 })}>
@@ -174,52 +192,77 @@ function WarehouseUpdateForm() {
                                         <ScrollArea h={height} scrollbarSize={2} scrollbars="y" type="never">
                                             <Box>
                                                 <LoadingOverlay visible={formLoad} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />
-                                                <Box mt={'8'}>
-                                                    <SelectForm
-                                                        tooltip={t('LocationType')}
-                                                        label={t('LocationType')}
-                                                        placeholder={t('LocationType')}
-                                                        required={true}
-                                                        nextField={'location_name'}
-                                                        name={'location_type'}
-                                                        form={form}
-                                                        dropdownValue={['test1', 'test2']}
-                                                        id={'location_type'}
-                                                        searchable={false}
-                                                        value={categoryGroupData}
-                                                        changeValue={setCategoryGroupData}
-                                                    />
-                                                </Box>
-
                                                 <Box mt={'xs'}>
                                                     <InputForm
-                                                        tooltip={t('LocationName')}
-                                                        label={t('LocationName')}
-                                                        placeholder={t('LocationName')}
+                                                        tooltip={t('Name')}
+                                                        label={t('Name')}
+                                                        placeholder={t('Name')}
                                                         required={true}
-                                                        nextField={'status'}
+                                                        nextField={'location'}
                                                         form={form}
-                                                        name={'location_name'}
-                                                        id={'location_name'}
+                                                        name={'name'}
+                                                        id={'name'}
                                                     />
                                                 </Box>
                                                 <Box mt={'xs'}>
-                                                    <Grid gutter={{ base: 1 }}>
-                                                        <Grid.Col span={2}>
-                                                            <SwitchForm
-                                                                tooltip={t('Status')}
-                                                                label=''
-                                                                nextField={'EntityFormSubmit'}
-                                                                name={'status'}
-                                                                form={form}
-                                                                color="red"
-                                                                id={'status'}
-                                                                position={'left'}
-                                                                defaultChecked={1}
-                                                            />
-                                                        </Grid.Col>
-                                                        <Grid.Col span={6} fz={'sm'} pt={'1'}>{t('Status')}</Grid.Col>
-                                                    </Grid>
+                                                    <InputForm
+                                                        tooltip={t('Location')}
+                                                        label={t('Location')}
+                                                        placeholder={t('Location')}
+                                                        required={true}
+                                                        nextField={'contract_person'}
+                                                        form={form}
+                                                        name={'location'}
+                                                        id={'location'}
+                                                    />
+                                                </Box>
+                                                <Box mt={'xs'}>
+                                                    <InputForm
+                                                        tooltip={t('ContractPerson')}
+                                                        label={t('ContractPerson')}
+                                                        placeholder={t('ContractPerson')}
+                                                        required={true}
+                                                        nextField={'mobile'}
+                                                        form={form}
+                                                        name={'contract_person'}
+                                                        id={'contract_person'}
+                                                    />
+                                                </Box>
+                                                <Box mt={'xs'}>
+                                                    <PhoneNumber
+                                                        tooltip={form.errors.mobile ? form.errors.mobile : t('MobileValidateMessage')}
+                                                        label={t('Mobile')}
+                                                        placeholder={t('Mobile')}
+                                                        required={true}
+                                                        nextField={'email'}
+                                                        form={form}
+                                                        name={'mobile'}
+                                                        id={'mobile'}
+                                                    />
+                                                </Box>
+                                                <Box mt={'xs'}>
+                                                    <InputForm
+                                                        tooltip={t('Email')}
+                                                        label={t('Email')}
+                                                        placeholder={t('Email')}
+                                                        required={false}
+                                                        nextField={'address'}
+                                                        form={form}
+                                                        name={'email'}
+                                                        id={'email'}
+                                                    />
+                                                </Box>
+                                                <Box mt={'xs'}>
+                                                    <InputForm
+                                                        tooltip={t('Address')}
+                                                        label={t('Address')}
+                                                        placeholder={t('Address')}
+                                                        required={false}
+                                                        nextField={'WarehouseFormSubmit'}
+                                                        form={form}
+                                                        name={'address'}
+                                                        id={'address'}
+                                                    />
                                                 </Box>
                                             </Box>
                                         </ScrollArea>
@@ -240,7 +283,6 @@ function WarehouseUpdateForm() {
                     </Grid>
                 </form>
             </Box>
-
         </>
     )
 }

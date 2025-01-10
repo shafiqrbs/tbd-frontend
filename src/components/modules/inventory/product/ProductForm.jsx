@@ -91,12 +91,12 @@ function ProductForm(props) {
             category_id: isNotEmpty(),
             unit_id: isNotEmpty(),
             name: isNotEmpty(),
-            sales_price: (value) => {
+            /*sales_price: (value) => {
                 const isNumberOrFractional = /^-?\d+(\.\d+)?$/.test(value);
                 if (!isNumberOrFractional) {
                     return true;
                 }
-            },
+            },*/
             barcode: (value) => {
                 if (value) {
                     return /^\d+$/.test(value) ? null : 'Must be a numeric value';
@@ -151,24 +151,38 @@ function ProductForm(props) {
                                 form.setErrors(errorObject);
                             }
                         } else if (storeEntityData.fulfilled.match(resultAction)) {
-                            notifications.show({
-                                color: 'teal',
-                                title: t('CreateSuccessfully'),
-                                icon: <IconCheck style={{width: rem(18), height: rem(18)}}/>,
-                                loading: false,
-                                autoClose: 700,
-                                style: {backgroundColor: 'lightgray'},
-                            });
+                            if (resultAction.payload.data.data.id){
 
-                            setTimeout(() => {
-                                productsDataStoreIntoLocalStorage()
-                                form.reset()
-                                setCategoryData(null)
-                                setProductTypeData(null)
-                                setProductUnitData(null)
-                                dispatch(setFetching(true))
-                                navigate('/inventory/product/'+resultAction.payload.data.data.id)
-                            }, 700)
+                                notifications.show({
+                                    color: 'teal',
+                                    title: t('CreateSuccessfully'),
+                                    icon: <IconCheck style={{width: rem(18), height: rem(18)}}/>,
+                                    loading: false,
+                                    autoClose: 700,
+                                    style: {backgroundColor: 'lightgray'},
+                                });
+
+                                setTimeout(() => {
+                                    productsDataStoreIntoLocalStorage()
+                                    form.reset()
+                                    setCategoryData(null)
+                                    setProductTypeData(null)
+                                    setProductUnitData(null)
+                                    dispatch(setFetching(true))
+                                    navigate('/inventory/product/' + resultAction.payload.data.data.id)
+                                }, 700)
+                            }else {
+                                const fieldErrors = resultAction.payload.data.data;
+                                // Check if there are field validation errors and dynamically set them
+                                if (fieldErrors) {
+                                    const errorObject = {};
+                                    Object.keys(fieldErrors).forEach(key => {
+                                        errorObject[key] = fieldErrors[key][0]; // Assign the first error message for each field
+                                    });
+                                    // Display the errors using your form's `setErrors` function dynamically
+                                    form.setErrors(errorObject);
+                                }
+                            }
                         }
                     },
                 });
@@ -284,9 +298,9 @@ function ProductForm(props) {
                                         </Box>
                                         <Box mt={'xs'}>
                                             <InputForm
-                                                tooltip={t('AlternativeProductNameValidateMessage')}
-                                                label={t('AlternativeProductName')}
-                                                placeholder={t('AlternativeProductName')}
+                                                tooltip={t('DisplayName')}
+                                                label={t('DisplayName')}
+                                                placeholder={t('DisplayName')}
                                                 required={false}
                                                 form={form}
                                                 name={'alternative_name'}
@@ -297,9 +311,9 @@ function ProductForm(props) {
                                         </Box>
                                         <Box mt={'xs'}>
                                             <InputForm
-                                                tooltip={t('BanglaName')}
-                                                label={t('BanglaName')}
-                                                placeholder={t('BanglaName')}
+                                                tooltip={t('LanguageName')}
+                                                label={t('LanguageName')}
+                                                placeholder={t('LanguageName')}
                                                 required={false}
                                                 form={form}
                                                 name={'bangla_name'}
@@ -346,7 +360,7 @@ function ProductForm(props) {
                                                         tooltip={t('SalesPriceValidateMessage')}
                                                         label={t('SalesPrice')}
                                                         placeholder={t('SalesPrice')}
-                                                        required={true}
+                                                        required={false}
                                                         nextField={'purchase_price'}
                                                         form={form}
                                                         name={'sales_price'}

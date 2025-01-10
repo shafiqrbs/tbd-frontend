@@ -142,8 +142,8 @@ function ProductTable() {
                         { accessor: 'product_type', title: t("NatureOfProduct") },
                         { accessor: 'category_name', title: t("Category") },
                         { accessor: 'product_name', title: t("Name") },
-                        { accessor: 'alternative_name', title: t("AlternativeName") },
-                        { accessor: 'bangla_name', title: t("BanglaName") },
+                        { accessor: 'alternative_name', title: t("DisplayName") },
+                        { accessor: 'bangla_name', title: t("LanguageName") },
                         { accessor: 'unit_name', title: t("Unit") },
                         { accessor: 'quantity', title: t("Quantity") },
                         {

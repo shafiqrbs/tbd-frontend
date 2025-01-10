@@ -24,7 +24,7 @@ function WarehouseIndex() {
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
 
-    const insertType = useSelector((state) => state.inventoryCrudSlice.insertType)
+    const insertType = useSelector((state) => state.crudSlice.insertType)
 
     const progress = getLoadingProgress()
     const {configData,fetchData} = getConfigData()

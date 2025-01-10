@@ -37,7 +37,7 @@ function WarehouseTable() {
     const [fetching,setFetching] = useState(true)
     const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword)
     const fetchingReload = useSelector((state) => state.crudSlice.fetching)
-    const vendorFilterData = useSelector((state) => state.crudSlice.vendorFilterData)
+    const warehouseFilterData = useSelector((state) => state.crudSlice.warehouseFilterData)
     const entityDataDelete = useSelector((state) => state.crudSlice.entityDataDelete)
     const coreVendors = JSON.parse(localStorage.getItem('core-vendors') || '[]');
 
@@ -74,9 +74,10 @@ function WarehouseTable() {
                 url: 'core/warehouse',
                 param: {
                     term: searchKeyword,
-                    name: vendorFilterData.name,
-                    mobile: vendorFilterData.mobile,
-                    company_name: vendorFilterData.company_name,
+                    name: warehouseFilterData.name,
+                    mobile: warehouseFilterData.mobile,
+                    location: warehouseFilterData.location,
+                    email: warehouseFilterData.email,
                     page: page,
                     offset: perPage
                 }
@@ -97,7 +98,7 @@ function WarehouseTable() {
         };
 
         fetchData();
-    }, [dispatch, searchKeyword, vendorFilterData, page,fetchingReload]);
+    }, [dispatch, searchKeyword, page,fetchingReload]);
 
     return (
         <>
@@ -140,12 +141,12 @@ function WarehouseTable() {
                                             </ActionIcon>
                                         </Menu.Target>
                                         <Menu.Dropdown>
-                                            {/*<Menu.Item
+                                            <Menu.Item
                                                 onClick={() => {
                                                     dispatch(setInsertType('update'))
-                                                    dispatch(editEntityData('core/vendor/' + data.id))
+                                                    dispatch(editEntityData('core/warehouse/' + data.id))
                                                     dispatch(setFormLoading(true))
-                                                    navigate(`/core/vendor/${data.id}`)
+                                                    navigate(`/core/warehouse/${data.id}`)
                                                 }}
 
                                                 target="_blank"
@@ -153,7 +154,7 @@ function WarehouseTable() {
                                                 w={'200'}
                                             >
                                                 {t('Edit')}
-                                            </Menu.Item>*/}
+                                            </Menu.Item>
 
                                             {/*<Menu.Item
                                                 onClick={() => {

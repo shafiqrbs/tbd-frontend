@@ -17,6 +17,7 @@ import CategoryFilterForm from "../inventory/category/CategoryFilterForm.jsx";
 import { useOutletContext } from "react-router-dom";
 import { IconSearch, IconX } from "@tabler/icons-react";
 import __ProductionSettingFilterForm from "../production/settings/__ProductionSettingFilterForm.jsx";
+import WarehouseFilterForm from "../core/warehouse/WarehouseFilterForm.jsx";
 
 function FilterModel(props) {
     const { t, i18n } = useTranslation();
@@ -54,6 +55,7 @@ function FilterModel(props) {
                     <Box ml={2} mr={2} mt={0} p={'xs'} className="borderRadiusAll" bg={'white'}>
                         <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} h={height - 37}>
                             {props.module === 'customer' && <CustomerFilterForm module={props.module} />}
+                            {props.module === 'warehouse' && <WarehouseFilterForm module={props.module} />}
                             {props.module === 'category-group' && <CategoryGroupFilterForm module={props.module} />}
                             {props.module === 'vendor' && <VendorFilterForm module={props.module} />}
                             {props.module === 'user' && <UserFilterForm module={props.module} />}

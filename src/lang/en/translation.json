@@ -673,5 +673,7 @@
   "CreateWarehouse" : "Create Warehouse",
   "Warehouse" : "Warehouse",
   "ContractPerson" : "Contract Person",
+  "DisplayName" : "Display Name",
+  "LanguageName" : "Language Name",
   "": ""
 }

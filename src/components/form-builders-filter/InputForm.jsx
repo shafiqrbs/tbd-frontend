@@ -10,7 +10,7 @@ import {
     setCategoryGroupFilterData,
     setCustomerFilterData,
     setUserFilterData,
-    setVendorFilterData
+    setVendorFilterData, setWarehouseFilterData
 } from "../../store/core/crudSlice.js";
 import { useDispatch, useSelector } from "react-redux";
 import { setCategoryFilterData, setProductFilterData } from "../../store/inventory/crudSlice.js";
@@ -30,6 +30,7 @@ function InputForm(props) {
     const customerFilterData = useSelector((state) => state.crudSlice.customerFilterData)
     const vendorFilterData = useSelector((state) => state.crudSlice.vendorFilterData)
     const userFilterData = useSelector((state) => state.crudSlice.userFilterData)
+    const warehouseFilterData = useSelector((state) => state.crudSlice.warehouseFilterData)
     const categoryGroupFilterData = useSelector((state) => state.crudSlice.categoryGroupFilterData)
     const productFilterData = useSelector((state) => state.inventoryCrudSlice.productFilterData)
     const categoryFilterData = useSelector((state) => state.inventoryCrudSlice.categoryFilterData)
@@ -67,6 +68,7 @@ function InputForm(props) {
             if (module === 'production-setting') { dispatch(setProductionSettingFilterData({ ...productionSettingFilterData, [name]: e.currentTarget.value })) }
             if (module === 'production-batch') { dispatch(setProductionBatchFilterData({ ...productionSettingFilterData, [name]: e.currentTarget.value })) }
             if (module === 'recipe-item') { dispatch(setRecipeItemFilterData({ ...recipeItemFilterData, [name]: e.currentTarget.value })) }
+            if (module === 'warehouse') { dispatch(setWarehouseFilterData({ ...warehouseFilterData, [name]: e.currentTarget.value })) }
         }}
                     value={
                         module === 'category-group' ? categoryGroupFilterData[name] :
@@ -78,6 +80,7 @@ function InputForm(props) {
                                             module === 'production-setting' ? productionSettingFilterData[name] :
                                             module === 'production-batch' ? productionBatchFilterData[name] :
                                             module === 'recipe-item' ? recipeItemFilterData[name] :
+                                            module === 'warehouse' ? warehouseFilterData[name] :
                                                 ''
                     }
                     id={id}
@@ -89,6 +92,7 @@ function InputForm(props) {
                             (module === 'production-setting' && productionSettingFilterData[name]) ||
                             (module === 'production-batch' && productionBatchFilterData[name]) ||
                             (module === 'recipe-item' && recipeItemFilterData[name]) ||
+                            (module === 'warehouse' && warehouseFilterData[name]) ||
                             (module === 'vendor' && vendorFilterData[name]) ? (
                             <Tooltip label={t("Close")} withArrow bg={`red.5`}>
                                 <IconX color={`red`} size={16} opacity={0.5} onClick={() => {
@@ -130,6 +134,11 @@ function InputForm(props) {
                                     } else if (module === 'recipe-item') {
                                         dispatch(setRecipeItemFilterData({
                                             ...recipeItemFilterData,
+                                            [name]: ''
+                                        }));
+                                    } else if (module === 'warehouse') {
+                                        dispatch(setWarehouseFilterData({
+                                            ...warehouseFilterData,
                                             [name]: ''
                                         }));
                                     }

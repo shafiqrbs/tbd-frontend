@@ -19,7 +19,7 @@ import {
     setCustomerFilterData,
     setFetching,
     setSearchKeyword, setUserFilterData,
-    setVendorFilterData
+    setVendorFilterData, setWarehouseFilterData
 } from "../../../store/core/crudSlice.js";
 import FilterModel from "./FilterModel.jsx";
 import { setProductFilterData, setCategoryFilterData } from "../../../store/inventory/crudSlice.js";
@@ -38,6 +38,7 @@ function KeywordSearch(props) {
     const categoryFilterData = useSelector((state) => state.inventoryCrudSlice.categoryFilterData)
     const vendorFilterData = useSelector((state) => state.crudSlice.vendorFilterData)
     const userFilterData = useSelector((state) => state.crudSlice.userFilterData)
+    const warehouseFilterData = useSelector((state) => state.crudSlice.warehouseFilterData)
     const categoryGroupFilterData = useSelector((state) => state.crudSlice.categoryGroupFilterData)
     const productFilterData = useSelector((state) => state.inventoryCrudSlice.productFilterData)
     const productionSettingFilterData = useSelector((state) => state.productionCrudSlice.productionSettingFilterData)
@@ -229,6 +230,14 @@ function KeywordSearch(props) {
                                             ...categoryFilterData,
                                             name: '',
                                             parent_name : ''
+                                        }));
+                                    }else if (props.module === 'warehouse') {
+                                        dispatch(setWarehouseFilterData({
+                                            ...warehouseFilterData,
+                                            name: '',
+                                            email : '',
+                                            location : '',
+                                            mobile : '',
                                         }));
                                     }
                                 }} />

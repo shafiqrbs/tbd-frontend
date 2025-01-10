@@ -214,8 +214,6 @@ function WarehouseForm(props) {
                                                         id={'email'}
                                                     />
                                                 </Box>
-
-
                                                 <Box mt={'xs'}>
                                                     <InputForm
                                                         tooltip={t('Address')}
@@ -228,7 +226,6 @@ function WarehouseForm(props) {
                                                         id={'address'}
                                                     />
                                                 </Box>
-
                                             </ScrollArea>
                                         </Box>
                                     </Box>
