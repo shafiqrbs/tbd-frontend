@@ -42,6 +42,7 @@ export default function _GenericRequisitionForm(props) {
   const { isOnline, mainAreaHeight } = useOutletContext();
   const height = mainAreaHeight - 150;
   const [fetching, setFetching] = useState(false);
+  console.log("1");
 
   // form variables
 

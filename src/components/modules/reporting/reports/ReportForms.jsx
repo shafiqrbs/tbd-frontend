@@ -1,9 +1,17 @@
 import React, { forwardRef } from "react";
-import { ScrollArea, Box, Grid, Text, Center } from "@mantine/core";
+import {
+  ScrollArea,
+  Box,
+  Grid,
+  Text,
+  NativeSelect,
+  Select,
+} from "@mantine/core";
 import { useOutletContext } from "react-router-dom";
 import SelectForm from "../../../form-builders/SelectForm";
 import InputForm from "../../../form-builders/InputForm";
 import { useTranslation } from "react-i18next";
+import SelectServerSideForm from "../../../form-builders/SelectServerSideForm";
 
 const ReportForms = forwardRef(
   (
@@ -54,43 +62,7 @@ const ReportForms = forwardRef(
     };
 
     const renderField = (field) => {
-      if (field.type === "text") {
-        return (
-          <Box key={field.name} mt={8}>
-            <InputForm
-              tooltip={t(field.label)}
-              label={field.label}
-              placeholder={field.label}
-              required={field.required}
-              name={field.name}
-              form={form}
-            />
-          </Box>
-        );
-      }
-
-      if (field.type === "dropdown") {
-        const options = field.options.map((option) => ({
-          value: option,
-          label: option,
-        }));
-
-        return (
-          <Box key={field.name} mt={8}>
-            <SelectForm
-              tooltip={t(field.label)}
-              label={field.label}
-              placeholder={field.label}
-              required={field.required}
-              name={field.name}
-              form={form}
-              changeValue={(value) => handleDropdownChange(field.name, value)}
-              dropdownValue={options}
-            />
-          </Box>
-        );
-      }
-
+      console.log(field.length);
       if (field.type === "advance_search") {
         return (
           <Box key={field.name} mt="lg">
@@ -100,17 +72,25 @@ const ReportForms = forwardRef(
               justify="center"
               align="center"
             >
-              <Grid.Col span={3}>
-                <Center>
-                  <Text fw={400} fz="sm">
-                    {field.label}
-                  </Text>
-                </Center>
-              </Grid.Col>
+              {/* <Grid.Col span={4}></Grid.Col>
+                {/* <Text fw={400} fz="sm" ta={"end"}>
+                  {field.label}
+                </Text> */}
+              {/* </Grid.Col>  */}
               <Grid.Col span={4}>
-                <SelectForm
+                <Select
+                  placeholder="Search Like"
+                  label={t(field.label)}
+                  data={field.options.map((option) => ({
+                    value: option,
+                    label: option,
+                  }))}
+                ></Select>
+                {/* <SelectServerSideForm
                   tooltip={t(field.label)}
                   placeholder="Search Like"
+                  label={t(field.label)}
+                  value={'='}
                   required={field.required}
                   name={`${field.name}_operator`}
                   form={form}
@@ -121,10 +101,11 @@ const ReportForms = forwardRef(
                     value: option,
                     label: option,
                   }))}
-                />
+                /> */}
               </Grid.Col>
-              <Grid.Col span={5}>
+              <Grid.Col span={8}>
                 <InputForm
+                  label={" "}
                   tooltip={t(field.label)}
                   placeholder="Enter Value"
                   required={field.required}
@@ -155,7 +136,15 @@ const ReportForms = forwardRef(
         >
           <Box>
             <Box mt={8}>
-              <SelectForm
+              <Select
+                label={t("SelectReportType")}
+                placeholder={t("ChooseReportType")}
+                data={formFields.map((report) => ({
+                  value: report.name,
+                  label: report.name,
+                }))}
+              ></Select>
+              {/* <SelectForm
                 tooltip={t("SelectReportType")}
                 label={t("SelectReportType")}
                 placeholder={t("ChooseReportType")}
@@ -168,9 +157,8 @@ const ReportForms = forwardRef(
                 }))}
                 value={selectedReport}
                 changeValue={handleReportTypeChange}
-              />
+              /> */}
             </Box>
-
             {selectedReport &&
               formFields
                 .find((report) => report.name === selectedReport)

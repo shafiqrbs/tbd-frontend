@@ -10,6 +10,7 @@ export default function RequisitionInvoice() {
   const { t } = useTranslation();
   const progress = getLoadingProgress();
   const configData = getConfigData();
+  
 
   return (
     <>
@@ -32,7 +33,7 @@ export default function RequisitionInvoice() {
                 roles={t("Roles")}
               />
               <Box p={8}>
-                {configData?.business_model?.slug === "general" && (
+                {  (
                   <_GenericRequisitionForm
                     allowZeroPercentage={configData?.zero_stock}
                     currencySymbol={configData?.currency?.symbol}
