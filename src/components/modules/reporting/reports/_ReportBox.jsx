@@ -12,7 +12,6 @@ const REPORT_SCHEMAS = {
       name: "Report One",
       fields: [
         {
-          type: "text",
           label: "My name",
           name: "customer",
           required: true,
@@ -30,7 +29,6 @@ const REPORT_SCHEMAS = {
       name: "Report Two",
       fields: [
         {
-          type: "text",
           label: "My name",
           name: "customer",
           required: true,
@@ -55,7 +53,6 @@ const REPORT_SCHEMAS = {
       name: "Report Three",
       fields: [
         {
-          type: "text",
           label: "My name",
           name: "customer",
           required: true,
@@ -68,14 +65,12 @@ const REPORT_SCHEMAS = {
           required: true,
         },
         {
-          type: "dropdown",
           label: "Year",
           name: "year",
           options: ["2021", "2022", "2023"],
           required: true,
         },
         {
-          type: "dropdown",
           label: "Format",
           name: "format",
           options: ["PDF", "Excel", "CSV"],
@@ -89,13 +84,11 @@ const REPORT_SCHEMAS = {
       name: "Report One",
       fields: [
         {
-          type: "text",
           label: "My name",
           name: "customer",
           required: true,
         },
         {
-          type: "dropdown",
           label: "Month",
           name: "month",
           options: ["January", "February", "March"],
@@ -107,20 +100,17 @@ const REPORT_SCHEMAS = {
       name: "Report Two",
       fields: [
         {
-          type: "text",
           label: "My name",
           name: "customer",
           required: true,
         },
         {
-          type: "dropdown",
           label: "Month",
           name: "month",
           options: ["January", "February", "March"],
           required: true,
         },
         {
-          type: "dropdown",
           label: "Year",
           name: "year",
           options: ["2021", "2022", "2023"],
@@ -132,27 +122,23 @@ const REPORT_SCHEMAS = {
       name: "Report Three",
       fields: [
         {
-          type: "text",
           label: "My name",
           name: "customer",
           required: true,
         },
         {
-          type: "dropdown",
           label: "Month",
           name: "month",
           options: ["January", "February", "March"],
           required: true,
         },
         {
-          type: "dropdown",
           label: "Year",
           name: "year",
           options: ["2021", "2022", "2023"],
           required: true,
         },
         {
-          type: "dropdown",
           label: "Format",
           name: "format",
           options: ["PDF", "Excel", "CSV"],
@@ -166,9 +152,8 @@ const REPORT_SCHEMAS = {
       name: "Inventory Report One",
       fields: [
         {
-          type: "advance_search",
-          label: "Advance Search",
-          name: "advance_search",
+          label: "Product",
+          name: "product",
           options: [
             "=",
             "<",
@@ -191,20 +176,12 @@ const REPORT_SCHEMAS = {
           required: false,
         },
         {
-          type: "text",
-          label: "Product Name",
-          name: "product",
-          required: true,
-        },
-        {
-          type: "dropdown",
           label: "Category",
           name: "category",
           options: ["Electronics", "Clothing", "Food"],
           required: true,
         },
         {
-          type: "dropdown",
           label: "Report Period",
           name: "period",
           options: ["Daily", "Weekly", "Monthly"],
@@ -216,27 +193,23 @@ const REPORT_SCHEMAS = {
       name: "Inventory Report Two",
       fields: [
         {
-          type: "text",
           label: "Product Name",
           name: "product",
           required: true,
         },
         {
-          type: "dropdown",
           label: "Location",
           name: "location",
           options: ["Warehouse A", "Warehouse B", "Store Front"],
           required: true,
         },
         {
-          type: "dropdown",
           label: "Report Type",
           name: "reportType",
           options: ["Stock Level", "Movement", "Valuation"],
           required: true,
         },
         {
-          type: "dropdown",
           label: "Format",
           name: "format",
           options: ["PDF", "Excel", "CSV"],
@@ -250,21 +223,18 @@ const REPORT_SCHEMAS = {
       name: "Financial Statement",
       fields: [
         {
-          type: "dropdown",
           label: "Statement Type",
           name: "statementType",
           options: ["Balance Sheet", "Income Statement", "Cash Flow"],
           required: true,
         },
         {
-          type: "dropdown",
           label: "Period",
           name: "period",
           options: ["Monthly", "Quarterly", "Yearly"],
           required: true,
         },
         {
-          type: "dropdown",
           label: "Year",
           name: "year",
           options: ["2021", "2022", "2023"],
@@ -276,28 +246,24 @@ const REPORT_SCHEMAS = {
       name: "Tax Report",
       fields: [
         {
-          type: "dropdown",
           label: "Tax Type",
           name: "taxType",
           options: ["VAT", "Income Tax", "Sales Tax"],
           required: true,
         },
         {
-          type: "dropdown",
           label: "Quarter",
           name: "quarter",
           options: ["Q1", "Q2", "Q3", "Q4"],
           required: true,
         },
         {
-          type: "dropdown",
           label: "Year",
           name: "year",
           options: ["2021", "2022", "2023"],
           required: true,
         },
         {
-          type: "dropdown",
           label: "Format",
           name: "format",
           options: ["PDF", "Excel", "CSV"],
