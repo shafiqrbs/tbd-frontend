@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import {
     Box, Button,
-    Grid, Progress, Title, Group, Burger, Menu, rem, ActionIcon, Text, NavLink
+    Grid, Progress, Title, Group, Burger, Menu, rem, ActionIcon, Text, NavLink, Paper
 } from "@mantine/core";
 import { getHotkeyHandler, useDisclosure, useHotkeys, useToggle } from "@mantine/hooks";
 import { useTranslation } from 'react-i18next';
@@ -24,6 +24,9 @@ function ProductionHeaderNavbar(props) {
     const navigate = useNavigate();
     const location = useLocation();
     const currentRoute = location.pathname;
+
+    const stockItem = useSelector((state) => state.productionCrudSlice.measurementInputData.stock_item)
+
     const CallProductionBatchCreateApi = (event) => {
         event.preventDefault();
         axios({
@@ -87,7 +90,14 @@ function ProductionHeaderNavbar(props) {
         <>
             <header className={classes.header}>
                 <div className={classes.inner}>
-                    <Group ml={10}><Text>{pageTitle}</Text></Group>
+                    <Group ml={10}>
+                        <Text>
+                            {pageTitle} {stockItem?.display_name ? ` ${stockItem.display_name}` : ''}
+                        </Text>
+                        {/*<Paper shadow="lg" radius="xs" p="sm">
+                            {stockItem?.display_name ? ` ${stockItem.display_name}` : ''}
+                        </Paper>*/}
+                    </Group>
                     <Group>
                         <Group ml={50} gap={5} className={classes.links} visibleFrom="sm" mt={'2'}>
                             {items}
