@@ -282,7 +282,6 @@
   "Brand": "Brand",
   "CreateProduct": "Create Product",
   "Barcode": "Barcode",
-  "Warehouse": "Warehouse",
   "ProductionType": "Production Type",
   "ChooseProductionType": "Choose Production Type",
   "Logo": "Logo",
@@ -419,7 +418,7 @@
   "Stock": "Stock",
   "UOM": "UOM",
   "ProductionInhouse": "Production Inhouse",
-  "ProductionReceipe": "Production Receipe",
+  "ProductionReceipe": "Production Recipe",
   "AddVendor": "Add Vendor",
   "InstantVendorCreate": "Instant Vendor Create",
   "CreatedDate": "Created Date",
@@ -676,5 +675,5 @@
   "DisplayName" : "Display Name",
   "LanguageName" : "Language Name",
   "OpeningStockN" : "Opening Stock",
-  "": ""
+  "ManageProductionCost" : "Manage Production Cost"
 }
