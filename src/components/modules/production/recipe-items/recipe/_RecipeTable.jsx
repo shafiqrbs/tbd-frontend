@@ -13,11 +13,13 @@ import {
 import {DataTable} from 'mantine-datatable';
 import {useDispatch, useSelector} from "react-redux";
 import {
-    getIndexEntityData,
-    setFetching, deleteEntityData, storeEntityData, inlineUpdateEntityData
+    deleteEntityData, storeEntityData, inlineUpdateEntityData
 } from "../../../../../store/production/crudSlice.js";
 import tableCss from "../../../../../assets/css/Table.module.css";
 import __RecipeAddItem from "./__RecipeAddItem.jsx";
+import {
+    getIndexEntityData,
+} from "../../../../../store/core/crudSlice.js";
 
 function _RecipeTable() {
     const {id} = useParams();
@@ -29,8 +31,8 @@ function _RecipeTable() {
     const perPage = 50;
     const [page, setPage] = useState(1);
 
-    const fetching = useSelector((state) => state.productionCrudSlice.fetching)
-    const indexData = useSelector((state) => state.productionCrudSlice.indexEntityData)
+    const [fetching,setFetching] = useState(true)
+    const [indexData,setIndexData] = useState([])
 
     let totalQuantity = indexData.data?.reduce((total, item) => {
         if (item.status === 1) {
@@ -61,16 +63,34 @@ function _RecipeTable() {
     }, 0) || 0;
 
     useEffect(() => {
-        const value = {
-            url: 'production/recipe',
-            param: {
-                page: page,
-                offset: perPage,
-                pro_item_id : id
+        const fetchData = async () => {
+            const value = {
+                url: 'production/recipe',
+                param: {
+                    page: page,
+                    offset: perPage,
+                    pro_item_id : id
+                }
             }
-        }
-        dispatch(getIndexEntityData(value))
-    }, [fetching]);
+
+            try {
+                const resultAction = await dispatch(getIndexEntityData(value));
+
+                if (getIndexEntityData.rejected.match(resultAction)) {
+                    console.error('Error:', resultAction);
+                    setFetching(false)
+                } else if (getIndexEntityData.fulfilled.match(resultAction)) {
+                    setIndexData(resultAction.payload);
+                    setFetching(false)
+                }
+            } catch (err) {
+                console.error('Unexpected error:', err);
+            }
+        };
+
+        fetchData();
+    }, [dispatch,fetching]);
+
 
 
     return (
@@ -335,13 +355,6 @@ function _RecipeTable() {
                     ]
                     }
                     fetching={fetching}
-                    // totalRecords={indexData.total}
-                    // recordsPerPage={perPage}
-                    // page={page}
-                    // onPageChange={(p) => {
-                    //     setPage(p)
-                    //     dispatch(setFetching(true))
-                    // }}
                     loaderSize="xs"
                     loaderColor="grape"
                     height={tableHeight}

@@ -10,11 +10,18 @@ import { DataTable } from 'mantine-datatable';
 import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from 'react-i18next';
 import {
-    getIndexEntityData,
     setFetching,
 } from "../../../../store/production/crudSlice.js";
 import KeywordSearch from "../common/KeywordSearch.jsx";
 import tableCss from "../../../../assets/css/Table.module.css";
+
+import {
+    editEntityData,
+    getIndexEntityData,
+    setDeleteMessage,
+    setFormLoading,
+    setInsertType,
+} from "../../../../store/core/crudSlice.js";
 
 function _RecipeItemsTable() {
     const dispatch = useDispatch();
@@ -25,24 +32,42 @@ function _RecipeItemsTable() {
     const perPage = 50;
     const [page, setPage] = useState(1);
 
-    const fetching = useSelector((state) => state.productionCrudSlice.fetching)
     const searchKeyword = useSelector((state) => state.productionCrudSlice.searchKeyword)
-    const indexData = useSelector((state) => state.productionCrudSlice.indexEntityData)
     const recipeItemFilterData = useSelector((state) => state.productionCrudSlice.recipeItemFilterData)
     const navigate = useNavigate()
 
+    const [fetching,setFetching] = useState(true)
+    const [indexData,setIndexData] = useState([])
+
     useEffect(() => {
-        const value = {
-            url: 'production/recipe-items',
-            param: {
-                term: searchKeyword,
-                product_name: recipeItemFilterData.product_name,
-                page: page,
-                offset: perPage
+        const fetchData = async () => {
+            const value = {
+                url: 'production/recipe-items',
+                param: {
+                    term: searchKeyword,
+                    product_name: recipeItemFilterData.product_name,
+                    page: page,
+                    offset: perPage
+                }
             }
-        }
-        dispatch(getIndexEntityData(value))
-    }, [fetching]);
+
+            try {
+                const resultAction = await dispatch(getIndexEntityData(value));
+
+                if (getIndexEntityData.rejected.match(resultAction)) {
+                    console.error('Error:', resultAction);
+                    setFetching(false)
+                } else if (getIndexEntityData.fulfilled.match(resultAction)) {
+                    setIndexData(resultAction.payload);
+                    setFetching(false)
+                }
+            } catch (err) {
+                console.error('Unexpected error:', err);
+            }
+        };
+
+        fetchData();
+    }, [dispatch, searchKeyword, recipeItemFilterData, page,fetching]);
 
     return (
         <>

@@ -63,8 +63,6 @@ function SalesUpdateForm() {
             company_name: hasLength({min: 2, max: 20}),
             name: hasLength({min: 2, max: 20}),
             mobile: (value) => (!/^\d+$/.test(value)),
-            // tp_percent: (value) => (value && !/^\d*\.?\d*$/.test(value)),
-            // email: (value) => (value && !/^\S+@\S+$/.test(value)),
         }
     });
 

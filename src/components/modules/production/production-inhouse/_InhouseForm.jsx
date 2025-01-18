@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { useOutletContext } from "react-router-dom";
+import {useNavigate, useOutletContext} from "react-router-dom";
+
 import {
-    Button, Flex, Grid, Box, ScrollArea, Text, Title, Stack, Tooltip
+    Button, Flex, Grid, Box, ScrollArea, Text, Title, Stack, Tooltip, rem
 } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
 import {
     IconDeviceFloppy,
-    IconCalendar
+    IconCalendar, IconCheck
 } from "@tabler/icons-react";
 import {getHotkeyHandler, useHotkeys} from "@mantine/hooks";
 import { useDispatch } from "react-redux";
@@ -17,9 +18,13 @@ import InputForm from "../../../form-builders/InputForm";
 import SelectForm from "../../../form-builders/SelectForm";
 
 import { DateInput } from "@mantine/dates";
+import {modals} from "@mantine/modals";
+import {setFetching, storeEntityData, updateEntityData} from "../../../../store/core/crudSlice.js";
+import {notifications} from "@mantine/notifications";
 
 function _InhouseForm(Props) {
     const {batchData} = Props
+    const navigate = useNavigate()
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
@@ -28,6 +33,7 @@ function _InhouseForm(Props) {
 
     const [issueDate, setIssueDate] = useState(null);
     const [receiveDate, setReceiveDate] = useState(null);
+    const [process, setProcess] = useState(batchData?.process);
 
     useEffect(() => {
         setIssueDate(new Date(batchData.issue_date))
@@ -40,6 +46,7 @@ function _InhouseForm(Props) {
             remark: batchData?.remark,
             issue_date: batchData?.issue_date,
             receive_date: batchData?.receive_date,
+            process : batchData?.process
         },
         validate: {
             invoice: isNotEmpty(),
@@ -60,8 +67,7 @@ function _InhouseForm(Props) {
     return (
         <Box>
             <form onSubmit={form.onSubmit((values) => {
-                console.log(values);
-                /*modals.openConfirmModal({
+                modals.openConfirmModal({
                     title: (
                         <Text size="md"> {t("FormConfirmationTitle")}</Text>
                     ),
@@ -70,25 +76,49 @@ function _InhouseForm(Props) {
                     ),
                     labels: { confirm: t('Submit'), cancel: t('Cancel') }, confirmProps: { color: 'red' },
                     onCancel: () => console.log('Cancel'),
-                    onConfirm: () => {
-                        const value = {
-                            url: 'inventory/product',
-                            data: values
+                    onConfirm: async () => {
+                        const formData = {
+                            remark: values.remark,
+                            issue_date: values.issue_date,
+                            receive_date: values.receive_date,
+                            process: process
                         }
-                        dispatch(storeEntityData(value))
-                        notifications.show({
-                            color: 'teal',
-                            title: t('CreateSuccessfully'),
-                            icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
-                            loading: false,
-                            autoClose: 700,
-                            style: { backgroundColor: 'lightgray' },
-                        });
-                        setTimeout(() => {
-                            form.reset()
-                        }, 700)
+                        const value = {
+                            url: 'production/batch/' + batchData.id,
+                            data: formData
+                        }
+                        const resultAction = await dispatch(updateEntityData(value));
+
+                        if (updateEntityData.rejected.match(resultAction)) {
+                            console.log('error');
+                            const fieldErrors = resultAction.payload.errors;
+
+                            // Handle field validation errors dynamically
+                            if (fieldErrors) {
+                                const errorObject = {};
+                                Object.keys(fieldErrors).forEach((key) => {
+                                    errorObject[key] = fieldErrors[key][0]; // First error message for each field
+                                });
+                                form.setErrors(errorObject); // Set dynamic form errors
+                            }
+                        } else if (updateEntityData.fulfilled.match(resultAction)) {
+                            // Extract the updated data from the action payload
+                            notifications.show({
+                                color: 'teal',
+                                title: t('UpdateSuccessfully'),
+                                icon: <IconCheck style={{width: rem(18), height: rem(18)}}/>,
+                                loading: false,
+                                autoClose: 700,
+                                style: {backgroundColor: 'lightgray'},
+                            });
+
+                            setTimeout(() => {
+                                navigate('/production/batch', {replace: true});
+                            }, 700);
+                        }
+
                     },
-                });*/
+                });
             })}>
                 <Grid columns={9} gutter={{ base: 8 }}>
                     <Grid.Col span={8} >
@@ -114,7 +144,7 @@ function _InhouseForm(Props) {
 
                                                             <Flex direction={`column`} gap={0}>
                                                                 <Text fz={14} fw={400}>
-                                                                    {t("CreateAndSave")}
+                                                                    {t("Update")}
                                                                 </Text>
                                                             </Flex>
                                                         </Button>
@@ -334,10 +364,15 @@ function _InhouseForm(Props) {
                                                         <SelectForm
                                                             tooltip={t('Process')}
                                                             placeholder={t('Process')}
-                                                            dropdownValue={''}
+                                                            dropdownValue={[
+                                                                { value: 'created', label: 'Created' },
+                                                                { value: 'approved', label: 'Approved' },
+                                                            ]}
+                                                            data={[{ value: 'react', label: 'React library' }]}
+
                                                             searchable={true}
-                                                            // changeValue={setProductTypeData}
-                                                            // value={productTypeData}
+                                                            changeValue={setProcess}
+                                                            value={process}
                                                             required={false}
                                                             nextField={'EntityFormSubmit'}
                                                             name={'process'}

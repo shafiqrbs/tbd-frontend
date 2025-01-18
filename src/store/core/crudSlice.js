@@ -222,9 +222,6 @@ const crudSlice = createSlice({
             state.entityEditData = action.payload.data.data
         })
 
-        /*builder.addCase(updateEntityData.fulfilled, (state, action) => {
-            state.updateEntityData = action.payload.data.data
-        })*/
         builder.addCase(updateEntityData.fulfilled, (state, action) => {
             state.updateEntityDataForUser = action.payload.data.data;
         });
