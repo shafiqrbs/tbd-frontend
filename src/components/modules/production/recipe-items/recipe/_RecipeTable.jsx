@@ -96,7 +96,7 @@ function _RecipeTable() {
     return (
         <>
             <Box pb={'xs'}>
-                <__RecipeAddItem/>
+                <__RecipeAddItem setFetching={setFetching}/>
             </Box>
             <Box className={'borderRadiusAll'}>
                 <DataTable

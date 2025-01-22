@@ -175,7 +175,7 @@ function _UserTable() {
                         onClick={() => {
                           // dispatch(editEntityData('core/user/' + data.id))
 
-                          const foundUsers = users.find(
+                          const foundUsers = indexData?.data.find(
                             (type) => type.id == data.id
                           );
                           if (foundUsers) {

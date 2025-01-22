@@ -77,7 +77,7 @@ function _InhouseTable(props) {
                         allowMultiple: true,
                         expanded: { recordIds: expandedCompanyIds, onRecordIdsChange: setExpandedCompanyIds },
                         content: (batchItem) => {
-                            return batchItem.record.production_items ? (
+                            return batchItem.record.production_expenses ? (
                                 <div style={{
                                     display: 'flex',
                                     justifyContent: 'center',
@@ -96,7 +96,7 @@ function _InhouseTable(props) {
                                                 {accessor: 'less_quantity', title: t('Less')},
                                                 {accessor: 'more_quantity', title: t('More')},
                                             ]}
-                                            records={batchItem.record.production_items}
+                                            records={batchItem.record.production_expenses}
                                         />
                                     </div>
                                 </div>

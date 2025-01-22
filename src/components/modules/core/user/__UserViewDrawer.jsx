@@ -25,8 +25,6 @@ function __UserViewDrawer(props) {
         setViewDrawer(false)
     }
 
-
-
     return (
         <>
             <Drawer.Root opened={viewDrawer} position="right" onClose={closeDrawer} size={'30%'} >

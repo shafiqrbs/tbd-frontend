@@ -19,7 +19,8 @@ import {storeEntityData, setFetching} from "../../../../../store/production/crud
 import {notifications} from "@mantine/notifications";
 import {IconCheck} from "@tabler/icons-react";
 
-function __RecipeAddItem() {
+function __RecipeAddItem(props) {
+    const {setFetching} = props
     const {t, i18n} = useTranslation();
     const dispatch = useDispatch();
     const {isOnline} = useOutletContext();
@@ -111,7 +112,7 @@ function __RecipeAddItem() {
                                     setTimeout(() => {
                                         form.reset()
                                         setProductData(null)
-                                        dispatch(setFetching(true))
+                                        setFetching(true)
                                     }, 500)
                                 } else {
                                     notifications.show({

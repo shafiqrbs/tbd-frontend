@@ -25,7 +25,7 @@ import SelectForm from "../../../form-builders/SelectForm.jsx";
 import SwitchForm from "../../../form-builders/SwitchForm.jsx";
 
 function _ParticularUpdateForm(props) {
-    const { settingTypeDropdown, formSubmitId } = props
+    const { settingTypeDropdown, formSubmitId,setParticularFetching } = props
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
@@ -91,6 +91,7 @@ function _ParticularUpdateForm(props) {
         <>
             <Box>
                 <form onSubmit={settingsForm.onSubmit((values) => {
+                    values['particular_type_id'] = values['setting_type_id']
                     modals.openConfirmModal({
                         title: (
                             <Text size="md"> {t("FormConfirmationTitle")}</Text>
@@ -120,7 +121,7 @@ function _ParticularUpdateForm(props) {
                                 settingsForm.reset()
                                 dispatch(setInsertType('create'))
                                 dispatch(setEditEntityData([]))
-                                dispatch(setFetching(true))
+                                setParticularFetching(true)
                                 setSaveCreateLoading(false)
                                 navigate('/inventory/particular');
                             }, 700)

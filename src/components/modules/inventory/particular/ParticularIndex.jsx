@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, {useEffect, useState} from "react";
 import {
     Box, Grid, Progress
 } from "@mantine/core";
@@ -33,6 +33,7 @@ function ParticularIndex() {
     const insertType = useSelector((state) => state.productionCrudSlice.insertType)
     const settingTypeDropdown = getParticularTypeDropdownData()
     const configData = localStorage.getItem('config-data') ? JSON.parse(localStorage.getItem('config-data')) : []
+    const [particularFetching,setParticularFetching] = useState(true)
 
     useEffect(() => {
         if (id) {
@@ -66,7 +67,7 @@ function ParticularIndex() {
                                 <Grid columns={24} gutter={{ base: 8 }}>
                                     <Grid.Col span={15}>
                                         <Box bg={'white'} p={'xs'} className={'borderRadiusAll'}>
-                                            <_ParticularTable />
+                                            <_ParticularTable particularFetching={particularFetching} setParticularFetching={setParticularFetching} />
                                         </Box>
                                     </Grid.Col>
                                     <Grid.Col span={9}>
@@ -76,7 +77,7 @@ function ParticularIndex() {
                                                     formSubmitId={'EntityFormSubmit'} />
                                                 :
                                                 <_ParticularUpdateForm settingTypeDropdown={settingTypeDropdown}
-                                                    formSubmitId={'EntityFormSubmit'} />
+                                                    formSubmitId={'EntityFormSubmit'}  setParticularFetching={setParticularFetching} />
                                         }
                                     </Grid.Col>
                                 </Grid>

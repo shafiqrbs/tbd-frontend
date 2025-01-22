@@ -27,8 +27,8 @@ import {notifications} from "@mantine/notifications";
 import tableCss from "../../../../assets/css/Table.module.css";
 import _ParticularViewModal from "./_ParticularViewModal.jsx";
 
-function _ParticularTable() {
-
+function _ParticularTable(props) {
+    const {particularFetching,setParticularFetching} =props
     const dispatch = useDispatch();
     const {t, i18n} = useTranslation();
     const {isOnline, mainAreaHeight} = useOutletContext();
@@ -58,7 +58,8 @@ function _ParticularTable() {
             }
         }
         dispatch(getIndexEntityData(value))
-    }, [fetching]);
+        setParticularFetching(false)
+    }, [fetching ,particularFetching]);
 
     return (
         <>
@@ -172,7 +173,7 @@ function _ParticularTable() {
                         },
                     ]
                     }
-                    fetching={fetching}
+                    fetching={fetching || particularFetching}
                     totalRecords={indexData.total}
                     recordsPerPage={perPage}
                     page={page}
