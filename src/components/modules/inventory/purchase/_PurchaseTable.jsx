@@ -721,22 +721,27 @@ function _PurchaseTable() {
                                 >
                                     {t("Pos")}
                                 </Button>
-                                <Button
-                                    onClick={() => {
-                                        navigate(
-                                            `/inventory/purchase/edit/${purchaseViewData?.id}`
-                                        );
-                                    }}
-                                    fullWidth={true}
-                                    variant="filled"
-                                    leftSection={<IconEdit size={14}/>}
-                                    color="cyan.5"
-                                >
-                                    {t("Edit")}
-                                </Button>
+                                {
+                                    (!purchaseViewData?.approved_by_id) &&
+
+                                    <Button
+                                        onClick={() => {
+                                            navigate(
+                                                `/inventory/purchase/edit/${purchaseViewData?.id}`
+                                            );
+                                        }}
+                                        fullWidth={true}
+                                        variant="filled"
+                                        leftSection={<IconEdit size={14}/>}
+                                        color="cyan.5"
+                                    >
+                                        {t("Edit")}
+                                    </Button>
+                                }
+
                             </Button.Group>
                         </Box>
-                        <Box></Box>
+
                     </Grid.Col>
                     <Grid.Col span={1}>
                         <Box bg={"white"} className={"borderRadiusAll"} pt={"16"}>
