@@ -102,7 +102,7 @@ function _RecipeForm() {
                                      className={'boxBackground borderRadiusAll'}>
                                     <Grid>
                                         <Grid.Col span={6}>
-                                            <Title order={6} pt={'6'}>{t('ManageProductionMeasurement')}</Title>
+                                            <Title order={6} pt={'6'}>{t('ManageProductionCost')}</Title>
                                             {/*  SHOULD BE LOAD THE PRODUCT NAME FOR MEASUREMENT .KINDY CHECK THE CSS FOR HEIGHT */}
                                         </Grid.Col>
                                         <Grid.Col span={6}>

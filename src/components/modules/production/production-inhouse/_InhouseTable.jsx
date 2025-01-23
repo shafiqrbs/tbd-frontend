@@ -1,27 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useOutletContext } from "react-router-dom";
-import {
-    Group,
-    Box,
-    ActionIcon,
-    Text,
-    Table,
-    Menu,
-    rem
-} from "@mantine/core";
-import {
-    IconEye,
-    IconEdit,
-    IconTrash,
-    IconTrashX,
-    IconDotsVertical, IconChevronRight, IconBuilding, IconUsers
-} from "@tabler/icons-react";
+import {Box,TextInput} from "@mantine/core";
+import { IconChevronRight, IconBuilding} from "@tabler/icons-react";
 import { DataTable } from 'mantine-datatable';
 import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from 'react-i18next';
 import __InhouseAddItem from "./__InhouseAddItem.jsx";
 import clsx from "clsx";
 import classes from "./NestedTablesExample.module.css";
+import {getHotkeyHandler} from "@mantine/hooks";
+import {storeEntityData} from "../../../../store/core/crudSlice.js";
 
 function _InhouseTable(props) {
     const {setReloadBatchItemTable} = props
@@ -32,7 +20,28 @@ function _InhouseTable(props) {
     const editedData = useSelector((state) => state.productionCrudSlice.entityEditData);
 
     const [expandedCompanyIds, setExpandedCompanyIds] = useState([]);
-    const [expandedDepartmentIds, setExpandedDepartmentIds] = useState([]);
+
+    const handelInlineUpdateQuantityData = async (quantity, type, batchId, recipeItemId) => {
+
+        const value = {
+            url: 'production/batch/item/inline-quantity-update',
+            data: {
+                "quantity": quantity,
+                "type": type,
+                "batch_id": batchId,
+                "batch_item_id": recipeItemId
+            }
+        }
+
+        const resultAction = await dispatch(storeEntityData(value));
+
+        if (storeEntityData.rejected.match(resultAction)) {
+            const fieldErrors = resultAction.payload.errors;
+            console.log(fieldErrors)
+        } else if (storeEntityData.fulfilled.match(resultAction)) {
+            setReloadBatchItemTable(true)
+        }
+    }
 
     return (
         <>
@@ -64,10 +73,103 @@ function _InhouseTable(props) {
                             ),
                         },
                         { accessor: 'uom', title: t('UOM') },
-                        { accessor: 'uom', title: t('WorkorderInvoice') },
-                        { accessor: 'issue_quantity', title: t('IssueQty') },
-                        { accessor: 'receive_quantity', title: t('ReceiveQty') },
-                        { accessor: 'damage_quantity', title: t('DamageQty') },
+                        { accessor: 'WorkorderInvoice', title: t('WorkorderInvoice') },
+                        {
+                            accessor: 'issue_quantity',
+                            title: t('IssueQty'),
+                            textAlign: "center",
+                            width: '100px',
+                            render: (item) => {
+                                const [issueQuantity, setIssueQuantity] = useState(item.issue_quantity);
+
+                                const handelIssueQuantityChange = (e) => {
+                                    const issueQuantity = e.currentTarget.value;
+                                    setIssueQuantity(issueQuantity);
+                                    handelInlineUpdateQuantityData(issueQuantity,'issue_quantity',item.batch_id,item.id)
+                                };
+
+                                return (
+                                    <>
+                                        <TextInput
+                                            type="number"
+                                            label=""
+                                            size="xs"
+                                            id={"inline-update-issue-quantity-"+item.id}
+                                            value={issueQuantity}
+                                            onChange={handelIssueQuantityChange}
+                                            onKeyDown={getHotkeyHandler([
+                                                ['Enter', (e) => {
+                                                    document.getElementById('inline-update-receive-quantity-' + item.product_id).focus();
+                                                }],
+                                            ])}
+                                        />
+                                    </>
+                                );
+                            }
+                        },
+                        {
+                            accessor: 'receive_quantity',
+                            title: t('ReceiveQty'),
+                            textAlign: "center",
+                            width: '100px',
+                            render: (item) => {
+                                const [receiveQuantity, setReceiveQuantity] = useState(item.receive_quantity);
+
+                                const handelReceiveQuantityChange = (e) => {
+                                    const receiveQuantity = e.currentTarget.value;
+                                    setReceiveQuantity(receiveQuantity);
+
+                                    handelInlineUpdateQuantityData(receiveQuantity,'receive_quantity',item.batch_id,item.id)
+                                };
+
+                                return (
+                                    <>
+                                        <TextInput
+                                            type="number"
+                                            label=""
+                                            size="xs"
+                                            id={"inline-update-receive-quantity-"+item.id}
+                                            value={receiveQuantity}
+                                            onChange={handelReceiveQuantityChange}
+                                            onKeyDown={getHotkeyHandler([
+                                                ['Enter', (e) => {
+                                                    document.getElementById('inline-update-damage-quantity-' + item.product_id).focus();
+                                                }],
+                                            ])}
+                                        />
+                                    </>
+                                );
+                            }
+                        },
+                        {
+                            accessor: 'damage_quantity',
+                            title: t('DamageQty'),
+                            textAlign: "center",
+                            width: '100px',
+                            render: (item) => {
+                                const [damageQuantity, setDamageQuantity] = useState(item.damage_quantity);
+
+                                const handelDamageQuantityChange = (e) => {
+                                    const damageQuantity = e.currentTarget.value;
+                                    setDamageQuantity(damageQuantity);
+
+                                    handelInlineUpdateQuantityData(damageQuantity,'damage_quantity',item.batch_id,item.id)
+                                };
+
+                                return (
+                                    <>
+                                        <TextInput
+                                            type="number"
+                                            label=""
+                                            size="xs"
+                                            id={"inline-update-damage-quantity-"+item.id}
+                                            value={damageQuantity}
+                                            onChange={handelDamageQuantityChange}
+                                        />
+                                    </>
+                                );
+                            }
+                        },
                         { accessor: 'stock_qty', title: t('StockQty') },
                         { accessor: 'status', title: t('Status') },
                         { accessor: 'action', title: t('Action') }
@@ -75,6 +177,7 @@ function _InhouseTable(props) {
                     records={editedData.batch_items}
                     rowExpansion={{
                         allowMultiple: true,
+                        trigger: 'always',
                         expanded: { recordIds: expandedCompanyIds, onRecordIdsChange: setExpandedCompanyIds },
                         content: (batchItem) => {
                             return batchItem.record.production_expenses ? (
