@@ -1,14 +1,16 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import KeywordSearch from "../common/KeywordSearch";
-import { Box, Switch, Flex, Group, Button, Menu, ActionIcon, rem } from "@mantine/core";
+import {Box, Switch, Flex, Group, Button, Menu, ActionIcon, rem, Text} from "@mantine/core";
 import { DataTable } from "mantine-datatable";
 import tableCss from '../../../../assets/css/Table.module.css';
 import { modals } from "@mantine/modals";
-import { IconDotsVertical, IconTrashX } from '@tabler/icons-react'
+import {IconCheck, IconDotsVertical, IconTrashX} from '@tabler/icons-react'
 import {getIndexEntityData} from "../../../../store/production/crudSlice.js";
+import {notifications} from "@mantine/notifications";
+import {storeEntityData} from "../../../../store/core/crudSlice.js";
 
 export default function BatchTable(){
     const dispatch = useDispatch();
@@ -19,6 +21,7 @@ export default function BatchTable(){
     const productionBatchFilterData = useSelector((state) => state.productionCrudSlice.productionBatchFilterData);
     const searchKeyword = useSelector((state) => state.productionCrudSlice.searchKeyword);
     const fetching = useSelector((state) => state.productionCrudSlice.fetching);
+    const [reloadBatchData,setReloadBatchData] = useState(false)
 
     const perPage = 20;
     const [page,setPage] = useState(1);
@@ -36,17 +39,13 @@ export default function BatchTable(){
             }
         }
         dispatch(getIndexEntityData(value))
-    }, [fetching]);
+        setReloadBatchData(false)
+    }, [fetching,reloadBatchData]);
 
     const [swtichEnable, setSwitchEnable] = useState({});
 
     const handleSwtich = (event, item) => {
         setSwitchEnable(prev => ({ ...prev, [item.id]: true }));
-        // const value = {
-        //     url: 'core/setting/inline-status/' + item.id
-        // }
-        // dispatch(getStatusInlineUpdateData(value))
-        // dispatch(setFetching(true))
         setTimeout(() => {
             setSwitchEnable(prev => ({ ...prev, [item.id]: false }));
         }, 3000)
@@ -106,6 +105,55 @@ export default function BatchTable(){
                             textAlign: "right",
                             render: (item) => (
                                 <Group gap={4} justify="right" wrap="nowrap">
+                                    {
+                                        item.process === 'created' &&
+                                        <Button
+                                            component="a"
+                                            size="compact-xs"
+                                            radius="xs"
+                                            variant="filled"
+                                            fw={'100'}
+                                            fz={'12'}
+                                            color="yellow.8"
+                                            mr={'4'}
+                                            onClick={(event) => {
+                                                modals.openConfirmModal({
+                                                    title: (
+                                                        <Text size="md"> {t("FormConfirmationTitle")}</Text>
+                                                    ),
+                                                    children: (
+                                                        <Text size="sm"> {t("FormConfirmationMessage")}</Text>
+                                                    ),
+                                                    labels: { confirm: t('Submit'), cancel: t('Cancel') }, confirmProps: { color: 'red' },
+                                                    onCancel: () => console.log('Cancel'),
+                                                    onConfirm: async () => {
+                                                        const value = {
+                                                            url: 'production/batch/approve/'+item.id,
+                                                            data: {}
+                                                        }
+
+                                                        const resultAction = await dispatch(storeEntityData(value));
+
+                                                        if (storeEntityData.rejected.match(resultAction)) {
+                                                            const fieldErrors = resultAction.payload.errors;
+                                                            console.log(fieldErrors)
+                                                        } else if (storeEntityData.fulfilled.match(resultAction)) {
+                                                            notifications.show({
+                                                                color: 'teal',
+                                                                title: t('ApproveSuccessfully'),
+                                                                icon: <IconCheck style={{width: rem(18), height: rem(18)}}/>,
+                                                                loading: false,
+                                                                autoClose: 700,
+                                                                style: {backgroundColor: 'lightgray'},
+                                                            });
+                                                            setReloadBatchData(true)
+                                                        }
+                                                    },
+                                                });
+                                            }}
+                                        >  {t('Approved')}</Button>
+                                    }
+
                                     <Button component="a" size="compact-xs" radius="xs" variant="filled" fw={'100'} fz={'12'} color="green.8" mr={'4'}
                                         onClick={() => {
                                             {
@@ -113,13 +161,20 @@ export default function BatchTable(){
                                             }
                                         }}
                                     >  {t('Show')}</Button>
-                                    <Button component="a" size="compact-xs" radius="xs" variant="filled" fw={'100'} fz={'12'} color="red.6" mr={'4'}
-                                        onClick={() => {
-                                            {
-                                                navigate(`/production/batch/${item.id}`)
-                                            }
-                                        }}
-                                    >  {t('Edit')}</Button>
+
+                                    {
+                                        item.process === 'created' &&
+                                        <Button component="a" size="compact-xs" radius="xs" variant="filled" fw={'100'} fz={'12'} color="red.6" mr={'4'}
+                                                onClick={() => {
+                                                    {
+                                                        navigate(`/production/batch/${item.id}`)
+                                                    }
+                                                }}
+                                        >  {t('Edit')}</Button>
+                                    }
+
+
+
                                     <Menu position="bottom-end" offset={3} withArrow trigger="hover" openDelay={100} closeDelay={400}>
                                     <Menu.Target>
                                         <ActionIcon size="sm" variant="outline" color="red" radius="xl" aria-label="Settings">
@@ -161,7 +216,7 @@ export default function BatchTable(){
                         },
                     ]
                     }
-                    fetching={fetching}
+                    fetching={fetching || reloadBatchData}
                     totalRecords={indexData.total}
                     recordsPerPage={perPage}
                     page={page}

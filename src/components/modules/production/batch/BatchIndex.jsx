@@ -1,7 +1,5 @@
 import React from "react";
 import { useTranslation } from 'react-i18next';
-import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom"
 import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress";
 import { Progress, Box } from "@mantine/core";
 import ProductionHeaderNavbar from "../common/ProductionHeaderNavbar";

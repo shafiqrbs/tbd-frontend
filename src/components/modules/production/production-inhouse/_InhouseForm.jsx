@@ -19,7 +19,7 @@ import SelectForm from "../../../form-builders/SelectForm";
 
 import { DateInput } from "@mantine/dates";
 import {modals} from "@mantine/modals";
-import {setFetching, storeEntityData, updateEntityData} from "../../../../store/core/crudSlice.js";
+import {updateEntityData} from "../../../../store/core/crudSlice.js";
 import {notifications} from "@mantine/notifications";
 
 function _InhouseForm(Props) {
