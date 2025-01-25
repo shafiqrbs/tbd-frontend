@@ -11,11 +11,10 @@ import {
     Stack,
     ActionIcon,
     LoadingOverlay,
-    Table, Title,
+    Table, Title, Checkbox,
 } from "@mantine/core";
 import {useTranslation} from "react-i18next";
 import {
-    IconCheck,
     IconDeviceFloppy,
     IconX,
     IconSortAscendingNumbers,
@@ -23,10 +22,8 @@ import {
 import {useHotkeys} from "@mantine/hooks";
 import {useDispatch, useSelector} from "react-redux";
 import {isNotEmpty, useForm} from "@mantine/form";
-import {notifications} from "@mantine/notifications";
 
 import {
-    getIndexEntityData,
     setFetching,
     setFormLoading,
 } from "../../../../store/core/crudSlice.js";
@@ -39,6 +36,7 @@ import {
     storeEntityData,
 } from "../../../../store/inventory/crudSlice.js";
 import {modals} from "@mantine/modals";
+import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
 
 function _ProductMeasurement(props) {
     const {id} = props;
@@ -92,7 +90,6 @@ function _ProductMeasurement(props) {
                 }
                 // Handle fulfilled state
                 else if (getIndexEntityDataForInventory.fulfilled.match(resultAction)) {
-                    console.log(resultAction.payload.data);
                     setMeasurementData(resultAction.payload.data)
                 }
                 setReloadMeasurementData(false);
@@ -155,6 +152,35 @@ function _ProductMeasurement(props) {
         []
     );
 
+    const HandleSalesPurchaseUnitCheck = async (isChecked, unitId, type) => {
+        const value = {
+            url: `inventory/product/measurement/sales-purchase/${id}`,
+            data: {
+                check: isChecked,
+                unit_id: unitId,
+                type: type,
+            },
+        };
+
+        const resultAction = await dispatch(storeEntityData(value));
+
+        if (storeEntityData.rejected.match(resultAction)) {
+            showNotificationComponent(
+                resultAction.payload?.message || t('ErrorOccurred'),
+                'red',
+                'lightgray'
+            );
+            setReloadMeasurementData(true);
+        } else if (storeEntityData.fulfilled.match(resultAction)) {
+            showNotificationComponent(
+                t('Update'),
+                'teal',
+                'lightgray'
+            );
+            setReloadMeasurementData(true);
+        }
+    };
+
     return (
         <form
             onSubmit={form.onSubmit((values) => {
@@ -170,15 +196,15 @@ function _ProductMeasurement(props) {
                         );
 
                         if (isUnitIdExists) {
-                            notifications.show({
-                                loading: true,
-                                color: "red",
-                                title: "Unit already exists",
-                                message:
-                                    "Data will be loaded in 3 seconds, you cannot close this yet",
-                                autoClose: 1000,
-                                withCloseButton: true,
-                            });
+                            showNotificationComponent(
+                                "Unit already exists",
+                                'red',
+                                'lightgray',
+                                'Data will be loaded in 3 seconds, you cannot close this yet',
+                                true,
+                                1000,
+                                true
+                            );
                             return;
                         }
 
@@ -194,14 +220,15 @@ function _ProductMeasurement(props) {
                         form.reset();
                         setSaveCreateLoading(true);
 
-                        notifications.show({
-                            color: "teal",
-                            title: t("UpdateSuccessfully"),
-                            icon: <IconCheck style={{width: rem(18), height: rem(18)}}/>,
-                            loading: false,
-                            autoClose: 700,
-                            style: {backgroundColor: "lightgray"},
-                        });
+                        showNotificationComponent(
+                            t("UpdateSuccessfully"),
+                            'teal',
+                            'lightgray',
+                            'Data will be loaded in 3 seconds, you cannot close this yet',
+                            true,
+                            1000,
+                            true
+                        );
 
                         setTimeout(() => {
                             setReloadMeasurementData(true);
@@ -328,7 +355,13 @@ function _ProductMeasurement(props) {
                                             <Table.Th fz="xs" ta="left" w={"300"}>
                                                 {t("Unit")}
                                             </Table.Th>
-                                            <Table.Th ta="right" fz="xs" w={"80"}></Table.Th>
+                                            <Table.Th fz="xs" ta="left" w={"300"}>
+                                                {t("Sales")}
+                                            </Table.Th>
+                                            <Table.Th fz="xs" ta="left" w={"300"}>
+                                                {t("Purchase")}
+                                            </Table.Th>
+                                            <Table.Th ta="center" fz="xs" w={"80"}></Table.Th>
                                         </Table.Tr>
                                     </Table.Thead>
                                     <Table.Tbody>
@@ -338,11 +371,47 @@ function _ProductMeasurement(props) {
                                                     <Table.Th fz="xs" w={"20"}>
                                                         {index + 1}
                                                     </Table.Th>
-                                                    <Table.Th fz="xs" ta="center" w={"60"}>
+                                                    <Table.Th fz="xs" ta="center" w={"300"}>
                                                         {unit.quantity+' '+entityEditData?.unit_name}
                                                     </Table.Th>
                                                     <Table.Th fz="xs" ta="left" w={"300"}>
                                                         {unit.unit_name}
+                                                    </Table.Th>
+                                                    <Table.Th fz="xs" ta="center" w={"60"}>
+                                                        <Checkbox
+                                                            id={`sales_${unit.id}`}
+                                                            checked={unit.is_sales}
+                                                            onChange={(e) => {
+                                                                HandleSalesPurchaseUnitCheck(
+                                                                    e.currentTarget.checked,
+                                                                    unit.id,
+                                                                    'is_sales'
+                                                                );
+                                                            }}
+                                                            color="red"
+                                                            variant="outline"
+                                                            radius="xl"
+                                                            size="md"
+                                                            label=""
+                                                        />
+                                                    </Table.Th>
+                                                    <Table.Th fz="xs" ta="center" w={"60"}>
+                                                        <Checkbox
+                                                            id={`purchase_${unit.id}`}
+                                                            checked={unit.is_purchase}
+                                                            onChange={(e) => {
+                                                                HandleSalesPurchaseUnitCheck(
+                                                                    e.currentTarget.checked,
+                                                                    unit.id,
+                                                                    'is_purchase'
+                                                                );
+                                                            }}
+                                                            color="red"
+                                                            variant="outline"
+                                                            radius="xl"
+                                                            size="md"
+                                                            label=""
+                                                        />
                                                     </Table.Th>
                                                     <Table.Th ta="right" fz="xs" w={"80"}>
                                                         <ActionIcon
