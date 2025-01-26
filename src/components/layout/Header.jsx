@@ -162,7 +162,7 @@ export default function Header({
                         c={'red'}
                         fw={'800'}
                         component="button"
-                        label={configData && configData.domain ? configData.domain.name : ''}
+                        label={configData && configData.domain ? configData.domain.company_name : ''}
                         onClick={(e) => { navigate('/') }}
                     />
                 </Grid.Col>

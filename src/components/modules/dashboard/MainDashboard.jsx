@@ -1111,7 +1111,7 @@ function MainDashboard(props) {
                           <NavLink
                               pl={"md"}
                               href="/production/setting"
-                              label={t("Production setting")}
+                              label={t("ProductionSetting")}
                               component="button"
                               onClick={(e) => {
                                 navigate("/production/setting");
@@ -1138,29 +1138,6 @@ function MainDashboard(props) {
                               component="button"
                               onClick={(e) => {
                                 navigate("/production/config");
-                              }}
-                          />
-                        </List.Item>
-                        <List.Item
-                            pl={"xs"}
-                            icon={
-                              <ThemeIcon
-                                  color="red.6"
-                                  size={20}
-                                  radius="xl"
-                                  variant="outline"
-                              >
-                                <IconShoppingBag />
-                              </ThemeIcon>
-                            }
-                        >
-                          <NavLink
-                              pl={"md"}
-                              href="/production/setting"
-                              label={t("Setting")}
-                              component="button"
-                              onClick={(e) => {
-                                navigate("/production/setting");
                               }}
                           />
                         </List.Item>
