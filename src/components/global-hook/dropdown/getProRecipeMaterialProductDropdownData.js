@@ -15,7 +15,8 @@ const getProRecipeMaterialProductDropdownData = () => {
     useEffect(() => {
         if (materialProductDropdownData && materialProductDropdownData.length > 0) {
             const transformedData = materialProductDropdownData.map(type => {
-                return ({'label': type.display_name, 'value': String(type.id)})
+                const name = type.display_name?type.display_name:type.name
+                return ({'label': name, 'value': String(type.id)})
             });
             setMaterialDropdown(transformedData);
         }

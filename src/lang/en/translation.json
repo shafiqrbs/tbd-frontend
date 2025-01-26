@@ -676,5 +676,7 @@
   "DisplayName" : "Display Name",
   "LanguageName" : "Language Name",
   "ManageStock" : "Manage Stock",
+  "ReceiveProduction" : "Receive Production",
+  "ReceivedSuccessfully" : "Received Successfully",
   "": ""
 }

@@ -365,8 +365,8 @@ function _InhouseForm(Props) {
                                                             tooltip={t('Process')}
                                                             placeholder={t('Process')}
                                                             dropdownValue={[
-                                                                { value: 'created', label: 'Created' },
-                                                                { value: 'approved', label: 'Approved' },
+                                                                { value: 'Created', label: 'Created' },
+                                                                { value: 'Approved', label: 'Approved' },
                                                             ]}
                                                             data={[{ value: 'react', label: 'React library' }]}
 
