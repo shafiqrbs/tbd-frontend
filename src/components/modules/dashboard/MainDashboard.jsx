@@ -803,6 +803,146 @@ function MainDashboard(props) {
                     </Card>
                 )
             }
+            {
+              configData?.domain?.modules?.includes("production") && (
+                  <Card shadow="md" radius="md" className={classes.card} padding="lg">
+                    <Grid gutter={{ base: 2 }}>
+                      <Grid.Col span={2}>
+                        <IconShoppingCart
+                            style={{ width: rem(42), height: rem(42) }}
+                            stroke={2}
+                            color={theme.colors.red[6]}
+                        />
+                      </Grid.Col>
+                      <Grid.Col span={10}>
+                        <Text fz="md" fw={500} className={classes.cardTitle}>
+                          {t("Production")}
+                        </Text>
+                      </Grid.Col>
+                    </Grid>
+                    <Box fz="sm" c="dimmed" mt="sm">
+                      <List spacing="ms" size="sm" center>
+                        <List.Item
+                            pl={"xs"}
+                            icon={
+                              <ThemeIcon
+                                  color="red.6"
+                                  size={20}
+                                  radius="xl"
+                                  variant="outline"
+                              >
+                                <IconShoppingBag />
+                              </ThemeIcon>
+                            }
+                        >
+                          <NavLink
+                              pl={"md"}
+                              href="/production/batch"
+                              label={t("Production Batch")}
+                              component="button"
+                              onClick={(e) => {
+                                navigate("/production/batch");
+                              }}
+                          />
+                        </List.Item>
+                        <List.Item
+                            pl={"xs"}
+                            icon={
+                              <ThemeIcon
+                                  color="red.6"
+                                  size={20}
+                                  radius="xl"
+                                  variant="outline"
+                              >
+                                <IconShoppingBag />
+                              </ThemeIcon>
+                            }
+                        >
+                          <NavLink
+                              pl={"md"}
+                              href="/production/batch/new"
+                              label={t("New Batch")}
+                              component="button"
+                              onClick={(e) => {
+                                navigate("/production/batch/new");
+                              }}
+                          />
+                        </List.Item>
+                        <List.Item
+                            pl={"xs"}
+                            icon={
+                              <ThemeIcon
+                                  color="red.6"
+                                  size={20}
+                                  radius="xl"
+                                  variant="outline"
+                              >
+                                <IconShoppingBag />
+                              </ThemeIcon>
+                            }
+                        >
+                          <NavLink
+                              pl={"md"}
+                              href="/production/items"
+                              label={t("Production Items")}
+                              component="button"
+                              onClick={(e) => {
+                                navigate("/production/items");
+                              }}
+                          />
+                        </List.Item>
+                        <List.Item
+                            pl={"xs"}
+                            icon={
+                              <ThemeIcon
+                                  color="red.6"
+                                  size={20}
+                                  radius="xl"
+                                  variant="outline"
+                              >
+                                <IconShoppingBag />
+                              </ThemeIcon>
+                            }
+                        >
+                          <NavLink
+                              pl={"md"}
+                              href="/production/setting"
+                              label={t("Production setting")}
+                              component="button"
+                              onClick={(e) => {
+                                navigate("/production/setting");
+                              }}
+                          />
+                        </List.Item>
+                        <List.Item
+                            pl={"xs"}
+                            icon={
+                              <ThemeIcon
+                                  color="red.6"
+                                  size={20}
+                                  radius="xl"
+                                  variant="outline"
+                              >
+                                <IconShoppingBag />
+                              </ThemeIcon>
+                            }
+                        >
+                          <NavLink
+                              pl={"md"}
+                              href="/production/config"
+                              label={t("Configuration")}
+                              component="button"
+                              onClick={(e) => {
+                                navigate("/production/config");
+                              }}
+                          />
+                        </List.Item>
+
+                      </List>
+                    </Box>
+                  </Card>
+              )
+            }
 
             {
                 configData?.domain?.modules?.includes("procurement") && (
