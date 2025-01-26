@@ -420,7 +420,7 @@
   "Stock": "Stock",
   "UOM": "UOM",
   "ProductionInhouse": "Production Inhouse",
-  "ProductionReceipe": "Production Receipe",
+  "ProductionReceipe": "Production Recipe",
   "AddVendor": "Add Vendor",
   "InstantVendorCreate": "Instant Vendor Create",
   "CreatedDate": "Created Date",
@@ -461,7 +461,7 @@
   "WhereWePresentTheProductionInformationN": "Manage production processes & track product quantity and quality",
   "ProductionInhouseN": "Production Inhouse",
   "WhereWePresentTheProductionInhouseInformationN": "Manage in-house production to ensure product quality and timely delivery.",
-  "ProductionReceipeN": "Production Receipe",
+  "ProductionReceipeN": "Production Recipe",
   "WhereWePresentTheProductionReceipeInformationN": "A process detailing how a product is manufactured or assembled in a production environment.",
   "DomainN": "Domain",
   "WhereWePresentTheDomainInformationN": "Manage and detailed information about domain",
@@ -673,8 +673,9 @@
   "BanglaName" : "Bangla Name",
   "CreateWarehouse" : "Create Warehouse",
   "Warehouse" : "Warehouse",
-  "ContractPerson" : "Contract Person",
+  "ContractPerson" : "Contact Person",
   "DisplayName" : "Display Name",
   "LanguageName" : "Language Name",
+  "ManageStock" : "Manage Stock",
   "": ""
 }

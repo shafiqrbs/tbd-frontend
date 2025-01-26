@@ -295,6 +295,65 @@ function MainDashboard(props) {
                                 }}
                             />
                           </List.Item>
+                          <List.Item
+                              pl={"xs"}
+                              icon={
+                                <ThemeIcon
+                                    color="teal.6"
+                                    size={20}
+                                    radius="xl"
+                                    variant="outline"
+                                >
+                                  <IconList />
+                                </ThemeIcon>
+                              }
+                          >
+                            <NavLink
+                                pl={"md"}
+                                href="/inventory/opening-stock"
+                                label={t("OpeningStock")}
+                                component="button"
+                                onClick={(e) => {
+                                  navigate("inventory/opening-stock");
+                                }}
+                                onAuxClick={(e) => {
+                                  // Handle middle mouse button click for browsers that support it
+                                  if (e.button === 1) {
+                                    window.open("/inventory/opening-stock", "_blank");
+                                  }
+                                }}
+                            />
+                          </List.Item>
+                          <List.Item
+                              pl={"xs"}
+                              icon={
+                                <ThemeIcon
+                                    color="teal.6"
+                                    size={20}
+                                    radius="xl"
+                                    variant="outline"
+                                >
+                                  <IconList />
+                                </ThemeIcon>
+                              }
+                          >
+                            <NavLink
+                                pl={"md"}
+                                href="/inventory/opening-approve-stock"
+                                label={t("Opening Approve")}
+                                component="button"
+                                onClick={(e) => {
+                                  navigate("inventory/opening-approve-stock");
+                                }}
+                                onAuxClick={(e) => {
+                                  // Handle middle mouse button click for browsers that support it
+                                  if (e.button === 1) {
+                                    window.open("/inventory/opening-approve-stock", "_blank");
+                                  }
+                                }}
+                            />
+                          </List.Item>
+
                         </List>
                       </Box>
                     </Card>
@@ -521,6 +580,35 @@ function MainDashboard(props) {
                           >
                             <NavLink
                                 pl={"md"}
+                                href="/inventory/stock"
+                                label={t("ManageStock")}
+                                component="button"
+                                onClick={(e) => {
+                                  navigate("inventory/stock");
+                                }}
+                                onAuxClick={(e) => {
+                                  // Handle middle mouse button click for browsers that support it
+                                  if (e.button === 1) {
+                                    window.open("/inventory/stock", "_blank");
+                                  }
+                                }}
+                            />
+                          </List.Item>
+                          <List.Item
+                              pl={"xs"}
+                              icon={
+                                <ThemeIcon
+                                    color="yellow.6"
+                                    size={20}
+                                    radius="xl"
+                                    variant="outline"
+                                >
+                                  <IconListDetails />
+                                </ThemeIcon>
+                              }
+                          >
+                            <NavLink
+                                pl={"md"}
                                 href="/inventory/product"
                                 label={t("ManageProduct")}
                                 component="button"
@@ -589,6 +677,64 @@ function MainDashboard(props) {
                                   // Handle middle mouse button click for browsers that support it
                                   if (e.button === 1) {
                                     window.open("/inventory/category-group", "_blank");
+                                  }
+                                }}
+                            />
+                          </List.Item>
+                          <List.Item
+                              pl={"xs"}
+                              icon={
+                                <ThemeIcon
+                                    color="yellow.6"
+                                    size={20}
+                                    radius="xl"
+                                    variant="outline"
+                                >
+                                  <IconCategory2 />
+                                </ThemeIcon>
+                              }
+                          >
+                            <NavLink
+                                pl={"md"}
+                                href="/inventory/particular"
+                                label={t("Particular")}
+                                component="button"
+                                onClick={(e) => {
+                                  navigate("inventory/particular");
+                                }}
+                                onAuxClick={(e) => {
+                                  // Handle middle mouse button click for browsers that support it
+                                  if (e.button === 1) {
+                                    window.open("/inventory/particular", "_blank");
+                                  }
+                                }}
+                            />
+                          </List.Item>
+                          <List.Item
+                              pl={"xs"}
+                              icon={
+                                <ThemeIcon
+                                    color="yellow.6"
+                                    size={20}
+                                    radius="xl"
+                                    variant="outline"
+                                >
+                                  <IconCategory2 />
+                                </ThemeIcon>
+                              }
+                          >
+                            <NavLink
+                                pl={"md"}
+                                href="/inventory/config"
+                                label={t("Configuration")}
+                                component="button"
+                                onClick={(e) => {
+                                  navigate("inventory/config");
+                                }}
+                                onAuxClick={(e) => {
+                                  // Handle middle mouse button click for browsers that support it
+                                  if (e.button === 1) {
+                                    window.open("/inventory/config", "_blank");
                                   }
                                 }}
                             />
@@ -721,6 +867,35 @@ function MainDashboard(props) {
                           >
                             <NavLink
                                 pl={"md"}
+                                href="core/warehouse"
+                                label={t("Warehouse")}
+                                component="button"
+                                onClick={(e) => {
+                                  navigate("core/warehouse");
+                                }}
+                                onAuxClick={(e) => {
+                                  // Handle middle mouse button click for browsers that support it
+                                  if (e.button === 1) {
+                                    window.open("/core/warehouse", "_blank");
+                                  }
+                                }}
+                            />
+                          </List.Item>
+                          <List.Item
+                              pl={"xs"}
+                              icon={
+                                <ThemeIcon
+                                    color="cyan.6"
+                                    size={20}
+                                    radius="xl"
+                                    variant="outline"
+                                >
+                                  <IconUsers />
+                                </ThemeIcon>
+                              }
+                          >
+                            <NavLink
+                                pl={"md"}
                                 href="core/file-upload"
                                 label={t("ManageFile")}
                                 component="button"
@@ -731,6 +906,35 @@ function MainDashboard(props) {
                                   // Handle middle mouse button click for browsers that support it
                                   if (e.button === 1) {
                                     window.open("/core/file-upload", "_blank");
+                                  }
+                                }}
+                            />
+                          </List.Item>
+                          <List.Item
+                              pl={"xs"}
+                              icon={
+                                <ThemeIcon
+                                    color="cyan.6"
+                                    size={20}
+                                    radius="xl"
+                                    variant="outline"
+                                >
+                                  <IconUsers />
+                                </ThemeIcon>
+                              }
+                          >
+                            <NavLink
+                                pl={"md"}
+                                href="core/setting"
+                                label={t("Setting")}
+                                component="button"
+                                onClick={(e) => {
+                                  navigate("core/setting");
+                                }}
+                                onAuxClick={(e) => {
+                                  // Handle middle mouse button click for browsers that support it
+                                  if (e.button === 1) {
+                                    window.open("/core/setting", "_blank");
                                   }
                                 }}
                             />
@@ -934,6 +1138,29 @@ function MainDashboard(props) {
                               component="button"
                               onClick={(e) => {
                                 navigate("/production/config");
+                              }}
+                          />
+                        </List.Item>
+                        <List.Item
+                            pl={"xs"}
+                            icon={
+                              <ThemeIcon
+                                  color="red.6"
+                                  size={20}
+                                  radius="xl"
+                                  variant="outline"
+                              >
+                                <IconShoppingBag />
+                              </ThemeIcon>
+                            }
+                        >
+                          <NavLink
+                              pl={"md"}
+                              href="/production/setting"
+                              label={t("Setting")}
+                              component="button"
+                              onClick={(e) => {
+                                navigate("/production/setting");
                               }}
                           />
                         </List.Item>
