@@ -96,7 +96,10 @@ function _InhouseTable(props) {
                                             size="xs"
                                             id={"inline-update-issue-quantity-"+item.id}
                                             value={issueQuantity}
-                                            onChange={handelIssueQuantityChange}
+                                            onBlur={handelIssueQuantityChange}
+                                            onChange={(e)=>{
+                                                setIssueQuantity(e.currentTarget.value)
+                                            }}
                                             onKeyDown={getHotkeyHandler([
                                                 ['Enter', (e) => {
                                                     document.getElementById('inline-update-receive-quantity-' + item.product_id).focus();
@@ -130,7 +133,10 @@ function _InhouseTable(props) {
                                             size="xs"
                                             id={"inline-update-receive-quantity-"+item.id}
                                             value={receiveQuantity}
-                                            onChange={handelReceiveQuantityChange}
+                                            onBlur={handelReceiveQuantityChange}
+                                            onChange={(e)=>{
+                                                setReceiveQuantity(e.currentTarget.value)
+                                            }}
                                             onKeyDown={getHotkeyHandler([
                                                 ['Enter', (e) => {
                                                     document.getElementById('inline-update-damage-quantity-' + item.product_id).focus();
@@ -164,7 +170,10 @@ function _InhouseTable(props) {
                                             size="xs"
                                             id={"inline-update-damage-quantity-"+item.id}
                                             value={damageQuantity}
-                                            onChange={handelDamageQuantityChange}
+                                            onBlur={handelDamageQuantityChange}
+                                            onChange={(e)=>{
+                                                setDamageQuantity(e.currentTarget.value)
+                                            }}
                                         />
                                     </>
                                 );
