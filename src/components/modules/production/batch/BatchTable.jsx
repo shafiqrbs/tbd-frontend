@@ -246,8 +246,8 @@ export default function BatchTable(){
                                                 component="a"
                                                 w={'200'}
                                                 mt={'2'}
-                                                bg={'blue.9'}
-                                                c={'blue.1'}
+                                                bg={'blue.1'}
+                                                c={'blue.6'}
                                                 onClick={(event) => {
                                                     modals.openConfirmModal({
                                                         title: (
@@ -294,8 +294,8 @@ export default function BatchTable(){
                                                 component="a"
                                                 w={'200'}
                                                 mt={'2'}
-                                                bg={'yellow.9'}
-                                                c={'yellow.1'}
+                                                bg={'yellow.1'}
+                                                c={'yellow.6'}
                                                 onClick={(event) => {
                                                     modals.openConfirmModal({
                                                         title: (
@@ -343,8 +343,8 @@ export default function BatchTable(){
                                                 component="a"
                                                 w={'200'}
                                                 mt={'2'}
-                                                bg={'green.9'}
-                                                c={'green.1'}
+                                                bg={'green.1'}
+                                                c={'green.6'}
                                                 onClick={() => {
                                                     navigate(`/production/batch/${item.id}`)
                                                 }}
@@ -359,8 +359,8 @@ export default function BatchTable(){
                                             component="a"
                                             w={'200'}
                                             mt={'2'}
-                                            bg={'red.9'}
-                                            c={'red.1'}
+                                            bg={'red.1'}
+                                            c={'red.6'}
                                             onClick={() => {
                                                 modals.openConfirmModal({
                                                     title: (

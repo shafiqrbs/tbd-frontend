@@ -678,5 +678,6 @@
   "ManageStock" : "Manage Stock",
   "ReceiveProduction" : "Receive Production",
   "ReceivedSuccessfully" : "Received Successfully",
+  "DeleteThisDomain" : "Delete this domain ?",
   "": ""
 }

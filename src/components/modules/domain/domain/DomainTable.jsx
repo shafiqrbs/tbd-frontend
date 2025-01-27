@@ -23,6 +23,7 @@ import {setInventoryShowDataEmpty, showInstantEntityData} from "../../../../stor
 import {notifications} from "@mantine/notifications";
 import commonDataStoreIntoLocalStorage from "../../../global-hook/local-storage/commonDataStoreIntoLocalStorage.js";
 import getConfigData from "../../../global-hook/config-data/getConfigData.js";
+import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
 
 function DomainTable(props) {
     const dispatch = useDispatch();
@@ -41,19 +42,20 @@ function DomainTable(props) {
     const indexData = useSelector((state) => state.crudSlice.indexEntityData)
     const navigate = useNavigate();
 
+    const [reloadList,setReloadList] = useState(false)
+
     useEffect(() => {
         const value = {
             url: 'domain/global',
             param: {
                 term: searchKeyword,
-                // name: customerFilterData.name,
-                // mobile: customerFilterData.mobile,
                 page: page,
                 offset: perPage
             }
         }
         dispatch(getIndexEntityData(value))
-    }, [fetching]);
+        setReloadList(false)
+    }, [fetching,reloadList]);
 
 
     const handleConfirmDomainReset = async (id) => {
@@ -62,15 +64,7 @@ function DomainTable(props) {
             if (showInstantEntityData.fulfilled.match(resultAction)) {
                 if (resultAction.payload.data.status === 200) {
                     // Show success notification
-                    notifications.show({
-                        color: "teal",
-                        title: t("ResetSuccessfully"),
-                        icon: <IconCheck style={{width: rem(18), height: rem(18)}}/>,
-                        loading: false,
-                        autoClose: 700,
-                        style: {backgroundColor: "lightgray"},
-                    });
-
+                    showNotificationComponent(t("ResetSuccessfully"),'teal','lightgray',null,false,1000,true)
                     fetchData()
 
                 }
@@ -78,16 +72,29 @@ function DomainTable(props) {
         } catch (error) {
             console.error("Error updating entity:", error);
             // Error notification
-            notifications.show({
-                color: "red",
-                title: t("ResetFailed"),
-                icon: <IconX style={{width: rem(18), height: rem(18)}}/>,
-                loading: false,
-                autoClose: 700,
-                style: {backgroundColor: "lightgray"},
-            });
+            showNotificationComponent(t("ResetFailed"),'red','lightgray',null,false,1000,true)
         }
         setSuperadmin(true)
+        setReloadList(true)
+    };
+
+    const handleConfirmDomainDelete = async (id) => {
+        try {
+            const resultAction = await dispatch(showInstantEntityData('domain/restore/delete/' + id));
+            if (showInstantEntityData.fulfilled.match(resultAction)) {
+                if (resultAction.payload.data.status === 200) {
+                    // Show success notification
+                    showNotificationComponent(t("DeleteSuccessfully"),'teal','lightgray',null,false,1000,true)
+                    fetchData()
+                }
+            }
+        } catch (error) {
+            console.error("Error updating entity:", error);
+            // Error notification
+            showNotificationComponent(t("DeleteFailed"),'red','lightgray',null,false,1000,true)
+        }
+        setSuperadmin(true)
+        setReloadList(true)
     };
 
 
@@ -194,33 +201,37 @@ function DomainTable(props) {
                                                     </Menu.Item>
                                                 )
                                             }
-                                            <Menu.Item
-                                                target="_blank"
-                                                component="a"
-                                                w={'200'}
-                                                mt={'2'}
-                                                bg={'red.1'}
-                                                c={'red.6'}
-                                                onClick={() => {
-                                                    modals.openConfirmModal({
-                                                        title: (
-                                                            <Text size="md"> {t("FormConfirmationTitle")}</Text>
-                                                        ),
-                                                        children: (
-                                                            <Text size="sm"> {t("FormConfirmationMessage")}</Text>
-                                                        ),
-                                                        labels: { confirm: 'Confirm', cancel: 'Cancel' },
-                                                        onCancel: () => console.log('Cancel'),
-                                                        onConfirm: () => {
-                                                            // dispatch(deleteEntityData('core/customer/' + data.id))
-                                                            // dispatch(setFetching(true))
-                                                        },
-                                                    });
-                                                }}
-                                                rightSection={<IconTrashX style={{ width: rem(14), height: rem(14) }} />}
-                                            >
-                                                {t('Delete')}
-                                            </Menu.Item>
+
+                                            {
+                                                superadmin && (
+                                                    <Menu.Item
+                                                        target="_blank"
+                                                        component="a"
+                                                        w={'200'}
+                                                        mt={'2'}
+                                                        bg={'red.1'}
+                                                        c={'red.6'}
+                                                        onClick={() => {
+                                                            modals.openConfirmModal({
+                                                                title: (
+                                                                    <Text size="md"> {t("DeleteThisDomain")}</Text>
+                                                                ),
+                                                                children: (
+                                                                    <Text size="sm"> {t("FormConfirmationMessage")}</Text>
+                                                                ),
+                                                                labels: { confirm: 'Confirm', cancel: 'Cancel' },
+                                                                onCancel: () => console.log('Cancel'),
+                                                                onConfirm: () => {
+                                                                    handleConfirmDomainDelete(data.id)
+                                                                },
+                                                            });
+                                                        }}
+                                                        rightSection={<IconTrashX style={{ width: rem(14), height: rem(14) }} />}
+                                                    >
+                                                        {t('Delete')}
+                                                    </Menu.Item>
+                                                )
+                                            }
                                         </Menu.Dropdown>
                                     </Menu>
                                 </Group>
@@ -228,7 +239,7 @@ function DomainTable(props) {
                         },
                     ]
                     }
-                    fetching={fetching}
+                    fetching={fetching || reloadList}
                     totalRecords={indexData.total}
                     recordsPerPage={perPage}
                     page={page}
