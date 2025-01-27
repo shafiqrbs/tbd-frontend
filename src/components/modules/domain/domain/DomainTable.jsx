@@ -13,15 +13,11 @@ import {
     editEntityData,
     getIndexEntityData,
     setFetching, setFormLoading,
-    setInsertType,
-    showEntityData
-} from "../../../../store/core/crudSlice.js";
+    setInsertType} from "../../../../store/core/crudSlice.js";
 import KeywordSearch from "../../filter/KeywordSearch";
 import { modals } from "@mantine/modals";
 import tableCss from "../../../../assets/css/Table.module.css";
-import {setInventoryShowDataEmpty, showInstantEntityData} from "../../../../store/inventory/crudSlice.js";
-import {notifications} from "@mantine/notifications";
-import commonDataStoreIntoLocalStorage from "../../../global-hook/local-storage/commonDataStoreIntoLocalStorage.js";
+import {showInstantEntityData} from "../../../../store/inventory/crudSlice.js";
 import getConfigData from "../../../global-hook/config-data/getConfigData.js";
 import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
 
@@ -36,13 +32,12 @@ function DomainTable(props) {
     const {configData,fetchData} = getConfigData()
     const [superadmin,setSuperadmin] = useState(configData?.domain?.modules?.includes(['superadmin']) || false)
 
-
     const fetching = useSelector((state) => state.crudSlice.fetching)
     const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword)
     const indexData = useSelector((state) => state.crudSlice.indexEntityData)
     const navigate = useNavigate();
-
     const [reloadList,setReloadList] = useState(false)
+
 
     useEffect(() => {
         const value = {
@@ -96,7 +91,7 @@ function DomainTable(props) {
         setSuperadmin(true)
         setReloadList(true)
     };
-
+    const user = JSON.parse(localStorage.getItem("user") || '{}');
 
     return (
 
@@ -203,7 +198,7 @@ function DomainTable(props) {
                                             }
 
                                             {
-                                                superadmin && (
+                                                (superadmin && user.domain_id!=data.id) && (
                                                     <Menu.Item
                                                         target="_blank"
                                                         component="a"
