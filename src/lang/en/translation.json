@@ -678,5 +678,7 @@
   "ReceiveProduction" : "Receive Production",
   "ReceivedSuccessfully" : "Received Successfully",
   "OpeningStockN" : "Opening Stock",
-  "PosManagement" : "POS Management"
+  "PosManagement" : "POS Management",
+  "DeleteThisDomain" : "Delete this domain ?",
+  "": ""
 }

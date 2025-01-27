@@ -59,10 +59,8 @@ function TransactionModeForm(props) {
         },
         validate: {
             method_id: isNotEmpty(),
-            name: hasLength({ min: 2, max: 20 }),
-            short_name: hasLength({ min: 2, max: 20 }),
-            authorised_mode_id: isNotEmpty(),
-            account_mode_id: isNotEmpty(),
+            name: hasLength({ min: 2}),
+            short_name: hasLength({ min: 2}),
             path: isNotEmpty(),
             service_charge: (value, values) => {
                 if (value) {
@@ -219,7 +217,7 @@ function TransactionModeForm(props) {
                                                             tooltip={t('ChooseAuthorised')}
                                                             label={t('Authorised')}
                                                             placeholder={t('ChooseAuthorised')}
-                                                            required={true}
+                                                            required={false}
                                                             nextField={'account_mode_id'}
                                                             name={'authorised_mode_id'}
                                                             form={form}
@@ -236,7 +234,7 @@ function TransactionModeForm(props) {
                                                             tooltip={t('ChooseAccountType')}
                                                             label={t('AccountType')}
                                                             placeholder={t('ChooseAccountType')}
-                                                            required={true}
+                                                            required={false}
                                                             nextField={'service_charge'}
                                                             name={'account_mode_id'}
                                                             form={form}
