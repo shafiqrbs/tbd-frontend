@@ -191,7 +191,7 @@ export default function Sales() {
 
   return (
     <>
-      <Box w={"100%"} h={height + 72} className={classes["box-white"]}>
+      <Box w={"100%"} h={height + 191} className={classes["box-white"]}>
         <Box pl={10} m={0} pr={10}>
           <Group
             preventGrowOverflow={false}
@@ -247,7 +247,7 @@ export default function Sales() {
             </Button>
           </Group>
           <Box>
-            <ScrollArea h={heightHalf - 48} type="never" scrollbars="y">
+            <ScrollArea h={heightHalf + 68} type="never" scrollbars="y">
               <Paper
                 p="8"
                 radius="md"

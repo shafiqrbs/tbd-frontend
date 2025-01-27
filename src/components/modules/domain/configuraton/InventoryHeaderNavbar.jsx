@@ -26,10 +26,10 @@ function InventoryHeaderNavbar(props) {
     const location = useLocation();
 
     const links = [
-        { link: '/inventory/stock', label: t('Stock') },
         { link: '/inventory/product', label: t('Products') },
         { link: '/inventory/category', label: t('Category') },
         { link: '/inventory/category-group', label: t('CategoryGroup') },
+        { link: '/inventory/stock', label: t('Stock') },
     ];
     const items = links.map((link) => (
         <a
@@ -61,6 +61,10 @@ function InventoryHeaderNavbar(props) {
                             </Menu.Target>
                             <Menu.Dropdown>
                                 <Menu.Item
+                                    component="button" onClick={(e) => { navigate('/inventory/opening-stock') }} leftSection={<IconBrandCodesandbox style={{ width: rem(14), height: rem(14) }} />}>
+                                    {t('OpeningStockN')}
+                                </Menu.Item>
+                                <Menu.Item
                                     component="button" onClick={(e) => { navigate('/inventory/particular') }} leftSection={<IconBrandProducthunt style={{ width: rem(14), height: rem(14) }} />}>
                                     {t('ProductSetting')}
                                 </Menu.Item>
@@ -69,10 +73,10 @@ function InventoryHeaderNavbar(props) {
                                     {t('InventoryConfiguration')}
                                 </Menu.Item>
 
-                                <Menu.Item
+                                {/* <Menu.Item
                                     component="button" onClick={(e) => { navigate('/inventory/stock') }} leftSection={<IconStack2 style={{ width: rem(14), height: rem(14) }} />}>
                                     {t('Stock')}
-                                </Menu.Item>
+                                </Menu.Item> */}
                             </Menu.Dropdown>
                         </Menu>
                     </Group>

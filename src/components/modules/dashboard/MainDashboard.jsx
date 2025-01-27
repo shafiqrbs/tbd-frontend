@@ -70,11 +70,47 @@ function MainDashboard(props) {
 
     return () => clearTimeout(timeoutId); // Clear the timeout if the component unmounts
   }, [navigate]);  // Notice we're also adding `navigate` dependency here
-
   return (
     <>
       <Container fluid mt={"xs"}>
-        <SimpleGrid cols={{ base: 1, md: 2 }} spacing="xs" mb={"xs"}>
+        <SimpleGrid cols={{ base: 1, md: 3 }} spacing="xs" mb={"xs"}>
+        <Card shadow="md" radius="md" className={classes.card} padding="lg">
+            <Grid gutter={{ base: 2 }}>
+              {/* demo role implement*/}
+              {/*{
+                ["condition_account", "expenditure", "purchase", "payroll_salary", "payroll"].some((value) => userRole.includes(value)) &&
+                  (
+                      <>
+                        <Grid.Col span={2}>
+                          <IconMoneybag
+                              style={{ width: rem(42), height: rem(42) }}
+                              stroke={2}
+                              color={theme.colors.teal[6]}
+                          />
+                        </Grid.Col>
+                        <Grid.Col span={10}>
+                          <Text fz="md" fw={500} className={classes.cardTitle}>
+                            {t("Sales&PurchaseOverview")}
+                          </Text>
+                        </Grid.Col>
+                      </>
+                  )
+              }*/}
+
+              <Grid.Col span={2}>
+                <IconMoneybag
+                    style={{ width: rem(42), height: rem(42) }}
+                    stroke={2}
+                    color={theme.colors.teal[6]}
+                />
+              </Grid.Col>
+              <Grid.Col span={10}>
+                <Text fz="md" fw={500} className={classes.cardTitle}>
+                  {t("Pos")}
+                </Text>
+              </Grid.Col>
+            </Grid>
+          </Card>
           <Card shadow="md" radius="md" className={classes.card} padding="lg">
             <Grid gutter={{ base: 2 }}>
               {/* demo role implement*/}
@@ -131,6 +167,88 @@ function MainDashboard(props) {
         </SimpleGrid>
         <ScrollArea h={height} scrollbarSize={2} type="never">
           <SimpleGrid cols={{ base: 1, md: 4 }} spacing="xs">
+          {
+              configData?.domain?.modules?.includes("sales-purchase") && (
+                    <Card shadow="md" radius="md" className={classes.card} padding="lg">
+                      <Grid gutter={{ base: 2 }}>
+                        <Grid.Col span={2}>
+                          <IconBuildingStore
+                              style={{ width: rem(42), height: rem(42) }}
+                              stroke={2}
+                              color={theme.colors.teal[6]}
+                          />
+                        </Grid.Col>
+                        <Grid.Col span={10}>
+                          <Text fz="md" fw={500} className={classes.cardTitle}>
+                            {t("PosManagement")}
+                          </Text>
+                        </Grid.Col>
+                      </Grid>
+                      <Box fz="sm" c="dimmed" mt="sm">
+                        <List spacing="ms" size="sm" center>
+                          <List.Item
+                              pl={"xs"}
+                              icon={
+                                <ThemeIcon
+                                    color="teal.6"
+                                    size={20}
+                                    radius="xl"
+                                    variant="outline"
+                                >
+                                  <IconBasket />
+                                </ThemeIcon>
+                              }
+                          >
+                            <NavLink
+                                pl={"md"}
+                                href="/pos/restaurant"
+                                label={t("Restaurant")}
+                                component="button"
+                                onClick={(e) => {
+                                  navigate("pos/restaurant");
+                                }}
+                                onAuxClick={(e) => {
+                                  // Handle middle mouse button click for browsers that support it
+                                  if (e.button === 1) {
+                                    window.open("/pos/restaurant", "_blank");
+                                  }
+                                }}
+                            />
+                          </List.Item>
+                          <List.Item
+                              pl={"xs"}
+                              icon={
+                                <ThemeIcon
+                                    color="teal.6"
+                                    size={20}
+                                    radius="xl"
+                                    variant="outline"
+                                >
+                                  <IconBasket />
+                                </ThemeIcon>
+                              }
+                          >
+                            <NavLink
+                                pl={"md"}
+                                href="/pos/restaurant"
+                                label={t("Bakery")}
+                                component="button"
+                                onClick={(e) => {
+                                  navigate("pos/bakery");
+                                }}
+                                onAuxClick={(e) => {
+                                  // Handle middle mouse button click for browsers that support it
+                                  if (e.button === 1) {
+                                    window.open("/pos/bakery", "_blank");
+                                  }
+                                }}
+                            />
+                          </List.Item>
+                        </List>
+                      </Box>
+                    </Card>
+                )
+            }
             {
               configData?.domain?.modules?.includes("sales-purchase") && (
                     <Card shadow="md" radius="md" className={classes.card} padding="lg">

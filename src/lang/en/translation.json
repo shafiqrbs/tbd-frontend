@@ -282,7 +282,6 @@
   "Brand": "Brand",
   "CreateProduct": "Create Product",
   "Barcode": "Barcode",
-  "Warehouse": "Warehouse",
   "ProductionType": "Production Type",
   "ChooseProductionType": "Choose Production Type",
   "Logo": "Logo",
@@ -678,6 +677,8 @@
   "ManageStock" : "Manage Stock",
   "ReceiveProduction" : "Receive Production",
   "ReceivedSuccessfully" : "Received Successfully",
+  "OpeningStockN" : "Opening Stock",
+  "PosManagement" : "POS Management",
   "DeleteThisDomain" : "Delete this domain ?",
   "": ""
 }

@@ -469,5 +469,6 @@
   "BaseUnit" : "বেস ইউনিট",
   "SettingsDetailsData" : "সেটিংসের বিস্তারিত",
   "NoUppercaseAllowedMessage" : "বড় হাতের অক্ষর গ্রহণযোগ্য নয়",
-  "ManageStock" : "স্টক ম্যানেজ"
+  "ManageStock" : "স্টক ম্যানেজ",
+  "ManageProductionCost" : "উৎপাদন খরচ পরিচালনা"
 }
