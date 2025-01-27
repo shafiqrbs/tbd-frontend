@@ -12,6 +12,7 @@ import {
   Button,
   Grid,
   Flex,
+  Stack,
   ScrollArea,
   Card,
   Image,
@@ -26,6 +27,8 @@ import {
 } from "@tabler/icons-react";
 import { useDispatch, useSelector } from "react-redux";
 import classes from "./Table.module.css";
+import getConfigData from "../../../global-hook/config-data/getConfigData";
+
 export default function Table() {
   const dispatch = useDispatch();
   const { t, i18n } = useTranslation();
@@ -38,6 +41,9 @@ export default function Table() {
   const [selected, setSelected] = useState([]);
   const [grid, setGrid] = useState(null);
 
+  const {configData} = getConfigData()
+
+  console.log(configData)
   const handleSelect = (productId) => {
     setSelected((prevSelected) =>
       prevSelected.includes(productId)
@@ -68,29 +74,29 @@ export default function Table() {
       id: 1,
       name: "Margarita Pizza",
       img: "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png",
-      price: 120,
+      price: 120.25,
     },
     {
       id: 2,
       name: "Lemonade Pizza",
       img: "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png",
-      price: 130,
+      price: 130.50,
     },
     {
       id: 3,
       name: "Barrista Pizza",
       img: "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png",
-      price: 110,
+      price: 110.75,
     },
     {
       id: 4,
       name: "Jhankar Pizza",
       img: "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png",
-      price: 120,
+      price: 12000.25,
     },
     {
       id: 5,
-      name: "Uttara Pizza",
+      name: "Uttara Pizza githubusercontent githubusercontent mantine demo",
       img: "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png",
       price: 200,
     },
@@ -294,46 +300,47 @@ export default function Table() {
                 <Grid columns={12} gutter={8}>
                   {products.map((product) => (
                     <Grid.Col key={product.id} span={6}>
-                      <Grid
-                        columns={12}
-                        gutter={0}
-                        p="xs"
-                        className={`${classes["pressable-card"]} ${
-                          classes["card"]
-                        } ${
-                          selected.includes(product.id)
-                            ? classes["border"]
-                            : classes["border-not"]
-                        }`}
-                        style={{ borderRadius: "4px" }}
-                        onClick={() => handleSelect(product.id)}
-                      >
-                        <Grid.Col span={6}>
-                          <Image
-                            h={134}
-                            w={"100%"}
-                            src={product.img}
-                            alt={product.name}
-                          />
-                        </Grid.Col>
-                        <Grid.Col
-                          span={6}
-                          style={{ display: "flex", alignItems: "center" }}
-                        >
-                          <Card
-                            w="100%"
-                            padding="xl"
-                            style={{ height: "100%" }}
-                          >
-                            <Text fw={600} size="md" mt="sm">
+                      <Card shadow="md" radius="md" className={classes.card} padding="xs">
+                        <Grid columns={12}>
+                          <Grid.Col span={6}>
+                            <Card  p={0}>
+                            <Image
+                                mih={120}
+                                fit="cover"
+                                src={product.img}
+                                alt={product.name}
+                            />
+                            </Card>
+                          </Grid.Col>
+                          <Grid.Col span={6}>
+                            <Stack
+                                radius="md"
+                                mih={'118'}
+                                bg="var(--mantine-color-body)"
+                                align="stretch"
+                                justify="space-between"
+                                gap="md"
+                            >
+                            <Text fw={600} size="sm" fz={'13'} mt={"4"}>
                               {product.name}
                             </Text>
-                            <Text mt="xs" fw={500} c="" size="sm">
-                              {product.price}
+                            <Flex
+                                gap="md"
+                                justify="flex-end"
+                                align="flex-end"
+                                direction="row"
+                                wrap="nowrap"
+                            >
+                            <Text ta={'right'} fw={900} fz={'18'} size="md" c={'green.9'}>
+                              {configData?.currency?.symbol} {product.price}
                             </Text>
-                          </Card>
-                        </Grid.Col>
-                      </Grid>
+                            </Flex>
+                            </Stack>
+                          </Grid.Col>
+                        </Grid>
+
+
+                      </Card>
                     </Grid.Col>
                   ))}
                 </Grid>
@@ -341,45 +348,21 @@ export default function Table() {
                 <Grid columns={12} gutter={{ base: 8 }}>
                   {products.map((product) => (
                     <Grid.Col span={3} key={product.id}>
-                      <Card
-                        p={"md"}
-                        radius="sm"
-                        onClick={() => {
-                          handleSelect(product.id);
-                        }}
-                        className={`${classes["pressable-card"]} ${
-                          classes["card"]
-                        }  ${
-                          selected.includes(product.id)
-                            ? classes["border"]
-                            : classes["border-not"]
-                        }`}
-                      >
-                        <Card.Section>
-                          <Flex justify={"center"} align={"center"}>
-                            <Image
-                              mt={2}
-                              mb={4}
-                              pt={"xs"}
-                              pl={"xs"}
-                              pr={"xs"}
-                              pb={4}
-                              src={product.img}
-                              height={180}
-                              w={180}
-                              alt={product.name}
-                              fit="cover"
-                              radius="lg"
-                            />
-                          </Flex>
-                        </Card.Section>
-
-                        <Text fw={700} size="sm" c={"#333333"} mt={"4"}>
+                      <Card shadow="md" radius="md" className={classes.card} padding="xs">
+                        <Image
+                            radius="sm"
+                            h={120}
+                            w="auto"
+                            fit="cover"
+                            src={product.img}
+                            alt={product.name}
+                        />
+                        <Text fw={600} size="sm" fz={'13'} mt={"4"}>
                           {product.name}
                         </Text>
 
-                        <Text fw={800} size="md" c={"#333333"}>
-                          ${product.price}
+                        <Text ta={'right'} fw={900} fz={'18'} size="md" c={'green.9'}>
+                          {configData?.currency?.symbol} {product.price}
                         </Text>
                       </Card>
                     </Grid.Col>

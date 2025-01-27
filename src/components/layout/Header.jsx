@@ -216,7 +216,7 @@ export default function Header({
                               align="center"
                               direction="row"
                               wrap="wrap">
-                        <Group >
+                            <Group >
                             <Flex justify="center"
                                   align="center"
                                   direction="row"
@@ -253,59 +253,58 @@ export default function Header({
                             gap="sm"
                             justify="flex-end"
                             direction="row"
-                            v-align={'center'}
                             wrap="wrap"
                             mih={42}
                             align={'right'} px={`xs`} pr={'24'}>
-                            <Menu
-                                onOpen={() => setLanguageOpened(true)}
-                                onClose={() => setLanguageOpened(false)}
-                                radius="md"
-                                width="target"
-                                withinPortal
-                                withArrow arrowPosition="center"
-                            >
-                                <Menu.Target>
-                                    <UnstyledButton
-                                        p={2}
-                                        className={LanguagePickerStyle.control}
-                                        data-expanded={languageOpened || undefined}
-                                    >
-                                        <Group gap="xs">
-                                            <Image
-                                                src={languageSelected?.flag}
-                                                width={18}
-                                                height={18}
-                                            />
-                                            <span className={LanguagePickerStyle.label}>
-                                                {languageSelected?.label}
-                                            </span>
-                                        </Group>
-                                        <IconChevronDown
-                                            size="1rem"
-                                            className={LanguagePickerStyle.icon}
-                                            stroke={1}
-                                        />
-                                    </UnstyledButton>
-                                </Menu.Target>
-                                <Menu.Dropdown p={4} className={LanguagePickerStyle.dropdown}>
-                                    {languages.map((item) => (
-                                        <Menu.Item
-                                            p={4}
-                                            leftSection={
-                                                <Image src={item.flag} width={18} height={18} />
-                                            }
-                                            onClick={() => {
-                                                setLanguageSelected(item);
-                                                i18n.changeLanguage(item.value);
-                                            }}
-                                            key={item.label}
+                                <Menu
+                                    onOpen={() => setLanguageOpened(true)}
+                                    onClose={() => setLanguageOpened(false)}
+                                    radius="md"
+                                    width="target"
+                                    withinPortal
+                                    withArrow arrowPosition="center"
+                                >
+                                    <Menu.Target>
+                                        <UnstyledButton
+                                            p={2}
+                                            className={LanguagePickerStyle.control}
+                                            data-expanded={languageOpened || undefined}
                                         >
-                                            {item.label}
-                                        </Menu.Item>
-                                    ))}
-                                </Menu.Dropdown>
-                            </Menu>
+                                            <Group gap="xs">
+                                                <Image
+                                                    src={languageSelected?.flag}
+                                                    width={18}
+                                                    height={18}
+                                                />
+                                                <span className={LanguagePickerStyle.label}>
+                                                    {languageSelected?.label}
+                                                </span>
+                                            </Group>
+                                            <IconChevronDown
+                                                size="1rem"
+                                                className={LanguagePickerStyle.icon}
+                                                stroke={1}
+                                            />
+                                        </UnstyledButton>
+                                    </Menu.Target>
+                                    <Menu.Dropdown p={4} className={LanguagePickerStyle.dropdown}>
+                                        {languages.map((item) => (
+                                            <Menu.Item
+                                                p={4}
+                                                leftSection={
+                                                    <Image src={item.flag} width={18} height={18} />
+                                                }
+                                                onClick={() => {
+                                                    setLanguageSelected(item);
+                                                    i18n.changeLanguage(item.value);
+                                                }}
+                                                key={item.label}
+                                            >
+                                                {item.label}
+                                            </Menu.Item>
+                                        ))}
+                                    </Menu.Dropdown>
+                                </Menu>
                             <Tooltip
                                 label={fullscreen ? t("NormalScreen") : t("Fullscreen")}
                                 bg={`red.5`} withArrow

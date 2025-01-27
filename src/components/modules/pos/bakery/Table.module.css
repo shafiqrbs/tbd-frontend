@@ -1,8 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap");
 
-.body {
-  font-family: "Nunito", sans-serif;
-}
+
 .pressable-card {
   cursor: pointer;
   transition: transform 0.1s ease-in-out;
@@ -12,8 +10,12 @@
   transform: scale(0.97);
 }
 .border {
-  border: 1px solid #00994f;
+  border: 3px solid #00542b;
 }
 .border-not {
-  border: 1px solid #eaeced;
+  border: 3px solid #eaeced;
+}
+
+.card {
+  border: rem(1px) solid light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-5));
 }
