@@ -83,8 +83,8 @@ function _InhouseForm(Props) {
                     onConfirm: async () => {
                         const formData = {
                             remark: values.remark,
-                            issue_date: issueDate ? issueDate.toISOString() : null,
-                            receive_date: receiveDate ? receiveDate.toISOString() : null,
+                            issue_date: issueDate ? issueDate : null,
+                            receive_date: receiveDate ? receiveDate : null,
                             process: process
                         }
                         const value = {
