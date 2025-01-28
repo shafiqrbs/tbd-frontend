@@ -36,9 +36,13 @@ function _InhouseForm(Props) {
     const [process, setProcess] = useState(batchData?.process);
 
     useEffect(() => {
-        setIssueDate(new Date(batchData.issue_date))
-        setReceiveDate(new Date(batchData.receive_date))
-    },[])
+        setIssueDate(
+            batchData.issue_date ? new Date(batchData.issue_date) : null
+        );
+        setReceiveDate(
+            batchData.receive_date ? new Date(batchData.receive_date) : null
+        );
+    }, []);
 
     const form = useForm({
         initialValues: {
@@ -79,8 +83,8 @@ function _InhouseForm(Props) {
                     onConfirm: async () => {
                         const formData = {
                             remark: values.remark,
-                            issue_date: values.issue_date,
-                            receive_date: values.receive_date,
+                            issue_date: issueDate ? issueDate.toISOString() : null,
+                            receive_date: receiveDate ? receiveDate.toISOString() : null,
                             process: process
                         }
                         const value = {
