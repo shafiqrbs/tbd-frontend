@@ -83,7 +83,7 @@ function InhouseIndex() {
                                     </Grid.Col>
                                     <Grid.Col span={9}>
                                         {
-                                            <_InhouseForm batchData={batchData} />
+                                            // <_InhouseForm batchData={batchData} />
                                         }
                                     </Grid.Col>
                                 </Grid>
