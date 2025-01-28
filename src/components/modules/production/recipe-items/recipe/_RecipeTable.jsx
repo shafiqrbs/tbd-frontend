@@ -173,7 +173,7 @@ function _RecipeTable() {
                             },
                             footer: (
                                 <Group spacing="xs" >
-                                    <Text fz={'md'} fw={'600'}>{totalQuantity.toFixed(2)}</Text>
+                                    <Text fz={'md'} fw={'600'}>{totalQuantity}</Text>
                                 </Group>
                             ),
                         },
@@ -231,7 +231,7 @@ function _RecipeTable() {
                             textAlign: 'center',
                             footer: (
                                 <Group spacing="xs">
-                                    <Text fz={'md'} fw={'600'}>{totalSubTotal.toFixed(2)}</Text>
+                                    <Text fz={'md'} fw={'600'}>{totalSubTotal}</Text>
                                 </Group>
                             ),
                         },
@@ -289,7 +289,7 @@ function _RecipeTable() {
                             textAlign: 'center',
                             footer: (
                                 <Group spacing="xs" >
-                                    <Text fz={'md'} fw={'600'}>{totalWastageQuantity.toFixed(2)}</Text>
+                                    <Text fz={'md'} fw={'600'}>{totalWastageQuantity}</Text>
                                 </Group>
                             ),
                         },
@@ -299,7 +299,7 @@ function _RecipeTable() {
                             textAlign: 'center',
                             footer: (
                                 <Group spacing="xs" >
-                                    <Text fz={'md'} fw={'600'}>{totalWastageAmount.toFixed(2)}</Text>
+                                    <Text fz={'md'} fw={'600'}>{totalWastageAmount}</Text>
                                 </Group>
                             ),
                         },
