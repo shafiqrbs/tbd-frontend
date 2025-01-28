@@ -207,6 +207,11 @@ const getSpotlightDropdownData = (t, configData) => {
       actions: configData?.domain?.modules?.includes("procurement")
         ? [
             {
+              id: "all",
+              label: t("AllRequisitionN"),
+              description: t("WhereWePresentTheDomainInformationN"),
+            },
+            {
               id: "requisition",
               label: t("Requisition"),
               description: t("WhereWePresentTheTransactionModeInformationN"),

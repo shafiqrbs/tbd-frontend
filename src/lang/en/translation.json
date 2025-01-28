@@ -682,5 +682,9 @@
   "DeleteThisDomain" : "Delete this domain ?",
   "SelectedItems" : "Selected Items",
   "StockN" : "Stock",
+  "AllRequisitionN" : "Requisition Board",
+  "RquisitionN" : "Rquisition",
+  "NewRequistionN" : "New Requistion",
+  "RequistionMatrix" : "Requistion Matrix",
   "": ""
 }
