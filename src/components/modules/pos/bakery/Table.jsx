@@ -41,9 +41,9 @@ export default function Table() {
   const [selected, setSelected] = useState([]);
   const [grid, setGrid] = useState(null);
 
-  const {configData} = getConfigData()
+  const { configData } = getConfigData();
 
-  console.log(configData)
+  // console.log(configData)
   const handleSelect = (productId) => {
     setSelected((prevSelected) =>
       prevSelected.includes(productId)
@@ -80,7 +80,7 @@ export default function Table() {
       id: 2,
       name: "Lemonade Pizza",
       img: "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png",
-      price: 130.50,
+      price: 130.5,
     },
     {
       id: 3,
@@ -300,46 +300,67 @@ export default function Table() {
                 <Grid columns={12} gutter={8}>
                   {products.map((product) => (
                     <Grid.Col key={product.id} span={6}>
-                      <Card shadow="md" radius="md" className={classes.card} padding="xs">
+                      <Card
+                        shadow="md"
+                        radius="md"
+                        styles={(theme) => ({
+                          root: {
+                            cursor: "pointer",
+                            transition: "transform 0.1s ease-in-out",
+                            transform: selected.includes(product.id)
+                              ? "scale(0.97)"
+                              : undefined,
+                            border: selected.includes(product.id)
+                              ? "3px solid #00542b"
+                              : "3px solid #eaeced",
+                          },
+                        })}
+                        padding="xs"
+                        onClick={() => handleSelect(product.id)}
+                      >
                         <Grid columns={12}>
                           <Grid.Col span={6}>
-                            <Card  p={0}>
-                            <Image
+                            <Card p={0}>
+                              <Image
                                 mih={120}
                                 fit="cover"
                                 src={product.img}
                                 alt={product.name}
-                            />
+                              />
                             </Card>
                           </Grid.Col>
                           <Grid.Col span={6}>
                             <Stack
-                                radius="md"
-                                mih={'118'}
-                                bg="var(--mantine-color-body)"
-                                align="stretch"
-                                justify="space-between"
-                                gap="md"
+                              radius="md"
+                              mih={"118"}
+                              bg="var(--mantine-color-body)"
+                              align="stretch"
+                              justify="space-between"
+                              gap="md"
                             >
-                            <Text fw={600} size="sm" fz={'13'} mt={"4"}>
-                              {product.name}
-                            </Text>
-                            <Flex
+                              <Text fw={600} size="sm" fz={"13"} mt={"4"}>
+                                {product.name}
+                              </Text>
+                              <Flex
                                 gap="md"
                                 justify="flex-end"
                                 align="flex-end"
                                 direction="row"
                                 wrap="nowrap"
-                            >
-                            <Text ta={'right'} fw={900} fz={'18'} size="md" c={'green.9'}>
-                              {configData?.currency?.symbol} {product.price}
-                            </Text>
-                            </Flex>
+                              >
+                                <Text
+                                  ta={"right"}
+                                  fw={900}
+                                  fz={"18"}
+                                  size="md"
+                                  c={"green.9"}
+                                >
+                                  {configData?.currency?.symbol} {product.price}
+                                </Text>
+                              </Flex>
                             </Stack>
                           </Grid.Col>
                         </Grid>
-
-
                       </Card>
                     </Grid.Col>
                   ))}
@@ -348,20 +369,43 @@ export default function Table() {
                 <Grid columns={12} gutter={{ base: 8 }}>
                   {products.map((product) => (
                     <Grid.Col span={3} key={product.id}>
-                      <Card shadow="md" radius="md" className={classes.card} padding="xs">
+                      <Card
+                        shadow="md"
+                        radius="md"
+                        padding="xs"
+                        styles={(theme) => ({
+                          root: {
+                            cursor: "pointer",
+                            transition: "transform 0.1s ease-in-out",
+                            transform: selected.includes(product.id)
+                              ? "scale(0.97)"
+                              : undefined,
+                            border: selected.includes(product.id)
+                              ? "3px solid #00542b"
+                              : "3px solid #eaeced",
+                          },
+                        })}
+                        onClick={() => handleSelect(product.id)}
+                      >
                         <Image
-                            radius="sm"
-                            h={120}
-                            w="auto"
-                            fit="cover"
-                            src={product.img}
-                            alt={product.name}
+                          radius="sm"
+                          h={120}
+                          w="auto"
+                          fit="cover"
+                          src={product.img}
+                          alt={product.name}
                         />
-                        <Text fw={600} size="sm" fz={'13'} mt={"4"}>
+                        <Text fw={600} size="sm" fz={"13"} mt={"4"}>
                           {product.name}
                         </Text>
 
-                        <Text ta={'right'} fw={900} fz={'18'} size="md" c={'green.9'}>
+                        <Text
+                          ta={"right"}
+                          fw={900}
+                          fz={"18"}
+                          size="md"
+                          c={"green.9"}
+                        >
                           {configData?.currency?.symbol} {product.price}
                         </Text>
                       </Card>

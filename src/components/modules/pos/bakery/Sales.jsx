@@ -17,7 +17,7 @@ import {
   Image,
   Select,
   SimpleGrid,
-  Badge,
+  Tooltip,
   Checkbox,
   Paper,
   Switch,
@@ -44,6 +44,7 @@ import { useDispatch, useSelector } from "react-redux";
 import tableCss from "./Table.module.css";
 import classes from "./Sales.module.css";
 import { IconChefHat } from "@tabler/icons-react";
+import getConfigData from "../../../global-hook/config-data/getConfigData";
 export default function Sales() {
   const dispatch = useDispatch();
   const { t, i18n } = useTranslation();
@@ -58,6 +59,7 @@ export default function Sales() {
   const scrollRef = useRef(null);
   const [showLeftArrow, setShowLeftArrow] = useState(false);
   const [showRightArrow, setShowRightArrow] = useState(false);
+  const { configData } = getConfigData();
 
   const handleScroll = () => {
     if (scrollRef.current) {
@@ -203,7 +205,7 @@ export default function Sales() {
           >
             <Select
               pt={10}
-              placeholder="Order Taken By"
+              placeholder={t("SalesBy")}
               data={["Rafi", "Foysal", "Mahmud", "Hasan"]}
               clearable
               searchable
@@ -231,48 +233,21 @@ export default function Sales() {
                 )
               }
             />
-
-            <Button
-              radius="md"
-              size="sm"
-              color="green"
-              mt={10}
-              miw={122}
-              maw={122}
-              leftSection={<IconChefHat height={18} width={18} stroke={2} />}
-            >
-              <Text fw={600} size="sm">
-                {t("Kitchen")}
-              </Text>
-            </Button>
           </Group>
           <Box>
             <ScrollArea h={heightHalf + 68} type="never" scrollbars="y">
               <Paper
                 p="8"
-                radius="md"
+                radius="4"
                 style={{ backgroundColor: checked ? "#4CAF50" : "#E8F5E9" }}
               >
                 <Grid align="center">
                   <Grid.Col span={11}>
                     <Text weight={500} c={checked ? "white" : "black"}>
-                      Select additional table
+                      {t("SelectedItems")}
                     </Text>
                   </Grid.Col>
-                  <Grid.Col span={1}>
-                    <Checkbox
-                      checked={checked}
-                      color="green.8"
-                      onChange={(event) =>
-                        setChecked(event.currentTarget.checked)
-                      }
-                      styles={(theme) => ({
-                        input: {
-                          borderColor: "white",
-                        },
-                      })}
-                    />
-                  </Grid.Col>
+                  <Grid.Col span={1}></Grid.Col>
                 </Grid>
               </Paper>
 
@@ -351,7 +326,11 @@ export default function Sales() {
                       accessor: "price",
                       title: t("Price"),
                       textAlign: "center",
-                      render: (data) => <>${data.price}</>,
+                      render: (data) => (
+                        <>
+                          {configData?.currency?.symbol} {data.price}
+                        </>
+                      ),
                     },
                     {
                       accessor: "action",
@@ -382,7 +361,7 @@ export default function Sales() {
                   ]}
                   loaderSize="xs"
                   loaderColor="grape"
-                  height={220}
+                  height={400}
                   scrollAreaProps={{ type: "never" }}
                 />
               </Box>
@@ -430,7 +409,7 @@ export default function Sales() {
                         </Grid.Col>
                         <Grid.Col span={"auto"}>
                           <Text fw={800} c={"#333333"}>
-                            {t("$")} {price}
+                            {configData?.currency?.symbol} {price}
                           </Text>
                         </Grid.Col>
                       </Grid>
@@ -442,7 +421,7 @@ export default function Sales() {
                         </Grid.Col>
                         <Grid.Col span={"auto"}>
                           <Text fw={800} c={"#333333"}>
-                            {t("$")} {price}
+                            {configData?.currency?.symbol} {price}
                           </Text>
                         </Grid.Col>
                       </Grid>
@@ -454,7 +433,7 @@ export default function Sales() {
                         </Grid.Col>
                         <Grid.Col span={"auto"}>
                           <Text fw={800} c={"#333333"}>
-                            {t("$")} {price}
+                            {configData?.currency?.symbol} {price}
                           </Text>
                         </Grid.Col>
                       </Grid>
@@ -472,7 +451,7 @@ export default function Sales() {
                             {t("Total")}
                           </Text>
                           <Text fw={800} c={"#00542B"} size={"lg"}>
-                            $ {price}
+                            {configData?.currency?.symbol} {price}
                           </Text>
                         </Flex>
                       </Box>
@@ -621,7 +600,54 @@ export default function Sales() {
                 />
               </Group>
             </Box>
-            <Group
+            <Grid columns={12} gutter={{ base: 2 }} pl={"8"} pr={"8"}>
+              <Grid.Col span={2}>
+                <Tooltip
+                  label={t("Hold")}
+                  px={16}
+                  py={2}
+                  position="top-end"
+                  color="red"
+                  withArrow
+                  offset={2}
+                  zIndex={100}
+                  transitionProps={{
+                    transition: "pop-bottom-left",
+                    duration: 2000,
+                  }}
+                >
+                  <Button
+                    bg={"red.5"}
+                    size={"sm"}
+                    fullWidth={true}
+                    leftSection={<IconPrinter />}
+                  >
+                    {t("Hold")}
+                  </Button>
+                </Tooltip>
+              </Grid.Col>
+              <Grid.Col span={5}>
+                <Button
+                  bg={"#30444F"}
+                  size={"sm"}
+                  fullWidth={true}
+                  leftSection={<IconPrinter />}
+                >
+                  {t("POS Print")}
+                </Button>
+              </Grid.Col>
+              <Grid.Col span={5}>
+                <Button
+                  size={"sm"}
+                  bg={"#00994f"}
+                  fullWidth={true}
+                  leftSection={<IconDeviceFloppy />}
+                >
+                  {t("Save")}
+                </Button>
+              </Grid.Col>
+            </Grid>
+            {/* <Group
               grow
               gap={"xs"}
               p={8}
@@ -630,6 +656,13 @@ export default function Sales() {
               style={{ borderTop: "#c0c0c0 solid 2px" }}
               className="divider"
             >
+              <Button
+                bg={"red.5"}
+                size={"sm"}
+                leftSection={<IconPrinter />}
+              >
+                {t("Hold")}
+              </Button>
               <Button
                 bg={"#30444F"}
                 size={"sm"}
@@ -646,7 +679,7 @@ export default function Sales() {
               >
                 {t("Save")}
               </Button>
-            </Group>
+            </Group> */}
           </Box>
         </Box>
       </Box>
