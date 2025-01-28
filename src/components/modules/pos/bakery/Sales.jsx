@@ -45,6 +45,7 @@ import tableCss from "./Table.module.css";
 import classes from "./Sales.module.css";
 import { IconChefHat } from "@tabler/icons-react";
 import getConfigData from "../../../global-hook/config-data/getConfigData";
+import { SalesPrintPos } from "../print/pos/SalesPrintPos";
 export default function Sales() {
   const dispatch = useDispatch();
   const { t, i18n } = useTranslation();
@@ -60,6 +61,7 @@ export default function Sales() {
   const [showLeftArrow, setShowLeftArrow] = useState(false);
   const [showRightArrow, setShowRightArrow] = useState(false);
   const { configData } = getConfigData();
+  const [printPos, setPrintPos] = useState(false);
 
   const handleScroll = () => {
     if (scrollRef.current) {
@@ -109,6 +111,21 @@ export default function Sales() {
     { id: 3, name: "Fettuccine Lalamero", qty: 8, price: 1200 },
     { id: 4, name: "Gigichano Alfredo", qty: 8, price: 1200 },
     { id: 5, name: "Fettuccine Alfredo Kepukano", qty: 8, price: 1200 },
+    { id: 6, name: "Fettuccine Alfredo Kepukano", qty: 8, price: 1200 },
+    { id: 7, name: "Fettuccine Alfredo Kepukano", qty: 8, price: 1200 },
+    { id: 8, name: "Fettuccine Alfredo Kepukano", qty: 8, price: 1200 },
+    { id: 9, name: "Fettuccine Alfredo Kepukano", qty: 8, price: 1200 },
+    { id: 10, name: "Fettuccine Alfredo Kepukano", qty: 8, price: 1200 },
+    { id: 11, name: "Fettuccine Alfredo Kepukano", qty: 8, price: 1200 },
+    { id: 12, name: "Fettuccine Alfredo Kepukano", qty: 8, price: 1200 },
+    { id: 13, name: "Fettuccine Alfredo Kepukano", qty: 8, price: 1200 },
+    { id: 14, name: "Fettuccine Alfredo Kepukano", qty: 8, price: 1200 },
+    { id: 15, name: "Fettuccine Alfredo Kepukano", qty: 8, price: 1200 },
+    { id: 16, name: "Fettuccine Alfredo Kepukano", qty: 8, price: 1200 },
+    { id: 17, name: "Fettuccine Alfredo Kepukano", qty: 8, price: 1200 },
+    { id: 18, name: "Fettuccine Alfredo Kepukano", qty: 8, price: 1200 },
+    { id: 19, name: "Fettuccine Alfredo Kepukano", qty: 8, price: 1200 },
+    { id: 20, name: "Fettuccine Alfredo Kepukano", qty: 8, price: 1200 },
   ]);
   const [checked, setChecked] = useState(false);
 
@@ -620,7 +637,7 @@ export default function Sales() {
                     bg={"red.5"}
                     size={"sm"}
                     fullWidth={true}
-                    leftSection={<IconPrinter />}
+                    // leftSection={<IconPrinter />}
                   >
                     {t("Hold")}
                   </Button>
@@ -632,6 +649,9 @@ export default function Sales() {
                   size={"sm"}
                   fullWidth={true}
                   leftSection={<IconPrinter />}
+                  onClick={() => {
+                    setPrintPos(true);
+                  }}
                 >
                   {t("POS Print")}
                 </Button>
@@ -680,6 +700,11 @@ export default function Sales() {
                 {t("Save")}
               </Button>
             </Group> */}
+            {printPos && (
+              <div style={{ display: "none" }}>
+                <SalesPrintPos setPrintPos={setPrintPos} />
+              </div>
+            )}
           </Box>
         </Box>
       </Box>
