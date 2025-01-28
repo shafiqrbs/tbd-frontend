@@ -1,0 +1,145 @@
+@import url('https://fonts.googleapis.com/css2?family=Azeret+Mono:ital,wght@0,100..900;1,100..900&display=swap');
+.print-body{
+    font-family: "Azeret Mono", monospace;
+    margin: 0px;
+    padding: 0px;
+    background-color: white;
+    max-width: 80mm;
+    margin: auto;
+}
+
+.pos-body{
+    font-family: "Azeret Mono", monospace;
+    margin: 0px;
+    padding: 5px;
+    max-width: 80mm;
+    margin: auto;
+    background-color: white;
+}
+.pos-head{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.head-img{
+    margin-top: 10px;
+    width: 20mm;
+    height: 20mm;
+    margin-bottom: 0px;
+}
+.head-title{
+    margin-top : 0;
+    margin-bottom: 0px;
+    font-weight: 600;
+    font-size: 16px;
+    text-align: center;
+}
+.head-email{
+    font-size: 11px;
+    margin-bottom: 0px;
+}
+.head-address{
+    font-size: 11px;
+    margin-top: 0px;
+    text-align: center;
+}
+.head-phone{
+    margin-top: 0px;
+    font-size: 11px;
+    margin-bottom: 0px;
+}
+.body-main{
+    display: flex;
+    flex-direction: column;
+}
+.main-title{
+    width: 100%; 
+    text-align: center; 
+    border-bottom: 1px dashed #000; 
+    line-height: 0.1em;
+    margin: 10px 0 20px; 
+}
+.main-title-span{
+    background:#fff; 
+    padding:0 5px;
+    font-size: 12px;
+    font-weight: 400;
+}
+.main-invoice{
+    display: flex;
+    gap: 0px;
+}
+
+.invoice-text{
+    margin: 0px;
+    padding: 2px;
+    font-weight: 400;
+    font-size: 9px;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+.text-width{
+    width: 50mm;
+}
+.text-width-two{
+    width: 78mm;
+    padding-left: 1px;
+    padding-right: 1px;
+}
+.invoice-details{
+    margin: 0px;
+    padding: 0px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+}
+.main-address {
+    display: flex ;
+    flex-direction: column;
+    width: 100%;
+    text-align: left;
+}
+.text-center{
+    margin: 0px;
+    padding: 0px;
+    text-align: center;
+}
+.text-left{
+    margin: 0px;
+    padding: 0px;
+    text-align: left;
+}
+.text-right{
+    margin: 0px;
+    padding: 0px;
+    text-align: right;
+}
+.table-title{
+    width: 100%; 
+    text-align: center; 
+    border-bottom: 1px dashed #000; 
+    line-height: 0.1em;
+    margin: 0px;
+    padding: 0px;
+}
+.margin-footer{
+    margin-top: 30px;
+}
+.margin-footer-botom{
+    margin-bottom: 20px;
+}
+.footer-items{
+    
+    display: flex;
+    justify-content: space-between;
+}
+.footer-company{
+    margin: 0px;
+    padding: 0px;
+    display: flex;
+    width: 100%;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+}
