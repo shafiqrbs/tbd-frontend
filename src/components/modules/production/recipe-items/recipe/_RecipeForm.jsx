@@ -120,8 +120,8 @@ function _RecipeForm() {
 
                                                             <Flex direction={`column`} gap={0}>
                                                                 <Text fz={14} fw={400}>
-                                                                    {/*{productionItem?.process==='created' && t("Checked")}*/}
-                                                                    {/*{productionItem?.process==='checked' && t("Approved")}*/}
+                                                                    {productionItem?.process==='created' && t("Checked")}
+                                                                    {productionItem?.process==='checked' && t("Approved")}
                                                                 </Text>
                                                             </Flex>
                                                         </Button>
@@ -132,7 +132,94 @@ function _RecipeForm() {
                                     </Grid>
                                 </Box>
                                 <Box pl={`xs`} pr={'xs'} className={'borderRadiusAll'}>
+
                                     <ScrollArea h={height} scrollbarSize={2} scrollbars="y" type="never">
+                                        {measurementInputData && Object.keys(measurementInputData).length > 0 ? (
+                                            Object.keys(measurementInputData).map((key, i) => (
+                                                <div key={i}>
+                                                    <Title order={6} pt={'6'} color={'red'}>{key}</Title>
+                                                    {measurementInputData[key].map((item, j) => (
+                                                        <Box mt={'xs'} key={item.slug + key + j}>
+                                                            <Grid gutter={{base: 6}}>
+                                                                <Grid.Col span={6}>
+                                                                    <Box mt={'xs'}>
+                                                                        <Flex
+                                                                            justify="flex-start"
+                                                                            align="center"
+                                                                            direction="row"
+                                                                        >
+                                                                            <Text
+                                                                                ta="center" fz="sm"
+                                                                                fw={300}>
+                                                                                {item.name}
+                                                                            </Text>
+                                                                        </Flex>
+                                                                    </Box>
+                                                                </Grid.Col>
+                                                                <Grid.Col span={6}>
+                                                                    <Box>
+                                                                        <TextInput
+                                                                            type='number'
+                                                                            id={item.slug}
+                                                                            size="sm"
+                                                                            placeholder={t('Amount')}
+                                                                            autoComplete="off"
+                                                                            value={item.amount}
+                                                                            onChange={(e) => {
+                                                                                const newValue = e.target.value;
+                                                                                dispatch(setUpdateMeasurementData({ key, slug: item.slug, newAmount: newValue }));
+                                                                                const value = {
+                                                                                    url: 'production/inline-update-value-added',
+                                                                                    data: {
+                                                                                        value_added_id: item.id,
+                                                                                        amount: e.target.value
+                                                                                    }
+                                                                                }
+                                                                                setTimeout(() => {
+                                                                                    dispatch(storeEntityData(value))
+                                                                                }, 1000);
+                                                                            }}
+                                                                        />
+                                                                    </Box>
+                                                                </Grid.Col>
+                                                            </Grid>
+                                                        </Box>
+                                                    ))}
+                                                </div>
+                                            ))
+                                        ) : (
+                                            <Text color="dimmed" ta="center">
+                                                {t('No data available')}
+                                            </Text>
+                                        )}
+                                        <Box mt={'xs'} key={'111221122'}>
+                                            <Grid gutter={{base: 6}}>
+                                                <Grid.Col span={6}>
+                                                    <Box mt={'xs'}>
+                                                        <Flex
+                                                            justify="flex-start"
+                                                            align="center"
+                                                            direction="row"
+                                                        >
+                                                            <Text
+                                                                ta="center" fz="sm"
+                                                                fw={300}>
+                                                                {t('TotalAmount')}
+                                                            </Text>
+                                                        </Flex>
+                                                    </Box>
+                                                </Grid.Col>
+                                                <Grid.Col span={6}>
+                                                    <Box>
+                                                        <Text>{measurementInputData ? getTotalAmount(measurementInputData).toFixed(2) : 0}</Text>
+                                                    </Box>
+                                                </Grid.Col>
+                                            </Grid>
+                                        </Box>
+                                    </ScrollArea>
+
+
+                                    {/*<ScrollArea h={height} scrollbarSize={2} scrollbars="y" type="never">
                                         {Object.keys(measurementInputData).map((key, i) => (
                                             <div key={i}>
                                                 <Title order={6} pt={'6'} color={'red'}>{key}</Title>
@@ -211,7 +298,7 @@ function _RecipeForm() {
                                                 </Grid.Col>
                                             </Grid>
                                         </Box>
-                                    </ScrollArea>
+                                    </ScrollArea>*/}
                                 </Box>
                             </Box>
                         </Box>
