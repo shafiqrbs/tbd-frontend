@@ -247,7 +247,7 @@ export default function Table() {
       <Grid columns={12} gutter={{ base: 12 }}>
         <Grid.Col span={2}>
           <Box bg="white" w={"100%"} mt={8} style={{ borderRadius: 8 }}>
-            <ScrollArea h={height + 142} type="never" scrollbars="y">
+            <ScrollArea h={height + 134} type="never" scrollbars="y">
               <Box pt={"4"} pl={"xs"} pr={"xs"} pb={"8"}>
                 {data.map((data) => (
                   <Box
@@ -284,12 +284,12 @@ export default function Table() {
           <Box
             bg="white"
             w={"100%"}
-            h={height + 142}
+            h={height + 134}
             mt={8}
             style={{ borderRadius: 8 }}
           >
             <ScrollArea
-              h={height + 142}
+              h={height + 134}
               type="never"
               pt={"8"}
               pl={"xs"}

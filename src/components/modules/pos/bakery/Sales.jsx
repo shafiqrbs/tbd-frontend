@@ -85,26 +85,27 @@ export default function Sales() {
       });
     }
   };
-
+  const transactionModeData = JSON.parse(
+    localStorage.getItem("accounting-transaction-mode")
+  )
+    ? JSON.parse(localStorage.getItem("accounting-transaction-mode"))
+    : [];
+  useEffect(() => {
+    if (transactionModeData && transactionModeData.length > 0) {
+      for (let mode of transactionModeData) {
+        if (mode.is_selected) {
+          form.setFieldValue(
+            "transaction_mode_id",
+            form.values.transaction_mode_id
+              ? form.values.transaction_mode_id
+              : mode.id
+          );
+          break;
+        }
+      }
+    }
+  }, [transactionModeData]);
   const [profitShow, setProfitShow] = useState(false);
-
-  const data = [
-    { id: 1, name: "T-1" },
-    { id: 2, name: "T-2" },
-    { id: 3, name: "T-3" },
-    { id: 4, name: "T-4" },
-    { id: 5, name: "T-5" },
-    { id: 6, name: "T-6" },
-    { id: 7, name: "T-7" },
-    { id: 8, name: "T-8" },
-    { id: 9, name: "T-9" },
-    { id: 10, name: "T-10" },
-    { id: 11, name: "T-11" },
-    { id: 12, name: "T-12" },
-    { id: 13, name: "T-13" },
-    { id: 14, name: "T-14" },
-    { id: 15, name: "T-15" },
-  ];
   const [tableData, setTableData] = useState([
     { id: 1, name: "Spaghetti Bolognese", qty: 10, price: 1000 },
     { id: 2, name: "Fettuccine Alfredo", qty: 8, price: 1200 },
@@ -494,13 +495,13 @@ export default function Sales() {
                     gap="0"
                     wrap="nowrap"
                   >
-                    {paymentPartners.map((partners) => (
+                    {transactionModeData.map((mode, index) => (
                       <Box
                         onClick={() => {
-                          console.log("Clicked on Table -", partners.id),
-                            clicked(partners.id);
+                          console.log("Clicked on method -", mode.id),
+                            clicked(mode.id);
                         }}
-                        key={partners.id}
+                        key={index}
                         p={4}
                         style={{
                           position: "relative",
@@ -508,7 +509,7 @@ export default function Sales() {
                         }}
                       >
                         <Flex
-                          bg={partners.id === id ? "#E6F5ED" : "white"}
+                          bg={mode.id === id ? "#E6F5ED" : "white"}
                           direction="column"
                           align="center"
                           justify="center"
@@ -522,10 +523,15 @@ export default function Sales() {
                             h={"60%"}
                             w={"60%"}
                             fit="contain"
-                            src={partners.img}
+                            src={
+                              isOnline
+                                ? mode.path
+                                : "/images/transaction-mode-offline.jpg"
+                            }
+                            alt={mode.method_name}
                           ></Image>
                           <Text pt={"4"} c={"#333333"} fw={500}>
-                            {partners.name}
+                            {mode.name}
                           </Text>
                         </Flex>
                       </Box>
