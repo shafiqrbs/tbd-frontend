@@ -60,12 +60,12 @@ function _RecipeForm() {
         <Box>
             <form onSubmit={form.onSubmit((values) => {
 
-                if (productionItem.process) {
+                if (productionItem?.process) {
                     const data = {
                         url: 'production/recipe-items-process',
                         data: {
                             pro_item_id : id,
-                            process : productionItem.process==='created'?'checked':'approved'
+                            process : productionItem?.process==='created'?'checked':'approved'
                         }
                     }
                     dispatch(proItemUpdateStatus(data))
@@ -81,7 +81,7 @@ function _RecipeForm() {
 
                     setTimeout(() => {
                         form.reset()
-                        productionItem.process=='checked' && navigate('/production/items');
+                        productionItem?.process=='checked' && navigate('/production/items');
                     }, 500)
                 } else {
                     notifications.show({
@@ -120,8 +120,8 @@ function _RecipeForm() {
 
                                                             <Flex direction={`column`} gap={0}>
                                                                 <Text fz={14} fw={400}>
-                                                                    {productionItem.process==='created' && t("Checked")}
-                                                                    {productionItem.process==='checked' && t("Approved")}
+                                                                    {productionItem?.process==='created' && t("Checked")}
+                                                                    {productionItem?.process==='checked' && t("Approved")}
                                                                 </Text>
                                                             </Flex>
                                                         </Button>
