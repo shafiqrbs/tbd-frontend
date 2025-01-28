@@ -49,7 +49,7 @@ function RecipeIndex() {
                         <Grid columns={24} gutter={{ base: 8 }}>
                             <Grid.Col span={15} >
                                 <Box bg={'white'} p={'xs'} className={'borderRadiusAll'}>
-                                    <_RecipeTable />
+                                    {/*<_RecipeTable />*/}
                                 </Box>
                             </Grid.Col>
                             <Grid.Col span={9} >
