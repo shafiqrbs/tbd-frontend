@@ -3,7 +3,7 @@ const getSpotlightDropdownData = (t, configData) => {
     {
       group: "Core",
       actions: configData?.domain?.modules?.includes("core")
-          ? [
+        ? [
             {
               id: "customer",
               label: t("CustomerN"),
@@ -40,12 +40,12 @@ const getSpotlightDropdownData = (t, configData) => {
               description: t("WhereWePresentTheFileInformation"),
             },
           ]
-          : [],
+        : [],
     },
     {
       group: "Sales & Purchase",
       actions: configData?.domain?.modules?.includes("sales-purchase")
-          ? [
+        ? [
             {
               id: "sales",
               label: t("SalesN"),
@@ -82,12 +82,12 @@ const getSpotlightDropdownData = (t, configData) => {
               description: t("WhereWePresentTheInvoiceBatchInformationN"),
             },
           ]
-          : [],
+        : [],
     },
     {
       group: "Inventory",
       actions: configData?.domain?.modules?.includes("inventory")
-          ? [
+        ? [
             {
               id: "category",
               label: t("CategoryN"),
@@ -119,17 +119,22 @@ const getSpotlightDropdownData = (t, configData) => {
               description: t("WhereWePresentTheInvoiceBatchInformationN"),
             },
             {
+              id: "stock",
+              label: t("StockN"),
+              description: t("WhereWePresentTheInvoiceBatchInformationN"),
+            },
+            {
               id: "opening-stock",
               label: t("OpeningStockN"),
               description: t("WhereWePresentTheInvoiceBatchInformationN"),
             },
           ]
-          : [],
+        : [],
     },
     {
       group: "Production",
       actions: configData?.domain?.modules?.includes("production")
-          ? [
+        ? [
             {
               id: "items",
               label: t("ProductionReceipeN"),
@@ -151,24 +156,24 @@ const getSpotlightDropdownData = (t, configData) => {
               description: t("WhereWePresentTheProductionInhouseInformationN"),
             },
           ]
-          : [],
+        : [],
     },
     {
       group: "Domain",
       actions: configData?.domain?.modules?.includes("domain")
-          ? [
+        ? [
             {
               id: "",
               label: t("DomainN"),
               description: t("WhereWePresentTheDomainInformationN"),
             },
           ]
-          : [],
+        : [],
     },
     {
       group: "Accounting",
       actions: configData?.domain?.modules?.includes("accounting")
-          ? [
+        ? [
             {
               id: "transaction-mode",
               label: t("TransactionModeN"),
@@ -195,12 +200,12 @@ const getSpotlightDropdownData = (t, configData) => {
               description: t("WhereWePresentTheHeadSubGroupInformationN"),
             },
           ]
-          : [],
+        : [],
     },
     {
       group: "Procurement",
       actions: configData?.domain?.modules?.includes("procurement")
-          ? [
+        ? [
             {
               id: "requisition",
               label: t("Requisition"),
@@ -212,8 +217,8 @@ const getSpotlightDropdownData = (t, configData) => {
               description: t("WhereWePresentTheTransactionModeInformationN"),
             },
           ]
-          : [],
+        : [],
     },
-  ].filter(group => group.actions.length > 0);
+  ].filter((group) => group.actions.length > 0);
 };
 export default getSpotlightDropdownData;
