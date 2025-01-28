@@ -58,7 +58,45 @@ function _RecipeForm() {
 
     return (
         <Box>
+
             <form onSubmit={form.onSubmit((values) => {
+                if (productionItem && productionItem.process) {
+                    const data = {
+                        url: 'production/recipe-items-process',
+                        data: {
+                            pro_item_id: id,
+                            process: productionItem.process === 'created' ? 'checked' : 'approved',
+                        },
+                    };
+                    dispatch(proItemUpdateStatus(data));
+
+                    notifications.show({
+                        color: 'teal',
+                        title: t('ProcessUpdate'),
+                        icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
+                        loading: false,
+                        autoClose: 700,
+                        style: { backgroundColor: 'lightgray' },
+                    });
+
+                    setTimeout(() => {
+                        form.reset();
+                        if (productionItem.process === 'checked') navigate('/production/items');
+                    }, 500);
+                } else {
+                    notifications.show({
+                        color: 'red',
+                        title: t('ProductionItemMissing'),
+                        icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
+                        loading: false,
+                        autoClose: 700,
+                        style: { backgroundColor: 'lightgray' },
+                    });
+                }
+            })}>
+
+
+            {/*<form onSubmit={form.onSubmit((values) => {
 
                 if (productionItem?.process) {
                     const data = {
@@ -93,7 +131,7 @@ function _RecipeForm() {
                         style: {backgroundColor: 'lightgray'},
                     });
                 }
-            })}>
+            })}>*/}
                 <Grid columns={9} gutter={{base: 8}}>
                     <Grid.Col span={8}>
                         <Box bg={'white'} p={'xs'} className={'borderRadiusAll'}>
