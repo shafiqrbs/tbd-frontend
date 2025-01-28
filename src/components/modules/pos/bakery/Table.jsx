@@ -189,6 +189,7 @@ export default function Table() {
     <>
       <Box p={0} m={0}>
         <Group
+        mt={8}
           preventGrowOverflow={false}
           grow
           align="flex-start"
