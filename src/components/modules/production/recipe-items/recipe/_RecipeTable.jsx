@@ -289,7 +289,7 @@ function _RecipeTable() {
                             textAlign: 'center',
                             footer: (
                                 <Group spacing="xs" >
-                                    <Text fz={'md'} fw={'600'}>{totalWastageQuantity}</Text>
+                                    <Text fz={'md'} fw={'600'}>{totalWastageQuantity.toString()}</Text>
                                 </Group>
                             ),
                         },
