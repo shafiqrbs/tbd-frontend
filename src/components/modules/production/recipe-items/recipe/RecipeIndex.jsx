@@ -53,7 +53,7 @@ function RecipeIndex() {
                                 </Box>
                             </Grid.Col>
                             <Grid.Col span={9} >
-                                {/*<_RecipeForm />*/}
+                                <_RecipeForm />
                             </Grid.Col>
                         </Grid>
                     </Box>

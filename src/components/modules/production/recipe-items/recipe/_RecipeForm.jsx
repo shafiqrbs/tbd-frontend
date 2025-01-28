@@ -120,8 +120,8 @@ function _RecipeForm() {
 
                                                             <Flex direction={`column`} gap={0}>
                                                                 <Text fz={14} fw={400}>
-                                                                    {productionItem?.process==='created' && t("Checked")}
-                                                                    {productionItem?.process==='checked' && t("Approved")}
+                                                                    {/*{productionItem?.process==='created' && t("Checked")}*/}
+                                                                    {/*{productionItem?.process==='checked' && t("Approved")}*/}
                                                                 </Text>
                                                             </Flex>
                                                         </Button>
