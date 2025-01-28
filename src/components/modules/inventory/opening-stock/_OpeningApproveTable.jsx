@@ -102,7 +102,7 @@ function _OpeningApproveTable(props) {
                             <Box>
                                 <Box pl={`xs`} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'}>
                                     <Box pb={'xs'}>
-                                       <_OpeningSearch/>
+                                       <_OpeningSearch tableDataLoading={setFetching}/>
                                     </Box>
                                 </Box>
                             </Box>

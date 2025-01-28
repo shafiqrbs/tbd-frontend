@@ -18,6 +18,8 @@ import _StockModal from './_StockModal.jsx';
 import { IconCheck, IconDotsVertical, IconTrashX } from "@tabler/icons-react";
 import { showEntityData } from "../../../../store/core/crudSlice.js";
 import {notifications} from "@mantine/notifications";
+import axios from "axios";
+import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
 
 function StockTable() {
     const dispatch = useDispatch();
@@ -64,6 +66,8 @@ function StockTable() {
         }, 5000)
     }
 
+    const [downloadStockXLS,setDownloadStockXls] = useState(false)
+
 
     useEffect(() => {
         const value = {
@@ -80,7 +84,7 @@ function StockTable() {
             }
         }
         dispatch(getIndexEntityData(value))
-    }, [fetching]);
+    }, [fetching,downloadStockXLS]);
 
     useEffect(() => {
         dispatch(setDeleteMessage(''))
@@ -107,11 +111,48 @@ function StockTable() {
     const [isModel, setModel] = useState((configData?.is_model === 1));
     const [isBrand, setBrand] = useState((configData?.is_brand === 1));
 
+    useEffect(() => {
+        if (downloadStockXLS) {
+            const fetchData = async () => {
+                const value = {
+                    url: 'inventory/generate/stock-item/xlsx',
+                    param: {}
+                };
+
+                try {
+                    const resultAction = await dispatch(getIndexEntityData(value));
+                    if (getIndexEntityData.rejected.match(resultAction)) {
+                        console.error('Error:', resultAction);
+                    } else if (getIndexEntityData.fulfilled.match(resultAction)) {
+                        if (resultAction.payload.status===200) {
+                            const href = `${import.meta.env.VITE_API_GATEWAY_URL + "stock-item/download"}`;
+
+                            const anchorElement = document.createElement('a');
+                            anchorElement.href = href;
+                            document.body.appendChild(anchorElement);
+                            anchorElement.click();
+                            document.body.removeChild(anchorElement);
+                        }else {
+                            showNotificationComponent(resultAction.payload.error,'red')
+                        }
+                    }
+                } catch (err) {
+                    console.error('Unexpected error:', err);
+                } finally {
+                    setDownloadStockXls(false)
+                }
+            };
+
+            fetchData();
+        }
+    }, [downloadStockXLS, dispatch]);
+
+
     return (
         <>
 
             <Box pl={`xs`} pb={'xs'} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'} >
-                <KeywordSearch module={'recipe-item'} />
+                <KeywordSearch module={'stock'} setDownloadStockXls={setDownloadStockXls}/>
             </Box>
             <Box className={'borderRadiusAll'}>
                 <DataTable
@@ -240,7 +281,7 @@ function StockTable() {
                         },
                     ]
                     }
-                    fetching={fetching}
+                    fetching={fetching || downloadStockXLS}
                     totalRecords={indexData.total}
                     recordsPerPage={perPage}
                     page={page}

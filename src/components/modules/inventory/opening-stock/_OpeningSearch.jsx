@@ -17,6 +17,7 @@ import {useDispatch, useSelector} from "react-redux";
 import FilterModel from "../../filter/FilterModel.jsx";
 import {setFetching, setPurchaseItemsFilterData} from "../../../../store/inventory/crudSlice.js";
 import {DateInput} from "@mantine/dates";
+import FileUploadModel from "../../../core-component/FileUploadModel.jsx";
 
 function _OpeningSearch(props) {
     const {t, i18n} = useTranslation();
@@ -28,6 +29,7 @@ function _OpeningSearch(props) {
     const [startDateTooltip, setStartDateTooltip] = useState(false)
     const [endDateTooltip, setEndDateTooltip] = useState(false)
     const [filterModel, setFilterModel] = useState(false)
+    const [uploadOpeningStockModel, setUploadOpeningStockModel] = useState(false)
 
     const purchaseItemsFilterData = useSelector((state) => state.inventoryCrudSlice.purchaseItemsFilterData)
     let [resetKey, setResetKey] = useState(0);
@@ -98,7 +100,7 @@ function _OpeningSearch(props) {
                         />
                     </Tooltip>
                 </Grid.Col>
-                <Grid.Col span={3}>
+                <Grid.Col span={2}>
                     <Tooltip
                         label={t('StartDate')}
                         opened={startDateTooltip}
@@ -128,7 +130,7 @@ function _OpeningSearch(props) {
                         />
                     </Tooltip>
                 </Grid.Col>
-                <Grid.Col span={3}>
+                <Grid.Col span={2}>
                     <Tooltip
                         label={t('EndDate')}
                         opened={endDateTooltip}
@@ -157,7 +159,7 @@ function _OpeningSearch(props) {
                         />
                     </Tooltip>
                 </Grid.Col>
-                <Grid.Col span={3}>
+                <Grid.Col span={2}>
                     <ActionIcon.Group mt={'1'}>
                         <ActionIcon variant="transparent"
                                     c={'red.4'}
@@ -241,29 +243,53 @@ function _OpeningSearch(props) {
 
                     </ActionIcon.Group>
                 </Grid.Col>
+
+
                 <Grid.Col span={2}>
                     <Flex
                         justify="flex-end"
                         align="center"
                     >
-
-                    <Button onClick={(e) => { navigate('/inventory/opening-stock') }}
+                    <Button onClick={(e) => {
+                        setUploadOpeningStockModel(true)
+                    }}
                             size="sm"
                             color={`red.8`}
                             variant="outline"
                             mt={0}
                             rightSection={<IconArrowRight size={16} />}
                     >
-                        {t("OpeningStock")}
+                        {t("Upload")}
                     </Button>
+                    </Flex>
+                </Grid.Col>
+
+                <Grid.Col span={2}>
+                    <Flex
+                        justify="flex-end"
+                        align="center"
+                    >
+                        <Button onClick={(e) => { navigate('/inventory/opening-stock') }}
+                                size="sm"
+                                color={`red.8`}
+                                variant="outline"
+                                mt={0}
+                                rightSection={<IconArrowRight size={16} />}
+                        >
+                            {t("OpeningStock")}
+                        </Button>
                     </Flex>
                 </Grid.Col>
             </Grid>
 
-            {
-                filterModel &&
-                <FilterModel filterModel={filterModel} setFilterModel={setFilterModel} module={props.module}/>
-            }
+            {filterModel && <FilterModel filterModel={filterModel} setFilterModel={setFilterModel} module={props.module}/>}
+            {uploadOpeningStockModel &&
+                <FileUploadModel
+                    modelStatus={uploadOpeningStockModel}
+                    setFileUploadStateFunction={setUploadOpeningStockModel}
+                    filyType={'Opening-Stock'}
+                    tableDataLoading={props.tableDataLoading}
+                />}
         </>
     );
 }

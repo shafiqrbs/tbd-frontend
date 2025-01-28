@@ -65,8 +65,6 @@ function FileUploadForm() {
                         withCloseButton: true,
                     });
                 }else {
-
-
                     values['file'] = excelFile
                     modals.openConfirmModal({
                         title: (
@@ -163,7 +161,7 @@ function FileUploadForm() {
                                                     nextField={''}
                                                     name={'file_type'}
                                                     form={form}
-                                                    dropdownValue={['Production','Product','User']}
+                                                    dropdownValue={['Opening-Stock','Production','Product','User']}
                                                     mt={8}
                                                     id={'file_type'}
                                                     searchable={true}

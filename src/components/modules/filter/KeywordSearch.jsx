@@ -270,18 +270,14 @@ function KeywordSearch(props) {
                                 <IconPdf style={{ width: rem(18) }} stroke={1.5} />
                             </Tooltip>
                         </ActionIcon>
+
                         <ActionIcon variant="default"
                             c={'green.8'}
                             size="lg" aria-label="Filter"
                             onClick={() => {
-                                searchKeyword.length > 0 ?
-                                    (dispatch(setFetching(true)),
-                                        setSearchKeywordTooltip(false))
-                                    :
-                                    (setSearchKeywordTooltip(true),
-                                        setTimeout(() => {
-                                            setSearchKeywordTooltip(false)
-                                        }, 1500))
+                                if (props.module === 'stock') {
+                                    props.setDownloadStockXls(true)
+                                }
                             }}
                         >
                             <Tooltip
@@ -292,9 +288,9 @@ function KeywordSearch(props) {
                                 position={"bottom"}
                                 c={'red'}
                                 bg={`red.1`}
-                                transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
+                                transitionProps={{transition: "pop-bottom-left", duration: 500}}
                             >
-                                <IconFileTypeXls style={{ width: rem(18) }} stroke={1.5} />
+                                <IconFileTypeXls style={{width: rem(18)}} stroke={1.5}/>
                             </Tooltip>
                         </ActionIcon>
 
