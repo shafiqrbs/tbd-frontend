@@ -95,43 +95,6 @@ function _RecipeForm() {
                 }
             })}>
 
-
-            {/*<form onSubmit={form.onSubmit((values) => {
-
-                if (productionItem?.process) {
-                    const data = {
-                        url: 'production/recipe-items-process',
-                        data: {
-                            pro_item_id : id,
-                            process : productionItem?.process==='created'?'checked':'approved'
-                        }
-                    }
-                    dispatch(proItemUpdateStatus(data))
-
-                    notifications.show({
-                        color: 'teal',
-                        title: t('ProcessUpdate'),
-                        icon: <IconCheck style={{width: rem(18), height: rem(18)}}/>,
-                        loading: false,
-                        autoClose: 700,
-                        style: {backgroundColor: 'lightgray'},
-                    });
-
-                    setTimeout(() => {
-                        form.reset()
-                        productionItem?.process=='checked' && navigate('/production/items');
-                    }, 500)
-                } else {
-                    notifications.show({
-                        color: 'red',
-                        title: t('ProductionItemMissing'),
-                        icon: <IconCheck style={{width: rem(18), height: rem(18)}}/>,
-                        loading: false,
-                        autoClose: 700,
-                        style: {backgroundColor: 'lightgray'},
-                    });
-                }
-            })}>*/}
                 <Grid columns={9} gutter={{base: 8}}>
                     <Grid.Col span={8}>
                         <Box bg={'white'} p={'xs'} className={'borderRadiusAll'}>
@@ -255,88 +218,6 @@ function _RecipeForm() {
                                             </Grid>
                                         </Box>
                                     </ScrollArea>
-
-
-                                    {/*<ScrollArea h={height} scrollbarSize={2} scrollbars="y" type="never">
-                                        {Object.keys(measurementInputData).map((key, i) => (
-                                            <div key={i}>
-                                                <Title order={6} pt={'6'} color={'red'}>{key}</Title>
-
-                                                {measurementInputData[key].map((item, j) => (
-                                                    <Box mt={'xs'} key={item.slug+key+j}>
-                                                        <Grid gutter={{base: 6}}>
-                                                            <Grid.Col span={6}>
-                                                                <Box mt={'xs'}>
-                                                                    <Flex
-                                                                        justify="flex-start"
-                                                                        align="center"
-                                                                        direction="row"
-                                                                    >
-                                                                        <Text
-                                                                            ta="center" fz="sm"
-                                                                            fw={300}>
-                                                                            {item.name}
-                                                                        </Text>
-                                                                    </Flex>
-                                                                </Box>
-                                                            </Grid.Col>
-                                                            <Grid.Col span={6}>
-                                                                <Box>
-                                                                    <TextInput
-                                                                        type='number'
-                                                                        id={item.slug}
-                                                                        size="sm"
-                                                                        placeholder={t('Amount')}
-                                                                        autoComplete="off"
-                                                                        value={item.amount}
-                                                                        onChange={(e)=>{
-                                                                            const newValue = e.target.value;
-                                                                            dispatch(setUpdateMeasurementData({ key, slug: item.slug, newAmount: newValue }));
-                                                                            const value = {
-                                                                                url: 'production/inline-update-value-added',
-                                                                                data: {
-                                                                                    value_added_id : item.id,
-                                                                                    amount : e.target.value
-                                                                                }
-                                                                            }
-                                                                            setTimeout(()=>{
-                                                                                dispatch(storeEntityData(value))
-                                                                            },1000)
-                                                                        }}
-                                                                    />
-                                                                </Box>
-                                                            </Grid.Col>
-                                                        </Grid>
-                                                    </Box>
-
-                                                ))}
-                                            </div>
-                                        ))}
-                                        <Box mt={'xs'} key={'111221122'}>
-                                            <Grid gutter={{base: 6}}>
-                                                <Grid.Col span={6}>
-                                                    <Box mt={'xs'}>
-                                                        <Flex
-                                                            justify="flex-start"
-                                                            align="center"
-                                                            direction="row"
-                                                        >
-                                                            <Text
-                                                                ta="center" fz="sm"
-                                                                fw={300}>
-                                                                {t('TotalAmount')}
-                                                            </Text>
-                                                        </Flex>
-                                                    </Box>
-                                                </Grid.Col>
-                                                <Grid.Col span={6}>
-                                                    <Box>
-                                                        <Text>{getTotalAmount(measurementInputData).toFixed(2)}</Text>
-                                                    </Box>
-                                                </Grid.Col>
-                                            </Grid>
-                                        </Box>
-                                    </ScrollArea>*/}
                                 </Box>
                             </Box>
                         </Box>
