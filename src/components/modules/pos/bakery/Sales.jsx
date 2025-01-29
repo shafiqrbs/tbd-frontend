@@ -253,7 +253,7 @@ export default function Sales() {
             />
           </Group>
           <Box>
-            <ScrollArea h={heightHalf + 68} type="never" scrollbars="y">
+            <ScrollArea h={heightHalf + 66} type="never" scrollbars="y">
               <Paper
                 p="8"
                 radius="4"
@@ -379,7 +379,8 @@ export default function Sales() {
                   ]}
                   loaderSize="xs"
                   loaderColor="grape"
-                  height={400}
+                  height={396}
+                  // backgroundColor={'black'}
                   scrollAreaProps={{ type: "never" }}
                 />
               </Box>
