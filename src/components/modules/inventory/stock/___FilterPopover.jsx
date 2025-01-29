@@ -24,7 +24,7 @@ import { useTranslation } from "react-i18next";
 import { isNotEmpty, useForm } from "@mantine/form";
 import { useOutletContext } from "react-router-dom";
 import SelectForm from "../../../form-builders/SelectForm";
-export default function __FilterPopover(props) {
+export default function ___FilterPopover(props) {
   const { setRefreshCustomerDropdown, focusField, fieldPrefix } = props;
 
   const { mainAreaHeight } = useOutletContext();
@@ -161,6 +161,7 @@ export default function __FilterPopover(props) {
           <Box>
             <form
               onSubmit={advanceSearchForm.onSubmit((values) => {
+                setAdvanceSearchFormOpened(false);
                 console.log(advanceSearchForm.values);
               })}
             >
@@ -184,7 +185,7 @@ export default function __FilterPopover(props) {
                     <Box p={"xs"}>
                       <Grid columns={18} gutter={{ base: 8 }}>
                         <Grid.Col span={5}>
-                          <Text ta={"right"} fw={600} fz={"sm"} mt={"8"}>
+                          <Text ta={"left"} fw={600} fz={"sm"} mt={"8"}>
                             {t("NatureOfProduct")}
                           </Text>
                         </Grid.Col>
@@ -206,7 +207,7 @@ export default function __FilterPopover(props) {
                     <Box p={"xs"}>
                       <Grid columns={18} gutter={{ base: 8 }}>
                         <Grid.Col span={5}>
-                          <Text ta={"right"} fw={600} fz={"sm"} mt={"8"}>
+                          <Text ta={"left"} fw={600} fz={"sm"} mt={"8"}>
                             {t("Category")}
                           </Text>
                         </Grid.Col>
@@ -228,7 +229,7 @@ export default function __FilterPopover(props) {
                     <Box p={"xs"}>
                       <Grid columns={18} gutter={{ base: 8 }}>
                         <Grid.Col span={5}>
-                          <Text ta={"right"} fw={600} fz={"sm"} mt={"8"}>
+                          <Text ta={"left"} fw={600} fz={"sm"} mt={"8"}>
                             {t("Name")}
                           </Text>
                         </Grid.Col>
@@ -269,7 +270,7 @@ export default function __FilterPopover(props) {
                     <Box p={"xs"}>
                       <Grid columns={18} gutter={{ base: 8 }}>
                         <Grid.Col span={5}>
-                          <Text ta={"right"} fw={600} fz={"sm"} mt={"8"}>
+                          <Text ta={"left"} fw={600} fz={"sm"} mt={"8"}>
                             {t("Barcode")}
                           </Text>
                         </Grid.Col>
@@ -311,7 +312,7 @@ export default function __FilterPopover(props) {
                     <Box p={"xs"}>
                       <Grid columns={18} gutter={{ base: 8 }}>
                         <Grid.Col span={5}>
-                          <Text ta={"right"} fw={600} fz={"sm"} mt={"8"}>
+                          <Text ta={"left"} fw={600} fz={"sm"} mt={"8"}>
                             {t("AlternativeName")}
                           </Text>
                         </Grid.Col>

@@ -72,6 +72,7 @@ export default function Header({ isOnline, configData }) {
   const [languageSelected, setLanguageSelected] = useState(
     languages.find((item) => item.value === i18n.language)
   );
+  const [visible, setVisible] = useState(true);
 
   const [configDataSpot, setConfigData] = useState(null);
   useEffect(() => {
@@ -79,9 +80,9 @@ export default function Header({ isOnline, configData }) {
       const storedConfigData = localStorage.getItem("config-data");
       if (storedConfigData) {
         setConfigData(JSON.parse(storedConfigData));
-        setVisible(false); // Data is loaded, hide the loader
+        setVisible(false); 
       } else {
-        setVisible(false); // Even if no config data, hide loader after the check
+        setVisible(false);
         navigate("/login");
       }
     };

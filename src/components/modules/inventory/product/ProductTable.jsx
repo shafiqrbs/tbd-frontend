@@ -24,7 +24,7 @@ import {
     setInsertType,
     showEntityData, deleteEntityData, getStatusInlineUpdateData, storeEntityData
 } from "../../../../store/core/crudSlice.js";
-import KeywordSearch from "../../filter/KeywordSearch";
+import _ProductSearch from "./_ProductSearch";
 import { modals } from "@mantine/modals";
 import tableCss from "../../../../assets/css/Table.module.css";
 import ProductViewDrawer from "./ProductViewDrawer.jsx";
@@ -120,7 +120,7 @@ function ProductTable() {
         <>
 
             <Box pl={`xs`} pr={8} pt={'6'} pb={'4'} className={'boxBackground borderRadiusAll border-bottom-none'} >
-                <KeywordSearch module={'product'} />
+                <_ProductSearch module={'product'} />
             </Box>
             <Box className={'borderRadiusAll border-top-none'}>
                 <DataTable

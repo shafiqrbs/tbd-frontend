@@ -25,7 +25,7 @@ import { isNotEmpty, useForm } from "@mantine/form";
 import { useOutletContext } from "react-router-dom";
 import SelectForm from "../../../form-builders/SelectForm";
 export default function __FilterPopover(props) {
-  const { setRefreshCustomerDropdown, focusField, fieldPrefix } = props;
+  const { setRefreshCustomerDropdown, focusField, fieldPrefix, module } = props;
 
   const { mainAreaHeight } = useOutletContext();
   const height = mainAreaHeight;
@@ -33,19 +33,22 @@ export default function __FilterPopover(props) {
   const dispatch = useDispatch();
   const { t, i18n } = useTranslation();
 
-  /*START CUSTOMER ADDED FORM INITIAL*/
   const [advanceSearchFormOpened, setAdvanceSearchFormOpened] = useState(false);
   const [nameDropdown, setNameDropdown] = useState(null);
-  const [mobileDropdown, setMobileDropdown] = useState(null);
-  const [invoiceDropdown, setInvoiceDropdown] = useState(null);
+  const [displayDropdown, setDisplayDropdown] = useState(null);
+  const [languageDropdown, setLanguageDropdown] = useState(null);
+  const [natureofProduct, setNatureofProduct] = useState(null);
+  const [categoryDropdown, setCategoryDropdown] = useState(null);
   const advanceSearchForm = useForm({
     initialValues: {
-      name: "",
-      mobile: "",
-      invoice: "",
+      nature_of_product: "",
+      category: "",
       name_dropdown: "",
-      mobile_dropdown: "",
-      invoice_dropdown: "",
+      name: "",
+      display_name: "",
+      display_dropdown: "",
+      language_dropdown: "",
+      language_name: "",
     },
     validate: {
       name: (value, values) => {
@@ -88,38 +91,47 @@ export default function __FilterPopover(props) {
       },
     },
   });
-  const mobile_drop_data = [
-    { id: 1, value: "chiller" },
-    { id: 2, value: "party" },
+  const display_drop_data = [
+    { id: 1, value: "=" },
+    { id: 2, value: "!=" },
+    { id: 2, value: "LIKE" },
   ];
-  const invoice_drop_data = [
-    { id: 1, value: "chiller" },
-    { id: 2, value: "party" },
+  const language_drop_data = [
+    { id: 1, value: "=" },
+    { id: 2, value: "!=" },
+    { id: 2, value: "LIKE" },
   ];
   const name_drop_data = [
-    { id: 1, value: "chiller" },
-    { id: 2, value: "party" },
+    { id: 1, value: "=" },
+    { id: 2, value: "!=" },
+    { id: 2, value: "LIKE" },
   ];
-  /*END CUSTOMER ADDED FORM INITIAL*/
+  const nameof_product_data = [
+    { id: 1, value: "Post-production" },
+    { id: 2, value: "Pre-production" },
+    { id: 3, value: "Raw Materials" },
+  ];
+  const category_data = [
+    { id: 1, value: "Bread & Buns" },
+    { id: 2, value: "Raw Materials" },
+    { id: 3, value: "Groceries" },
+  ];
 
   return (
     <Box>
       <Popover
-        width={"500"}
+        width={"586"}
         trapFocus
         position="bottom"
         withArrow
         shadow="xl"
         opened={advanceSearchFormOpened}
-        onChange={() => {
-          setAdvanceSearchFormOpened(false);
-        }}
       >
         <Popover.Target>
           <Tooltip
             multiline
             bg={"orange.8"}
-            offset={{ crossAxis: "-52", mainAxis: "5" }}
+            offset={{ crossAxis: "-42", mainAxis: "5" }}
             position="top"
             ta={"center"}
             withArrow
@@ -148,21 +160,24 @@ export default function __FilterPopover(props) {
           <Box>
             <form
               onSubmit={advanceSearchForm.onSubmit((values) => {
+                setAdvanceSearchFormOpened(false);
                 console.log(advanceSearchForm.values);
               })}
             >
               <Box mt={"4"}>
                 <Box
-                  className="boxBackground borderRadiusAll"
+                  className="boxBackground border-bottom-none borderRadiusAll"
                   pt={"6"}
-                  mb={"4"}
                   pb={"6"}
                 >
                   <Text ta={"center"} fw={600} fz={"sm"}>
                     {t("AdvanceSearch")}
                   </Text>
                 </Box>
-                <Box className="borderRadiusAll" bg={"white"}>
+                <Box
+                  className="borderRadiusAll border-bottom-none border-top-none"
+                  bg={"white"}
+                >
                   <ScrollArea
                     h={height / 3}
                     scrollbarSize={2}
@@ -170,26 +185,69 @@ export default function __FilterPopover(props) {
                     type="never"
                   >
                     <Box p={"xs"}>
-                      <Grid columns={15} gutter={{ base: 8 }}>
-                        <Grid.Col span={3}>
-                          <Text ta={"left"} fw={600} fz={"sm"} mt={"8"}>
+                      <Grid columns={18} gutter={{ base: 8 }}>
+                        <Grid.Col span={5}>
+                          <Text ta={"right"} fw={600} fz={"sm"} mt={"8"}>
+                            {t("NatureOfProduct")}
+                          </Text>
+                        </Grid.Col>
+                        <Grid.Col span={13}>
+                          <SelectForm
+                            tooltip={t("SelectSearchLikeValue")}
+                            form={advanceSearchForm}
+                            searchable
+                            name="nature_of_product"
+                            id="nature_of_product"
+                            nextField="category"
+                            placeholder={t("NatureOfProduct")}
+                            dropdownValue={nameof_product_data}
+                            changeValue={setNatureofProduct}
+                          />
+                        </Grid.Col>
+                      </Grid>
+                    </Box>
+                    <Box p={"xs"}>
+                      <Grid columns={18} gutter={{ base: 8 }}>
+                        <Grid.Col span={5}>
+                          <Text ta={"right"} fw={600} fz={"sm"} mt={"8"}>
+                            {t("Category")}
+                          </Text>
+                        </Grid.Col>
+                        <Grid.Col span={13}>
+                          <SelectForm
+                            tooltip={t("SelectSearchLikeValue")}
+                            form={advanceSearchForm}
+                            searchable
+                            name="category"
+                            id="category"
+                            nextField="name_dropdown"
+                            placeholder={t("Category")}
+                            dropdownValue={category_data}
+                            changeValue={setCategoryDropdown}
+                          />
+                        </Grid.Col>
+                      </Grid>
+                    </Box>
+                    <Box p={"xs"}>
+                      <Grid columns={18} gutter={{ base: 8 }}>
+                        <Grid.Col span={5}>
+                          <Text ta={"right"} fw={600} fz={"sm"} mt={"8"}>
                             {t("Name")}
                           </Text>
                         </Grid.Col>
 
-                        <Grid.Col span={5}>
+                        <Grid.Col span={6}>
                           <SelectForm
                             tooltip={t("SelectSearchLikeValue")}
                             form={advanceSearchForm}
                             searchable
                             name="name_dropdown"
                             id="name_dropdown"
-                            label=""
                             nextField="name"
                             placeholder="Search Like"
                             dropdownValue={name_drop_data}
                             changeValue={setNameDropdown}
-                            data={["React", "Angular", "Vue", "Svelte"]}
+                            value={nameDropdown}
                           />
                         </Grid.Col>
                         <Grid.Col span={7}>
@@ -198,7 +256,7 @@ export default function __FilterPopover(props) {
                               tooltip={t("NameValidateMessage")}
                               label=""
                               placeholder={t("Name")}
-                              nextField={"mobile_dropdown"}
+                              nextField={"display_dropdown"}
                               form={advanceSearchForm}
                               name={"name"}
                               id={"name"}
@@ -212,26 +270,26 @@ export default function __FilterPopover(props) {
                       </Grid>
                     </Box>
                     <Box p={"xs"}>
-                      <Grid columns={15} gutter={{ base: 8 }}>
-                        <Grid.Col span={3}>
-                          <Text ta={"left"} fw={600} fz={"sm"} mt={"8"}>
-                            {t("Mobile")}
+                      <Grid columns={18} gutter={{ base: 8 }}>
+                        <Grid.Col span={5}>
+                          <Text ta={"right"} fw={600} fz={"sm"} mt={"8"}>
+                            {t("DisplayName")}
                           </Text>
                         </Grid.Col>
 
-                        <Grid.Col span={5}>
+                        <Grid.Col span={6}>
                           <SelectForm
                             tooltip={t("SelectSearchLikeValue")}
                             form={advanceSearchForm}
                             searchable
-                            name="mobile_dropdown"
-                            id="mobile_dropdown"
-                            nextField="mobile"
+                            name="display_dropdown"
+                            id="display_dropdown"
+                            nextField="display_name"
                             label=""
                             placeholder="Search Like"
-                            dropdownValue={mobile_drop_data}
-                            value={mobileDropdown}
-                            changeValue={setMobileDropdown}
+                            dropdownValue={display_drop_data}
+                            value={displayDropdown}
+                            changeValue={setDisplayDropdown}
                           />
                         </Grid.Col>
                         <Grid.Col span={7}>
@@ -239,11 +297,11 @@ export default function __FilterPopover(props) {
                             <InputForm
                               tooltip={t("MobileValidateMessage")}
                               label=""
-                              placeholder={t("Mobile")}
-                              nextField={"invoice_dropdown"}
+                              placeholder={t("DisplayName")}
+                              nextField={"language_dropdown"}
                               form={advanceSearchForm}
-                              name={"mobile"}
-                              id={"mobile"}
+                              name={"display_name"}
+                              id={"display_name"}
                               leftSection={
                                 <IconDeviceMobile size={16} opacity={0.5} />
                               }
@@ -254,26 +312,26 @@ export default function __FilterPopover(props) {
                       </Grid>
                     </Box>
                     <Box p={"xs"}>
-                      <Grid columns={15} gutter={{ base: 8 }}>
-                        <Grid.Col span={3}>
-                          <Text ta={"left"} fw={600} fz={"sm"} mt={"8"}>
-                            {t("Invoice")}
+                      <Grid columns={18} gutter={{ base: 8 }}>
+                        <Grid.Col span={5}>
+                          <Text ta={"right"} fw={600} fz={"sm"} mt={"8"}>
+                            {t("LanguageName")}
                           </Text>
                         </Grid.Col>
 
-                        <Grid.Col span={5}>
+                        <Grid.Col span={6}>
                           <SelectForm
                             tooltip={t("SelectSearchLikeValue")}
                             form={advanceSearchForm}
                             searchable
-                            name="invoice_dropdown"
-                            id="invoice_dropdown"
-                            nextField="invoice"
+                            name="language_dropdown"
+                            id="language_dropdown"
+                            nextField="language_name"
                             label=""
                             placeholder="Search Like"
-                            dropdownValue={invoice_drop_data}
-                            value={invoiceDropdown}
-                            changeValue={setInvoiceDropdown}
+                            dropdownValue={language_drop_data}
+                            value={languageDropdown}
+                            changeValue={setLanguageDropdown}
                           />
                         </Grid.Col>
                         <Grid.Col span={7}>
@@ -281,11 +339,11 @@ export default function __FilterPopover(props) {
                             <InputForm
                               tooltip={t("InvoiceValidateMessage")}
                               label=""
-                              placeholder={t("Invoice")}
+                              placeholder={t("LanguageName")}
                               nextField={"EntityFormSubmit"}
                               form={advanceSearchForm}
-                              name={"invoice"}
-                              id={"invoice"}
+                              name={"language_name"}
+                              id={"language_name"}
                               leftSection={
                                 <IconFileInvoice size={16} opacity={0.5} />
                               }
@@ -299,11 +357,10 @@ export default function __FilterPopover(props) {
                 </Box>
               </Box>
               <Box
-                className="borderRadiusAll boxBackground"
+                className="borderRadiusAll border-top-none boxBackground"
                 pl={"xs"}
                 pr={"xs"}
                 pb={2}
-                mt={4}
               >
                 <Box>
                   <Grid columns={12} gutter={{ base: 1 }}>
@@ -336,6 +393,7 @@ export default function __FilterPopover(props) {
                         mr={"xs"}
                         fullWidth={true}
                         id={"EntityFormSubmit"}
+                        name={"EntityFormSubmit"}
                         leftSection={<IconSearch size={16} />}
                         // onClick={() => {
                         //   let validation = true;
