@@ -536,6 +536,11 @@ export default function MatrixTable(props) {
                         pagination: matrixTable.pagination,
                       }}
                       columns={[
+
+                        {
+                          accessor: "total_requested",
+                          title: "Total Requested",
+                        },
                         {
                           accessor: "opening_stock",
                           title: "Stock",
