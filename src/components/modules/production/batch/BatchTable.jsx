@@ -11,7 +11,7 @@ import {IconDotsVertical, IconFilePencil, IconTrashX} from '@tabler/icons-react'
 import {storeEntityData , getIndexEntityData} from "../../../../store/core/crudSlice.js";
 import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
 
-export default function BatchTable(){
+export default function BatchTable(props){
     const dispatch = useDispatch();
     const {t, i18n} = useTranslation();
     const { isOnline, mainAreaHeight} = useOutletContext();
@@ -52,12 +52,14 @@ export default function BatchTable(){
                 setReloadBatchData(false);
             } catch (error) {
                 console.error("Unexpected error in fetchData:", error);
+            }finally {
+                props.setBatchReloadWithUpload(false)
             }
         };
 
         // Call the async function
         fetchData();
-    }, [dispatch, fetching, reloadBatchData]);
+    }, [dispatch, fetching, reloadBatchData,props.batchReloadWithUpload]);
 
     const [swtichEnable, setSwitchEnable] = useState({});
 
@@ -122,115 +124,6 @@ export default function BatchTable(){
                             textAlign: "right",
                             render: (item) => (
                                 <Group gap={4} justify="right" wrap="nowrap">
-                                    {/*{
-                                        (item.process ==='Approved' ) &&
-                                        <Button
-                                            component="a"
-                                            size="compact-xs"
-                                            radius="xs"
-                                            variant="filled"
-                                            fw={'100'}
-                                            fz={'12'}
-                                            color="blue.8"
-                                            mr={'4'}
-                                            onClick={(event) => {
-                                                modals.openConfirmModal({
-                                                    title: (
-                                                        <Text size="md"> {t("FormConfirmationTitle")}</Text>
-                                                    ),
-                                                    children: (
-                                                        <Text size="sm"> {t("FormConfirmationMessage")}</Text>
-                                                    ),
-                                                    labels: { confirm: t('Submit'), cancel: t('Cancel') }, confirmProps: { color: 'red' },
-                                                    onCancel: () => console.log('Cancel'),
-                                                    onConfirm: async () => {
-                                                        const value = {
-                                                            url: 'production/batch/confirm-receive/'+item.id,
-                                                            data: {}
-                                                        }
-
-                                                        const resultAction = await dispatch(storeEntityData(value));
-
-                                                        if (storeEntityData.rejected.match(resultAction)) {
-                                                            showNotificationComponent(
-                                                                resultAction.payload?.message || t('ErrorOccurred'),
-                                                                'red',
-                                                                'lightgray'
-                                                            );
-                                                        } else if (storeEntityData.fulfilled.match(resultAction)) {
-                                                            showNotificationComponent(
-                                                                t('ReceivedSuccessfully'),
-                                                                'teal',
-                                                                'lightgray'
-                                                            );
-                                                        }
-                                                        setReloadBatchData(true)
-                                                    },
-                                                });
-                                            }}
-                                        >  {t('ReceiveProduction')}</Button>
-                                    }*/}
-                                    {/*{
-                                        item.process === 'Created' &&
-                                        <Button
-                                            component="a"
-                                            size="compact-xs"
-                                            radius="xs"
-                                            variant="filled"
-                                            fw={'100'}
-                                            fz={'12'}
-                                            color="yellow.8"
-                                            mr={'4'}
-                                            onClick={(event) => {
-                                                modals.openConfirmModal({
-                                                    title: (
-                                                        <Text size="md"> {t("FormConfirmationTitle")}</Text>
-                                                    ),
-                                                    children: (
-                                                        <Text size="sm"> {t("FormConfirmationMessage")}</Text>
-                                                    ),
-                                                    labels: { confirm: t('Submit'), cancel: t('Cancel') }, confirmProps: { color: 'red' },
-                                                    onCancel: () => console.log('Cancel'),
-                                                    onConfirm: async () => {
-                                                        const value = {
-                                                            url: 'production/batch/approve/'+item.id,
-                                                            data: {}
-                                                        }
-
-                                                        const resultAction = await dispatch(storeEntityData(value));
-
-                                                        if (storeEntityData.rejected.match(resultAction)) {
-                                                            showNotificationComponent(
-                                                                resultAction.payload?.message || t('ErrorOccurred'),
-                                                                'red',
-                                                                'lightgray'
-                                                            );
-                                                        } else if (storeEntityData.fulfilled.match(resultAction)) {
-                                                            showNotificationComponent(
-                                                                t('ApprovedSuccessfully'),
-                                                                'teal',
-                                                                'lightgray'
-                                                            );
-                                                        }
-                                                        setReloadBatchData(true)
-                                                    },
-                                                });
-                                            }}
-                                        >  {t('Approved')}</Button>
-                                    }*/}
-
-                                    {/*<Button component="a" size="compact-xs" radius="xs" variant="filled" fw={'100'} fz={'12'} color="green.8" mr={'4'}
-                                        onClick={() => {
-                                            {
-                                                // navigate(`/production/recipe-update/${item.id}`)
-                                            }
-                                        }}
-                                    >  {t('Show')}</Button>*/}
-
-
-
-
-
                                     <Menu position="bottom-end" offset={3} withArrow trigger="hover" openDelay={100} closeDelay={400}>
                                     <Menu.Target>
                                         <ActionIcon size="sm" variant="outline" color="red" radius="xl" aria-label="Settings">
@@ -388,7 +281,7 @@ export default function BatchTable(){
                         },
                     ]
                     }
-                    fetching={fetching || reloadBatchData}
+                    fetching={fetching || reloadBatchData || props.batchReloadWithUpload}
                     totalRecords={indexData.total}
                     recordsPerPage={perPage}
                     page={page}

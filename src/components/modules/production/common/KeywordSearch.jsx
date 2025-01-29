@@ -216,9 +216,11 @@ function KeywordSearch(props) {
                         <ActionIcon variant="default"
                             c={'green.8'}
                             size="lg" aria-label="Filter"
-                            onClick={() => {
-                                console.log('ok')
-                            }}
+                                    onClick={() => {
+                                        if (props.module === 'recipe-item') {
+                                            props.setDownloadFinishGoodsXLS(true)
+                                        }
+                                    }}
                         >
                             <Tooltip
                                 label={t('DownloadExcelFile')}

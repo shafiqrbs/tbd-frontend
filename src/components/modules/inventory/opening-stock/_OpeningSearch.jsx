@@ -289,7 +289,8 @@ function _OpeningSearch(props) {
                     setFileUploadStateFunction={setUploadOpeningStockModel}
                     filyType={'Opening-Stock'}
                     tableDataLoading={props.tableDataLoading}
-                />}
+                />
+            }
         </>
     );
 }

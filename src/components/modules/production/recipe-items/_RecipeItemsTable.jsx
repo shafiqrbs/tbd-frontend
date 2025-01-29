@@ -22,6 +22,7 @@ import {
     setFormLoading,
     setInsertType,
 } from "../../../../store/core/crudSlice.js";
+import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
 
 function _RecipeItemsTable() {
     const dispatch = useDispatch();
@@ -69,11 +70,50 @@ function _RecipeItemsTable() {
         fetchData();
     }, [dispatch, searchKeyword, recipeItemFilterData, page,fetching]);
 
+    const [downloadFinishGoodsXLS,setDownloadFinishGoodsXLS] = useState(false)
+
+    useEffect(() => {
+        if (downloadFinishGoodsXLS) {
+            const fetchData = async () => {
+                const value = {
+                    url: 'production/generate/finish-goods/xlsx',
+                    param: {}
+                };
+
+                try {
+                    const resultAction = await dispatch(getIndexEntityData(value));
+                    if (getIndexEntityData.rejected.match(resultAction)) {
+                        console.error('Error:', resultAction);
+                    } else if (getIndexEntityData.fulfilled.match(resultAction)) {
+                        if (resultAction.payload.status===200) {
+                            const href = `${import.meta.env.VITE_API_GATEWAY_URL + "finish-goods/download"}`;
+
+                            const anchorElement = document.createElement('a');
+                            anchorElement.href = href;
+                            document.body.appendChild(anchorElement);
+                            anchorElement.click();
+                            document.body.removeChild(anchorElement);
+                        }else {
+                            showNotificationComponent(resultAction.payload.error,'red')
+                        }
+                    }
+                } catch (err) {
+                    console.error('Unexpected error:', err);
+                } finally {
+                    setDownloadFinishGoodsXLS(false)
+                }
+            };
+
+            fetchData();
+        }
+    }, [downloadFinishGoodsXLS, dispatch]);
+
+
     return (
         <>
 
             <Box pl={`xs`} pb={'xs'} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'} >
-                <KeywordSearch module={'recipe-item'} />
+                <KeywordSearch module={'recipe-item'} setDownloadFinishGoodsXLS={setDownloadFinishGoodsXLS} />
             </Box>
             <Box className={'borderRadiusAll'}>
                 <DataTable

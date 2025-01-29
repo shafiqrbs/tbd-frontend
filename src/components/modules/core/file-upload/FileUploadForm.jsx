@@ -161,7 +161,7 @@ function FileUploadForm() {
                                                     nextField={''}
                                                     name={'file_type'}
                                                     form={form}
-                                                    dropdownValue={['Opening-Stock','Production','Product','User']}
+                                                    dropdownValue={['Opening-Stock','Finish-Goods','Production','Product','User']}
                                                     mt={8}
                                                     id={'file_type'}
                                                     searchable={true}

@@ -13,6 +13,7 @@ import {
 import {useLocation, useNavigate, useParams} from "react-router-dom";
 import {getIndexEntityData, getRestoreData} from "../../../../store/production/crudSlice";
 import axios from "axios";
+import FileUploadModel from "../../../core-component/FileUploadModel.jsx";
 
 
 function ProductionHeaderNavbar(props) {
@@ -26,6 +27,9 @@ function ProductionHeaderNavbar(props) {
     const currentRoute = location.pathname;
 
     const stockItem = useSelector((state) => state.productionCrudSlice.measurementInputData.stock_item)
+
+    const [uploadFinishGoodsModel, setUploadFinishGoodsModel] = useState(false)
+
 
     const CallProductionBatchCreateApi = (event) => {
         event.preventDefault();
@@ -109,6 +113,11 @@ function ProductionHeaderNavbar(props) {
                                 </ActionIcon>
                             </Menu.Target>
                             <Menu.Dropdown>
+                                <Menu.Item href="javascript:"  onClick={(e)=>{
+                                    setUploadFinishGoodsModel(true)
+                                }} leftSection={<IconRestore style={{ width: rem(14), height: rem(14) }} />}>
+                                    {t('UploadFinishGoods')}
+                                </Menu.Item>
                                 <Menu.Item href="javascript:"  onClick={dataRestore} leftSection={<IconRestore style={{ width: rem(14), height: rem(14) }} />}>
                                     {t('ItemRestore')}
                                 </Menu.Item>
@@ -125,6 +134,14 @@ function ProductionHeaderNavbar(props) {
                     </Group>
                 </div>
             </header>
+            {uploadFinishGoodsModel &&
+                <FileUploadModel
+                    modelStatus={uploadFinishGoodsModel}
+                    setFileUploadStateFunction={setUploadFinishGoodsModel}
+                    filyType={'Finish-Goods'}
+                    tableDataLoading={props.setBatchReloadWithUpload}
+                />
+            }
         </>
     );
 }

@@ -24,7 +24,9 @@ function FileUploadModel(props) {
     const dispatch = useDispatch();
 
     const closeModel = () => {
-        props.filyType === 'Opening-Stock' && props.setFileUploadStateFunction(false)
+        // props.filyType === 'Opening-Stock' && props.setFileUploadStateFunction(false)
+        // props.filyType === 'Finish-Goods' && props.set(false)
+        props.setFileUploadStateFunction(false)
     }
 
     const [excelFile, setExcelFile] = useState(null);
@@ -87,7 +89,7 @@ function FileUploadModel(props) {
                     <Group mih={40} justify="space-between">
                         <Box>
                             <Text fw={'600'} fz={'16'} ml={'md'}>
-                                {t('CreateFile')}
+                                {t('CreateFile')+' '+props.filyType}
                             </Text>
                         </Box>
                         <ActionIcon
