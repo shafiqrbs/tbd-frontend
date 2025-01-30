@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import {useNavigate, useOutletContext} from "react-router-dom";
 import {
-    rem, Grid, Tooltip, TextInput, ActionIcon, Button,Flex
+    rem, Grid, Tooltip, TextInput, ActionIcon, Button,Flex, Menu
 } from "@mantine/core";
 import {useTranslation} from 'react-i18next';
 import {
@@ -11,6 +11,8 @@ import {
     IconRestore,
     IconSearch,
     IconX,
+    IconLoader,
+    IconDotsVertical
 } from "@tabler/icons-react";
 import {useHotkeys} from "@mantine/hooks";
 import {useDispatch, useSelector} from "react-redux";
@@ -47,7 +49,7 @@ function _OpeningSearch(props) {
     return (
         <>
             <Grid columns={14} justify="flex-end" align="flex-end">
-                <Grid.Col span={3}>
+                <Grid.Col span={4}>
                     <Tooltip
                         label={t('EnterSearchAnyKeyword')}
                         opened={searchKeywordTooltip}
@@ -245,7 +247,7 @@ function _OpeningSearch(props) {
                 </Grid.Col>
 
 
-                <Grid.Col span={2}>
+                {/* <Grid.Col span={2}>
                     <Flex
                         justify="flex-end"
                         align="center"
@@ -262,22 +264,57 @@ function _OpeningSearch(props) {
                         {t("Upload")}
                     </Button>
                     </Flex>
-                </Grid.Col>
+                </Grid.Col> */}
 
-                <Grid.Col span={2}>
-                    <Flex
-                        justify="flex-end"
-                        align="center"
-                    >
-                        <Button onClick={(e) => { navigate('/inventory/opening-stock') }}
-                                size="sm"
-                                color={`red.8`}
-                                variant="outline"
-                                mt={0}
-                                rightSection={<IconArrowRight size={16} />}
+                <Grid.Col span={4}>
+                    <Flex justify="flex-end" align="center" gap={"xs"}>
+                        <Button
+                        onClick={(e) => {
+                            navigate("/inventory/opening-stock");
+                        }}
+                        size="sm"
+                        c={"red.8"}
+                        variant="link"
+                        bg={"#f7f4f4"}
+                        mt={0}
+                        rightSection={<IconArrowRight size={16} />}
                         >
-                            {t("OpeningStock")}
+                        {t("OpeningStock")}
                         </Button>
+                        <Menu
+                        position="bottom-end"
+                        offset={3}
+                        withArrow
+                        trigger="hover"
+                        openDelay={100}
+                        closeDelay={400}
+                        >
+                        <Menu.Target>
+                            <ActionIcon
+                            size="md"
+                            variant="transparent"
+                            color="red"
+                            aria-label="Settings"
+                            >
+                            <IconDotsVertical height={"20"} width={"20"} stroke={1.5} />
+                            </ActionIcon>
+                        </Menu.Target>
+                        <Menu.Dropdown>
+                            <Menu.Item
+                            onClick={(e) => {
+                                setUploadOpeningStockModel(true);
+                            }}
+                            component="a"
+                            bg={"#d7e8cd"}
+                            w={"200"}
+                            rightSection={
+                                <IconLoader style={{ width: rem(14), height: rem(14) }} />
+                            }
+                            >
+                            {t("Upload")}
+                            </Menu.Item>
+                        </Menu.Dropdown>
+                        </Menu>
                     </Flex>
                 </Grid.Col>
             </Grid>
