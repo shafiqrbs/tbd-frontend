@@ -454,9 +454,9 @@ function _CreateOpeningForm(props) {
                                                             navigate('/inventory/opening-approve-stock')
                                                         }}
                                                             size="sm"
-                                                            color={`red.8`}
-                                                            variant="outline"
-                                                            mt={0}
+                                                            c={"red.8"}
+                                                            variant="link"
+                                                            bg={"#f7f4f4"}
                                                             rightSection={<IconArrowRight size={16} />}
                                                         >
                                                             {t("ApproveStock")}
