@@ -17,6 +17,7 @@ import {
   IconDownload,
   IconGitBranchDeleted,
   IconHttpDelete,
+  IconLoader,
   IconPhoto,
   IconSquareArrowLeftFilled,
   IconTrashX,
@@ -197,30 +198,71 @@ function FileUploadTable() {
               title: t("Action"),
               textAlign: "right",
               render: (data) => (
-                <Group position="center">
-                  {!data.is_process && (
-                    <Button
-                      leftSection={<IconSquareArrowLeftFilled size={18} />}
-                      onClick={(e) => {
-                        processUploadFile(data.id);
-                      }}
-                    >
-                      Process
-                    </Button>
-                  )}
-
-                  <Button
-                    component="a"
-                    size="compact-xs"
-                    radius="xs"
-                    variant="filled"
-                    fw={"100"}
-                    fz={"12"}
-                    color="red.6"
+                <Group gap={4} justify="right" wrap="nowrap">
+                  <Menu
+                    position="bottom-end"
+                    offset={3}
+                    withArrow
+                    trigger="hover"
+                    openDelay={100}
+                    closeDelay={400}
                   >
-                    {t('Delete')}
-                    <IconTrashX  style={{ width: rem(16), height: rem(16), paddingLeft : 2 }} />
-                  </Button>
+                    <Menu.Target>
+                      <ActionIcon
+                        size="sm"
+                        variant="outline"
+                        color="red"
+                        radius="xl"
+                        aria-label="Settings"
+                      >
+                        <IconDotsVertical
+                          height={"18"}
+                          width={"18"}
+                          stroke={1.5}
+                        />
+                      </ActionIcon>
+                    </Menu.Target>
+                    <Menu.Dropdown>
+                      {!data.is_process && (
+                        <Menu.Item
+                          target="_blank"
+                          component="a"
+                          w={"200"}
+                          mt={"2"}
+                          bg={"blue.6"}
+                          c={"white"}
+                          rightSection={
+                            <IconLoader
+                              style={{ width: rem(14), height: rem(14) }}
+                            />
+                          }
+                          onClick={(e) => {
+                            processUploadFile(data.id);
+                          }}
+                        >
+                          {t("Process")}
+                        </Menu.Item>
+                      )}
+                      <Menu.Item
+                        target="_blank"
+                        component="a"
+                        w={"200"}
+                        mt={"2"}
+                        bg={"red.1"}
+                        c={"red.6"}
+                        onClick={() => {
+                          console.log("delete");
+                        }}
+                        rightSection={
+                          <IconTrashX
+                            style={{ width: rem(14), height: rem(14) }}
+                          />
+                        }
+                      >
+                        {t("Delete")}
+                      </Menu.Item>
+                    </Menu.Dropdown>
+                  </Menu>
                 </Group>
               ),
             },
