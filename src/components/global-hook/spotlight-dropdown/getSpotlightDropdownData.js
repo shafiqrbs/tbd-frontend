@@ -68,12 +68,12 @@ const getSpotlightDropdownData = (t, configData) => {
             },
             {
               id: "opening-stock",
-              label: t("NewOpening"),
+              label: t("NewOpeningN"),
               description: t("WhereWePresentThePurchaseInvoiceInformationN"),
             },
             {
               id: "opening-approve-stock",
-              label: t("OpeningApprove"),
+              label: t("OpeningApproveN"),
               description: t("WhereWePresentThePurchaseInvoiceInformationN"),
             },
             {

@@ -12,7 +12,7 @@ import {
     setFetching,
 } from "../../../../store/production/crudSlice.js";
 import tableCss from "../../../../assets/css/Table.module.css";
-import KeywordSearch from "../../filter/KeywordSearch.jsx";
+import __StockSearch from "./__StockSearch.jsx";
 import { setDeleteMessage } from "../../../../store/inventory/crudSlice.js";
 import _StockModal from './_StockModal.jsx';
 import { IconCheck, IconDotsVertical, IconTrashX } from "@tabler/icons-react";
@@ -152,7 +152,7 @@ function StockTable() {
         <>
 
             <Box pl={`xs`} pb={'xs'} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'} >
-                <KeywordSearch module={'stock'} setDownloadStockXls={setDownloadStockXls}/>
+                <__StockSearch module={'stock'} setDownloadStockXls={setDownloadStockXls}/>
             </Box>
             <Box className={'borderRadiusAll'}>
                 <DataTable
