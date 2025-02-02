@@ -60,9 +60,13 @@ function _GenericInvoiceForm(props) {
         if (searchValue.length > 0) {
             const storedProducts = localStorage.getItem('core-products');
             const localProducts = storedProducts ? JSON.parse(storedProducts) : [];
+
+            // Filter products where product_nature is not 'post-production'
+            const filteredProducts = localProducts.filter(product => product.product_nature !== 'post-production');
+
             const lowerCaseSearchTerm = searchValue.toLowerCase();
             const fieldsToSearch = ['product_name'];
-            const productFilterData = localProducts.filter(product =>
+            const productFilterData = filteredProducts.filter(product =>
                 fieldsToSearch.some(field =>
                     product[field] && String(product[field]).toLowerCase().includes(lowerCaseSearchTerm)
                 )
