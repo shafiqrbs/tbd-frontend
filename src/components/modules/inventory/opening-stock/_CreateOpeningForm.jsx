@@ -2,12 +2,12 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import {
     Button, ActionIcon, TextInput, Grid, Box, Group, Text,
-    Tooltip,
+    Tooltip,Menu, rem
 } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
 import {
-    IconDeviceFloppy, IconX, IconBarcode, IconChevronsRight, IconArrowRight,
-    IconPlus
+    IconDeviceFloppy, IconX, IconBarcode, IconChevronsRight, IconArrowRight, IconLoader,
+    IconPlus, IconDotsVertical
 } from "@tabler/icons-react";
 import { getHotkeyHandler, useHotkeys } from "@mantine/hooks";
 import { useDispatch, useSelector } from "react-redux";
@@ -29,6 +29,7 @@ import {
 } from "../../../../store/inventory/crudSlice.js";
 import AddProductDrawer from "../sales/drawer-form/AddProductDrawer.jsx";
 import {modals} from "@mantine/modals";
+import FileUploadModel from "../../../core-component/FileUploadModel.jsx";
 
 function _CreateOpeningForm(props) {
     const { currencySymbol } = props
@@ -47,6 +48,7 @@ function _CreateOpeningForm(props) {
     const [productDrawer, setProductDrawer] = useState(false);
     const [indexData,setIndexData] = useState([])
     const purchaseItemsFilterData = useSelector((state) => state.inventoryCrudSlice.purchaseItemsFilterData)
+    const [uploadOpeningStockModel, setUploadOpeningStockModel] = useState(false)
 
     useEffect(() => {
         let isMounted = true; // To handle cleanup properly in `useEffect`
@@ -416,12 +418,13 @@ function _CreateOpeningForm(props) {
                                             </Grid.Col>
                                             <Grid.Col span={6}>
                                                 <Box>
-                                                    <Group justify="right">
+                                                    <Group justify="right" gap={0}>
                                                         <Button
                                                             size="sm"
                                                             color={`red.5`}
                                                             type="submit"
                                                             mt={0}
+                                                            mr={'sm'}
                                                             id="EntityFormSubmit"
                                                             leftSection={<IconDeviceFloppy size={16} />}
                                                         >
@@ -439,6 +442,7 @@ function _CreateOpeningForm(props) {
                                                             label={t('InstantProductCreate')}
                                                         >
                                                             <ActionIcon
+                                                                mr={'sm'}
                                                                 variant="outline"
                                                                 size={'lg'}
                                                                 color="red.5"
@@ -461,6 +465,40 @@ function _CreateOpeningForm(props) {
                                                         >
                                                             {t("ApproveStock")}
                                                         </Button>
+                                                        <Menu
+                                                            position="bottom-end"
+                                                            offset={3}
+                                                            withArrow
+                                                            trigger="hover"
+                                                            openDelay={100}
+                                                            closeDelay={400}
+                                                            >
+                                                            <Menu.Target>
+                                                                <ActionIcon
+                                                                size="md"
+                                                                variant="transparent"
+                                                                color="red"
+                                                                aria-label="Settings"
+                                                                >
+                                                                <IconDotsVertical height={"20"} width={"20"} stroke={1.5} />
+                                                                </ActionIcon>
+                                                            </Menu.Target>
+                                                            <Menu.Dropdown>
+                                                                <Menu.Item
+                                                                onClick={(e) => {
+                                                                    setUploadOpeningStockModel(true);
+                                                                }}
+                                                                component="a"
+                                                                bg={"#d7e8cd"}
+                                                                w={"200"}
+                                                                rightSection={
+                                                                    <IconLoader style={{ width: rem(14), height: rem(14) }} />
+                                                                }
+                                                                >
+                                                                {t("Upload")}
+                                                                </Menu.Item>
+                                                            </Menu.Dropdown>
+                                                        </Menu>
                                                     </Group>
                                                 </Box>
                                             </Grid.Col>
@@ -742,6 +780,14 @@ function _CreateOpeningForm(props) {
                     setStockProductRestore={setStockProductRestore}
                     focusField={'product_id'}
                     fieldPrefix="purchase_"
+                />
+            }
+            {uploadOpeningStockModel &&
+                <FileUploadModel
+                    modelStatus={uploadOpeningStockModel}
+                    setFileUploadStateFunction={setUploadOpeningStockModel}
+                    filyType={'Opening-Stock'}
+                    tableDataLoading={props.tableDataLoading}
                 />
             }
         </Box>
