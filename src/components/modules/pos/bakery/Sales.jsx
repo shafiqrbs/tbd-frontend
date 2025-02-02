@@ -46,7 +46,8 @@ import classes from "./Sales.module.css";
 import { IconChefHat } from "@tabler/icons-react";
 import getConfigData from "../../../global-hook/config-data/getConfigData";
 import { SalesPrintPos } from "../print/pos/SalesPrintPos";
-export default function Sales() {
+export default function Sales(props) {
+  const { quantities, setQuantities, products } = props;
   const dispatch = useDispatch();
   const { t, i18n } = useTranslation();
   const { isOnline, mainAreaHeight } = useOutletContext();
@@ -105,29 +106,6 @@ export default function Sales() {
       }
     }
   }, [transactionModeData]);
-  const [profitShow, setProfitShow] = useState(false);
-  const [tableData, setTableData] = useState([
-    { id: 1, name: "Spaghetti Bolognese", qty: 10, price: 1000 },
-    { id: 2, name: "Fettuccine Alfredo", qty: 8, price: 1200 },
-    { id: 3, name: "Fettuccine Lalamero", qty: 8, price: 1200 },
-    { id: 4, name: "Gigichano Alfredo", qty: 8, price: 1200 },
-    { id: 5, name: "Fettuccine Alfredo Kepukano", qty: 8, price: 1200 },
-    { id: 6, name: "Fettuccine Alfredo Kepukano", qty: 8, price: 1200 },
-    { id: 7, name: "Fettuccine Alfredo Kepukano", qty: 8, price: 1200 },
-    { id: 8, name: "Fettuccine Alfredo Kepukano", qty: 8, price: 1200 },
-    { id: 9, name: "Fettuccine Alfredo Kepukano", qty: 8, price: 1200 },
-    { id: 10, name: "Fettuccine Alfredo Kepukano", qty: 8, price: 1200 },
-    { id: 11, name: "Fettuccine Alfredo Kepukano", qty: 8, price: 1200 },
-    { id: 12, name: "Fettuccine Alfredo Kepukano", qty: 8, price: 1200 },
-    { id: 13, name: "Fettuccine Alfredo Kepukano", qty: 8, price: 1200 },
-    { id: 14, name: "Fettuccine Alfredo Kepukano", qty: 8, price: 1200 },
-    { id: 15, name: "Fettuccine Alfredo Kepukano", qty: 8, price: 1200 },
-    { id: 16, name: "Fettuccine Alfredo Kepukano", qty: 8, price: 1200 },
-    { id: 17, name: "Fettuccine Alfredo Kepukano", qty: 8, price: 1200 },
-    { id: 18, name: "Fettuccine Alfredo Kepukano", qty: 8, price: 1200 },
-    { id: 19, name: "Fettuccine Alfredo Kepukano", qty: 8, price: 1200 },
-    { id: 20, name: "Fettuccine Alfredo Kepukano", qty: 8, price: 1200 },
-  ]);
   const [checked, setChecked] = useState(false);
 
   const [id, setId] = useState(null);
@@ -135,79 +113,28 @@ export default function Sales() {
     setId(id);
   };
 
-  const handleIncrement = (id) => {
-    setTableData((prevData) =>
-      prevData.map((item) =>
-        item.id === id ? { ...item, qty: item.qty + 1 } : item
-      )
-    );
+  const handleDelete = (productId) => {
+    // Remove the product from quantities by setting its quantity to 0
+    setQuantities((prev) => {
+      const updatedQuantities = { ...prev };
+      delete updatedQuantities[productId]; // Remove the product from quantities
+      return updatedQuantities;
+    });
   };
-
-  const handleDecrement = (id) => {
-    setTableData((prevData) =>
-      prevData.map((item) =>
-        item.id === id && item.qty > 0 ? { ...item, qty: item.qty - 1 } : item
-      )
-    );
-  };
-  const handleDelete = (id) => {
-    setTableData((prevData) => prevData.filter((item) => item.id !== id));
-  };
-  const calculateSubtotal = (data) => {
-    return data.reduce((total, item) => total + item.price * item.qty, 0);
-  };
-  const subtotal = calculateSubtotal(tableData);
 
   // Demo
   const price = 1000;
-
-  const paymentPartners = [
-    {
-      id: 1,
-      name: "Bkash",
-      img: "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png",
-    },
-    {
-      id: 2,
-      name: "Nogod",
-      img: "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png",
-    },
-    {
-      id: 3,
-      name: "MTB",
-      img: "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png",
-    },
-    {
-      id: 4,
-      name: "Google Pay",
-      img: "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png",
-    },
-    {
-      id: 5,
-      name: "Wise",
-      img: "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png",
-    },
-    {
-      id: 6,
-      name: "SCB",
-      img: "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png",
-    },
-    {
-      id: 7,
-      name: "Brac Bank",
-      img: "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png",
-    },
-    {
-      id: 8,
-      name: "Trust Bank",
-      img: "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png",
-    },
-    {
-      id: 9,
-      name: "Sonali bank",
-      img: "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png",
-    },
-  ];
+  const filteredProducts = products
+    .map((product) => ({
+      ...product,
+      qty: quantities[product.id]?.quantity ?? 0,
+      subtotal: (quantities[product.id]?.quantity ?? 0) * product.price,
+    }))
+    .filter((product) => product.qty > 0);
+  const subtotal = filteredProducts.reduce(
+    (sum, item) => sum + item.subtotal,
+    0
+  );
 
   return (
     <>
@@ -300,45 +227,24 @@ export default function Sales() {
                     footer: tableCss.footer,
                     pagination: tableCss.pagination,
                   }}
-                  records={tableData}
+                  records={filteredProducts}
                   columns={[
+                    {
+                      accessor: "id",
+                      width: 100,
+                      title: "S/N",
+                      render: (data, index) => index + 1,
+                      footer: <div>Sub Total -</div>,
+                    },
                     {
                       accessor: "name",
                       title: t("Product"),
-                      footer: <div>Sub Total -</div>,
                     },
                     {
                       accessor: "qty",
                       title: t("Qty"),
                       textAlign: "left",
-
-                      render: (data) => (
-                        <Group w={120} gap={8} justify="left">
-                          <ActionIcon
-                            size={"sm"}
-                            bg={"#596972"}
-                            onClick={() => handleDecrement(data.id)}
-                          >
-                            <IconMinus height={"12"} width={"12"} />
-                          </ActionIcon>
-                          <Text
-                            size="sm"
-                            ta={"center"}
-                            fw={600}
-                            maw={30}
-                            miw={30}
-                          >
-                            {data.qty}
-                          </Text>
-                          <ActionIcon
-                            size={"sm"}
-                            bg={"#596972"}
-                            onClick={() => handleIncrement(data.id)}
-                          >
-                            <IconPlus height={"12"} width={"12"} />
-                          </ActionIcon>
-                        </Group>
-                      ),
+                      render: (data) => <>{data.qty}</>,
                     },
                     {
                       accessor: "price",
@@ -351,7 +257,19 @@ export default function Sales() {
                       ),
                     },
                     {
+                      accessor: "subtotal",
+                      title: "Subtotal",
+                      textAlign: "center",
+                      render: (data) => (
+                        <>
+                          {configData?.currency?.symbol}{" "}
+                          {data.subtotal.toFixed(2)}
+                        </>
+                      ),
+                    },
+                    {
                       accessor: "action",
+                      width: 120,
                       title: t(""),
                       textAlign: "right",
                       render: (data) => (
@@ -372,7 +290,9 @@ export default function Sales() {
                           <Box mb={-4}>
                             <IconSum size="14" />
                           </Box>
-                          <div>{subtotal}</div>
+                          <div>
+                            {configData?.currency?.symbol} {subtotal.toFixed(2)}
+                          </div>
                         </Group>
                       ),
                     },

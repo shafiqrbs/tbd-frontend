@@ -12,7 +12,131 @@ export default function BakeryIndex() {
   const height = mainAreaHeight - 130;
   const progress = getLoadingProgress();
 
+  const products = [
+    {
+      id: 1,
+      name: "Margarita Pizza",
+      img: "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png",
+      price: 120.25,
+    },
+    {
+      id: 2,
+      name: "Lemonade Pizza",
+      img: "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png",
+      price: 130.5,
+    },
+    {
+      id: 3,
+      name: "Barrista Pizza",
+      img: "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png",
+      price: 110.75,
+    },
+    {
+      id: 4,
+      name: "Jhankar Pizza",
+      img: "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png",
+      price: 12000.25,
+    },
+    {
+      id: 5,
+      name: "Uttara Pizza githubusercontent githubusercontent mantine demo",
+      img: "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png",
+      price: 200,
+    },
+    {
+      id: 6,
+      name: "Chikni Pizza",
+      img: "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png",
+      price: 220,
+    },
+    {
+      id: 7,
+      name: "Dambu Pizza",
+      img: "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png",
+      price: 300,
+    },
+    {
+      id: 8,
+      name: "Gambu Pizza",
+      img: "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png",
+      price: 400,
+    },
+    {
+      id: 9,
+      name: "Chontu Pizza",
+      img: "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png",
+      price: 50,
+    },
+    {
+      id: 10,
+      name: "Pontu Pizza",
+      img: "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png",
+      price: 100,
+    },
+    {
+      id: 11,
+      name: "Chintu Pizza",
+      img: "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png",
+      price: 210,
+    },
+    {
+      id: 12,
+      name: "Kintu Pizza",
+      img: "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png",
+      price: 220,
+    },
+    {
+      id: 13,
+      name: "Asta Pizza",
+      img: "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png",
+      price: 240,
+    },
+    {
+      id: 14,
+      name: "Beef Pizza",
+      img: "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png",
+      price: 300,
+    },
+    {
+      id: 15,
+      name: "Chicken Pizza",
+      img: "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png",
+      price: 400,
+    },
+    {
+      id: 16,
+      name: "Mango Pizza",
+      img: "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png",
+      price: 500,
+    },
+    {
+      id: 17,
+      name: "Django Pizza",
+      img: "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png",
+      price: 180,
+    },
+    {
+      id: 18,
+      name: "Vue Pizza",
+      img: "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png",
+      price: 790,
+    },
+  ];
 
+  const [quantities, setQuantities] = useState(
+    products.reduce(
+      (acc, product) => ({
+        ...acc,
+        [product.id]: {
+          id: product.id,
+          name: product.name,
+          quantity: 0,
+          price: product.price,
+        },
+      }),
+      {}
+    )
+  );
   return (
     <>
       {progress !== 100 && (
@@ -32,11 +156,19 @@ export default function BakeryIndex() {
             <Box pl={"4"}>
               <Grid columns={24} gutter={{ base: 8 }}>
                 <Grid.Col span={16}>
-                  <Table />
+                  <Table
+                    quantities={quantities}
+                    setQuantities={setQuantities}
+                    products={products}
+                    />
                 </Grid.Col>
                 <Grid.Col span={8}>
                   <Box style={{ borderRadius: 8 }}>
-                    <Sales />
+                    <Sales
+                      quantities={quantities}
+                      setQuantities={setQuantities}
+                      products={products}
+                    />
                   </Box>
                 </Grid.Col>
               </Grid>
