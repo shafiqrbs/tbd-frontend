@@ -37,7 +37,7 @@ import { DataTable } from "mantine-datatable";
 import tableCss from "./Table.module.css";
 
 export default function Table(props) {
-  const { quantities, setQuantities, products } = props;
+  const { quantities, setQuantities, products, enableTable } = props;
   const dispatch = useDispatch();
   const { t, i18n } = useTranslation();
   const { isOnline, mainAreaHeight } = useOutletContext();
@@ -126,7 +126,7 @@ export default function Table(props) {
   return (
     <>
       <Box p={0} m={0}>
-        <Grid columns={16} gutter={{ base: 4 }} grow align="center">
+        <Grid columns={16} gutter={{ base: 4 }} grow align="center" mt={8}>
           <Grid.Col span={12}>
             <TextInput
               radius="md"
@@ -170,7 +170,6 @@ export default function Table(props) {
                   label: (
                     <Center style={{ gap: 10 }}>
                       <IconLayoutGrid height={"24"} width={"24"} stroke={1.5} />
-                      <span>Grid</span>
                     </Center>
                   ),
                   value: "grid",
@@ -183,7 +182,6 @@ export default function Table(props) {
                         width={"24"}
                         stroke={1.5}
                       />
-                      <span>List</span>
                     </Center>
                   ),
                   value: "list",
@@ -196,7 +194,7 @@ export default function Table(props) {
                         width={"24"}
                         stroke={1.5}
                       />
-                      <span>Minimal</span>
+                      {/* <span>Minimal</span> */}
                     </Center>
                   ),
                   value: "minimal",
@@ -209,7 +207,11 @@ export default function Table(props) {
       <Grid columns={12} gutter={{ base: 12 }}>
         <Grid.Col span={2}>
           <Box bg="white" w={"100%"} mt={8} style={{ borderRadius: 4 }}>
-            <ScrollArea h={height + 139} type="never" scrollbars="y">
+            <ScrollArea
+              h={enableTable ? height - 49 : height + 131}
+              type="never"
+              scrollbars="y"
+            >
               <Box pt={"4"} pl={"xs"} pr={"xs"} pb={"8"}>
                 {data.map((data) => (
                   <Box
@@ -246,12 +248,12 @@ export default function Table(props) {
           <Box
             bg="white"
             w={"100%"}
-            h={height + 139}
+            h={enableTable ? height - 49 : height + 131}
             mt={8}
             style={{ borderRadius: 4 }}
           >
             <ScrollArea
-              h={height + 139}
+              h={enableTable ? height - 49 : height + 131}
               type="never"
               pt={"8"}
               pl={"xs"}
@@ -460,6 +462,52 @@ export default function Table(props) {
           </Box>
         </Grid.Col>
       </Grid>
+      {enableTable && (
+        <Box bg="white" w={"100%"} mt={8} style={{ borderRadius: 8 }}>
+          <Group
+            grow
+            gap={4}
+            h={54}
+            justify="center"
+            align="center"
+            pl={8}
+            pr={8}
+            className="divider"
+          >
+            <Button
+              bg={bg}
+              onClick={() => {
+                bg === "#E6F5ED" ? setBg("green.8") : setBg("#E6F5ED"),
+                  tc === "#333333" ? setTc("white") : setTc("#333333");
+              }}
+            >
+              <Text c={tc} size="sm" fw={600}>
+                Order
+              </Text>
+            </Button>
+            <Button bg={"#E6F5ED"}>
+              <Text c={"#333333"} size="sm" fw={600}>
+                Kitchen
+              </Text>
+            </Button>
+            <Button bg={"#E6F5ED"}>
+              <Text c={"#333333"} size="sm" fw={600}>
+                Hold
+              </Text>
+            </Button>
+            <Button bg={"#E6F5ED"}>
+              <Text c={"#333333"} size="sm" fw={600}>
+                Reserved
+              </Text>
+            </Button>
+            <Button bg={"#E6F5ED"}>
+              <Text c={"#333333"} size="sm" fw={600}>
+                Free
+              </Text>
+            </Button>
+          </Group>
+        </Box>
+      )}
     </>
   );
 }

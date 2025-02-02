@@ -7,10 +7,12 @@ import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoa
 import Table from "./Table.jsx";
 import classes from "./Index.module.css";
 import Sales from "./Sales.jsx";
+import HeaderNavbar from "../HeaderNavbar.jsx";
 export default function BakeryIndex() {
   const { isOnline, mainAreaHeight } = useOutletContext();
   const height = mainAreaHeight - 130;
   const progress = getLoadingProgress();
+  const { t } = useTranslation();
 
   const products = [
     {
@@ -137,6 +139,29 @@ export default function BakeryIndex() {
       {}
     )
   );
+
+  const [tables, setTables] = useState([
+    { id: 1, time: "08:01:49 PM" },
+    { id: 2, time: "08:01:49 PM" },
+    { id: 3, time: "08:01:49 PM" },
+    { id: 4, time: "08:01:49 PM" },
+    { id: 5, time: "08:01:49 PM" },
+    { id: 6, time: "08:01:49 PM" },
+    { id: 7, time: "08:01:49 PM" },
+    { id: 8, time: "08:01:49 PM" },
+    { id: 9, time: "08:01:49 PM" },
+    { id: 10, time: "08:01:49 PM" },
+    { id: 11, time: "08:01:49 PM" },
+    { id: 12, time: "08:01:49 PM" },
+    { id: 13, time: "08:01:49 PM" },
+    { id: 14, time: "08:01:49 PM" },
+    { id: 15, time: "08:01:49 PM" },
+    { id: 16, time: "08:01:49 PM" },
+    { id: 17, time: "08:01:49 PM" },
+    { id: 18, time: "08:01:49 PM" },
+  ]);
+  
+  const [enableTable, setEnableTable] = useState(true);
   return (
     <>
       {progress !== 100 && (
@@ -144,6 +169,16 @@ export default function BakeryIndex() {
       )}
       {progress === 100 && (
         <>
+          {enableTable && (
+            <HeaderNavbar
+              pageTitle={t("ManageCustomer")}
+              roles={t("Roles")}
+              allowZeroPercentage=""
+              currencySymbol=""
+              tables={tables}
+              setTables={setTables}
+            />
+          )}
           <Box
             h={height + 4}
             mt={6}
@@ -157,14 +192,16 @@ export default function BakeryIndex() {
               <Grid columns={24} gutter={{ base: 8 }}>
                 <Grid.Col span={16}>
                   <Table
+                    enableTable={enableTable}
                     quantities={quantities}
                     setQuantities={setQuantities}
                     products={products}
-                    />
+                  />
                 </Grid.Col>
                 <Grid.Col span={8}>
                   <Box style={{ borderRadius: 8 }}>
                     <Sales
+                      enableTable={enableTable}
                       quantities={quantities}
                       setQuantities={setQuantities}
                       products={products}

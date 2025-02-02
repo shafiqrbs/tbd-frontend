@@ -47,7 +47,7 @@ import { IconChefHat } from "@tabler/icons-react";
 import getConfigData from "../../../global-hook/config-data/getConfigData";
 import { SalesPrintPos } from "../print/pos/SalesPrintPos";
 export default function Sales(props) {
-  const { quantities, setQuantities, products } = props;
+  const { quantities, setQuantities, products, enableTable } = props;
   const dispatch = useDispatch();
   const { t, i18n } = useTranslation();
   const { isOnline, mainAreaHeight } = useOutletContext();
@@ -136,21 +136,43 @@ export default function Sales(props) {
     0
   );
 
+  const data = [
+    { id: 1, name: "T-1" },
+    { id: 2, name: "T-2" },
+    { id: 3, name: "T-3" },
+    { id: 4, name: "T-4" },
+    { id: 5, name: "T-5" },
+    { id: 6, name: "T-6" },
+    { id: 7, name: "T-7" },
+    { id: 8, name: "T-8" },
+    { id: 9, name: "T-9" },
+    { id: 10, name: "T-10" },
+    { id: 11, name: "T-11" },
+    { id: 12, name: "T-12" },
+    { id: 13, name: "T-13" },
+    { id: 14, name: "T-14" },
+    { id: 15, name: "T-15" },
+  ];
+
   return (
     <>
-      <Box w={"100%"} h={height + 191} className={classes["box-white"]}>
+      <Box
+        w={"100%"}
+        h={enableTable ? height + 73 : height + 191}
+        className={classes["box-white"]}
+      >
         <Box pl={10} m={0} pr={10}>
           <Group
+            gap={10}
+            mb={8}
             preventGrowOverflow={false}
             grow
             align="flex-start"
             wrap="nowrap"
-            gap={10}
-            mb={8}
           >
             <Select
               pt={10}
-              placeholder={t("SalesBy")}
+              placeholder={enableTable ? t('OrderTakenBy') :t("SalesBy")}
               data={["Rafi", "Foysal", "Mahmud", "Hasan"]}
               clearable
               searchable
@@ -178,9 +200,28 @@ export default function Sales(props) {
                 )
               }
             />
+            {enableTable && (
+              <Button
+                radius="md"
+                size="sm"
+                color="green"
+                mt={10}
+                miw={122}
+                maw={122}
+                leftSection={<IconChefHat height={18} width={18} stroke={2} />}
+              >
+                <Text fw={600} size="sm">
+                  {t("Kitchen")}
+                </Text>
+              </Button>
+            )}
           </Group>
           <Box>
-            <ScrollArea h={heightHalf + 66} type="never" scrollbars="y">
+            <ScrollArea
+              h={enableTable ? heightHalf - 48 : heightHalf + 66}
+              type="never"
+              scrollbars="y"
+            >
               <Paper
                 p="8"
                 radius="4"
@@ -189,10 +230,27 @@ export default function Sales(props) {
                 <Grid align="center">
                   <Grid.Col span={11}>
                     <Text weight={500} c={checked ? "white" : "black"}>
-                      {t("SelectedItems")}
+                      {enableTable
+                        ? t("SelectAdditionalTable")
+                        : t("SelectedItems")}
                     </Text>
                   </Grid.Col>
-                  <Grid.Col span={1}></Grid.Col>
+                  <Grid.Col span={1}>
+                    {enableTable && (
+                      <Checkbox
+                        checked={checked}
+                        color="green.8"
+                        onChange={(event) =>
+                          setChecked(event.currentTarget.checked)
+                        }
+                        styles={(theme) => ({
+                          input: {
+                            borderColor: "white",
+                          },
+                        })}
+                      />
+                    )}
+                  </Grid.Col>
                 </Grid>
               </Paper>
 
@@ -244,7 +302,39 @@ export default function Sales(props) {
                       accessor: "qty",
                       title: t("Qty"),
                       textAlign: "left",
-                      render: (data) => <>{data.qty}</>,
+                      render: (data) => (
+                        <>
+                          {enableTable ? (
+                            <Group w={120} gap={8} justify="left">
+                              <ActionIcon
+                                size={"sm"}
+                                bg={"#596972"}
+                                // onClick={() => handleDecrement(data.id)}
+                              >
+                                <IconMinus height={"12"} width={"12"} />
+                              </ActionIcon>
+                              <Text
+                                size="sm"
+                                ta={"center"}
+                                fw={600}
+                                maw={30}
+                                miw={30}
+                              >
+                                {data.qty}
+                              </Text>
+                              <ActionIcon
+                                size={"sm"}
+                                bg={"#596972"}
+                                // onClick={() => handleIncrement(data.id)}
+                              >
+                                <IconPlus height={"12"} width={"12"} />
+                              </ActionIcon>
+                            </Group>
+                          ) : (
+                            data.qty
+                          )}
+                        </>
+                      ),
                     },
                     {
                       accessor: "price",
@@ -299,7 +389,7 @@ export default function Sales(props) {
                   ]}
                   loaderSize="xs"
                   loaderColor="grape"
-                  height={396}
+                  height={enableTable ? 220 : 346}
                   // backgroundColor={'black'}
                   scrollAreaProps={{ type: "never" }}
                 />
