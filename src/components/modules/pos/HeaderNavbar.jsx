@@ -58,7 +58,7 @@ function HeaderNavbar(props) {
         <Box style={{ position: 'relative' }}>
         <ScrollArea
             type="never"
-            mt={'1'}
+            mt={'8'}
             pl={'sm'}
             pr={'sm'}
             viewportRef={scrollRef}
@@ -72,7 +72,6 @@ function HeaderNavbar(props) {
                         clicked(table.id)
                     }
                 }
-                mb={'8'}
                 key={table.id}
                 style={{
                     position: 'relative',

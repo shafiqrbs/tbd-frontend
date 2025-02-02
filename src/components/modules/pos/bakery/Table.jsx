@@ -6,7 +6,7 @@ import {
   ActionIcon,
   Text,
   Menu,
-  rem,
+  Center,
   TextInput,
   Tooltip,
   Button,
@@ -16,20 +16,28 @@ import {
   ScrollArea,
   Card,
   Image,
+  SegmentedControl,
 } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import {
   IconLayoutGrid,
   IconListDetails,
-  IconCheck,
+  IconBaselineDensitySmall,
   IconSearch,
   IconInfoCircle,
+  IconSum,
+  IconMinus,
+  IconPlus,
+  IconTrash,
 } from "@tabler/icons-react";
 import { useDispatch, useSelector } from "react-redux";
 import classes from "./Table.module.css";
 import getConfigData from "../../../global-hook/config-data/getConfigData";
+import { DataTable } from "mantine-datatable";
+import tableCss from "./Table.module.css";
 
-export default function Table() {
+export default function Table(props) {
+  const { quantities, setQuantities, products, enableTable } = props;
   const dispatch = useDispatch();
   const { t, i18n } = useTranslation();
   const { isOnline, mainAreaHeight } = useOutletContext();
@@ -69,185 +77,141 @@ export default function Table() {
     { id: 14, itemName: "Summer Special" },
   ];
 
-  const products = [
-    {
-      id: 1,
-      name: "Margarita Pizza",
-      img: "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png",
-      price: 120.25,
-    },
-    {
-      id: 2,
-      name: "Lemonade Pizza",
-      img: "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png",
-      price: 130.5,
-    },
-    {
-      id: 3,
-      name: "Barrista Pizza",
-      img: "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png",
-      price: 110.75,
-    },
-    {
-      id: 4,
-      name: "Jhankar Pizza",
-      img: "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png",
-      price: 12000.25,
-    },
-    {
-      id: 5,
-      name: "Uttara Pizza githubusercontent githubusercontent mantine demo",
-      img: "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png",
-      price: 200,
-    },
-    {
-      id: 6,
-      name: "Chikni Pizza",
-      img: "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png",
-      price: 220,
-    },
-    {
-      id: 7,
-      name: "Dambu Pizza",
-      img: "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png",
-      price: 300,
-    },
-    {
-      id: 8,
-      name: "Gambu Pizza",
-      img: "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png",
-      price: 400,
-    },
-    {
-      id: 9,
-      name: "Chontu Pizza",
-      img: "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png",
-      price: 50,
-    },
-    {
-      id: 10,
-      name: "Pontu Pizza",
-      img: "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png",
-      price: 100,
-    },
-    {
-      id: 11,
-      name: "Chintu Pizza",
-      img: "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png",
-      price: 210,
-    },
-    {
-      id: 12,
-      name: "Kintu Pizza",
-      img: "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png",
-      price: 220,
-    },
-    {
-      id: 13,
-      name: "Asta Pizza",
-      img: "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png",
-      price: 240,
-    },
-    {
-      id: 14,
-      name: "Beef Pizza",
-      img: "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png",
-      price: 300,
-    },
-    {
-      id: 15,
-      name: "Chicken Pizza",
-      img: "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png",
-      price: 400,
-    },
-    {
-      id: 16,
-      name: "Mango Pizza",
-      img: "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png",
-      price: 500,
-    },
-    {
-      id: 17,
-      name: "Django Pizza",
-      img: "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png",
-      price: 180,
-    },
-    {
-      id: 18,
-      name: "Vue Pizza",
-      img: "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png",
-      price: 790,
-    },
-  ];
+  const handleIncrement = (productId) => {
+    setQuantities((prev) => {
+      const updatedQuantities = { ...prev };
+      if (!updatedQuantities[productId]) {
+        updatedQuantities[productId] = {
+          id: productId,
+          quantity: 0,
+          name:
+            products.find((product) => product.id === productId)?.name || "",
+          price:
+            products.find((product) => product.id === productId)?.price || 0,
+        };
+      }
+
+      updatedQuantities[productId].quantity += 1;
+
+      return updatedQuantities;
+    });
+  };
+
+  const handleDecrement = (productId) => {
+    setQuantities((prev) => {
+      const updatedQuantities = { ...prev };
+
+      if (updatedQuantities[productId]) {
+        updatedQuantities[productId] = {
+          ...updatedQuantities[productId],
+          quantity: Math.max(0, updatedQuantities[productId].quantity - 1),
+        };
+      }
+
+      return updatedQuantities;
+    });
+  };
 
   const [id, setId] = useState(null);
   const clicked = (id) => {
     setId(id);
   };
+  const [value, setValue] = useState("grid");
+
+  const calculateSubtotal = (data) => {
+    return data.reduce((total, item) => total + item.price * item.qty, 0);
+  };
+  const subtotal = calculateSubtotal(products);
 
   return (
     <>
       <Box p={0} m={0}>
-        <Group
-        mt={8}
-          preventGrowOverflow={false}
-          grow
-          align="flex-start"
-          wrap="nowrap"
-          gap={4}
-        >
-          <TextInput
-            radius="md"
-            leftSection={<IconSearch size={16} opacity={0.5} />}
-            size="md"
-            placeholder="SearchFood"
-            rightSection={
-              searchKeyword ? (
-                <Tooltip label="Clear" withArrow position="top">
-                  <IconX
+        <Grid columns={16} gutter={{ base: 4 }} grow align="center" mt={8}>
+          <Grid.Col span={12}>
+            <TextInput
+              radius="md"
+              leftSection={<IconSearch size={16} opacity={0.5} />}
+              size="md"
+              placeholder="SearchFood"
+              rightSection={
+                searchKeyword ? (
+                  <Tooltip label="Clear" withArrow position="top">
+                    <IconX
+                      color="red"
+                      size={16}
+                      opacity={0.5}
+                      style={{ cursor: "pointer" }}
+                      // onClick={() => setSearchKeyword("")}
+                    />
+                  </Tooltip>
+                ) : (
+                  <Tooltip
+                    label="Field is required"
+                    withArrow
+                    position="top"
                     color="red"
-                    size={16}
-                    opacity={0.5}
-                    style={{ cursor: "pointer" }}
-                    // onClick={() => setSearchKeyword("")}
-                  />
-                </Tooltip>
-              ) : (
-                <Tooltip
-                  label="Field is required"
-                  withArrow
-                  position="top"
-                  color="red"
-                >
-                  <IconInfoCircle size={16} opacity={0.5} />
-                </Tooltip>
-              )
-            }
-          />
-          <ActionIcon
-            size="input-md"
-            variant="default"
-            radius="md"
-            aria-label="Settings"
-            miw={60}
-            maw={60}
-            c={"green.8"}
-            onClick={() => {
-              grid ? setGrid(false) : setGrid(true);
-            }}
-          >
-            {!grid ? (
-              <IconListDetails height={"24"} width={"24"} stroke={1.5} />
-            ) : (
-              <IconLayoutGrid height={"24"} width={"24"} stroke={1.5} />
-            )}
-          </ActionIcon>
-        </Group>
+                  >
+                    <IconInfoCircle size={16} opacity={0.5} />
+                  </Tooltip>
+                )
+              }
+            />
+          </Grid.Col>
+          <Grid.Col span={4}>
+            <SegmentedControl
+              bg={"white"}
+              withItemsBorders={false}
+              fullWidth
+              color="green.6"
+              value={value}
+              onChange={setValue}
+              data={[
+                {
+                  label: (
+                    <Center style={{ gap: 10 }}>
+                      <IconLayoutGrid height={"24"} width={"24"} stroke={1.5} />
+                    </Center>
+                  ),
+                  value: "grid",
+                },
+                {
+                  label: (
+                    <Center style={{ gap: 10 }}>
+                      <IconListDetails
+                        height={"24"}
+                        width={"24"}
+                        stroke={1.5}
+                      />
+                    </Center>
+                  ),
+                  value: "list",
+                },
+                {
+                  label: (
+                    <Center style={{ gap: 10 }}>
+                      <IconBaselineDensitySmall
+                        height={"24"}
+                        width={"24"}
+                        stroke={1.5}
+                      />
+                      {/* <span>Minimal</span> */}
+                    </Center>
+                  ),
+                  value: "minimal",
+                },
+              ]}
+            />
+          </Grid.Col>
+        </Grid>
       </Box>
       <Grid columns={12} gutter={{ base: 12 }}>
         <Grid.Col span={2}>
           <Box bg="white" w={"100%"} mt={8} style={{ borderRadius: 4 }}>
-            <ScrollArea h={height + 134} type="never" scrollbars="y">
+            <ScrollArea
+              h={enableTable ? height - 49 : height + 131}
+              type="never"
+              scrollbars="y"
+            >
               <Box pt={"4"} pl={"xs"} pr={"xs"} pb={"8"}>
                 {data.map((data) => (
                   <Box
@@ -284,12 +248,12 @@ export default function Table() {
           <Box
             bg="white"
             w={"100%"}
-            h={height + 134}
+            h={enableTable ? height - 49 : height + 131}
             mt={8}
             style={{ borderRadius: 4 }}
           >
             <ScrollArea
-              h={height + 134}
+              h={enableTable ? height - 49 : height + 131}
               type="never"
               pt={"8"}
               pl={"xs"}
@@ -297,7 +261,60 @@ export default function Table() {
               pb={"6"}
               scrollbars="y"
             >
-              {grid ? (
+              {value === "grid" && (
+                <Grid columns={12} gutter={{ base: 8 }}>
+                  {products.map((product) => (
+                    <Grid.Col span={3} key={product.id}>
+                      <Card
+                        shadow="md"
+                        radius="md"
+                        padding="xs"
+                        styles={(theme) => ({
+                          root: {
+                            cursor: "pointer",
+                            transition: "transform 0.1s ease-in-out",
+                            transform: selected.includes(product.id)
+                              ? "scale(0.97)"
+                              : undefined,
+                            border: selected.includes(product.id)
+                              ? "3px solid #00542b"
+                              : "3px solid #eaeced",
+                          },
+                        })}
+                        onClick={() => handleSelect(product.id)}
+                      >
+                        <Image
+                          radius="sm"
+                          h={120}
+                          w="auto"
+                          fit="cover"
+                          src={product.img}
+                          alt={product.name}
+                        />
+                        <Text fw={600} size="sm" fz={"13"} mt={"4"} ta={"left"}>
+                          {product.name}
+                        </Text>
+
+                        <Text
+                          styles={{
+                            root: {
+                              marginTop: "auto", // This pushes the price to the bottom
+                            },
+                          }}
+                          ta={"right"}
+                          fw={900}
+                          fz={"18"}
+                          size="md"
+                          c={"green.9"}
+                        >
+                          {configData?.currency?.symbol} {product.price}
+                        </Text>
+                      </Card>
+                    </Grid.Col>
+                  ))}
+                </Grid>
+              )}
+              {value === "list" && (
                 <Grid columns={12} gutter={8}>
                   {products.map((product) => (
                     <Grid.Col key={product.id} span={6}>
@@ -366,102 +383,131 @@ export default function Table() {
                     </Grid.Col>
                   ))}
                 </Grid>
-              ) : (
-                <Grid columns={12} gutter={{ base: 8 }}>
-                  {products.map((product) => (
-                    <Grid.Col span={3} key={product.id}>
-                      <Card
-                        shadow="md"
-                        radius="md"
-                        padding="xs"
-                        styles={(theme) => ({
-                          root: {
-                            cursor: "pointer",
-                            transition: "transform 0.1s ease-in-out",
-                            transform: selected.includes(product.id)
-                              ? "scale(0.97)"
-                              : undefined,
-                            border: selected.includes(product.id)
-                              ? "3px solid #00542b"
-                              : "3px solid #eaeced",
-                          },
-                        })}
-                        onClick={() => handleSelect(product.id)}
-                      >
-                        <Image
-                          radius="sm"
-                          h={120}
-                          w="auto"
-                          fit="cover"
-                          src={product.img}
-                          alt={product.name}
-                        />
-                        <Text fw={600} size="sm" fz={"13"} mt={"4"}>
-                          {product.name}
-                        </Text>
-
-                        <Text
-                          ta={"right"}
-                          fw={900}
-                          fz={"18"}
-                          size="md"
-                          c={"green.9"}
-                        >
-                          {configData?.currency?.symbol} {product.price}
-                        </Text>
-                      </Card>
-                    </Grid.Col>
-                  ))}
-                </Grid>
+              )}
+              {value === "minimal" && (
+                <>
+                  <DataTable
+                    classNames={{
+                      root: tableCss.root,
+                      table: tableCss.table,
+                      header: tableCss.header,
+                      footer: tableCss.footer,
+                      pagination: tableCss.pagination,
+                    }}
+                    // withTableBorder={true}
+                    // withColumnBorders={true}
+                    records={products}
+                    columns={[
+                      {
+                        accessor: "id",
+                        title: "S/N",
+                      },
+                      {
+                        accessor: "name",
+                        title: t("Product"),
+                      },
+                      {
+                        accessor: "price",
+                        title: t("Price"),
+                        textAlign: "center",
+                        render: (data) => (
+                          <>
+                            {configData?.currency?.symbol} {data.price}
+                          </>
+                        ),
+                      },
+                      {
+                        accessor: "qty",
+                        title: t("Qty"),
+                        textAlign: "center",
+                        backgroundColor: "blue",
+                        render: (data) => (
+                          <Group gap={8} justify="center" align="center">
+                            <ActionIcon
+                              size={"sm"}
+                              bg={"#596972"}
+                              onClick={() => handleDecrement(data.id)}
+                            >
+                              <IconMinus height={"12"} width={"12"} />
+                            </ActionIcon>
+                            <Text
+                              size="sm"
+                              ta={"center"}
+                              fw={600}
+                              maw={30}
+                              miw={30}
+                            >
+                              {quantities[data.id]?.quantity ?? 0}
+                            </Text>
+                            <ActionIcon
+                              size={"sm"}
+                              bg={"#596972"}
+                              onClick={() => handleIncrement(data.id)}
+                            >
+                              <IconPlus height={"12"} width={"12"} />
+                            </ActionIcon>
+                          </Group>
+                        ),
+                      },
+                    ]}
+                    loaderSize="xs"
+                    loaderColor="grape"
+                    height={height + 120}
+                    // backgroundColor={'black'}
+                    scrollAreaProps={{ type: "never" }}
+                  />
+                </>
               )}
             </ScrollArea>
           </Box>
         </Grid.Col>
       </Grid>
-      {/* <Box bg="white" w={"100%"} mt={8} style={{ borderRadius: 8 }}>
-        <Group
-          grow
-          gap={4}
-          h={54}
-          justify="center"
-          align="center"
-          pl={8}
-          pr={8}
-          className="divider"
-        >
-          <Button
-            bg={bg}
-            onClick={() => {
-              bg === "#E6F5ED" ? setBg("green.8") : setBg("#E6F5ED"),
-                tc === "#333333" ? setTc("white") : setTc("#333333");
-            }}
+      {enableTable && (
+        <Box bg="white" w={"100%"} mt={8} style={{ borderRadius: 8 }}>
+          <Group
+            grow
+            gap={4}
+            h={54}
+            justify="center"
+            align="center"
+            pl={8}
+            pr={8}
+            className="divider"
           >
-            <Text c={tc} size="sm" fw={600}>
-              Order
-            </Text>
-          </Button>
-          <Button bg={"#E6F5ED"}>
-            <Text c={"#333333"} size="sm" fw={600}>
-              Kitchen
-            </Text>
-          </Button>
-          <Button bg={"#E6F5ED"}>
-            <Text c={"#333333"} size="sm" fw={600}>
-              Hold
-            </Text>
-          </Button>
-          <Button bg={"#E6F5ED"}>
-            <Text c={"#333333"} size="sm" fw={600}>
-              Reserved
-            </Text>
-          </Button>
-          <Button bg={"#E6F5ED"}>
-            <Text c={"#333333"} size="sm" fw={600}>
-              Free
-            </Text>
-          </Button>
-        </Group>
-      </Box> */}
+            <Button
+              bg={bg}
+              onClick={() => {
+                bg === "#E6F5ED" ? setBg("green.8") : setBg("#E6F5ED"),
+                  tc === "#333333" ? setTc("white") : setTc("#333333");
+              }}
+            >
+              <Text c={tc} size="sm" fw={600}>
+                Order
+              </Text>
+            </Button>
+            <Button bg={"#E6F5ED"}>
+              <Text c={"#333333"} size="sm" fw={600}>
+                Kitchen
+              </Text>
+            </Button>
+            <Button bg={"#E6F5ED"}>
+              <Text c={"#333333"} size="sm" fw={600}>
+                Hold
+              </Text>
+            </Button>
+            <Button bg={"#E6F5ED"}>
+              <Text c={"#333333"} size="sm" fw={600}>
+                Reserved
+              </Text>
+            </Button>
+            <Button bg={"#E6F5ED"}>
+              <Text c={"#333333"} size="sm" fw={600}>
+                Free
+              </Text>
+            </Button>
+          </Group>
+        </Box>
+      )}
     </>
   );
 }

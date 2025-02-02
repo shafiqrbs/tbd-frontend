@@ -229,8 +229,8 @@ function FileUploadTable() {
                           component="a"
                           w={"200"}
                           mt={"2"}
-                          bg={"blue.6"}
-                          c={"white"}
+                          bg={"#d7e8cd"}
+                          c={"black"}
                           rightSection={
                             <IconLoader
                               style={{ width: rem(14), height: rem(14) }}

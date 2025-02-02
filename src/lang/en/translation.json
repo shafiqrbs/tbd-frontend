@@ -687,5 +687,8 @@
   "RequistionMatrix" : "Requistion Matrix",
   "NewOpeningN" : "New Opening",
   "OpeningApproveN" : "Opening Approve",
+  "SearchByName" : "Search by name",
+  "SelectAdditionalTable" : "Select Additional Table",
+  "OrderTakenBy" : "Order taken by",
   "": ""
 }
