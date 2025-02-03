@@ -125,94 +125,15 @@ export default function Table(props) {
 
   return (
     <>
-      <Box p={0} m={0}>
-        <Grid columns={16} gutter={{ base: 4 }} grow align="center" mt={8}>
-          <Grid.Col span={12}>
-            <TextInput
-              radius="md"
-              leftSection={<IconSearch size={16} opacity={0.5} />}
-              size="md"
-              placeholder="SearchFood"
-              rightSection={
-                searchKeyword ? (
-                  <Tooltip label="Clear" withArrow position="top">
-                    <IconX
-                      color="red"
-                      size={16}
-                      opacity={0.5}
-                      style={{ cursor: "pointer" }}
-                      // onClick={() => setSearchKeyword("")}
-                    />
-                  </Tooltip>
-                ) : (
-                  <Tooltip
-                    label="Field is required"
-                    withArrow
-                    position="top"
-                    color="red"
-                  >
-                    <IconInfoCircle size={16} opacity={0.5} />
-                  </Tooltip>
-                )
-              }
-            />
-          </Grid.Col>
-          <Grid.Col span={4}>
-            <SegmentedControl
-              bg={"white"}
-              withItemsBorders={false}
-              fullWidth
-              color="green.6"
-              value={value}
-              onChange={setValue}
-              data={[
-                {
-                  label: (
-                    <Center style={{ gap: 10 }}>
-                      <IconLayoutGrid height={"24"} width={"24"} stroke={1.5} />
-                    </Center>
-                  ),
-                  value: "grid",
-                },
-                {
-                  label: (
-                    <Center style={{ gap: 10 }}>
-                      <IconListDetails
-                        height={"24"}
-                        width={"24"}
-                        stroke={1.5}
-                      />
-                    </Center>
-                  ),
-                  value: "list",
-                },
-                {
-                  label: (
-                    <Center style={{ gap: 10 }}>
-                      <IconBaselineDensitySmall
-                        height={"24"}
-                        width={"24"}
-                        stroke={1.5}
-                      />
-                      {/* <span>Minimal</span> */}
-                    </Center>
-                  ),
-                  value: "minimal",
-                },
-              ]}
-            />
-          </Grid.Col>
-        </Grid>
-      </Box>
-      <Grid columns={12} gutter={{ base: 12 }}>
+      <Grid columns={12} gutter={{ base: 8 }}>
         <Grid.Col span={2}>
           <Box bg="white" w={"100%"} mt={8} style={{ borderRadius: 4 }}>
             <ScrollArea
-              h={enableTable ? height - 49 : height + 131}
+              h={enableTable ? height + 3 : height + 183}
               type="never"
               scrollbars="y"
             >
-              <Box pt={"4"} pl={"xs"} pr={"xs"} pb={"8"}>
+              <Box pt={"6"} pl={"xs"} pr={"xs"} pb={"8"}>
                 {data.map((data) => (
                   <Box
                     style={{
@@ -245,15 +166,98 @@ export default function Table(props) {
           </Box>
         </Grid.Col>
         <Grid.Col span={10}>
+          <Box p={0} m={0}>
+            <Grid columns={16} gutter={{ base: 4 }} grow align="center" mt={6}>
+              <Grid.Col span={12}>
+                <TextInput
+                  radius="md"
+                  leftSection={<IconSearch size={16} opacity={0.5} />}
+                  size="md"
+                  placeholder="SearchFood"
+                  rightSection={
+                    searchKeyword ? (
+                      <Tooltip label="Clear" withArrow position="top">
+                        <IconX
+                          color="red"
+                          size={16}
+                          opacity={0.5}
+                          style={{ cursor: "pointer" }}
+                          // onClick={() => setSearchKeyword("")}
+                        />
+                      </Tooltip>
+                    ) : (
+                      <Tooltip
+                        label="Field is required"
+                        withArrow
+                        position="top"
+                        color="red"
+                      >
+                        <IconInfoCircle size={16} opacity={0.5} />
+                      </Tooltip>
+                    )
+                  }
+                />
+              </Grid.Col>
+              <Grid.Col span={4}>
+                <SegmentedControl
+                  bg={"white"}
+                  withItemsBorders={false}
+                  fullWidth
+                  color="green.6"
+                  value={value}
+                  onChange={setValue}
+                  data={[
+                    {
+                      label: (
+                        <Center style={{ gap: 10 }}>
+                          <IconLayoutGrid
+                            height={"24"}
+                            width={"24"}
+                            stroke={1.5}
+                          />
+                        </Center>
+                      ),
+                      value: "grid",
+                    },
+                    {
+                      label: (
+                        <Center style={{ gap: 10 }}>
+                          <IconListDetails
+                            height={"24"}
+                            width={"24"}
+                            stroke={1.5}
+                          />
+                        </Center>
+                      ),
+                      value: "list",
+                    },
+                    {
+                      label: (
+                        <Center style={{ gap: 10 }}>
+                          <IconBaselineDensitySmall
+                            height={"24"}
+                            width={"24"}
+                            stroke={1.5}
+                          />
+                          {/* <span>Minimal</span> */}
+                        </Center>
+                      ),
+                      value: "minimal",
+                    },
+                  ]}
+                />
+              </Grid.Col>
+            </Grid>
+          </Box>
           <Box
             bg="white"
             w={"100%"}
-            h={enableTable ? height - 49 : height + 131}
+            h={enableTable ? height - 45 : height + 135}
             mt={8}
             style={{ borderRadius: 4 }}
           >
             <ScrollArea
-              h={enableTable ? height - 49 : height + 131}
+              h={enableTable ? height - 45 : height + 135}
               type="never"
               pt={"8"}
               pl={"xs"}
@@ -463,7 +467,7 @@ export default function Table(props) {
         </Grid.Col>
       </Grid>
       {enableTable && (
-        <Box bg="white" w={"100%"} mt={8} style={{ borderRadius: 8 }}>
+        <Box bg="white" w={"100%"} mt={8} style={{ borderRadius: 4 }}>
           <Group
             grow
             gap={4}

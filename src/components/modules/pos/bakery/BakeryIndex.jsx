@@ -161,7 +161,7 @@ export default function BakeryIndex() {
     { id: 18, time: "08:01:49 PM" },
   ]);
   
-  const [enableTable, setEnableTable] = useState(true);
+  const [enableTable, setEnableTable] = useState(false);
   return (
     <>
       {progress !== 100 && (
@@ -190,7 +190,7 @@ export default function BakeryIndex() {
           >
             <Box pl={"4"}>
               <Grid columns={24} gutter={{ base: 8 }}>
-                <Grid.Col span={16}>
+                <Grid.Col span={15}>
                   <Table
                     enableTable={enableTable}
                     quantities={quantities}
@@ -198,7 +198,7 @@ export default function BakeryIndex() {
                     products={products}
                   />
                 </Grid.Col>
-                <Grid.Col span={8}>
+                <Grid.Col span={9}>
                   <Box style={{ borderRadius: 8 }}>
                     <Sales
                       enableTable={enableTable}
