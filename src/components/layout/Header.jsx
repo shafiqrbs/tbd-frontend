@@ -32,7 +32,7 @@ import {
   IconBook,
   IconChartPie3,
   IconFingerprint,
-  IconCoin,
+  IconCircleCheck,
   IconChevronDown,
   IconLogout,
   IconSearch,
@@ -80,7 +80,7 @@ export default function Header({ isOnline, configData }) {
       const storedConfigData = localStorage.getItem("config-data");
       if (storedConfigData) {
         setConfigData(JSON.parse(storedConfigData));
-        setVisible(false); 
+        setVisible(false);
       } else {
         setVisible(false);
         navigate("/login");
@@ -139,7 +139,7 @@ export default function Header({ isOnline, configData }) {
   );
 
   const shortcuts = (
-    <Stack spacing="sm">
+    <Stack spacing="xs">
       {list
         .reduce((groups, item) => {
           const lastGroup = groups[groups.length - 1];
@@ -152,7 +152,7 @@ export default function Header({ isOnline, configData }) {
         }, [])
         .map((groupData, groupIndex) => (
           <Box key={groupIndex}>
-            <Text size="md" fw="bold" c="#828282" pb={"xs"}>
+            <Text size="sm" fw="bold" c="#828282" pb={"xs"}>
               {groupData.group}
             </Text>
 
@@ -205,20 +205,27 @@ export default function Header({ isOnline, configData }) {
                   style={{ textDecoration: "none", color: "inherit" }}
                 >
                   <UnstyledButton className={HeaderStyle.subLink}>
-                    <Group wrap="nowrap" align="flex-start">
-                      <ThemeIcon size={34} variant="default" radius="md">
-                        <action.icon
-                          style={{ width: rem(22), height: rem(22) }}
-                          color={theme.colors.blue[6]}
+                    <Group
+                      wrap="nowrap"
+                      align="center"
+                      justify="center"
+                      gap={4}
+                    >
+                      <ThemeIcon size={18} variant="transparent" radius="md">
+                        <IconCircleCheck
+                          style={{ width: rem(14), height: rem(14) }}
+                          color={"green"}
                         />
                       </ThemeIcon>
                       <div>
-                        <Text size="sm" fw={500}>
-                          {action.label}
-                        </Text>
-                        <Text size="xs" c="dimmed">
+                        <Center>
+                          <Text size="sm" fw={500}>
+                            {action.label}
+                          </Text>
+                        </Center>
+                        {/* <Text size="xs" c="dimmed">
                           {action.description}
-                        </Text>
+                        </Text> */}
                       </div>
                     </Group>
                   </UnstyledButton>
@@ -267,7 +274,7 @@ export default function Header({ isOnline, configData }) {
           </Grid.Col>
           <Grid.Col span={3} justify="flex-end" align={"center"} mt={"xs"}>
             <HoverCard
-              width={600}
+              width={400}
               position="bottom"
               radius="md"
               shadow="md"
@@ -290,8 +297,10 @@ export default function Header({ isOnline, configData }) {
               </HoverCard.Target>
 
               <HoverCard.Dropdown style={{ overflow: "hidden" }}>
-                <Group justify="space-between" px="md">
-                  <Text fw={500}>{t("Shortcuts")}</Text>
+                <Group justify="space-between">
+                  <Text fw={500} fz={16} c={"red.6"}>
+                    {t("Shortcuts")}
+                  </Text>
                   {/* <Anchor href="#" fz="xs">
                       View all
                     </Anchor> */}
@@ -310,10 +319,14 @@ export default function Header({ isOnline, configData }) {
                         Sitemap
                       </Text>
                       <Text size="xs" c="dimmed">
-                        Their food sources have decreased, and their numbers
+                        Stiemap Details
                       </Text>
                     </div>
-                    <Button bg={"green.6"} onClick={() => navigate("/")}>
+                    <Button
+                      bg={"green.6"}
+                      size="xs"
+                      onClick={() => navigate("/")}
+                    >
                       Sitemap
                     </Button>
                   </Group>
