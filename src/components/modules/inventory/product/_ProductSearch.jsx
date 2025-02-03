@@ -30,34 +30,15 @@ import { setProductionSettingFilterData } from "../../../../store/production/cru
 import __FilterPopover from "./__FilterPopover";
 
 function _ProductSearch(props) {
+  const { categoryDropdown } = props;
   const { t, i18n } = useTranslation();
   const dispatch = useDispatch();
   const { isOnline } = useOutletContext();
 
   const [searchKeywordTooltip, setSearchKeywordTooltip] = useState(false);
-
   const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword);
-  const customerFilterData = useSelector(
-    (state) => state.crudSlice.customerFilterData
-  );
-  const categoryFilterData = useSelector(
-    (state) => state.inventoryCrudSlice.categoryFilterData
-  );
-  const vendorFilterData = useSelector(
-    (state) => state.crudSlice.vendorFilterData
-  );
-  const userFilterData = useSelector((state) => state.crudSlice.userFilterData);
-  const warehouseFilterData = useSelector(
-    (state) => state.crudSlice.warehouseFilterData
-  );
-  const categoryGroupFilterData = useSelector(
-    (state) => state.crudSlice.categoryGroupFilterData
-  );
   const productFilterData = useSelector(
     (state) => state.inventoryCrudSlice.productFilterData
-  );
-  const productionSettingFilterData = useSelector(
-    (state) => state.productionCrudSlice.productionSettingFilterData
   );
 
   useHotkeys(
@@ -175,7 +156,7 @@ function _ProductSearch(props) {
                 <IconSearch style={{ width: rem(18) }} stroke={1.5} />
               </Tooltip>
             </ActionIcon>
-            <__FilterPopover />
+            <__FilterPopover categoryDropdown={categoryDropdown} />
             <ActionIcon
               variant="default"
               c={"gray.6"}
@@ -201,76 +182,15 @@ function _ProductSearch(props) {
                   onClick={() => {
                     dispatch(setSearchKeyword(""));
                     dispatch(setFetching(true));
-
-                    if (props.module === "customer") {
-                      dispatch(
-                        setCustomerFilterData({
-                          ...customerFilterData,
-                          name: "",
-                          mobile: "",
-                        })
-                      );
-                    } else if (props.module === "vendor") {
-                      dispatch(
-                        setVendorFilterData({
-                          ...vendorFilterData,
-                          name: "",
-                          mobile: "",
-                          company_name: "",
-                        })
-                      );
-                    } else if (props.module === "user") {
-                      dispatch(
-                        setUserFilterData({
-                          ...userFilterData,
-                          name: "",
-                          mobile: "",
-                          email: "",
-                        })
-                      );
-                    } else if (props.module === "product") {
-                      dispatch(
-                        setProductFilterData({
-                          ...productFilterData,
-                          name: "",
-                          alternative_name: "",
-                          sales_price: "",
-                          sku: "",
-                        })
-                      );
-                    } else if (props.module === "category-group") {
-                      dispatch(
-                        setCategoryGroupFilterData({
-                          ...categoryGroupFilterData,
-                          name: "",
-                        })
-                      );
-                    } else if (props.module === "production-setting") {
-                      dispatch(
-                        setProductionSettingFilterData({
-                          ...productionSettingFilterData,
-                          name: "",
-                        })
-                      );
-                    } else if (props.module === "category") {
-                      dispatch(
-                        setCategoryFilterData({
-                          ...categoryFilterData,
-                          name: "",
-                          parent_name: "",
-                        })
-                      );
-                    } else if (props.module === "warehouse") {
-                      dispatch(
-                        setWarehouseFilterData({
-                          ...warehouseFilterData,
-                          name: "",
-                          email: "",
-                          location: "",
-                          mobile: "",
-                        })
-                      );
-                    }
+                    dispatch(
+                      setProductFilterData({
+                        ...productFilterData,
+                        name: "",
+                        alternative_name: "",
+                        sales_price: "",
+                        sku: "",
+                      })
+                    );
                   }}
                 />
               </Tooltip>

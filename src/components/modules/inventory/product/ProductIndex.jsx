@@ -81,7 +81,7 @@ function  ProductIndex() {
                                         <Grid columns={24} gutter={{ base: 8 }}>
                                             <Grid.Col span={15}>
                                                 <Box bg={'white'} p={'xs'} className={'borderRadiusAll'}>
-                                                    <ProductTable />
+                                                    <ProductTable categoryDropdown={categoryDropdown}/>
                                                 </Box>
                                             </Grid.Col>
                                             <Grid.Col span={9}>

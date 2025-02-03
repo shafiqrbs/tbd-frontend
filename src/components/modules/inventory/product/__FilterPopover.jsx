@@ -24,8 +24,9 @@ import { useTranslation } from "react-i18next";
 import { isNotEmpty, useForm } from "@mantine/form";
 import { useOutletContext } from "react-router-dom";
 import SelectForm from "../../../form-builders/SelectForm";
+import getSettingProductTypeDropdownData from "../../../global-hook/dropdown/getSettingProductTypeDropdownData";
 export default function __FilterPopover(props) {
-  const { setRefreshCustomerDropdown, focusField, fieldPrefix, module } = props;
+  const { categoryDropdown, focusField, fieldPrefix, module } = props;
 
   const { mainAreaHeight } = useOutletContext();
   const height = mainAreaHeight;
@@ -37,8 +38,12 @@ export default function __FilterPopover(props) {
   const [nameDropdown, setNameDropdown] = useState(null);
   const [displayDropdown, setDisplayDropdown] = useState(null);
   const [languageDropdown, setLanguageDropdown] = useState(null);
-  const [natureofProduct, setNatureofProduct] = useState(null);
-  const [categoryDropdown, setCategoryDropdown] = useState(null);
+
+  // dropdown hooks
+
+  const [productTypeData, setProductTypeData] = useState(null);
+  const [categoryData, setCategoryData] = useState(null);
+
   const advanceSearchForm = useForm({
     initialValues: {
       nature_of_product: "",
@@ -51,44 +56,44 @@ export default function __FilterPopover(props) {
       language_name: "",
     },
     validate: {
-      name: (value, values) => {
-        // First check if any main field is filled
-        if (!value && !values.mobile && !values.invoice) {
-          return "At least one main field is required";
-        }
-        return null;
-      },
-      name_dropdown: (value, values) => {
-        // Validate dropdown when name has value
-        if (values.name && !value) {
-          return true;
-        }
-        return null;
-      },
-      mobile: (value, values) => {
-        if (!value && !values.name && !values.invoice) {
-          return true;
-        }
-        return null;
-      },
-      mobile_dropdown: (value, values) => {
-        if (values.mobile && !value) {
-          return true;
-        }
-        return null;
-      },
-      invoice: (value, values) => {
-        if (!value && !values.name && !values.mobile) {
-          return "At least one main field is required";
-        }
-        return null;
-      },
-      invoice_dropdown: (value, values) => {
-        if (values.invoice && !value) {
-          return "Please select an option for Invoice";
-        }
-        return null;
-      },
+      // name: (value, values) => {
+      //   // First check if any main field is filled
+      //   if (!value && !values.mobile && !values.invoice) {
+      //     return "At least one main field is required";
+      //   }
+      //   return null;
+      // },
+      // name_dropdown: (value, values) => {
+      //   // Validate dropdown when name has value
+      //   if (values.name && !value) {
+      //     return true;
+      //   }
+      //   return null;
+      // },
+      // mobile: (value, values) => {
+      //   if (!value && !values.name && !values.invoice) {
+      //     return true;
+      //   }
+      //   return null;
+      // },
+      // mobile_dropdown: (value, values) => {
+      //   if (values.mobile && !value) {
+      //     return true;
+      //   }
+      //   return null;
+      // },
+      // invoice: (value, values) => {
+      //   if (!value && !values.name && !values.mobile) {
+      //     return "At least one main field is required";
+      //   }
+      //   return null;
+      // },
+      // invoice_dropdown: (value, values) => {
+      //   if (values.invoice && !value) {
+      //     return "Please select an option for Invoice";
+      //   }
+      //   return null;
+      // },
     },
   });
   const display_drop_data = [
@@ -162,6 +167,8 @@ export default function __FilterPopover(props) {
               onSubmit={advanceSearchForm.onSubmit((values) => {
                 setAdvanceSearchFormOpened(false);
                 console.log(advanceSearchForm.values);
+                setCategoryData(null);
+                setProductTypeData(null);
               })}
             >
               <Box mt={"4"}>
@@ -200,8 +207,9 @@ export default function __FilterPopover(props) {
                             id="nature_of_product"
                             nextField="category"
                             placeholder={t("NatureOfProduct")}
-                            dropdownValue={nameof_product_data}
-                            changeValue={setNatureofProduct}
+                            dropdownValue={getSettingProductTypeDropdownData()}
+                            value={productTypeData}
+                            changeValue={setProductTypeData}
                           />
                         </Grid.Col>
                       </Grid>
@@ -222,8 +230,9 @@ export default function __FilterPopover(props) {
                             id="category"
                             nextField="name_dropdown"
                             placeholder={t("Category")}
-                            dropdownValue={category_data}
-                            changeValue={setCategoryDropdown}
+                            dropdownValue={categoryDropdown}
+                            value={categoryData}
+                            changeValue={setCategoryData}
                           />
                         </Grid.Col>
                       </Grid>
