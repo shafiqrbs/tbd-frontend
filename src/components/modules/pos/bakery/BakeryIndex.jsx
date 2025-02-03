@@ -8,11 +8,41 @@ import Table from "./Table.jsx";
 import classes from "./Index.module.css";
 import Sales from "./Sales.jsx";
 import HeaderNavbar from "../HeaderNavbar.jsx";
+import { getCategoryDropdown } from "../../../../store/inventory/utilitySlice.js";
+import { setDropdownLoad } from "../../../../store/inventory/crudSlice.js";
 export default function BakeryIndex() {
   const { isOnline, mainAreaHeight } = useOutletContext();
   const height = mainAreaHeight - 130;
   const progress = getLoadingProgress();
   const { t } = useTranslation();
+  const dispatch = useDispatch()
+
+  // category dropdown
+  const dropdownLoad = useSelector(
+    (state) => state.inventoryCrudSlice.dropdownLoad
+  );
+  const categoryDropdownData = useSelector(
+    (state) => state.inventoryUtilitySlice.categoryDropdownData
+  );
+
+  let categoryDropdown =
+    categoryDropdownData && categoryDropdownData.length > 0
+      ? categoryDropdownData.map((type, index) => {
+          return { label: type.name, value: String(type.id) };
+        })
+      : [];
+
+  useEffect(() => {
+    const value = {
+      url: "inventory/select/category",
+      param: {
+        // type: 'parent'
+        type: "all",
+      },
+    };
+    dispatch(getCategoryDropdown(value));
+    dispatch(setDropdownLoad(false));
+  }, [dropdownLoad]);
 
   const products = [
     {
@@ -160,7 +190,7 @@ export default function BakeryIndex() {
     { id: 17, time: "08:01:49 PM" },
     { id: 18, time: "08:01:49 PM" },
   ]);
-  
+
   const [enableTable, setEnableTable] = useState(false);
   return (
     <>
@@ -196,6 +226,7 @@ export default function BakeryIndex() {
                     quantities={quantities}
                     setQuantities={setQuantities}
                     products={products}
+                    categoryDropdown={categoryDropdown}
                   />
                 </Grid.Col>
                 <Grid.Col span={9}>

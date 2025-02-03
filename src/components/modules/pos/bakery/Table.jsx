@@ -30,6 +30,17 @@ import {
   IconPlus,
   IconTrash,
 } from "@tabler/icons-react";
+import {
+  editEntityData,
+  getIndexEntityData,
+  setFetching,
+  setFormLoading,
+  setInsertType,
+  showEntityData,
+  deleteEntityData,
+  getStatusInlineUpdateData,
+  storeEntityData,
+} from "../../../../store/core/crudSlice.js";
 import { useDispatch, useSelector } from "react-redux";
 import classes from "./Table.module.css";
 import getConfigData from "../../../global-hook/config-data/getConfigData";
@@ -37,7 +48,8 @@ import { DataTable } from "mantine-datatable";
 import tableCss from "./Table.module.css";
 
 export default function Table(props) {
-  const { quantities, setQuantities, products, enableTable } = props;
+  const { quantities, setQuantities, products, enableTable, categoryDropdown } =
+    props;
   const dispatch = useDispatch();
   const { t, i18n } = useTranslation();
   const { isOnline, mainAreaHeight } = useOutletContext();
@@ -60,23 +72,53 @@ export default function Table(props) {
     );
   };
 
-  const data = [
-    { id: 1, itemName: "All" },
-    { id: 2, itemName: "Pizza" },
-    { id: 3, itemName: "Burger" },
-    { id: 4, itemName: "Set Menu" },
-    { id: 5, itemName: "Fries" },
-    { id: 6, itemName: "Soup" },
-    { id: 7, itemName: "Subway" },
-    { id: 8, itemName: "Sandwich" },
-    { id: 9, itemName: "Chicken" },
-    { id: 10, itemName: "Drinks" },
-    { id: 11, itemName: "Pasta" },
-    { id: 12, itemName: "Lemonade" },
-    { id: 13, itemName: "Juice" },
-    { id: 14, itemName: "Summer Special" },
-  ];
+  //get products
+  const perPage = 50;
+  const [page, setPage] = useState(1);
+  const productFilterData = useSelector(
+    (state) => state.inventoryCrudSlice.productFilterData
+  );
+  const [indexData, setIndexData] = useState([]);
+  useEffect(() => {
+    const fetchData = async () => {
+      const value = {
+        url: "inventory/product",
+        param: {
+          term: searchKeyword,
+          name: productFilterData.name,
+          alternative_name: productFilterData.alternative_name,
+          sku: productFilterData.sku,
+          sales_price: productFilterData.sales_price,
+          page: page,
+          offset: perPage,
+          type: "product",
+        },
+      };
 
+      try {
+        const resultAction = await dispatch(getIndexEntityData(value));
+
+        if (getIndexEntityData.rejected.match(resultAction)) {
+          console.error("Error:", resultAction);
+        } else if (getIndexEntityData.fulfilled.match(resultAction)) {
+          setIndexData(resultAction.payload);
+          setFetching(false);
+        }
+      } catch (err) {
+        console.error("Unexpected error:", err);
+      }
+    };
+
+    fetchData();
+  }, [
+    // dispatch,
+    // searchKeyword,
+    productFilterData,
+    // page,
+    // perPage,
+    // fetchingReload,
+  ]);
+  // console.log(indexData);
   const handleIncrement = (productId) => {
     setQuantities((prev) => {
       const updatedQuantities = { ...prev };
@@ -134,7 +176,7 @@ export default function Table(props) {
               scrollbars="y"
             >
               <Box pt={"6"} pl={"xs"} pr={"xs"} pb={"8"}>
-                {data.map((data) => (
+                {categoryDropdown.map((data) => (
                   <Box
                     style={{
                       borderRadius: 4,
@@ -145,19 +187,19 @@ export default function Table(props) {
                     variant="default"
                     key={data.id}
                     onClick={() => {
-                      console.log("Clicked on Table -", data.id);
-                      clicked(data.id);
+                      console.log("Clicked on Table -", data.value);
+                      clicked(data.value);
                     }}
-                    bg={data.id === id ? "green.8" : "#EAECED"}
+                    bg={data.value === id ? "green.8" : "#EAECED"}
                   >
                     <Text
                       size={"md"}
                       pl={14}
                       pt={8}
                       fw={500}
-                      c={data.id === id ? "white" : "#333333"}
+                      c={data.value === id ? "white" : "#333333"}
                     >
-                      {data.itemName}
+                      {data.label}
                     </Text>
                   </Box>
                 ))}
@@ -400,14 +442,15 @@ export default function Table(props) {
                     }}
                     // withTableBorder={true}
                     // withColumnBorders={true}
-                    records={products}
+                    records={indexData.data}
                     columns={[
                       {
                         accessor: "id",
                         title: "S/N",
+                        render: (data, index) => index + 1,
                       },
                       {
-                        accessor: "name",
+                        accessor: "product_name",
                         title: t("Product"),
                       },
                       {
@@ -416,7 +459,7 @@ export default function Table(props) {
                         textAlign: "center",
                         render: (data) => (
                           <>
-                            {configData?.currency?.symbol} {data.price}
+                            {configData?.currency?.symbol} {data.purchase_price}
                           </>
                         ),
                       },
