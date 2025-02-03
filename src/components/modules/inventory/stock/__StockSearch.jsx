@@ -30,6 +30,7 @@ import { setProductionSettingFilterData } from "../../../../store/production/cru
 import ___FilterPopover from "./___FilterPopover.jsx";
 
 function __StockSearch(props) {
+  const { categoryDropdown } = props;
   const { t, i18n } = useTranslation();
   const dispatch = useDispatch();
   const { isOnline } = useOutletContext();
@@ -175,7 +176,7 @@ function __StockSearch(props) {
                 <IconSearch style={{ width: rem(18) }} stroke={1.5} />
               </Tooltip>
             </ActionIcon>
-            <___FilterPopover />
+            <___FilterPopover categoryDropdown={categoryDropdown} />
             <ActionIcon
               variant="default"
               c={"gray.6"}

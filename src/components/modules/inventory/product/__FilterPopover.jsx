@@ -205,7 +205,7 @@ export default function __FilterPopover(props) {
                             searchable
                             name="nature_of_product"
                             id="nature_of_product"
-                            nextField="category"
+                            // nextField="category"
                             placeholder={t("NatureOfProduct")}
                             dropdownValue={getSettingProductTypeDropdownData()}
                             value={productTypeData}
@@ -228,7 +228,7 @@ export default function __FilterPopover(props) {
                             searchable
                             name="category"
                             id="category"
-                            nextField="name_dropdown"
+                            // nextField="name_dropdown"
                             placeholder={t("Category")}
                             dropdownValue={categoryDropdown}
                             value={categoryData}
@@ -252,7 +252,7 @@ export default function __FilterPopover(props) {
                             searchable
                             name="name_dropdown"
                             id="name_dropdown"
-                            nextField="name"
+                            // nextField="name"
                             placeholder="Search Like"
                             dropdownValue={name_drop_data}
                             changeValue={setNameDropdown}
@@ -265,7 +265,7 @@ export default function __FilterPopover(props) {
                               tooltip={t("NameValidateMessage")}
                               label=""
                               placeholder={t("Name")}
-                              nextField={"display_dropdown"}
+                              // nextField={"display_dropdown"}
                               form={advanceSearchForm}
                               name={"name"}
                               id={"name"}
@@ -293,7 +293,7 @@ export default function __FilterPopover(props) {
                             searchable
                             name="display_dropdown"
                             id="display_dropdown"
-                            nextField="display_name"
+                            // nextField="display_name"
                             label=""
                             placeholder="Search Like"
                             dropdownValue={display_drop_data}
@@ -307,7 +307,7 @@ export default function __FilterPopover(props) {
                               tooltip={t("MobileValidateMessage")}
                               label=""
                               placeholder={t("DisplayName")}
-                              nextField={"language_dropdown"}
+                              // nextField={"language_dropdown"}
                               form={advanceSearchForm}
                               name={"display_name"}
                               id={"display_name"}
@@ -335,7 +335,7 @@ export default function __FilterPopover(props) {
                             searchable
                             name="language_dropdown"
                             id="language_dropdown"
-                            nextField="language_name"
+                            // nextField="language_name"
                             label=""
                             placeholder="Search Like"
                             dropdownValue={language_drop_data}
@@ -349,7 +349,7 @@ export default function __FilterPopover(props) {
                               tooltip={t("InvoiceValidateMessage")}
                               label=""
                               placeholder={t("LanguageName")}
-                              nextField={"EntityFormSubmit"}
+                              // nextField={"EntityFormSubmit"}
                               form={advanceSearchForm}
                               name={"language_name"}
                               id={"language_name"}
