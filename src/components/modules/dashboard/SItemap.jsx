@@ -33,6 +33,7 @@ import {
   IconMoneybag,
   IconUsersGroup,
   IconUsers,
+  IconFileTypePdf,
 } from "@tabler/icons-react";
 import { useTranslation } from "react-i18next";
 import {
@@ -516,6 +517,49 @@ function Sitemap() {
                       component="button"
                       onClick={(e) => {
                         navigate("/inventory/sales");
+                      }}
+                    />
+                  </List.Item>
+                </List>
+              </Text>
+            </Card>
+            <Card shadow="md" radius="md" className={classes.card} padding="lg">
+              <Grid gutter={{ base: 2 }}>
+                <Grid.Col span={2}>
+                  <IconFileTypePdf
+                    style={{ width: rem(42), height: rem(42) }}
+                    stroke={2}
+                    color={theme.colors.teal[6]}
+                  />
+                </Grid.Col>
+                <Grid.Col span={10}>
+                  <Text fz="md" fw={500} className={classes.cardTitle}>
+                    {t("Reporting")}
+                  </Text>
+                </Grid.Col>
+              </Grid>
+              <Text fz="sm" c="dimmed" mt="sm">
+                <List spacing="ms" size="sm" center>
+                  <List.Item
+                    pl={"xs"}
+                    icon={
+                      <ThemeIcon
+                        color="teal.6"
+                        size={20}
+                        radius="xl"
+                        variant="outline"
+                      >
+                        <IconFileTypePdf />
+                      </ThemeIcon>
+                    }
+                  >
+                    <NavLink
+                      pl={"md"}
+                      href="inventory/sales"
+                      label={t("GenerateReport")}
+                      component="button"
+                      onClick={(e) => {
+                        navigate("/reporting/reports");
                       }}
                     />
                   </List.Item>
