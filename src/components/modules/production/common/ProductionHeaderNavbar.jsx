@@ -22,7 +22,7 @@ function ProductionHeaderNavbar(props) {
 
     const stockItem = useSelector((state) => state.productionCrudSlice.measurementInputData.stock_item)
     const [uploadFinishGoodsModel, setUploadFinishGoodsModel] = useState(false)
-    
+
     const CallProductionBatchCreateApi = (event) => {
         event.preventDefault();
         axios({
