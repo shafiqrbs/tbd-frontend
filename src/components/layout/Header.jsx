@@ -55,6 +55,7 @@ import SpotLightSearchModal from "../modules/modals/SpotLightSearchModal.jsx";
 import { useDispatch } from "react-redux";
 import { setInventoryShowDataEmpty } from "../../store/inventory/crudSlice.js";
 import shortcutDropdownData from "../global-hook/shortcut-dropdown/shortcutDropdownData.js";
+import Sandra_Logo from "../../assets/images/sandra_logo.jpeg";
 
 const languages = [
   { label: "EN", value: "en", flag: flagGB },
@@ -257,20 +258,36 @@ export default function Header({ isOnline, configData }) {
       <Box bg={"white"} mb={"2"} pos={`relative`}>
         <Grid columns={24} gutter={{ base: 2 }} justify="space-between">
           <Grid.Col span={3}>
-            <NavLink
-              href="/"
-              c={"red"}
-              fw={"800"}
-              component="button"
-              label={
-                configData && configData.domain
-                  ? configData.domain.company_name
-                  : ""
-              }
-              onClick={(e) => {
-                navigate("/");
-              }}
-            />
+            {configData?.domain ? (
+              configData?.domain?.company_name === "Sandra" ? (
+                <Center mt={2}>
+                  <img
+                    style={{
+                      height: 40,
+                      style: "cover",
+                    }}
+                    src={Sandra_Logo}
+                  ></img>
+                </Center>
+              ) : (
+                <NavLink
+                  href="/"
+                  c={"red"}
+                  fw={"800"}
+                  component="button"
+                  label={
+                    configData && configData.domain
+                      ? configData.domain.company_name
+                      : ""
+                  }
+                  onClick={(e) => {
+                    navigate("/");
+                  }}
+                />
+              )
+            ) : (
+              <></>
+            )}
           </Grid.Col>
           <Grid.Col span={3} justify="flex-end" align={"center"} mt={"xs"}>
             <HoverCard
