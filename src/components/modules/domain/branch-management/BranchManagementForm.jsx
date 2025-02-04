@@ -236,9 +236,9 @@ export default function BranchManagementForm() {
             <Grid.Col span={23}>
                 <ScrollArea
                     h={height + 1}
-                    scrollbarSize={2}
+                    scrollbarSize={10}
                     scrollbars="y"
-                    type="never"
+                    type="hover"
                     bg={"white"}
                     className="borderRadiusAll"
                     pl="xs"
@@ -246,8 +246,11 @@ export default function BranchManagementForm() {
                     pb="8"
                     pt={6}
                 >
-                    <LoadingOverlay visible={fetching} zIndex={1000}
-                                    overlayProps={{radius: "sm", blur: .5, color: "grape"}}/>
+                    <LoadingOverlay
+                        visible={fetching}
+                        zIndex={1000}
+                        overlayProps={{radius: "sm", blur: .5, color: "grape"}}
+                    />
 
                     <Box
                         style={{
@@ -391,10 +394,9 @@ export default function BranchManagementForm() {
                                                 pb={"xs"}
                                                 pt={"xs"}
                                                 h={`${maxSwitchesInBox * 40}px`}
-                                                scrollbarSize={2}
+                                                scrollbarSize={10}
                                                 scrollbars="y"
                                                 type="never"
-                                                // viewportRef={priceScrollRef}
                                             >
                                                 {!checkedStates[branch.id] && (
                                                     <Overlay
@@ -473,9 +475,9 @@ export default function BranchManagementForm() {
                                                 pb={"xs"}
                                                 pt={"xs"}
                                                 h={`${maxSwitchesInBox * 40}px`}
-                                                scrollbarSize={2}
                                                 scrollbars="y"
-                                                type="never"
+                                                type="hover"
+                                                scrollbarSize={10}
                                             >
                                                 {(!checkedStates[branch.id] || shadowOverlay[branch.id]) && (
                                                     <Overlay
