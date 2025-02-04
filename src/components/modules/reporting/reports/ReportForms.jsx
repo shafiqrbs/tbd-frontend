@@ -30,6 +30,7 @@ const ReportForms = forwardRef(
     const { t } = useTranslation();
 
     const handleReportTypeChange = (value) => {
+      // console.log(selectedReport);
       setSelectedReport(value);
 
       // Reset form with only the fields for this specific report
@@ -41,7 +42,12 @@ const ReportForms = forwardRef(
           if (field.type === "advance_search") {
             newValues[`${field.name}_operator`] = "";
             newValues[`${field.name}_value`] = "";
-          } else {
+          }
+          // if (field.type === "input") {
+          //   newValues[`${field.name}_operator`] = "";
+          //   newValues[`${field.name}_value`] = "";
+          // }
+          else {
             newValues[field.name] = "";
           }
         });
@@ -62,7 +68,6 @@ const ReportForms = forwardRef(
     };
 
     const renderField = (field) => {
-      console.log(field.length);
       if (field.type === "advance_search") {
         return (
           <Box key={field.name} mt="lg">
@@ -72,11 +77,6 @@ const ReportForms = forwardRef(
               justify="center"
               align="center"
             >
-              {/* <Grid.Col span={4}></Grid.Col>
-                {/* <Text fw={400} fz="sm" ta={"end"}>
-                  {field.label}
-                </Text> */}
-              {/* </Grid.Col>  */}
               <Grid.Col span={4}>
                 <Select
                   placeholder="Search Like"
@@ -85,23 +85,52 @@ const ReportForms = forwardRef(
                     value: option,
                     label: option,
                   }))}
-                ></Select>
-                {/* <SelectServerSideForm
-                  tooltip={t(field.label)}
-                  placeholder="Search Like"
-                  label={t(field.label)}
-                  value={'='}
                   required={field.required}
-                  name={`${field.name}_operator`}
-                  form={form}
-                  changeValue={(value) =>
+                  onChange={(value) =>
+                    handleDropdownChange(`${field.name}_value`, value)
+                  }
+                ></Select>
+              </Grid.Col>
+              <Grid.Col span={8}>
+                <Select
+                  placeholder="Options"
+                  label={" "}
+                  data={field.drop_down.map((drop_down) => ({
+                    value: drop_down,
+                    label: drop_down,
+                  }))}
+                  required={field.required}
+                  onChange={(value) =>
                     handleDropdownChange(`${field.name}_operator`, value)
                   }
-                  dropdownValue={field.options.map((option) => ({
+                ></Select>
+              </Grid.Col>
+            </Grid>
+          </Box>
+        );
+      }
+      if (field.type === "input") {
+        return (
+          <Box key={field.name} mt="lg">
+            <Grid
+              columns={12}
+              gutter={{ base: 8 }}
+              justify="center"
+              align="center"
+            >
+              <Grid.Col span={4}>
+                <Select
+                  placeholder="Search Like"
+                  label={t(field.label)}
+                  data={field.options.map((option) => ({
                     value: option,
                     label: option,
                   }))}
-                /> */}
+                  required={field.required}
+                  onChange={(value) =>
+                    handleDropdownChange(`${field.name}_operator`, value)
+                  }
+                ></Select>
               </Grid.Col>
               <Grid.Col span={8}>
                 <InputForm
@@ -125,6 +154,9 @@ const ReportForms = forwardRef(
 
     const formFields = reports[formType] || [];
     const height = mainAreaHeight - 98;
+    // console.log("selected Report", selectedReport);
+    // console.log(" formfields ", formFields[1].name);
+    // console.log(formFields[1].name === selectedReport);
 
     return (
       <form>
@@ -136,15 +168,7 @@ const ReportForms = forwardRef(
         >
           <Box>
             <Box mt={8}>
-              <Select
-                label={t("SelectReportType")}
-                placeholder={t("ChooseReportType")}
-                data={formFields.map((report) => ({
-                  value: report.name,
-                  label: report.name,
-                }))}
-              ></Select>
-              {/* <SelectForm
+              <SelectForm
                 tooltip={t("SelectReportType")}
                 label={t("SelectReportType")}
                 placeholder={t("ChooseReportType")}
@@ -157,7 +181,7 @@ const ReportForms = forwardRef(
                 }))}
                 value={selectedReport}
                 changeValue={handleReportTypeChange}
-              /> */}
+              />
             </Box>
             {selectedReport &&
               formFields
