@@ -153,6 +153,7 @@ const REPORT_SCHEMAS = {
       fields: [
         {
           label: "Product",
+          type: "advance_search",
           name: "product",
           options: [
             "=",
@@ -173,12 +174,32 @@ const REPORT_SCHEMAS = {
             "IS NOT NULL",
             "SQL",
           ],
+          drop_down: ["optionOne", "optionTwo"],
           required: false,
         },
         {
           label: "Category",
           name: "category",
-          options: ["Electronics", "Clothing", "Food"],
+          type: "input",
+          options: [
+            "=",
+            "<",
+            ">",
+            "<=",
+            ">=",
+            "!=",
+            "LIKE",
+            "LIKE %%",
+            "REGEXP",
+            "IN",
+            "FIND_IN_SET",
+            "IS NULL",
+            "NOT LIKE",
+            "NOT REGEXP",
+            "NOT IN",
+            "IS NOT NULL",
+            "SQL",
+          ],
           required: true,
         },
         {

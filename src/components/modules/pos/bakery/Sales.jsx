@@ -64,6 +64,24 @@ export default function Sales(props) {
   const { configData } = getConfigData();
   const [printPos, setPrintPos] = useState(false);
 
+  /*START GET SALES BY / USERS DROPDOWN FROM LOCAL STORAGE*/
+  const [salesByUser, setSalesByUser] = useState(null);
+  const [salesByDropdownData, setSalesByDropdownData] = useState([]);
+  useEffect(() => {
+    let coreUsers = localStorage.getItem("core-users")
+      ? JSON.parse(localStorage.getItem("core-users"))
+      : [];
+    if (coreUsers && coreUsers.length > 0) {
+      const transformedData = coreUsers.map((type) => {
+        return {
+          label: type.username + " - " + type.email,
+          value: String(type.id),
+        };
+      });
+      setSalesByDropdownData(transformedData);
+    }
+  }, []);
+
   const handleScroll = () => {
     if (scrollRef.current) {
       const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
@@ -172,11 +190,12 @@ export default function Sales(props) {
           >
             <Select
               pt={10}
-              placeholder={enableTable ? t('OrderTakenBy') :t("SalesBy")}
-              data={["Rafi", "Foysal", "Mahmud", "Hasan"]}
+              placeholder={enableTable ? t("OrderTakenBy") : t("SalesBy")}
+              data={salesByDropdownData}
+              value={salesByUser}
+              changeValue={setSalesByUser}
               clearable
               searchable
-              value={value}
               onChange={setValue}
               nothingFoundMessage="Nothing found..."
               searchValue={searchValue}
@@ -289,19 +308,20 @@ export default function Sales(props) {
                   columns={[
                     {
                       accessor: "id",
-                      width: 100,
+                      // width: 100,
                       title: "S/N",
                       render: (data, index) => index + 1,
-                      footer: <div>Sub Total -</div>,
+                      footer: <div>Sub Total</div>,
                     },
                     {
                       accessor: "name",
                       title: t("Product"),
+                      width: 120,
                     },
                     {
                       accessor: "qty",
                       title: t("Qty"),
-                      textAlign: "left",
+                      textAlign: "center",
                       render: (data) => (
                         <>
                           {enableTable ? (
@@ -389,7 +409,7 @@ export default function Sales(props) {
                   ]}
                   loaderSize="xs"
                   loaderColor="grape"
-                  height={enableTable ? 220 : 346}
+                  height={enableTable ? 230 : 346}
                   // backgroundColor={'black'}
                   scrollAreaProps={{ type: "never" }}
                 />
@@ -531,8 +551,10 @@ export default function Sales(props) {
                           }}
                         >
                           <Image
-                            h={"60%"}
-                            w={"60%"}
+                            mih={"60%"}
+                            miw={"60%"}
+                            mah={"60%"}
+                            maw={"60%"}
                             fit="contain"
                             src={
                               isOnline

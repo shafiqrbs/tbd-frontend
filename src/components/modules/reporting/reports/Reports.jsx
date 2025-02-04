@@ -177,7 +177,7 @@ const Reports = () => {
         <Grid columns={48} gutter={{ base: 6 }}>
           <Grid.Col span={4}>
             <Box bg="white">
-              <Box p="xs" className="borderRadiusAll">
+              <Box pb="xs" pl="xs" pr="xs" className="borderRadiusAll">
                 <Box
                   pl="xs"
                   pr={8}
