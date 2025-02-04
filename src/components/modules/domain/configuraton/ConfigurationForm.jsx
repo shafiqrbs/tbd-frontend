@@ -6,7 +6,6 @@ import { IconDeviceFloppy} from "@tabler/icons-react";
 import {useHotkeys} from "@mantine/hooks";
 import {useDispatch} from "react-redux";
 import {isNotEmpty, useForm} from "@mantine/form";
-import {notifications} from "@mantine/notifications";
 import Shortcut from "../../shortcut/Shortcut.jsx";
 import InputForm from "../../../form-builders/InputForm.jsx";
 import SelectForm from "../../../form-builders/SelectForm.jsx";
@@ -46,12 +45,7 @@ function ConfigurationForm() {
                     setCurrencyId(result.data.data.currency_id?.toString() || '');
                 }
             } catch (error) {
-                console.error('Error fetching data:', error);
-                notifications.show({
-                    color: 'red',
-                    title: t('Error'),
-                    message: t('FailedToFetchData'),
-                });
+                showNotificationComponent(t('FailedToFetchData'), 'red', 'lightgray', null, false, 1000)
             } finally {
                 setFormLoad(false);
             }
