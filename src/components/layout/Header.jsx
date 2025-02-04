@@ -260,7 +260,14 @@ export default function Header({ isOnline, configData }) {
           <Grid.Col span={3}>
             {configData?.domain ? (
               configData?.domain?.company_name === "Sandra" ? (
-                <Center mt={2}>
+                <div
+                  style={{
+                    display: "flex",
+                    height: "100%",
+                    alignItems: "center",
+                    paddingLeft: 16,
+                  }}
+                >
                   <img
                     style={{
                       height: 40,
@@ -268,7 +275,7 @@ export default function Header({ isOnline, configData }) {
                     }}
                     src={Sandra_Logo}
                   ></img>
-                </Center>
+                </div>
               ) : (
                 <NavLink
                   href="/"
