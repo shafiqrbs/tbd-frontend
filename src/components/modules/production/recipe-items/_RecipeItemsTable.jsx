@@ -3,7 +3,7 @@ import { useNavigate, useOutletContext } from "react-router-dom";
 import {
     Group,
     Box,
-    Button,
+    Button, LoadingOverlay,
 } from "@mantine/core";
 
 import { DataTable } from 'mantine-datatable';
@@ -24,7 +24,8 @@ import {
 } from "../../../../store/core/crudSlice.js";
 import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
 
-function _RecipeItemsTable() {
+function _RecipeItemsTable(props) {
+    const {fetching,setFetching,layoutLoading,setLayoutLoading} = props
     const dispatch = useDispatch();
     const { t, i18n } = useTranslation();
     const { isOnline, mainAreaHeight } = useOutletContext();
@@ -37,7 +38,6 @@ function _RecipeItemsTable() {
     const recipeItemFilterData = useSelector((state) => state.productionCrudSlice.recipeItemFilterData)
     const navigate = useNavigate()
 
-    const [fetching,setFetching] = useState(true)
     const [indexData,setIndexData] = useState([])
 
     useEffect(() => {
@@ -65,6 +65,7 @@ function _RecipeItemsTable() {
             } catch (err) {
                 console.error('Unexpected error:', err);
             }
+            setLayoutLoading(false)
         };
 
         fetchData();
@@ -111,7 +112,7 @@ function _RecipeItemsTable() {
 
     return (
         <>
-
+            <LoadingOverlay visible={layoutLoading} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />
             <Box pl={`xs`} pb={'xs'} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'} >
                 <KeywordSearch module={'recipe-item'} setDownloadFinishGoodsXLS={setDownloadFinishGoodsXLS} />
             </Box>
