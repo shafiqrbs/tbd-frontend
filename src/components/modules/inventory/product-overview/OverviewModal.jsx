@@ -28,7 +28,7 @@ export default function OverviewModal(props) {
                     <Modal.Overlay />
                     <Modal.Content>
                         <Modal.Header>
-                            <Modal.Title>{t('StockDetails')}</Modal.Title>
+                            <Modal.Title>{t('ProductDetails')}</Modal.Title>
                             <Modal.CloseButton />
                         </Modal.Header>
                         <Modal.Body>

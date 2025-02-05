@@ -32,6 +32,7 @@ import ProductViewDrawer from "./ProductViewDrawer.jsx";
 import { notifications } from "@mantine/notifications";
 import { setDeleteMessage } from "../../../../store/inventory/crudSlice.js";
 import vendorDataStoreIntoLocalStorage from "../../../global-hook/local-storage/vendorDataStoreIntoLocalStorage.js";
+import OverviewModal from "../product-overview/OverviewModal.jsx";
 
 function ProductTable(props) {
   const { categoryDropdown } = props;
@@ -42,7 +43,7 @@ function ProductTable(props) {
 
   const perPage = 50;
   const [page, setPage] = useState(1);
-  const [viewDrawer, setViewDrawer] = useState(false);
+  const [viewModal, setViewModal] = useState(false);
 
   const [fetching, setFetching] = useState(true);
   const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword);
@@ -109,7 +110,6 @@ function ProductTable(props) {
     perPage,
     fetchingReload,
   ]);
-
   useEffect(() => {
     dispatch(setDeleteMessage(""));
     if (entityDataDelete === "success") {
@@ -137,7 +137,10 @@ function ProductTable(props) {
         pb={"4"}
         className={"boxBackground borderRadiusAll border-bottom-none"}
       >
-        <_ProductSearch module={"product"} categoryDropdown={categoryDropdown}/>
+        <_ProductSearch
+          module={"product"}
+          categoryDropdown={categoryDropdown}
+        />
       </Box>
       <Box className={"borderRadiusAll border-top-none"}>
         <DataTable
@@ -231,7 +234,7 @@ function ProductTable(props) {
 
                       <Menu.Item
                         onClick={() => {
-                          setViewDrawer(true);
+                          setViewModal(true);
                           dispatch(
                             showEntityData("inventory/product/" + data.id)
                           );
@@ -307,11 +310,8 @@ function ProductTable(props) {
           scrollAreaProps={{ type: "never" }}
         />
       </Box>
-      {viewDrawer && (
-        <ProductViewDrawer
-          viewDrawer={viewDrawer}
-          setViewDrawer={setViewDrawer}
-        />
+      {viewModal && (
+        <OverviewModal viewModal={viewModal} setViewModal={setViewModal} />
       )}
     </>
   );
