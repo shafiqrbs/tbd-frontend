@@ -274,6 +274,11 @@ export default function Header({ isOnline, configData }) {
                     onClick={() => {
                       navigate("/");
                     }}
+                    onAuxClick={(e) => {
+                      if (e.button === 1) {
+                        window.open("/", "_blank");
+                      }
+                    }}
                   >
                     <Image
                       mah={40}
