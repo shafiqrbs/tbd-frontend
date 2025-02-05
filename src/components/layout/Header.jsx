@@ -268,15 +268,20 @@ export default function Header({ isOnline, configData }) {
                     paddingLeft: 16,
                   }}
                 >
-                  <a href="/">
-                    <img
-                      style={{
-                        height: 40,
-                        style: "cover",
-                      }}
+                  <Anchor
+                    target="_blank"
+                    underline="never"
+                    onClick={() => {
+                      navigate("/");
+                    }}
+                  >
+                    <Image
+                      mah={40}
+                      radius="md"
                       src={Sandra_Logo}
-                    ></img>
-                  </a>
+                      pl={6}
+                    ></Image>
+                  </Anchor>
                 </div>
               ) : (
                 <NavLink
