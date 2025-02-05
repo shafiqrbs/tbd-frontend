@@ -53,7 +53,6 @@ export default function Sales(props) {
   const { isOnline, mainAreaHeight } = useOutletContext();
   const height = mainAreaHeight - 190; //TabList height 104
   const heightHalf = height / 2;
-
   const navigate = useNavigate();
   const [value, setValue] = useState("");
   const [searchValue, setSearchValue] = useState("");
@@ -142,17 +141,18 @@ export default function Sales(props) {
 
   // Demo
   const price = 1000;
-  const filteredProducts = products
-    .map((product) => ({
-      ...product,
-      qty: quantities[product.id]?.quantity ?? 0,
-      subtotal: (quantities[product.id]?.quantity ?? 0) * product.price,
-    }))
-    .filter((product) => product.qty > 0);
-  const subtotal = filteredProducts.reduce(
-    (sum, item) => sum + item.subtotal,
-    0
-  );
+  // const filteredProducts = products
+  //   .map((product) => ({
+  //     ...product,
+  //     quantity: quantities[product.id]?.quantity ?? 0,
+  //     subtotal: (quantities[product.id]?.quantity ?? 0) * product.price,
+  //   }))
+  //   .filter((product) => product.qty > 0);
+  // const subtotal = filteredProducts.reduce(
+  //   (sum, item) => sum + item.subtotal,
+  //   0
+  // );
+  const filteredProducts = [];
 
   const data = [
     { id: 1, name: "T-1" },
@@ -401,7 +401,7 @@ export default function Sales(props) {
                             <IconSum size="14" />
                           </Box>
                           <div>
-                            {configData?.currency?.symbol} {subtotal.toFixed(2)}
+                            {/* {configData?.currency?.symbol} {subtotal.toFixed(2)} */}
                           </div>
                         </Group>
                       ),

@@ -71,6 +71,7 @@ function _GenericInvoiceForm(props) {
   useEffect(() => {
     if (stockProductRestore) {
       const local = productsDataStoreIntoLocalStorage();
+      console.log(local)
     }
   }, [stockProductRestore]);
 
@@ -79,7 +80,7 @@ function _GenericInvoiceForm(props) {
     setTempCardProducts(tempProducts ? JSON.parse(tempProducts) : []);
     setLoadCardProducts(false);
   }, [loadCardProducts]);
-
+  console.log(tempCardProducts)
   useEffect(() => {
     if (searchValue.length > 0) {
       const storedProducts = localStorage.getItem("core-products");

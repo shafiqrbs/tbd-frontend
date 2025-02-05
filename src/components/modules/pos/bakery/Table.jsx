@@ -30,17 +30,6 @@ import {
   IconPlus,
   IconTrash,
 } from "@tabler/icons-react";
-import {
-  editEntityData,
-  getIndexEntityData,
-  setFetching,
-  setFormLoading,
-  setInsertType,
-  showEntityData,
-  deleteEntityData,
-  getStatusInlineUpdateData,
-  storeEntityData,
-} from "../../../../store/core/crudSlice.js";
 import { useDispatch, useSelector } from "react-redux";
 import classes from "./Table.module.css";
 import getConfigData from "../../../global-hook/config-data/getConfigData";
@@ -59,10 +48,9 @@ export default function Table(props) {
   const [tc, setTc] = useState("#333333");
   const [bg, setBg] = useState("#E6F5ED");
   const [selected, setSelected] = useState([]);
-  const [grid, setGrid] = useState(null);
 
   const { configData } = getConfigData();
-
+  // console.log(products)
   // console.log(configData)
   const handleSelect = (productId) => {
     setSelected((prevSelected) =>
@@ -72,53 +60,6 @@ export default function Table(props) {
     );
   };
 
-  //get products
-  const perPage = 50;
-  const [page, setPage] = useState(1);
-  const productFilterData = useSelector(
-    (state) => state.inventoryCrudSlice.productFilterData
-  );
-  const [indexData, setIndexData] = useState([]);
-  useEffect(() => {
-    const fetchData = async () => {
-      const value = {
-        url: "inventory/product",
-        param: {
-          term: searchKeyword,
-          name: productFilterData.name,
-          alternative_name: productFilterData.alternative_name,
-          sku: productFilterData.sku,
-          sales_price: productFilterData.sales_price,
-          page: page,
-          offset: perPage,
-          type: "product",
-        },
-      };
-
-      try {
-        const resultAction = await dispatch(getIndexEntityData(value));
-
-        if (getIndexEntityData.rejected.match(resultAction)) {
-          console.error("Error:", resultAction);
-        } else if (getIndexEntityData.fulfilled.match(resultAction)) {
-          setIndexData(resultAction.payload);
-          setFetching(false);
-        }
-      } catch (err) {
-        console.error("Unexpected error:", err);
-      }
-    };
-
-    fetchData();
-  }, [
-    // dispatch,
-    // searchKeyword,
-    productFilterData,
-    // page,
-    // perPage,
-    // fetchingReload,
-  ]);
-  // console.log(indexData);
   const handleIncrement = (productId) => {
     setQuantities((prev) => {
       const updatedQuantities = { ...prev };
@@ -126,10 +67,12 @@ export default function Table(props) {
         updatedQuantities[productId] = {
           id: productId,
           quantity: 0,
-          name:
-            products.find((product) => product.id === productId)?.name || "",
-          price:
-            products.find((product) => product.id === productId)?.price || 0,
+          display_name:
+            products.find((product) => product.id === productId)
+              ?.display_name || "",
+          sales_price:
+            products.find((product) => product.id === productId)?.sales_price ||
+            0,
         };
       }
 
@@ -160,16 +103,16 @@ export default function Table(props) {
   };
   const [value, setValue] = useState("grid");
 
-  const calculateSubtotal = (data) => {
-    return data.reduce((total, item) => total + item.price * item.qty, 0);
-  };
-  const subtotal = calculateSubtotal(products);
+  // const calculateSubtotal = (data) => {
+  //   return data.reduce((total, item) => total + item.price * item.qty, 0);
+  // };
+  // const subtotal = calculateSubtotal(products);
 
   return (
     <>
       <Grid columns={12} gutter={{ base: 8 }}>
         <Grid.Col span={2}>
-          <Box bg="white" w={"100%"} mt={8} style={{ borderRadius: 4 }}>
+          <Box bg="white" w={"100%"} mt={6} style={{ borderRadius: 4 }}>
             <ScrollArea
               h={enableTable ? height + 3 : height + 183}
               type="never"
@@ -309,7 +252,7 @@ export default function Table(props) {
             >
               {value === "grid" && (
                 <Grid columns={12} gutter={{ base: 8 }}>
-                  {products.map((product) => (
+                  {products?.map((product) => (
                     <Grid.Col span={3} key={product.id}>
                       <Card
                         shadow="md"
@@ -331,14 +274,22 @@ export default function Table(props) {
                       >
                         <Image
                           radius="sm"
-                          h={120}
+                          mih={120}
+                          mah={120}
                           w="auto"
                           fit="cover"
-                          src={product.img}
-                          alt={product.name}
+                          // src={product.img}
+                          src={`${
+                            import.meta.env.VITE_IMAGE_GATEWAY_URL
+                          }/uploads/inventory/product/feature_image/${
+                            product.feature_image
+                          }`}
+                          fallbackSrc={`https://placehold.co/120x80?text=${encodeURIComponent(
+                            product.display_name
+                          )}`}
                         />
                         <Text fw={600} size="sm" fz={"13"} mt={"4"} ta={"left"}>
-                          {product.name}
+                          {product.display_name}
                         </Text>
 
                         <Text
@@ -353,7 +304,7 @@ export default function Table(props) {
                           size="md"
                           c={"green.9"}
                         >
-                          {configData?.currency?.symbol} {product.price}
+                          {configData?.currency?.symbol} {product.sales_price}
                         </Text>
                       </Card>
                     </Grid.Col>
@@ -362,7 +313,7 @@ export default function Table(props) {
               )}
               {value === "list" && (
                 <Grid columns={12} gutter={8}>
-                  {products.map((product) => (
+                  {products?.map((product) => (
                     <Grid.Col key={product.id} span={6}>
                       <Card
                         shadow="md"
@@ -387,9 +338,18 @@ export default function Table(props) {
                             <Card p={0}>
                               <Image
                                 mih={120}
+                                mah={120}
+                                miw={70}
                                 fit="cover"
-                                src={product.img}
-                                alt={product.name}
+                                // src={product.img}
+                                src={`${
+                                  import.meta.env.VITE_IMAGE_GATEWAY_URL
+                                }/uploads/inventory/product/feature_image/${
+                                  product.feature_image
+                                }`}
+                                fallbackSrc={`https://placehold.co/120x80?text=${encodeURIComponent(
+                                  product.display_name
+                                )}`}
                               />
                             </Card>
                           </Grid.Col>
@@ -403,7 +363,7 @@ export default function Table(props) {
                               gap="md"
                             >
                               <Text fw={600} size="sm" fz={"13"} mt={"4"}>
-                                {product.name}
+                                {product.display_name}
                               </Text>
                               <Flex
                                 gap="md"
@@ -419,7 +379,8 @@ export default function Table(props) {
                                   size="md"
                                   c={"green.9"}
                                 >
-                                  {configData?.currency?.symbol} {product.price}
+                                  {configData?.currency?.symbol}{" "}
+                                  {product.sales_price}
                                 </Text>
                               </Flex>
                             </Stack>
@@ -442,7 +403,7 @@ export default function Table(props) {
                     }}
                     // withTableBorder={true}
                     // withColumnBorders={true}
-                    records={indexData.data}
+                    records={products}
                     columns={[
                       {
                         accessor: "id",
@@ -450,7 +411,7 @@ export default function Table(props) {
                         render: (data, index) => index + 1,
                       },
                       {
-                        accessor: "product_name",
+                        accessor: "display_name",
                         title: t("Product"),
                       },
                       {
@@ -459,7 +420,7 @@ export default function Table(props) {
                         textAlign: "center",
                         render: (data) => (
                           <>
-                            {configData?.currency?.symbol} {data.purchase_price}
+                            {configData?.currency?.symbol} {data.sales_price}
                           </>
                         ),
                       },
@@ -484,7 +445,7 @@ export default function Table(props) {
                               maw={30}
                               miw={30}
                             >
-                              {quantities[data.id]?.quantity ?? 0}
+                              {/* {quantities[data.id]?.quantity ?? 0} */}
                             </Text>
                             <ActionIcon
                               size={"sm"}

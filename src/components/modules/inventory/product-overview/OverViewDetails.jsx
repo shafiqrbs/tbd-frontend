@@ -315,7 +315,9 @@ function OverViewDetails(props) {
                                                             height={200}
                                                             fit="cover"
                                                             width="100%"
-                                                            fallbackSrc={"https://placehold.co/200x200?text=Placeholder"}
+                                                            fallbackSrc={`https://placehold.co/120x80?text=${encodeURIComponent(
+                                                                showEntityData && showEntityData?.product_name
+                                                            )}`}
                                                         />
                                                     </Card.Section>
                                                     <Grid columns={12} gutter={4}>
@@ -325,7 +327,9 @@ function OverViewDetails(props) {
                                                                 height={140}
                                                                 width="100%"
                                                                 fit="cover"
-                                                                fallbackSrc={"https://placehold.co/200x200?text=Placeholder"}
+                                                                fallbackSrc={`https://placehold.co/120x80?text=${encodeURIComponent(
+                                                                    showEntityData && showEntityData?.product_name
+                                                                )}`}
                                                             />
                                                         </Grid.Col>
                                                         <Grid.Col span={6} p={2}>
@@ -334,7 +338,9 @@ function OverViewDetails(props) {
                                                                 height={140}
                                                                 width="100%"
                                                                 fit="cover"
-                                                                fallbackSrc={"https://placehold.co/200x200?text=Placeholder"}
+                                                                fallbackSrc={`https://placehold.co/120x80?text=${encodeURIComponent(
+                                                                    showEntityData && showEntityData?.product_name
+                                                                )}`}
                                                             />
                                                         </Grid.Col>
                                                     </Grid>
@@ -345,7 +351,9 @@ function OverViewDetails(props) {
                                                                 height={140}
                                                                 width="100%"
                                                                 fit="cover"
-                                                                fallbackSrc={"https://placehold.co/200x200?text=Placeholder"}
+                                                                fallbackSrc={`https://placehold.co/120x80?text=${encodeURIComponent(
+                                                                    showEntityData && showEntityData?.product_name
+                                                                )}`}
                                                             />
                                                         </Grid.Col>
                                                         <Grid.Col span={6} p={2}>
@@ -354,7 +362,9 @@ function OverViewDetails(props) {
                                                                 height={140}
                                                                 width="100%"
                                                                 fit="cover"
-                                                                fallbackSrc={"https://placehold.co/200x200?text=Placeholder"}
+                                                                fallbackSrc={`https://placehold.co/120x80?text=${encodeURIComponent(
+                                                                    showEntityData && showEntityData?.product_name
+                                                                )}`}
                                                             />
                                                         </Grid.Col>
 
