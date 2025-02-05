@@ -460,7 +460,7 @@ function _SkuManagement(props) {
 
                             <Box pl={`xs`} pr={"xs"} className={"borderRadiusAll"}>
                                 <ScrollArea
-                                    h={height - 142}
+                                    h={height - 152}
                                     scrollbarSize={2}
                                     scrollbars="y"
                                     type="never"

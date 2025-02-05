@@ -66,7 +66,7 @@ function _ProductGallery(props) {
             <Box bg={"white"} p={"xs"} className={"borderRadiusAll"}>
                 <Box
                     pl={`xs`}
-                    pb={"6"}
+                    pb={"8"}
                     pr={8}
                     pt={"6"}
                     mb={"4"}
