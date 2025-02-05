@@ -268,13 +268,15 @@ export default function Header({ isOnline, configData }) {
                     paddingLeft: 16,
                   }}
                 >
-                  <img
-                    style={{
-                      height: 40,
-                      style: "cover",
-                    }}
-                    src={Sandra_Logo}
-                  ></img>
+                  <a href="/">
+                    <img
+                      style={{
+                        height: 40,
+                        style: "cover",
+                      }}
+                      src={Sandra_Logo}
+                    ></img>
+                  </a>
                 </div>
               ) : (
                 <NavLink
