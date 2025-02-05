@@ -8,9 +8,9 @@ import {
 import { useTranslation } from 'react-i18next';
 import { useOutletContext } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import barcode from '../../../../../assets/images/frame.png';
+import barcode from '../../../../assets/images/frame.png';
 
-function __OverViewTab(props) {
+function OverViewDetails(props) {
     const theme = useMantineTheme();
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
@@ -521,4 +521,4 @@ function __OverViewTab(props) {
     );
 }
 
-export default __OverViewTab;
+export default OverViewDetails;

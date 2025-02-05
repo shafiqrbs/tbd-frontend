@@ -1,11 +1,11 @@
 import { useDisclosure } from '@mantine/hooks';
 import { Modal, Button, Progress, Tabs, Box } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
-import { getLoadingProgress } from '../../../global-hook/loading-progress/getLoadingProgress';
+import { getLoadingProgress } from '../../../global-hook/loading-progress/getLoadingProgress.js';
 import { useEffect, useState } from 'react';
-import __OverViewTab from './stock-tabs/__OverViewTab';
+import OverViewDetails from './OverViewDetails.jsx';
 
-export default function _StockModal(props) {
+export default function OverviewModal(props) {
 
     const { viewModal, setViewModal } = props;
     const { t, i18 } = useTranslation();
@@ -59,7 +59,7 @@ export default function _StockModal(props) {
 
                                     <Tabs.Panel value="StockOverview"  >
                                         <Box >
-                                            <__OverViewTab />
+                                            <OverViewDetails />
                                         </Box>
                                     </Tabs.Panel>
                                     <Tabs.Panel value="Details" >
