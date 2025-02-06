@@ -695,5 +695,7 @@
   "UploadFinishGoods" : "Upload Finish Goods",
   "ProductionItemRestoreSuccessfully" : "Production item restore successfully",
   "FailedToItemRestore" : "Fail to restore production item",
+  "EnterOpeningQuantity" : "Enter opening quantity",
+  "EnterPurchasePrice" : "Enter purchase price",
   "": ""
 }

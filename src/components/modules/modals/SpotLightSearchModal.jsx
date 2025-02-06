@@ -33,9 +33,7 @@ function SpotLightSearchModal({onClose}) {
             const storedConfigData = localStorage.getItem("config-data");
             if (storedConfigData) {
                 setConfigData(JSON.parse(storedConfigData));
-                setVisible(false); // Data is loaded, hide the loader
             } else {
-                setVisible(false); // Even if no config data, hide loader after the check
                 navigate("/login");
             }
         };

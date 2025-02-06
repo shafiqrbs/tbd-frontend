@@ -30,6 +30,7 @@ import {
 import AddProductDrawer from "../sales/drawer-form/AddProductDrawer.jsx";
 import {modals} from "@mantine/modals";
 import FileUploadModel from "../../../core-component/FileUploadModel.jsx";
+import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
 
 function _CreateOpeningForm(props) {
     const { currencySymbol } = props
@@ -574,7 +575,7 @@ function _CreateOpeningForm(props) {
                                                 setTimeout(() => {
                                                     dispatch(inlineUpdateEntityData(editedQuantityData));
                                                     setFetching(true);
-                                                }, 700);
+                                                }, 1000);
 
                                             };
 
@@ -632,7 +633,7 @@ function _CreateOpeningForm(props) {
                                                 setTimeout(() => {
                                                     dispatch(inlineUpdateEntityData(editedQuantityData));
                                                     setFetching(true);
-                                                }, 700);
+                                                }, 1000);
                                             }
 
                                             return (
@@ -706,8 +707,17 @@ function _CreateOpeningForm(props) {
                                                                         id: item.id
                                                                     }
                                                                 }
-                                                                dispatch(inlineUpdateEntityData(approveData))
-                                                                setFetching(true)
+
+                                                                if (!item.opening_quantity){
+                                                                    showNotificationComponent(t("EnterOpeningQuantity"),'red',null,null,false,1000,true)
+                                                                }
+                                                                if (!item.purchase_price){
+                                                                    showNotificationComponent(t("EnterPurchasePrice"),'red',null,null,false,1000,true);
+                                                                }
+                                                                if (item.opening_quantity && item.purchase_price){
+                                                                    dispatch(inlineUpdateEntityData(approveData))
+                                                                    setFetching(true)
+                                                                }
                                                             },
                                                         });
                                                     }}
