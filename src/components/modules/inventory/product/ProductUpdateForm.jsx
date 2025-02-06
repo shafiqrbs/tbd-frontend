@@ -96,15 +96,6 @@ function ProductUpdateForm(props) {
             </Grid.Col>
           </Grid>
           <Grid columns={24} gutter={8}>
-            <Grid.Col span={8}>
-              {/* vat integration */}
-              {
-                vatEnable && (
-                      <_VatManagement id={id} />
-                  )
-              }
-
-            </Grid.Col>
             {/* Measurement form */}
             {is_measurement && (
                 <Grid.Col span={8}>
@@ -117,6 +108,15 @@ function ProductUpdateForm(props) {
                   <_ProductGallery id={id} />
                 </Grid.Col>
             )}
+            <Grid.Col span={8}>
+              {/* vat integration */}
+              {
+                  vatEnable && (
+                      <_VatManagement id={id} />
+                  )
+              }
+
+            </Grid.Col>
           </Grid>
         </Stack>
       </Box>

@@ -25,7 +25,7 @@ function SpotLightSearchModal({onClose}) {
 
     localStorage.setItem("config-data", JSON.stringify(configData));
 
-    const [configDataSpot, setConfigData] = useState(null);
+    const [configDataSpot, setConfigData] = useState(configData);
 
     // Fetch the configData from local storage and set loading
     useEffect(() => {
@@ -78,7 +78,11 @@ function SpotLightSearchModal({onClose}) {
         if (configDataSpot) {
             const allActions = getActions().reduce((acc, group) => [...acc, ...group.actions], []);
             setFilteredItems(allActions);
-            setVisible(false); // Hide the loader when data has been fetched
+            setTimeout(() => {
+                if (allActions) {
+                    setVisible(false); // Hide the loader when data has been fetched
+                }
+            },1000)
         }
     }, [configDataSpot]);
 
