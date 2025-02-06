@@ -56,11 +56,6 @@ export default function BakeryIndex() {
   }, [dropdownLoad]);
 
   //get products
-  const perPage = 1000;
-  const [page, setPage] = useState(1);
-  const productFilterData = useSelector(
-    (state) => state.inventoryCrudSlice.productFilterData
-  );
   const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword);
   const [indexData, setIndexData] = useState([]);
   useEffect(() => {

@@ -59,7 +59,22 @@ export default function Table(props) {
         : [...prevSelected, productId]
     );
   };
-
+  const changeSubTotalbyQuantity = (event) => {
+    const quantity = Number(event.target.value);
+    const purchase_price = Number(productForm.values.purchase_price);
+    if (
+      !isNaN(quantity) &&
+      !isNaN(purchase_price) &&
+      quantity > 0 &&
+      purchase_price >= 0
+    ) {
+      setSelectProductDetails((prevDetails) => ({
+        ...prevDetails,
+        sub_total: quantity * purchase_price,
+      }));
+      productForm.setFieldValue("sub_total", quantity * purchase_price);
+    }
+  };
   const handleIncrement = (productId) => {
     setQuantities((prev) => {
       const updatedQuantities = { ...prev };
@@ -73,11 +88,12 @@ export default function Table(props) {
           sales_price:
             products.find((product) => product.id === productId)?.sales_price ||
             0,
+          sub_total: 0,
         };
       }
 
       updatedQuantities[productId].quantity += 1;
-
+      updatedQuantities[productId].sub_total =  updatedQuantities[productId].quantity * updatedQuantities[productId].sales_price;
       return updatedQuantities;
     });
   };
@@ -445,7 +461,7 @@ export default function Table(props) {
                               maw={30}
                               miw={30}
                             >
-                              {/* {quantities[data.id]?.quantity ?? 0} */}
+                              {quantities[data.id]?.quantity ?? 0}
                             </Text>
                             <ActionIcon
                               size={"sm"}
