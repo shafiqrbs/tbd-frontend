@@ -697,5 +697,6 @@
   "FailedToItemRestore" : "Fail to restore production item",
   "EnterOpeningQuantity" : "Enter opening quantity",
   "EnterPurchasePrice" : "Enter purchase price",
+  "SalesProcess" : "Sales process",
   "": ""
 }

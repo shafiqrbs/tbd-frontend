@@ -317,7 +317,7 @@ function _SalesTable() {
                                                         </Menu.Target>
                                                         <Menu.Dropdown>
                                                             {
-                                                                data.customer_group=='domain' &&
+                                                                (data.customer_group=='domain' && !data.is_domain_sales_completed) &&
                                                                 <Menu.Item
                                                                     onClick={()=>{
                                                                         modals.openConfirmModal({
@@ -334,7 +334,7 @@ function _SalesTable() {
                                                                     component="a"
                                                                     w={'200'}
                                                                 >
-                                                                    {t('CompleteSales')}
+                                                                    {t('SalesProcess')}
                                                                 </Menu.Item>
                                                             }
                                                             {
