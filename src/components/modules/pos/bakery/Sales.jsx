@@ -239,10 +239,10 @@ export default function Sales(props) {
       return;
     }
 
-    console.log("dss");
     const formValue = {};
     formValue.user_id = salesByUser;
     formValue.transaction_mode_id = id;
+    enableTable ? formValue.sales_type = "restaurant" : formValue.sales_type = "bakery"
     let transformedArray = filteredProducts.map((product) => {
       return {
         product_id: product.id,
@@ -758,7 +758,17 @@ export default function Sales(props) {
                   <Grid columns={12} gutter={0}>
                     <Grid.Col span={4}>
                       <Flex h={40} justify={"center"} align={"center"}>
-                        <Checkbox color="lime" size="lg" onClick={""} />
+                        <Checkbox
+                          color="lime"
+                          size="lg"
+                          onChange={(event) => {
+                            
+                            console.log(
+                              "Checkbox clicked:",
+                              event.currentTarget.checked
+                            );
+                          }}
+                        />
                       </Flex>
                     </Grid.Col>
                     <Grid.Col span={8}>

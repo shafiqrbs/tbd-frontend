@@ -93,7 +93,9 @@ export default function Table(props) {
       }
 
       updatedQuantities[productId].quantity += 1;
-      updatedQuantities[productId].sub_total =  updatedQuantities[productId].quantity * updatedQuantities[productId].sales_price;
+      updatedQuantities[productId].sub_total =
+        updatedQuantities[productId].quantity *
+        updatedQuantities[productId].sales_price;
       return updatedQuantities;
     });
   };
@@ -144,7 +146,7 @@ export default function Table(props) {
                     mih={40}
                     mt={"4"}
                     variant="default"
-                    key={data.id}
+                    key={data.value}
                     onClick={() => {
                       console.log("Clicked on Table -", data.value);
                       clicked(data.value);
