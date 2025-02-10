@@ -27,11 +27,6 @@ import {
 
 import { useDisclosure, useFullscreen, useHotkeys } from "@mantine/hooks";
 import {
-  IconNotification,
-  IconCode,
-  IconBook,
-  IconChartPie3,
-  IconFingerprint,
   IconCircleCheck,
   IconChevronDown,
   IconLogout,
@@ -337,9 +332,6 @@ export default function Header({ isOnline, configData }) {
                   <Text fw={500} fz={16} c={"red.6"}>
                     {t("Shortcuts")}
                   </Text>
-                  {/* <Anchor href="#" fz="xs">
-                      View all
-                    </Anchor> */}
                 </Group>
 
                 <Divider my="sm" />

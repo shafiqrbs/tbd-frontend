@@ -27,7 +27,14 @@ import {
 import { DataTable } from 'mantine-datatable';
 import { useDispatch, useSelector } from "react-redux";
 import { useHotkeys } from "@mantine/hooks";
-import { deleteEntityData, getIndexEntityData, setDeleteMessage, setFetching, setSalesFilterData, } from "../../../../store/inventory/crudSlice.js";
+import {
+    deleteEntityData,
+    getIndexEntityData,
+    setDeleteMessage,
+    setFetching,
+    setSalesFilterData,
+    showInstantEntityData,
+} from "../../../../store/inventory/crudSlice.js";
 import __ShortcutTable from "../../shortcut/__ShortcutTable";
 import _SalesSearch from "./_SalesSearch.jsx";
 import { setSearchKeyword } from "../../../../store/core/crudSlice.js";
@@ -35,6 +42,7 @@ import { SalesPrintA4 } from "./print-component/SalesPrintA4.jsx";
 import { SalesPrintPos } from "./print-component/SalesPrintPos.jsx";
 import { modals } from "@mantine/modals";
 import { notifications } from "@mantine/notifications";
+import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
 
 function _SalesTable() {
     const navigate = useNavigate();
@@ -107,40 +115,41 @@ function _SalesTable() {
         }
     }, [entityDataDelete]);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            setFetching(true)
-            const options = {
-                year: 'numeric',
-                month: '2-digit',
-                day: '2-digit'
-            };
-            const value = {
-                url: 'inventory/sales',
-                param: {
-                    term: salesFilterData.searchKeyword,
-                    customer_id: salesFilterData.customer_id,
-                    start_date: salesFilterData.start_date && new Date(salesFilterData.start_date).toLocaleDateString("en-CA", options),
-                    end_date: salesFilterData.end_date && new Date(salesFilterData.end_date).toLocaleDateString("en-CA", options),
-                    page: page,
-                    offset: perPage
-                }
-            }
-
-            try {
-                const resultAction = await dispatch(getIndexEntityData(value));
-
-                if (getIndexEntityData.rejected.match(resultAction)) {
-                    console.error('Error:', resultAction);
-                } else if (getIndexEntityData.fulfilled.match(resultAction)) {
-                    setIndexData(resultAction.payload);
-                    setFetching(false)
-                }
-            } catch (err) {
-                console.error('Unexpected error:', err);
-            }
+    const fetchData = async () => {
+        setFetching(true)
+        const options = {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit'
         };
+        const value = {
+            url: 'inventory/sales',
+            param: {
+                term: salesFilterData.searchKeyword,
+                customer_id: salesFilterData.customer_id,
+                start_date: salesFilterData.start_date && new Date(salesFilterData.start_date).toLocaleDateString("en-CA", options),
+                end_date: salesFilterData.end_date && new Date(salesFilterData.end_date).toLocaleDateString("en-CA", options),
+                page: page,
+                offset: perPage
+            }
+        }
 
+        try {
+            const resultAction = await dispatch(getIndexEntityData(value));
+
+            if (getIndexEntityData.rejected.match(resultAction)) {
+                console.error('Error:', resultAction);
+            } else if (getIndexEntityData.fulfilled.match(resultAction)) {
+                setIndexData(resultAction.payload);
+            }
+        } catch (err) {
+            console.error('Unexpected error:', err);
+        }finally {
+            setFetching(false)
+        }
+    };
+
+    useEffect(() => {
         fetchData();
     }, [salesFilterData,page]);
 
@@ -166,6 +175,24 @@ function _SalesTable() {
             dispatch(setFetching(true));
         }
     }
+
+    const handleDomainCustomerSalesProcess = async (id) => {
+        try {
+            const resultAction = await dispatch(showInstantEntityData('inventory/sales/domain-customer/' + id));
+            if (showInstantEntityData.fulfilled.match(resultAction)) {
+                if (resultAction.payload.data.status === 200) {
+                    // Show success notification
+                    showNotificationComponent(t("SalesComplete"), 'teal', 'lightgray', null, false, 1000, true)
+                }
+            }
+        } catch (error) {
+            console.error("Error updating entity:", error);
+            showNotificationComponent(t("DeleteFailed"), 'red', 'lightgray', null, false, 1000, true)
+        }finally {
+            fetchData();
+        }
+
+    };
 
     return (
         <>
@@ -289,6 +316,27 @@ function _SalesTable() {
                                                             </ActionIcon>
                                                         </Menu.Target>
                                                         <Menu.Dropdown>
+                                                            {
+                                                                (data.customer_group=='domain' && !data.is_domain_sales_completed) &&
+                                                                <Menu.Item
+                                                                    onClick={()=>{
+                                                                        modals.openConfirmModal({
+                                                                            title: (<Text size="md"> {t("SalesConformation")}</Text>),
+                                                                            children: (
+                                                                                <Text size="sm"> {t("FormConfirmationMessage")}</Text>),
+                                                                            labels: {confirm: 'Confirm', cancel: 'Cancel'},
+                                                                            onCancel: () => console.log('Cancel'),
+                                                                            onConfirm: () => {
+                                                                                handleDomainCustomerSalesProcess(data.id)
+                                                                            },
+                                                                        });
+                                                                    }}
+                                                                    component="a"
+                                                                    w={'200'}
+                                                                >
+                                                                    {t('SalesProcess')}
+                                                                </Menu.Item>
+                                                            }
                                                             {
                                                                 !data.invoice_batch_id &&
                                                                 <Menu.Item

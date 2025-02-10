@@ -96,6 +96,7 @@ function ProductUpdateForm(props) {
             </Grid.Col>
           </Grid>
           <Grid columns={24} gutter={4}>
+
             {/* Measurement form */}
             {is_measurement && (
                 <Grid.Col span={8}>

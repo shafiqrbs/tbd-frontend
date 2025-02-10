@@ -65,16 +65,17 @@ function DomainTable(props) {
                     // Show success notification
                     showNotificationComponent(t("ResetSuccessfully"), 'teal', 'lightgray', null, false, 1000, true)
                     fetchData()
-
                 }
             }
         } catch (error) {
             console.error("Error updating entity:", error);
             // Error notification
             showNotificationComponent(t("ResetFailed"), 'red', 'lightgray', null, false, 1000, true)
+        }finally {
+            setSuperadmin(true)
+            setReloadList(true)
+            dispatch(setFetching(true))
         }
-        setSuperadmin(true)
-        setReloadList(true)
     };
 
     const handleConfirmDomainDelete = async (id) => {
@@ -91,9 +92,12 @@ function DomainTable(props) {
             console.error("Error updating entity:", error);
             // Error notification
             showNotificationComponent(t("DeleteFailed"), 'red', 'lightgray', null, false, 1000, true)
+        }finally {
+            setSuperadmin(true)
+            setReloadList(true)
+            dispatch(setFetching(true))
         }
-        setSuperadmin(true)
-        setReloadList(true)
+
     };
     const user = JSON.parse(localStorage.getItem("user") || '{}');
 
