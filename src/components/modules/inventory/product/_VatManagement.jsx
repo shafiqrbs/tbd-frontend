@@ -28,7 +28,7 @@ function _VatManagement(props) {
     const {t, i18n} = useTranslation();
     const dispatch = useDispatch();
     const {isOnline, mainAreaHeight} = useOutletContext();
-    const height = mainAreaHeight / 2 + 1; //TabList height 104
+    const height = mainAreaHeight / 2 + 47; //TabList height 104
 
     const [setFormData, setFormDataForUpdate] = useState(false);
     const [formLoad, setFormLoad] = useState(true);

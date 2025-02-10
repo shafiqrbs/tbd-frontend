@@ -42,7 +42,6 @@ export default function _GenericRequisitionForm(props) {
   const { isOnline, mainAreaHeight } = useOutletContext();
   const height = mainAreaHeight - 150;
   const [fetching, setFetching] = useState(false);
-  console.log("1");
 
   // form variables
 
@@ -419,6 +418,7 @@ export default function _GenericRequisitionForm(props) {
                     >
                       <form
                         onSubmit={productForm.onSubmit((values) => {
+                          console.log("valeu", values);
                           if (!values.barcode && !values.product_id) {
                             productForm.setFieldError("barcode", true);
                             productForm.setFieldError("product_id", true);

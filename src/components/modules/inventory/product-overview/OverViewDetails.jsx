@@ -8,9 +8,9 @@ import {
 import { useTranslation } from 'react-i18next';
 import { useOutletContext } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import barcode from '../../../../../assets/images/frame.png';
+import barcode from '../../../../assets/images/frame.png';
 
-function __OverViewTab(props) {
+function OverViewDetails(props) {
     const theme = useMantineTheme();
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
@@ -311,46 +311,60 @@ function __OverViewTab(props) {
                                                 <Card padding="xs">
                                                     <Card.Section p={'xs'}>
                                                         <Image
-                                                            src={import.meta.env.VITE_IMAGE_GATEWAY_URL + 'uploads/inventory/logo/' + configData?.path}
+                                                            src={showEntityData && showEntityData?.feature_image}
                                                             height={200}
                                                             fit="cover"
                                                             width="100%"
-                                                            alt="Feature image"
+                                                            fallbackSrc={`https://placehold.co/120x80?text=${encodeURIComponent(
+                                                                showEntityData && showEntityData?.product_name
+                                                            )}`}
                                                         />
                                                     </Card.Section>
                                                     <Grid columns={12} gutter={4}>
                                                         <Grid.Col span={6} p={2}>
                                                             <Image
-                                                                src={import.meta.env.VITE_IMAGE_GATEWAY_URL + 'uploads/inventory/logo/' + configData?.path}
+                                                                src={showEntityData && showEntityData?.path_one }
                                                                 height={140}
                                                                 width="100%"
                                                                 fit="cover"
+                                                                fallbackSrc={`https://placehold.co/120x80?text=${encodeURIComponent(
+                                                                    showEntityData && showEntityData?.product_name
+                                                                )}`}
                                                             />
                                                         </Grid.Col>
                                                         <Grid.Col span={6} p={2}>
                                                             <Image
-                                                                src={import.meta.env.VITE_IMAGE_GATEWAY_URL + 'uploads/inventory/logo/' + configData?.path}
+                                                                src={showEntityData && showEntityData?.path_two}
                                                                 height={140}
                                                                 width="100%"
                                                                 fit="cover"
+                                                                fallbackSrc={`https://placehold.co/120x80?text=${encodeURIComponent(
+                                                                    showEntityData && showEntityData?.product_name
+                                                                )}`}
                                                             />
                                                         </Grid.Col>
                                                     </Grid>
                                                     <Grid columns={12} gutter={4} pt={'xs'}>
                                                         <Grid.Col span={6} p={2}>
                                                             <Image
-                                                                src={import.meta.env.VITE_IMAGE_GATEWAY_URL + 'uploads/inventory/logo/' + configData?.path}
+                                                                src={showEntityData && showEntityData?.path_three}
                                                                 height={140}
                                                                 width="100%"
                                                                 fit="cover"
+                                                                fallbackSrc={`https://placehold.co/120x80?text=${encodeURIComponent(
+                                                                    showEntityData && showEntityData?.product_name
+                                                                )}`}
                                                             />
                                                         </Grid.Col>
                                                         <Grid.Col span={6} p={2}>
                                                             <Image
-                                                                src={import.meta.env.VITE_IMAGE_GATEWAY_URL + 'uploads/inventory/logo/' + configData?.path}
+                                                                src={showEntityData && showEntityData?.path_four}
                                                                 height={140}
                                                                 width="100%"
                                                                 fit="cover"
+                                                                fallbackSrc={`https://placehold.co/120x80?text=${encodeURIComponent(
+                                                                    showEntityData && showEntityData?.product_name
+                                                                )}`}
                                                             />
                                                         </Grid.Col>
 
@@ -521,4 +535,4 @@ function __OverViewTab(props) {
     );
 }
 
-export default __OverViewTab;
+export default OverViewDetails;

@@ -40,7 +40,7 @@ function _SkuManagement(props) {
     const {t, i18n} = useTranslation();
     const dispatch = useDispatch();
     const {isOnline, mainAreaHeight} = useOutletContext();
-    const height = mainAreaHeight / 2; //TabList height 104
+    const height = mainAreaHeight / 2 + 9; //TabList height 104
 
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
     const [setFormData, setFormDataForUpdate] = useState(false);
@@ -332,8 +332,8 @@ function _SkuManagement(props) {
                                     >
                                         <Grid columns={11}>
                                             <Grid.Col span={10}>
-                                                <Grid gutter={{base: 2}}>
-                                                    <Grid.Col span={"auto"}>
+                                                <Grid gutter={{base: 2}} >
+                                                    <Grid.Col span={"auto"} >
                                                         <InputForm
                                                             tooltip={t('BarcodeValidateMessage')}
                                                             placeholder={t('Barcode')}
@@ -341,7 +341,6 @@ function _SkuManagement(props) {
                                                             nextField={'sales_price'}
                                                             form={form}
                                                             name={'barcode'}
-                                                            mt={8}
                                                             id={'barcode'}
                                                         />
                                                     </Grid.Col>
@@ -460,7 +459,7 @@ function _SkuManagement(props) {
 
                             <Box pl={`xs`} pr={"xs"} className={"borderRadiusAll"}>
                                 <ScrollArea
-                                    h={height - 142}
+                                    h={height - 152}
                                     scrollbarSize={2}
                                     scrollbars="y"
                                     type="never"

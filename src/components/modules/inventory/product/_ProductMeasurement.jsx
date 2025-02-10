@@ -43,7 +43,7 @@ function _ProductMeasurement(props) {
     const {t, i18n} = useTranslation();
     const dispatch = useDispatch();
     const {isOnline, mainAreaHeight} = useOutletContext();
-    const height = mainAreaHeight / 2 + 30; //TabList height 104
+    const height = mainAreaHeight / 2 + 33; //TabList height 104
 
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
     const [setFormData, setFormDataForUpdate] = useState(false);

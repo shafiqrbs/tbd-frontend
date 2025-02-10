@@ -75,7 +75,7 @@ function ProductUpdateForm(props) {
   return (
       <Box>
         <Stack gap={0}>
-          <Grid columns={24} gutter={{ base: 8 }} mb={"6"}>
+          <Grid columns={24} gutter={{ base: 4 }} mb={"4"}>
             <Grid.Col span={8}>
               {/* update product form */}
               <_UpdateProduct categoryDropdown={categoryDropdown} />
@@ -95,7 +95,8 @@ function ProductUpdateForm(props) {
               )}
             </Grid.Col>
           </Grid>
-          <Grid columns={24} gutter={8}>
+          <Grid columns={24} gutter={4}>
+
             {/* Measurement form */}
             {is_measurement && (
                 <Grid.Col span={8}>
@@ -111,7 +112,7 @@ function ProductUpdateForm(props) {
             <Grid.Col span={8}>
               {/* vat integration */}
               {
-                  vatEnable && (
+                vatEnable && (
                       <_VatManagement id={id} />
                   )
               }

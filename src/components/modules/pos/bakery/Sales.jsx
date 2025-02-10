@@ -38,6 +38,7 @@ import {
   IconUserFilled,
   IconPrinter,
   IconDeviceFloppy,
+  IconAlertCircle,
 } from "@tabler/icons-react";
 import { DataTable } from "mantine-datatable";
 import { useDispatch, useSelector } from "react-redux";
@@ -46,6 +47,8 @@ import classes from "./Sales.module.css";
 import { IconChefHat } from "@tabler/icons-react";
 import getConfigData from "../../../global-hook/config-data/getConfigData";
 import { SalesPrintPos } from "../print/pos/SalesPrintPos";
+import { isNotEmpty, useForm } from "@mantine/form";
+import { notifications } from "@mantine/notifications";
 export default function Sales(props) {
   const { quantities, setQuantities, products, enableTable } = props;
   const dispatch = useDispatch();
@@ -53,7 +56,6 @@ export default function Sales(props) {
   const { isOnline, mainAreaHeight } = useOutletContext();
   const height = mainAreaHeight - 190; //TabList height 104
   const heightHalf = height / 2;
-
   const navigate = useNavigate();
   const [value, setValue] = useState("");
   const [searchValue, setSearchValue] = useState("");
@@ -109,6 +111,38 @@ export default function Sales(props) {
   )
     ? JSON.parse(localStorage.getItem("accounting-transaction-mode"))
     : [];
+
+  const form = useForm({
+    initialValues: {
+      transaction_mode_id: null,
+      user_id: null,
+    },
+    validate: {
+      transaction_mode_id: (value) =>
+        !value ? t("Please select transaction mode") : null,
+      user_id: (value) => (!value ? true : null),
+      // items: (value) =>
+      //   filteredProducts.length === 0
+      //     ? t("Please add at least one product")
+      //     : null,
+    },
+  });
+  const [errors, setErrors] = useState({
+    products: false,
+    user_id: false,
+    transaction_mode: false,
+  });
+  const validateForm = () => {
+    const newErrors = {
+      user_id: !salesByUser,
+      transaction_mode: !id,
+    };
+
+    setErrors(newErrors);
+
+    // Return true if there are no errors
+    return !Object.values(newErrors).some((error) => error);
+  };
   useEffect(() => {
     if (transactionModeData && transactionModeData.length > 0) {
       for (let mode of transactionModeData) {
@@ -124,11 +158,13 @@ export default function Sales(props) {
       }
     }
   }, [transactionModeData]);
+
   const [checked, setChecked] = useState(false);
 
   const [id, setId] = useState(null);
   const clicked = (id) => {
     setId(id);
+    form.setFieldValue("transaction_mode_id", id);
   };
 
   const handleDelete = (productId) => {
@@ -139,20 +175,35 @@ export default function Sales(props) {
       return updatedQuantities;
     });
   };
-
-  // Demo
-  const price = 1000;
+  const changeSubTotalbyQuantity = (event) => {
+    const quantity = Number(event.target.value);
+    const purchase_price = Number(productForm.values.purchase_price);
+    if (
+      !isNaN(quantity) &&
+      !isNaN(purchase_price) &&
+      quantity > 0 &&
+      purchase_price >= 0
+    ) {
+      setSelectProductDetails((prevDetails) => ({
+        ...prevDetails,
+        sub_total: quantity * purchase_price,
+      }));
+      productForm.setFieldValue("sub_total", quantity * purchase_price);
+    }
+  };
+  // console.log(quantities)
   const filteredProducts = products
     .map((product) => ({
       ...product,
-      qty: quantities[product.id]?.quantity ?? 0,
-      subtotal: (quantities[product.id]?.quantity ?? 0) * product.price,
+      quantity: quantities[product.id]?.quantity ?? 0,
+      sub_total: (quantities[product.id]?.quantity ?? 0) * product.sales_price,
     }))
-    .filter((product) => product.qty > 0);
+    .filter((product) => product.quantity > 0);
   const subtotal = filteredProducts.reduce(
-    (sum, item) => sum + item.subtotal,
+    (sum, item) => sum + item.sub_total,
     0
   );
+  // console.log(subtotal)
 
   const data = [
     { id: 1, name: "T-1" },
@@ -171,7 +222,39 @@ export default function Sales(props) {
     { id: 14, name: "T-14" },
     { id: 15, name: "T-15" },
   ];
+  const handleSubmit = () => {
+    if (filteredProducts.length === 0) {
+      notifications.show({
+        title: t("ValidationError"),
+        position: "top-right",
+        autoClose: 1000,
+        withCloseButton: true,
+        message: t("Add at least one product"),
+        color: "red",
+      });
+      return;
+    }
+    const validation = form.validate();
+    if (validation.hasErrors) {
+      return;
+    }
 
+    const formValue = {};
+    formValue.user_id = salesByUser;
+    formValue.transaction_mode_id = id;
+    enableTable ? formValue.sales_type = "restaurant" : formValue.sales_type = "bakery"
+    let transformedArray = filteredProducts.map((product) => {
+      return {
+        product_id: product.id,
+        quantity: product.quantity,
+        purchase_price: product.purchase_price,
+        sales_price: product.sales_price,
+        sub_total: product.sub_total,
+      };
+    });
+    formValue["items"] = transformedArray ? transformedArray : [];
+    console.log(formValue);
+  };
   return (
     <>
       <Box
@@ -188,37 +271,56 @@ export default function Sales(props) {
             align="flex-start"
             wrap="nowrap"
           >
-            <Select
-              pt={10}
-              placeholder={enableTable ? t("OrderTakenBy") : t("SalesBy")}
-              data={salesByDropdownData}
-              value={salesByUser}
-              changeValue={setSalesByUser}
-              clearable
-              searchable
-              onChange={setValue}
-              nothingFoundMessage="Nothing found..."
-              searchValue={searchValue}
-              onSearchChange={setSearchValue}
-              rightSection={
-                value || searchValue ? (
-                  <IconX
-                    style={{
-                      width: rem(16),
-                      height: rem(16),
-                      cursor: "pointer",
-                    }}
-                    onMouseDown={() => {
-                      setValue("");
-                    }}
-                  />
-                ) : (
-                  <IconChevronDown
-                    style={{ width: rem(16), height: rem(16) }}
-                  />
-                )
-              }
-            />
+            <Tooltip
+              label={t("SalesBy")}
+              opened={!!form.errors.user_id}
+              px={16}
+              py={2}
+              position="top-end"
+              bg={`red.4`}
+              c={"white"}
+              withArrow
+              offset={2}
+              zIndex={999}
+              transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
+            >
+              <Select
+                pt={10}
+                placeholder={enableTable ? t("OrderTakenBy") : t("SalesBy")}
+                data={salesByDropdownData}
+                value={form.values.user_id}
+                error={form.errors.user_id}
+                onChange={(value) => {
+                  form.setFieldValue("user_id", value);
+                  setSalesByUser(value);
+                }}
+                clearable
+                searchable
+                nothingFoundMessage="Nothing found..."
+                searchValue={searchValue}
+                onSearchChange={setSearchValue}
+                rightSection={
+                  value || searchValue ? (
+                    <IconX
+                      style={{
+                        width: rem(16),
+                        height: rem(16),
+                        cursor: "pointer",
+                      }}
+                      onMouseDown={() => {
+                        setValue("");
+                        form.setFieldValue("user_id", null);
+                      }}
+                    />
+                  ) : (
+                    <IconChevronDown
+                      style={{ width: rem(16), height: rem(16) }}
+                    />
+                  )
+                }
+              />
+            </Tooltip>
+
             {enableTable && (
               <Button
                 radius="md"
@@ -319,7 +421,7 @@ export default function Sales(props) {
                       width: 120,
                     },
                     {
-                      accessor: "qty",
+                      accessor: "quantity",
                       title: t("Qty"),
                       textAlign: "center",
                       render: (data) => (
@@ -329,7 +431,7 @@ export default function Sales(props) {
                               <ActionIcon
                                 size={"sm"}
                                 bg={"#596972"}
-                                // onClick={() => handleDecrement(data.id)}
+                                onClick={() => handleDecrement(data.id)}
                               >
                                 <IconMinus height={"12"} width={"12"} />
                               </ActionIcon>
@@ -340,18 +442,18 @@ export default function Sales(props) {
                                 maw={30}
                                 miw={30}
                               >
-                                {data.qty}
+                                {data.quantity}
                               </Text>
                               <ActionIcon
                                 size={"sm"}
                                 bg={"#596972"}
-                                // onClick={() => handleIncrement(data.id)}
+                                onClick={() => handleIncrement(data.id)}
                               >
                                 <IconPlus height={"12"} width={"12"} />
                               </ActionIcon>
                             </Group>
                           ) : (
-                            data.qty
+                            data.quantity
                           )}
                         </>
                       ),
@@ -373,7 +475,7 @@ export default function Sales(props) {
                       render: (data) => (
                         <>
                           {configData?.currency?.symbol}{" "}
-                          {data.subtotal.toFixed(2)}
+                          {data.sub_total.toFixed(2)}
                         </>
                       ),
                     },
@@ -458,7 +560,7 @@ export default function Sales(props) {
                         </Grid.Col>
                         <Grid.Col span={"auto"}>
                           <Text fw={800} c={"#333333"}>
-                            {configData?.currency?.symbol} {price}
+                            {configData?.currency?.symbol} 0
                           </Text>
                         </Grid.Col>
                       </Grid>
@@ -470,7 +572,7 @@ export default function Sales(props) {
                         </Grid.Col>
                         <Grid.Col span={"auto"}>
                           <Text fw={800} c={"#333333"}>
-                            {configData?.currency?.symbol} {price}
+                            {configData?.currency?.symbol} 0
                           </Text>
                         </Grid.Col>
                       </Grid>
@@ -482,7 +584,7 @@ export default function Sales(props) {
                         </Grid.Col>
                         <Grid.Col span={"auto"}>
                           <Text fw={800} c={"#333333"}>
-                            {configData?.currency?.symbol} {price}
+                            {configData?.currency?.symbol} 0
                           </Text>
                         </Grid.Col>
                       </Grid>
@@ -500,7 +602,7 @@ export default function Sales(props) {
                             {t("Total")}
                           </Text>
                           <Text fw={800} c={"#00542B"} size={"lg"}>
-                            {configData?.currency?.symbol} {price}
+                            {configData?.currency?.symbol} {subtotal.toFixed(2)}
                           </Text>
                         </Flex>
                       </Box>
@@ -517,59 +619,83 @@ export default function Sales(props) {
                   pr={"sm"}
                   viewportRef={scrollRef}
                   onScrollPositionChange={handleScroll}
+                  style={{
+                    borderRadius: 4,
+                    border:
+                      form.errors.transaction_mode_id && !id
+                        ? "1px solid red"
+                        : "none",
+                  }}
                 >
-                  <Group
-                    m={0}
-                    p={0}
-                    justify="flex-start"
-                    align="flex-start"
-                    gap="0"
-                    wrap="nowrap"
+                  <Tooltip
+                    label={t("TransactionMode")}
+                    opened={!!form.errors.transaction_mode_id}
+                    px={16}
+                    py={2}
+                    position="top-end"
+                    bg={`red.4`}
+                    c={"white"}
+                    withArrow
+                    offset={{ mainAxis: 5, crossAxis: 12 }}
+                    zIndex={999}
+                    transitionProps={{
+                      transition: "pop-bottom-left",
+                      duration: 500,
+                    }}
                   >
-                    {transactionModeData.map((mode, index) => (
-                      <Box
-                        onClick={() => {
-                          console.log("Clicked on method -", mode.id),
+                    <Group
+                      m={0}
+                      p={0}
+                      justify="flex-start"
+                      align="flex-start"
+                      gap="0"
+                      wrap="nowrap"
+                    >
+                      {transactionModeData.map((mode, index) => (
+                        <Box
+                          onClick={() => {
+                            // console.log("Clicked on method -", mode.id),
                             clicked(mode.id);
-                        }}
-                        key={index}
-                        p={4}
-                        style={{
-                          position: "relative",
-                          cursor: "pointer",
-                        }}
-                      >
-                        <Flex
-                          bg={mode.id === id ? "#E6F5ED" : "white"}
-                          direction="column"
-                          align="center"
-                          justify="center"
+                          }}
+                          key={index}
                           p={4}
                           style={{
-                            width: "100px",
-                            borderRadius: "8px",
+                            position: "relative",
+                            cursor: "pointer",
                           }}
                         >
-                          <Image
-                            mih={"60%"}
-                            miw={"60%"}
-                            mah={"60%"}
-                            maw={"60%"}
-                            fit="contain"
-                            src={
-                              isOnline
-                                ? mode.path
-                                : "/images/transaction-mode-offline.jpg"
-                            }
-                            alt={mode.method_name}
-                          ></Image>
-                          <Text pt={"4"} c={"#333333"} fw={500}>
-                            {mode.name}
-                          </Text>
-                        </Flex>
-                      </Box>
-                    ))}
-                  </Group>
+                          <Flex
+                            bg={mode.id === id ? "#E6F5ED" : "white"}
+                            direction="column"
+                            align="center"
+                            justify="center"
+                            p={4}
+                            style={{
+                              width: "100px",
+                              borderRadius: "8px",
+                            }}
+                          >
+                            <Image
+                              mih={"60%"}
+                              miw={"60%"}
+                              mah={"60%"}
+                              maw={"60%"}
+                              fit="contain"
+                              src={
+                                isOnline
+                                  ? mode.path
+                                  : "/images/transaction-mode-offline.jpg"
+                              }
+                              alt={mode.method_name}
+                            ></Image>
+                            <Text pt={"4"} c={"#333333"} fw={500}>
+                              {mode.name}
+                            </Text>
+                          </Flex>
+                        </Box>
+                      ))}
+                    </Group>
+                  </Tooltip>
                 </ScrollArea>
                 {showLeftArrow && (
                   <ActionIcon
@@ -632,7 +758,17 @@ export default function Sales(props) {
                   <Grid columns={12} gutter={0}>
                     <Grid.Col span={4}>
                       <Flex h={40} justify={"center"} align={"center"}>
-                        <Checkbox color="lime" size="lg" onClick={""} />
+                        <Checkbox
+                          color="lime"
+                          size="lg"
+                          onChange={(event) => {
+                            
+                            console.log(
+                              "Checkbox clicked:",
+                              event.currentTarget.checked
+                            );
+                          }}
+                        />
                       </Flex>
                     </Grid.Col>
                     <Grid.Col span={8}>
@@ -701,6 +837,9 @@ export default function Sales(props) {
                   bg={"#00994f"}
                   fullWidth={true}
                   leftSection={<IconDeviceFloppy />}
+                  onClick={() => {
+                    handleSubmit();
+                  }}
                 >
                   {t("Save")}
                 </Button>

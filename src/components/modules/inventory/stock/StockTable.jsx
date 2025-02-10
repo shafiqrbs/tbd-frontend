@@ -20,7 +20,7 @@ import {
 import tableCss from "../../../../assets/css/Table.module.css";
 import __StockSearch from "./__StockSearch.jsx";
 import { setDeleteMessage } from "../../../../store/inventory/crudSlice.js";
-import _StockModal from "./_StockModal.jsx";
+import OverviewModal from "../product-overview/OverviewModal.jsx";
 import { IconCheck, IconDotsVertical, IconTrashX } from "@tabler/icons-react";
 import { showEntityData } from "../../../../store/core/crudSlice.js";
 import { notifications } from "@mantine/notifications";
@@ -346,7 +346,7 @@ function StockTable(props) {
         />
       </Box>
       {viewModal && (
-        <_StockModal viewModal={viewModal} setViewModal={setViewModal} />
+        <OverviewModal viewModal={viewModal} setViewModal={setViewModal} />
       )}
     </>
   );

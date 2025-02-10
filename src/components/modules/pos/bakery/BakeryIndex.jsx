@@ -10,12 +10,23 @@ import Sales from "./Sales.jsx";
 import HeaderNavbar from "../HeaderNavbar.jsx";
 import { getCategoryDropdown } from "../../../../store/inventory/utilitySlice.js";
 import { setDropdownLoad } from "../../../../store/inventory/crudSlice.js";
+import {
+  editEntityData,
+  getIndexEntityData,
+  setFetching,
+  setFormLoading,
+  setInsertType,
+  showEntityData,
+  deleteEntityData,
+  getStatusInlineUpdateData,
+  storeEntityData,
+} from "../../../../store/core/crudSlice.js";
 export default function BakeryIndex() {
   const { isOnline, mainAreaHeight } = useOutletContext();
   const height = mainAreaHeight - 130;
   const progress = getLoadingProgress();
   const { t } = useTranslation();
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   // category dropdown
   const dropdownLoad = useSelector(
@@ -44,131 +55,22 @@ export default function BakeryIndex() {
     dispatch(setDropdownLoad(false));
   }, [dropdownLoad]);
 
-  const products = [
-    {
-      id: 1,
-      name: "Margarita Pizza",
-      img: "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png",
-      price: 120.25,
-    },
-    {
-      id: 2,
-      name: "Lemonade Pizza",
-      img: "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png",
-      price: 130.5,
-    },
-    {
-      id: 3,
-      name: "Barrista Pizza",
-      img: "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png",
-      price: 110.75,
-    },
-    {
-      id: 4,
-      name: "Jhankar Pizza",
-      img: "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png",
-      price: 12000.25,
-    },
-    {
-      id: 5,
-      name: "Uttara Pizza githubusercontent githubusercontent mantine demo",
-      img: "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png",
-      price: 200,
-    },
-    {
-      id: 6,
-      name: "Chikni Pizza",
-      img: "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png",
-      price: 220,
-    },
-    {
-      id: 7,
-      name: "Dambu Pizza",
-      img: "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png",
-      price: 300,
-    },
-    {
-      id: 8,
-      name: "Gambu Pizza",
-      img: "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png",
-      price: 400,
-    },
-    {
-      id: 9,
-      name: "Chontu Pizza",
-      img: "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png",
-      price: 50,
-    },
-    {
-      id: 10,
-      name: "Pontu Pizza",
-      img: "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png",
-      price: 100,
-    },
-    {
-      id: 11,
-      name: "Chintu Pizza",
-      img: "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png",
-      price: 210,
-    },
-    {
-      id: 12,
-      name: "Kintu Pizza",
-      img: "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png",
-      price: 220,
-    },
-    {
-      id: 13,
-      name: "Asta Pizza",
-      img: "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png",
-      price: 240,
-    },
-    {
-      id: 14,
-      name: "Beef Pizza",
-      img: "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png",
-      price: 300,
-    },
-    {
-      id: 15,
-      name: "Chicken Pizza",
-      img: "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png",
-      price: 400,
-    },
-    {
-      id: 16,
-      name: "Mango Pizza",
-      img: "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png",
-      price: 500,
-    },
-    {
-      id: 17,
-      name: "Django Pizza",
-      img: "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png",
-      price: 180,
-    },
-    {
-      id: 18,
-      name: "Vue Pizza",
-      img: "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png",
-      price: 790,
-    },
-  ];
+  //get products
+  const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword);
+  const [indexData, setIndexData] = useState([]);
+  useEffect(() => {
+    const storedProducts = localStorage.getItem("core-products");
+    const localProducts = storedProducts ? JSON.parse(storedProducts) : [];
 
-  const [quantities, setQuantities] = useState(
-    products.reduce(
-      (acc, product) => ({
-        ...acc,
-        [product.id]: {
-          id: product.id,
-          name: product.name,
-          quantity: 0,
-          price: product.price,
-        },
-      }),
-      {}
-    )
-  );
+    // Filter products where product_nature is not 'raw-materials'
+    const filteredProducts = localProducts.filter(
+      (product) => product.product_nature !== "raw-materials"
+    );
+
+    setIndexData(filteredProducts);
+  }, []);
+  const [quantities, setQuantities] = useState({});
+
 
   const [tables, setTables] = useState([
     { id: 1, time: "08:01:49 PM" },
@@ -192,6 +94,7 @@ export default function BakeryIndex() {
   ]);
 
   const [enableTable, setEnableTable] = useState(false);
+
   return (
     <>
       {progress !== 100 && (
@@ -225,7 +128,7 @@ export default function BakeryIndex() {
                     enableTable={enableTable}
                     quantities={quantities}
                     setQuantities={setQuantities}
-                    products={products}
+                    products={indexData}
                     categoryDropdown={categoryDropdown}
                   />
                 </Grid.Col>
@@ -235,7 +138,7 @@ export default function BakeryIndex() {
                       enableTable={enableTable}
                       quantities={quantities}
                       setQuantities={setQuantities}
-                      products={products}
+                      products={indexData}
                     />
                   </Box>
                 </Grid.Col>
