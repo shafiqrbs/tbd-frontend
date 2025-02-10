@@ -75,6 +75,9 @@ export default function Table(props) {
         ? prevSelected.filter((id) => id !== productId)
         : [...prevSelected, productId]
     );
+    setTimeout(() => {
+      setSelected([]);
+    }, 50);
   };
 
   // changes
@@ -337,7 +340,7 @@ export default function Table(props) {
                             styles={(theme) => ({
                               root: {
                                 cursor: "pointer",
-                                transition: "transform 0.1s ease-in-out",
+                                transition: "transform 0.5s ease-in-out",
                                 transform: selected.includes(product.id)
                                   ? "scale(0.97)"
                                   : undefined,
@@ -346,7 +349,10 @@ export default function Table(props) {
                                   : "3px solid #eaeced",
                               },
                             })}
-                            onClick={() => handleSelect(product.id)}
+                            onClick={() => {
+                              handleSelect(product.id);
+                              handleIncrement(product.id);
+                            }}
                           >
                             <Image
                               radius="sm"
@@ -404,7 +410,6 @@ export default function Table(props) {
                             styles={(theme) => ({
                               root: {
                                 cursor: "pointer",
-                                transition: "transform 0.1s ease-in-out",
                                 transform: selected.includes(product.id)
                                   ? "scale(0.97)"
                                   : undefined,
@@ -414,7 +419,10 @@ export default function Table(props) {
                               },
                             })}
                             padding="xs"
-                            onClick={() => handleSelect(product.id)}
+                            onClick={() => {
+                              handleSelect(product.id);
+                              handleIncrement(product.id);
+                            }}
                           >
                             <Grid columns={12}>
                               <Grid.Col span={6}>

@@ -203,10 +203,10 @@ export default function Sales(props) {
     (sum, item) => sum + item.sub_total,
     0
   );
-  // console.log(subtotal)
+  // console.log(filteredProducts)
   const vat = 5;
-  const sd = 5; 
-  const discount = 5
+  const sd = 5;
+  const discount = 5;
 
   const data = [
     { id: 1, name: "T-1" },
@@ -245,7 +245,9 @@ export default function Sales(props) {
     const formValue = {};
     formValue.user_id = salesByUser;
     formValue.transaction_mode_id = id;
-    enableTable ? formValue.sales_type = "restaurant" : formValue.sales_type = "bakery"
+    enableTable
+      ? (formValue.sales_type = "restaurant")
+      : (formValue.sales_type = "bakery");
     let transformedArray = filteredProducts.map((product) => {
       return {
         product_id: product.id,
@@ -257,6 +259,45 @@ export default function Sales(props) {
     });
     formValue["items"] = transformedArray ? transformedArray : [];
     console.log(formValue);
+  };
+
+  const handleIncrement = (productId) => {
+    setQuantities((prev) => {
+      const updatedQuantities = { ...prev };
+      if (!updatedQuantities[productId]) {
+        updatedQuantities[productId] = {
+          id: productId,
+          quantity: 0,
+          display_name:
+            products.find((product) => product.id === productId)
+              ?.display_name || "",
+          sales_price:
+            products.find((product) => product.id === productId)?.sales_price ||
+            0,
+          sub_total: 0,
+        };
+      }
+
+      updatedQuantities[productId].quantity += 1;
+      updatedQuantities[productId].sub_total =
+        updatedQuantities[productId].quantity *
+        updatedQuantities[productId].sales_price;
+      return updatedQuantities;
+    });
+  };
+  const handleDecrement = (productId) => {
+    setQuantities((prev) => {
+      const updatedQuantities = { ...prev };
+
+      if (updatedQuantities[productId]) {
+        updatedQuantities[productId] = {
+          ...updatedQuantities[productId],
+          quantity: Math.max(0, updatedQuantities[productId].quantity - 1),
+        };
+      }
+
+      return updatedQuantities;
+    });
   };
   return (
     <>
@@ -413,10 +454,15 @@ export default function Sales(props) {
                   columns={[
                     {
                       accessor: "id",
-                      // width: 100,
                       title: "S/N",
                       render: (data, index) => index + 1,
-                      footer: <div>Sub Total</div>,
+                      footer: (
+                        <>
+                          <Text fw={"bold"} fz={"xs"}>
+                            {t("SubTotal")}
+                          </Text>
+                        </>
+                      ),
                     },
                     {
                       accessor: "name",
@@ -429,35 +475,31 @@ export default function Sales(props) {
                       textAlign: "center",
                       render: (data) => (
                         <>
-                          {enableTable ? (
-                            <Group w={120} gap={8} justify="left">
-                              <ActionIcon
-                                size={"sm"}
-                                bg={"#596972"}
-                                onClick={() => handleDecrement(data.id)}
-                              >
-                                <IconMinus height={"12"} width={"12"} />
-                              </ActionIcon>
-                              <Text
-                                size="sm"
-                                ta={"center"}
-                                fw={600}
-                                maw={30}
-                                miw={30}
-                              >
-                                {data.quantity}
-                              </Text>
-                              <ActionIcon
-                                size={"sm"}
-                                bg={"#596972"}
-                                onClick={() => handleIncrement(data.id)}
-                              >
-                                <IconPlus height={"12"} width={"12"} />
-                              </ActionIcon>
-                            </Group>
-                          ) : (
-                            data.quantity
-                          )}
+                          <Group w={120} gap={8} justify="left">
+                            <ActionIcon
+                              size={"sm"}
+                              bg={"#596972"}
+                              onClick={() => handleDecrement(data.id)}
+                            >
+                              <IconMinus height={"12"} width={"12"} />
+                            </ActionIcon>
+                            <Text
+                              size="sm"
+                              ta={"center"}
+                              fw={600}
+                              maw={30}
+                              miw={30}
+                            >
+                              {data.quantity}
+                            </Text>
+                            <ActionIcon
+                              size={"sm"}
+                              bg={"#596972"}
+                              onClick={() => handleIncrement(data.id)}
+                            >
+                              <IconPlus height={"12"} width={"12"} />
+                            </ActionIcon>
+                          </Group>
                         </>
                       ),
                     },
@@ -467,7 +509,7 @@ export default function Sales(props) {
                       textAlign: "center",
                       render: (data) => (
                         <>
-                          {configData?.currency?.symbol} {data.price}
+                          {configData?.currency?.symbol} {data.sales_price}
                         </>
                       ),
                     },
@@ -484,7 +526,6 @@ export default function Sales(props) {
                     },
                     {
                       accessor: "action",
-                      width: 120,
                       title: t(""),
                       textAlign: "right",
                       render: (data) => (
@@ -503,11 +544,11 @@ export default function Sales(props) {
                       footer: (
                         <Group gap="0">
                           <Box mb={-4}>
-                            <IconSum size="14" />
+                            <IconSum size="12" />
                           </Box>
-                          <div>
+                          <Text fw={"bold"} fz={"sm"}>
                             {configData?.currency?.symbol} {subtotal.toFixed(2)}
-                          </div>
+                          </Text>
                         </Group>
                       ),
                     },
@@ -765,7 +806,6 @@ export default function Sales(props) {
                           color="lime"
                           size="lg"
                           onChange={(event) => {
-                            
                             console.log(
                               "Checkbox clicked:",
                               event.currentTarget.checked
