@@ -199,11 +199,14 @@ export default function Sales(props) {
       sub_total: (quantities[product.id]?.quantity ?? 0) * product.sales_price,
     }))
     .filter((product) => product.quantity > 0);
-  const subtotal = filteredProducts.reduce(
+  let subtotal = filteredProducts.reduce(
     (sum, item) => sum + item.sub_total,
     0
   );
   // console.log(subtotal)
+  const vat = 5;
+  const sd = 5; 
+  const discount = 5
 
   const data = [
     { id: 1, name: "T-1" },
