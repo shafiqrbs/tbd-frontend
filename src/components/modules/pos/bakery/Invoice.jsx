@@ -186,7 +186,6 @@ export default function Invoice(props) {
 
     localStorage.setItem("temp-pos-products", JSON.stringify(myCartProducts));
     setLoadCartProducts(true);
-    console.log("kk");
   };
   const changeSubTotalbyQuantity = (event) => {
     const quantity = Number(event.target.value);

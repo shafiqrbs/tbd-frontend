@@ -619,7 +619,6 @@
   "AlternativeEmail" : "Alternative Email",
   "ChooseProductGrade" : "Choose Product Grade",
   "VatManagement" : "Vat Management",
-  "SKUItem" : "SKU Item",
   "ChooseHS" : "Choose HS",
   "SkuItem" : "Sku Item",
   "EnterQuantity" : "Enter Quantity",
@@ -699,5 +698,9 @@
   "EnterPurchasePrice" : "Enter purchase price",
   "SalesProcess" : "Sales process",
   "CustomerMobileNumber" : "Customer Mobile Number",
+  "ValidationError" : "Validation Error",
+  "Description" : "Description",
+  "Grade" : "Grade",
+  "Provision" : "Provision",
   "": ""
 }
