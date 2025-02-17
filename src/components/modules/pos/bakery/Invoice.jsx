@@ -714,7 +714,7 @@ export default function Invoice(props) {
                             {t("Total")}
                           </Text>
                           <Text fw={800} c={"#00542B"} size={"lg"}>
-                            {/* {configData?.currency?.symbol} {subtotal.toFixed(2)} */}
+                            {configData?.currency?.symbol} {subtotal.toFixed(2)}
                           </Text>
                         </Flex>
                       </Box>
