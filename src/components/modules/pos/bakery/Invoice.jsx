@@ -503,7 +503,6 @@ export default function Invoice(props) {
                     {
                       accessor: "display_name",
                       title: t("Product"),
-                      width: 120,
                     },
                     {
                       accessor: "quantity",
@@ -511,7 +510,7 @@ export default function Invoice(props) {
                       textAlign: "center",
                       render: (data) => (
                         <>
-                          <Group w={120} gap={8} justify="left">
+                          <Group gap={8} justify="center" >
                             <ActionIcon
                               size={"sm"}
                               bg={"#596972"}
