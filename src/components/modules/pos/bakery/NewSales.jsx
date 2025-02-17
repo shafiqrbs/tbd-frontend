@@ -37,6 +37,7 @@ import getConfigData from "../../../global-hook/config-data/getConfigData";
 import { DataTable } from "mantine-datatable";
 import tableCss from "./Table.module.css";
 import Invoice from "./Invoice.jsx";
+import { notifications } from "@mantine/notifications";
 
 export default function NewSales(props) {
   const { enableTable, categoryDropdown } = props;
@@ -59,7 +60,6 @@ export default function NewSales(props) {
     setTempCartProducts(tempProducts ? JSON.parse(tempProducts) : []);
     setLoadCartProducts(false);
   }, [loadCartProducts]);
-  const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword);
   const [originalProducts, setOriginalProducts] = useState([]);
   const [products, setProducts] = useState([]);
 
@@ -74,9 +74,7 @@ export default function NewSales(props) {
           product.sales_price !== 0
         );
       }
-      return (
-        product.product_nature !== "raw-materials" && product.sales_price !== 0
-      );
+      return product.product_nature !== "raw-materials";
     });
     setProducts(filteredProducts);
     setOriginalProducts(filteredProducts);
@@ -100,7 +98,17 @@ export default function NewSales(props) {
     const cartProducts = localStorage.getItem("temp-pos-products");
     let myCartProducts = cartProducts ? JSON.parse(cartProducts) : [];
     const product = products.find((product) => product.id === productId);
-
+    if (product.sales_price === 0 || product.sales_price === null) {
+      notifications.show({
+        title: t("Error"),
+        position: "top-right",
+        autoClose: 1000,
+        withCloseButton: true,
+        message: t("Sales price cant be zero"),
+        color: "red",
+      });
+      return;
+    }
     let found = false;
 
     myCartProducts = myCartProducts.map((item) => {

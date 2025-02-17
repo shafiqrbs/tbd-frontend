@@ -63,7 +63,6 @@ function _GenericInvoiceForm(props) {
 
             // Filter products where product_nature is not 'post-production'
             const filteredProducts = localProducts.filter(product => product.product_nature !== 'post-production');
-
             const lowerCaseSearchTerm = searchValue.toLowerCase();
             const fieldsToSearch = ['product_name'];
             const productFilterData = filteredProducts.filter(product =>
@@ -286,13 +285,15 @@ function _GenericInvoiceForm(props) {
                                     form.setFieldError('barcode', true);
                                     form.setFieldError('product_id', true);
                                     setTimeout(() => { }, 1000)
-                                } else {
-
+                                }
+                                if (values.purchase_price === 0 || values.purchase_price === null) { 
+                                    form.setFieldError('purchase_price', true)
+                                } 
+                                else{
                                     const cardProducts = localStorage.getItem('temp-purchase-products');
                                     const myCardProducts = cardProducts ? JSON.parse(cardProducts) : [];
                                     const storedProducts = localStorage.getItem('core-products');
                                     const localProducts = storedProducts ? JSON.parse(storedProducts) : [];
-
                                     if (values.product_id && !values.barcode) {
                                         handleAddProductByProductId(values, myCardProducts, localProducts);
                                     } else if (!values.product_id && values.barcode) {
