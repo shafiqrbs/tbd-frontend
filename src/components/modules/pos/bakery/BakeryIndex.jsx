@@ -45,27 +45,30 @@ export default function BakeryIndex() {
     dispatch(setDropdownLoad(false));
   }, [dropdownLoad]);
 
-  const [tables, setTables] = useState([
-    { id: 1, time: "08:01:49 PM" },
-    { id: 2, time: "08:01:49 PM" },
-    { id: 3, time: "08:01:49 PM" },
-    { id: 4, time: "08:01:49 PM" },
-    { id: 5, time: "08:01:49 PM" },
-    { id: 6, time: "08:01:49 PM" },
-    { id: 7, time: "08:01:49 PM" },
-    { id: 8, time: "08:01:49 PM" },
-    { id: 9, time: "08:01:49 PM" },
-    { id: 10, time: "08:01:49 PM" },
-    { id: 11, time: "08:01:49 PM" },
-    { id: 12, time: "08:01:49 PM" },
-    { id: 13, time: "08:01:49 PM" },
-    { id: 14, time: "08:01:49 PM" },
-    { id: 15, time: "08:01:49 PM" },
-    { id: 16, time: "08:01:49 PM" },
-    { id: 17, time: "08:01:49 PM" },
-    { id: 18, time: "08:01:49 PM" },
-  ]);
+  const [time, setTime] = useState(new Date().toLocaleTimeString());
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setTime(new Date().toLocaleTimeString());
+    }, 100);
+    return () => clearInterval(intervalId);
+  }, []);
+  const [tables, setTables] = useState(
+    Array.from({ length: 18 }, (_, i) => ({
+      id: i + 1,
+      time: time,
+      status: "Free",
+    }))
+  );
+  useEffect(() => {
+    setTables((prevTables) =>
+      prevTables.map((table) => ({
+        ...table,
+        time: time, // Update the time in each table object
+      }))
+    );
+  }, [time]);
 
+  const [tableId, setTableId] = useState(null);
   const [enableTable, setEnableTable] = useState(true);
 
   return (
@@ -83,6 +86,8 @@ export default function BakeryIndex() {
               currencySymbol=""
               tables={tables}
               setTables={setTables}
+              tableId={tableId}
+              setTableId={setTableId}
             />
           )}
           <Box
@@ -96,8 +101,12 @@ export default function BakeryIndex() {
           >
             <Box pl={"4"}>
               <NewSales
+                tables={tables}
+                setTables={setTables}
                 enableTable={enableTable}
                 categoryDropdown={categoryDropdown}
+                tableId={tableId}
+                setTableId={setTableId}
               />
             </Box>
           </Box>

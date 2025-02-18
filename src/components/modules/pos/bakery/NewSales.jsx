@@ -40,14 +40,18 @@ import Invoice from "./Invoice.jsx";
 import { notifications } from "@mantine/notifications";
 
 export default function NewSales(props) {
-  const { enableTable, categoryDropdown } = props;
+  const {
+    enableTable,
+    categoryDropdown,
+    tableId,
+    setTableId,
+    tables,
+    setTables,
+  } = props;
   const dispatch = useDispatch();
   const { t, i18n } = useTranslation();
   const { isOnline, mainAreaHeight } = useOutletContext();
   const height = mainAreaHeight - 190; //TabList height 104
-
-  const [tc, setTc] = useState("#333333");
-  const [bg, setBg] = useState("#E6F5ED");
   const [selected, setSelected] = useState([]);
   const [id, setId] = useState(null);
 
@@ -81,8 +85,6 @@ export default function NewSales(props) {
     // console.log("from filter use", filteredProducts);
   }, [id]);
   const { configData } = getConfigData();
-  // console.log(products)
-  // console.log(configData)
   const handleSelect = (productId) => {
     setSelected((prevSelected) =>
       prevSelected.includes(productId)
@@ -170,13 +172,6 @@ export default function NewSales(props) {
   };
   const [value, setValue] = useState("grid");
 
-  // const calculateSubtotal = (data) => {
-  //   return data.reduce((total, item) => total + item.price * item.qty, 0);
-  // };
-  // const subtotal = calculateSubtotal(products);
-
-  // search functionality
-
   const [searchValue, setSearchValue] = useState("");
 
   const filterList = (searchValue) => {
@@ -192,10 +187,17 @@ export default function NewSales(props) {
     });
     setProducts(updatedList);
   };
-  // useEffect(() => {
-  //   console.log(products.length);
-  //   console.log(products);
-  // }, [products]);
+  const updateTableStatus = (newStatus) => {
+    if (!tableId) return;
+
+    setTables((prevTables) =>
+      prevTables.map((table) =>
+        table.id === tableId ? { ...table, status: newStatus } : table
+      )
+    );
+  };
+  const currentTable = tables.find((t) => t.id === tableId);
+  const currentStatus = currentTable ? currentTable.status : "";
 
   return (
     <>
@@ -560,8 +562,6 @@ export default function NewSales(props) {
                           footer: tableCss.footer,
                           pagination: tableCss.pagination,
                         }}
-                        // withTableBorder={true}
-                        // withColumnBorders={true}
                         records={products}
                         columns={[
                           {
@@ -644,43 +644,48 @@ export default function NewSales(props) {
                 pr={8}
                 className="divider"
               >
-                <Button
-                  bg={bg}
-                  onClick={() => {
-                    bg === "#E6F5ED" ? setBg("green.8") : setBg("#E6F5ED"),
-                      tc === "#333333" ? setTc("white") : setTc("#333333");
-                  }}
-                >
-                  <Text c={tc} size="sm" fw={600}>
-                    Order
-                  </Text>
-                </Button>
-                <Button bg={"#E6F5ED"}>
-                  <Text c={"#333333"} size="sm" fw={600}>
-                    Kitchen
-                  </Text>
-                </Button>
-                <Button bg={"#E6F5ED"}>
-                  <Text c={"#333333"} size="sm" fw={600}>
-                    Hold
-                  </Text>
-                </Button>
-                <Button bg={"#E6F5ED"}>
-                  <Text c={"#333333"} size="sm" fw={600}>
-                    Reserved
-                  </Text>
-                </Button>
-                <Button bg={"#E6F5ED"}>
-                  <Text c={"#333333"} size="sm" fw={600}>
-                    Free
-                  </Text>
-                </Button>
+                {["Order", "Kitchen", "Hold", "Reserved", "Free"].map(
+                  (status) => {
+                    const isActive = currentStatus === status;
+                    const bg = isActive ? "green.8" : "#E6F5ED";
+                    const tc = isActive ? "white" : "#333333";
+
+                    return (
+                      <Tooltip
+                        key={status}
+                        disabled={!!tableId}
+                        withArrow
+                        px={16}
+                        py={2}
+                        offset={2}
+                        zIndex={999}
+                        position="top-end"
+                        label={t("PleaseSelectTable")}
+                        color="red"
+                      >
+                        <Button
+                          disabled={!tableId}
+                          bg={bg}
+                          onClick={() => updateTableStatus(status)}
+                        >
+                          <Text c={tc} size="sm" fw={600}>
+                            {t(status)}
+                          </Text>
+                        </Button>
+                      </Tooltip>
+                    );
+                  }
+                )}
               </Group>
             </Box>
           )}
         </Grid.Col>
         <Grid.Col span={9}>
           <Invoice
+            tables={tables}
+            setTables={setTables}
+            tableId={tableId}
+            setTableId={setTableId}
             enableTable={enableTable}
             loadCartProducts={loadCartProducts}
             setLoadCartProducts={setLoadCartProducts}

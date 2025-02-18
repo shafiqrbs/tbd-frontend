@@ -51,8 +51,15 @@ import { SalesPrintPos } from "../print/pos/SalesPrintPos";
 import { isNotEmpty, useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
 export default function Invoice(props) {
-  const { setLoadCartProducts, loadCartProducts, products, enableTable } =
-    props;
+  const {
+    setLoadCartProducts,
+    loadCartProducts,
+    products,
+    enableTable,
+    tables,
+    tableId,
+    setTableId,
+  } = props;
   const dispatch = useDispatch();
   const { t, i18n } = useTranslation();
   const { isOnline, mainAreaHeight } = useOutletContext();
@@ -131,10 +138,6 @@ export default function Invoice(props) {
       transaction_mode_id: (value) =>
         !value ? t("Please select transaction mode") : null,
       user_id: (value) => (!value ? true : null),
-      // items: (value) =>
-      //   filteredProducts.length === 0
-      //     ? t("Please add at least one product")
-      //     : null,
     },
   });
   const [errors, setErrors] = useState({
@@ -169,8 +172,6 @@ export default function Invoice(props) {
     }
   }, [transactionModeData]);
 
-  const [checked, setChecked] = useState(false);
-
   const [id, setId] = useState(null);
   const clicked = (id) => {
     setId(id);
@@ -188,85 +189,6 @@ export default function Invoice(props) {
     localStorage.setItem("temp-pos-products", JSON.stringify(myCartProducts));
     setLoadCartProducts(true);
   };
-  const changeSubTotalbyQuantity = (event) => {
-    const quantity = Number(event.target.value);
-    const purchase_price = Number(productForm.values.purchase_price);
-    if (
-      !isNaN(quantity) &&
-      !isNaN(purchase_price) &&
-      quantity > 0 &&
-      purchase_price >= 0
-    ) {
-      setSelectProductDetails((prevDetails) => ({
-        ...prevDetails,
-        sub_total: quantity * purchase_price,
-      }));
-      productForm.setFieldValue("sub_total", quantity * purchase_price);
-    }
-  };
-
-  const vat = 5;
-  const sd = 5;
-  const discount = 5;
-
-  const data = [
-    { id: 1, name: "T-1" },
-    { id: 2, name: "T-2" },
-    { id: 3, name: "T-3" },
-    { id: 4, name: "T-4" },
-    { id: 5, name: "T-5" },
-    { id: 6, name: "T-6" },
-    { id: 7, name: "T-7" },
-    { id: 8, name: "T-8" },
-    { id: 9, name: "T-9" },
-    { id: 10, name: "T-10" },
-    { id: 11, name: "T-11" },
-    { id: 12, name: "T-12" },
-    { id: 13, name: "T-13" },
-    { id: 14, name: "T-14" },
-    { id: 15, name: "T-15" },
-  ];
-  const handleSubmit = () => {
-    if (tempCartProducts.length === 0) {
-      notifications.show({
-        title: t("ValidationError"),
-        position: "top-right",
-        autoClose: 1000,
-        withCloseButton: true,
-        message: t("Add at least one product"),
-        color: "red",
-      });
-      return;
-    }
-    const validation = form.validate();
-    if (validation.hasErrors) {
-      return;
-    }
-
-    const formValue = {};
-    formValue.user_id = salesByUser;
-    formValue.transaction_mode_id = id;
-    enableTable
-      ? (formValue.sales_type = "restaurant")
-      : (formValue.sales_type = "bakery");
-    let transformedArray = tempCartProducts.map((product) => {
-      return {
-        product_id: product.id,
-        quantity: product.quantity,
-        purchase_price: product.purchase_price,
-        sales_price: product.sales_price,
-        sub_total: product.sub_total,
-      };
-    });
-    formValue["items"] = transformedArray ? transformedArray : [];
-    localStorage.removeItem("temp-pos-products")
-    setLoadCartProducts(true);
-    setSalesByUser(null)
-    setId(null)
-    form.reset()
-    console.log(formValue);
-  };
-
   const handleIncrement = (productId) => {
     const cartProducts = localStorage.getItem("temp-pos-products");
     let myCartProducts = cartProducts ? JSON.parse(cartProducts) : [];
@@ -323,18 +245,106 @@ export default function Invoice(props) {
     localStorage.setItem("temp-pos-products", JSON.stringify(myCartProducts));
     setLoadCartProducts(true);
   };
-  // let subtotal = 0;
-  // const findSubtotal = () =>
-  //   tempCartProducts.map((item) => {
-  //     subtotal += item.sub_total;
-  //   });
-  // findSubtotal();
 
   const subtotal = tempCartProducts.reduce(
     (acc, item) => acc + item.sub_total,
     0
   );
+  // Track additional tables per selected table
+  const [additionalTableSelections, setAdditionalTableSelections] = useState(
+    {}
+  );
+  const [checked, setChecked] = useState(false);
 
+  // Initialize or update selections when table changes
+  useEffect(() => {
+    if (tableId && !additionalTableSelections[tableId]) {
+      setAdditionalTableSelections((prev) => ({
+        ...prev,
+        [tableId]: new Set(),
+      }));
+    }
+  }, [tableId]);
+
+  const handleAdditionalTableCheck = (checkedTableId) => {
+    if (!tableId) return;
+
+    setAdditionalTableSelections((prev) => {
+      const currentSelections = new Set(prev[tableId] || []);
+
+      if (currentSelections.has(checkedTableId)) {
+        currentSelections.delete(checkedTableId);
+      } else {
+        currentSelections.add(checkedTableId);
+      }
+
+      return {
+        ...prev,
+        [tableId]: currentSelections,
+      };
+    });
+  };
+  const handlePrintAll = () => {
+    if (tempCartProducts.length === 0) {
+      notifications.show({
+        title: t("ValidationError"),
+        position: "top-right",
+        autoClose: 1000,
+        withCloseButton: true,
+        message: t("Add at least one product"),
+        color: "red",
+      });
+      return;
+    }
+    const validation = form.validate();
+    if (validation.hasErrors) {
+      return;
+    }
+
+    const formValue = {};
+    formValue.user_id = salesByUser;
+    formValue.transaction_mode_id = id;
+    enableTable
+      ? (formValue.sales_type = "restaurant")
+      : (formValue.sales_type = "bakery");
+    let transformedArray = tempCartProducts.map((product) => {
+      return {
+        product_id: product.id,
+        quantity: product.quantity,
+        purchase_price: product.purchase_price,
+        sales_price: product.sales_price,
+        sub_total: product.sub_total,
+      };
+    });
+    formValue["items"] = transformedArray ? transformedArray : [];
+    if (enableTable) {
+      const tableData = {
+        mainTable: {
+          id: tableId,
+          status: tables.find((t) => t.id === tableId)?.status,
+        },
+        additionalTables: Array.from(additionalTableSelections[tableId] || []),
+      };
+      formValue["table_data"] = tableData ? tableData : [];
+    }
+
+    console.log("Print All Data:", formValue);
+    localStorage.removeItem("temp-pos-products");
+    setLoadCartProducts(true);
+    setSalesByUser(null);
+    setId(null);
+
+    if (enableTable) {
+      setAdditionalTableSelections((prev) => {
+        const newSelections = { ...prev };
+        delete newSelections[tableId];
+        return newSelections;
+      });
+      setChecked(false);
+      setTableId(null);
+    }
+    form.reset();
+  };
   return (
     <>
       <Box
@@ -354,14 +364,14 @@ export default function Invoice(props) {
             <Tooltip
               label={t("SalesBy")}
               opened={!!form.errors.user_id}
-              px={16}
-              py={2}
-              position="top-end"
               bg={`red.4`}
               c={"white"}
               withArrow
+              px={16}
+              py={2}
               offset={2}
               zIndex={999}
+              position="top-end"
               transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
             >
               <Select
@@ -438,18 +448,31 @@ export default function Invoice(props) {
                   </Grid.Col>
                   <Grid.Col span={1}>
                     {enableTable && (
-                      <Checkbox
-                        checked={checked}
-                        color="green.8"
-                        onChange={(event) =>
-                          setChecked(event.currentTarget.checked)
-                        }
-                        styles={(theme) => ({
-                          input: {
-                            borderColor: "white",
-                          },
-                        })}
-                      />
+                      <Tooltip
+                        color="red.6"
+                        disabled={tableId}
+                        withArrow
+                        px={16}
+                        py={2}
+                        offset={2}
+                        zIndex={999}
+                        position="top-end"
+                        label={t("SelectaTabletoChooseAdditional")}
+                      >
+                        <Checkbox
+                          disabled={!tableId}
+                          checked={checked}
+                          color="green.8"
+                          onChange={(event) =>
+                            setChecked(event.currentTarget.checked)
+                          }
+                          styles={(theme) => ({
+                            input: {
+                              borderColor: "white",
+                            },
+                          })}
+                        />
+                      </Tooltip>
                     )}
                   </Grid.Col>
                 </Grid>
@@ -458,11 +481,16 @@ export default function Invoice(props) {
               {checked && (
                 <Paper p="md" radius="md" bg={"#E6F5ED99"}>
                   <Grid columns={15} gutter="md">
-                    {data.map((item) => (
+                    {tables.map((item) => (
                       <Grid.Col span={3} key={item.id}>
                         <Checkbox
-                          label={item.name}
+                          label={`Table ${item.id}`}
                           color="green.8"
+                          checked={additionalTableSelections[tableId]?.has(
+                            item.id
+                          )}
+                          onChange={() => handleAdditionalTableCheck(item.id)}
+                          disabled={item.id === tableId}
                           styles={(theme) => ({
                             input: {
                               border: "1.5px solid #767676",
@@ -492,18 +520,6 @@ export default function Invoice(props) {
                       accessor: "id",
                       title: "S/N",
                       render: (data, index) => index + 1,
-                      // footer: (
-                      //   <>
-                      //     <Text
-                      //       fw={"bold"}
-                      //       fz={"xs"}
-                      //       pos="absolute"
-                      //       style={{ top: 10, left: 10, zIndex: 1000 }}
-                      //     >
-                      //       {t("SubTotal")}
-                      //     </Text>
-                      //   </>
-                      // ),
                     },
                     {
                       accessor: "display_name",
@@ -515,7 +531,7 @@ export default function Invoice(props) {
                       textAlign: "center",
                       render: (data) => (
                         <>
-                          <Group gap={8} justify="center" >
+                          <Group gap={8} justify="center">
                             <ActionIcon
                               size={"sm"}
                               bg={"#596972"}
@@ -581,23 +597,6 @@ export default function Invoice(props) {
                           </ActionIcon>
                         </Group>
                       ),
-                      // footer: (
-                      //   <Group
-                      //     gap="10"
-                      //     pos="absolute"
-                      //     style={{ top: 10, right: 10, zIndex: 1000 }}
-                      //   >
-                      //     <Box mb={-4}>
-                      //       <IconSum size="16" />
-                      //     </Box>
-                      //     <Box>
-                      //       <Text fw={"bold"} fz={"sm"}>
-                      //         {configData?.currency?.symbol}{" "}
-                      //         {subtotal.toFixed(2)}
-                      //       </Text>
-                      //     </Box>
-                      //   </Group>
-                      // ),
                     },
                   ]}
                   loaderSize="xs"
@@ -611,7 +610,7 @@ export default function Invoice(props) {
                   align="center"
                   pt={4}
                   style={{
-                    borderTop: "1px solid #dee2e6", 
+                    borderTop: "1px solid #dee2e6",
                   }}
                 >
                   <Text fw={"bold"} fz={"sm"} c={"black"} pl={"10"}>
@@ -619,7 +618,7 @@ export default function Invoice(props) {
                   </Text>
                   <Group gap="10" pr={"sm"} align="center">
                     <Box mt={4}>
-                      <IconSum  size="16" style={{ color: "black" }} />
+                      <IconSum size="16" style={{ color: "black" }} />
                     </Box>
                     <Box>
                       <Text fw={"bold"} fz={"sm"} c={"black"}>
@@ -910,32 +909,35 @@ export default function Invoice(props) {
               </Group>
             </Box>
             <Grid columns={18} gutter={{ base: 2 }} pl={"8"} pr={"8"}>
-            <Grid.Col span={4}>
-                <Tooltip
-                  label={t("PrintAll")}
-                  px={16}
-                  py={2}
-                  position="top-end"
-                  color="red"
-                  withArrow
-                  offset={2}
-                  zIndex={100}
-                  transitionProps={{
-                    transition: "pop-bottom-left",
-                    duration: 2000,
-                  }}
-                >
-                  <Button
-                    bg={"green.5"}
-                    size={"sm"}
-                    fullWidth={true}
-                    leftSection={<IconPrinter />}
+              {enableTable && (
+                <Grid.Col span={4}>
+                  <Tooltip
+                    label={t("PrintAll")}
+                    px={16}
+                    py={2}
+                    position="top-end"
+                    color="red"
+                    withArrow
+                    offset={2}
+                    zIndex={100}
+                    transitionProps={{
+                      transition: "pop-bottom-left",
+                      duration: 2000,
+                    }}
                   >
-                    {t("Print All")}
-                  </Button>
-                </Tooltip>
-              </Grid.Col>
-              <Grid.Col span={4}>
+                    <Button
+                      bg={"green.5"}
+                      size={"sm"}
+                      fullWidth={true}
+                      leftSection={<IconPrinter />}
+                      onClick={handlePrintAll}
+                    >
+                      {t("Print All")}
+                    </Button>
+                  </Tooltip>
+                </Grid.Col>
+              )}
+              <Grid.Col span={enableTable ? 4 : 6}>
                 <Tooltip
                   label={t("Hold")}
                   px={16}
@@ -960,7 +962,7 @@ export default function Invoice(props) {
                   </Button>
                 </Tooltip>
               </Grid.Col>
-              <Grid.Col span={5}>
+              <Grid.Col span={enableTable ? 5 : 6}>
                 <Button
                   bg={"#30444F"}
                   size={"sm"}
@@ -973,53 +975,18 @@ export default function Invoice(props) {
                   {t("POS Print")}
                 </Button>
               </Grid.Col>
-              <Grid.Col span={5}>
+              <Grid.Col span={enableTable ? 5 : 6}>
                 <Button
                   size={"sm"}
                   bg={"#00994f"}
                   fullWidth={true}
                   leftSection={<IconDeviceFloppy />}
-                  onClick={() => {
-                    handleSubmit();
-                  }}
+                  onClick={handlePrintAll}
                 >
                   {t("Save")}
                 </Button>
               </Grid.Col>
             </Grid>
-            {/* <Group
-              grow
-              gap={"xs"}
-              p={8}
-              mb={"0"}
-              pt={6}
-              style={{ borderTop: "#c0c0c0 solid 2px" }}
-              className="divider"
-            >
-              <Button
-                bg={"red.5"}
-                size={"sm"}
-                leftSection={<IconPrinter />}
-              >
-                {t("Hold")}
-              </Button>
-              <Button
-                bg={"#30444F"}
-                size={"sm"}
-                fullWidth={true}
-                leftSection={<IconPrinter />}
-              >
-                {t("POS Print")}
-              </Button>
-              <Button
-                size={"sm"}
-                bg={"#00994f"}
-                fullWidth={true}
-                leftSection={<IconDeviceFloppy />}
-              >
-                {t("Save")}
-              </Button>
-            </Group> */}
             {printPos && (
               <div style={{ display: "none" }}>
                 <SalesPrintPos setPrintPos={setPrintPos} />
