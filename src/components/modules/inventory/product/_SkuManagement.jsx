@@ -216,7 +216,7 @@ function _SkuManagement(props) {
                     <Grid>
                         <Grid.Col span={6}>
                             <Title order={6} pt={"6"}>
-                                {t("SkuItem")}
+                                {t("SKUItem")}
                             </Title>
                         </Grid.Col>
                         <Grid.Col span={6}></Grid.Col>
