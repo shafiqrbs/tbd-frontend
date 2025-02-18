@@ -4,23 +4,13 @@ import { Box, Grid, Progress } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress.js";
-import Table from "./Table.jsx";
+import NewSales from "./NewSales.jsx";
 import classes from "./Index.module.css";
-import Sales from "./Sales.jsx";
+import Invoice from "./Invoice.jsx";
 import HeaderNavbar from "../HeaderNavbar.jsx";
 import { getCategoryDropdown } from "../../../../store/inventory/utilitySlice.js";
 import { setDropdownLoad } from "../../../../store/inventory/crudSlice.js";
-import {
-  editEntityData,
-  getIndexEntityData,
-  setFetching,
-  setFormLoading,
-  setInsertType,
-  showEntityData,
-  deleteEntityData,
-  getStatusInlineUpdateData,
-  storeEntityData,
-} from "../../../../store/core/crudSlice.js";
+
 export default function BakeryIndex() {
   const { isOnline, mainAreaHeight } = useOutletContext();
   const height = mainAreaHeight - 130;

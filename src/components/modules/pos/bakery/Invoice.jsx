@@ -70,6 +70,7 @@ export default function Invoice(props) {
   const navigate = useNavigate();
   const [value, setValue] = useState("");
   const [searchValue, setSearchValue] = useState("");
+  const [customerMobile, setCustomerMobile] = useState("");
 
   const scrollRef = useRef(null);
   const [showLeftArrow, setShowLeftArrow] = useState(false);
@@ -358,6 +359,7 @@ export default function Invoice(props) {
       });
       return;
     }
+
     const validation = form.validate();
     if (validation.hasErrors) {
       return;
@@ -673,18 +675,16 @@ export default function Invoice(props) {
                     footer: tableCss.footer,
                     pagination: tableCss.pagination,
                   }}
-                  records={filteredProducts}
+                  records={tempCartProducts}
                   columns={[
                     {
                       accessor: "id",
-                      // width: 100,
                       title: "S/N",
                       render: (data, index) => index + 1,
                     },
                     {
-                      accessor: "name",
+                      accessor: "display_name",
                       title: t("Product"),
-                      width: 120,
                     },
                     {
                       accessor: "quantity",
@@ -726,7 +726,7 @@ export default function Invoice(props) {
                       textAlign: "center",
                       render: (data) => (
                         <>
-                          {configData?.currency?.symbol} {data.price}
+                          {configData?.currency?.symbol} {data.sales_price}
                         </>
                       ),
                     },
@@ -743,7 +743,6 @@ export default function Invoice(props) {
                     },
                     {
                       accessor: "action",
-                      width: 120,
                       title: t(""),
                       textAlign: "right",
                       render: (data) => (
@@ -753,7 +752,7 @@ export default function Invoice(props) {
                             variant="white"
                             color="#FF0000"
                             aria-label="Settings"
-                            onClick={() => handleDelete(data.id)}
+                            onClick={() => handleDelete(data.product_id)}
                           >
                             <IconTrash height={20} width={20} stroke={1.5} />
                           </ActionIcon>
@@ -1049,7 +1048,6 @@ export default function Invoice(props) {
                           color="lime"
                           size="lg"
                           onChange={(event) => {
-                            
                             console.log(
                               "Checkbox clicked:",
                               event.currentTarget.checked
