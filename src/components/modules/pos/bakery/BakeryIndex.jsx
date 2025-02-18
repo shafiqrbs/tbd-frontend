@@ -4,23 +4,13 @@ import { Box, Grid, Progress } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress.js";
-import Table from "./Table.jsx";
+import NewSales from "./NewSales.jsx";
 import classes from "./Index.module.css";
-import Sales from "./Sales.jsx";
+import Invoice from "./Invoice.jsx";
 import HeaderNavbar from "../HeaderNavbar.jsx";
 import { getCategoryDropdown } from "../../../../store/inventory/utilitySlice.js";
 import { setDropdownLoad } from "../../../../store/inventory/crudSlice.js";
-import {
-  editEntityData,
-  getIndexEntityData,
-  setFetching,
-  setFormLoading,
-  setInsertType,
-  showEntityData,
-  deleteEntityData,
-  getStatusInlineUpdateData,
-  storeEntityData,
-} from "../../../../store/core/crudSlice.js";
+
 export default function BakeryIndex() {
   const { isOnline, mainAreaHeight } = useOutletContext();
   const height = mainAreaHeight - 130;
@@ -54,23 +44,6 @@ export default function BakeryIndex() {
     dispatch(getCategoryDropdown(value));
     dispatch(setDropdownLoad(false));
   }, [dropdownLoad]);
-
-  //get products
-  const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword);
-  const [indexData, setIndexData] = useState([]);
-  useEffect(() => {
-    const storedProducts = localStorage.getItem("core-products");
-    const localProducts = storedProducts ? JSON.parse(storedProducts) : [];
-
-    // Filter products where product_nature is not 'raw-materials'
-    const filteredProducts = localProducts.filter(
-      (product) => product.product_nature !== "raw-materials"
-    );
-
-    setIndexData(filteredProducts);
-  }, []);
-  const [quantities, setQuantities] = useState({});
-
 
   const [tables, setTables] = useState([
     { id: 1, time: "08:01:49 PM" },
@@ -122,27 +95,10 @@ export default function BakeryIndex() {
             className={classes["body"]}
           >
             <Box pl={"4"}>
-              <Grid columns={24} gutter={{ base: 8 }}>
-                <Grid.Col span={15}>
-                  <Table
-                    enableTable={enableTable}
-                    quantities={quantities}
-                    setQuantities={setQuantities}
-                    products={indexData}
-                    categoryDropdown={categoryDropdown}
-                  />
-                </Grid.Col>
-                <Grid.Col span={9}>
-                  <Box style={{ borderRadius: 8 }}>
-                    <Sales
-                      enableTable={enableTable}
-                      quantities={quantities}
-                      setQuantities={setQuantities}
-                      products={indexData}
-                    />
-                  </Box>
-                </Grid.Col>
-              </Grid>
+              <NewSales
+                enableTable={enableTable}
+                categoryDropdown={categoryDropdown}
+              />
             </Box>
           </Box>
         </>

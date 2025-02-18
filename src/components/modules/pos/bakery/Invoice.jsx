@@ -49,8 +49,9 @@ import getConfigData from "../../../global-hook/config-data/getConfigData";
 import { SalesPrintPos } from "../print/pos/SalesPrintPos";
 import { isNotEmpty, useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
-export default function Sales(props) {
-  const { quantities, setQuantities, products, enableTable } = props;
+export default function Invoice(props) {
+  const { setLoadCartProducts, loadCartProducts, products, enableTable } =
+    props;
   const dispatch = useDispatch();
   const { t, i18n } = useTranslation();
   const { isOnline, mainAreaHeight } = useOutletContext();
@@ -59,12 +60,20 @@ export default function Sales(props) {
   const navigate = useNavigate();
   const [value, setValue] = useState("");
   const [searchValue, setSearchValue] = useState("");
+  const [customerMobile, setCustomerMobile] = useState("");
 
   const scrollRef = useRef(null);
   const [showLeftArrow, setShowLeftArrow] = useState(false);
   const [showRightArrow, setShowRightArrow] = useState(false);
   const { configData } = getConfigData();
   const [printPos, setPrintPos] = useState(false);
+
+  const [tempCartProducts, setTempCartProducts] = useState([]);
+  useEffect(() => {
+    const tempProducts = localStorage.getItem("temp-pos-products");
+    setTempCartProducts(tempProducts ? JSON.parse(tempProducts) : []);
+    setLoadCartProducts(false);
+  }, [loadCartProducts]);
 
   /*START GET SALES BY / USERS DROPDOWN FROM LOCAL STORAGE*/
   const [salesByUser, setSalesByUser] = useState(null);
@@ -168,12 +177,15 @@ export default function Sales(props) {
   };
 
   const handleDelete = (productId) => {
-    // Remove the product from quantities by setting its quantity to 0
-    setQuantities((prev) => {
-      const updatedQuantities = { ...prev };
-      delete updatedQuantities[productId]; // Remove the product from quantities
-      return updatedQuantities;
-    });
+    const cartProducts = localStorage.getItem("temp-pos-products");
+    let myCartProducts = cartProducts ? JSON.parse(cartProducts) : [];
+
+    myCartProducts = myCartProducts.filter(
+      (item) => item.product_id !== productId
+    );
+
+    localStorage.setItem("temp-pos-products", JSON.stringify(myCartProducts));
+    setLoadCartProducts(true);
   };
   const changeSubTotalbyQuantity = (event) => {
     const quantity = Number(event.target.value);
@@ -191,19 +203,10 @@ export default function Sales(props) {
       productForm.setFieldValue("sub_total", quantity * purchase_price);
     }
   };
-  // console.log(quantities)
-  const filteredProducts = products
-    .map((product) => ({
-      ...product,
-      quantity: quantities[product.id]?.quantity ?? 0,
-      sub_total: (quantities[product.id]?.quantity ?? 0) * product.sales_price,
-    }))
-    .filter((product) => product.quantity > 0);
-  const subtotal = filteredProducts.reduce(
-    (sum, item) => sum + item.sub_total,
-    0
-  );
-  // console.log(subtotal)
+
+  const vat = 5;
+  const sd = 5;
+  const discount = 5;
 
   const data = [
     { id: 1, name: "T-1" },
@@ -223,7 +226,7 @@ export default function Sales(props) {
     { id: 15, name: "T-15" },
   ];
   const handleSubmit = () => {
-    if (filteredProducts.length === 0) {
+    if (tempCartProducts.length === 0) {
       notifications.show({
         title: t("ValidationError"),
         position: "top-right",
@@ -242,8 +245,10 @@ export default function Sales(props) {
     const formValue = {};
     formValue.user_id = salesByUser;
     formValue.transaction_mode_id = id;
-    enableTable ? formValue.sales_type = "restaurant" : formValue.sales_type = "bakery"
-    let transformedArray = filteredProducts.map((product) => {
+    enableTable
+      ? (formValue.sales_type = "restaurant")
+      : (formValue.sales_type = "bakery");
+    let transformedArray = tempCartProducts.map((product) => {
       return {
         product_id: product.id,
         quantity: product.quantity,
@@ -255,6 +260,75 @@ export default function Sales(props) {
     formValue["items"] = transformedArray ? transformedArray : [];
     console.log(formValue);
   };
+
+  const handleIncrement = (productId) => {
+    const cartProducts = localStorage.getItem("temp-pos-products");
+    let myCartProducts = cartProducts ? JSON.parse(cartProducts) : [];
+    const product = products.find((product) => product.id === productId);
+
+    let found = false;
+
+    myCartProducts = myCartProducts.map((item) => {
+      if (item.product_id === productId) {
+        found = true;
+        const newQuantity = Math.min(item.quantity + 1);
+        return {
+          ...item,
+          quantity: newQuantity,
+          sub_total: newQuantity * item.sales_price,
+        };
+      }
+      return item;
+    });
+
+    if (!found) {
+      myCartProducts.push({
+        product_id: product.id,
+        display_name: product.display_name,
+        quantity: 1,
+        unit_name: product.unit_name,
+        purchase_price: Number(product.purchase_price),
+        sub_total: Number(product.sales_price),
+        sales_price: Number(product.sales_price),
+      });
+    }
+
+    localStorage.setItem("temp-pos-products", JSON.stringify(myCartProducts));
+    setLoadCartProducts(true);
+  };
+  const handleDecrement = (productId) => {
+    const cartProducts = localStorage.getItem("temp-pos-products");
+    let myCartProducts = cartProducts ? JSON.parse(cartProducts) : [];
+
+    myCartProducts = myCartProducts
+      .map((item) => {
+        if (item.product_id === productId) {
+          const newQuantity = Math.max(0, item.quantity - 1);
+          return {
+            ...item,
+            quantity: newQuantity,
+            sub_total: newQuantity * item.sales_price,
+          };
+        }
+        return item;
+      })
+      .filter((item) => item.quantity > 0);
+
+    localStorage.setItem("temp-pos-products", JSON.stringify(myCartProducts));
+    setLoadCartProducts(true);
+  };
+  // let subtotal = 0;
+  // const findSubtotal = () =>
+  //   tempCartProducts.map((item) => {
+  //     subtotal += item.sub_total;
+  //   });
+  // findSubtotal();
+
+  const subtotal = tempCartProducts.reduce(
+    (acc, item) => acc + item.sub_total,
+    0
+  );
+
   return (
     <>
       <Box
@@ -406,19 +480,28 @@ export default function Sales(props) {
                     footer: tableCss.footer,
                     pagination: tableCss.pagination,
                   }}
-                  records={filteredProducts}
+                  records={tempCartProducts}
                   columns={[
                     {
                       accessor: "id",
-                      // width: 100,
                       title: "S/N",
                       render: (data, index) => index + 1,
-                      footer: <div>Sub Total</div>,
+                      // footer: (
+                      //   <>
+                      //     <Text
+                      //       fw={"bold"}
+                      //       fz={"xs"}
+                      //       pos="absolute"
+                      //       style={{ top: 10, left: 10, zIndex: 1000 }}
+                      //     >
+                      //       {t("SubTotal")}
+                      //     </Text>
+                      //   </>
+                      // ),
                     },
                     {
-                      accessor: "name",
+                      accessor: "display_name",
                       title: t("Product"),
-                      width: 120,
                     },
                     {
                       accessor: "quantity",
@@ -426,35 +509,31 @@ export default function Sales(props) {
                       textAlign: "center",
                       render: (data) => (
                         <>
-                          {enableTable ? (
-                            <Group w={120} gap={8} justify="left">
-                              <ActionIcon
-                                size={"sm"}
-                                bg={"#596972"}
-                                onClick={() => handleDecrement(data.id)}
-                              >
-                                <IconMinus height={"12"} width={"12"} />
-                              </ActionIcon>
-                              <Text
-                                size="sm"
-                                ta={"center"}
-                                fw={600}
-                                maw={30}
-                                miw={30}
-                              >
-                                {data.quantity}
-                              </Text>
-                              <ActionIcon
-                                size={"sm"}
-                                bg={"#596972"}
-                                onClick={() => handleIncrement(data.id)}
-                              >
-                                <IconPlus height={"12"} width={"12"} />
-                              </ActionIcon>
-                            </Group>
-                          ) : (
-                            data.quantity
-                          )}
+                          <Group gap={8} justify="center" >
+                            <ActionIcon
+                              size={"sm"}
+                              bg={"#596972"}
+                              onClick={() => handleDecrement(data.product_id)}
+                            >
+                              <IconMinus height={"12"} width={"12"} />
+                            </ActionIcon>
+                            <Text
+                              size="sm"
+                              ta={"center"}
+                              fw={600}
+                              maw={30}
+                              miw={30}
+                            >
+                              {data.quantity}
+                            </Text>
+                            <ActionIcon
+                              size={"sm"}
+                              bg={"#596972"}
+                              onClick={() => handleIncrement(data.product_id)}
+                            >
+                              <IconPlus height={"12"} width={"12"} />
+                            </ActionIcon>
+                          </Group>
                         </>
                       ),
                     },
@@ -464,7 +543,7 @@ export default function Sales(props) {
                       textAlign: "center",
                       render: (data) => (
                         <>
-                          {configData?.currency?.symbol} {data.price}
+                          {configData?.currency?.symbol} {data.sales_price}
                         </>
                       ),
                     },
@@ -481,7 +560,6 @@ export default function Sales(props) {
                     },
                     {
                       accessor: "action",
-                      width: 120,
                       title: t(""),
                       textAlign: "right",
                       render: (data) => (
@@ -491,30 +569,59 @@ export default function Sales(props) {
                             variant="white"
                             color="#FF0000"
                             aria-label="Settings"
-                            onClick={() => handleDelete(data.id)}
+                            onClick={() => handleDelete(data.product_id)}
                           >
                             <IconTrash height={20} width={20} stroke={1.5} />
                           </ActionIcon>
                         </Group>
                       ),
-                      footer: (
-                        <Group gap="0">
-                          <Box mb={-4}>
-                            <IconSum size="14" />
-                          </Box>
-                          <div>
-                            {configData?.currency?.symbol} {subtotal.toFixed(2)}
-                          </div>
-                        </Group>
-                      ),
+                      // footer: (
+                      //   <Group
+                      //     gap="10"
+                      //     pos="absolute"
+                      //     style={{ top: 10, right: 10, zIndex: 1000 }}
+                      //   >
+                      //     <Box mb={-4}>
+                      //       <IconSum size="16" />
+                      //     </Box>
+                      //     <Box>
+                      //       <Text fw={"bold"} fz={"sm"}>
+                      //         {configData?.currency?.symbol}{" "}
+                      //         {subtotal.toFixed(2)}
+                      //       </Text>
+                      //     </Box>
+                      //   </Group>
+                      // ),
                     },
                   ]}
                   loaderSize="xs"
                   loaderColor="grape"
-                  height={enableTable ? 230 : 346}
+                  height={enableTable ? 196 : 310}
                   // backgroundColor={'black'}
                   scrollAreaProps={{ type: "never" }}
                 />
+                <Group
+                  justify="space-between"
+                  align="center"
+                  pt={4}
+                  style={{
+                    borderTop: "1px solid #dee2e6", 
+                  }}
+                >
+                  <Text fw={"bold"} fz={"sm"} c={"black"} pl={"10"}>
+                    {t("SubTotal")}
+                  </Text>
+                  <Group gap="10" pr={"sm"} align="center">
+                    <Box mt={4}>
+                      <IconSum  size="16" style={{ color: "black" }} />
+                    </Box>
+                    <Box>
+                      <Text fw={"bold"} fz={"sm"} c={"black"}>
+                        {configData?.currency?.symbol} {subtotal.toFixed(2)}
+                      </Text>
+                    </Box>
+                  </Group>
+                </Group>
               </Box>
             </ScrollArea>
           </Box>
@@ -543,6 +650,11 @@ export default function Sales(props) {
                   size={"sm"}
                   w={"100%"}
                   pt={"xs"}
+                  onChange={(e) => {
+                    e.preventDefault();
+                    setCustomerMobile(e.currentTarget.value);
+                    console.log(customerMobile);
+                  }}
                   placeholder={t("CustomerMobileNumber")}
                   leftSection={<IconSearch height={18} width={18} stroke={2} />}
                   rightSection={
@@ -762,7 +874,6 @@ export default function Sales(props) {
                           color="lime"
                           size="lg"
                           onChange={(event) => {
-                            
                             console.log(
                               "Checkbox clicked:",
                               event.currentTarget.checked
