@@ -71,7 +71,7 @@ function _GenericInvoiceForm(props) {
   useEffect(() => {
     if (stockProductRestore) {
       const local = productsDataStoreIntoLocalStorage();
-      // console.log(local)
+      console.log(local)
     }
   }, [stockProductRestore]);
 
@@ -80,7 +80,7 @@ function _GenericInvoiceForm(props) {
     setTempCardProducts(tempProducts ? JSON.parse(tempProducts) : []);
     setLoadCardProducts(false);
   }, [loadCardProducts]);
-  // console.log(tempCardProducts)
+  console.log(tempCardProducts)
   useEffect(() => {
     if (searchValue.length > 0) {
       const storedProducts = localStorage.getItem("core-products");
@@ -88,10 +88,9 @@ function _GenericInvoiceForm(props) {
 
       // Filter products where product_nature is not 'raw-materials'
       const filteredProducts = localProducts.filter(
-        (product) =>
-          product.product_nature !== "raw-materials"
+        (product) => product.product_nature !== "raw-materials"
       );
-      console.log(filteredProducts)
+
       const lowerCaseSearchTerm = searchValue.toLowerCase();
       const fieldsToSearch = ["product_name"];
       const productFilterData = filteredProducts.filter((product) =>
@@ -388,16 +387,11 @@ function _GenericInvoiceForm(props) {
               <Box>
                 <form
                   onSubmit={form.onSubmit((values) => {
-                    console.log(values.sales_price)
                     if (!values.barcode && !values.product_id) {
                       form.setFieldError("barcode", true);
                       form.setFieldError("product_id", true);
                       setTimeout(() => {}, 1000);
-                    } 
-                    if (values.sales_price === 0 || values.sales_price === null) { 
-                      form.setFieldError('sales_price', true)
-                    } 
-                    else {
+                    } else {
                       const cardProducts = localStorage.getItem(
                         "temp-sales-products"
                       );
