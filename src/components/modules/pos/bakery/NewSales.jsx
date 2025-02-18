@@ -55,15 +55,24 @@ export default function NewSales(props) {
   const [selected, setSelected] = useState([]);
   const [id, setId] = useState(null);
 
-  //get products
-
+  // Modified to handle table-specific cart products
   const [loadCartProducts, setLoadCartProducts] = useState(false);
   const [tempCartProducts, setTempCartProducts] = useState([]);
+
   useEffect(() => {
-    const tempProducts = localStorage.getItem("temp-pos-products");
-    setTempCartProducts(tempProducts ? JSON.parse(tempProducts) : []);
+    if (enableTable && tableId) {
+      // Load table-specific cart when a table is selected
+      const tableCartKey = `table-${tableId}-pos-products`;
+      const tempProducts = localStorage.getItem(tableCartKey);
+      setTempCartProducts(tempProducts ? JSON.parse(tempProducts) : []);
+    } else {
+      // Default behavior without table selection
+      const tempProducts = localStorage.getItem("temp-pos-products");
+      setTempCartProducts(tempProducts ? JSON.parse(tempProducts) : []);
+    }
     setLoadCartProducts(false);
-  }, [loadCartProducts]);
+  }, [loadCartProducts, tableId, enableTable]);
+
   const [originalProducts, setOriginalProducts] = useState([]);
   const [products, setProducts] = useState([]);
 
@@ -82,9 +91,10 @@ export default function NewSales(props) {
     });
     setProducts(filteredProducts);
     setOriginalProducts(filteredProducts);
-    // console.log("from filter use", filteredProducts);
   }, [id]);
+
   const { configData } = getConfigData();
+
   const handleSelect = (productId) => {
     setSelected((prevSelected) =>
       prevSelected.includes(productId)
@@ -96,10 +106,16 @@ export default function NewSales(props) {
     }, 50);
   };
 
+  // Modified to handle table-specific cart
   const handleIncrement = (productId) => {
-    const cartProducts = localStorage.getItem("temp-pos-products");
+    const storageKey =
+      enableTable && tableId
+        ? `table-${tableId}-pos-products`
+        : "temp-pos-products";
+    const cartProducts = localStorage.getItem(storageKey);
     let myCartProducts = cartProducts ? JSON.parse(cartProducts) : [];
     const product = products.find((product) => product.id === productId);
+
     if (product.sales_price === 0 || product.sales_price === null) {
       notifications.show({
         title: t("Error"),
@@ -111,6 +127,7 @@ export default function NewSales(props) {
       });
       return;
     }
+
     let found = false;
 
     myCartProducts = myCartProducts.map((item) => {
@@ -138,11 +155,27 @@ export default function NewSales(props) {
       });
     }
 
-    localStorage.setItem("temp-pos-products", JSON.stringify(myCartProducts));
+    // Update the table status if this is the first item
+    if (
+      enableTable &&
+      tableId &&
+      myCartProducts.length === 1 &&
+      currentStatus === "Free"
+    ) {
+      updateTableStatus("Occupied");
+    }
+
+    localStorage.setItem(storageKey, JSON.stringify(myCartProducts));
     setLoadCartProducts(true);
   };
+
+  // Modified to handle table-specific cart
   const handleDecrement = (productId) => {
-    const cartProducts = localStorage.getItem("temp-pos-products");
+    const storageKey =
+      enableTable && tableId
+        ? `table-${tableId}-pos-products`
+        : "temp-pos-products";
+    const cartProducts = localStorage.getItem(storageKey);
     let myCartProducts = cartProducts ? JSON.parse(cartProducts) : [];
 
     myCartProducts = myCartProducts
@@ -159,7 +192,17 @@ export default function NewSales(props) {
       })
       .filter((item) => item.quantity > 0);
 
-    localStorage.setItem("temp-pos-products", JSON.stringify(myCartProducts));
+    // Update the table status if cart becomes empty
+    if (
+      enableTable &&
+      tableId &&
+      myCartProducts.length === 0 &&
+      currentStatus === "Occupied"
+    ) {
+      updateTableStatus("Free");
+    }
+
+    localStorage.setItem(storageKey, JSON.stringify(myCartProducts));
     setLoadCartProducts(true);
   };
 
@@ -170,8 +213,8 @@ export default function NewSales(props) {
       setId(id);
     }
   };
-  const [value, setValue] = useState("grid");
 
+  const [value, setValue] = useState("grid");
   const [searchValue, setSearchValue] = useState("");
 
   const filterList = (searchValue) => {
@@ -187,6 +230,7 @@ export default function NewSales(props) {
     });
     setProducts(updatedList);
   };
+
   const updateTableStatus = (newStatus) => {
     if (!tableId) return;
 
@@ -196,9 +240,74 @@ export default function NewSales(props) {
       )
     );
   };
+
   const currentTable = tables.find((t) => t.id === tableId);
   const currentStatus = currentTable ? currentTable.status : "";
 
+  const handleTableSelection = (newTableId) => {
+    // If unselecting the current table
+    if (tableId === newTableId) {
+      setTableId(null);
+    } else {
+      // Selecting a different table
+      setTableId(newTableId);
+      // Load the table-specific cart
+      setLoadCartProducts(true);
+    }
+  };
+
+  // Function to handle Print All / Save actions
+  const handleSubmitOrder = () => {
+    if (!tempCartProducts.length) {
+      notifications.show({
+        title: t("ValidationError"),
+        position: "top-right",
+        autoClose: 1000,
+        withCloseButton: true,
+        message: t("Add at least one product"),
+        color: "red",
+      });
+      return;
+    }
+
+    if (enableTable && tableId) {
+      // Clear this specific table's data
+      localStorage.removeItem(`table-${tableId}-pos-products`);
+
+      // Reset table status to Free
+      updateTableStatus("Free");
+
+      // Show success notification
+      notifications.show({
+        title: t("Success"),
+        position: "top-right",
+        autoClose: 2000,
+        withCloseButton: true,
+        message:
+          t("Order for Table") + ` ${tableId} ` + t("processed successfully"),
+        color: "green",
+      });
+    } else {
+      // Clear general cart data
+      localStorage.removeItem("temp-pos-products");
+
+      // Show success notification
+      notifications.show({
+        title: t("Success"),
+        position: "top-right",
+        autoClose: 1000,
+        withCloseButton: true,
+        message: t("Order processed successfully"),
+        color: "green",
+      });
+    }
+
+    // Refresh the cart display
+    setLoadCartProducts(true);
+
+    // Reset form values if needed - this would depend on your specific implementation
+    // form.reset();
+  };
   return (
     <>
       <Grid columns={24} gutter={{ base: 8 }}>
@@ -682,14 +791,14 @@ export default function NewSales(props) {
         </Grid.Col>
         <Grid.Col span={9}>
           <Invoice
-            tables={tables}
-            setTables={setTables}
-            tableId={tableId}
-            setTableId={setTableId}
-            enableTable={enableTable}
-            loadCartProducts={loadCartProducts}
             setLoadCartProducts={setLoadCartProducts}
+            loadCartProducts={loadCartProducts}
             products={products}
+            enableTable={enableTable}
+            tables={tables}
+            tableId={tableId}
+            setTableId={handleTableSelection}
+            handleSubmitOrder={handleSubmitOrder}
           />
         </Grid.Col>
       </Grid>

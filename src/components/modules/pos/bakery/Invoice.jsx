@@ -59,11 +59,13 @@ export default function Invoice(props) {
     tables,
     tableId,
     setTableId,
+    handleSubmitOrder, // New function passed from parent
   } = props;
+
   const dispatch = useDispatch();
   const { t, i18n } = useTranslation();
   const { isOnline, mainAreaHeight } = useOutletContext();
-  const height = mainAreaHeight - 190; //TabList height 104
+  const height = mainAreaHeight - 190;
   const heightHalf = height / 2;
   const navigate = useNavigate();
   const [value, setValue] = useState("");
@@ -77,13 +79,20 @@ export default function Invoice(props) {
   const [printPos, setPrintPos] = useState(false);
 
   const [tempCartProducts, setTempCartProducts] = useState([]);
-  useEffect(() => {
-    const tempProducts = localStorage.getItem("temp-pos-products");
-    setTempCartProducts(tempProducts ? JSON.parse(tempProducts) : []);
-    setLoadCartProducts(false);
-  }, [loadCartProducts]);
 
-  /*START GET SALES BY / USERS DROPDOWN FROM LOCAL STORAGE*/
+  useEffect(() => {
+    if (enableTable && tableId) {
+      const tableCartKey = `table-${tableId}-pos-products`;
+      const tempProducts = localStorage.getItem(tableCartKey);
+      setTempCartProducts(tempProducts ? JSON.parse(tempProducts) : []);
+    } else {
+      const tempProducts = localStorage.getItem("temp-pos-products");
+      setTempCartProducts(tempProducts ? JSON.parse(tempProducts) : []);
+    }
+    setLoadCartProducts(false);
+  }, [loadCartProducts, tableId, enableTable]);
+
+  // Sales by user state management remains the same
   const [salesByUser, setSalesByUser] = useState(null);
   const [salesByDropdownData, setSalesByDropdownData] = useState([]);
   useEffect(() => {
@@ -101,6 +110,7 @@ export default function Invoice(props) {
     }
   }, []);
 
+  // Scroll handling remains the same
   const handleScroll = () => {
     if (scrollRef.current) {
       const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
@@ -108,11 +118,12 @@ export default function Invoice(props) {
       setShowRightArrow(scrollLeft < scrollWidth - clientWidth - 1);
     }
   };
+
   useEffect(() => {
     handleScroll();
     window.addEventListener("resize", handleScroll);
     return () => window.removeEventListener("resize", handleScroll);
-  });
+  }, []);
 
   const scroll = (direction) => {
     if (scrollRef.current) {
@@ -123,6 +134,8 @@ export default function Invoice(props) {
       });
     }
   };
+
+  // Form and validation remains the same
   const transactionModeData = JSON.parse(
     localStorage.getItem("accounting-transaction-mode")
   )
@@ -140,11 +153,13 @@ export default function Invoice(props) {
       user_id: (value) => (!value ? true : null),
     },
   });
+
   const [errors, setErrors] = useState({
     products: false,
     user_id: false,
     transaction_mode: false,
   });
+
   const validateForm = () => {
     const newErrors = {
       user_id: !salesByUser,
@@ -156,6 +171,7 @@ export default function Invoice(props) {
     // Return true if there are no errors
     return !Object.values(newErrors).some((error) => error);
   };
+
   useEffect(() => {
     if (transactionModeData && transactionModeData.length > 0) {
       for (let mode of transactionModeData) {
@@ -178,19 +194,40 @@ export default function Invoice(props) {
     form.setFieldValue("transaction_mode_id", id);
   };
 
+  // Modified to handle table-specific cart
   const handleDelete = (productId) => {
-    const cartProducts = localStorage.getItem("temp-pos-products");
+    const storageKey =
+      enableTable && tableId
+        ? `table-${tableId}-pos-products`
+        : "temp-pos-products";
+
+    const cartProducts = localStorage.getItem(storageKey);
     let myCartProducts = cartProducts ? JSON.parse(cartProducts) : [];
 
     myCartProducts = myCartProducts.filter(
       (item) => item.product_id !== productId
     );
 
-    localStorage.setItem("temp-pos-products", JSON.stringify(myCartProducts));
+    localStorage.setItem(storageKey, JSON.stringify(myCartProducts));
     setLoadCartProducts(true);
+
+    // Update table status if cart becomes empty
+    if (enableTable && tableId && myCartProducts.length === 0) {
+      const updatedTables = tables.map((table) =>
+        table.id === tableId ? { ...table, status: "Free" } : table
+      );
+      setTables(updatedTables);
+    }
   };
+
+  // Modified to handle table-specific cart
   const handleIncrement = (productId) => {
-    const cartProducts = localStorage.getItem("temp-pos-products");
+    const storageKey =
+      enableTable && tableId
+        ? `table-${tableId}-pos-products`
+        : "temp-pos-products";
+
+    const cartProducts = localStorage.getItem(storageKey);
     let myCartProducts = cartProducts ? JSON.parse(cartProducts) : [];
     const product = products.find((product) => product.id === productId);
 
@@ -221,11 +258,26 @@ export default function Invoice(props) {
       });
     }
 
-    localStorage.setItem("temp-pos-products", JSON.stringify(myCartProducts));
+    // Update table status if this is the first item
+    if (enableTable && tableId && myCartProducts.length === 1) {
+      const updatedTables = tables.map((table) =>
+        table.id === tableId ? { ...table, status: "Occupied" } : table
+      );
+      setTables(updatedTables);
+    }
+
+    localStorage.setItem(storageKey, JSON.stringify(myCartProducts));
     setLoadCartProducts(true);
   };
+
+  // Modified to handle table-specific cart
   const handleDecrement = (productId) => {
-    const cartProducts = localStorage.getItem("temp-pos-products");
+    const storageKey =
+      enableTable && tableId
+        ? `table-${tableId}-pos-products`
+        : "temp-pos-products";
+
+    const cartProducts = localStorage.getItem(storageKey);
     let myCartProducts = cartProducts ? JSON.parse(cartProducts) : [];
 
     myCartProducts = myCartProducts
@@ -242,7 +294,15 @@ export default function Invoice(props) {
       })
       .filter((item) => item.quantity > 0);
 
-    localStorage.setItem("temp-pos-products", JSON.stringify(myCartProducts));
+    // Update table status if cart becomes empty
+    if (enableTable && tableId && myCartProducts.length === 0) {
+      const updatedTables = tables.map((table) =>
+        table.id === tableId ? { ...table, status: "Free" } : table
+      );
+      setTables(updatedTables);
+    }
+
+    localStorage.setItem(storageKey, JSON.stringify(myCartProducts));
     setLoadCartProducts(true);
   };
 
@@ -250,6 +310,7 @@ export default function Invoice(props) {
     (acc, item) => acc + item.sub_total,
     0
   );
+
   // Track additional tables per selected table
   const [additionalTableSelections, setAdditionalTableSelections] = useState(
     {}
@@ -284,6 +345,8 @@ export default function Invoice(props) {
       };
     });
   };
+
+  // Modified to use the parent handleSubmitOrder function
   const handlePrintAll = () => {
     if (tempCartProducts.length === 0) {
       notifications.show({
@@ -296,6 +359,7 @@ export default function Invoice(props) {
       });
       return;
     }
+
     const validation = form.validate();
     if (validation.hasErrors) {
       return;
@@ -307,17 +371,20 @@ export default function Invoice(props) {
     enableTable
       ? (formValue.sales_type = "restaurant")
       : (formValue.sales_type = "bakery");
+
     let transformedArray = tempCartProducts.map((product) => {
       return {
-        product_id: product.id,
+        product_id: product.id || product.product_id,
         quantity: product.quantity,
         purchase_price: product.purchase_price,
         sales_price: product.sales_price,
         sub_total: product.sub_total,
       };
     });
+
     formValue["items"] = transformedArray ? transformedArray : [];
-    if (enableTable) {
+
+    if (enableTable && tableId) {
       const tableData = {
         mainTable: {
           id: tableId,
@@ -329,8 +396,11 @@ export default function Invoice(props) {
     }
 
     console.log("Print All Data:", formValue);
-    localStorage.removeItem("temp-pos-products");
-    setLoadCartProducts(true);
+
+    // Call the parent function to handle order submission
+    handleSubmitOrder();
+
+    // Reset form and UI state
     setSalesByUser(null);
     setId(null);
 
@@ -341,10 +411,101 @@ export default function Invoice(props) {
         return newSelections;
       });
       setChecked(false);
-      setTableId(null);
+      // Don't reset tableId here - that's handled in the parent function
     }
+
     form.reset();
   };
+  const printItem = () => {
+    const formValue = {};
+    let transformedArray = tempCartProducts.map((product) => {
+      return {
+        product_id: product.id || product.product_id,
+        quantity: product.quantity,
+        purchase_price: product.purchase_price,
+        sales_price: product.sales_price,
+        sub_total: product.sub_total,
+      };
+    });
+    formValue["items"] = transformedArray ? transformedArray : [];
+    console.log(formValue);
+  };
+  function tempLocalPosInvoice(addInvoice) {
+    const existingInvoices = localStorage.getItem("temp-pos-invoice");
+    const invoices = existingInvoices ? JSON.parse(existingInvoices) : [];
+
+    invoices.push(addInvoice);
+    localStorage.setItem("temp-pos-invoice", JSON.stringify(invoices));
+  }
+  const posPrint = () => {
+    if (tempCartProducts.length === 0) {
+      notifications.show({
+        title: t("ValidationError"),
+        position: "top-right",
+        autoClose: 1000,
+        withCloseButton: true,
+        message: t("Add at least one product"),
+        color: "red",
+      });
+      return;
+    }
+
+    const validation = form.validate();
+    if (validation.hasErrors) {
+      return;
+    }
+
+    const formValue = {};
+    formValue.user_id = salesByUser;
+    formValue.transaction_mode_id = id;
+    enableTable
+      ? (formValue.sales_type = "restaurant")
+      : (formValue.sales_type = "bakery");
+
+    let transformedArray = tempCartProducts.map((product) => {
+      return {
+        product_id: product.id || product.product_id,
+        quantity: product.quantity,
+        purchase_price: product.purchase_price,
+        sales_price: product.sales_price,
+        sub_total: product.sub_total,
+      };
+    });
+
+    formValue["items"] = transformedArray ? transformedArray : [];
+
+    if (enableTable && tableId) {
+      const tableData = {
+        mainTable: {
+          id: tableId,
+          status: tables.find((t) => t.id === tableId)?.status,
+        },
+        additionalTables: Array.from(additionalTableSelections[tableId] || []),
+      };
+      formValue["table_data"] = tableData ? tableData : [];
+    }
+
+    console.log("Print All Data:", formValue);
+    tempLocalPosInvoice(formValue)
+    // Call the parent function to handle order submission
+    handleSubmitOrder();
+
+    // Reset form and UI state
+    setSalesByUser(null);
+    setId(null);
+
+    if (enableTable) {
+      setAdditionalTableSelections((prev) => {
+        const newSelections = { ...prev };
+        delete newSelections[tableId];
+        return newSelections;
+      });
+      setChecked(false);
+      
+    }
+
+    form.reset();
+  }
   return (
     <>
       <Box
@@ -413,6 +574,7 @@ export default function Invoice(props) {
 
             {enableTable && (
               <Button
+                disabled={tempCartProducts.length === 0}
                 radius="md"
                 size="sm"
                 color="green"
@@ -420,6 +582,7 @@ export default function Invoice(props) {
                 miw={122}
                 maw={122}
                 leftSection={<IconChefHat height={18} width={18} stroke={2} />}
+                onClick={printItem}
               >
                 <Text fw={600} size="sm">
                   {t("Kitchen")}
@@ -428,13 +591,9 @@ export default function Invoice(props) {
             )}
           </Group>
           <Box>
-            <ScrollArea
-              h={enableTable ? heightHalf - 48 : heightHalf + 66}
-              type="never"
-              scrollbars="y"
-            >
+            <Box h={enableTable ? heightHalf - 12 : heightHalf + 99}>
               <Paper
-                p="8"
+                p="6"
                 radius="4"
                 style={{ backgroundColor: checked ? "#4CAF50" : "#E8F5E9" }}
               >
@@ -479,31 +638,33 @@ export default function Invoice(props) {
               </Paper>
 
               {checked && (
-                <Paper p="md" radius="md" bg={"#E6F5ED99"}>
-                  <Grid columns={15} gutter="md">
-                    {tables.map((item) => (
-                      <Grid.Col span={3} key={item.id}>
-                        <Checkbox
-                          label={`Table ${item.id}`}
-                          color="green.8"
-                          checked={additionalTableSelections[tableId]?.has(
-                            item.id
-                          )}
-                          onChange={() => handleAdditionalTableCheck(item.id)}
-                          disabled={item.id === tableId}
-                          styles={(theme) => ({
-                            input: {
-                              border: "1.5px solid #767676",
-                            },
-                            label: {
-                              color: "#333333",
-                            },
-                          })}
-                        />
-                      </Grid.Col>
-                    ))}
-                  </Grid>
-                </Paper>
+                <ScrollArea h={heightHalf / 4} type="never" scrollbars="y">
+                  <Paper p="md" radius="md" bg={"#E6F5ED99"}>
+                    <Grid columns={15} gutter="md">
+                      {tables.map((item) => (
+                        <Grid.Col span={3} key={item.id}>
+                          <Checkbox
+                            label={`Table ${item.id}`}
+                            color="green.8"
+                            checked={additionalTableSelections[tableId]?.has(
+                              item.id
+                            )}
+                            onChange={() => handleAdditionalTableCheck(item.id)}
+                            disabled={item.id === tableId}
+                            styles={(theme) => ({
+                              input: {
+                                border: "1.5px solid #767676",
+                              },
+                              label: {
+                                color: "#333333",
+                              },
+                            })}
+                          />
+                        </Grid.Col>
+                      ))}
+                    </Grid>
+                  </Paper>
+                </ScrollArea>
               )}
               <Box>
                 <DataTable
@@ -601,7 +762,10 @@ export default function Invoice(props) {
                   ]}
                   loaderSize="xs"
                   loaderColor="grape"
-                  height={enableTable ? 196 : 310}
+                  height={
+                    enableTable && checked ? 158 : enableTable ? 240 : 310
+                  }
+                  // height={enableTable ? 196 : 310}
                   // backgroundColor={'black'}
                   scrollAreaProps={{ type: "never" }}
                 />
@@ -628,11 +792,11 @@ export default function Invoice(props) {
                   </Group>
                 </Group>
               </Box>
-            </ScrollArea>
+            </Box>
           </Box>
           <Box
             className={classes["box-border"]}
-            h={heightHalf + 52}
+            h={heightHalf + 16}
             pl={4}
             pr={4}
             pb={4}
@@ -641,7 +805,7 @@ export default function Invoice(props) {
           >
             <Box>
               <Flex
-                h={heightHalf - 142}
+                h={heightHalf - 182}
                 direction={"column"}
                 w={"100%"}
                 justify={"center"}
@@ -658,7 +822,6 @@ export default function Invoice(props) {
                   onChange={(e) => {
                     e.preventDefault();
                     setCustomerMobile(e.currentTarget.value);
-                    console.log(customerMobile);
                   }}
                   placeholder={t("CustomerMobileNumber")}
                   leftSection={<IconSearch height={18} width={18} stroke={2} />}
@@ -669,45 +832,51 @@ export default function Invoice(props) {
                 <Box className={classes["box-white"]} p={"4"} w={"100%"}>
                   <Grid columns={12} gutter={0} pt={4} pl={12} pr={12}>
                     <Grid.Col span={6}>
-                      <Grid columns={12} gutter={0}>
-                        <Grid.Col span={2}>
-                          <Text fw={500} c={"#333333"}>
-                            {t("VAT")}
-                          </Text>
-                        </Grid.Col>
-                        <Grid.Col span={"auto"}>
-                          <Text fw={800} c={"#333333"}>
-                            {configData?.currency?.symbol} 0
-                          </Text>
-                        </Grid.Col>
-                      </Grid>
-                      <Grid columns={12} gutter={0} pt={0}>
-                        <Grid.Col span={2}>
-                          <Text fw={500} c={"#333333"}>
-                            {t("SD")}
-                          </Text>
-                        </Grid.Col>
-                        <Grid.Col span={"auto"}>
-                          <Text fw={800} c={"#333333"}>
-                            {configData?.currency?.symbol} 0
-                          </Text>
-                        </Grid.Col>
-                      </Grid>
-                      <Grid columns={12} gutter={0} pt={0}>
-                        <Grid.Col span={2}>
-                          <Text fw={500} c={"#333333"}>
-                            {t("DIS.")}
-                          </Text>
-                        </Grid.Col>
-                        <Grid.Col span={"auto"}>
-                          <Text fw={800} c={"#333333"}>
-                            {configData?.currency?.symbol} 0
-                          </Text>
-                        </Grid.Col>
-                      </Grid>
+                      <Box bg={"#e8f5e9"} mr={'xs'} style={{borderRadius : 4}} pl={'xs'}>
+                        <Grid columns={12} gutter={0}>
+                          <Grid.Col span={2}>
+                            <Text fw={500} c={"#333333"}>
+                              {t("VAT")}
+                            </Text>
+                          </Grid.Col>
+                          <Grid.Col span={"auto"}>
+                            <Text fw={800} c={"#333333"}>
+                              {configData?.currency?.symbol} 0
+                            </Text>
+                          </Grid.Col>
+                        </Grid>
+                        <Grid columns={12} gutter={0} pt={0}>
+                          <Grid.Col span={2}>
+                            <Text fw={500} c={"#333333"}>
+                              {t("SD")}
+                            </Text>
+                          </Grid.Col>
+                          <Grid.Col span={"auto"}>
+                            <Text fw={800} c={"#333333"}>
+                              {configData?.currency?.symbol} 0
+                            </Text>
+                          </Grid.Col>
+                        </Grid>
+                        <Grid columns={12} gutter={0} pt={0}>
+                          <Grid.Col span={2}>
+                            <Text fw={500} c={"#333333"}>
+                              {t("DIS.")}
+                            </Text>
+                          </Grid.Col>
+                          <Grid.Col span={"auto"}>
+                            <Text fw={800} c={"#333333"}>
+                              {configData?.currency?.symbol} 0
+                            </Text>
+                          </Grid.Col>
+                        </Grid>
+                      </Box>
                     </Grid.Col>
                     <Grid.Col span={6}>
-                      <Box className={classes["box-border"]} p={6}>
+                      <Box
+                        className={classes["box-border"]}
+                        bg={"#30444f"}
+                        p={8}
+                      >
                         <Flex
                           direction={"column"}
                           justify={"center"}
@@ -715,10 +884,10 @@ export default function Invoice(props) {
                           h={"100%"}
                           p={2}
                         >
-                          <Text fw={500} c={"#333333"} size={"md"}>
+                          <Text fw={500} c={"white"} size={"md"}>
                             {t("Total")}
                           </Text>
-                          <Text fw={800} c={"#00542B"} size={"lg"}>
+                          <Text fw={800} c={"white"} size={"lg"}>
                             {configData?.currency?.symbol} {subtotal.toFixed(2)}
                           </Text>
                         </Flex>
@@ -908,36 +1077,8 @@ export default function Invoice(props) {
                 />
               </Group>
             </Box>
-            <Grid columns={18} gutter={{ base: 2 }} pl={"8"} pr={"8"}>
-              {enableTable && (
-                <Grid.Col span={4}>
-                  <Tooltip
-                    label={t("PrintAll")}
-                    px={16}
-                    py={2}
-                    position="top-end"
-                    color="red"
-                    withArrow
-                    offset={2}
-                    zIndex={100}
-                    transitionProps={{
-                      transition: "pop-bottom-left",
-                      duration: 2000,
-                    }}
-                  >
-                    <Button
-                      bg={"green.5"}
-                      size={"sm"}
-                      fullWidth={true}
-                      leftSection={<IconPrinter />}
-                      onClick={handlePrintAll}
-                    >
-                      {t("Print All")}
-                    </Button>
-                  </Tooltip>
-                </Grid.Col>
-              )}
-              <Grid.Col span={enableTable ? 4 : 6}>
+            <Grid columns={12} gutter={{ base: 2 }} pl={"8"} pr={"8"}>
+              <Grid.Col span={enableTable ? 3 : 4}>
                 <Tooltip
                   label={t("Hold")}
                   px={16}
@@ -962,7 +1103,35 @@ export default function Invoice(props) {
                   </Button>
                 </Tooltip>
               </Grid.Col>
-              <Grid.Col span={enableTable ? 5 : 6}>
+              {enableTable && (
+                <Grid.Col span={3}>
+                  <Tooltip
+                    label={t("PrintAll")}
+                    px={16}
+                    py={2}
+                    position="top-end"
+                    color="red"
+                    withArrow
+                    offset={2}
+                    zIndex={100}
+                    transitionProps={{
+                      transition: "pop-bottom-left",
+                      duration: 2000,
+                    }}
+                  >
+                    <Button
+                      bg={"green.5"}
+                      size={"sm"}
+                      fullWidth={true}
+                      leftSection={<IconPrinter />}
+                      onClick={handlePrintAll}
+                    >
+                      {t("All Print")}
+                    </Button>
+                  </Tooltip>
+                </Grid.Col>
+              )}
+              <Grid.Col span={enableTable ? 3 : 4}>
                 <Button
                   bg={"#30444F"}
                   size={"sm"}
@@ -972,10 +1141,10 @@ export default function Invoice(props) {
                     setPrintPos(true);
                   }}
                 >
-                  {t("POS Print")}
+                  {t("POS")}
                 </Button>
               </Grid.Col>
-              <Grid.Col span={enableTable ? 5 : 6}>
+              <Grid.Col span={enableTable ? 3 : 4}>
                 <Button
                   size={"sm"}
                   bg={"#00994f"}
