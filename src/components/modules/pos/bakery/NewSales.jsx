@@ -101,8 +101,8 @@ export default function NewSales(props) {
     if (product.sales_price === 0 || product.sales_price === null) {
       notifications.show({
         title: t("Error"),
-        position: "top-right",
-        autoClose: 1000,
+        position: "bottom-right",
+        autoClose: 2000,
         withCloseButton: true,
         message: t("Sales price cant be zero"),
         color: "red",

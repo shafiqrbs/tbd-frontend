@@ -39,6 +39,7 @@ import {
   IconPrinter,
   IconDeviceFloppy,
   IconAlertCircle,
+  IconHandStop,
 } from "@tabler/icons-react";
 import { DataTable } from "mantine-datatable";
 import { useDispatch, useSelector } from "react-redux";
@@ -258,6 +259,11 @@ export default function Invoice(props) {
       };
     });
     formValue["items"] = transformedArray ? transformedArray : [];
+    localStorage.removeItem("temp-pos-products")
+    setLoadCartProducts(true);
+    setSalesByUser(null)
+    setId(null)
+    form.reset()
     console.log(formValue);
   };
 
@@ -903,8 +909,33 @@ export default function Invoice(props) {
                 />
               </Group>
             </Box>
-            <Grid columns={12} gutter={{ base: 2 }} pl={"8"} pr={"8"}>
-              <Grid.Col span={2}>
+            <Grid columns={18} gutter={{ base: 2 }} pl={"8"} pr={"8"}>
+            <Grid.Col span={4}>
+                <Tooltip
+                  label={t("PrintAll")}
+                  px={16}
+                  py={2}
+                  position="top-end"
+                  color="red"
+                  withArrow
+                  offset={2}
+                  zIndex={100}
+                  transitionProps={{
+                    transition: "pop-bottom-left",
+                    duration: 2000,
+                  }}
+                >
+                  <Button
+                    bg={"green.5"}
+                    size={"sm"}
+                    fullWidth={true}
+                    leftSection={<IconPrinter />}
+                  >
+                    {t("Print All")}
+                  </Button>
+                </Tooltip>
+              </Grid.Col>
+              <Grid.Col span={4}>
                 <Tooltip
                   label={t("Hold")}
                   px={16}
@@ -923,7 +954,7 @@ export default function Invoice(props) {
                     bg={"red.5"}
                     size={"sm"}
                     fullWidth={true}
-                    // leftSection={<IconPrinter />}
+                    leftSection={<IconHandStop />}
                   >
                     {t("Hold")}
                   </Button>
