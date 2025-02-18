@@ -39,6 +39,7 @@ import {
   IconPrinter,
   IconDeviceFloppy,
   IconAlertCircle,
+  IconHandStop,
 } from "@tabler/icons-react";
 import { DataTable } from "mantine-datatable";
 import { useDispatch, useSelector } from "react-redux";
@@ -49,16 +50,27 @@ import getConfigData from "../../../global-hook/config-data/getConfigData";
 import { SalesPrintPos } from "../print/pos/SalesPrintPos";
 import { isNotEmpty, useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
-export default function Sales(props) {
-  const { quantities, setQuantities, products, enableTable } = props;
+export default function Invoice(props) {
+  const {
+    setLoadCartProducts,
+    loadCartProducts,
+    products,
+    enableTable,
+    tables,
+    tableId,
+    setTableId,
+    handleSubmitOrder, // New function passed from parent
+  } = props;
+
   const dispatch = useDispatch();
   const { t, i18n } = useTranslation();
   const { isOnline, mainAreaHeight } = useOutletContext();
-  const height = mainAreaHeight - 190; //TabList height 104
+  const height = mainAreaHeight - 190;
   const heightHalf = height / 2;
   const navigate = useNavigate();
   const [value, setValue] = useState("");
   const [searchValue, setSearchValue] = useState("");
+  const [customerMobile, setCustomerMobile] = useState("");
 
   const scrollRef = useRef(null);
   const [showLeftArrow, setShowLeftArrow] = useState(false);
@@ -66,7 +78,21 @@ export default function Sales(props) {
   const { configData } = getConfigData();
   const [printPos, setPrintPos] = useState(false);
 
-  /*START GET SALES BY / USERS DROPDOWN FROM LOCAL STORAGE*/
+  const [tempCartProducts, setTempCartProducts] = useState([]);
+
+  useEffect(() => {
+    if (enableTable && tableId) {
+      const tableCartKey = `table-${tableId}-pos-products`;
+      const tempProducts = localStorage.getItem(tableCartKey);
+      setTempCartProducts(tempProducts ? JSON.parse(tempProducts) : []);
+    } else {
+      const tempProducts = localStorage.getItem("temp-pos-products");
+      setTempCartProducts(tempProducts ? JSON.parse(tempProducts) : []);
+    }
+    setLoadCartProducts(false);
+  }, [loadCartProducts, tableId, enableTable]);
+
+  // Sales by user state management remains the same
   const [salesByUser, setSalesByUser] = useState(null);
   const [salesByDropdownData, setSalesByDropdownData] = useState([]);
   useEffect(() => {
@@ -84,6 +110,7 @@ export default function Sales(props) {
     }
   }, []);
 
+  // Scroll handling remains the same
   const handleScroll = () => {
     if (scrollRef.current) {
       const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
@@ -91,11 +118,12 @@ export default function Sales(props) {
       setShowRightArrow(scrollLeft < scrollWidth - clientWidth - 1);
     }
   };
+
   useEffect(() => {
     handleScroll();
     window.addEventListener("resize", handleScroll);
     return () => window.removeEventListener("resize", handleScroll);
-  });
+  }, []);
 
   const scroll = (direction) => {
     if (scrollRef.current) {
@@ -106,6 +134,8 @@ export default function Sales(props) {
       });
     }
   };
+
+  // Form and validation remains the same
   const transactionModeData = JSON.parse(
     localStorage.getItem("accounting-transaction-mode")
   )
@@ -121,17 +151,15 @@ export default function Sales(props) {
       transaction_mode_id: (value) =>
         !value ? t("Please select transaction mode") : null,
       user_id: (value) => (!value ? true : null),
-      // items: (value) =>
-      //   filteredProducts.length === 0
-      //     ? t("Please add at least one product")
-      //     : null,
     },
   });
+
   const [errors, setErrors] = useState({
     products: false,
     user_id: false,
     transaction_mode: false,
   });
+
   const validateForm = () => {
     const newErrors = {
       user_id: !salesByUser,
@@ -143,6 +171,7 @@ export default function Sales(props) {
     // Return true if there are no errors
     return !Object.values(newErrors).some((error) => error);
   };
+
   useEffect(() => {
     if (transactionModeData && transactionModeData.length > 0) {
       for (let mode of transactionModeData) {
@@ -159,71 +188,167 @@ export default function Sales(props) {
     }
   }, [transactionModeData]);
 
-  const [checked, setChecked] = useState(false);
-
   const [id, setId] = useState(null);
   const clicked = (id) => {
     setId(id);
     form.setFieldValue("transaction_mode_id", id);
   };
 
+  // Modified to handle table-specific cart
   const handleDelete = (productId) => {
-    // Remove the product from quantities by setting its quantity to 0
-    setQuantities((prev) => {
-      const updatedQuantities = { ...prev };
-      delete updatedQuantities[productId]; // Remove the product from quantities
-      return updatedQuantities;
-    });
-  };
-  const changeSubTotalbyQuantity = (event) => {
-    const quantity = Number(event.target.value);
-    const purchase_price = Number(productForm.values.purchase_price);
-    if (
-      !isNaN(quantity) &&
-      !isNaN(purchase_price) &&
-      quantity > 0 &&
-      purchase_price >= 0
-    ) {
-      setSelectProductDetails((prevDetails) => ({
-        ...prevDetails,
-        sub_total: quantity * purchase_price,
-      }));
-      productForm.setFieldValue("sub_total", quantity * purchase_price);
+    const storageKey =
+      enableTable && tableId
+        ? `table-${tableId}-pos-products`
+        : "temp-pos-products";
+
+    const cartProducts = localStorage.getItem(storageKey);
+    let myCartProducts = cartProducts ? JSON.parse(cartProducts) : [];
+
+    myCartProducts = myCartProducts.filter(
+      (item) => item.product_id !== productId
+    );
+
+    localStorage.setItem(storageKey, JSON.stringify(myCartProducts));
+    setLoadCartProducts(true);
+
+    // Update table status if cart becomes empty
+    if (enableTable && tableId && myCartProducts.length === 0) {
+      const updatedTables = tables.map((table) =>
+        table.id === tableId ? { ...table, status: "Free" } : table
+      );
+      setTables(updatedTables);
     }
   };
-  // console.log(quantities)
-  const filteredProducts = products
-    .map((product) => ({
-      ...product,
-      quantity: quantities[product.id]?.quantity ?? 0,
-      sub_total: (quantities[product.id]?.quantity ?? 0) * product.sales_price,
-    }))
-    .filter((product) => product.quantity > 0);
-  const subtotal = filteredProducts.reduce(
-    (sum, item) => sum + item.sub_total,
+
+  // Modified to handle table-specific cart
+  const handleIncrement = (productId) => {
+    const storageKey =
+      enableTable && tableId
+        ? `table-${tableId}-pos-products`
+        : "temp-pos-products";
+
+    const cartProducts = localStorage.getItem(storageKey);
+    let myCartProducts = cartProducts ? JSON.parse(cartProducts) : [];
+    const product = products.find((product) => product.id === productId);
+
+    let found = false;
+
+    myCartProducts = myCartProducts.map((item) => {
+      if (item.product_id === productId) {
+        found = true;
+        const newQuantity = Math.min(item.quantity + 1);
+        return {
+          ...item,
+          quantity: newQuantity,
+          sub_total: newQuantity * item.sales_price,
+        };
+      }
+      return item;
+    });
+
+    if (!found) {
+      myCartProducts.push({
+        product_id: product.id,
+        display_name: product.display_name,
+        quantity: 1,
+        unit_name: product.unit_name,
+        purchase_price: Number(product.purchase_price),
+        sub_total: Number(product.sales_price),
+        sales_price: Number(product.sales_price),
+      });
+    }
+
+    // Update table status if this is the first item
+    if (enableTable && tableId && myCartProducts.length === 1) {
+      const updatedTables = tables.map((table) =>
+        table.id === tableId ? { ...table, status: "Occupied" } : table
+      );
+      setTables(updatedTables);
+    }
+
+    localStorage.setItem(storageKey, JSON.stringify(myCartProducts));
+    setLoadCartProducts(true);
+  };
+
+  // Modified to handle table-specific cart
+  const handleDecrement = (productId) => {
+    const storageKey =
+      enableTable && tableId
+        ? `table-${tableId}-pos-products`
+        : "temp-pos-products";
+
+    const cartProducts = localStorage.getItem(storageKey);
+    let myCartProducts = cartProducts ? JSON.parse(cartProducts) : [];
+
+    myCartProducts = myCartProducts
+      .map((item) => {
+        if (item.product_id === productId) {
+          const newQuantity = Math.max(0, item.quantity - 1);
+          return {
+            ...item,
+            quantity: newQuantity,
+            sub_total: newQuantity * item.sales_price,
+          };
+        }
+        return item;
+      })
+      .filter((item) => item.quantity > 0);
+
+    // Update table status if cart becomes empty
+    if (enableTable && tableId && myCartProducts.length === 0) {
+      const updatedTables = tables.map((table) =>
+        table.id === tableId ? { ...table, status: "Free" } : table
+      );
+      setTables(updatedTables);
+    }
+
+    localStorage.setItem(storageKey, JSON.stringify(myCartProducts));
+    setLoadCartProducts(true);
+  };
+
+  const subtotal = tempCartProducts.reduce(
+    (acc, item) => acc + item.sub_total,
     0
   );
-  // console.log(subtotal)
 
-  const data = [
-    { id: 1, name: "T-1" },
-    { id: 2, name: "T-2" },
-    { id: 3, name: "T-3" },
-    { id: 4, name: "T-4" },
-    { id: 5, name: "T-5" },
-    { id: 6, name: "T-6" },
-    { id: 7, name: "T-7" },
-    { id: 8, name: "T-8" },
-    { id: 9, name: "T-9" },
-    { id: 10, name: "T-10" },
-    { id: 11, name: "T-11" },
-    { id: 12, name: "T-12" },
-    { id: 13, name: "T-13" },
-    { id: 14, name: "T-14" },
-    { id: 15, name: "T-15" },
-  ];
-  const handleSubmit = () => {
-    if (filteredProducts.length === 0) {
+  // Track additional tables per selected table
+  const [additionalTableSelections, setAdditionalTableSelections] = useState(
+    {}
+  );
+  const [checked, setChecked] = useState(false);
+
+  // Initialize or update selections when table changes
+  useEffect(() => {
+    if (tableId && !additionalTableSelections[tableId]) {
+      setAdditionalTableSelections((prev) => ({
+        ...prev,
+        [tableId]: new Set(),
+      }));
+    }
+  }, [tableId]);
+
+  const handleAdditionalTableCheck = (checkedTableId) => {
+    if (!tableId) return;
+
+    setAdditionalTableSelections((prev) => {
+      const currentSelections = new Set(prev[tableId] || []);
+
+      if (currentSelections.has(checkedTableId)) {
+        currentSelections.delete(checkedTableId);
+      } else {
+        currentSelections.add(checkedTableId);
+      }
+
+      return {
+        ...prev,
+        [tableId]: currentSelections,
+      };
+    });
+  };
+
+  // Modified to use the parent handleSubmitOrder function
+  const handlePrintAll = () => {
+    if (tempCartProducts.length === 0) {
       notifications.show({
         title: t("ValidationError"),
         position: "top-right",
@@ -234,6 +359,7 @@ export default function Sales(props) {
       });
       return;
     }
+
     const validation = form.validate();
     if (validation.hasErrors) {
       return;
@@ -242,10 +368,59 @@ export default function Sales(props) {
     const formValue = {};
     formValue.user_id = salesByUser;
     formValue.transaction_mode_id = id;
-    enableTable ? formValue.sales_type = "restaurant" : formValue.sales_type = "bakery"
-    let transformedArray = filteredProducts.map((product) => {
+    enableTable
+      ? (formValue.sales_type = "restaurant")
+      : (formValue.sales_type = "bakery");
+
+    let transformedArray = tempCartProducts.map((product) => {
       return {
-        product_id: product.id,
+        product_id: product.id || product.product_id,
+        quantity: product.quantity,
+        purchase_price: product.purchase_price,
+        sales_price: product.sales_price,
+        sub_total: product.sub_total,
+      };
+    });
+
+    formValue["items"] = transformedArray ? transformedArray : [];
+
+    if (enableTable && tableId) {
+      const tableData = {
+        mainTable: {
+          id: tableId,
+          status: tables.find((t) => t.id === tableId)?.status,
+        },
+        additionalTables: Array.from(additionalTableSelections[tableId] || []),
+      };
+      formValue["table_data"] = tableData ? tableData : [];
+    }
+
+    console.log("Print All Data:", formValue);
+
+    // Call the parent function to handle order submission
+    handleSubmitOrder();
+
+    // Reset form and UI state
+    setSalesByUser(null);
+    setId(null);
+
+    if (enableTable) {
+      setAdditionalTableSelections((prev) => {
+        const newSelections = { ...prev };
+        delete newSelections[tableId];
+        return newSelections;
+      });
+      setChecked(false);
+      // Don't reset tableId here - that's handled in the parent function
+    }
+
+    form.reset();
+  };
+  const printItem = () => {
+    const formValue = {};
+    let transformedArray = tempCartProducts.map((product) => {
+      return {
+        product_id: product.id || product.product_id,
         quantity: product.quantity,
         purchase_price: product.purchase_price,
         sales_price: product.sales_price,
@@ -255,6 +430,82 @@ export default function Sales(props) {
     formValue["items"] = transformedArray ? transformedArray : [];
     console.log(formValue);
   };
+  function tempLocalPosInvoice(addInvoice) {
+    const existingInvoices = localStorage.getItem("temp-pos-invoice");
+    const invoices = existingInvoices ? JSON.parse(existingInvoices) : [];
+
+    invoices.push(addInvoice);
+    localStorage.setItem("temp-pos-invoice", JSON.stringify(invoices));
+  }
+  const posPrint = () => {
+    if (tempCartProducts.length === 0) {
+      notifications.show({
+        title: t("ValidationError"),
+        position: "top-right",
+        autoClose: 1000,
+        withCloseButton: true,
+        message: t("Add at least one product"),
+        color: "red",
+      });
+      return;
+    }
+
+    const validation = form.validate();
+    if (validation.hasErrors) {
+      return;
+    }
+
+    const formValue = {};
+    formValue.user_id = salesByUser;
+    formValue.transaction_mode_id = id;
+    enableTable
+      ? (formValue.sales_type = "restaurant")
+      : (formValue.sales_type = "bakery");
+
+    let transformedArray = tempCartProducts.map((product) => {
+      return {
+        product_id: product.id || product.product_id,
+        quantity: product.quantity,
+        purchase_price: product.purchase_price,
+        sales_price: product.sales_price,
+        sub_total: product.sub_total,
+      };
+    });
+
+    formValue["items"] = transformedArray ? transformedArray : [];
+
+    if (enableTable && tableId) {
+      const tableData = {
+        mainTable: {
+          id: tableId,
+          status: tables.find((t) => t.id === tableId)?.status,
+        },
+        additionalTables: Array.from(additionalTableSelections[tableId] || []),
+      };
+      formValue["table_data"] = tableData ? tableData : [];
+    }
+
+    console.log("Print All Data:", formValue);
+    tempLocalPosInvoice(formValue)
+    // Call the parent function to handle order submission
+    handleSubmitOrder();
+
+    // Reset form and UI state
+    setSalesByUser(null);
+    setId(null);
+
+    if (enableTable) {
+      setAdditionalTableSelections((prev) => {
+        const newSelections = { ...prev };
+        delete newSelections[tableId];
+        return newSelections;
+      });
+      setChecked(false);
+      
+    }
+
+    form.reset();
+  }
   return (
     <>
       <Box
@@ -274,14 +525,14 @@ export default function Sales(props) {
             <Tooltip
               label={t("SalesBy")}
               opened={!!form.errors.user_id}
-              px={16}
-              py={2}
-              position="top-end"
               bg={`red.4`}
               c={"white"}
               withArrow
+              px={16}
+              py={2}
               offset={2}
               zIndex={999}
+              position="top-end"
               transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
             >
               <Select
@@ -323,6 +574,7 @@ export default function Sales(props) {
 
             {enableTable && (
               <Button
+                disabled={tempCartProducts.length === 0}
                 radius="md"
                 size="sm"
                 color="green"
@@ -330,6 +582,7 @@ export default function Sales(props) {
                 miw={122}
                 maw={122}
                 leftSection={<IconChefHat height={18} width={18} stroke={2} />}
+                onClick={printItem}
               >
                 <Text fw={600} size="sm">
                   {t("Kitchen")}
@@ -338,13 +591,9 @@ export default function Sales(props) {
             )}
           </Group>
           <Box>
-            <ScrollArea
-              h={enableTable ? heightHalf - 48 : heightHalf + 66}
-              type="never"
-              scrollbars="y"
-            >
+            <Box h={enableTable ? heightHalf - 12 : heightHalf + 99}>
               <Paper
-                p="8"
+                p="6"
                 radius="4"
                 style={{ backgroundColor: checked ? "#4CAF50" : "#E8F5E9" }}
               >
@@ -358,44 +607,64 @@ export default function Sales(props) {
                   </Grid.Col>
                   <Grid.Col span={1}>
                     {enableTable && (
-                      <Checkbox
-                        checked={checked}
-                        color="green.8"
-                        onChange={(event) =>
-                          setChecked(event.currentTarget.checked)
-                        }
-                        styles={(theme) => ({
-                          input: {
-                            borderColor: "white",
-                          },
-                        })}
-                      />
+                      <Tooltip
+                        color="red.6"
+                        disabled={tableId}
+                        withArrow
+                        px={16}
+                        py={2}
+                        offset={2}
+                        zIndex={999}
+                        position="top-end"
+                        label={t("SelectaTabletoChooseAdditional")}
+                      >
+                        <Checkbox
+                          disabled={!tableId}
+                          checked={checked}
+                          color="green.8"
+                          onChange={(event) =>
+                            setChecked(event.currentTarget.checked)
+                          }
+                          styles={(theme) => ({
+                            input: {
+                              borderColor: "white",
+                            },
+                          })}
+                        />
+                      </Tooltip>
                     )}
                   </Grid.Col>
                 </Grid>
               </Paper>
 
               {checked && (
-                <Paper p="md" radius="md" bg={"#E6F5ED99"}>
-                  <Grid columns={15} gutter="md">
-                    {data.map((item) => (
-                      <Grid.Col span={3} key={item.id}>
-                        <Checkbox
-                          label={item.name}
-                          color="green.8"
-                          styles={(theme) => ({
-                            input: {
-                              border: "1.5px solid #767676",
-                            },
-                            label: {
-                              color: "#333333",
-                            },
-                          })}
-                        />
-                      </Grid.Col>
-                    ))}
-                  </Grid>
-                </Paper>
+                <ScrollArea h={heightHalf / 4} type="never" scrollbars="y">
+                  <Paper p="md" radius="md" bg={"#E6F5ED99"}>
+                    <Grid columns={15} gutter="md">
+                      {tables.map((item) => (
+                        <Grid.Col span={3} key={item.id}>
+                          <Checkbox
+                            label={`Table ${item.id}`}
+                            color="green.8"
+                            checked={additionalTableSelections[tableId]?.has(
+                              item.id
+                            )}
+                            onChange={() => handleAdditionalTableCheck(item.id)}
+                            disabled={item.id === tableId}
+                            styles={(theme) => ({
+                              input: {
+                                border: "1.5px solid #767676",
+                              },
+                              label: {
+                                color: "#333333",
+                              },
+                            })}
+                          />
+                        </Grid.Col>
+                      ))}
+                    </Grid>
+                  </Paper>
+                </ScrollArea>
               )}
               <Box>
                 <DataTable
@@ -406,19 +675,16 @@ export default function Sales(props) {
                     footer: tableCss.footer,
                     pagination: tableCss.pagination,
                   }}
-                  records={filteredProducts}
+                  records={tempCartProducts}
                   columns={[
                     {
                       accessor: "id",
-                      // width: 100,
                       title: "S/N",
                       render: (data, index) => index + 1,
-                      footer: <div>Sub Total</div>,
                     },
                     {
-                      accessor: "name",
+                      accessor: "display_name",
                       title: t("Product"),
-                      width: 120,
                     },
                     {
                       accessor: "quantity",
@@ -426,35 +692,31 @@ export default function Sales(props) {
                       textAlign: "center",
                       render: (data) => (
                         <>
-                          {enableTable ? (
-                            <Group w={120} gap={8} justify="left">
-                              <ActionIcon
-                                size={"sm"}
-                                bg={"#596972"}
-                                onClick={() => handleDecrement(data.id)}
-                              >
-                                <IconMinus height={"12"} width={"12"} />
-                              </ActionIcon>
-                              <Text
-                                size="sm"
-                                ta={"center"}
-                                fw={600}
-                                maw={30}
-                                miw={30}
-                              >
-                                {data.quantity}
-                              </Text>
-                              <ActionIcon
-                                size={"sm"}
-                                bg={"#596972"}
-                                onClick={() => handleIncrement(data.id)}
-                              >
-                                <IconPlus height={"12"} width={"12"} />
-                              </ActionIcon>
-                            </Group>
-                          ) : (
-                            data.quantity
-                          )}
+                          <Group gap={8} justify="center">
+                            <ActionIcon
+                              size={"sm"}
+                              bg={"#596972"}
+                              onClick={() => handleDecrement(data.product_id)}
+                            >
+                              <IconMinus height={"12"} width={"12"} />
+                            </ActionIcon>
+                            <Text
+                              size="sm"
+                              ta={"center"}
+                              fw={600}
+                              maw={30}
+                              miw={30}
+                            >
+                              {data.quantity}
+                            </Text>
+                            <ActionIcon
+                              size={"sm"}
+                              bg={"#596972"}
+                              onClick={() => handleIncrement(data.product_id)}
+                            >
+                              <IconPlus height={"12"} width={"12"} />
+                            </ActionIcon>
+                          </Group>
                         </>
                       ),
                     },
@@ -464,7 +726,7 @@ export default function Sales(props) {
                       textAlign: "center",
                       render: (data) => (
                         <>
-                          {configData?.currency?.symbol} {data.price}
+                          {configData?.currency?.symbol} {data.sales_price}
                         </>
                       ),
                     },
@@ -481,7 +743,6 @@ export default function Sales(props) {
                     },
                     {
                       accessor: "action",
-                      width: 120,
                       title: t(""),
                       textAlign: "right",
                       render: (data) => (
@@ -491,36 +752,51 @@ export default function Sales(props) {
                             variant="white"
                             color="#FF0000"
                             aria-label="Settings"
-                            onClick={() => handleDelete(data.id)}
+                            onClick={() => handleDelete(data.product_id)}
                           >
                             <IconTrash height={20} width={20} stroke={1.5} />
                           </ActionIcon>
-                        </Group>
-                      ),
-                      footer: (
-                        <Group gap="0">
-                          <Box mb={-4}>
-                            <IconSum size="14" />
-                          </Box>
-                          <div>
-                            {configData?.currency?.symbol} {subtotal.toFixed(2)}
-                          </div>
                         </Group>
                       ),
                     },
                   ]}
                   loaderSize="xs"
                   loaderColor="grape"
-                  height={enableTable ? 230 : 346}
+                  height={
+                    enableTable && checked ? 158 : enableTable ? 240 : 310
+                  }
+                  // height={enableTable ? 196 : 310}
                   // backgroundColor={'black'}
                   scrollAreaProps={{ type: "never" }}
                 />
+                <Group
+                  justify="space-between"
+                  align="center"
+                  pt={4}
+                  style={{
+                    borderTop: "1px solid #dee2e6",
+                  }}
+                >
+                  <Text fw={"bold"} fz={"sm"} c={"black"} pl={"10"}>
+                    {t("SubTotal")}
+                  </Text>
+                  <Group gap="10" pr={"sm"} align="center">
+                    <Box mt={4}>
+                      <IconSum size="16" style={{ color: "black" }} />
+                    </Box>
+                    <Box>
+                      <Text fw={"bold"} fz={"sm"} c={"black"}>
+                        {configData?.currency?.symbol} {subtotal.toFixed(2)}
+                      </Text>
+                    </Box>
+                  </Group>
+                </Group>
               </Box>
-            </ScrollArea>
+            </Box>
           </Box>
           <Box
             className={classes["box-border"]}
-            h={heightHalf + 52}
+            h={heightHalf + 16}
             pl={4}
             pr={4}
             pb={4}
@@ -529,7 +805,7 @@ export default function Sales(props) {
           >
             <Box>
               <Flex
-                h={heightHalf - 142}
+                h={heightHalf - 182}
                 direction={"column"}
                 w={"100%"}
                 justify={"center"}
@@ -543,6 +819,10 @@ export default function Sales(props) {
                   size={"sm"}
                   w={"100%"}
                   pt={"xs"}
+                  onChange={(e) => {
+                    e.preventDefault();
+                    setCustomerMobile(e.currentTarget.value);
+                  }}
                   placeholder={t("CustomerMobileNumber")}
                   leftSection={<IconSearch height={18} width={18} stroke={2} />}
                   rightSection={
@@ -552,45 +832,51 @@ export default function Sales(props) {
                 <Box className={classes["box-white"]} p={"4"} w={"100%"}>
                   <Grid columns={12} gutter={0} pt={4} pl={12} pr={12}>
                     <Grid.Col span={6}>
-                      <Grid columns={12} gutter={0}>
-                        <Grid.Col span={2}>
-                          <Text fw={500} c={"#333333"}>
-                            {t("VAT")}
-                          </Text>
-                        </Grid.Col>
-                        <Grid.Col span={"auto"}>
-                          <Text fw={800} c={"#333333"}>
-                            {configData?.currency?.symbol} 0
-                          </Text>
-                        </Grid.Col>
-                      </Grid>
-                      <Grid columns={12} gutter={0} pt={0}>
-                        <Grid.Col span={2}>
-                          <Text fw={500} c={"#333333"}>
-                            {t("SD")}
-                          </Text>
-                        </Grid.Col>
-                        <Grid.Col span={"auto"}>
-                          <Text fw={800} c={"#333333"}>
-                            {configData?.currency?.symbol} 0
-                          </Text>
-                        </Grid.Col>
-                      </Grid>
-                      <Grid columns={12} gutter={0} pt={0}>
-                        <Grid.Col span={2}>
-                          <Text fw={500} c={"#333333"}>
-                            {t("DIS.")}
-                          </Text>
-                        </Grid.Col>
-                        <Grid.Col span={"auto"}>
-                          <Text fw={800} c={"#333333"}>
-                            {configData?.currency?.symbol} 0
-                          </Text>
-                        </Grid.Col>
-                      </Grid>
+                      <Box bg={"#e8f5e9"} mr={'xs'} style={{borderRadius : 4}} pl={'xs'}>
+                        <Grid columns={12} gutter={0}>
+                          <Grid.Col span={2}>
+                            <Text fw={500} c={"#333333"}>
+                              {t("VAT")}
+                            </Text>
+                          </Grid.Col>
+                          <Grid.Col span={"auto"}>
+                            <Text fw={800} c={"#333333"}>
+                              {configData?.currency?.symbol} 0
+                            </Text>
+                          </Grid.Col>
+                        </Grid>
+                        <Grid columns={12} gutter={0} pt={0}>
+                          <Grid.Col span={2}>
+                            <Text fw={500} c={"#333333"}>
+                              {t("SD")}
+                            </Text>
+                          </Grid.Col>
+                          <Grid.Col span={"auto"}>
+                            <Text fw={800} c={"#333333"}>
+                              {configData?.currency?.symbol} 0
+                            </Text>
+                          </Grid.Col>
+                        </Grid>
+                        <Grid columns={12} gutter={0} pt={0}>
+                          <Grid.Col span={2}>
+                            <Text fw={500} c={"#333333"}>
+                              {t("DIS.")}
+                            </Text>
+                          </Grid.Col>
+                          <Grid.Col span={"auto"}>
+                            <Text fw={800} c={"#333333"}>
+                              {configData?.currency?.symbol} 0
+                            </Text>
+                          </Grid.Col>
+                        </Grid>
+                      </Box>
                     </Grid.Col>
                     <Grid.Col span={6}>
-                      <Box className={classes["box-border"]} p={6}>
+                      <Box
+                        className={classes["box-border"]}
+                        bg={"#30444f"}
+                        p={8}
+                      >
                         <Flex
                           direction={"column"}
                           justify={"center"}
@@ -598,10 +884,10 @@ export default function Sales(props) {
                           h={"100%"}
                           p={2}
                         >
-                          <Text fw={500} c={"#333333"} size={"md"}>
+                          <Text fw={500} c={"white"} size={"md"}>
                             {t("Total")}
                           </Text>
-                          <Text fw={800} c={"#00542B"} size={"lg"}>
+                          <Text fw={800} c={"white"} size={"lg"}>
                             {configData?.currency?.symbol} {subtotal.toFixed(2)}
                           </Text>
                         </Flex>
@@ -762,7 +1048,6 @@ export default function Sales(props) {
                           color="lime"
                           size="lg"
                           onChange={(event) => {
-                            
                             console.log(
                               "Checkbox clicked:",
                               event.currentTarget.checked
@@ -793,7 +1078,7 @@ export default function Sales(props) {
               </Group>
             </Box>
             <Grid columns={12} gutter={{ base: 2 }} pl={"8"} pr={"8"}>
-              <Grid.Col span={2}>
+              <Grid.Col span={enableTable ? 3 : 4}>
                 <Tooltip
                   label={t("Hold")}
                   px={16}
@@ -812,13 +1097,41 @@ export default function Sales(props) {
                     bg={"red.5"}
                     size={"sm"}
                     fullWidth={true}
-                    // leftSection={<IconPrinter />}
+                    leftSection={<IconHandStop />}
                   >
                     {t("Hold")}
                   </Button>
                 </Tooltip>
               </Grid.Col>
-              <Grid.Col span={5}>
+              {enableTable && (
+                <Grid.Col span={3}>
+                  <Tooltip
+                    label={t("PrintAll")}
+                    px={16}
+                    py={2}
+                    position="top-end"
+                    color="red"
+                    withArrow
+                    offset={2}
+                    zIndex={100}
+                    transitionProps={{
+                      transition: "pop-bottom-left",
+                      duration: 2000,
+                    }}
+                  >
+                    <Button
+                      bg={"green.5"}
+                      size={"sm"}
+                      fullWidth={true}
+                      leftSection={<IconPrinter />}
+                      onClick={handlePrintAll}
+                    >
+                      {t("All Print")}
+                    </Button>
+                  </Tooltip>
+                </Grid.Col>
+              )}
+              <Grid.Col span={enableTable ? 3 : 4}>
                 <Button
                   bg={"#30444F"}
                   size={"sm"}
@@ -828,56 +1141,21 @@ export default function Sales(props) {
                     setPrintPos(true);
                   }}
                 >
-                  {t("POS Print")}
+                  {t("POS")}
                 </Button>
               </Grid.Col>
-              <Grid.Col span={5}>
+              <Grid.Col span={enableTable ? 3 : 4}>
                 <Button
                   size={"sm"}
                   bg={"#00994f"}
                   fullWidth={true}
                   leftSection={<IconDeviceFloppy />}
-                  onClick={() => {
-                    handleSubmit();
-                  }}
+                  onClick={handlePrintAll}
                 >
                   {t("Save")}
                 </Button>
               </Grid.Col>
             </Grid>
-            {/* <Group
-              grow
-              gap={"xs"}
-              p={8}
-              mb={"0"}
-              pt={6}
-              style={{ borderTop: "#c0c0c0 solid 2px" }}
-              className="divider"
-            >
-              <Button
-                bg={"red.5"}
-                size={"sm"}
-                leftSection={<IconPrinter />}
-              >
-                {t("Hold")}
-              </Button>
-              <Button
-                bg={"#30444F"}
-                size={"sm"}
-                fullWidth={true}
-                leftSection={<IconPrinter />}
-              >
-                {t("POS Print")}
-              </Button>
-              <Button
-                size={"sm"}
-                bg={"#00994f"}
-                fullWidth={true}
-                leftSection={<IconDeviceFloppy />}
-              >
-                {t("Save")}
-              </Button>
-            </Group> */}
             {printPos && (
               <div style={{ display: "none" }}>
                 <SalesPrintPos setPrintPos={setPrintPos} />
