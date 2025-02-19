@@ -59,6 +59,7 @@ export default function Invoice(props) {
     tables,
     tableId,
     setTableId,
+    setTables,
     handleSubmitOrder, // New function passed from parent
   } = props;
 
@@ -386,17 +387,38 @@ export default function Invoice(props) {
     formValue["items"] = transformedArray ? transformedArray : [];
 
     if (enableTable && tableId) {
+      // Get the selected table
+      const selectedTable = tables.find((t) => t.id === tableId);
+
+      // Calculate elapsed time
+      let elapsedTime = "00:00:00";
+      if (selectedTable && selectedTable.statusStartTime) {
+        const elapsedSeconds = Math.floor(
+          (new Date() - new Date(selectedTable.statusStartTime)) / 1000
+        );
+        const hours = Math.floor(elapsedSeconds / 3600)
+          .toString()
+          .padStart(2, "0");
+        const minutes = Math.floor((elapsedSeconds % 3600) / 60)
+          .toString()
+          .padStart(2, "0");
+        const seconds = (elapsedSeconds % 60).toString().padStart(2, "0");
+        elapsedTime = `${hours}:${minutes}:${seconds}`;
+      }
+
       const tableData = {
         mainTable: {
           id: tableId,
-          status: tables.find((t) => t.id === tableId)?.status,
+          status: selectedTable?.status || "Unknown",
+          status_change_time: selectedTable?.statusStartTime || "N/A",
+          elapsed_time: elapsedTime,
         },
         additionalTables: Array.from(additionalTableSelections[tableId] || []),
       };
-      formValue["table_data"] = tableData ? tableData : [];
+      formValue["table_data"] = tableData;
     }
 
-    console.log("Print All Data:", formValue);
+    // console.log("Print All Data:", formValue);
 
     // Call the parent function to handle order submission
     handleSubmitOrder();
@@ -412,7 +434,6 @@ export default function Invoice(props) {
         return newSelections;
       });
       setChecked(false);
-      // Don't reset tableId here - that's handled in the parent function
     }
 
     form.reset();
@@ -443,7 +464,9 @@ export default function Invoice(props) {
     localStorage.setItem("temp-pos-invoice", JSON.stringify(invoices));
   }
   const [posData, setPosData] = useState(null);
+
   const posPrint = () => {
+    // Validate cart has products
     if (tempCartProducts.length === 0) {
       notifications.show({
         title: t("ValidationError"),
@@ -456,53 +479,114 @@ export default function Invoice(props) {
       return;
     }
 
+    // Form validation
     const validation = form.validate();
     if (validation.hasErrors) {
       return;
     }
 
-    const formValue = {};
-    formValue["invoice_id"] =
-      Math.floor(Math.random() * (999999 - 100000 + 1)) + 100000;
-    formValue["invoice_date"] = new Date().toLocaleDateString("en-CA");
-    formValue["invoice_time"] = new Date().toLocaleTimeString("en-CA");
-    formValue.user_id = salesByUser;
-    formValue.transaction_mode_id = id;
-    formValue.createdByName = salesByUserName.label;
-    formValue.grand_total = subtotal;
-    enableTable
-      ? (formValue.sales_type = "restaurant")
-      : (formValue.sales_type = "bakery");
-    // console.log(products);
-    let transformedArray = tempCartProducts.map((product) => {
-      return {
-        display_name: product.display_name,
-        product_id: product.id || product.product_id,
-        quantity: product.quantity,
-        purchase_price: product.purchase_price,
-        sales_price: product.sales_price,
-        sub_total: product.sub_total,
-      };
-    });
+    // Prepare base form value
+    const formValue = {
+      invoice_id: Math.floor(Math.random() * (999999 - 100000 + 1)) + 100000,
+      invoice_date: new Date().toLocaleDateString("en-CA"),
+      invoice_time: new Date().toLocaleTimeString("en-CA"),
+      user_id: salesByUser,
+      transaction_mode_id: id,
+      createdByName: salesByUserName.label,
+      grand_total: subtotal,
+      sales_type: enableTable ? "restaurant" : "bakery",
+    };
 
-    formValue["items"] = transformedArray ? transformedArray : [];
+    // Transform cart products
+    const transformedArray = tempCartProducts.map((product) => ({
+      display_name: product.display_name,
+      product_id: product.id || product.product_id,
+      quantity: product.quantity,
+      purchase_price: product.purchase_price,
+      sales_price: product.sales_price,
+      sub_total: product.sub_total,
+    }));
 
+    formValue.items = transformedArray || [];
+
+    // Handle table-specific details if enabled
     if (enableTable && tableId) {
+      const selectedTable = tables.find((t) => t.id === tableId);
+
+      // Calculate current status elapsed time
+      const currentTime = new Date();
+      let statusHistory = [...(selectedTable.statusHistory || [])];
+
+      if (
+        selectedTable.currentStatusStartTime &&
+        selectedTable.status !== "Free"
+      ) {
+        const currentElapsed =
+          currentTime - new Date(selectedTable.currentStatusStartTime);
+        statusHistory.push({
+          status: selectedTable.status,
+          startTime: selectedTable.currentStatusStartTime,
+          endTime: currentTime,
+          elapsedTime: currentElapsed,
+        });
+      }
+
+      // Format status history for display
+      const formattedStatusHistory = statusHistory.map((entry) => {
+        const elapsedSeconds = Math.floor(entry.elapsedTime / 1000);
+        const hours = Math.floor(elapsedSeconds / 3600)
+          .toString()
+          .padStart(2, "0");
+        const minutes = Math.floor((elapsedSeconds % 3600) / 60)
+          .toString()
+          .padStart(2, "0");
+        const seconds = (elapsedSeconds % 60).toString().padStart(2, "0");
+
+        return {
+          status: entry.status,
+          elapsed_time: `${hours}:${minutes}:${seconds}`,
+          start_time: new Date(entry.startTime).toISOString(),
+          end_time: new Date(entry.endTime).toISOString(),
+        };
+      });
+
+      // Calculate total elapsed time
+      const totalElapsedMs = statusHistory.reduce(
+        (total, entry) => total + entry.elapsedTime,
+        0
+      );
+      const totalSeconds = Math.floor(totalElapsedMs / 1000);
+      const totalHours = Math.floor(totalSeconds / 3600)
+        .toString()
+        .padStart(2, "0");
+      const totalMinutes = Math.floor((totalSeconds % 3600) / 60)
+        .toString()
+        .padStart(2, "0");
+      const totalSecondsRemainder = (totalSeconds % 60)
+        .toString()
+        .padStart(2, "0");
+
+      // Prepare table data
       const tableData = {
         mainTable: {
           id: tableId,
-          status: tables.find((t) => t.id === tableId)?.status,
+          status: selectedTable.status,
+          status_change_history: formattedStatusHistory,
+          total_elapsed_time: `${totalHours}:${totalMinutes}:${totalSecondsRemainder}`,
         },
         additionalTables: Array.from(additionalTableSelections[tableId] || []),
       };
-      formValue["table_data"] = tableData ? tableData : [];
+
+      formValue.table_data = tableData;
     }
 
-    // console.log("Print All Data:", formValue);
+    // Process the print request
+    console.log("Print Data:", formValue);
     tempLocalPosInvoice(formValue);
     setPosData(formValue);
     handleSubmitOrder();
 
+    // Reset form and selections
     setSalesByUser(null);
     setSalesByUserName(null);
     setId(null);
@@ -519,6 +603,7 @@ export default function Invoice(props) {
     form.reset();
     setPrintPos(true);
   };
+
   return (
     <>
       <Box
