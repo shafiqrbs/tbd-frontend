@@ -931,58 +931,80 @@ export default function Invoice(props) {
                     <IconUserFilled height={18} width={18} stroke={2} />
                   }
                 ></TextInput>
-                <Box className={classes["box-white"]} p={"4"} w={"100%"}>
-                  <Grid columns={12} gutter={0} pt={4} pl={12} pr={12}>
-                    <Grid.Col span={6}>
-                      <Box
-                        bg={"#e8f5e9"}
-                        mr={"xs"}
-                        style={{ borderRadius: 4 }}
-                        pl={"xs"}
-                      >
-                        <Grid columns={12} gutter={0}>
-                          <Grid.Col span={2}>
-                            <Text fw={500} c={"#333333"}>
-                              {t("VAT")}
-                            </Text>
-                          </Grid.Col>
-                          <Grid.Col span={"auto"}>
-                            <Text fw={800} c={"#333333"}>
-                              {configData?.currency?.symbol} 0
-                            </Text>
-                          </Grid.Col>
-                        </Grid>
-                        <Grid columns={12} gutter={0} pt={0}>
-                          <Grid.Col span={2}>
-                            <Text fw={500} c={"#333333"}>
-                              {t("SD")}
-                            </Text>
-                          </Grid.Col>
-                          <Grid.Col span={"auto"}>
-                            <Text fw={800} c={"#333333"}>
-                              {configData?.currency?.symbol} 0
-                            </Text>
-                          </Grid.Col>
-                        </Grid>
-                        <Grid columns={12} gutter={0} pt={0}>
-                          <Grid.Col span={2}>
-                            <Text fw={500} c={"#333333"}>
-                              {t("DIS.")}
-                            </Text>
-                          </Grid.Col>
-                          <Grid.Col span={"auto"}>
-                            <Text fw={800} c={"#333333"}>
-                              {configData?.currency?.symbol} 0
-                            </Text>
-                          </Grid.Col>
-                        </Grid>
-                      </Box>
+                <Box className={classes["box-white"]} w={"100%"} p={2}>
+                  <Grid columns={12} gutter={0} pt={4} pl={12} pr={12} pb={4}>
+                    <Grid.Col span={6} bg={"#e8f5e9"} mb={4} mt={3}>
+                      <Grid columns={6} p={2}>
+                        <Grid.Col span={3} >
+                          <Box
+                            style={{ borderRadius: 4 }}
+                            pl={"xs"}
+                          >
+                            <Grid columns={12} gutter={0} pt={8}>
+                              <Grid.Col span={6}>
+                                <Text fw={500} c={"#333333"}>
+                                  {t("Type")}
+                                </Text>
+                              </Grid.Col>
+                              <Grid.Col span={6}>
+                                <Text fw={800} c={"#333333"}>
+                                  Flat
+                                </Text>
+                              </Grid.Col>
+                            </Grid>
+                            <Grid columns={12} gutter={0} pt={0}>
+                              <Grid.Col span={6}>
+                                <Text fw={500} c={"#333333"}>
+                                  {t("DIS.")}
+                                </Text>
+                              </Grid.Col>
+                              <Grid.Col span={6}>
+                                <Text fw={800} c={"#333333"}>
+                                  {configData?.currency?.symbol} 0
+                                </Text>
+                              </Grid.Col>
+                            </Grid>
+                          </Box>
+                        </Grid.Col>
+                        <Grid.Col span={3}>
+                          <Box
+                            style={{ borderRadius: 4 }}
+                            pl={"xs"}
+                          >
+                            <Grid columns={12} gutter={0} pt={8}>
+                              <Grid.Col span={6}>
+                                <Text fw={500} c={"#333333"}>
+                                  {t("VAT")}
+                                </Text>
+                              </Grid.Col>
+                              <Grid.Col span={6}>
+                                <Text fw={800} c={"#333333"}>
+                                  {configData?.currency?.symbol} 0
+                                </Text>
+                              </Grid.Col>
+                            </Grid>
+                            <Grid columns={12} gutter={0} pt={0}>
+                              <Grid.Col span={6}>
+                                <Text fw={500} c={"#333333"}>
+                                  {t("SD")}
+                                </Text>
+                              </Grid.Col>
+                              <Grid.Col span={6}>
+                                <Text fw={800} c={"#333333"}>
+                                  {configData?.currency?.symbol} 0
+                                </Text>
+                              </Grid.Col>
+                            </Grid>
+                          </Box>
+                        </Grid.Col>
+                      </Grid>
                     </Grid.Col>
                     <Grid.Col span={6}>
                       <Box
                         className={classes["box-border"]}
                         bg={"#30444f"}
                         p={8}
+                        mt={2}
                       >
                         <Flex
                           direction={"column"}
