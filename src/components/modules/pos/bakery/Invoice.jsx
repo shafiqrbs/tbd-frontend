@@ -94,6 +94,7 @@ export default function Invoice(props) {
 
   // Sales by user state management remains the same
   const [salesByUser, setSalesByUser] = useState(null);
+  const [salesByUserName, setSalesByUserName] = useState(null);
   const [salesByDropdownData, setSalesByDropdownData] = useState([]);
   useEffect(() => {
     let coreUsers = localStorage.getItem("core-users")
@@ -430,13 +431,18 @@ export default function Invoice(props) {
     formValue["items"] = transformedArray ? transformedArray : [];
     console.log(formValue);
   };
+  if (!localStorage.getItem("temp-requistion-invoice")) {
+    localStorage.setItem("temp-requistion-invoice", JSON.stringify([]));
+  }
+
   function tempLocalPosInvoice(addInvoice) {
     const existingInvoices = localStorage.getItem("temp-pos-invoice");
     const invoices = existingInvoices ? JSON.parse(existingInvoices) : [];
-
+    localStorage.setItem("temp-pos-print", JSON.stringify(addInvoice));
     invoices.push(addInvoice);
     localStorage.setItem("temp-pos-invoice", JSON.stringify(invoices));
   }
+  const [posData, setPosData] = useState(null);
   const posPrint = () => {
     if (tempCartProducts.length === 0) {
       notifications.show({
@@ -456,14 +462,21 @@ export default function Invoice(props) {
     }
 
     const formValue = {};
+    formValue["invoice_id"] =
+      Math.floor(Math.random() * (999999 - 100000 + 1)) + 100000;
+    formValue["invoice_date"] = new Date().toLocaleDateString("en-CA");
+    formValue["invoice_time"] = new Date().toLocaleTimeString("en-CA");
     formValue.user_id = salesByUser;
     formValue.transaction_mode_id = id;
+    formValue.createdByName = salesByUserName.label;
+    formValue.grand_total = subtotal;
     enableTable
       ? (formValue.sales_type = "restaurant")
       : (formValue.sales_type = "bakery");
-
+    // console.log(products);
     let transformedArray = tempCartProducts.map((product) => {
       return {
+        display_name: product.display_name,
         product_id: product.id || product.product_id,
         quantity: product.quantity,
         purchase_price: product.purchase_price,
@@ -485,13 +498,13 @@ export default function Invoice(props) {
       formValue["table_data"] = tableData ? tableData : [];
     }
 
-    console.log("Print All Data:", formValue);
-    tempLocalPosInvoice(formValue)
-    // Call the parent function to handle order submission
+    // console.log("Print All Data:", formValue);
+    tempLocalPosInvoice(formValue);
+    setPosData(formValue);
     handleSubmitOrder();
 
-    // Reset form and UI state
     setSalesByUser(null);
+    setSalesByUserName(null);
     setId(null);
 
     if (enableTable) {
@@ -501,11 +514,11 @@ export default function Invoice(props) {
         return newSelections;
       });
       setChecked(false);
-      
     }
 
     form.reset();
-  }
+    setPrintPos(true);
+  };
   return (
     <>
       <Box
@@ -543,7 +556,11 @@ export default function Invoice(props) {
                 error={form.errors.user_id}
                 onChange={(value) => {
                   form.setFieldValue("user_id", value);
+                  const selectedUser = salesByDropdownData.find(
+                    (user) => user.value === value
+                  );
                   setSalesByUser(value);
+                  setSalesByUserName(selectedUser);
                 }}
                 clearable
                 searchable
@@ -832,7 +849,12 @@ export default function Invoice(props) {
                 <Box className={classes["box-white"]} p={"4"} w={"100%"}>
                   <Grid columns={12} gutter={0} pt={4} pl={12} pr={12}>
                     <Grid.Col span={6}>
-                      <Box bg={"#e8f5e9"} mr={'xs'} style={{borderRadius : 4}} pl={'xs'}>
+                      <Box
+                        bg={"#e8f5e9"}
+                        mr={"xs"}
+                        style={{ borderRadius: 4 }}
+                        pl={"xs"}
+                      >
                         <Grid columns={12} gutter={0}>
                           <Grid.Col span={2}>
                             <Text fw={500} c={"#333333"}>
@@ -931,7 +953,8 @@ export default function Invoice(props) {
                   >
                     <Group
                       m={0}
-                      p={0}
+                      pt={8}
+                      pb={8}
                       justify="flex-start"
                       align="flex-start"
                       gap="0"
@@ -961,22 +984,34 @@ export default function Invoice(props) {
                               borderRadius: "8px",
                             }}
                           >
-                            <Image
-                              mih={"60%"}
-                              miw={"60%"}
-                              mah={"60%"}
-                              maw={"60%"}
-                              fit="contain"
-                              src={
-                                isOnline
-                                  ? mode.path
-                                  : "/images/transaction-mode-offline.jpg"
-                              }
-                              alt={mode.method_name}
-                            ></Image>
-                            <Text pt={"4"} c={"#333333"} fw={500}>
+                            <Tooltip
+                              label={mode.name}
+                              withArrow
+                              px={16}
+                              py={2}
+                              offset={2}
+                              zIndex={999}
+                              position="top-end"
+                              color="red"
+                            >
+                              <Image
+                                mih={50}
+                                mah={50}
+                                fit="contain"
+                                src={
+                                  isOnline
+                                    ? mode.path
+                                    : "/images/transaction-mode-offline.jpg"
+                                }
+                                fallbackSrc={`https://placehold.co/120x80/FFFFFF/2f9e44?text=${encodeURIComponent(
+                                  mode.name
+                                )}`}
+                              ></Image>
+                            </Tooltip>
+
+                            {/* <Text pt={"4"} c={"#333333"} fw={500}>
                               {mode.name}
-                            </Text>
+                            </Text> */}
                           </Flex>
                         </Box>
                       ))}
@@ -1137,9 +1172,7 @@ export default function Invoice(props) {
                   size={"sm"}
                   fullWidth={true}
                   leftSection={<IconPrinter />}
-                  onClick={() => {
-                    setPrintPos(true);
-                  }}
+                  onClick={posPrint}
                 >
                   {t("POS")}
                 </Button>
@@ -1158,7 +1191,7 @@ export default function Invoice(props) {
             </Grid>
             {printPos && (
               <div style={{ display: "none" }}>
-                <SalesPrintPos setPrintPos={setPrintPos} />
+                <SalesPrintPos posData={posData} setPrintPos={setPrintPos} />
               </div>
             )}
           </Box>

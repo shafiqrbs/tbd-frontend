@@ -504,7 +504,7 @@ export default function NewSales(props) {
                                 }/uploads/inventory/product/feature_image/${
                                   product.feature_image
                                 }`}
-                                fallbackSrc={`https://placehold.co/120x80?text=${encodeURIComponent(
+                                fallbackSrc={`https://placehold.co/120x80/FFFFFF/2f9e44?text=${encodeURIComponent(
                                   product.display_name
                                 )}`}
                               />
@@ -597,7 +597,7 @@ export default function NewSales(props) {
                                       }/uploads/inventory/product/feature_image/${
                                         product.feature_image
                                       }`}
-                                      fallbackSrc={`https://placehold.co/120x80?text=${encodeURIComponent(
+                                      fallbackSrc={`https://placehold.co/120x80/FFFFFF/2f9e44?text=${encodeURIComponent(
                                         product.display_name
                                       )}`}
                                     />
@@ -769,8 +769,8 @@ export default function NewSales(props) {
                         offset={2}
                         zIndex={999}
                         position="top-end"
-                        label={t("PleaseSelectTable")}
                         color="red"
+                        label={t("PleaseSelectTable")}
                       >
                         <Button
                           disabled={!tableId}
