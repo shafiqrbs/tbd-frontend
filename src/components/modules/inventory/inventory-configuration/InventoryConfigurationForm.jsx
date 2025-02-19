@@ -10,6 +10,9 @@ import {
     Text,
     Title,
     Stack,
+    Radio,
+    Center,
+    Checkbox,
 } from "@mantine/core";
 import {useTranslation} from "react-i18next";
 import {IconCheck, IconDeviceFloppy, IconX} from "@tabler/icons-react";
@@ -40,7 +43,7 @@ function InventoryConfigurationForm() {
         ? JSON.parse(localStorage.getItem("config-data"))
         : [];
 
-
+    // console.log(inventoryConfigData)
     const form = useForm({
         initialValues: {
             is_brand: inventoryConfigData.is_brand || "",
@@ -64,7 +67,9 @@ function InventoryConfigurationForm() {
             stockable: inventoryConfigData.stockable || "",
             post_production: inventoryConfigData.post_production || "",
             mid_production: inventoryConfigData.mid_production || "",
-            pre_production: inventoryConfigData.pre_production || ""
+            pre_production: inventoryConfigData.pre_production || "",
+            pos_sales: inventoryConfigData.pos_sales || "",
+            with_table: inventoryConfigData.with_table || "",
         },
     });
 
@@ -150,13 +155,14 @@ function InventoryConfigurationForm() {
             "post_production",
             "mid_production",
             "pre_production",
-            "is_sku"
+            "is_sku",
+            "pos_sales",
+            "with_table"
         ];
 
         properties.forEach((property) => {
             form.values[property] = values[property] === true || values[property] == 1 ? 1 : 0;
         });
-
         try {
             const value = {
                 url: `inventory/config-update/${inventoryConfigData.domain_id}`,
@@ -520,7 +526,7 @@ function InventoryConfigurationForm() {
                                                         <SwitchForm
                                                             tooltip={t("StockHistory")}
                                                             label=""
-                                                            nextField={"mrp_price"}
+                                                            nextField={"pos_sales"}
                                                             name={"is_stock_history"}
                                                             form={form}
                                                             color="red"
@@ -536,6 +542,53 @@ function InventoryConfigurationForm() {
                                                     </Grid.Col>
                                                 </Grid>
                                             </Box>
+                                            <Box mt={"xs"}>
+                                                <Grid gutter={{base: 1}}>
+                                                    <Grid.Col span={2}>
+                                                        <SwitchForm
+                                                            tooltip={t("PosSales")}
+                                                            label=""
+                                                            nextField={"mrp_price"}
+                                                            name={"pos_sales"}
+                                                            form={form}
+                                                            color="red"
+                                                            id={"pos_sales"}
+                                                            position={"left"}
+                                                            defaultChecked={
+                                                                inventoryConfigData.pos_sales
+                                                            }
+                                                        />
+                                                    </Grid.Col>
+                                                    <Grid.Col span={6} fz={"sm"} pt={"1"}>
+                                                        {t("PosSales")}
+                                                    </Grid.Col>
+                                                </Grid>
+                                            </Box>
+                                            {1 && (
+                                                <Box mt={"sm"}>
+                                                <Grid gutter={{base: 1}}>
+                                                    <Grid.Col span={6}>
+                                                        <Grid >
+                                                            <Grid.Col span={2}>
+                                                            <Checkbox
+                                                                {...form.getInputProps('with_table', { type: 'checkbox' })}
+                                                                checked={form.values.with_table === 1}
+                                                                onChange={(event) => form.setFieldValue('with_table', event.currentTarget.checked ? 1 : 0)}
+                                                                ml="sm"
+                                                                color="red"
+                                                            />
+                                                            </Grid.Col>
+                                                            <Grid.Col span={6} fz={"sm"}>
+                                                                <Center ml={'sm'} pl={'md'}>
+                                                                {t("WithTable")}
+                                                                </Center>
+                                                            </Grid.Col>
+                                                        </Grid>
+                                                    </Grid.Col>
+                                                    
+                                                </Grid>
+                                            </Box>
+                                            )}
                                         </Box>
                                     </ScrollArea>
                                 </Box>
