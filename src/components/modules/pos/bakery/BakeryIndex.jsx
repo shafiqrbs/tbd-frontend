@@ -98,7 +98,7 @@ export default function BakeryIndex() {
             h={height + 4}
             mt={6}
             ml={6}
-            mr={6}
+            mr={12}
             style={{ borderRadius: "4px" }}
             c={"#EAECED"}
             className={classes["body"]}
