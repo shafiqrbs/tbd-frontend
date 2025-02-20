@@ -68,7 +68,7 @@ function HeaderNavbar(props) {
             {tables.map((table) => (
               <Box
                 onClick={() => {
-                    clicked(table.id);
+                  clicked(table.id);
                 }}
                 key={table.id}
                 style={{
@@ -131,9 +131,13 @@ function HeaderNavbar(props) {
                       borderRadius: "1px",
                     }}
                   >
-                    <Text size="sm" fw={400} c={"black"}>
-                      {table.time}
-                    </Text>
+                    {table.status !== "Free" ? (
+                      <Text size="sm">{table.elapsedTime}</Text>
+                    ) : (
+                      <Text size="sm" fw={400} c={"black"}>
+                        {table.time}
+                      </Text>
+                    )}
                   </Flex>
                 </Flex>
               </Box>

@@ -1,11 +1,12 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useReactToPrint } from "react-to-print";
 import classes from "./SalesPrintPos.module.css";
 import { useTranslation } from "react-i18next";
 import { Grid, Text } from "@mantine/core";
 
 export function SalesPrintPos(props) {
-  const { setPrintPos } = props;
+  const { setPrintPos, posData } = props;
+  console.log(posData)
   const componentRef = useRef();
   const effectRan = useRef(false);
   const { t, i18n } = useTranslation();
@@ -20,32 +21,32 @@ export function SalesPrintPos(props) {
     content: () => componentRef.current,
   });
 
+  
   useEffect(() => {
     !effectRan.current &&
       (handlePrint(), setPrintPos(false), (effectRan.current = true));
   }, []);
-  const salesViewData = {
-    invoice: "88393389",
-    created: "28-01-25",
-    createdByName: "Zerin Akhter",
-    customerName: "Kanita Jerin",
-    customerMobile: "01521334751",
-    customer_address: "29 Gausul Azam Avenue, uttara Dhaka",
-    sales_items: [
-      {
-        name: "Pizza",
-        quantity: 10,
-        uom: 10,
-        sales_price: 100,
-        sub_total: 1000,
-      },
-    ],
-    sub_total: 1000,
-    discount: 50,
-    total: 950,
-    payment: 900,
-  };
-
+  // const posData = {
+  //   invoice: "88393389",
+  //   created: "28-01-25",
+  //   createdByName: "Zerin Akhter",
+  //   customerName: "Kanita Jerin",
+  //   customerMobile: "01521334751",
+  //   customer_address: "29 Gausul Azam Avenue, uttara Dhaka",
+  //   sales_items: [
+  //     {
+  //       name: "Pizza",
+  //       quantity: 10,
+  //       uom: 10,
+  //       sales_price: 100,
+  //       sub_total: 1000,
+  //     },
+  //   ],
+  //   sub_total: 1000,
+  //   discount: 50,
+  //   total: 950,
+  //   payment: 900,
+  // };
   return (
     <>
       <div className={classes["pos-body"]} ref={componentRef}>
@@ -100,9 +101,7 @@ export function SalesPrintPos(props) {
                 <Grid.Col span={6}>{t("Invoice")}</Grid.Col>
                 <Grid.Col span={2}>:</Grid.Col>
                 <Grid.Col span={16}>
-                  {salesViewData &&
-                    salesViewData.invoice &&
-                    salesViewData.invoice}
+                  {posData?.invoice_id}
                 </Grid.Col>
               </Grid>
               <Grid
@@ -113,9 +112,8 @@ export function SalesPrintPos(props) {
                 <Grid.Col span={6}>{t("Created")}</Grid.Col>
                 <Grid.Col span={2}>:</Grid.Col>
                 <Grid.Col span={16}>
-                  {salesViewData &&
-                    salesViewData.created &&
-                    salesViewData.created}
+                  {
+                    posData?.invoice_time}
                 </Grid.Col>
               </Grid>
               <Grid
@@ -126,9 +124,9 @@ export function SalesPrintPos(props) {
                 <Grid.Col span={6}>{t("CreatedBy")}</Grid.Col>
                 <Grid.Col span={2}>:</Grid.Col>
                 <Grid.Col span={16}>
-                  {salesViewData &&
-                    salesViewData.createdByName &&
-                    salesViewData.createdByName}
+                  {posData &&
+                    posData.createdByName &&
+                    posData.createdByName}
                 </Grid.Col>
               </Grid>
             </div>
@@ -145,9 +143,8 @@ export function SalesPrintPos(props) {
               <Grid.Col span={6}>{t("Customer")}</Grid.Col>
               <Grid.Col span={2}>:</Grid.Col>
               <Grid.Col span={16}>
-                {salesViewData &&
-                  salesViewData.customerName &&
-                  salesViewData.customerName}
+                {
+                  posData?.customerName}
               </Grid.Col>
             </Grid>
             <Grid
@@ -158,9 +155,8 @@ export function SalesPrintPos(props) {
               <Grid.Col span={6}>{t("Mobile")}</Grid.Col>
               <Grid.Col span={2}>:</Grid.Col>
               <Grid.Col span={16}>
-                {salesViewData &&
-                  salesViewData.customerMobile &&
-                  salesViewData.customerMobile}
+                {
+                  posData?.customerMobile}
               </Grid.Col>
             </Grid>
             <Grid
@@ -171,9 +167,8 @@ export function SalesPrintPos(props) {
               <Grid.Col span={6}>{t("Address")}</Grid.Col>
               <Grid.Col span={2}>:</Grid.Col>
               <Grid.Col span={16}>
-                {salesViewData &&
-                  salesViewData.customer_address &&
-                  salesViewData.customer_address}
+                {
+                  posData?.customer_address}
               </Grid.Col>
             </Grid>
           </div>
@@ -216,16 +211,15 @@ export function SalesPrintPos(props) {
 
           <table style={{ width: "78mm" }}>
             <tbody>
-              {salesViewData &&
-                salesViewData.sales_items &&
-                salesViewData.sales_items.map((element, index) => (
+              {
+                posData?.items?.map((element, index) => (
                   <React.Fragment key={index}>
                     <tr>
                       <td
                         className={`${classes["invoice-text"]} ${classes["text-left"]}`}
                         style={{ width: "30mm" }}
                       >
-                        {element.name}
+                        {element.product_id}
                         {/* {element.sku && (
                                                 <>
                                                     <br />
@@ -243,7 +237,7 @@ export function SalesPrintPos(props) {
                         className={`${classes["invoice-text"]} ${classes["text-center"]}`}
                         style={{ width: "6mm" }}
                       >
-                        {element.uom}
+                        {element.purchase_price}
                       </td>
                       <td
                         className={`${classes["invoice-text"]} ${classes["text-right"]}`}
@@ -280,9 +274,9 @@ export function SalesPrintPos(props) {
               <p
                 className={`${classes["footer-details"]} ${classes["invoice-text"]}`}
               >
-                {salesViewData &&
-                  salesViewData.sub_total &&
-                  Number(salesViewData.sub_total).toFixed(2)}
+                {posData &&
+                  posData.grand_total &&
+                  Number(posData.grand_total).toFixed(2)}
               </p>
             </div>
             <div className={classes["footer-items"]}>
@@ -294,9 +288,9 @@ export function SalesPrintPos(props) {
               <p
                 className={`${classes["footer-details"]} ${classes["invoice-text"]}`}
               >
-                {salesViewData &&
-                  salesViewData.discount &&
-                  Number(salesViewData.discount).toFixed(2)}
+                {posData &&
+                  posData.discount &&
+                  Number(posData.discount).toFixed(2)}
               </p>
             </div>
             <div className={classes["footer-items"]}>
@@ -308,9 +302,9 @@ export function SalesPrintPos(props) {
               <p
                 className={`${classes["footer-details"]} ${classes["invoice-text"]}`}
               >
-                {salesViewData &&
-                  salesViewData.total &&
-                  Number(salesViewData.total).toFixed(2)}
+                {posData &&
+                  posData.total &&
+                  Number(posData.total).toFixed(2)}
               </p>
             </div>
             <h3 className={classes["table-title"]}></h3>
@@ -323,9 +317,9 @@ export function SalesPrintPos(props) {
               <p
                 className={`${classes["footer-details"]} ${classes["invoice-text"]}`}
               >
-                {salesViewData &&
-                  salesViewData.payment &&
-                  Number(salesViewData.payment).toFixed(2)}
+                {posData &&
+                  posData.payment &&
+                  Number(posData.payment).toFixed(2)}
               </p>
             </div>
             <h3 className={classes["table-title"]}></h3>
@@ -338,10 +332,10 @@ export function SalesPrintPos(props) {
               <p
                 className={`${classes["footer-details"]} ${classes["invoice-text"]}`}
               >
-                {salesViewData &&
-                  salesViewData.total &&
+                {posData &&
+                  posData.total &&
                   (
-                    Number(salesViewData.total) - Number(salesViewData.payment)
+                    Number(posData.total) - Number(posData.payment)
                   ).toFixed(2)}
               </p>
             </div>

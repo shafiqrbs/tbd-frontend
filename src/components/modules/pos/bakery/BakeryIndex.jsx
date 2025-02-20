@@ -57,8 +57,12 @@ export default function BakeryIndex() {
       id: i + 1,
       time: time,
       status: "Free",
+      statusHistory: [],
+      currentStatusStartTime: null,
+      elapsedTime: "00:00:00",
     }))
   );
+
   useEffect(() => {
     setTables((prevTables) =>
       prevTables.map((table) => ({

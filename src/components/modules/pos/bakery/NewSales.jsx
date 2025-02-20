@@ -230,33 +230,94 @@ export default function NewSales(props) {
     });
     setProducts(updatedList);
   };
-
+  const [currentStatus, setCurrentStatus] = useState("");
   const updateTableStatus = (newStatus) => {
     if (!tableId) return;
 
     setTables((prevTables) =>
-      prevTables.map((table) =>
-        table.id === tableId ? { ...table, status: newStatus } : table
-      )
+      prevTables.map((table) => {
+        if (table.id === tableId) {
+          const currentTime = new Date();
+
+          // Calculate elapsed time for the previous status if exists
+          let updatedStatusHistory = [...(table.statusHistory || [])];
+          if (table.currentStatusStartTime) {
+            const previousStatus = table.status;
+            const elapsedTime =
+              currentTime - new Date(table.currentStatusStartTime);
+
+            updatedStatusHistory.push({
+              status: previousStatus,
+              startTime: table.currentStatusStartTime,
+              endTime: currentTime,
+              elapsedTime: elapsedTime,
+            });
+          }
+
+          // For Free status, keep the history but reset current timing
+          if (newStatus === "Free") {
+            return {
+              ...table,
+              status: newStatus,
+              statusHistory: updatedStatusHistory,
+              currentStatusStartTime: null,
+              elapsedTime: "00:00:00",
+            };
+          }
+
+          // For any other status, add to history and update current
+          return {
+            ...table,
+            status: newStatus,
+            statusHistory: updatedStatusHistory,
+            currentStatusStartTime: currentTime,
+            elapsedTime: "00:00:00", // Reset elapsed time for new status
+          };
+        }
+        return table;
+      })
     );
   };
 
-  const currentTable = tables.find((t) => t.id === tableId);
-  const currentStatus = currentTable ? currentTable.status : "";
+  // Timer effect to update elapsed time
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTables((prevTables) =>
+        prevTables.map((table) => {
+          if (table.status !== "Free" && table.currentStatusStartTime) {
+            const elapsedSeconds = Math.floor(
+              (new Date() - new Date(table.currentStatusStartTime)) / 1000
+            );
+            const hours = Math.floor(elapsedSeconds / 3600)
+              .toString()
+              .padStart(2, "0");
+            const minutes = Math.floor((elapsedSeconds % 3600) / 60)
+              .toString()
+              .padStart(2, "0");
+            const seconds = (elapsedSeconds % 60).toString().padStart(2, "0");
+
+            return {
+              ...table,
+              elapsedTime: `${hours}:${minutes}:${seconds}`,
+            };
+          }
+          return table;
+        })
+      );
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   const handleTableSelection = (newTableId) => {
-    // If unselecting the current table
     if (tableId === newTableId) {
       setTableId(null);
     } else {
-      // Selecting a different table
       setTableId(newTableId);
-      // Load the table-specific cart
       setLoadCartProducts(true);
     }
   };
 
-  // Function to handle Print All / Save actions
   const handleSubmitOrder = () => {
     if (!tempCartProducts.length) {
       notifications.show({
@@ -271,13 +332,9 @@ export default function NewSales(props) {
     }
 
     if (enableTable && tableId) {
-      // Clear this specific table's data
       localStorage.removeItem(`table-${tableId}-pos-products`);
-
-      // Reset table status to Free
       updateTableStatus("Free");
 
-      // Show success notification
       notifications.show({
         title: t("Success"),
         position: "top-right",
@@ -288,10 +345,8 @@ export default function NewSales(props) {
         color: "green",
       });
     } else {
-      // Clear general cart data
       localStorage.removeItem("temp-pos-products");
 
-      // Show success notification
       notifications.show({
         title: t("Success"),
         position: "top-right",
@@ -302,11 +357,7 @@ export default function NewSales(props) {
       });
     }
 
-    // Refresh the cart display
     setLoadCartProducts(true);
-
-    // Reset form values if needed - this would depend on your specific implementation
-    // form.reset();
   };
   return (
     <>
@@ -504,7 +555,7 @@ export default function NewSales(props) {
                                 }/uploads/inventory/product/feature_image/${
                                   product.feature_image
                                 }`}
-                                fallbackSrc={`https://placehold.co/120x80?text=${encodeURIComponent(
+                                fallbackSrc={`https://placehold.co/120x80/FFFFFF/2f9e44?text=${encodeURIComponent(
                                   product.display_name
                                 )}`}
                               />
@@ -597,7 +648,7 @@ export default function NewSales(props) {
                                       }/uploads/inventory/product/feature_image/${
                                         product.feature_image
                                       }`}
-                                      fallbackSrc={`https://placehold.co/120x80?text=${encodeURIComponent(
+                                      fallbackSrc={`https://placehold.co/120x80/FFFFFF/2f9e44?text=${encodeURIComponent(
                                         product.display_name
                                       )}`}
                                     />
@@ -769,8 +820,8 @@ export default function NewSales(props) {
                         offset={2}
                         zIndex={999}
                         position="top-end"
-                        label={t("PleaseSelectTable")}
                         color="red"
+                        label={t("PleaseSelectTable")}
                       >
                         <Button
                           disabled={!tableId}
@@ -796,6 +847,7 @@ export default function NewSales(props) {
             products={products}
             enableTable={enableTable}
             tables={tables}
+            setTables={setTables}
             tableId={tableId}
             setTableId={handleTableSelection}
             handleSubmitOrder={handleSubmitOrder}
