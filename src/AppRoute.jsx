@@ -42,7 +42,6 @@ import SettingsIndex from "./components/modules/core/settings/SettingsIndex";
 
 import StockIndex from "./components/modules/inventory/stock/StockIndex.jsx";
 import ConfigurationIndex from "./components/modules/domain/configuraton/ConfigurationIndex.jsx";
-import RestaurantIndex from "./components/modules/pos/restaurant/RestaurantIndex.jsx";
 import SitemapIndex from "./components/modules/domain/sitemap/SitemapIndex.jsx";
 import BatchIndex from "./components/modules/production/batch/BatchIndex.jsx";
 import Requisition from "./components/modules/procurement/purchase-requisition/Requisition.jsx";
@@ -163,7 +162,6 @@ function AppRoute() {
         </Route>
         <Route path="sitemap" element={<Sitemap />} />
         <Route path="/pos/">
-          <Route path="restaurant" element={<RestaurantIndex />} />
           <Route path="bakery" element={<BakeryIndex />} />
         </Route>
         <Route path="sitemap" element={<Sitemap />} />
