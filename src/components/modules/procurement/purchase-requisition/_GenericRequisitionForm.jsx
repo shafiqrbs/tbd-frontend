@@ -108,8 +108,11 @@ export default function _GenericRequisitionForm(props) {
     let coreVendors = localStorage.getItem("core-vendors");
     coreVendors = coreVendors ? JSON.parse(coreVendors) : [];
 
-    if (coreVendors && coreVendors.length > 0) {
-      const transformedData = coreVendors.map((type) => {
+    // Filter vendor for domain vendor
+    const filteredVendors = coreVendors.filter(vendor => vendor.sub_domain_id != null);
+    console.log(filteredVendors)
+    if (filteredVendors && filteredVendors.length > 0) {
+      const transformedData = filteredVendors.map((type) => {
         return {
           label: type.mobile + " -- " + type.name,
           value: String(type.id),
@@ -129,9 +132,14 @@ export default function _GenericRequisitionForm(props) {
     if (searchValue.length > 0) {
       const storedProducts = localStorage.getItem("core-products");
       const localProducts = storedProducts ? JSON.parse(storedProducts) : [];
+      // vendor wise filter product
+      let filteredProducts = localProducts.filter(product => product.vendor_id == vendorData);
+      // purchase price wise filter
+       filteredProducts = filteredProducts.filter(product => product.purchase_price > 0);
+
       const lowerCaseSearchTerm = searchValue.toLowerCase();
       const fieldsToSearch = ["product_name"];
-      const productFilterData = localProducts.filter((product) =>
+      const productFilterData = filteredProducts.filter((product) =>
         fieldsToSearch.some(
           (field) =>
             product[field] &&
@@ -273,7 +281,7 @@ export default function _GenericRequisitionForm(props) {
     productForm.reset();
     setLoadCardProducts(true);
     if (type == "productId") {
-      document.getElementById("product_id").focus();
+      document.getElementById("vendor_id").focus();
     } else {
       document.getElementById("barcode").focus();
     }
@@ -302,14 +310,15 @@ export default function _GenericRequisitionForm(props) {
   }
 
   // add product based on barcode
-  function createProductFromValues(product) {
+  function createProductFromValues(product,values) {
     return {
       product_id: product.product_id,
-      quantity: product.quantity,
+      display_name: product.display_name,
+      quantity: values?.quantity,
       purchase_price: product.purchase_price,
       sales_price: product.sales_price,
-      sub_total: product.sub_total,
-      vendor_id: product.vendorId,
+      sub_total: values.quantity*product.purchase_price,
+      vendor_id: productForm.values.vendor_id,
     };
   }
   function handleAddProductByBarcode(values, myCardProducts, localProducts) {
@@ -319,7 +328,7 @@ export default function _GenericRequisitionForm(props) {
     if (barcodeExists) {
       const addProducts = localProducts.reduce((acc, product) => {
         if (String(product.barcode) === String(values.barcode)) {
-          acc.push(createProductFromValues(product));
+          acc.push(createProductFromValues(product,values));
         }
         return acc;
       }, myCardProducts);
@@ -418,7 +427,7 @@ export default function _GenericRequisitionForm(props) {
                     >
                       <form
                         onSubmit={productForm.onSubmit((values) => {
-                          console.log("valeu", values);
+                          // console.log("valeu", values);
                           if (!values.barcode && !values.product_id) {
                             productForm.setFieldError("barcode", true);
                             productForm.setFieldError("product_id", true);
@@ -472,11 +481,12 @@ export default function _GenericRequisitionForm(props) {
                             <Grid columns={24} gutter={{ base: 6 }}>
                               <Grid.Col span={4}>
                                 <InputNumberForm
+                                    disabled={!vendorData}
                                   tooltip={t("BarcodeValidateMessage")}
                                   label=""
                                   placeholder={t("Barcode")}
                                   required={true}
-                                  nextfield={t("EntityFormSubmit")}
+                                  nextfield={"quantity"}
                                   form={productForm}
                                   name={"barcode"}
                                   id={"barcode"}
@@ -487,6 +497,7 @@ export default function _GenericRequisitionForm(props) {
                               </Grid.Col>
                               <Grid.Col span={8}>
                                 <SelectServerSideForm
+                                    disabled={!vendorData}
                                   tooltip={t("ChooseStockProduct")}
                                   lable=""
                                   placeholder={t("ChooseStockProduct")}
@@ -598,7 +609,9 @@ export default function _GenericRequisitionForm(props) {
                               vendor_id: product.vendor_id,
                             };
                           });
-                          const options = {
+
+                          console.log(transformedArray,values)
+                          /*const options = {
                             year: "numeric",
                             month: "2-digit",
                             day: "2-digit",
@@ -628,7 +641,7 @@ export default function _GenericRequisitionForm(props) {
                           productForm.reset();
                           requisitionForm.reset();
                           setVendorData(null);
-                          setLoadCardProducts(true);
+                          setLoadCardProducts(true);*/
                           // const data = {
                           //   url: "inventory/purchase",
                           //   data: formValue,

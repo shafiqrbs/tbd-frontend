@@ -10,7 +10,6 @@ export default function RequisitionInvoice() {
   const { t } = useTranslation();
   const progress = getLoadingProgress();
   const configData = getConfigData();
-  
 
   return (
     <>

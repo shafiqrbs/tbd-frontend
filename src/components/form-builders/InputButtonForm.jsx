@@ -50,9 +50,7 @@ function InputButtonForm(props) {
                         onChange={handleChange}
                         onKeyDown={getHotkeyHandler([
                             ['Enter', (e) => {
-                                nextField === 'EntityFormSubmit'?
-                                document.getElementById(nextField).click() :
-                                    document.getElementById(nextField).focus()
+                                nextField === 'EntityFormSubmit'? document.getElementById(nextField).click() : document.getElementById(nextField).focus()
                             }],
                         ])}
                         rightSection={props.rightSection}
