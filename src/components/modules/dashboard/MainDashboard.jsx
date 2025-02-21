@@ -201,36 +201,7 @@ function MainDashboard(props) {
                           >
                             <NavLink
                                 pl={"md"}
-                                href="/pos/restaurant"
-                                label={t("Restaurant")}
-                                component="button"
-                                onClick={(e) => {
-                                  navigate("pos/restaurant");
-                                }}
-                                onAuxClick={(e) => {
-                                  // Handle middle mouse button click for browsers that support it
-                                  if (e.button === 1) {
-                                    window.open("/pos/restaurant", "_blank");
-                                  }
-                                }}
-                            />
-                          </List.Item>
-                          <List.Item
-                              pl={"xs"}
-                              icon={
-                                <ThemeIcon
-                                    color="teal.6"
-                                    size={20}
-                                    radius="xl"
-                                    variant="outline"
-                                >
-                                  <IconBasket />
-                                </ThemeIcon>
-                              }
-                          >
-                            <NavLink
-                                pl={"md"}
-                                href="/pos/restaurant"
+                                href="/pos/bakery"
                                 label={t("Bakery")}
                                 component="button"
                                 onClick={(e) => {

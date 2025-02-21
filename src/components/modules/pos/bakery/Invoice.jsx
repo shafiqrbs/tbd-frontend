@@ -44,12 +44,13 @@ import {
 import { DataTable } from "mantine-datatable";
 import { useDispatch, useSelector } from "react-redux";
 import tableCss from "./Table.module.css";
-import classes from "./Sales.module.css";
+import classes from "./Invoice.module.css";
 import { IconChefHat } from "@tabler/icons-react";
 import getConfigData from "../../../global-hook/config-data/getConfigData";
 import { SalesPrintPos } from "../print/pos/SalesPrintPos";
 import { isNotEmpty, useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
+import { useCartOperations } from "./utils/CartOperations";
 export default function Invoice(props) {
   const {
     setLoadCartProducts,
@@ -81,6 +82,21 @@ export default function Invoice(props) {
 
   const [tempCartProducts, setTempCartProducts] = useState([]);
 
+  // Sales by user state management remains the same
+  const [salesByUser, setSalesByUser] = useState(null);
+  const [salesByUserName, setSalesByUserName] = useState(null);
+  const [salesByDropdownData, setSalesByDropdownData] = useState([]);
+
+  // Track additional tables per selected table
+  const [additionalTableSelections, setAdditionalTableSelections] = useState(
+    {}
+  );
+  const [checked, setChecked] = useState(false);
+
+  const [id, setId] = useState(null);
+
+  const [posData, setPosData] = useState(null);
+
   useEffect(() => {
     if (enableTable && tableId) {
       const tableCartKey = `table-${tableId}-pos-products`;
@@ -93,10 +109,6 @@ export default function Invoice(props) {
     setLoadCartProducts(false);
   }, [loadCartProducts, tableId, enableTable]);
 
-  // Sales by user state management remains the same
-  const [salesByUser, setSalesByUser] = useState(null);
-  const [salesByUserName, setSalesByUserName] = useState(null);
-  const [salesByDropdownData, setSalesByDropdownData] = useState([]);
   useEffect(() => {
     let coreUsers = localStorage.getItem("core-users")
       ? JSON.parse(localStorage.getItem("core-users"))
@@ -156,24 +168,6 @@ export default function Invoice(props) {
     },
   });
 
-  const [errors, setErrors] = useState({
-    products: false,
-    user_id: false,
-    transaction_mode: false,
-  });
-
-  const validateForm = () => {
-    const newErrors = {
-      user_id: !salesByUser,
-      transaction_mode: !id,
-    };
-
-    setErrors(newErrors);
-
-    // Return true if there are no errors
-    return !Object.values(newErrors).some((error) => error);
-  };
-
   useEffect(() => {
     if (transactionModeData && transactionModeData.length > 0) {
       for (let mode of transactionModeData) {
@@ -190,134 +184,22 @@ export default function Invoice(props) {
     }
   }, [transactionModeData]);
 
-  const [id, setId] = useState(null);
   const clicked = (id) => {
     setId(id);
     form.setFieldValue("transaction_mode_id", id);
   };
 
-  // Modified to handle table-specific cart
-  const handleDelete = (productId) => {
-    const storageKey =
-      enableTable && tableId
-        ? `table-${tableId}-pos-products`
-        : "temp-pos-products";
-
-    const cartProducts = localStorage.getItem(storageKey);
-    let myCartProducts = cartProducts ? JSON.parse(cartProducts) : [];
-
-    myCartProducts = myCartProducts.filter(
-      (item) => item.product_id !== productId
-    );
-
-    localStorage.setItem(storageKey, JSON.stringify(myCartProducts));
-    setLoadCartProducts(true);
-
-    // Update table status if cart becomes empty
-    if (enableTable && tableId && myCartProducts.length === 0) {
-      const updatedTables = tables.map((table) =>
-        table.id === tableId ? { ...table, status: "Free" } : table
-      );
-      setTables(updatedTables);
-    }
-  };
-
-  // Modified to handle table-specific cart
-  const handleIncrement = (productId) => {
-    const storageKey =
-      enableTable && tableId
-        ? `table-${tableId}-pos-products`
-        : "temp-pos-products";
-
-    const cartProducts = localStorage.getItem(storageKey);
-    let myCartProducts = cartProducts ? JSON.parse(cartProducts) : [];
-    const product = products.find((product) => product.id === productId);
-
-    let found = false;
-
-    myCartProducts = myCartProducts.map((item) => {
-      if (item.product_id === productId) {
-        found = true;
-        const newQuantity = Math.min(item.quantity + 1);
-        return {
-          ...item,
-          quantity: newQuantity,
-          sub_total: newQuantity * item.sales_price,
-        };
-      }
-      return item;
-    });
-
-    if (!found) {
-      myCartProducts.push({
-        product_id: product.id,
-        display_name: product.display_name,
-        quantity: 1,
-        unit_name: product.unit_name,
-        purchase_price: Number(product.purchase_price),
-        sub_total: Number(product.sales_price),
-        sales_price: Number(product.sales_price),
-      });
-    }
-
-    // Update table status if this is the first item
-    if (enableTable && tableId && myCartProducts.length === 1) {
-      const updatedTables = tables.map((table) =>
-        table.id === tableId ? { ...table, status: "Occupied" } : table
-      );
-      setTables(updatedTables);
-    }
-
-    localStorage.setItem(storageKey, JSON.stringify(myCartProducts));
-    setLoadCartProducts(true);
-  };
-
-  // Modified to handle table-specific cart
-  const handleDecrement = (productId) => {
-    const storageKey =
-      enableTable && tableId
-        ? `table-${tableId}-pos-products`
-        : "temp-pos-products";
-
-    const cartProducts = localStorage.getItem(storageKey);
-    let myCartProducts = cartProducts ? JSON.parse(cartProducts) : [];
-
-    myCartProducts = myCartProducts
-      .map((item) => {
-        if (item.product_id === productId) {
-          const newQuantity = Math.max(0, item.quantity - 1);
-          return {
-            ...item,
-            quantity: newQuantity,
-            sub_total: newQuantity * item.sales_price,
-          };
-        }
-        return item;
-      })
-      .filter((item) => item.quantity > 0);
-
-    // Update table status if cart becomes empty
-    if (enableTable && tableId && myCartProducts.length === 0) {
-      const updatedTables = tables.map((table) =>
-        table.id === tableId ? { ...table, status: "Free" } : table
-      );
-      setTables(updatedTables);
-    }
-
-    localStorage.setItem(storageKey, JSON.stringify(myCartProducts));
-    setLoadCartProducts(true);
-  };
+  const { handleIncrement, handleDecrement, handleDelete } = useCartOperations({
+    enableTable,
+    tableId,
+    products,
+    setLoadCartProducts,
+  });
 
   const subtotal = tempCartProducts.reduce(
     (acc, item) => acc + item.sub_total,
     0
   );
-
-  // Track additional tables per selected table
-  const [additionalTableSelections, setAdditionalTableSelections] = useState(
-    {}
-  );
-  const [checked, setChecked] = useState(false);
 
   // Initialize or update selections when table changes
   useEffect(() => {
@@ -353,7 +235,7 @@ export default function Invoice(props) {
     if (tempCartProducts.length === 0) {
       notifications.show({
         title: t("ValidationError"),
-        position: "top-right",
+        position: "bottom-right",
         autoClose: 1000,
         withCloseButton: true,
         message: t("Add at least one product"),
@@ -463,7 +345,6 @@ export default function Invoice(props) {
     invoices.push(addInvoice);
     localStorage.setItem("temp-pos-invoice", JSON.stringify(invoices));
   }
-  const [posData, setPosData] = useState(null);
 
   const posPrint = () => {
     // Validate cart has products
@@ -608,621 +489,602 @@ export default function Invoice(props) {
     <>
       <Box
         w={"100%"}
-        h={enableTable ? height + 73 : height + 191}
+        pl={10}
+        m={0}
+        pr={10}
+        h={enableTable ? height + 82 : height + 195}
         className={classes["box-white"]}
       >
-        <Box pl={10} m={0} pr={10}>
-          <Group
-            gap={10}
-            mb={8}
-            preventGrowOverflow={false}
-            grow
-            align="flex-start"
-            wrap="nowrap"
+        <Group
+          gap={10}
+          mb={4}
+          preventGrowOverflow={false}
+          grow
+          align="flex-start"
+          wrap="nowrap"
+        >
+          <Tooltip
+            label={t("SalesBy")}
+            opened={!!form.errors.user_id}
+            bg={"orange.8"}
+            c={"white"}
+            withArrow
+            px={16}
+            py={2}
+            offset={2}
+            zIndex={999}
+            position="top-end"
+            transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
           >
-            <Tooltip
-              label={t("SalesBy")}
-              opened={!!form.errors.user_id}
-              bg={`red.4`}
-              c={"white"}
-              withArrow
-              px={16}
-              py={2}
-              offset={2}
-              zIndex={999}
-              position="top-end"
-              transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
+            <Select
+              pt={8}
+              placeholder={enableTable ? t("OrderTakenBy") : t("SalesBy")}
+              data={salesByDropdownData}
+              value={form.values.user_id}
+              error={form.errors.user_id}
+              onChange={(value) => {
+                form.setFieldValue("user_id", value);
+                const selectedUser = salesByDropdownData.find(
+                  (user) => user.value === value
+                );
+                setSalesByUser(value);
+                setSalesByUserName(selectedUser);
+              }}
+              clearable
+              searchable
+              nothingFoundMessage="Nothing found..."
+              searchValue={searchValue}
+              onSearchChange={setSearchValue}
+              rightSection={
+                value || searchValue ? (
+                  <IconX
+                    style={{
+                      width: rem(16),
+                      height: rem(16),
+                      cursor: "pointer",
+                    }}
+                    onMouseDown={() => {
+                      setValue("");
+                      form.setFieldValue("user_id", null);
+                    }}
+                  />
+                ) : (
+                  <IconChevronDown
+                    style={{ width: rem(16), height: rem(16) }}
+                  />
+                )
+              }
+            />
+          </Tooltip>
+
+          {enableTable && (
+            <Button
+              disabled={tempCartProducts.length === 0}
+              radius="md"
+              size="sm"
+              color="green"
+              mt={8}
+              miw={122}
+              maw={122}
+              leftSection={<IconChefHat height={18} width={18} stroke={2} />}
+              onClick={printItem}
             >
-              <Select
-                pt={10}
-                placeholder={enableTable ? t("OrderTakenBy") : t("SalesBy")}
-                data={salesByDropdownData}
-                value={form.values.user_id}
-                error={form.errors.user_id}
-                onChange={(value) => {
-                  form.setFieldValue("user_id", value);
-                  const selectedUser = salesByDropdownData.find(
-                    (user) => user.value === value
-                  );
-                  setSalesByUser(value);
-                  setSalesByUserName(selectedUser);
-                }}
-                clearable
-                searchable
-                nothingFoundMessage="Nothing found..."
-                searchValue={searchValue}
-                onSearchChange={setSearchValue}
-                rightSection={
-                  value || searchValue ? (
-                    <IconX
-                      style={{
-                        width: rem(16),
-                        height: rem(16),
-                        cursor: "pointer",
-                      }}
-                      onMouseDown={() => {
-                        setValue("");
-                        form.setFieldValue("user_id", null);
-                      }}
-                    />
-                  ) : (
-                    <IconChevronDown
-                      style={{ width: rem(16), height: rem(16) }}
-                    />
-                  )
-                }
-              />
-            </Tooltip>
-
-            {enableTable && (
-              <Button
-                disabled={tempCartProducts.length === 0}
-                radius="md"
-                size="sm"
-                color="green"
-                mt={10}
-                miw={122}
-                maw={122}
-                leftSection={<IconChefHat height={18} width={18} stroke={2} />}
-                onClick={printItem}
-              >
-                <Text fw={600} size="sm">
-                  {t("Kitchen")}
-                </Text>
-              </Button>
-            )}
-          </Group>
-          <Box>
-            <Box h={enableTable ? heightHalf - 12 : heightHalf + 99}>
-              <Paper
-                p="6"
-                radius="4"
-                style={{ backgroundColor: checked ? "#4CAF50" : "#E8F5E9" }}
-              >
-                <Grid align="center">
-                  <Grid.Col span={11}>
-                    <Text weight={500} c={checked ? "white" : "black"}>
-                      {enableTable
-                        ? t("SelectAdditionalTable")
-                        : t("SelectedItems")}
-                    </Text>
-                  </Grid.Col>
-                  <Grid.Col span={1}>
-                    {enableTable && (
-                      <Tooltip
-                        color="red.6"
-                        disabled={tableId}
-                        withArrow
-                        px={16}
-                        py={2}
-                        offset={2}
-                        zIndex={999}
-                        position="top-end"
-                        label={t("SelectaTabletoChooseAdditional")}
-                      >
-                        <Checkbox
-                          disabled={!tableId}
-                          checked={checked}
-                          color="green.8"
-                          onChange={(event) =>
-                            setChecked(event.currentTarget.checked)
-                          }
-                          styles={(theme) => ({
-                            input: {
-                              borderColor: "white",
-                            },
-                          })}
-                        />
-                      </Tooltip>
-                    )}
-                  </Grid.Col>
-                </Grid>
-              </Paper>
-
-              {checked && (
-                <ScrollArea h={heightHalf / 4} type="never" scrollbars="y">
-                  <Paper p="md" radius="md" bg={"#E6F5ED99"}>
-                    <Grid columns={15} gutter="md">
-                      {tables.map((item) => (
-                        <Grid.Col span={3} key={item.id}>
-                          <Checkbox
-                            label={`Table ${item.id}`}
-                            color="green.8"
-                            checked={additionalTableSelections[tableId]?.has(
-                              item.id
-                            )}
-                            onChange={() => handleAdditionalTableCheck(item.id)}
-                            disabled={item.id === tableId}
-                            styles={(theme) => ({
-                              input: {
-                                border: "1.5px solid #767676",
-                              },
-                              label: {
-                                color: "#333333",
-                              },
-                            })}
-                          />
-                        </Grid.Col>
-                      ))}
-                    </Grid>
-                  </Paper>
-                </ScrollArea>
-              )}
-              <Box>
-                <DataTable
-                  classNames={{
-                    root: tableCss.root,
-                    table: tableCss.table,
-                    header: tableCss.header,
-                    footer: tableCss.footer,
-                    pagination: tableCss.pagination,
-                  }}
-                  records={tempCartProducts}
-                  columns={[
-                    {
-                      accessor: "id",
-                      title: "S/N",
-                      render: (data, index) => index + 1,
-                    },
-                    {
-                      accessor: "display_name",
-                      title: t("Product"),
-                    },
-                    {
-                      accessor: "quantity",
-                      title: t("Qty"),
-                      textAlign: "center",
-                      render: (data) => (
-                        <>
-                          <Group gap={8} justify="center">
-                            <ActionIcon
-                              size={"sm"}
-                              bg={"#596972"}
-                              onClick={() => handleDecrement(data.product_id)}
-                            >
-                              <IconMinus height={"12"} width={"12"} />
-                            </ActionIcon>
-                            <Text
-                              size="sm"
-                              ta={"center"}
-                              fw={600}
-                              maw={30}
-                              miw={30}
-                            >
-                              {data.quantity}
-                            </Text>
-                            <ActionIcon
-                              size={"sm"}
-                              bg={"#596972"}
-                              onClick={() => handleIncrement(data.product_id)}
-                            >
-                              <IconPlus height={"12"} width={"12"} />
-                            </ActionIcon>
-                          </Group>
-                        </>
-                      ),
-                    },
-                    {
-                      accessor: "price",
-                      title: t("Price"),
-                      textAlign: "center",
-                      render: (data) => (
-                        <>
-                          {configData?.currency?.symbol} {data.sales_price}
-                        </>
-                      ),
-                    },
-                    {
-                      accessor: "subtotal",
-                      title: "Subtotal",
-                      textAlign: "center",
-                      render: (data) => (
-                        <>
-                          {configData?.currency?.symbol}{" "}
-                          {data.sub_total.toFixed(2)}
-                        </>
-                      ),
-                    },
-                    {
-                      accessor: "action",
-                      title: t(""),
-                      textAlign: "right",
-                      render: (data) => (
-                        <Group justify="right" wrap="nowrap">
-                          <ActionIcon
-                            size="sm"
-                            variant="white"
-                            color="#FF0000"
-                            aria-label="Settings"
-                            onClick={() => handleDelete(data.product_id)}
-                          >
-                            <IconTrash height={20} width={20} stroke={1.5} />
-                          </ActionIcon>
-                        </Group>
-                      ),
-                    },
-                  ]}
-                  loaderSize="xs"
-                  loaderColor="grape"
-                  height={
-                    enableTable && checked ? 158 : enableTable ? 240 : 310
-                  }
-                  // height={enableTable ? 196 : 310}
-                  // backgroundColor={'black'}
-                  scrollAreaProps={{ type: "never" }}
-                />
-                <Group
-                  justify="space-between"
-                  align="center"
-                  pt={4}
-                  style={{
-                    borderTop: "1px solid #dee2e6",
-                  }}
-                >
-                  <Text fw={"bold"} fz={"sm"} c={"black"} pl={"10"}>
-                    {t("SubTotal")}
-                  </Text>
-                  <Group gap="10" pr={"sm"} align="center">
-                    <Box mt={4}>
-                      <IconSum size="16" style={{ color: "black" }} />
-                    </Box>
-                    <Box>
-                      <Text fw={"bold"} fz={"sm"} c={"black"}>
-                        {configData?.currency?.symbol} {subtotal.toFixed(2)}
-                      </Text>
-                    </Box>
-                  </Group>
-                </Group>
-              </Box>
-            </Box>
-          </Box>
-          <Box
-            className={classes["box-border"]}
-            h={heightHalf + 16}
-            pl={4}
-            pr={4}
-            pb={4}
-            pt={2}
-            mt={6}
+              <Text fw={600} size="sm">
+                {t("Kitchen")}
+              </Text>
+            </Button>
+          )}
+        </Group>
+        <Box h={enableTable ? heightHalf + 6 : heightHalf + 117}>
+          <Paper
+            p="4"
+            radius="4"
+            style={{ backgroundColor: checked ? "#4CAF50" : "#E8F5E9" }}
           >
-            <Box>
-              <Flex
-                h={heightHalf - 182}
-                direction={"column"}
-                w={"100%"}
-                justify={"center"}
-                gap={0}
-                pl={4}
-                pr={4}
-                mb={8}
-              >
-                <TextInput
-                  pb={4}
-                  size={"sm"}
-                  w={"100%"}
-                  pt={"xs"}
-                  onChange={(e) => {
-                    e.preventDefault();
-                    setCustomerMobile(e.currentTarget.value);
-                  }}
-                  placeholder={t("CustomerMobileNumber")}
-                  leftSection={<IconSearch height={18} width={18} stroke={2} />}
-                  rightSection={
-                    <IconUserFilled height={18} width={18} stroke={2} />
-                  }
-                ></TextInput>
-                <Box className={classes["box-white"]} w={"100%"} p={2}>
-                  <Grid columns={12} gutter={0} pt={4} pl={12} pr={12} pb={4}>
-                    <Grid.Col span={6} bg={"#e8f5e9"} mb={4} mt={3}>
-                      <Grid columns={6} p={2}>
-                        <Grid.Col span={3} >
-                          <Box
-                            style={{ borderRadius: 4 }}
-                            pl={"xs"}
-                          >
-                            <Grid columns={12} gutter={0} pt={8}>
-                              <Grid.Col span={6}>
-                                <Text fw={500} c={"#333333"}>
-                                  {t("Type")}
-                                </Text>
-                              </Grid.Col>
-                              <Grid.Col span={6}>
-                                <Text fw={800} c={"#333333"}>
-                                  Flat
-                                </Text>
-                              </Grid.Col>
-                            </Grid>
-                            <Grid columns={12} gutter={0} pt={0}>
-                              <Grid.Col span={6}>
-                                <Text fw={500} c={"#333333"}>
-                                  {t("DIS.")}
-                                </Text>
-                              </Grid.Col>
-                              <Grid.Col span={6}>
-                                <Text fw={800} c={"#333333"}>
-                                  {configData?.currency?.symbol} 0
-                                </Text>
-                              </Grid.Col>
-                            </Grid>
-                          </Box>
-                        </Grid.Col>
-                        <Grid.Col span={3}>
-                          <Box
-                            style={{ borderRadius: 4 }}
-                            pl={"xs"}
-                          >
-                            <Grid columns={12} gutter={0} pt={8}>
-                              <Grid.Col span={6}>
-                                <Text fw={500} c={"#333333"}>
-                                  {t("VAT")}
-                                </Text>
-                              </Grid.Col>
-                              <Grid.Col span={6}>
-                                <Text fw={800} c={"#333333"}>
-                                  {configData?.currency?.symbol} 0
-                                </Text>
-                              </Grid.Col>
-                            </Grid>
-                            <Grid columns={12} gutter={0} pt={0}>
-                              <Grid.Col span={6}>
-                                <Text fw={500} c={"#333333"}>
-                                  {t("SD")}
-                                </Text>
-                              </Grid.Col>
-                              <Grid.Col span={6}>
-                                <Text fw={800} c={"#333333"}>
-                                  {configData?.currency?.symbol} 0
-                                </Text>
-                              </Grid.Col>
-                            </Grid>
-                          </Box>
-                        </Grid.Col>
-                      </Grid>
-                    </Grid.Col>
-                    <Grid.Col span={6}>
-                      <Box
-                        className={classes["box-border"]}
-                        bg={"#30444f"}
-                        p={8}
-                        mt={2}
-                      >
-                        <Flex
-                          direction={"column"}
-                          justify={"center"}
-                          align={"center"}
-                          h={"100%"}
-                          p={2}
-                        >
-                          <Text fw={500} c={"white"} size={"md"}>
-                            {t("Total")}
-                          </Text>
-                          <Text fw={800} c={"white"} size={"lg"}>
-                            {configData?.currency?.symbol} {subtotal.toFixed(2)}
-                          </Text>
-                        </Flex>
-                      </Box>
-                    </Grid.Col>
-                  </Grid>
-                </Box>
-              </Flex>
-            </Box>
-            <Box className={classes["box-white"]} ml={4} mr={4}>
-              <Box style={{ position: "relative" }}>
-                <ScrollArea
-                  type="never"
-                  pl={"sm"}
-                  pr={"sm"}
-                  viewportRef={scrollRef}
-                  onScrollPositionChange={handleScroll}
-                  style={{
-                    borderRadius: 4,
-                    border:
-                      form.errors.transaction_mode_id && !id
-                        ? "1px solid red"
-                        : "none",
-                  }}
-                >
+            <Grid align="center">
+              <Grid.Col span={11}>
+                <Text weight={500} c={checked ? "white" : "black"} pl={4}>
+                  {enableTable
+                    ? t("SelectAdditionalTable")
+                    : t("SelectedItems")}
+                </Text>
+              </Grid.Col>
+              <Grid.Col span={1}>
+                {enableTable && (
                   <Tooltip
-                    label={t("TransactionMode")}
-                    opened={!!form.errors.transaction_mode_id}
+                    color="red.6"
+                    disabled={tableId}
+                    withArrow
                     px={16}
                     py={2}
-                    position="top-end"
-                    bg={`red.4`}
-                    c={"white"}
-                    withArrow
-                    offset={{ mainAxis: 5, crossAxis: 12 }}
+                    offset={2}
                     zIndex={999}
-                    transitionProps={{
-                      transition: "pop-bottom-left",
-                      duration: 500,
-                    }}
+                    position="top-end"
+                    label={t("SelectaTabletoChooseAdditional")}
                   >
-                    <Group
-                      m={0}
-                      pt={8}
-                      pb={8}
-                      justify="flex-start"
-                      align="flex-start"
-                      gap="0"
-                      wrap="nowrap"
-                    >
-                      {transactionModeData.map((mode, index) => (
-                        <Box
-                          onClick={() => {
-                            // console.log("Clicked on method -", mode.id),
-                            clicked(mode.id);
-                          }}
-                          key={index}
-                          p={4}
-                          style={{
-                            position: "relative",
-                            cursor: "pointer",
-                          }}
-                        >
-                          <Flex
-                            bg={mode.id === id ? "#E6F5ED" : "white"}
-                            direction="column"
-                            align="center"
-                            justify="center"
-                            p={4}
-                            style={{
-                              width: "100px",
-                              borderRadius: "8px",
-                            }}
-                          >
-                            <Tooltip
-                              label={mode.name}
-                              withArrow
-                              px={16}
-                              py={2}
-                              offset={2}
-                              zIndex={999}
-                              position="top-end"
-                              color="red"
-                            >
-                              <Image
-                                mih={50}
-                                mah={50}
-                                fit="contain"
-                                src={
-                                  isOnline
-                                    ? mode.path
-                                    : "/images/transaction-mode-offline.jpg"
-                                }
-                                fallbackSrc={`https://placehold.co/120x80/FFFFFF/2f9e44?text=${encodeURIComponent(
-                                  mode.name
-                                )}`}
-                              ></Image>
-                            </Tooltip>
+                    <Checkbox
+                      disabled={!tableId}
+                      checked={checked}
+                      color="green.8"
+                      onChange={(event) =>
+                        setChecked(event.currentTarget.checked)
+                      }
+                      styles={(theme) => ({
+                        input: {
+                          borderColor: "white",
+                        },
+                      })}
+                    />
+                  </Tooltip>
+                )}
+              </Grid.Col>
+            </Grid>
+          </Paper>
 
-                            {/* <Text pt={"4"} c={"#333333"} fw={500}>
+          {checked && (
+            <ScrollArea h={heightHalf / 4} type="never" scrollbars="y">
+              <Paper p="md" radius="md" bg={"#E6F5ED99"}>
+                <Grid columns={15} gutter="md">
+                  {tables.map((item) => (
+                    <Grid.Col span={3} key={item.id}>
+                      <Checkbox
+                        label={`Table ${item.id}`}
+                        color="green.8"
+                        checked={additionalTableSelections[tableId]?.has(
+                          item.id
+                        )}
+                        onChange={() => handleAdditionalTableCheck(item.id)}
+                        disabled={item.id === tableId}
+                        styles={(theme) => ({
+                          input: {
+                            border: "1.5px solid #767676",
+                          },
+                          label: {
+                            color: "#333333",
+                          },
+                        })}
+                      />
+                    </Grid.Col>
+                  ))}
+                </Grid>
+              </Paper>
+            </ScrollArea>
+          )}
+          <DataTable
+            classNames={{
+              root: tableCss.root,
+              table: tableCss.table,
+              header: tableCss.header,
+              footer: tableCss.footer,
+              pagination: tableCss.pagination,
+            }}
+            records={tempCartProducts}
+            columns={[
+              {
+                accessor: "id",
+                title: "S/N",
+                render: (data, index) => index + 1,
+              },
+              {
+                accessor: "display_name",
+                title: t("Product"),
+              },
+              {
+                accessor: "quantity",
+                title: t("Qty"),
+                textAlign: "center",
+                render: (data) => (
+                  <>
+                    <Group gap={8} justify="center">
+                      <ActionIcon
+                        size={"sm"}
+                        bg={"#596972"}
+                        onClick={() => handleDecrement(data.product_id)}
+                      >
+                        <IconMinus height={"12"} width={"12"} />
+                      </ActionIcon>
+                      <Text size="sm" ta={"center"} fw={600} maw={30} miw={30}>
+                        {data.quantity}
+                      </Text>
+                      <ActionIcon
+                        size={"sm"}
+                        bg={"#596972"}
+                        onClick={() => handleIncrement(data.product_id)}
+                      >
+                        <IconPlus height={"12"} width={"12"} />
+                      </ActionIcon>
+                    </Group>
+                  </>
+                ),
+              },
+              {
+                accessor: "price",
+                title: t("Price"),
+                textAlign: "center",
+                render: (data) => (
+                  <>
+                    {configData?.currency?.symbol} {data.sales_price}
+                  </>
+                ),
+              },
+              {
+                accessor: "subtotal",
+                title: "Subtotal",
+                textAlign: "center",
+                render: (data) => (
+                  <>
+                    {configData?.currency?.symbol} {data.sub_total.toFixed(2)}
+                  </>
+                ),
+              },
+              {
+                accessor: "action",
+                title: t(""),
+                textAlign: "right",
+                render: (data) => (
+                  <Group justify="right" wrap="nowrap">
+                    <ActionIcon
+                      size="sm"
+                      variant="white"
+                      color="#FF0000"
+                      aria-label="Settings"
+                      onClick={() => handleDelete(data.product_id)}
+                    >
+                      <IconTrash height={20} width={20} stroke={1.5} />
+                    </ActionIcon>
+                  </Group>
+                ),
+              },
+            ]}
+            loaderSize="xs"
+            loaderColor="grape"
+            height={enableTable && checked ? 158 : enableTable ? 240 : 310}
+            // height={enableTable ? 196 : 310}
+            // backgroundColor={'black'}
+            scrollAreaProps={{ type: "never" }}
+          />
+          <Group
+            justify="space-between"
+            align="center"
+            pt={4}
+            style={{
+              borderTop: "1px solid #dee2e6",
+            }}
+          >
+            <Text fw={"bold"} fz={"sm"} c={"black"} pl={"10"}>
+              {t("SubTotal")}
+            </Text>
+            <Group gap="10" pr={"sm"} align="center">
+              <IconSum size="16" style={{ color: "black" }} />
+              <Text fw={"bold"} fz={"sm"} c={"black"}>
+                {configData?.currency?.symbol} {subtotal.toFixed(2)}
+              </Text>
+            </Group>
+          </Group>
+        </Box>
+        <Box
+          className={classes["box-border"]}
+          h={heightHalf + 16}
+          pl={4}
+          pr={4}
+          pb={4}
+          pt={2}
+          mt={6}
+        >
+          <Stack
+            align="stretch"
+            justify={"center"}
+            gap={0}
+            pl={4}
+            pr={4}
+            mb={8}
+          >
+            <TextInput
+              pb={4}
+              size={"sm"}
+              w={"100%"}
+              pt={"xs"}
+              onChange={(e) => {
+                e.preventDefault();
+                setCustomerMobile(e.currentTarget.value);
+              }}
+              placeholder={t("CustomerMobileNumber")}
+              leftSection={<IconSearch height={18} width={18} stroke={2} />}
+              rightSection={
+                <IconUserFilled height={18} width={18} stroke={2} />
+              }
+            ></TextInput>
+            <Grid
+              columns={12}
+              gutter={4}
+              justify="center"
+              align="center"
+              className={classes["box-white"]}
+              pt={8}
+              pb={8}
+            >
+              <Grid.Col span={6} pl={8}>
+                <Grid pl={8} pr={8} bg={"#e8f5e9"}>
+                  <Grid.Col span={6}>
+                    <Group justify="space-between">
+                      <Text fw={500} c={"#333333"}>
+                        {t("DIS.")}
+                      </Text>
+                      <Text fw={800} c={"#333333"}>
+                        {configData?.currency?.symbol} 0
+                      </Text>
+                    </Group>
+                    <Group justify="space-between">
+                      <Text fw={500} c={"#333333"}>
+                        {t("Type")}
+                      </Text>
+                      <Text fw={800} c={"#333333"}>
+                        Flat
+                      </Text>
+                    </Group>
+                  </Grid.Col>
+                  <Grid.Col span={6}>
+                    <Group justify="space-between">
+                      <Text fw={500} c={"#333333"}>
+                        {t("VAT")}
+                      </Text>
+                      <Text fw={800} c={"#333333"}>
+                        {configData?.currency?.symbol} 0
+                      </Text>
+                    </Group>
+                    <Group justify="space-between">
+                      <Text fw={500} c={"#333333"}>
+                        {t("SD")}
+                      </Text>
+                      <Text fw={800} c={"#333333"}>
+                        {configData?.currency?.symbol} 0
+                      </Text>
+                    </Group>
+                  </Grid.Col>
+                </Grid>
+              </Grid.Col>
+              <Grid.Col span={6}>
+                <Stack
+                  gap={0}
+                  className={classes["box-border"]}
+                  align="center"
+                  justify="center"
+                  bg={"#30444f"}
+                  pt={4}
+                  pb={4}
+                  mr={8}
+                >
+                  <Text fw={500} c={"white"} size={"md"}>
+                    {t("Total")}
+                  </Text>
+                  <Text fw={800} c={"white"} size={"lg"}>
+                    {configData?.currency?.symbol} {subtotal.toFixed(2)}
+                  </Text>
+                </Stack>
+              </Grid.Col>
+            </Grid>
+          </Stack>
+          <Box
+            className={classes["box-white"]}
+            ml={4}
+            mr={4}
+            style={{ position: "relative" }}
+          >
+            <ScrollArea
+              type="never"
+              pl={"sm"}
+              pr={"sm"}
+              viewportRef={scrollRef}
+              onScrollPositionChange={handleScroll}
+              style={{
+                borderRadius: 4,
+                border:
+                  form.errors.transaction_mode_id && !id
+                    ? "1px solid red"
+                    : "none",
+              }}
+            >
+              <Tooltip
+                label={t("TransactionMode")}
+                opened={!!form.errors.transaction_mode_id}
+                px={16}
+                py={2}
+                position="top-end"
+                bg={"orange.8"}
+                c={"white"}
+                withArrow
+                offset={{ mainAxis: 5, crossAxis: 12 }}
+                zIndex={999}
+                transitionProps={{
+                  transition: "pop-bottom-left",
+                  duration: 500,
+                }}
+              >
+                <Group
+                  m={0}
+                  pt={8}
+                  pb={8}
+                  justify="flex-start"
+                  align="flex-start"
+                  gap="0"
+                  wrap="nowrap"
+                >
+                  {transactionModeData.map((mode, index) => (
+                    <Box
+                      onClick={() => {
+                        // console.log("Clicked on method -", mode.id),
+                        clicked(mode.id);
+                      }}
+                      key={index}
+                      p={4}
+                      style={{
+                        position: "relative",
+                        cursor: "pointer",
+                      }}
+                    >
+                      <Flex
+                        bg={mode.id === id ? "#E6F5ED" : "white"}
+                        direction="column"
+                        align="center"
+                        justify="center"
+                        p={4}
+                        style={{
+                          width: "100px",
+                          borderRadius: "8px",
+                        }}
+                      >
+                        <Tooltip
+                          label={mode.name}
+                          withArrow
+                          px={16}
+                          py={2}
+                          offset={2}
+                          zIndex={999}
+                          position="top-end"
+                          color="red"
+                        >
+                          <Image
+                            mih={50}
+                            mah={50}
+                            fit="contain"
+                            src={
+                              isOnline
+                                ? mode.path
+                                : "/images/transaction-mode-offline.jpg"
+                            }
+                            fallbackSrc={`https://placehold.co/120x80/FFFFFF/2f9e44?text=${encodeURIComponent(
+                              mode.name
+                            )}`}
+                          ></Image>
+                        </Tooltip>
+
+                        {/* <Text pt={"4"} c={"#333333"} fw={500}>
                               {mode.name}
                             </Text> */}
-                          </Flex>
-                        </Box>
-                      ))}
-                    </Group>
-                  </Tooltip>
-                </ScrollArea>
-                {showLeftArrow && (
-                  <ActionIcon
-                    variant="filled"
-                    color="#EAECED"
-                    radius="xl"
-                    size="lg"
-                    h={24}
-                    w={24}
-                    style={{
-                      position: "absolute",
-                      left: 5,
-                      top: "50%",
-                      transform: "translateY(-50%)",
-                    }}
-                    onClick={() => scroll("left")}
-                  >
-                    <IconChevronLeft
-                      height={18}
-                      width={18}
-                      stroke={2}
-                      color="#30444F"
-                    />
-                  </ActionIcon>
-                )}
-                {showRightArrow && (
-                  <ActionIcon
-                    variant="filled"
-                    color="#EAECED"
-                    radius="xl"
-                    size="lg"
-                    h={24}
-                    w={24}
-                    style={{
-                      position: "absolute",
-                      right: 5,
-                      top: "50%",
-                      transform: "translateY(-50%)",
-                    }}
-                    onClick={() => scroll("right")}
-                  >
-                    <IconChevronRight
-                      height={18}
-                      width={18}
-                      stroke={2}
-                      color="#30444F"
-                    />
-                  </ActionIcon>
-                )}
-              </Box>
-            </Box>
-            <Box m={8}>
-              <Group
-                justify="center"
-                grow
-                gap={"xs"}
-                preventGrowOverflow={true}
+                      </Flex>
+                    </Box>
+                  ))}
+                </Group>
+              </Tooltip>
+            </ScrollArea>
+            {showLeftArrow && (
+              <ActionIcon
+                variant="filled"
+                color="#EAECED"
+                radius="xl"
+                size="lg"
+                h={24}
+                w={24}
+                style={{
+                  position: "absolute",
+                  left: 5,
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                }}
+                onClick={() => scroll("left")}
               >
-                <Box className={classes["box-green"]}>
-                  <Grid columns={12} gutter={0}>
-                    <Grid.Col span={4}>
-                      <Flex h={40} justify={"center"} align={"center"}>
-                        <Checkbox
-                          color="lime"
-                          size="lg"
-                          onChange={(event) => {
-                            console.log(
-                              "Checkbox clicked:",
-                              event.currentTarget.checked
-                            );
-                          }}
-                        />
-                      </Flex>
-                    </Grid.Col>
-                    <Grid.Col span={8}>
-                      <Flex h={40} justify={"center"} align={"center"}>
-                        <Text>{t("Flat")}</Text>
-                      </Flex>
-                    </Grid.Col>
-                  </Grid>
-                </Box>
-                <TextInput
-                  type="number"
-                  placeholder="0"
-                  size={rem(40)}
-                  classNames={{ input: classes.input }}
+                <IconChevronLeft
+                  height={18}
+                  width={18}
+                  stroke={2}
+                  color="#30444F"
                 />
-                <TextInput
-                  type="number"
-                  placeholder="0"
-                  size={rem(40)}
-                  classNames={{ input: classes.input }}
+              </ActionIcon>
+            )}
+            {showRightArrow && (
+              <ActionIcon
+                variant="filled"
+                color="#EAECED"
+                radius="xl"
+                size="lg"
+                h={24}
+                w={24}
+                style={{
+                  position: "absolute",
+                  right: 5,
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                }}
+                onClick={() => scroll("right")}
+              >
+                <IconChevronRight
+                  height={18}
+                  width={18}
+                  stroke={2}
+                  color="#30444F"
                 />
-              </Group>
-            </Box>
-            <Grid columns={12} gutter={{ base: 2 }} pl={"8"} pr={"8"}>
-              <Grid.Col span={enableTable ? 3 : 4}>
+              </ActionIcon>
+            )}
+          </Box>
+          <Box m={8}>
+            <Group justify="center" grow gap={"xs"} preventGrowOverflow={true}>
+              <Box className={classes["box-green"]}>
+                <Grid columns={12} gutter={0}>
+                  <Grid.Col span={4}>
+                    <Flex h={40} justify={"center"} align={"center"}>
+                      <Checkbox
+                        color="lime"
+                        size="lg"
+                        onChange={(event) => {
+                          console.log(
+                            "Checkbox clicked:",
+                            event.currentTarget.checked
+                          );
+                        }}
+                      />
+                    </Flex>
+                  </Grid.Col>
+                  <Grid.Col span={8}>
+                    <Flex h={40} justify={"center"} align={"center"}>
+                      <Text>{t("Flat")}</Text>
+                    </Flex>
+                  </Grid.Col>
+                </Grid>
+              </Box>
+              <TextInput
+                type="number"
+                placeholder="0"
+                size={rem(40)}
+                classNames={{ input: classes.input }}
+              />
+              <TextInput
+                type="number"
+                placeholder="0"
+                size={rem(40)}
+                classNames={{ input: classes.input }}
+              />
+            </Group>
+          </Box>
+          <Grid columns={12} gutter={{ base: 2 }} pl={"8"} pr={"8"}>
+            <Grid.Col span={enableTable ? 3 : 4}>
+              <Tooltip
+                label={t("Hold")}
+                px={16}
+                py={2}
+                position="top-end"
+                color="red"
+                withArrow
+                offset={2}
+                zIndex={100}
+                transitionProps={{
+                  transition: "pop-bottom-left",
+                  duration: 2000,
+                }}
+              >
+                <Button
+                  bg={"red.5"}
+                  size={"sm"}
+                  fullWidth={true}
+                  leftSection={<IconHandStop />}
+                >
+                  {t("Hold")}
+                </Button>
+              </Tooltip>
+            </Grid.Col>
+            {enableTable && (
+              <Grid.Col span={3}>
                 <Tooltip
-                  label={t("Hold")}
+                  label={t("PrintAll")}
                   px={16}
                   py={2}
                   position="top-end"
@@ -1236,72 +1098,45 @@ export default function Invoice(props) {
                   }}
                 >
                   <Button
-                    bg={"red.5"}
+                    bg={"green.5"}
                     size={"sm"}
                     fullWidth={true}
-                    leftSection={<IconHandStop />}
+                    leftSection={<IconPrinter />}
+                    onClick={handlePrintAll}
                   >
-                    {t("Hold")}
+                    {t("All Print")}
                   </Button>
                 </Tooltip>
               </Grid.Col>
-              {enableTable && (
-                <Grid.Col span={3}>
-                  <Tooltip
-                    label={t("PrintAll")}
-                    px={16}
-                    py={2}
-                    position="top-end"
-                    color="red"
-                    withArrow
-                    offset={2}
-                    zIndex={100}
-                    transitionProps={{
-                      transition: "pop-bottom-left",
-                      duration: 2000,
-                    }}
-                  >
-                    <Button
-                      bg={"green.5"}
-                      size={"sm"}
-                      fullWidth={true}
-                      leftSection={<IconPrinter />}
-                      onClick={handlePrintAll}
-                    >
-                      {t("All Print")}
-                    </Button>
-                  </Tooltip>
-                </Grid.Col>
-              )}
-              <Grid.Col span={enableTable ? 3 : 4}>
-                <Button
-                  bg={"#30444F"}
-                  size={"sm"}
-                  fullWidth={true}
-                  leftSection={<IconPrinter />}
-                  onClick={posPrint}
-                >
-                  {t("POS")}
-                </Button>
-              </Grid.Col>
-              <Grid.Col span={enableTable ? 3 : 4}>
-                <Button
-                  size={"sm"}
-                  bg={"#00994f"}
-                  fullWidth={true}
-                  leftSection={<IconDeviceFloppy />}
-                  onClick={handlePrintAll}
-                >
-                  {t("Save")}
-                </Button>
-              </Grid.Col>
-            </Grid>
-            {printPos && (
-              <div style={{ display: "none" }}>
-                <SalesPrintPos posData={posData} setPrintPos={setPrintPos} />
-              </div>
             )}
-          </Box>
+            <Grid.Col span={enableTable ? 3 : 4}>
+              <Button
+                bg={"#30444F"}
+                size={"sm"}
+                fullWidth={true}
+                leftSection={<IconPrinter />}
+                onClick={posPrint}
+              >
+                {t("POS")}
+              </Button>
+            </Grid.Col>
+            <Grid.Col span={enableTable ? 3 : 4}>
+              <Button
+                size={"sm"}
+                bg={"#00994f"}
+                fullWidth={true}
+                leftSection={<IconDeviceFloppy />}
+                onClick={handlePrintAll}
+              >
+                {t("Save")}
+              </Button>
+            </Grid.Col>
+          </Grid>
+          {printPos && (
+            <div style={{ display: "none" }}>
+              <SalesPrintPos posData={posData} setPrintPos={setPrintPos} />
+            </div>
+          )}
         </Box>
       </Box>
     </>
