@@ -31,6 +31,7 @@ import _ShortcutTable from "../../shortcut/_ShortcutTable";
 import { useHotkeys } from "@mantine/hooks";
 import { InvoiceBatchPrintA4 } from "../../inventory/invoice-batch/invoice-batch-print/InvoiceBatchPrintA4";
 import { InvoiceBatchPrintPos } from "../../inventory/invoice-batch/invoice-batch-print/InvoiceBatchPrintPos";
+import {getIndexEntityData} from "../../../../store/inventory/crudSlice.js";
 
 export default function _RequisitionTable(props) {
   const { t } = useTranslation();
@@ -52,31 +53,76 @@ export default function _RequisitionTable(props) {
 
   useEffect(() => {
     dispatch(setFetching(true));
-    const localInvoices = localStorage.getItem("temp-requistion-invoice");
-    setTempInvoices(localInvoices ? JSON.parse(localInvoices) : []);
+    // const localInvoices = localStorage.getItem("temp-requistion-invoice");
+    // setTempInvoices(localInvoices ? JSON.parse(localInvoices) : []);
   }, []);
 
+
+  const fetchData = async () => {
+    setFetching(true)
+    const options = {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit'
+    };
+    const value = {
+      url: 'inventory/requisition',
+      param: {
+        // term: salesFilterData.searchKeyword,
+        // customer_id: salesFilterData.customer_id,
+        // start_date: salesFilterData.start_date && new Date(salesFilterData.start_date).toLocaleDateString("en-CA", options),
+        // end_date: salesFilterData.end_date && new Date(salesFilterData.end_date).toLocaleDateString("en-CA", options),
+        page: page,
+        offset: perPage
+      }
+    }
+
+    try {
+      const resultAction = await dispatch(getIndexEntityData(value));
+
+      if (getIndexEntityData.rejected.match(resultAction)) {
+        console.error('Error:', resultAction);
+      } else if (getIndexEntityData.fulfilled.match(resultAction)) {
+        setTempInvoices(resultAction.payload);
+      }
+    } catch (err) {
+      console.error('Unexpected error:', err);
+    }finally {
+      setFetching(false)
+    }
+  };
+
   useEffect(() => {
+    fetchData();
+  // }, [salesFilterData,page]);
+  }, [page]);
+
+
+  /*useEffect(() => {
     if (tempInvoices.length > 0 || []) {
       dispatch(setFetching(false));
-      setSelectedInvoice(tempInvoices[0]);
-      // setSelectedRow(selectedRow.invoice_id);
+      setSelectedInvoice(tempInvoices.data[0]);
     } else {
       console.log("tempInvoices is either empty or does not Loaded");
     }
-  }, [tempInvoices]);
+  }, [tempInvoices]);*/
+
+  useEffect(() => {
+    // setSalesViewData(indexData.data && indexData.data[0] && indexData.data[0])
+    setSelectedRow(tempInvoices.data && tempInvoices.data[0] && tempInvoices.data[0].invoice)
+  }, [tempInvoices.data])
 
   useEffect(() => {
     selectedInvoice && setSelectedRow(selectedInvoice.invoice_id);
   }, [selectedInvoice]);
 
-  useEffect(() => {
-    const selectedInvoice = tempInvoices.find(
-      (tempInvoices) => tempInvoices.invoice_id === selectedRow
+  /*useEffect(() => {
+    const selectedInvoice = tempInvoices.data.find(
+      (tempInvoice) => tempInvoice.id === selectedRow
     );
     setSelectedInvoice(selectedInvoice);
     setLoading(false);
-  }, [selectedRow]);
+  }, [selectedRow]);*/
   useHotkeys(
     [
       [
@@ -151,16 +197,24 @@ export default function _RequisitionTable(props) {
                     footer: tableCss.footer,
                     pagination: tableCss.pagination,
                   }}
-                  records={tempInvoices}
+                  records={tempInvoices.data}
                   columns={[
                     {
                       accessor: "id",
                       title: t("S/N"),
                       textAlign: "left",
-                      render: (item) => tempInvoices.indexOf(item) + 1,
+                      render: (item) => tempInvoices.data.indexOf(item) + 1,
                     },
                     {
-                      accessor: "invoice_id",
+                      accessor: "created",
+                      title: t("Created"),
+                    },
+                    {
+                      accessor: "expected_date",
+                      title: t("expectedDate"),
+                    },
+                    {
+                      accessor: "id",
                       title: t("Invoice"),
                       textAlign: "center",
                       render: (item) => (
@@ -172,33 +226,28 @@ export default function _RequisitionTable(props) {
                           onClick={(e) => {
                             e.preventDefault();
                             setLoading(true);
-                            // setselectedInvoice(item);
-                            setSelectedRow(item.invoice_id);
+                            setSelectedRow(item.id);
+                            setSelectedInvoice(item)
                           }}
                           style={{ cursor: "pointer" }}
                         >
-                          {item.invoice_id}
+                          {item.id}
                         </Text>
                       ),
                     },
+
                     {
-                      accessor: "invoice_date",
-                      title: t("Created"),
-                    },
-                    {
-                      accessor: "items",
-                      title: t("Total Items"),
-                      render: (data) => data.items?.length ?? 0,
-                      textAlign: "center",
-                      width: "300",
-                    },
-                    {
-                      accessor: "expected_date",
-                      title: t("ExpectedDate"),
+                      accessor: "vendor_name",
+                      title: t("Vendor"),
                       textAlign: "center",
                     },
                     {
-                      accessor: "status",
+                      accessor: "vendor_mobile",
+                      title: t("vendorMobile"),
+                      textAlign: "center",
+                    },
+                    {
+                      accessor: "process",
                       title: t("Status"),
                       textAlign: "center",
                       render: (data) => (
@@ -212,7 +261,7 @@ export default function _RequisitionTable(props) {
                           mr={"4"}
                           w={60}
                         >
-                          {data.status}
+                          {data.process}
                         </Button>
                       ),
                     },
@@ -244,7 +293,7 @@ export default function _RequisitionTable(props) {
                                 />
                               </ActionIcon>
                             </Menu.Target>
-                            <Menu.Dropdown>
+                           {/* <Menu.Dropdown>
                               <Menu.Item
                                 onclick={""}
                                 w={200}
@@ -257,14 +306,14 @@ export default function _RequisitionTable(props) {
                               >
                                 {t("Edit")}
                               </Menu.Item>
-                            </Menu.Dropdown>
+                            </Menu.Dropdown>*/}
                           </Menu>
                         </Box>
                       ),
                     },
                   ]}
                   fetching={fetching}
-                  totalRecords={tempInvoices.length}
+                  totalRecords={tempInvoices.total}
                   recordsPerPage={perPage}
                   page={page}
                   onPageChange={(p) => {
