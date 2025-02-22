@@ -67,7 +67,7 @@ export default function BakeryIndex() {
     setTables((prevTables) =>
       prevTables.map((table) => ({
         ...table,
-        time: time, // Update the time in each table object
+        time: time, 
       }))
     );
   }, [time]);

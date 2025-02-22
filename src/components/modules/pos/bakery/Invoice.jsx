@@ -51,6 +51,7 @@ import { SalesPrintPos } from "../print/pos/SalesPrintPos";
 import { isNotEmpty, useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
 import { useCartOperations } from "./utils/CartOperations";
+import { TransformProduct } from "./utils/TransformProduct";
 export default function Invoice(props) {
   const {
     setLoadCartProducts,
@@ -61,7 +62,7 @@ export default function Invoice(props) {
     tableId,
     setTableId,
     setTables,
-    handleSubmitOrder, // New function passed from parent
+    handleSubmitOrder, 
   } = props;
 
   const dispatch = useDispatch();
@@ -82,7 +83,7 @@ export default function Invoice(props) {
 
   const [tempCartProducts, setTempCartProducts] = useState([]);
 
-  // Sales by user state management remains the same
+  // Sales by user state management 
   const [salesByUser, setSalesByUser] = useState(null);
   const [salesByUserName, setSalesByUserName] = useState(null);
   const [salesByDropdownData, setSalesByDropdownData] = useState([]);
@@ -124,7 +125,7 @@ export default function Invoice(props) {
     }
   }, []);
 
-  // Scroll handling remains the same
+  // Scroll handling 
   const handleScroll = () => {
     if (scrollRef.current) {
       const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
@@ -149,7 +150,7 @@ export default function Invoice(props) {
     }
   };
 
-  // Form and validation remains the same
+  // Form and validation 
   const transactionModeData = JSON.parse(
     localStorage.getItem("accounting-transaction-mode")
   )
@@ -230,7 +231,7 @@ export default function Invoice(props) {
     });
   };
 
-  // Modified to use the parent handleSubmitOrder function
+  
   const handlePrintAll = () => {
     if (tempCartProducts.length === 0) {
       notifications.show({
@@ -256,15 +257,7 @@ export default function Invoice(props) {
       ? (formValue.sales_type = "restaurant")
       : (formValue.sales_type = "bakery");
 
-    let transformedArray = tempCartProducts.map((product) => {
-      return {
-        product_id: product.id || product.product_id,
-        quantity: product.quantity,
-        purchase_price: product.purchase_price,
-        sales_price: product.sales_price,
-        sub_total: product.sub_total,
-      };
-    });
+    let transformedArray = TransformProduct(tempCartProducts);
 
     formValue["items"] = transformedArray ? transformedArray : [];
 
@@ -300,12 +293,7 @@ export default function Invoice(props) {
       formValue["table_data"] = tableData;
     }
 
-    // console.log("Print All Data:", formValue);
-
-    // Call the parent function to handle order submission
     handleSubmitOrder();
-
-    // Reset form and UI state
     setSalesByUser(null);
     setId(null);
 
@@ -322,15 +310,7 @@ export default function Invoice(props) {
   };
   const printItem = () => {
     const formValue = {};
-    let transformedArray = tempCartProducts.map((product) => {
-      return {
-        product_id: product.id || product.product_id,
-        quantity: product.quantity,
-        purchase_price: product.purchase_price,
-        sales_price: product.sales_price,
-        sub_total: product.sub_total,
-      };
-    });
+    let transformedArray = TransformProduct(tempCartProducts);
     formValue["items"] = transformedArray ? transformedArray : [];
     console.log(formValue);
   };
@@ -347,7 +327,7 @@ export default function Invoice(props) {
   }
 
   const posPrint = () => {
-    // Validate cart has products
+    
     if (tempCartProducts.length === 0) {
       notifications.show({
         title: t("ValidationError"),
@@ -359,14 +339,10 @@ export default function Invoice(props) {
       });
       return;
     }
-
-    // Form validation
     const validation = form.validate();
     if (validation.hasErrors) {
       return;
     }
-
-    // Prepare base form value
     const formValue = {
       invoice_id: Math.floor(Math.random() * (999999 - 100000 + 1)) + 100000,
       invoice_date: new Date().toLocaleDateString("en-CA"),
@@ -377,24 +353,11 @@ export default function Invoice(props) {
       grand_total: subtotal,
       sales_type: enableTable ? "restaurant" : "bakery",
     };
-
-    // Transform cart products
-    const transformedArray = tempCartProducts.map((product) => ({
-      display_name: product.display_name,
-      product_id: product.id || product.product_id,
-      quantity: product.quantity,
-      purchase_price: product.purchase_price,
-      sales_price: product.sales_price,
-      sub_total: product.sub_total,
-    }));
+    let transformedArray = TransformProduct(tempCartProducts);
 
     formValue.items = transformedArray || [];
-
-    // Handle table-specific details if enabled
     if (enableTable && tableId) {
       const selectedTable = tables.find((t) => t.id === tableId);
-
-      // Calculate current status elapsed time
       const currentTime = new Date();
       let statusHistory = [...(selectedTable.statusHistory || [])];
 
@@ -411,8 +374,6 @@ export default function Invoice(props) {
           elapsedTime: currentElapsed,
         });
       }
-
-      // Format status history for display
       const formattedStatusHistory = statusHistory.map((entry) => {
         const elapsedSeconds = Math.floor(entry.elapsedTime / 1000);
         const hours = Math.floor(elapsedSeconds / 3600)
@@ -430,8 +391,6 @@ export default function Invoice(props) {
           end_time: new Date(entry.endTime).toISOString(),
         };
       });
-
-      // Calculate total elapsed time
       const totalElapsedMs = statusHistory.reduce(
         (total, entry) => total + entry.elapsedTime,
         0
@@ -446,8 +405,6 @@ export default function Invoice(props) {
       const totalSecondsRemainder = (totalSeconds % 60)
         .toString()
         .padStart(2, "0");
-
-      // Prepare table data
       const tableData = {
         mainTable: {
           id: tableId,
@@ -461,13 +418,11 @@ export default function Invoice(props) {
       formValue.table_data = tableData;
     }
 
-    // Process the print request
     console.log("Print Data:", formValue);
     tempLocalPosInvoice(formValue);
     setPosData(formValue);
     handleSubmitOrder();
 
-    // Reset form and selections
     setSalesByUser(null);
     setSalesByUserName(null);
     setId(null);

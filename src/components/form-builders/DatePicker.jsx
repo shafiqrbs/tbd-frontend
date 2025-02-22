@@ -47,6 +47,7 @@ function DatePickerForm(props) {
                     clearable
                     defaultValue={new Date()}
                     size="sm"
+                    minDate={new Date()}
                     label={label}
                     placeholder={placeholder}
                     mt={mt}
