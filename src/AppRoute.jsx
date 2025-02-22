@@ -155,7 +155,7 @@ function AppRoute() {
         <Route path="/procurement/">
           <Route path="requisition" element={<Requisition />} />
           <Route path="new-requisition" element={<RequisitionInvoice />} />
-          <Route path="all" element={<MatrixIndex />} />
+          <Route path="requisition-board" element={<MatrixIndex />} />
         </Route>
         <Route path="/reporting/">
           <Route path="reports" element={<ReportIndex />} />

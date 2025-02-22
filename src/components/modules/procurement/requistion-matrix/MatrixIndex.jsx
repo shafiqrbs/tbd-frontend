@@ -31,9 +31,6 @@ export default function MatrixIndex() {
                 roles={t("Roles")}
               />
               <Box p={8}>
-                {/* {configData?.business_model?.slug === "general" && (
-                  <MatrixTable currencySymbol={configData?.currency?.symbol} />
-                )} */}
                 <MatrixTable currencySymbol={configData?.currency?.symbol} />
               </Box>
             </>

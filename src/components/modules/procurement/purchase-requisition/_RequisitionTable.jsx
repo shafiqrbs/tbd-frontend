@@ -91,13 +91,11 @@ export default function _RequisitionTable(props) {
       console.error('Unexpected error:', err);
     }finally {
       setFetching(false)
-      // dispatch(setFetching(false))
     }
   };
 
   useEffect(() => {
     fetchData();
-  // }, [salesFilterData,page]);
   }, [page,fetching]);
 
   useEffect(() => {

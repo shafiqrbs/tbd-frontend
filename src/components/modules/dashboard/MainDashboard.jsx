@@ -1271,16 +1271,16 @@ function MainDashboard(props) {
                           >
                             <NavLink
                                 pl={"md"}
-                                href="/procurement/all"
+                                href="/procurement/requisition-board"
                                 label={t("AllRequisitionN")}
                                 component="button"
                                 onClick={(e) => {
-                                  navigate("/procurement/all");
+                                  navigate("/procurement/requisition-board");
                                 }}
                                 onAuxClick={(e) => {
                                   // Handle middle mouse button click for browsers that support it
                                   if (e.button === 1) {
-                                    window.open("/procurement/all", "_blank");
+                                    window.open("/procurement/requisition-board", "_blank");
                                   }
                                 }}
                             />
