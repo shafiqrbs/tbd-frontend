@@ -57,7 +57,6 @@ export default function NewSales(props) {
   const [id, setId] = useState(null);
   const { configData } = getConfigData();
 
-  // Modified to handle table-specific cart products
   const [loadCartProducts, setLoadCartProducts] = useState(false);
   const [tempCartProducts, setTempCartProducts] = useState([]);
 
@@ -74,8 +73,6 @@ export default function NewSales(props) {
       prevTables.map((table) => {
         if (table.id === tableId) {
           const currentTime = new Date();
-
-          // Calculate elapsed time for the previous status if exists
           let updatedStatusHistory = [...(table.statusHistory || [])];
           if (table.currentStatusStartTime) {
             const previousStatus = table.status;
@@ -89,8 +86,6 @@ export default function NewSales(props) {
               elapsedTime: elapsedTime,
             });
           }
-
-          // For Free status, keep the history but reset current timing
           if (newStatus === "Free") {
             return {
               ...table,
@@ -100,14 +95,12 @@ export default function NewSales(props) {
               elapsedTime: "00:00:00",
             };
           }
-
-          // For any other status, add to history and update current
           return {
             ...table,
             status: newStatus,
             statusHistory: updatedStatusHistory,
             currentStatusStartTime: currentTime,
-            elapsedTime: "00:00:00", // Reset elapsed time for new status
+            elapsedTime: "00:00:00", 
           };
         }
         return table;
@@ -117,12 +110,12 @@ export default function NewSales(props) {
 
   useEffect(() => {
     if (enableTable && tableId) {
-      // Load table-specific cart when a table is selected
+      
       const tableCartKey = `table-${tableId}-pos-products`;
       const tempProducts = localStorage.getItem(tableCartKey);
       setTempCartProducts(tempProducts ? JSON.parse(tempProducts) : []);
     } else {
-      // Default behavior without table selection
+      
       const tempProducts = localStorage.getItem("temp-pos-products");
       setTempCartProducts(tempProducts ? JSON.parse(tempProducts) : []);
     }
@@ -189,7 +182,6 @@ export default function NewSales(props) {
     setProducts(updatedList);
   };
 
-  // Timer effect to update elapsed time
   useEffect(() => {
     const interval = setInterval(() => {
       setTables((prevTables) =>
@@ -480,7 +472,7 @@ export default function NewSales(props) {
                               <Text
                                 styles={{
                                   root: {
-                                    marginTop: "auto", // This pushes the price to the bottom
+                                    marginTop: "auto", 
                                   },
                                 }}
                                 ta={"right"}
