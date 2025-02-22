@@ -109,7 +109,7 @@ export default function _GenericRequisitionForm(props) {
 
         // Filter vendor for domain vendor
         const filteredVendors = coreVendors.filter(vendor => vendor.sub_domain_id != null);
-        console.log(filteredVendors)
+        // console.log(filteredVendors)
         if (filteredVendors && filteredVendors.length > 0) {
             const transformedData = filteredVendors.map((type) => {
                 return {
@@ -154,7 +154,6 @@ export default function _GenericRequisitionForm(props) {
             setProductDropdown([]);
         }
     }, [searchValue]);
-
     const [selectProductDetails, setSelectProductDetails] = useState("");
 
     // form update based on product selection
@@ -166,6 +165,7 @@ export default function _GenericRequisitionForm(props) {
         const filteredProducts = localProducts.filter(
             (product) => product.id === Number(productForm.values.product_id)
         );
+        console.log(filteredProducts)
         if (filteredProducts.length > 0) {
             const selectedProduct = filteredProducts[0];
             setSelectProductDetails(selectedProduct);
@@ -256,11 +256,14 @@ export default function _GenericRequisitionForm(props) {
         setSearchValue("");
         productForm.reset();
         setLoadCardProducts(true);
-        if (type == "productId") {
-            document.getElementById("vendor_id").focus();
-        } else {
-            document.getElementById("barcode").focus();
-        }
+        document.getElementById("vendor_id").click();
+
+        //commeneted because requisition starts from selecting vendor
+        // if (type == "productId") {
+        //     document.getElementById("product_id").click();
+        // } else {
+        //     document.getElementById("barcode").focus();
+        // }
     }
 
     // Add product based on product id
@@ -439,16 +442,16 @@ export default function _GenericRequisitionForm(props) {
                                                     }
                                                 })}
                                             >
-                                                <SelectForm
+                                                <SelectForm 
                                                     tooltip={t("ChooseVendor")}
                                                     label=""
                                                     placeholder={t("Vendor")}
                                                     required={false}
-                                                    nextField={"product_id"}
-                                                    name={"vendor_id"}
+                                                    nextField="product_id"  
+                                                    name="vendor_id"
                                                     form={productForm}
                                                     dropdownValue={vendorsDropdownData}
-                                                    id={"purchase_vendor_id"}
+                                                    id="vendor_id"
                                                     mt={1}
                                                     searchable={true}
                                                     value={vendorData}
@@ -464,7 +467,7 @@ export default function _GenericRequisitionForm(props) {
                                                                     label=""
                                                                     placeholder={t("Barcode")}
                                                                     required={true}
-                                                                    nextfield={"quantity"}
+                                                                    nextField="quantity"
                                                                     form={productForm}
                                                                     name={"barcode"}
                                                                     id={"barcode"}
@@ -474,16 +477,16 @@ export default function _GenericRequisitionForm(props) {
                                                                 />
                                                             </Grid.Col>
                                                             <Grid.Col span={8}>
-                                                                <SelectServerSideForm
+                                                                <SelectServerSideForm 
                                                                     disabled={!vendorData}
                                                                     tooltip={t("ChooseStockProduct")}
-                                                                    lable=""
+                                                                    label=""
                                                                     placeholder={t("ChooseStockProduct")}
                                                                     required={true}
-                                                                    nextfield={"quantity"}
-                                                                    name={"product_id"}
+                                                                    nextField="quantity"
+                                                                    name="product_id"
                                                                     form={productForm}
-                                                                    id={"product_id"}
+                                                                    id="product_id"
                                                                     searchable={true}
                                                                     searchValue={searchValue}
                                                                     setSearchValue={setSearchValue}
