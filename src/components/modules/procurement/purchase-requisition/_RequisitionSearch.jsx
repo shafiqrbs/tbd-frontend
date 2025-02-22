@@ -23,12 +23,11 @@ import {
 import { useHotkeys } from "@mantine/hooks";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  setFetching,
-  setSalesFilterData,
   storeEntityData,
 } from "../../../../store/inventory/crudSlice.js";
 import { DateInput } from "@mantine/dates";
 import __FilterPopover from "./__FilterPopover.jsx";
+import {setRequisitionFilterData} from "../../../../store/core/crudSlice.js";
 
 function _RequisitionSearch(props) {
   const { t, i18n } = useTranslation();
@@ -40,10 +39,9 @@ function _RequisitionSearch(props) {
   const [vendorTooltip, setVendorTooltip] = useState(false);
   const [startDateTooltip, setStartDateTooltip] = useState(false);
   const [endDateTooltip, setEndDateTooltip] = useState(false);
-  // const [filterModel, setFilterModel] = useState(false)
 
-  const salesFilterData = useSelector(
-    (state) => state.inventoryCrudSlice.salesFilterData
+  const requisitionFilterData = useSelector(
+    (state) => state.coreCrudSlice.requisitionFilterData
   );
 
   /*START GET CUSTOMER DROPDOWN FROM LOCAL STORAGE*/
@@ -53,8 +51,10 @@ function _RequisitionSearch(props) {
   useEffect(() => {
     let coreVendors = localStorage.getItem("core-vendors");
     coreVendors = coreVendors ? JSON.parse(coreVendors) : [];
-    if (coreVendors && coreVendors.length > 0) {
-      const transformedData = coreVendors.map((type) => {
+    const filteredVendors = coreVendors.filter(vendor => vendor.sub_domain_id != null);
+
+      if (filteredVendors && filteredVendors.length > 0) {
+      const transformedData = filteredVendors.map((type) => {
         return {
           label: type.mobile + " -- " + type.name,
           value: String(type.id),
@@ -109,22 +109,22 @@ function _RequisitionSearch(props) {
                   placeholder={t("EnterSearchAnyKeyword")}
                   onChange={(e) => {
                     dispatch(
-                      setSalesFilterData({
-                        ...salesFilterData,
+                      setRequisitionFilterData({
+                        ...requisitionFilterData,
                         ["searchKeyword"]: e.currentTarget.value,
                       })
                     );
-                    e.target.value !== ""
+                    /*e.target.value !== ""
                       ? setSearchKeywordTooltip(false)
                       : (setSearchKeywordTooltip(true),
                         setTimeout(() => {
                           setSearchKeywordTooltip(false);
-                        }, 1000));
+                        }, 1000));*/
                   }}
-                  value={salesFilterData.searchKeyword}
+                  value={requisitionFilterData.searchKeyword}
                   id={"SearchKeyword"}
                   rightSection={
-                    salesFilterData.searchKeyword ? (
+                    requisitionFilterData.searchKeyword && (
                       <Tooltip label={t("Close")} withArrow bg={`red.5`}>
                         <IconX
                           color={`red`}
@@ -132,23 +132,13 @@ function _RequisitionSearch(props) {
                           opacity={0.5}
                           onClick={() => {
                             dispatch(
-                              setSalesFilterData({
-                                ...salesFilterData,
+                              setRequisitionFilterData({
+                                ...requisitionFilterData,
                                 ["searchKeyword"]: "",
                               })
                             );
                           }}
                         />
-                      </Tooltip>
-                    ) : (
-                      <Tooltip
-                        label={t("FieldIsRequired")}
-                        withArrow
-                        position={"bottom"}
-                        c={"red"}
-                        bg={`red.1`}
-                      >
-                        <IconInfoCircle size={16} opacity={0.5} />
                       </Tooltip>
                     )
                   }
@@ -180,11 +170,11 @@ function _RequisitionSearch(props) {
                   autoComplete="off"
                   clearable
                   searchable
-                //   value={salesFilterData.customer_id}
+                //   value={requisitionFilterData.customer_id}
                   onChange={(e) => {
                     dispatch(
-                      setSalesFilterData({
-                        ...salesFilterData,
+                      setRequisitionFilterData({
+                        ...requisitionFilterData,
                         ["customer_id"]: e,
                       })
                     );
@@ -219,8 +209,8 @@ function _RequisitionSearch(props) {
                   clearable
                   onChange={(e) => {
                     dispatch(
-                      setSalesFilterData({
-                        ...salesFilterData,
+                      setRequisitionFilterData({
+                        ...requisitionFilterData,
                         ["start_date"]: e,
                       })
                     );
@@ -231,7 +221,7 @@ function _RequisitionSearch(props) {
                           setStartDateTooltip(false);
                         }, 1000));
                   }}
-                  value={salesFilterData.start_date}
+                  value={requisitionFilterData.start_date}
                   placeholder={t("StartDate")}
                 />
               </Tooltip>
@@ -256,8 +246,8 @@ function _RequisitionSearch(props) {
                   clearable
                   onChange={(e) => {
                     dispatch(
-                      setSalesFilterData({
-                        ...salesFilterData,
+                      setRequisitionFilterData({
+                        ...requisitionFilterData,
                         ["end_date"]: e,
                       })
                     );
@@ -282,15 +272,15 @@ function _RequisitionSearch(props) {
               size="lg"
               aria-label="Filter"
               onClick={() => {
-                salesFilterData.searchKeyword.length > 0 ||
-                salesFilterData.customer_id ||
-                salesFilterData.start_date
-                  ? (dispatch(setFetching(true)),
+                requisitionFilterData.searchKeyword.length > 0 ||
+                requisitionFilterData.customer_id ||
+                requisitionFilterData.start_date
+                  ? (props.setFetching(true),
                     setSearchKeywordTooltip(false))
-                  : (setSearchKeywordTooltip(true),
+                  :
                     setTimeout(() => {
                       setSearchKeywordTooltip(false);
-                    }, 1500));
+                    }, 1500);
               }}
             >
               <Tooltip
@@ -333,18 +323,17 @@ function _RequisitionSearch(props) {
                   style={{ width: rem(18) }}
                   stroke={1.5}
                   onClick={() => {
-                    dispatch(setFetching(true));
-                    setRefreshCustomerDropdown(true);
                     resetDropDownState();
                     dispatch(
-                      setSalesFilterData({
-                        ...salesFilterData,
-                        ["customer_id"]: "",
+                      setRequisitionFilterData({
+                        ...requisitionFilterData,
+                        ["vendor_id"]: "",
                         ["start_date"]: "",
                         ["end_date"]: "",
                         ["searchKeyword"]: "",
                       })
                     );
+                      props.setFetching(true)
                   }}
                 />
               </Tooltip>

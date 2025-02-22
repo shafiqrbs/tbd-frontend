@@ -134,6 +134,7 @@ const crudSlice = createSlice({
         vendorFilterData: { name: '', mobile: '', company_name: '' },
         userFilterData: { name: '', mobile: '', email: '' },
         warehouseFilterData: { name: '', mobile: '', email: '',location:'' },
+        requisitionFilterData: { vendor_id: '',start_date:'',end_date:'',searchKeyword:''},
         categoryGroupFilterData: { name: '' },
         statusInlineUpdateData:null
     },
@@ -190,6 +191,12 @@ const crudSlice = createSlice({
             state.warehouseFilterData.mobile = action.payload.mobile
             state.warehouseFilterData.location = action.payload.location
             state.warehouseFilterData.email = action.payload.email
+        },
+        setRequisitionFilterData: (state, action) => {
+            state.requisitionFilterData.vendor_id = action.payload.vendor_id
+            state.requisitionFilterData.start_date = action.payload.start_date
+            state.requisitionFilterData.end_date = action.payload.end_date
+            state.requisitionFilterData.searchKeyword = action.payload.searchKeyword
         },
 
     },
@@ -251,6 +258,6 @@ const crudSlice = createSlice({
     }
 })
 
-export const { setFetching, setFormLoading, setInsertType, setSearchKeyword, setEntityUpdateId, setEntityIsUpdate, setEditEntityData, setCustomerFilterData, setVendorFilterData, setUserFilterData, setValidationData, setEntityNewData, setCategoryGroupFilterData, setDeleteMessage,setWarehouseFilterData } = crudSlice.actions
+export const { setFetching, setFormLoading, setInsertType, setSearchKeyword, setEntityUpdateId, setEntityIsUpdate, setEditEntityData, setCustomerFilterData, setVendorFilterData, setUserFilterData, setValidationData, setEntityNewData, setCategoryGroupFilterData, setDeleteMessage,setWarehouseFilterData ,setRequisitionFilterData} = crudSlice.actions
 
 export default crudSlice.reducer;

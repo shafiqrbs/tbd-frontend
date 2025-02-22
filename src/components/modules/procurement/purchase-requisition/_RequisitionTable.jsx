@@ -50,6 +50,8 @@ export default function _RequisitionTable(props) {
   const [indexData, setIndexData] = useState([])
   const [fetching, setFetching] = useState(true)
   const [requisitionViewData, setRequisitionViewData] = useState({});
+  const requisitionFilterData = useSelector((state) => state.coreCrudSlice.requisitionFilterData);
+  // const coreFetching = useSelector((state) => state.coreCrudSlice.fetching);
 
   const [loading, setLoading] = useState(true);
       useEffect(() => {
@@ -59,7 +61,7 @@ export default function _RequisitionTable(props) {
       }, [loading]);
 
   const fetchData = async () => {
-    setFetching(true)
+    // setFetching(true)
     const options = {
       year: 'numeric',
       month: '2-digit',
@@ -68,10 +70,10 @@ export default function _RequisitionTable(props) {
     const value = {
       url: 'inventory/requisition',
       param: {
-        // term: salesFilterData.searchKeyword,
-        // customer_id: salesFilterData.customer_id,
-        // start_date: salesFilterData.start_date && new Date(salesFilterData.start_date).toLocaleDateString("en-CA", options),
-        // end_date: salesFilterData.end_date && new Date(salesFilterData.end_date).toLocaleDateString("en-CA", options),
+        term: requisitionFilterData.searchKeyword,
+        vendor_id: requisitionFilterData.vendor_id,
+        start_date: requisitionFilterData.start_date && new Date(requisitionFilterData.start_date).toLocaleDateString("en-CA", options),
+        end_date: requisitionFilterData.end_date && new Date(requisitionFilterData.end_date).toLocaleDateString("en-CA", options),
         page: page,
         offset: perPage
       }
@@ -89,16 +91,17 @@ export default function _RequisitionTable(props) {
       console.error('Unexpected error:', err);
     }finally {
       setFetching(false)
+      // dispatch(setFetching(false))
     }
   };
 
   useEffect(() => {
     fetchData();
   // }, [salesFilterData,page]);
-  }, [page]);
+  }, [page,fetching]);
 
   useEffect(() => {
-    setSelectedRow(indexData.data && indexData.data[0] && indexData.data[0].id)
+    setSelectedRow(indexData.data && indexData.data[0] && indexData.data[0].invoice)
     
     setRequisitionViewData(
       indexData.data && indexData.data[0] && indexData.data[0]
@@ -106,8 +109,8 @@ export default function _RequisitionTable(props) {
   }, [indexData.data])
   const rows =
     requisitionViewData &&
-    requisitionViewData.requisition_items &&
-    requisitionViewData.requisition_items.map((element, index) => (
+    requisitionViewData?.requisition_items &&
+    requisitionViewData?.requisition_items.map((element, index) => (
       <Table.Tr key={element.id}>
         <Table.Td fz="xs" width={"20"}>
           {index + 1}
@@ -159,7 +162,7 @@ export default function _RequisitionTable(props) {
               <Grid>
                 <Grid.Col>
                   <Stack>
-                    <_RequisitionSearch checkList={1} customerId={1} />
+                    <_RequisitionSearch checkList={1} customerId={1} setFetching={setFetching} />
                   </Stack>
                 </Grid.Col>
               </Grid>
@@ -197,7 +200,7 @@ export default function _RequisitionTable(props) {
                       title: t("expectedDate"),
                     },
                     {
-                      accessor: "id",
+                      accessor: "invoice",
                       title: t("Invoice"),
                       textAlign: "center",
                       render: (item) => (
@@ -209,12 +212,12 @@ export default function _RequisitionTable(props) {
                           onClick={(e) => {
                             e.preventDefault();
                             setLoading(true);
-                            setSelectedRow(item.id);
+                            setSelectedRow(item.invoice);
                             setRequisitionViewData(item)
                           }}
                           style={{ cursor: "pointer" }}
                         >
-                          {item.id}
+                          {item.invoice}
                         </Text>
                       ),
                     },
@@ -287,17 +290,17 @@ export default function _RequisitionTable(props) {
                   page={page}
                   onPageChange={(p) => {
                     setPage(p);
-                    dispatch(setFetching(true));
+                    // dispatch(setFetching(true));
                   }}
                   loaderSize="xs"
                   loaderColor="grape"
                   height={tableHeight}
                   scrollAreaProps={{ type: "never" }}
                   rowBackgroundColor={(item) => {
-                    if (item.id === selectedRow) return "#e2c2c263";
+                    if (item.invoice === selectedRow) return "#e2c2c263";
                   }}
                   rowColor={(item) => {
-                    if (item.id === selectedRow) return "red.6";
+                    if (item.invoice === selectedRow) return "red.6";
                   }}
                 />
               </Box>
@@ -329,7 +332,7 @@ export default function _RequisitionTable(props) {
                 pt={"xs"}
                 className={"boxBackground textColor borderRadiusAll"}
               >
-                {t("Invoice")}: {requisitionViewData && requisitionViewData.invoice_id}
+                {t("Invoice")}: {requisitionViewData && requisitionViewData.invoice}
               </Box>
               <Box className={"borderRadiusAll border-top-none"} fz={"sm"}>
                 <ScrollArea h={100} type="never">
