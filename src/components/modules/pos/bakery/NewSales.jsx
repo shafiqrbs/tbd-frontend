@@ -38,6 +38,7 @@ import { DataTable } from "mantine-datatable";
 import tableCss from "./Table.module.css";
 import Invoice from "./Invoice.jsx";
 import { notifications } from "@mantine/notifications";
+import { useCartOperations } from "./utils/CartOperations.jsx";
 
 export default function NewSales(props) {
   const {
@@ -54,183 +55,18 @@ export default function NewSales(props) {
   const height = mainAreaHeight - 190; //TabList height 104
   const [selected, setSelected] = useState([]);
   const [id, setId] = useState(null);
+  const { configData } = getConfigData();
 
   // Modified to handle table-specific cart products
   const [loadCartProducts, setLoadCartProducts] = useState(false);
   const [tempCartProducts, setTempCartProducts] = useState([]);
 
-  useEffect(() => {
-    if (enableTable && tableId) {
-      // Load table-specific cart when a table is selected
-      const tableCartKey = `table-${tableId}-pos-products`;
-      const tempProducts = localStorage.getItem(tableCartKey);
-      setTempCartProducts(tempProducts ? JSON.parse(tempProducts) : []);
-    } else {
-      // Default behavior without table selection
-      const tempProducts = localStorage.getItem("temp-pos-products");
-      setTempCartProducts(tempProducts ? JSON.parse(tempProducts) : []);
-    }
-    setLoadCartProducts(false);
-  }, [loadCartProducts, tableId, enableTable]);
-
   const [originalProducts, setOriginalProducts] = useState([]);
   const [products, setProducts] = useState([]);
-
-  useEffect(() => {
-    const storedProducts = localStorage.getItem("core-products");
-    const localProducts = storedProducts ? JSON.parse(storedProducts) : [];
-    const filteredProducts = localProducts.filter((product) => {
-      if (id) {
-        return (
-          product.product_nature !== "raw-materials" &&
-          product.category_id === Number(id) &&
-          product.sales_price !== 0
-        );
-      }
-      return product.product_nature !== "raw-materials";
-    });
-    setProducts(filteredProducts);
-    setOriginalProducts(filteredProducts);
-  }, [id]);
-
-  const { configData } = getConfigData();
-
-  const handleSelect = (productId) => {
-    setSelected((prevSelected) =>
-      prevSelected.includes(productId)
-        ? prevSelected.filter((id) => id !== productId)
-        : [...prevSelected, productId]
-    );
-    setTimeout(() => {
-      setSelected([]);
-    }, 50);
-  };
-
-  // Modified to handle table-specific cart
-  const handleIncrement = (productId) => {
-    const storageKey =
-      enableTable && tableId
-        ? `table-${tableId}-pos-products`
-        : "temp-pos-products";
-    const cartProducts = localStorage.getItem(storageKey);
-    let myCartProducts = cartProducts ? JSON.parse(cartProducts) : [];
-    const product = products.find((product) => product.id === productId);
-
-    if (product.sales_price === 0 || product.sales_price === null) {
-      notifications.show({
-        title: t("Error"),
-        position: "bottom-right",
-        autoClose: 2000,
-        withCloseButton: true,
-        message: t("Sales price cant be zero"),
-        color: "red",
-      });
-      return;
-    }
-
-    let found = false;
-
-    myCartProducts = myCartProducts.map((item) => {
-      if (item.product_id === productId) {
-        found = true;
-        const newQuantity = Math.min(item.quantity + 1);
-        return {
-          ...item,
-          quantity: newQuantity,
-          sub_total: newQuantity * item.sales_price,
-        };
-      }
-      return item;
-    });
-
-    if (!found) {
-      myCartProducts.push({
-        product_id: product.id,
-        display_name: product.display_name,
-        quantity: 1,
-        unit_name: product.unit_name,
-        purchase_price: Number(product.purchase_price),
-        sub_total: Number(product.sales_price),
-        sales_price: Number(product.sales_price),
-      });
-    }
-
-    // Update the table status if this is the first item
-    if (
-      enableTable &&
-      tableId &&
-      myCartProducts.length === 1 &&
-      currentStatus === "Free"
-    ) {
-      updateTableStatus("Occupied");
-    }
-
-    localStorage.setItem(storageKey, JSON.stringify(myCartProducts));
-    setLoadCartProducts(true);
-  };
-
-  // Modified to handle table-specific cart
-  const handleDecrement = (productId) => {
-    const storageKey =
-      enableTable && tableId
-        ? `table-${tableId}-pos-products`
-        : "temp-pos-products";
-    const cartProducts = localStorage.getItem(storageKey);
-    let myCartProducts = cartProducts ? JSON.parse(cartProducts) : [];
-
-    myCartProducts = myCartProducts
-      .map((item) => {
-        if (item.product_id === productId) {
-          const newQuantity = Math.max(0, item.quantity - 1);
-          return {
-            ...item,
-            quantity: newQuantity,
-            sub_total: newQuantity * item.sales_price,
-          };
-        }
-        return item;
-      })
-      .filter((item) => item.quantity > 0);
-
-    // Update the table status if cart becomes empty
-    if (
-      enableTable &&
-      tableId &&
-      myCartProducts.length === 0 &&
-      currentStatus === "Occupied"
-    ) {
-      updateTableStatus("Free");
-    }
-
-    localStorage.setItem(storageKey, JSON.stringify(myCartProducts));
-    setLoadCartProducts(true);
-  };
-
-  const filterProductsbyCategory = (id) => {
-    if (id === "230") {
-      setId(null);
-    } else {
-      setId(id);
-    }
-  };
-
+  const [currentStatus, setCurrentStatus] = useState("");
   const [value, setValue] = useState("grid");
   const [searchValue, setSearchValue] = useState("");
 
-  const filterList = (searchValue) => {
-    if (!searchValue) {
-      setProducts(originalProducts);
-      return;
-    }
-
-    const updatedList = originalProducts.filter((product) => {
-      return product.display_name
-        .toLowerCase()
-        .includes(searchValue.toLowerCase());
-    });
-    setProducts(updatedList);
-  };
-  const [currentStatus, setCurrentStatus] = useState("");
   const updateTableStatus = (newStatus) => {
     if (!tableId) return;
 
@@ -277,6 +113,80 @@ export default function NewSales(props) {
         return table;
       })
     );
+  };
+
+  useEffect(() => {
+    if (enableTable && tableId) {
+      // Load table-specific cart when a table is selected
+      const tableCartKey = `table-${tableId}-pos-products`;
+      const tempProducts = localStorage.getItem(tableCartKey);
+      setTempCartProducts(tempProducts ? JSON.parse(tempProducts) : []);
+    } else {
+      // Default behavior without table selection
+      const tempProducts = localStorage.getItem("temp-pos-products");
+      setTempCartProducts(tempProducts ? JSON.parse(tempProducts) : []);
+    }
+    setLoadCartProducts(false);
+  }, [loadCartProducts, tableId, enableTable]);
+
+  useEffect(() => {
+    const storedProducts = localStorage.getItem("core-products");
+    const localProducts = storedProducts ? JSON.parse(storedProducts) : [];
+    const filteredProducts = localProducts.filter((product) => {
+      if (id) {
+        return (
+          product.product_nature !== "raw-materials" &&
+          product.category_id === Number(id) &&
+          product.sales_price !== 0
+        );
+      }
+      return product.product_nature !== "raw-materials";
+    });
+    setProducts(filteredProducts);
+    setOriginalProducts(filteredProducts);
+  }, [id]);
+
+  const { handleIncrement, handleDecrement, handleClearCart, getCartProducts } =
+    useCartOperations({
+      enableTable,
+      tableId,
+      products,
+      currentStatus,
+      updateTableStatus,
+      setLoadCartProducts,
+    });
+
+  const handleSelect = (productId) => {
+    setSelected((prevSelected) =>
+      prevSelected.includes(productId)
+        ? prevSelected.filter((id) => id !== productId)
+        : [...prevSelected, productId]
+    );
+    setTimeout(() => {
+      setSelected([]);
+    }, 50);
+  };
+
+  const filterProductsbyCategory = (id) => {
+    if (id === "230") {
+      setId(null);
+    } else {
+      setId(id);
+    }
+  };
+
+  const filterList = (searchValue) => {
+    if (!searchValue) {
+      setProducts(originalProducts);
+      return;
+    }
+
+    const updatedList = originalProducts.filter((product) => {
+      return product.display_name
+        .toLowerCase()
+        .includes(searchValue.toLowerCase());
+    });
+    setProducts(updatedList);
   };
 
   // Timer effect to update elapsed time
@@ -367,11 +277,11 @@ export default function NewSales(props) {
             <Grid.Col span={2}>
               <Box bg="white" w={"100%"} mt={6} style={{ borderRadius: 4 }}>
                 <ScrollArea
-                  h={enableTable ? height + 3 : height + 183}
+                  h={enableTable ? height + 24 : height + 189}
                   type="never"
                   scrollbars="y"
                 >
-                  <Box pt={"6"} pl={"xs"} pr={"xs"} pb={"8"}>
+                  <Box pt={"4"} pl={"8"} pr={"8"} pb={"8"}>
                     {categoryDropdown.map((data) => (
                       <Box
                         style={{
@@ -403,7 +313,6 @@ export default function NewSales(props) {
               </Box>
             </Grid.Col>
             <Grid.Col span={10}>
-              <Box p={0} m={0}>
                 <Grid
                   columns={16}
                   gutter={{ base: 4 }}
@@ -498,16 +407,15 @@ export default function NewSales(props) {
                     />
                   </Grid.Col>
                 </Grid>
-              </Box>
               <Box
                 bg="white"
                 w={"100%"}
-                h={enableTable ? height - 45 : height + 135}
-                mt={8}
+                h={enableTable ? height - 22 : height + 143}
+                mt={4}
                 style={{ borderRadius: 4 }}
               >
                 <ScrollArea
-                  h={enableTable ? height - 45 : height + 135}
+                  h={enableTable ? height - 24 : height + 139}
                   type="never"
                   pt={"8"}
                   pl={"xs"}
@@ -793,11 +701,11 @@ export default function NewSales(props) {
             </Grid.Col>
           </Grid>
           {enableTable && (
-            <Box bg="white" w={"100%"} mt={8} style={{ borderRadius: 4 }}>
+            <Box bg="white" w={"100%"} mt={4} style={{ borderRadius: 4 }}>
               <Group
                 grow
                 gap={4}
-                h={54}
+                h={48}
                 justify="center"
                 align="center"
                 pl={8}
