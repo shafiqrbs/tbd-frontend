@@ -51,6 +51,7 @@ import { SalesPrintPos } from "../print/pos/SalesPrintPos";
 import { isNotEmpty, useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
 import { useCartOperations } from "./utils/CartOperations";
+import { TransformProduct } from "./utils/TransformProduct";
 export default function Invoice(props) {
   const {
     setLoadCartProducts,
@@ -256,15 +257,7 @@ export default function Invoice(props) {
       ? (formValue.sales_type = "restaurant")
       : (formValue.sales_type = "bakery");
 
-    let transformedArray = tempCartProducts.map((product) => {
-      return {
-        product_id: product.id || product.product_id,
-        quantity: product.quantity,
-        purchase_price: product.purchase_price,
-        sales_price: product.sales_price,
-        sub_total: product.sub_total,
-      };
-    });
+    let transformedArray = TransformProduct(tempCartProducts);
 
     formValue["items"] = transformedArray ? transformedArray : [];
 
@@ -322,15 +315,7 @@ export default function Invoice(props) {
   };
   const printItem = () => {
     const formValue = {};
-    let transformedArray = tempCartProducts.map((product) => {
-      return {
-        product_id: product.id || product.product_id,
-        quantity: product.quantity,
-        purchase_price: product.purchase_price,
-        sales_price: product.sales_price,
-        sub_total: product.sub_total,
-      };
-    });
+    let transformedArray = TransformProduct(tempCartProducts);
     formValue["items"] = transformedArray ? transformedArray : [];
     console.log(formValue);
   };
@@ -379,14 +364,7 @@ export default function Invoice(props) {
     };
 
     // Transform cart products
-    const transformedArray = tempCartProducts.map((product) => ({
-      display_name: product.display_name,
-      product_id: product.id || product.product_id,
-      quantity: product.quantity,
-      purchase_price: product.purchase_price,
-      sales_price: product.sales_price,
-      sub_total: product.sub_total,
-    }));
+    let transformedArray = TransformProduct(tempCartProducts);
 
     formValue.items = transformedArray || [];
 
