@@ -29,34 +29,34 @@ import { useDispatch, useSelector } from "react-redux";
 import { setFetching } from "../../../../store/core/crudSlice";
 import _ShortcutTable from "../../shortcut/_ShortcutTable";
 import { useHotkeys } from "@mantine/hooks";
-import { InvoiceBatchPrintA4 } from "../../inventory/invoice-batch/invoice-batch-print/InvoiceBatchPrintA4";
 import { InvoiceBatchPrintPos } from "../../inventory/invoice-batch/invoice-batch-print/InvoiceBatchPrintPos";
 import {getIndexEntityData} from "../../../../store/inventory/crudSlice.js";
+import { PrintNormal } from "../requisition-print/PrintNormal.jsx";
 
 export default function _RequisitionTable(props) {
+  const printRef = useRef();
+  const dispatch = useDispatch();
   const { t } = useTranslation();
   const { isOnline, mainAreaHeight } = useOutletContext();
   const tableHeight = mainAreaHeight - 106;
   const height = mainAreaHeight - 320;
-  const printRef = useRef();
+
   const perPage = 50;
   const [page, setPage] = useState(1);
-  const [tempInvoices, setTempInvoices] = useState([]);
-  const dispatch = useDispatch();
-  const fetching = useSelector((state) => state.crudSlice.fetching);
-  const [selectedRow, setSelectedRow] = useState("");
-  const [loading, setLoading] = useState(true);
-  const [selectedInvoice, setSelectedInvoice] = useState(null);
-  const navigate = useNavigate();
   const [printA4, setPrintA4] = useState(false);
   const [printPos, setPrintPos] = useState(false);
+  const navigate = useNavigate();
+  const [selectedRow, setSelectedRow] = useState("");
+  const [indexData, setIndexData] = useState([])
+  const [fetching, setFetching] = useState(true)
+  const [requisitionViewData, setRequisitionViewData] = useState({});
 
-  useEffect(() => {
-    dispatch(setFetching(true));
-    // const localInvoices = localStorage.getItem("temp-requistion-invoice");
-    // setTempInvoices(localInvoices ? JSON.parse(localInvoices) : []);
-  }, []);
-
+  const [loading, setLoading] = useState(true);
+      useEffect(() => {
+          setTimeout(() => {
+              setLoading(false);
+          }, 500);
+      }, [loading]);
 
   const fetchData = async () => {
     setFetching(true)
@@ -83,7 +83,7 @@ export default function _RequisitionTable(props) {
       if (getIndexEntityData.rejected.match(resultAction)) {
         console.error('Error:', resultAction);
       } else if (getIndexEntityData.fulfilled.match(resultAction)) {
-        setTempInvoices(resultAction.payload);
+        setIndexData(resultAction.payload);
       }
     } catch (err) {
       console.error('Unexpected error:', err);
@@ -97,32 +97,39 @@ export default function _RequisitionTable(props) {
   // }, [salesFilterData,page]);
   }, [page]);
 
-
-  /*useEffect(() => {
-    if (tempInvoices.length > 0 || []) {
-      dispatch(setFetching(false));
-      setSelectedInvoice(tempInvoices.data[0]);
-    } else {
-      console.log("tempInvoices is either empty or does not Loaded");
-    }
-  }, [tempInvoices]);*/
-
   useEffect(() => {
-    // setSalesViewData(indexData.data && indexData.data[0] && indexData.data[0])
-    setSelectedRow(tempInvoices.data && tempInvoices.data[0] && tempInvoices.data[0].invoice)
-  }, [tempInvoices.data])
+    setSelectedRow(indexData.data && indexData.data[0] && indexData.data[0].id)
+    
+    setRequisitionViewData(
+      indexData.data && indexData.data[0] && indexData.data[0]
+  );
+  }, [indexData.data])
+  const rows =
+    requisitionViewData &&
+    requisitionViewData.requisition_items &&
+    requisitionViewData.requisition_items.map((element, index) => (
+      <Table.Tr key={element.id}>
+        <Table.Td fz="xs" width={"20"}>
+          {index + 1}
+        </Table.Td>
+        <Table.Td ta="left" fz="xs" width={"300"}>
+          {element.item_name}
+        </Table.Td>
+        <Table.Td ta="center" fz="xs" width={"60"}>
+          {element.quantity}
+        </Table.Td>
+        <Table.Td ta="center" fz="xs" width={"60"}>
+          {element.unit_name}
+        </Table.Td>
+        <Table.Td ta="right" fz="xs" width={"80"}>
+          {element.purchase_price}
+        </Table.Td>
+        <Table.Td ta="right" fz="xs" width={"100"}>
+          {element.sub_total}
+        </Table.Td>
+      </Table.Tr>
+    ));
 
-  useEffect(() => {
-    selectedInvoice && setSelectedRow(selectedInvoice.invoice_id);
-  }, [selectedInvoice]);
-
-  /*useEffect(() => {
-    const selectedInvoice = tempInvoices.data.find(
-      (tempInvoice) => tempInvoice.id === selectedRow
-    );
-    setSelectedInvoice(selectedInvoice);
-    setLoading(false);
-  }, [selectedRow]);*/
   useHotkeys(
     [
       [
@@ -135,31 +142,7 @@ export default function _RequisitionTable(props) {
     []
   );
 
-  const rows =
-    selectedInvoice &&
-    selectedInvoice.items &&
-    selectedInvoice.items.map((element, index) => (
-      <Table.Tr key={index}>
-        <Table.Td fz="xs" width={"20"}>
-          {index + 1}
-        </Table.Td>
-        <Table.Td ta="left" fz="xs" width={"300"}>
-          {element.name}
-        </Table.Td>
-        <Table.Td ta="center" fz="xs" width={"60"}>
-          {element.quantity}
-        </Table.Td>
-        <Table.Td ta="center" fz="xs" width={"60"}>
-          {element.uom}
-        </Table.Td>
-        <Table.Td ta="right" fz="xs" width={"80"}>
-          {element.purchase_price}
-        </Table.Td>
-        <Table.Td ta="right" fz="xs" width={"100"}>
-          {element.sub_total}
-        </Table.Td>
-      </Table.Tr>
-    ));
+  
   return (
     <>
       <Box>
@@ -197,13 +180,13 @@ export default function _RequisitionTable(props) {
                     footer: tableCss.footer,
                     pagination: tableCss.pagination,
                   }}
-                  records={tempInvoices.data}
+                  records={indexData.data}
                   columns={[
                     {
                       accessor: "id",
                       title: t("S/N"),
                       textAlign: "left",
-                      render: (item) => tempInvoices.data.indexOf(item) + 1,
+                      render: (item) => indexData.data.indexOf(item) + 1,
                     },
                     {
                       accessor: "created",
@@ -227,7 +210,7 @@ export default function _RequisitionTable(props) {
                             e.preventDefault();
                             setLoading(true);
                             setSelectedRow(item.id);
-                            setSelectedInvoice(item)
+                            setRequisitionViewData(item)
                           }}
                           style={{ cursor: "pointer" }}
                         >
@@ -293,42 +276,28 @@ export default function _RequisitionTable(props) {
                                 />
                               </ActionIcon>
                             </Menu.Target>
-                           {/* <Menu.Dropdown>
-                              <Menu.Item
-                                onclick={""}
-                                w={200}
-                                component="a"
-                                leftSection={
-                                  <IconPencil
-                                    style={{ width: rem(14), height: rem(14) }}
-                                  />
-                                }
-                              >
-                                {t("Edit")}
-                              </Menu.Item>
-                            </Menu.Dropdown>*/}
                           </Menu>
                         </Box>
                       ),
                     },
                   ]}
                   fetching={fetching}
-                  totalRecords={tempInvoices.total}
+                  totalRecords={indexData.total}
                   recordsPerPage={perPage}
                   page={page}
                   onPageChange={(p) => {
                     setPage(p);
-                    // dispatch(setFetching(true));
+                    dispatch(setFetching(true));
                   }}
                   loaderSize="xs"
                   loaderColor="grape"
                   height={tableHeight}
                   scrollAreaProps={{ type: "never" }}
                   rowBackgroundColor={(item) => {
-                    if (item.invoice_id === selectedRow) return "#e2c2c263";
+                    if (item.id === selectedRow) return "#e2c2c263";
                   }}
                   rowColor={(item) => {
-                    if (item.invoice_id === selectedRow) return "red.6";
+                    if (item.id === selectedRow) return "red.6";
                   }}
                 />
               </Box>
@@ -360,7 +329,7 @@ export default function _RequisitionTable(props) {
                 pt={"xs"}
                 className={"boxBackground textColor borderRadiusAll"}
               >
-                {t("Invoice")}: {selectedInvoice && selectedInvoice.invoice_id}
+                {t("Invoice")}: {requisitionViewData && requisitionViewData.invoice_id}
               </Box>
               <Box className={"borderRadiusAll border-top-none"} fz={"sm"}>
                 <ScrollArea h={100} type="never">
@@ -383,9 +352,9 @@ export default function _RequisitionTable(props) {
                           </Grid.Col>
                           <Grid.Col span={9}>
                             <Text fz="sm" lh="xs">
-                              {selectedInvoice &&
-                                selectedInvoice.customer_name &&
-                                selectedInvoice.customer_name}
+                              {requisitionViewData &&
+                                requisitionViewData.vendor_name &&
+                                requisitionViewData.vendor_name}
                             </Text>
                           </Grid.Col>
                         </Grid>
@@ -397,9 +366,9 @@ export default function _RequisitionTable(props) {
                           </Grid.Col>
                           <Grid.Col span={9}>
                             <Text fz="sm" lh="xs">
-                              {selectedInvoice &&
-                                selectedInvoice.customer_mobile &&
-                                selectedInvoice.customer_mobile}
+                              {requisitionViewData &&
+                                requisitionViewData.vendor_mobile &&
+                                requisitionViewData.vendor_mobile}
                             </Text>
                           </Grid.Col>
                         </Grid>
@@ -411,9 +380,9 @@ export default function _RequisitionTable(props) {
                           </Grid.Col>
                           <Grid.Col span={9}>
                             <Text fz="sm" lh="xs">
-                              {selectedInvoice &&
-                                selectedInvoice.customer_address &&
-                                selectedInvoice.customer_address}
+                              {requisitionViewData &&
+                                requisitionViewData.vendor_address &&
+                                requisitionViewData.vendor_address}
                             </Text>
                           </Grid.Col>
                         </Grid>
@@ -425,8 +394,8 @@ export default function _RequisitionTable(props) {
                           </Grid.Col>
                           <Grid.Col span={9}>
                             <Text fz="sm" lh="xs">
-                              {selectedInvoice && selectedInvoice.balance
-                                ? Number(selectedInvoice.balance).toFixed(2)
+                              {requisitionViewData && requisitionViewData.balance
+                                ? Number(requisitionViewData.balance).toFixed(2)
                                 : 0.0}
                             </Text>
                           </Grid.Col>
@@ -441,9 +410,9 @@ export default function _RequisitionTable(props) {
                           </Grid.Col>
                           <Grid.Col span={9}>
                             <Text fz="sm" lh="xs">
-                              {selectedInvoice &&
-                                selectedInvoice.created &&
-                                selectedInvoice.created}
+                              {requisitionViewData &&
+                                requisitionViewData.created &&
+                                requisitionViewData.created}
                             </Text>
                           </Grid.Col>
                         </Grid>
@@ -455,9 +424,9 @@ export default function _RequisitionTable(props) {
                           </Grid.Col>
                           <Grid.Col span={9}>
                             <Text fz="sm" lh="xs">
-                              {selectedInvoice &&
-                                selectedInvoice.created_by_name &&
-                                selectedInvoice.created_by_name}
+                              {requisitionViewData &&
+                                requisitionViewData.createdByUser &&
+                                requisitionViewData.createdByUser}
                             </Text>
                           </Grid.Col>
                         </Grid>
@@ -497,9 +466,9 @@ export default function _RequisitionTable(props) {
                             {t("SubTotal")}
                           </Table.Th>
                           <Table.Th ta="right" fz="xs" w={"100"}>
-                            {selectedInvoice &&
-                              selectedInvoice.sub_total &&
-                              Number(selectedInvoice.sub_total).toFixed(2)}
+                            {requisitionViewData &&
+                              requisitionViewData.sub_total &&
+                              Number(requisitionViewData.sub_total).toFixed(2)}
                           </Table.Th>
                         </Table.Tr>
                         <Table.Tr>
@@ -507,9 +476,9 @@ export default function _RequisitionTable(props) {
                             {t("Discount")}
                           </Table.Th>
                           <Table.Th ta="right" fz="xs" w={"100"}>
-                            {selectedInvoice &&
-                              selectedInvoice.discount &&
-                              Number(selectedInvoice.discount).toFixed(2)}
+                            {requisitionViewData &&
+                              requisitionViewData.discount &&
+                              Number(requisitionViewData.discount).toFixed(2)}
                           </Table.Th>
                         </Table.Tr>
                         <Table.Tr>
@@ -517,9 +486,9 @@ export default function _RequisitionTable(props) {
                             {t("Total")}
                           </Table.Th>
                           <Table.Th ta="right" fz="xs" w={"100"}>
-                            {selectedInvoice &&
-                              selectedInvoice.total &&
-                              Number(selectedInvoice.total).toFixed(2)}
+                            {requisitionViewData &&
+                              requisitionViewData.total &&
+                              Number(requisitionViewData.total).toFixed(2)}
                           </Table.Th>
                         </Table.Tr>
                         <Table.Tr>
@@ -527,9 +496,9 @@ export default function _RequisitionTable(props) {
                             {t("Receive")}
                           </Table.Th>
                           <Table.Th ta="right" fz="xs" w={"100"}>
-                            {selectedInvoice &&
-                              selectedInvoice.payment &&
-                              Number(selectedInvoice.payment).toFixed(2)}
+                            {requisitionViewData &&
+                              requisitionViewData.payment &&
+                              Number(requisitionViewData.payment).toFixed(2)}
                           </Table.Th>
                         </Table.Tr>
                         <Table.Tr>
@@ -537,11 +506,11 @@ export default function _RequisitionTable(props) {
                             {t("Due")}
                           </Table.Th>
                           <Table.Th ta="right" fz="xs" w={"100"}>
-                            {selectedInvoice &&
-                              selectedInvoice.total &&
+                            {requisitionViewData &&
+                              requisitionViewData.total &&
                               (
-                                Number(selectedInvoice.total) -
-                                Number(selectedInvoice.payment)
+                                Number(requisitionViewData.total) -
+                                Number(requisitionViewData.payment)
                               ).toFixed(2)}
                           </Table.Th>
                         </Table.Tr>
@@ -604,8 +573,8 @@ export default function _RequisitionTable(props) {
       </Box>
       {printA4 && (
         <div style={{ display: "none" }}>
-          <InvoiceBatchPrintA4
-            invoiceBatchData={selectedInvoice}
+          <PrintNormal
+            requisitionViewData={requisitionViewData}
             setPrintA4={setPrintA4}
           />
         </div>
@@ -613,7 +582,7 @@ export default function _RequisitionTable(props) {
       {printPos && (
         <div style={{ display: "none" }}>
           <InvoiceBatchPrintPos
-            invoiceBatchData={selectedInvoice}
+            invoiceBatchData={requisitionViewData}
             setPrintPos={setPrintPos}
           />
         </div>
