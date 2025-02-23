@@ -65,6 +65,7 @@ export default function NewSales(props) {
   const [currentStatus, setCurrentStatus] = useState("");
   const [value, setValue] = useState("grid");
   const [searchValue, setSearchValue] = useState("");
+  const [tableStatuses, setTableStatuses] = useState({});
 
   const updateTableStatus = (newStatus) => {
     if (!tableId) return;
@@ -86,6 +87,13 @@ export default function NewSales(props) {
               elapsedTime: elapsedTime,
             });
           }
+
+          // Update the table-specific status
+          setTableStatuses((prev) => ({
+            ...prev,
+            [table.id]: newStatus,
+          }));
+
           if (newStatus === "Free") {
             return {
               ...table,
@@ -100,7 +108,7 @@ export default function NewSales(props) {
             status: newStatus,
             statusHistory: updatedStatusHistory,
             currentStatusStartTime: currentTime,
-            elapsedTime: "00:00:00", 
+            elapsedTime: "00:00:00",
           };
         }
         return table;
@@ -109,13 +117,19 @@ export default function NewSales(props) {
   };
 
   useEffect(() => {
+    const newTableStatuses = {};
+    tables.forEach(table => {
+      newTableStatuses[table.id] = table.status || "Free";
+    });
+    setTableStatuses(newTableStatuses);
+  }, [tables]);
+
+  useEffect(() => {
     if (enableTable && tableId) {
-      
       const tableCartKey = `table-${tableId}-pos-products`;
       const tempProducts = localStorage.getItem(tableCartKey);
       setTempCartProducts(tempProducts ? JSON.parse(tempProducts) : []);
     } else {
-      
       const tempProducts = localStorage.getItem("temp-pos-products");
       setTempCartProducts(tempProducts ? JSON.parse(tempProducts) : []);
     }
@@ -261,6 +275,52 @@ export default function NewSales(props) {
 
     setLoadCartProducts(true);
   };
+  const renderStatusButtons = () => (
+    <Box bg="white" w={"100%"} mt={4} style={{ borderRadius: 4 }}>
+      <Group
+        grow
+        gap={4}
+        h={48}
+        justify="center"
+        align="center"
+        pl={8}
+        pr={8}
+        className="divider"
+      >
+        {["Order", "Kitchen", "Hold", "Reserved", "Free"].map((status) => {
+          const currentTableStatus = tableStatuses[tableId];
+          const isActive = currentTableStatus === status;
+          const bg = isActive ? "green.8" : "#E6F5ED";
+          const tc = isActive ? "white" : "#333333";
+
+          return (
+            <Tooltip
+              key={status}
+              disabled={!!tableId}
+              withArrow
+              px={16}
+              py={2}
+              offset={2}
+              zIndex={999}
+              position="top-end"
+              color="red"
+              label={t("PleaseSelectTable")}
+            >
+              <Button
+                disabled={!tableId}
+                bg={bg}
+                onClick={() => updateTableStatus(status)}
+              >
+                <Text c={tc} size="sm" fw={600}>
+                  {t(status)}
+                </Text>
+              </Button>
+            </Tooltip>
+          );
+        })}
+      </Group>
+    </Box>
+  );
   return (
     <>
       <Grid columns={24} gutter={{ base: 8 }}>
@@ -305,100 +365,100 @@ export default function NewSales(props) {
               </Box>
             </Grid.Col>
             <Grid.Col span={10}>
-                <Grid
-                  columns={16}
-                  gutter={{ base: 4 }}
-                  grow
-                  align="center"
-                  mt={6}
-                >
-                  <Grid.Col span={12}>
-                    <TextInput
-                      radius="md"
-                      leftSection={<IconSearch size={16} opacity={0.5} />}
-                      size="md"
-                      placeholder="SearchFood"
-                      rightSection={
-                        searchValue ? (
-                          <Tooltip label="Clear" withArrow position="top">
-                            <IconX
-                              color="red"
-                              size={16}
-                              opacity={0.5}
-                              style={{ cursor: "pointer" }}
-                              onClick={() => {
-                                setSearchValue("");
-                                filterList("");
-                              }}
-                            />
-                          </Tooltip>
-                        ) : (
-                          <Tooltip
-                            label="Field is required"
-                            withArrow
-                            position="top"
+              <Grid
+                columns={16}
+                gutter={{ base: 4 }}
+                grow
+                align="center"
+                mt={6}
+              >
+                <Grid.Col span={12}>
+                  <TextInput
+                    radius="md"
+                    leftSection={<IconSearch size={16} opacity={0.5} />}
+                    size="md"
+                    placeholder="SearchFood"
+                    rightSection={
+                      searchValue ? (
+                        <Tooltip label="Clear" withArrow position="top">
+                          <IconX
                             color="red"
-                          >
-                            <IconInfoCircle size={16} opacity={0.5} />
-                          </Tooltip>
-                        )
-                      }
-                      onChange={(event) => {
-                        setSearchValue(event.target.value);
-                        filterList(event.target.value);
-                      }}
-                    />
-                  </Grid.Col>
-                  <Grid.Col span={4}>
-                    <SegmentedControl
-                      bg={"white"}
-                      withItemsBorders={false}
-                      fullWidth
-                      color="green.6"
-                      value={value}
-                      onChange={setValue}
-                      data={[
-                        {
-                          label: (
-                            <Center style={{ gap: 10 }}>
-                              <IconLayoutGrid
-                                height={"24"}
-                                width={"24"}
-                                stroke={1.5}
-                              />
-                            </Center>
-                          ),
-                          value: "grid",
-                        },
-                        {
-                          label: (
-                            <Center style={{ gap: 10 }}>
-                              <IconListDetails
-                                height={"24"}
-                                width={"24"}
-                                stroke={1.5}
-                              />
-                            </Center>
-                          ),
-                          value: "list",
-                        },
-                        {
-                          label: (
-                            <Center style={{ gap: 10 }}>
-                              <IconBaselineDensitySmall
-                                height={"24"}
-                                width={"24"}
-                                stroke={1.5}
-                              />
-                              {/* <span>Minimal</span> */}
-                            </Center>
-                          ),
-                          value: "minimal",
-                        },
-                      ]}
-                    />
-                  </Grid.Col>
-                </Grid>
+                            size={16}
+                            opacity={0.5}
+                            style={{ cursor: "pointer" }}
+                            onClick={() => {
+                              setSearchValue("");
+                              filterList("");
+                            }}
+                          />
+                        </Tooltip>
+                      ) : (
+                        <Tooltip
+                          label="Field is required"
+                          withArrow
+                          position="top"
+                          color="red"
+                        >
+                          <IconInfoCircle size={16} opacity={0.5} />
+                        </Tooltip>
+                      )
+                    }
+                    onChange={(event) => {
+                      setSearchValue(event.target.value);
+                      filterList(event.target.value);
+                    }}
+                  />
+                </Grid.Col>
+                <Grid.Col span={4}>
+                  <SegmentedControl
+                    bg={"green.6"}
+                    withItemsBorders={false}
+                    fullWidth
+                    color="green.4"
+                    value={value}
+                    onChange={setValue}
+                    data={[
+                      {
+                        label: (
+                          <Center style={{ gap: 10 }}>
+                            <IconLayoutGrid
+                              height={"24"}
+                              width={"24"}
+                              stroke={1.5}
+                            />
+                          </Center>
+                        ),
+                        value: "grid",
+                      },
+                      {
+                        label: (
+                          <Center style={{ gap: 10 }}>
+                            <IconListDetails
+                              height={"24"}
+                              width={"24"}
+                              stroke={1.5}
+                            />
+                          </Center>
+                        ),
+                        value: "list",
+                      },
+                      {
+                        label: (
+                          <Center style={{ gap: 10 }}>
+                            <IconBaselineDensitySmall
+                              height={"24"}
+                              width={"24"}
+                              stroke={1.5}
+                            />
+                            {/* <span>Minimal</span> */}
+                          </Center>
+                        ),
+                        value: "minimal",
+                      },
+                    ]}
+                  />
+                </Grid.Col>
+              </Grid>
               <Box
                 bg="white"
                 w={"100%"}
@@ -472,7 +532,7 @@ export default function NewSales(props) {
                               <Text
                                 styles={{
                                   root: {
-                                    marginTop: "auto", 
+                                    marginTop: "auto",
                                   },
                                 }}
                                 ta={"right"}
@@ -692,53 +752,7 @@ export default function NewSales(props) {
               </Box>
             </Grid.Col>
           </Grid>
-          {enableTable && (
-            <Box bg="white" w={"100%"} mt={4} style={{ borderRadius: 4 }}>
-              <Group
-                grow
-                gap={4}
-                h={48}
-                justify="center"
-                align="center"
-                pl={8}
-                pr={8}
-                className="divider"
-              >
-                {["Order", "Kitchen", "Hold", "Reserved", "Free"].map(
-                  (status) => {
-                    const isActive = currentStatus === status;
-                    const bg = isActive ? "green.8" : "#E6F5ED";
-                    const tc = isActive ? "white" : "#333333";
-
-                    return (
-                      <Tooltip
-                        key={status}
-                        disabled={!!tableId}
-                        withArrow
-                        px={16}
-                        py={2}
-                        offset={2}
-                        zIndex={999}
-                        position="top-end"
-                        color="red"
-                        label={t("PleaseSelectTable")}
-                      >
-                        <Button
-                          disabled={!tableId}
-                          bg={bg}
-                          onClick={() => updateTableStatus(status)}
-                        >
-                          <Text c={tc} size="sm" fw={600}>
-                            {t(status)}
-                          </Text>
-                        </Button>
-                      </Tooltip>
-                    );
-                  }
-                )}
-              </Group>
-            </Box>
-          )}
+          {enableTable && renderStatusButtons()}
         </Grid.Col>
         <Grid.Col span={9}>
           <Invoice
