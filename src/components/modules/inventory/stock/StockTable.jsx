@@ -41,7 +41,7 @@ function StockTable(props) {
   const { isOnline, mainAreaHeight } = useOutletContext();
   const height = mainAreaHeight - 120; //TabList height 104
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const perPage = 50;
   const [page, setPage] = useState(1);
 
@@ -209,6 +209,7 @@ function StockTable(props) {
             { accessor: "sales_price", title: t("SalesPrice") },
             { accessor: "average_price", title: t("AveragePrice") },
             { accessor: "quantity", title: t("Quantity") },
+            { accessor: "bonus_quantity", title: t("BonusQuantity") },
             { accessor: "brand_name", title: t("Brand"), hidden: !isBrand },
             { accessor: "grade_name", title: t("Grade"), hidden: !isGrade },
             { accessor: "color_name", title: t("Color"), hidden: !isColor },
@@ -303,18 +304,24 @@ function StockTable(props) {
                         c={"red.6"}
                         onClick={() => {
                           modals.openConfirmModal({
-                              title: (
-                                  <Text size="md"> {t("FormConfirmationTitle")}</Text>
-                              ),
-                              children: (
-                                  <Text size="sm"> {t("FormConfirmationMessage")}</Text>
-                              ),
-                              labels: { confirm: 'Confirm', cancel: 'Cancel' },
-                              confirmProps: { color: 'red.6' },
-                              onCancel: () => console.log('Cancel'),
-                              onConfirm: () => {
-                                  console.log("ok pressed")
-                              },
+                            title: (
+                              <Text size="md">
+                                {" "}
+                                {t("FormConfirmationTitle")}
+                              </Text>
+                            ),
+                            children: (
+                              <Text size="sm">
+                                {" "}
+                                {t("FormConfirmationMessage")}
+                              </Text>
+                            ),
+                            labels: { confirm: "Confirm", cancel: "Cancel" },
+                            confirmProps: { color: "red.6" },
+                            onCancel: () => console.log("Cancel"),
+                            onConfirm: () => {
+                              console.log("ok pressed");
+                            },
                           });
                         }}
                         rightSection={

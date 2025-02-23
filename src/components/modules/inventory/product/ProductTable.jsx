@@ -160,6 +160,7 @@ function ProductTable(props) {
                         {accessor: "bangla_name", title: t("LanguageName")},
                         {accessor: "unit_name", title: t("Unit")},
                         {accessor: "quantity", title: t("Quantity")},
+                        {accessor: "bonus_quantity", title: t("BonusQuantity")},
                         {
                             accessor: "status",
                             title: t("Status"),
