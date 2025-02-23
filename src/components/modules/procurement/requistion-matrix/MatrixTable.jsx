@@ -11,7 +11,7 @@ import {
 import _ShortcutTable from "../../shortcut/_ShortcutTable";
 import {DataTable} from "mantine-datatable";
 import matrixTable from "./Table.module.css";
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch} from "react-redux";
 import React, {useRef, useState, useEffect} from "react";
 import {useTranslation} from "react-i18next";
 import {useOutletContext} from "react-router-dom";
@@ -22,6 +22,8 @@ import {
 } from "@tabler/icons-react";
 import {DateInput} from "@mantine/dates";
 import {getIndexEntityData} from "../../../../store/inventory/crudSlice.js";
+import {storeEntityData} from "../../../../store/core/crudSlice.js";
+import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
 
 export default function MatrixTable(props) {
     const {t} = useTranslation();
@@ -33,7 +35,7 @@ export default function MatrixTable(props) {
     const rightTableRef = useRef(null);
 
     const dispatch = useDispatch()
-    const [fetching, setFetching] = useState(false);
+    const [fetching, setFetching] = useState(true);
     const [startDateTooltip, setStartDateTooltip] = useState(false);
     const [expectedDate, setExpectedDate] = useState(null)
     const [indexData, setIndexData] = useState([])
@@ -48,7 +50,7 @@ export default function MatrixTable(props) {
         const value = {
             url: 'inventory/requisition/matrix/board',
             param: {
-                expected_date: expectedDate && new Date(expectedDate).toLocaleDateString("en-CA", options),
+                expected_date: expectedDate ? new Date(expectedDate).toLocaleDateString("en-CA", options) : new Date().toLocaleDateString("en-CA", options),
             }
         }
 
@@ -64,7 +66,9 @@ export default function MatrixTable(props) {
         } catch (err) {
             console.error('Unexpected error:', err);
         } finally {
-            setFetching(false)
+            setTimeout(() => {
+                setFetching(false)
+            }, 700)
         }
     };
 
@@ -105,6 +109,59 @@ export default function MatrixTable(props) {
         };
     }, []);
 
+    const QuantityInput = ({item, shopKey}) => {
+        const [editedQuantity, setEditedQuantity] = useState(item[shopKey] || 0);
+        const [branchApproveQuantity, setBranchApproveQuantity] = useState(item[shopKey + "_approved_quantity"] || null);
+        const [branchRequestQuantity, setBranchRequestQuantity] = useState(item[shopKey + "_requested_quantity"] || null);
+
+        const handleQuantityChange = (e) => {
+            const newQuantity = e.currentTarget.value;
+            setEditedQuantity(newQuantity);
+        };
+
+        const handleQuantityUpdateDB = async () => {
+            const indexKey = shopKey + "_id";
+            const values = {
+                quantity: editedQuantity,
+                id: item[indexKey],
+            };
+
+            const value = {
+                url: 'inventory/requisition/matrix/board/quantity-update',
+                data: values
+            }
+
+            const resultAction = await dispatch(storeEntityData(value));
+
+            if (storeEntityData.rejected.match(resultAction)) {
+                showNotificationComponent(resultAction.payload.message, 'red', 'lightgray', true, 1000, true)
+            } else if (storeEntityData.fulfilled.match(resultAction)) {
+                if (resultAction.payload.data.status === 200) {
+                    setFetching(true)
+                    showNotificationComponent(resultAction.payload.data.message, 'teal', 'lightgray', true, 1000, true)
+                } else {
+                    showNotificationComponent(resultAction.payload.data.message, 'teal', 'lightgray', true, 1000, true)
+                }
+            }
+        };
+
+        return (
+            <TextInput
+                disabled={item[shopKey] <= 0}
+                type="number"
+                size="xs"
+                value={editedQuantity}
+                onChange={handleQuantityChange}
+                onBlur={handleQuantityUpdateDB}
+                rightSection={
+                    <>
+                        {branchRequestQuantity}
+                    </>
+                }
+            />
+        );
+    };
+
 
     return (
         <>
@@ -143,10 +200,11 @@ export default function MatrixTable(props) {
                                                         }}
                                                     >
                                                         <DateInput
+                                                            disabled={fetching}
                                                             clearable
                                                             onChange={(e) => {
                                                                 setExpectedDate(e)
-                                                                e !== ""
+                                                                e != ""
                                                                     ? setStartDateTooltip(false)
                                                                     : (setStartDateTooltip(true),
                                                                         setTimeout(() => {
@@ -159,42 +217,39 @@ export default function MatrixTable(props) {
                                                     </Tooltip>
                                                 </Grid.Col>
 
-                                            </Grid>
-                                        </Grid.Col>
-                                        <Grid.Col span={9}>
-                                            <ActionIcon.Group mt={"1"} justify="center">
-                                                <ActionIcon
-                                                    variant="default"
-                                                    c={"red.4"}
-                                                    size="lg"
-                                                    aria-label="Filter"
-                                                    onClick={() => {
-                                                        expectedDate
-                                                            ? (setFetching(true), setSearchKeywordTooltip(false))
-                                                            :
-                                                            setTimeout(() => {
-                                                                setSearchKeywordTooltip(false);
-                                                            }, 1500);
-                                                    }}
-                                                >
-                                                    <Tooltip
-                                                        label={t("SearchButton")}
-                                                        px={16}
-                                                        py={2}
-                                                        withArrow
-                                                        position={"bottom"}
-                                                        c={"red"}
-                                                        bg={`red.1`}
-                                                        transitionProps={{
-                                                            transition: "pop-bottom-left",
-                                                            duration: 500,
-                                                        }}
-                                                    >
-                                                        <IconSearch style={{width: rem(30)}} stroke={1.5}/>
-                                                    </Tooltip>
-                                                </ActionIcon>
+                                                <Grid.Col span={6}>
+                                                    <ActionIcon.Group mt={"1"} justify="center">
+                                                        <ActionIcon
+                                                            disabled={fetching}
+                                                            variant="default"
+                                                            c={"red.4"}
+                                                            size="lg"
+                                                            aria-label="Filter"
+                                                            onClick={() => {
+                                                                expectedDate ? setFetching(true) : setStartDateTooltip(true)
+                                                            }}
+                                                        >
+                                                            <Tooltip
+                                                                label={t("SearchButton")}
+                                                                px={16}
+                                                                py={2}
+                                                                withArrow
+                                                                position={"bottom"}
+                                                                c={"red"}
+                                                                bg={`red.1`}
+                                                                transitionProps={{
+                                                                    transition: "pop-bottom-left",
+                                                                    duration: 500,
+                                                                }}
+                                                            >
+                                                                <IconSearch style={{width: rem(30)}} stroke={1.5}/>
+                                                            </Tooltip>
+                                                        </ActionIcon>
 
-                                            </ActionIcon.Group>
+                                                    </ActionIcon.Group>
+                                                </Grid.Col>
+
+                                            </Grid>
                                         </Grid.Col>
                                     </Grid>
 
@@ -231,6 +286,7 @@ export default function MatrixTable(props) {
                                             records={indexData}
                                             totalRecords={indexData.length}
                                             loaderSize="xs"
+                                            fetching={fetching}
                                             loaderColor="grape"
                                             height={tableHeight - 46}
                                             scrollAreaProps={{type: "never"}}
@@ -249,61 +305,28 @@ export default function MatrixTable(props) {
                                                 footer: matrixTable.footer,
                                                 pagination: matrixTable.pagination,
                                             }}
-                                            columns={customers.map((shop) => ({
-                                                accessor: shop.toLowerCase().replace(/\s+/g, "_"),
-                                                title: shop,
-                                                width: 150,
-                                                render: (item) => {
-                                                    const shopKey = shop
-                                                        .toLowerCase()
-                                                        .replace(/\s+/g, "_");
-                                                    const [editedQuantity, setEditedQuantity] = useState(
-                                                        item[shopKey] || 0
-                                                    );
+                                            columns={
+                                                customers.length > 0 ? customers.map((shop) => ({
+                                                        accessor: shop.toLowerCase().replace(/\s+/g, "_"),
+                                                        title: shop ? shop : 'Branch Name',
+                                                        width: 150,
+                                                        render: (item) => {
+                                                            const shopKey = shop.toLowerCase().replace(/\s+/g, "_");
+                                                            return <QuantityInput item={item} shopKey={shopKey}/>;
+                                                        },
+                                                    })) :
+                                                    [
 
-                                                    const handleQuantityChange = (e) => {
-                                                        const newQuantity = e.currentTarget.value;
-                                                        setEditedQuantity(newQuantity);
+                                                        {
+                                                            accessor: "",
+                                                            title: "Branch Name",
+                                                        }
+                                                    ]
+                                            }
 
-                                                        const tempCardProducts = localStorage.getItem(
-                                                            "temp-sales-products"
-                                                        );
-                                                        const cardProducts = tempCardProducts
-                                                            ? JSON.parse(tempCardProducts)
-                                                            : [];
-
-                                                        const updatedProducts = cardProducts.map(
-                                                            (product) => {
-                                                                if (product.product_id === item.product_id) {
-                                                                    return {
-                                                                        ...product,
-                                                                        [shopKey]: newQuantity,
-                                                                        sub_total:
-                                                                            newQuantity * (item.sales_price || 0),
-                                                                    };
-                                                                }
-                                                                return product;
-                                                            }
-                                                        );
-
-                                                        localStorage.setItem(
-                                                            "temp-sales-products",
-                                                            JSON.stringify(updatedProducts)
-                                                        );
-                                                    };
-
-                                                    return (
-                                                        <TextInput
-                                                            type="number"
-                                                            size="xs"
-                                                            value={editedQuantity}
-                                                            onChange={handleQuantityChange}
-                                                        />
-                                                    );
-                                                },
-                                            }))}
                                             records={indexData}
                                             totalRecords={indexData.length}
+                                            fetching={fetching}
                                             loaderSize="xs"
                                             loaderColor="grape"
                                             height={tableHeight - 46}
@@ -325,7 +348,11 @@ export default function MatrixTable(props) {
 
                                                 {
                                                     accessor: "total_request_quantity",
-                                                    title: "Total Requested",
+                                                    title: "Requested",
+                                                },
+                                                {
+                                                    accessor: "total_approved_quantity",
+                                                    title: "Approved",
                                                 },
                                                 {
                                                     accessor: "vendor_stock_quantity",
@@ -333,13 +360,14 @@ export default function MatrixTable(props) {
                                                 },
                                                 {
                                                     accessor: "remaining_quantity",
-                                                    title: "Remaining Stock",
+                                                    title: "Remaining",
                                                 },
                                             ]}
                                             records={indexData}
                                             totalRecords={indexData.length}
                                             loaderSize="xs"
                                             loaderColor="grape"
+                                            fetching={fetching}
                                             height={tableHeight - 46}
                                         />
                                     </Grid.Col>

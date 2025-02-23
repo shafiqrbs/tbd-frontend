@@ -256,14 +256,7 @@ export default function _GenericRequisitionForm(props) {
         setSearchValue("");
         productForm.reset();
         setLoadCardProducts(true);
-        document.getElementById("vendor_id").click();
-
-        //commeneted because requisition starts from selecting vendor
-        // if (type == "productId") {
-        //     document.getElementById("product_id").click();
-        // } else {
-        //     document.getElementById("barcode").focus();
-        // }
+        document.getElementById("vendor_id").focus();
     }
 
     // Add product based on product id
