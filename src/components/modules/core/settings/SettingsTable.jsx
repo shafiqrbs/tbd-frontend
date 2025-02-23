@@ -23,7 +23,9 @@ import { notifications } from "@mantine/notifications";
 import tableCss from "../../../../assets/css/Table.module.css";
 import SettingsViewDrawer from "./SettingsViewDrawer.jsx";
 
-function SettingsTable() {
+function SettingsTable(props) {
+
+    const {settingTypeDropdown} = props
 
     const dispatch = useDispatch();
     const { t, i18n } = useTranslation();
@@ -249,7 +251,7 @@ function SettingsTable() {
             </Box>
             {
                 viewDrawer &&
-                <SettingsViewDrawer viewDrawer={viewDrawer} setViewDrawer={setViewDrawer} settingsData={settingsData} />
+                <SettingsViewDrawer viewDrawer={viewDrawer} setViewDrawer={setViewDrawer} settingsData={settingsData} settingTypeDropdown={settingTypeDropdown}/>
             }
         </>
     );
