@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useOutletContext } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import {
   Group,
   Box,
@@ -8,6 +8,7 @@ import {
   Menu,
   ActionIcon,
   rem,
+  Text,
 } from "@mantine/core";
 
 import { DataTable } from "mantine-datatable";
@@ -26,6 +27,12 @@ import { showEntityData } from "../../../../store/core/crudSlice.js";
 import { notifications } from "@mantine/notifications";
 import axios from "axios";
 import { showNotificationComponent } from "../../../core-component/showNotificationComponent.jsx";
+import {
+  editEntityData,
+  setFormLoading,
+  setInsertType,
+} from "../../../../store/core/crudSlice.js";
+import { modals } from "@mantine/modals";
 
 function StockTable(props) {
   const { categoryDropdown } = props;
@@ -34,6 +41,7 @@ function StockTable(props) {
   const { isOnline, mainAreaHeight } = useOutletContext();
   const height = mainAreaHeight - 120; //TabList height 104
 
+  const navigate = useNavigate()
   const perPage = 50;
   const [page, setPage] = useState(1);
 
@@ -276,10 +284,12 @@ function StockTable(props) {
                     <Menu.Dropdown>
                       <Menu.Item
                         onClick={() => {
-                          // dispatch(setInsertType('update'))
-                          // dispatch(editEntityData('inventory/products/' + data.id))
-                          // dispatch(setFormLoading(true))
-                          // navigate(`/core/customer-settings/${data.id}`)
+                          dispatch(setInsertType("update"));
+                          dispatch(
+                            editEntityData("inventory/product/" + item.id)
+                          );
+                          dispatch(setFormLoading(true));
+                          navigate(`/inventory/product/${item.id}`);
                         }}
                       >
                         {t("Edit")}
@@ -292,30 +302,20 @@ function StockTable(props) {
                         bg={"red.1"}
                         c={"red.6"}
                         onClick={() => {
-                          // modals.openConfirmModal({
-                          //     title: (
-                          //         <Text size="md"> {t("FormConfirmationTitle")}</Text>
-                          //     ),
-                          //     children: (
-                          //         <Text size="sm"> {t("FormConfirmationMessage")}</Text>
-                          //     ),
-                          //     labels: { confirm: 'Confirm', cancel: 'Cancel' },
-                          //     confirmProps: { color: 'red.6' },
-                          //     onCancel: () => console.log('Cancel'),
-                          //     onConfirm: () => {
-                          //         dispatch(deleteEntityData('inventory/particular/' + data.id))
-                          //         dispatch(setFetching(true))
-                          //         notifications.show({
-                          //             color: 'red',
-                          //             title: t('DeleteSuccessfully'),
-                          //             icon: <IconCheck
-                          //                 style={{ width: rem(18), height: rem(18) }} />,
-                          //             loading: false,
-                          //             autoClose: 700,
-                          //             style: { backgroundColor: 'lightgray' },
-                          //         });
-                          //     },
-                          // });
+                          modals.openConfirmModal({
+                              title: (
+                                  <Text size="md"> {t("FormConfirmationTitle")}</Text>
+                              ),
+                              children: (
+                                  <Text size="sm"> {t("FormConfirmationMessage")}</Text>
+                              ),
+                              labels: { confirm: 'Confirm', cancel: 'Cancel' },
+                              confirmProps: { color: 'red.6' },
+                              onCancel: () => console.log('Cancel'),
+                              onConfirm: () => {
+                                  console.log("ok pressed")
+                              },
+                          });
                         }}
                         rightSection={
                           <IconTrashX
