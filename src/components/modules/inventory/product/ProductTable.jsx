@@ -34,6 +34,7 @@ import {setDeleteMessage} from "../../../../store/inventory/crudSlice.js";
 import vendorDataStoreIntoLocalStorage from "../../../global-hook/local-storage/vendorDataStoreIntoLocalStorage.js";
 import OverviewModal from "../product-overview/OverviewModal.jsx";
 import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
+import AddMeasurement from "../modal/AddMeasurement.jsx";
 
 function ProductTable(props) {
     const {categoryDropdown} = props;
@@ -45,6 +46,8 @@ function ProductTable(props) {
     const perPage = 50;
     const [page, setPage] = useState(1);
     const [viewModal, setViewModal] = useState(false);
+    const [measurementDrawer, setMeasurementDrawer] = useState(false)
+    const [id, setId] = useState('null')
 
     const [fetching, setFetching] = useState(true);
     const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword);
@@ -121,7 +124,6 @@ function ProductTable(props) {
         }
         setFetching(true)
     }
-
     return (
         <>
             <Box
@@ -158,7 +160,27 @@ function ProductTable(props) {
                         {accessor: "product_name", title: t("Name")},
                         {accessor: "alternative_name", title: t("DisplayName")},
                         {accessor: "bangla_name", title: t("LanguageName")},
-                        {accessor: "unit_name", title: t("Unit")},
+                        {
+                            accessor: 'unit_name',
+                            title: t("Unit"),
+                            render: (item) => (
+                                <Text
+                                    component="a"
+                                    size="sm"
+                                    variant="subtle"
+                                    c="red.4"
+                                    onClick={() => {
+                                        setId(item.id)
+                                        setMeasurementDrawer(true)
+                                    }}
+                                    style={{ cursor: "pointer" }}
+
+                                >
+                                    {item.unit_name}
+                                </Text>
+
+                            )
+                        },
                         {accessor: "quantity", title: t("Quantity")},
                         {accessor: "bonus_quantity", title: t("BonusQuantity")},
                         {
@@ -302,6 +324,9 @@ function ProductTable(props) {
             </Box>
             {viewModal && (
                 <OverviewModal viewModal={viewModal} setViewModal={setViewModal}/>
+            )}
+            {measurementDrawer && (
+                <AddMeasurement measurementDrawer={measurementDrawer} setMeasurementDrawer={setMeasurementDrawer} id={id}/>
             )}
         </>
     );

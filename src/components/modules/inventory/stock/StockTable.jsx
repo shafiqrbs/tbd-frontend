@@ -33,6 +33,7 @@ import {
   setInsertType,
 } from "../../../../store/core/crudSlice.js";
 import { modals } from "@mantine/modals";
+import AddMeasurement from "../modal/AddMeasurement.jsx";
 
 function StockTable(props) {
   const { categoryDropdown } = props;
@@ -47,7 +48,8 @@ function StockTable(props) {
 
   const fetching = useSelector((state) => state.crudSlice.fetching);
   const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword);
-  const indexData = useSelector((state) => state.crudSlice.indexEntityData);
+  // const indexData = useSelector((state) => state.crudSlice.indexEntityData);
+  const [indexData, setIndexData] = useState([]);
   const productFilterData = useSelector(
     (state) => state.inventoryCrudSlice.productFilterData
   );
@@ -67,6 +69,8 @@ function StockTable(props) {
   const [checked, setChecked] = useState({});
 
   const [swtichEnable, setSwitchEnable] = useState({});
+  const [measurementDrawer, setMeasurementDrawer] = useState(false);
+  const [id, setId] = useState("null");
 
   const handleSwtich = (event, item) => {
     setChecked((prev) => ({ ...prev, [item.id]: !prev[item.id] }));
@@ -88,7 +92,7 @@ function StockTable(props) {
   const [downloadStockXLS, setDownloadStockXls] = useState(false);
 
   useEffect(() => {
-    const value = {
+    /* const value = {
       url: "inventory/product",
       param: {
         term: searchKeyword,
@@ -101,7 +105,38 @@ function StockTable(props) {
         type: "stock",
       },
     };
-    dispatch(getIndexEntityData(value));
+    dispatch(getIndexEntityData(value)); */
+
+    const fetchData = async () => {
+      const value = {
+        url: "inventory/product",
+        param: {
+          term: searchKeyword,
+          name: productFilterData.name,
+          alternative_name: productFilterData.alternative_name,
+          sku: productFilterData.sku,
+          sales_price: productFilterData.sales_price,
+          page: page,
+          offset: perPage,
+          type: "stock",
+        },
+      };
+
+      try {
+        const resultAction = await dispatch(getIndexEntityData(value));
+
+        if (getIndexEntityData.rejected.match(resultAction)) {
+          console.error("Error:", resultAction);
+        } else if (getIndexEntityData.fulfilled.match(resultAction)) {
+          setIndexData(resultAction.payload);
+          setFetching(false);
+        }
+      } catch (err) {
+        console.error("Unexpected error:", err);
+      }
+    };
+
+    fetchData();
   }, [fetching, downloadStockXLS]);
 
   useEffect(() => {
@@ -204,7 +239,26 @@ function StockTable(props) {
             { accessor: "product_name", title: t("Name") },
             { accessor: "barcode", title: t("Barcode") },
             { accessor: "alternative_name", title: t("AlternativeName") },
-            { accessor: "unit_name", title: t("Unit") },
+            {
+              accessor: "unit_name",
+              title: t("Unit"),
+              render: (item) => (
+                <Text
+                  component="a"
+                  size="sm"
+                  variant="subtle"
+                  c="red.4"
+                  onClick={() => {
+                    // console.log(item.id)
+                    setId(item.id);
+                    setMeasurementDrawer(true);
+                  }}
+                  style={{ cursor: "pointer" }}
+                >
+                  {item.unit_name}
+                </Text>
+              ),
+            },
             { accessor: "purchase_price", title: t("PurchasePrice") },
             { accessor: "sales_price", title: t("SalesPrice") },
             { accessor: "average_price", title: t("AveragePrice") },
@@ -354,6 +408,13 @@ function StockTable(props) {
       </Box>
       {viewModal && (
         <OverviewModal viewModal={viewModal} setViewModal={setViewModal} />
+      )}
+      {measurementDrawer && (
+        <AddMeasurement
+          measurementDrawer={measurementDrawer}
+          setMeasurementDrawer={setMeasurementDrawer}
+          id={id}
+        />
       )}
     </>
   );
