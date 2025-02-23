@@ -702,5 +702,7 @@
   "expectedDate" : "Expected Date",
   "vendorMobile" : "Vendor Mobile",
   "BonusQuantity" : "Bonus Quantity",
+  "PosSales" : "Pos Sales",
+  "PayFirst" : "PayFirst",
   "": ""
 }
