@@ -195,7 +195,7 @@ function __RecipeAddItem(props) {
                                                     w={'100%'}
                                                     id="EntityFormSubmit"
                                                 >
-                                                    <Text fz={12} fw={400}>
+                                                    <Text fz={14} fw={500}>
                                                         {isOnline && t("AddItem")}
                                                     </Text>
                                                 </Button>
