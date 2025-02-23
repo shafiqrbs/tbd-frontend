@@ -35,7 +35,7 @@ function InputForm(props) {
     const productFilterData = useSelector((state) => state.inventoryCrudSlice.productFilterData)
     const categoryFilterData = useSelector((state) => state.inventoryCrudSlice.categoryFilterData)
     const productionSettingFilterData = useSelector((state) => state.productionCrudSlice.productionSettingFilterData)
-    const productionBatchFilterData = useSelector((state) => state.productionCrudSlice.productionBatchFilterData)
+    const productionBatchFilterData = useSelector((state) => state.productionCrudSlice.productionBatchFilterData);
     const recipeItemFilterData = useSelector((state) => state.productionCrudSlice.recipeItemFilterData)
 
     return (
@@ -66,7 +66,8 @@ function InputForm(props) {
             if (module === 'product') { dispatch(setProductFilterData({ ...productFilterData, [name]: e.currentTarget.value })) }
             if (module === 'category') { dispatch(setCategoryFilterData({ ...categoryFilterData, [name]: e.currentTarget.value })) }
             if (module === 'production-setting') { dispatch(setProductionSettingFilterData({ ...productionSettingFilterData, [name]: e.currentTarget.value })) }
-            if (module === 'production-batch') { dispatch(setProductionBatchFilterData({ ...productionSettingFilterData, [name]: e.currentTarget.value })) }
+            if (module === 'production-batch') { 
+                dispatch(setProductionBatchFilterData({ ...productionBatchFilterData, [name]: e.currentTarget.value })) }
             if (module === 'recipe-item') { dispatch(setRecipeItemFilterData({ ...recipeItemFilterData, [name]: e.currentTarget.value })) }
             if (module === 'warehouse') { dispatch(setWarehouseFilterData({ ...warehouseFilterData, [name]: e.currentTarget.value })) }
         }}

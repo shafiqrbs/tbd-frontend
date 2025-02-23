@@ -10,6 +10,7 @@ import { modals } from "@mantine/modals";
 import {IconDotsVertical, IconFilePencil, IconTrashX} from '@tabler/icons-react'
 import {storeEntityData , getIndexEntityData} from "../../../../store/core/crudSlice.js";
 import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
+import { deleteEntityData } from "../../../../store/inventory/crudSlice.js";
 
 export default function BatchTable(props){
     const dispatch = useDispatch();
@@ -266,7 +267,7 @@ export default function BatchTable(props){
                                                     confirmProps: { color: 'red.6' },
                                                     onCancel: () => console.log('Cancel'),
                                                     onConfirm: () => {
-                                                        dispatch(deleteEntityData('inventory/product/' + data.id))
+                                                        dispatch(deleteEntityData('production/batch/' + item.id))
                                                     },
                                                 });
                                             }}
