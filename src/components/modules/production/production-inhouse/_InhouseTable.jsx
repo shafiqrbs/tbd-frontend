@@ -114,7 +114,7 @@ function _InhouseTable(props) {
                             accessor: 'receive_quantity',
                             title: t('ReceiveQty'),
                             textAlign: "center",
-                            width: '100px',
+                            width: '110px',
                             render: (item) => {
                                 const [receiveQuantity, setReceiveQuantity] = useState(item.receive_quantity);
 
@@ -151,7 +151,7 @@ function _InhouseTable(props) {
                             accessor: 'damage_quantity',
                             title: t('DamageQty'),
                             textAlign: "center",
-                            width: '100px',
+                            width: '110px',
                             render: (item) => {
                                 const [damageQuantity, setDamageQuantity] = useState(item.damage_quantity);
 
@@ -184,6 +184,10 @@ function _InhouseTable(props) {
                         { accessor: 'action', title: t('Action') }
                     ]}
                     records={editedData.batch_items}
+                    loaderSize="xs"
+                    loaderColor="grape"
+                    height={height}
+                    scrollAreaProps={{ type: 'never' }}
                     rowExpansion={{
                         allowMultiple: true,
                         trigger: 'always',

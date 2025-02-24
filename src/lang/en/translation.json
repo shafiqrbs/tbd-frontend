@@ -704,5 +704,11 @@
   "BonusQuantity" : "Bonus Quantity",
   "PosSales" : "Pos Sales",
   "PayFirst" : "Pay First",
-  "": ""
+  "WorkorderInvoice": "Workorder Invoice",
+  "IssueQty": "Issue Qty",
+  "ReceiveQty": "Receive Qty",
+  "DamageQty": "Damage Qty",
+  "StockQty": "Stock Qty",
+  "TotalQuantity" : "Total Quantity",
+  "" : ""
 }
