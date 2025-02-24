@@ -52,7 +52,6 @@ function SettingsTable(props) {
             url: 'core/setting/inline-status/'+item.id
         }
         dispatch(getStatusInlineUpdateData(value))
-        dispatch(setFetching(true))
         setTimeout(() => {
             setSwitchEnable(prev => ({ ...prev, [item.id]: false }));
         }, 5000)
