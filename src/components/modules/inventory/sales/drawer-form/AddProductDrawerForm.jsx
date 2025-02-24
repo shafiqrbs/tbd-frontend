@@ -188,7 +188,7 @@ function AddProductDrawerForm(props) {
                                                         required={true}
                                                         name={'unit_id'}
                                                         form={productAddedForm}
-                                                        dropdownValue={getSettingParticularDropdownData('size')}
+                                                        dropdownValue={getSettingParticularDropdownData('product-unit')}
                                                         id={fieldPrefix + 'unit_id'}
                                                         nextField={fieldPrefix + 'purchase_price'}
                                                         searchable={true}
