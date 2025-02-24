@@ -118,7 +118,7 @@ export default function NewSales(props) {
 
   useEffect(() => {
     const newTableStatuses = {};
-    tables.forEach(table => {
+    tables.forEach((table) => {
       newTableStatuses[table.id] = table.status || "Free";
     });
     setTableStatuses(newTableStatuses);
@@ -411,6 +411,9 @@ export default function NewSales(props) {
                 </Grid.Col>
                 <Grid.Col span={4}>
                   <SegmentedControl
+                    styles={{
+                      label: { color: "white" }, 
+                    }}
                     bg={"green.6"}
                     withItemsBorders={false}
                     fullWidth

@@ -451,7 +451,7 @@ export default function Invoice(props) {
         className={classes["box-white"]}
       >
         <Group
-          gap={10}
+          gap={6}
           mb={4}
           preventGrowOverflow={false}
           grow
@@ -521,7 +521,7 @@ export default function Invoice(props) {
               mt={8}
               miw={122}
               maw={122}
-              leftSection={<IconChefHat height={18} width={18} stroke={2} />}
+              leftSection={<IconChefHat height={14} width={14} stroke={2} />}
               onClick={printItem}
             >
               <Text fw={600} size="sm">
@@ -529,6 +529,22 @@ export default function Invoice(props) {
               </Text>
             </Button>
           )}
+          <Button
+              // disabled={tempCartProducts.length === 0}
+              radius="md"
+              size="sm"
+              color="green"
+              mt={8}
+              miw={122}
+              maw={122}
+              fullWidth
+              leftSection={<IconUserFilled height={14} width={14} stroke={2} />}
+              onClick={printItem}
+            >
+              <Text fw={600} size="sm">
+                {t("Customer")}
+              </Text>
+            </Button>
         </Group>
         <Box h={enableTable ? heightHalf + 6 : heightHalf + 117}>
           <Paper
@@ -719,7 +735,7 @@ export default function Invoice(props) {
         </Box>
         <Box
           className={classes["box-border"]}
-          h={heightHalf + 16}
+          h={274}
           pl={4}
           pr={4}
           pb={4}
@@ -729,26 +745,12 @@ export default function Invoice(props) {
           <Stack
             align="stretch"
             justify={"center"}
+            mt={6}
             gap={0}
             pl={4}
             pr={4}
             mb={8}
           >
-            <TextInput
-              pb={4}
-              size={"sm"}
-              w={"100%"}
-              pt={"xs"}
-              onChange={(e) => {
-                e.preventDefault();
-                setCustomerMobile(e.currentTarget.value);
-              }}
-              placeholder={t("CustomerMobileNumber")}
-              leftSection={<IconSearch height={18} width={18} stroke={2} />}
-              rightSection={
-                <IconUserFilled height={18} width={18} stroke={2} />
-              }
-            ></TextInput>
             <Grid
               columns={12}
               gutter={4}
