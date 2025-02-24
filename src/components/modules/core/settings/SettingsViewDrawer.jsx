@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import {
     ActionIcon,
@@ -16,13 +16,20 @@ import { useSelector } from "react-redux";
 
 function SettingsViewDrawer(props) {
 
-    const { viewDrawer, setViewDrawer, settingsData } = props
+    const { viewDrawer, setViewDrawer, settingsData, settingTypeDropdown } = props
     const { isOnline, mainAreaHeight } = useOutletContext();
     const { t, i18n } = useTranslation();
     const height = mainAreaHeight; //TabList height 104
     const closeDrawer = () => {
         setViewDrawer(false)
     }
+    const [settingType, setSettingType] = useState(() => {
+        const foundItem = settingTypeDropdown.find(item => Number(item.value) === settingsData.setting_id);
+        return foundItem ? foundItem.label : "";
+    });
+    
+    
+    
 
     return (
         <>
@@ -55,7 +62,7 @@ function SettingsViewDrawer(props) {
                                 <Grid columns={24}>
                                     <Grid.Col span={'8'} align={'left'} fw={'600'} fz={'14'}>{t('SettingType')}</Grid.Col>
                                     <Grid.Col span={'1'}>:</Grid.Col>
-                                    <Grid.Col span={'auto'}>{settingsData && settingsData.setting_type_name && settingsData.setting_type_name}</Grid.Col>
+                                    <Grid.Col span={'auto'}>{settingType}</Grid.Col>
                                 </Grid>
                             </Box>
 

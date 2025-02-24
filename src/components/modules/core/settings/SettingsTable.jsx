@@ -23,7 +23,9 @@ import { notifications } from "@mantine/notifications";
 import tableCss from "../../../../assets/css/Table.module.css";
 import SettingsViewDrawer from "./SettingsViewDrawer.jsx";
 
-function SettingsTable() {
+function SettingsTable(props) {
+
+    const {settingTypeDropdown} = props
 
     const dispatch = useDispatch();
     const { t, i18n } = useTranslation();
@@ -50,7 +52,6 @@ function SettingsTable() {
             url: 'core/setting/inline-status/'+item.id
         }
         dispatch(getStatusInlineUpdateData(value))
-        dispatch(setFetching(true))
         setTimeout(() => {
             setSwitchEnable(prev => ({ ...prev, [item.id]: false }));
         }, 5000)
@@ -249,7 +250,7 @@ function SettingsTable() {
             </Box>
             {
                 viewDrawer &&
-                <SettingsViewDrawer viewDrawer={viewDrawer} setViewDrawer={setViewDrawer} settingsData={settingsData} />
+                <SettingsViewDrawer viewDrawer={viewDrawer} setViewDrawer={setViewDrawer} settingsData={settingsData} settingTypeDropdown={settingTypeDropdown}/>
             }
         </>
     );

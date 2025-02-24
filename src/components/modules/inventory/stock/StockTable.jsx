@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useOutletContext } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import {
   Group,
   Box,
@@ -8,6 +8,7 @@ import {
   Menu,
   ActionIcon,
   rem,
+  Text,
 } from "@mantine/core";
 
 import { DataTable } from "mantine-datatable";
@@ -26,6 +27,13 @@ import { showEntityData } from "../../../../store/core/crudSlice.js";
 import { notifications } from "@mantine/notifications";
 import axios from "axios";
 import { showNotificationComponent } from "../../../core-component/showNotificationComponent.jsx";
+import {
+  editEntityData,
+  setFormLoading,
+  setInsertType,
+} from "../../../../store/core/crudSlice.js";
+import { modals } from "@mantine/modals";
+import AddMeasurement from "../modal/AddMeasurement.jsx";
 
 function StockTable(props) {
   const { categoryDropdown } = props;
@@ -34,12 +42,14 @@ function StockTable(props) {
   const { isOnline, mainAreaHeight } = useOutletContext();
   const height = mainAreaHeight - 120; //TabList height 104
 
+  const navigate = useNavigate();
   const perPage = 50;
   const [page, setPage] = useState(1);
 
   const fetching = useSelector((state) => state.crudSlice.fetching);
   const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword);
-  const indexData = useSelector((state) => state.crudSlice.indexEntityData);
+  // const indexData = useSelector((state) => state.crudSlice.indexEntityData);
+  const [indexData, setIndexData] = useState([]);
   const productFilterData = useSelector(
     (state) => state.inventoryCrudSlice.productFilterData
   );
@@ -59,6 +69,8 @@ function StockTable(props) {
   const [checked, setChecked] = useState({});
 
   const [swtichEnable, setSwitchEnable] = useState({});
+  const [measurementDrawer, setMeasurementDrawer] = useState(false);
+  const [id, setId] = useState("null");
 
   const handleSwtich = (event, item) => {
     setChecked((prev) => ({ ...prev, [item.id]: !prev[item.id] }));
@@ -80,7 +92,7 @@ function StockTable(props) {
   const [downloadStockXLS, setDownloadStockXls] = useState(false);
 
   useEffect(() => {
-    const value = {
+    /* const value = {
       url: "inventory/product",
       param: {
         term: searchKeyword,
@@ -93,7 +105,38 @@ function StockTable(props) {
         type: "stock",
       },
     };
-    dispatch(getIndexEntityData(value));
+    dispatch(getIndexEntityData(value)); */
+
+    const fetchData = async () => {
+      const value = {
+        url: "inventory/product",
+        param: {
+          term: searchKeyword,
+          name: productFilterData.name,
+          alternative_name: productFilterData.alternative_name,
+          sku: productFilterData.sku,
+          sales_price: productFilterData.sales_price,
+          page: page,
+          offset: perPage,
+          type: "stock",
+        },
+      };
+
+      try {
+        const resultAction = await dispatch(getIndexEntityData(value));
+
+        if (getIndexEntityData.rejected.match(resultAction)) {
+          console.error("Error:", resultAction);
+        } else if (getIndexEntityData.fulfilled.match(resultAction)) {
+          setIndexData(resultAction.payload);
+          setFetching(false);
+        }
+      } catch (err) {
+        console.error("Unexpected error:", err);
+      }
+    };
+
+    fetchData();
   }, [fetching, downloadStockXLS]);
 
   useEffect(() => {
@@ -196,11 +239,31 @@ function StockTable(props) {
             { accessor: "product_name", title: t("Name") },
             { accessor: "barcode", title: t("Barcode") },
             { accessor: "alternative_name", title: t("AlternativeName") },
-            { accessor: "unit_name", title: t("Unit") },
+            {
+              accessor: "unit_name",
+              title: t("Unit"),
+              render: (item) => (
+                <Text
+                  component="a"
+                  size="sm"
+                  variant="subtle"
+                  c="red.4"
+                  onClick={() => {
+                    // console.log(item.id)
+                    setId(item.id);
+                    setMeasurementDrawer(true);
+                  }}
+                  style={{ cursor: "pointer" }}
+                >
+                  {item.unit_name}
+                </Text>
+              ),
+            },
             { accessor: "purchase_price", title: t("PurchasePrice") },
             { accessor: "sales_price", title: t("SalesPrice") },
             { accessor: "average_price", title: t("AveragePrice") },
             { accessor: "quantity", title: t("Quantity") },
+            { accessor: "bonus_quantity", title: t("BonusQuantity") },
             { accessor: "brand_name", title: t("Brand"), hidden: !isBrand },
             { accessor: "grade_name", title: t("Grade"), hidden: !isGrade },
             { accessor: "color_name", title: t("Color"), hidden: !isColor },
@@ -276,10 +339,12 @@ function StockTable(props) {
                     <Menu.Dropdown>
                       <Menu.Item
                         onClick={() => {
-                          // dispatch(setInsertType('update'))
-                          // dispatch(editEntityData('inventory/products/' + data.id))
-                          // dispatch(setFormLoading(true))
-                          // navigate(`/core/customer-settings/${data.id}`)
+                          dispatch(setInsertType("update"));
+                          dispatch(
+                            editEntityData("inventory/product/" + item.id)
+                          );
+                          dispatch(setFormLoading(true));
+                          navigate(`/inventory/product/${item.id}`);
                         }}
                       >
                         {t("Edit")}
@@ -292,30 +357,26 @@ function StockTable(props) {
                         bg={"red.1"}
                         c={"red.6"}
                         onClick={() => {
-                          // modals.openConfirmModal({
-                          //     title: (
-                          //         <Text size="md"> {t("FormConfirmationTitle")}</Text>
-                          //     ),
-                          //     children: (
-                          //         <Text size="sm"> {t("FormConfirmationMessage")}</Text>
-                          //     ),
-                          //     labels: { confirm: 'Confirm', cancel: 'Cancel' },
-                          //     confirmProps: { color: 'red.6' },
-                          //     onCancel: () => console.log('Cancel'),
-                          //     onConfirm: () => {
-                          //         dispatch(deleteEntityData('inventory/particular/' + data.id))
-                          //         dispatch(setFetching(true))
-                          //         notifications.show({
-                          //             color: 'red',
-                          //             title: t('DeleteSuccessfully'),
-                          //             icon: <IconCheck
-                          //                 style={{ width: rem(18), height: rem(18) }} />,
-                          //             loading: false,
-                          //             autoClose: 700,
-                          //             style: { backgroundColor: 'lightgray' },
-                          //         });
-                          //     },
-                          // });
+                          modals.openConfirmModal({
+                            title: (
+                              <Text size="md">
+                                {" "}
+                                {t("FormConfirmationTitle")}
+                              </Text>
+                            ),
+                            children: (
+                              <Text size="sm">
+                                {" "}
+                                {t("FormConfirmationMessage")}
+                              </Text>
+                            ),
+                            labels: { confirm: "Confirm", cancel: "Cancel" },
+                            confirmProps: { color: "red.6" },
+                            onCancel: () => console.log("Cancel"),
+                            onConfirm: () => {
+                              console.log("ok pressed");
+                            },
+                          });
                         }}
                         rightSection={
                           <IconTrashX
@@ -347,6 +408,13 @@ function StockTable(props) {
       </Box>
       {viewModal && (
         <OverviewModal viewModal={viewModal} setViewModal={setViewModal} />
+      )}
+      {measurementDrawer && (
+        <AddMeasurement
+          measurementDrawer={measurementDrawer}
+          setMeasurementDrawer={setMeasurementDrawer}
+          id={id}
+        />
       )}
     </>
   );

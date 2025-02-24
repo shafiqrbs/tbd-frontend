@@ -27,7 +27,6 @@ import {
     updateEntityData,
 } from "../../../../store/inventory/crudSlice.js";
 import SwitchForm from "../../../form-builders/SwitchForm.jsx";
-import getSettingProductTypeDropdownData from "../../../global-hook/dropdown/getSettingProductTypeDropdownData.js";
 
 function InventoryConfigurationForm() {
     const {t, i18n} = useTranslation();
@@ -70,6 +69,7 @@ function InventoryConfigurationForm() {
             pre_production: inventoryConfigData.pre_production || "",
             pos_sales: inventoryConfigData.pos_sales || "",
             with_table: inventoryConfigData.with_table || "",
+            pay_first: inventoryConfigData.pay_first || "",
         },
     });
 
@@ -157,7 +157,8 @@ function InventoryConfigurationForm() {
             "pre_production",
             "is_sku",
             "pos_sales",
-            "with_table"
+            "with_table",
+            "pay_first"
         ];
 
         properties.forEach((property) => {
@@ -248,7 +249,7 @@ function InventoryConfigurationForm() {
                                                         <SwitchForm
                                                             tooltip={t("raw_materials")}
                                                             label=""
-                                                            nextField={"is_color"}
+                                                            nextField={"stockable"}
                                                             name={"raw_materials"}
                                                             form={form}
                                                             color="red"
@@ -268,7 +269,7 @@ function InventoryConfigurationForm() {
                                                         <SwitchForm
                                                             tooltip={t("stockable")}
                                                             label=""
-                                                            nextField={"is_color"}
+                                                            nextField={"post_production"}
                                                             name={"stockable"}
                                                             form={form}
                                                             color="red"
@@ -288,7 +289,7 @@ function InventoryConfigurationForm() {
                                                         <SwitchForm
                                                             tooltip={t("post_production")}
                                                             label=""
-                                                            nextField={"is_color"}
+                                                            nextField={"mid_production"}
                                                             name={"post_production"}
                                                             form={form}
                                                             color="red"
@@ -308,7 +309,7 @@ function InventoryConfigurationForm() {
                                                         <SwitchForm
                                                             tooltip={t("mid_production")}
                                                             label=""
-                                                            nextField={"is_color"}
+                                                            nextField={"pre_production"}
                                                             name={"mid_production"}
                                                             form={form}
                                                             color="red"
@@ -328,7 +329,7 @@ function InventoryConfigurationForm() {
                                                         <SwitchForm
                                                             tooltip={t("pre_production")}
                                                             label=""
-                                                            nextField={"is_color"}
+                                                            nextField={"is_brand"}
                                                             name={"pre_production"}
                                                             form={form}
                                                             color="red"
@@ -353,7 +354,7 @@ function InventoryConfigurationForm() {
                                                         <SwitchForm
                                                             tooltip={t("is_brand")}
                                                             label=""
-                                                            nextField={"is_color"}
+                                                            nextField={"is_grade"}
                                                             name={"is_brand"}
                                                             form={form}
                                                             color="red"
@@ -393,7 +394,7 @@ function InventoryConfigurationForm() {
                                                         <SwitchForm
                                                             tooltip={t("Color")}
                                                             label=""
-                                                            nextField={"size"}
+                                                            nextField={"is_size"}
                                                             name={"is_color"}
                                                             form={form}
                                                             color="red"
@@ -548,7 +549,7 @@ function InventoryConfigurationForm() {
                                                         <SwitchForm
                                                             tooltip={t("PosSales")}
                                                             label=""
-                                                            nextField={"mrp_price"}
+                                                            nextField="pay_first"
                                                             name={"pos_sales"}
                                                             form={form}
                                                             color="red"
@@ -564,7 +565,29 @@ function InventoryConfigurationForm() {
                                                     </Grid.Col>
                                                 </Grid>
                                             </Box>
-                                            {1 && (
+                                            <Box mt={"xs"}>
+                                                <Grid gutter={{base: 1}}>
+                                                    <Grid.Col span={2}>
+                                                        <SwitchForm
+                                                            tooltip={t("PayFirst")}
+                                                            label=""
+                                                            nextField={"mrp_price"}
+                                                            name={"pay_first"}
+                                                            form={form}
+                                                            color="red"
+                                                            id={"pay_first"}
+                                                            position={"left"}
+                                                            defaultChecked={
+                                                                inventoryConfigData.pos_sales
+                                                            }
+                                                        />
+                                                    </Grid.Col>
+                                                    <Grid.Col span={6} fz={"sm"} pt={"1"}>
+                                                        {t("PayFirst")}
+                                                    </Grid.Col>
+                                                </Grid>
+                                            </Box>
+                                            {inventoryConfigData?.pos_sales && (
                                                 <Box mt={"sm"}>
                                                 <Grid gutter={{base: 1}}>
                                                     <Grid.Col span={6}>

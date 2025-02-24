@@ -68,7 +68,7 @@ function SettingsIndex() {
                                 <Grid columns={24} gutter={{ base: 8 }}>
                                     <Grid.Col span={15} >
                                         <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
-                                            <SettingsTable />
+                                            <SettingsTable settingTypeDropdown={settingTypeDropdown}/>
                                         </Box>
                                     </Grid.Col>
                                     <Grid.Col span={9}>

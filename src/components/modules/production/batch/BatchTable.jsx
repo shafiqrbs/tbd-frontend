@@ -7,9 +7,10 @@ import {Box, Switch, Flex, Group, Button, Menu, ActionIcon, rem, Text} from "@ma
 import { DataTable } from "mantine-datatable";
 import tableCss from '../../../../assets/css/Table.module.css';
 import { modals } from "@mantine/modals";
-import {IconDotsVertical, IconFilePencil, IconTrashX} from '@tabler/icons-react'
+import {IconDotsVertical, IconEye, IconFilePencil, IconTrashX} from '@tabler/icons-react'
 import {storeEntityData , getIndexEntityData} from "../../../../store/core/crudSlice.js";
 import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
+import { deleteEntityData } from "../../../../store/inventory/crudSlice.js";
 
 export default function BatchTable(props){
     const dispatch = useDispatch();
@@ -246,6 +247,24 @@ export default function BatchTable(props){
                                                 {t('Edit')}
                                             </Menu.Item>
                                         }
+                                        {
+                                            item.process === 'Received' &&
+                                            <Menu.Item
+                                                target="_blank"
+                                                component="a"
+                                                w={'200'}
+                                                mt={'2'}
+                                                bg={'green.1'}
+                                                c={'green.6'}
+                                                onClick={() => {
+                                                    console.log("ok to show")
+                                                }}
+                                                rightSection={<IconEye style={{ width: rem(14), height: rem(14) }} />}
+                                            >
+                                                {t('Show')}
+                                            </Menu.Item>
+                                        }
+                                        
 
                                         <Menu.Item
                                             target="_blank"
@@ -266,7 +285,7 @@ export default function BatchTable(props){
                                                     confirmProps: { color: 'red.6' },
                                                     onCancel: () => console.log('Cancel'),
                                                     onConfirm: () => {
-                                                        dispatch(deleteEntityData('inventory/product/' + data.id))
+                                                        dispatch(deleteEntityData('production/batch/' + item.id))
                                                     },
                                                 });
                                             }}
