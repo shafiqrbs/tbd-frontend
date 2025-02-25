@@ -22,6 +22,7 @@ const useSettingParticularDropdownData = (type) => {
         'brand': 'productBrandDropdown',
         'size': 'productSizeDropdown',
         'model': 'productModelDropdown',
+        'table': 'posTableData',
     };
 
     // Dynamically select dropdown data based on type

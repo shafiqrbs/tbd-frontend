@@ -236,7 +236,7 @@ export default function Invoice(props) {
     if (tempCartProducts.length === 0) {
       notifications.show({
         title: t("ValidationError"),
-        position: "bottom-right",
+        position: "top-right",
         autoClose: 1000,
         withCloseButton: true,
         message: t("Add at least one product"),
@@ -264,12 +264,13 @@ export default function Invoice(props) {
     if (enableTable && tableId) {
       // Get the selected table
       const selectedTable = tables.find((t) => t.id === tableId);
-
       // Calculate elapsed time
+      console.log(selectedTable)
       let elapsedTime = "00:00:00";
-      if (selectedTable && selectedTable.statusStartTime) {
+      if (selectedTable && selectedTable.currentStatusStartTime) {
+        
         const elapsedSeconds = Math.floor(
-          (new Date() - new Date(selectedTable.statusStartTime)) / 1000
+          (new Date() - new Date(selectedTable.currentStatusStartTime)) / 1000
         );
         const hours = Math.floor(elapsedSeconds / 3600)
           .toString()
@@ -292,7 +293,7 @@ export default function Invoice(props) {
       };
       formValue["table_data"] = tableData;
     }
-
+    console.log(formValue)
     handleSubmitOrder();
     setSalesByUser(null);
     setId(null);
