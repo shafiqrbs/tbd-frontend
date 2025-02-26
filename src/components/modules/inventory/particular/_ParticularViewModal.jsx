@@ -1,15 +1,18 @@
 import React from "react";
 import {useOutletContext} from "react-router-dom";
 import {
-    Modal, Box, Grid,
-    useMantineTheme
+    ActionIcon,
+    Grid, Box, Drawer,
+    Text,
 } from "@mantine/core";
 import {useTranslation} from "react-i18next";
 
 import '@mantine/core/styles.css';
 import '@mantine/dates/styles.css';
 import 'mantine-react-table/styles.css';
-import {useDispatch, useSelector} from "react-redux";
+import {
+    IconX,
+} from "@tabler/icons-react";
 
 function _ParticularViewModal(props) {
     const {
@@ -18,9 +21,9 @@ function _ParticularViewModal(props) {
         productionSettingData,
         setProductionSettingViewData
     } = props
-    const {t, i18n} = useTranslation();
-    const theme = useMantineTheme();
-
+    const { isOnline, mainAreaHeight } = useOutletContext();
+        const { t, i18n } = useTranslation();
+        const height = mainAreaHeight; //TabList height 104
     const CloseModal = () => {
         setProductionSettingViewModal(false);
         setProductionSettingViewData([]);
@@ -28,46 +31,58 @@ function _ParticularViewModal(props) {
 
     return (
         <>
-            <Modal
-                opened={productionSettingView}
-                onClose={CloseModal}
-                title={t('ProductionSettingModel')}
-                size="75%" overlayProps={{
-                color: theme.colorScheme === 'dark' ? theme.colors.dark[9] : theme.colors.dark[8],
-                opacity: 0.9,
-                blur: 3,
-            }}
-            >
-                <Box m={'md'}>
-                    <Grid columns={24}>
-                        <Grid.Col span={'6'} align={'left'} fw={'600'} fz={'14'}>{t('SettingName')}</Grid.Col>
-                        <Grid.Col span={'1'}>:</Grid.Col>
-                        <Grid.Col
+            <Drawer.Root opened={productionSettingView} position="right" onClose={CloseModal} size={'30%'} >
+                <Drawer.Overlay />
+                <Drawer.Content>
+                    <Drawer.Header>
+                        <Drawer.Title>
+                            <Text fw={'600'} fz={'16'}>
+                                {t('ProductionSetting')}
+                            </Text>
+                        </Drawer.Title>
+                        <ActionIcon
+                            className="ActionIconCustom"
+                            radius="xl"
+                            color="red.6" size="lg"
+                            onClick={CloseModal}
+                        >
+                            <IconX style={{ width: '70%', height: '70%' }} stroke={1.5} />
+                        </ActionIcon>
+                    </Drawer.Header>
+                    <Box mb={0} bg={'gray.1'} h={height}>
+                        <Box p={'md'} className="boxBackground borderRadiusAll" h={height}>
+                            <Box >
+                                <Grid columns={24}>
+                                    <Grid.Col span={'8'} align={'left'} fw={'600'} fz={'14'}>{t('SettingName')}</Grid.Col>
+                                    <Grid.Col span={'1'}>:</Grid.Col>
+                                    <Grid.Col
                             span={'auto'}>{productionSettingData && productionSettingData.name && productionSettingData.name}</Grid.Col>
-                    </Grid>
-                    <Grid columns={24}>
-                        <Grid.Col span={'6'} align={'left'} fw={'600'} fz={'14'}>{t('SettingType')}</Grid.Col>
-                        <Grid.Col span={'1'}>:</Grid.Col>
-                        <Grid.Col
+                                </Grid>
+                                <Grid columns={24}>
+                                    <Grid.Col span={'8'} align={'left'} fw={'600'} fz={'14'}>{t('SettingType')}</Grid.Col>
+                                    <Grid.Col span={'1'}>:</Grid.Col>
+                                    <Grid.Col
                             span={'auto'}>{productionSettingData && productionSettingData.setting_type_name && productionSettingData.setting_type_name}</Grid.Col>
-                    </Grid>
-                    <Grid columns={24}>
-                        <Grid.Col span={'6'} align={'left'} fw={'600'} fz={'14'}>{t('Status')}</Grid.Col>
-                        <Grid.Col span={'1'}>:</Grid.Col>
-                        <Grid.Col
+                                </Grid>
+                                <Grid columns={24}>
+                                    <Grid.Col span={'8'} align={'left'} fw={'600'} fz={'14'}>{t('Status')}</Grid.Col>
+                                    <Grid.Col span={'1'}>:</Grid.Col>
+                                    <Grid.Col
                             span={'auto'}>{productionSettingData && productionSettingData.status == 1 ? 'Active' : 'Inactive'}</Grid.Col>
-                    </Grid>
-                    <Grid columns={24}>
-                        <Grid.Col span={'6'} align={'left'} fw={'600'} fz={'14'}>{t('Status')}</Grid.Col>
-                        <Grid.Col span={'1'}>:</Grid.Col>
-                        <Grid.Col
+                                </Grid>
+
+                                <Grid columns={24}>
+                                    <Grid.Col span={'8'} align={'left'} fw={'600'} fz={'14'}>{t('Status')}</Grid.Col>
+                                    <Grid.Col span={'1'}>:</Grid.Col>
+                                    <Grid.Col
                             span={'auto'}>{productionSettingData && productionSettingData.created && productionSettingData.created}</Grid.Col>
-                    </Grid>
+                                </Grid>
+                            </Box>
 
-
-                </Box>
-
-            </Modal>
+                        </Box>
+                    </Box>
+                </Drawer.Content>
+            </Drawer.Root >
         </>
     );
 }

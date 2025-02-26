@@ -80,7 +80,7 @@ function _GenericInvoiceForm(props) {
     setTempCardProducts(tempProducts ? JSON.parse(tempProducts) : []);
     setLoadCardProducts(false);
   }, [loadCardProducts]);
-  console.log(tempCardProducts)
+  // console.log(tempCardProducts)
   useEffect(() => {
     if (searchValue.length > 0) {
       const storedProducts = localStorage.getItem("core-products");
