@@ -718,10 +718,10 @@ export default function Invoice(props) {
             loaderColor="grape"
             height={
               enableTable && checked
-                ? calculatedHeight - 178
+                ? calculatedHeight - 170
                 : enableTable
-                ? calculatedHeight - 128
-                : calculatedHeight - 16
+                ? calculatedHeight - 120
+                : calculatedHeight - 8
             }
             scrollAreaProps={{ type: "never" }}
           />
@@ -768,6 +768,8 @@ export default function Invoice(props) {
               justify="center"
               align="center"
               className={classes["box-white"]}
+              mr={4}
+              ml={4}
               pt={8}
               pb={8}
             >
@@ -983,7 +985,7 @@ export default function Invoice(props) {
                 </ActionIcon>
               )}
             </Box>
-            <Box m={8}>
+            <Box m={4}>
               <Group
                 justify="center"
                 grow
@@ -1026,7 +1028,7 @@ export default function Invoice(props) {
                 />
               </Group>
             </Box>
-            <Grid columns={12} gutter={{ base: 2 }} pl={"8"} pr={"8"}>
+            <Grid columns={12} gutter={{ base: 2 }} pl={"4"} pr={"4"}>
               <Grid.Col span={enableTable ? 3 : 4}>
                 <Tooltip
                   label={t("Hold")}
