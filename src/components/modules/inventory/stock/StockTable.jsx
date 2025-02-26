@@ -9,6 +9,7 @@ import {
   ActionIcon,
   rem,
   Text,
+  Image,
 } from "@mantine/core";
 
 import { DataTable } from "mantine-datatable";
@@ -259,11 +260,33 @@ function StockTable(props) {
                 </Text>
               ),
             },
-            { accessor: "purchase_price", title: t("PurchasePrice") },
-            { accessor: "sales_price", title: t("SalesPrice") },
-            { accessor: "average_price", title: t("AveragePrice") },
-            { accessor: "quantity", title: t("Quantity") },
-            { accessor: "bonus_quantity", title: t("BonusQuantity") },
+            { accessor: "purchase_price", title: t("PurchasePrice"), textAlign : "center" },
+            { accessor: "sales_price", title: t("SalesPrice"), textAlign : "center" },
+            {
+              accessor: "feature_image",
+              textAlign : "center",
+              title: t("Image"),
+              width: "100px",
+              render: (item) => (
+                <Image
+                  mih={50}
+                  mah={50}
+                  fit="contain"
+                  // src={
+                  //   isOnline
+                  //     ? mode.path
+                  //     : "/images/transaction-mode-offline.jpg"
+                  // }
+                  fallbackSrc={`https://placehold.co/120x80/FFFFFF/2f9e44?text=${encodeURIComponent(
+                    item.product_name
+                  )}`}
+                ></Image>
+              ),
+            },
+            { accessor: "vat", title: t("Vat") },
+            { accessor: "average_price", title: t("AveragePrice"), textAlign : "center" },
+            { accessor: "quantity", title: t("Quantity"), textAlign : "center" },
+            { accessor: "bonus_quantity", title: t("BonusQuantity"), textAlign : "center" },
             { accessor: "brand_name", title: t("Brand"), hidden: !isBrand },
             { accessor: "grade_name", title: t("Grade"), hidden: !isGrade },
             { accessor: "color_name", title: t("Color"), hidden: !isColor },
