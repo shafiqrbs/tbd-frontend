@@ -516,7 +516,7 @@ export default function Invoice(props) {
           {enableTable && (
             <Button
               disabled={tempCartProducts.length === 0}
-              radius="md"
+              radius="sm"
               size="sm"
               color="green"
               mt={8}
@@ -532,9 +532,9 @@ export default function Invoice(props) {
           )}
           <Button
             // disabled={tempCartProducts.length === 0}
-            radius="md"
+            radius="sm"
             size="sm"
-            color="green"
+            color="red"
             mt={8}
             miw={122}
             maw={122}
@@ -557,7 +557,7 @@ export default function Invoice(props) {
           >
             <Grid align="center">
               <Grid.Col span={11}>
-                <Text weight={500} c={checked ? "white" : "black"} pl={4}>
+                <Text fz={'sm'} fw={500} c={checked ? "white" : "black"} pl={4}>
                   {enableTable
                     ? t("SelectAdditionalTable")
                     : t("SelectedItems")}
@@ -641,11 +641,17 @@ export default function Invoice(props) {
               {
                 accessor: "id",
                 title: "S/N",
+                width:48,
                 render: (data, index) => index + 1,
               },
               {
                 accessor: "display_name",
                 title: t("Product"),
+                render: (data) => (
+                  <Text fz={'xs'}>
+                    {data.display_name}
+                  </Text>
+                )
               },
               {
                 accessor: "quantity",
@@ -777,43 +783,43 @@ export default function Invoice(props) {
                 <Grid pl={8} pr={8} bg={"#e8f5e9"}>
                   <Grid.Col span={6}>
                     <Group justify="space-between">
-                      <Text fw={500} c={"#333333"}>
+                      <Text fz={'sm'} fw={500} c={"#333333"}>
                         {t("DIS.")}
                       </Text>
-                      <Text fw={800} c={"#333333"}>
+                      <Text fz={'sm'} fw={800} c={"#333333"}>
                         {configData?.currency?.symbol} 0
                       </Text>
                     </Group>
                     <Group justify="space-between">
-                      <Text fw={500} c={"#333333"}>
+                      <Text fz={'sm'} fw={500} c={"#333333"}>
                         {t("Type")}
                       </Text>
-                      <Text fw={800} c={"#333333"}>
+                      <Text fz={'sm'} fw={800} c={"#333333"}>
                         Flat
                       </Text>
                     </Group>
                   </Grid.Col>
                   <Grid.Col span={6}>
                     <Group justify="space-between">
-                      <Text fw={500} c={"#333333"}>
+                      <Text fz={'sm'} fw={500} c={"#333333"}>
                         {t("VAT")}
                       </Text>
-                      <Text fw={800} c={"#333333"}>
+                      <Text fz={'sm'} fw={800} c={"#333333"}>
                         {configData?.currency?.symbol} 0
                       </Text>
                     </Group>
                     <Group justify="space-between">
-                      <Text fw={500} c={"#333333"}>
+                      <Text fz={'sm'} fw={500} c={"#333333"}>
                         {t("SD")}
                       </Text>
-                      <Text fw={800} c={"#333333"}>
+                      <Text fz={'sm'} fw={800} c={"#333333"}>
                         {configData?.currency?.symbol} 0
                       </Text>
                     </Group>
                   </Grid.Col>
                 </Grid>
               </Grid.Col>
-              <Grid.Col span={6}>
+              <Grid.Col span={3}>
                 <Stack
                   grow
                   gap={0}
@@ -823,13 +829,33 @@ export default function Invoice(props) {
                   bg={"#30444f"}
                   pt={4}
                   pb={4}
-                  mr={8}
                 >
+
+                  <Text fw={800} c={"white"} size={"lg"}>
+                    {configData?.currency?.symbol} {subtotal.toFixed(2)}
+                  </Text>
                   <Text fw={500} c={"white"} size={"md"}>
                     {t("Total")}
                   </Text>
+                </Stack>
+              </Grid.Col>
+              <Grid.Col span={3}>
+                <Stack
+                    grow
+                    gap={0}
+                    className={classes["box-border"]}
+                    align="center"
+                    justify="center"
+                    bg={"red"}
+                    pt={4}
+                    pb={4}
+                    mr={8}
+                >
                   <Text fw={800} c={"white"} size={"lg"}>
                     {configData?.currency?.symbol} {subtotal.toFixed(2)}
+                  </Text>
+                  <Text fw={500} c={"white"} size={"md"}>
+                    {t("Due")}
                   </Text>
                 </Stack>
               </Grid.Col>
@@ -986,7 +1012,7 @@ export default function Invoice(props) {
               )}
             </Box>
             <Box m={4}>
-              <Group
+            {/*  <Group
                 justify="center"
                 grow
                 gap={"xs"}
@@ -1026,7 +1052,34 @@ export default function Invoice(props) {
                   size={rem(40)}
                   classNames={{ input: classes.input }}
                 />
-              </Group>
+              </Group>*/}
+              <Grid columns={24} gutter={{ base: 2 }} pl={"4"} pr={"4"}>
+                <Grid.Col span={4}>
+                  <Text fz={'sm'} fw={500} c={"#333333"}>
+                    {t("VATasdasd")}
+                  </Text>
+                </Grid.Col>
+                <Grid.Col span={4}>
+                  <TextInput
+                    type="number"
+                    placeholder="0"
+                    size={rem(40)}
+                    classNames={{ input: classes.input }}
+                />
+                </Grid.Col>
+                <Grid.Col span={2}> <TextInput
+                    type="number"
+                    placeholder="0"
+                    size={rem(40)}
+                    classNames={{ input: classes.input }}
+                /></Grid.Col>
+                <Grid.Col span={3}> <TextInput
+                    type="number"
+                    placeholder="0"
+                    size={rem(40)}
+                    classNames={{ input: classes.input }}
+                /></Grid.Col>
+              </Grid>
             </Box>
             <Grid columns={12} gutter={{ base: 2 }} pl={"4"} pr={"4"}>
               <Grid.Col span={enableTable ? 3 : 4}>
