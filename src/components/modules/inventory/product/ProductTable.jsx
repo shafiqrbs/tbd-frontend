@@ -8,7 +8,7 @@ import {
     Menu,
     rem,
     Switch,
-    Flex,
+    Flex, Image
 } from "@mantine/core";
 import {useTranslation} from "react-i18next";
 import {IconCheck, IconDotsVertical, IconTrashX} from "@tabler/icons-react";
@@ -114,7 +114,6 @@ function ProductTable(props) {
         perPage,
         fetchingReload,
     ]);
-
     const productDeleteHandle = async (id) => {
         const resultAction = await dispatch(deleteEntityData("inventory/product/" + id));
         if (resultAction.payload.data.status === 200) {
@@ -181,8 +180,29 @@ function ProductTable(props) {
 
                             )
                         },
-                        {accessor: "quantity", title: t("Quantity")},
-                        {accessor: "bonus_quantity", title: t("BonusQuantity")},
+                        {accessor: "quantity", title: t("Quantity"), textAlign : "center"},
+                        {accessor: "bonus_quantity", title: t("BonusQuantity"), textAlign : "center"},
+                        {
+                                      accessor: "feature_image",
+                                      textAlign : "center",
+                                      title: t("Image"),
+                                      width: "100px",
+                                      render: (item) => (
+                                        <Image
+                                          mih={50}
+                                          mah={50}
+                                          fit="contain"
+                                          // src={
+                                          //   isOnline
+                                          //     ? mode.path
+                                          //     : "/images/transaction-mode-offline.jpg"
+                                          // }
+                                          fallbackSrc={`https://placehold.co/120x80/FFFFFF/2f9e44?text=${encodeURIComponent(
+                                            item.product_name
+                                          )}`}
+                                        ></Image>
+                                      ),
+                                    },
                         {
                             accessor: "status",
                             title: t("Status"),

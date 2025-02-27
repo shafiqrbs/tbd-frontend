@@ -7,7 +7,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import {
     IconDeviceFloppy, IconX, IconBarcode, IconChevronsRight, IconArrowRight, IconLoader,
-    IconPlus, IconDotsVertical
+    IconPlus, IconDotsVertical, IconCheck
 } from "@tabler/icons-react";
 import { getHotkeyHandler, useHotkeys } from "@mantine/hooks";
 import { useDispatch, useSelector } from "react-redux";
@@ -25,7 +25,7 @@ import {
     deleteEntityData,
     getIndexEntityData,
     inlineUpdateEntityData, setPurchaseItemsFilterData,
-    storeEntityData
+    storeEntityData, setDeleteMessage
 } from "../../../../store/inventory/crudSlice.js";
 import AddProductDrawer from "../sales/drawer-form/AddProductDrawer.jsx";
 import {modals} from "@mantine/modals";
@@ -50,6 +50,25 @@ function _CreateOpeningForm(props) {
     const [indexData,setIndexData] = useState([])
     const purchaseItemsFilterData = useSelector((state) => state.inventoryCrudSlice.purchaseItemsFilterData)
     const [uploadOpeningStockModel, setUploadOpeningStockModel] = useState(false)
+    const entityDataDelete = useSelector((state) => state.crudSlice.entityDataDelete)
+
+    useEffect(() => {
+            dispatch(setDeleteMessage(''))
+            if (entityDataDelete?.message === 'delete') {
+                notifications.show({
+                    color: 'red',
+                    title: t('DeleteSuccessfully'),
+                    icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
+                    loading: false,
+                    autoClose: 700,
+                    style: { backgroundColor: 'lightgray' },
+                });
+    
+                setTimeout(() => {
+                    setFetching(true)
+                }, 700)
+            }
+        }, [entityDataDelete]);
 
     useEffect(() => {
         let isMounted = true; // To handle cleanup properly in `useEffect`
