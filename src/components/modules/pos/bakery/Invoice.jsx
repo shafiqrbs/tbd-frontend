@@ -97,7 +97,7 @@ export default function Invoice(props) {
   const [id, setId] = useState(null);
 
   const [posData, setPosData] = useState(null);
-
+  const [profitShow, setProfitShow] = useState(false);
   useEffect(() => {
     if (enableTable && tableId) {
       const tableCartKey = `table-${tableId}-pos-products`;
@@ -684,20 +684,20 @@ export default function Invoice(props) {
               {
                 accessor: "price",
                 title: t("Price"),
-                textAlign: "center",
+                textAlign: "right",
                 render: (data) => (
                   <>
-                    {configData?.currency?.symbol} {data.sales_price}
+                    {/*{configData?.currency?.symbol} */}{data.sales_price}
                   </>
                 ),
               },
               {
                 accessor: "subtotal",
                 title: "Subtotal",
-                textAlign: "center",
+                textAlign: "right",
                 render: (data) => (
                   <>
-                    {configData?.currency?.symbol} {data.sub_total.toFixed(2)}
+                    {data.sub_total.toFixed(2)}
                   </>
                 ),
               },
@@ -735,9 +735,10 @@ export default function Invoice(props) {
             h={34}
             justify="space-between"
             align="center"
-            pt={4}
+            pt={0}
             style={{
-              borderTop: "1px solid #dee2e6",
+              borderTop: "2px solid #dee2e6",
+              background:"#dee2e6",
             }}
           >
             <Text fw={"bold"} fz={"sm"} c={"black"} pl={"10"}>
@@ -830,7 +831,6 @@ export default function Invoice(props) {
                   pt={4}
                   pb={4}
                 >
-
                   <Text fw={800} c={"white"} size={"lg"}>
                     {configData?.currency?.symbol} {subtotal.toFixed(2)}
                   </Text>
@@ -935,7 +935,7 @@ export default function Invoice(props) {
                             py={2}
                             offset={2}
                             zIndex={999}
-                            position="top-end"
+                            position="top"
                             color="red"
                           >
                             <Image
@@ -1054,12 +1054,20 @@ export default function Invoice(props) {
                 />
               </Group>*/}
               <Grid columns={24} gutter={{ base: 2 }} pl={"4"} pr={"4"}>
-                <Grid.Col span={4}>
-                  <Text fz={'sm'} fw={500} c={"#333333"}>
-                    {t("VATasdasd")}
-                  </Text>
+                <Grid.Col span={3}>
+                  <Switch
+                      size="lg"
+                      w={'100%'}
+                      color={'red.3'}
+                      mt={'6'}
+                      ml={'6'}
+                      onLabel={t('%')}
+                      offLabel={t('Flat')}
+                      radius="xs"
+                      onChange={(event) => setProfitShow(event.currentTarget.checked)}
+                  />
                 </Grid.Col>
-                <Grid.Col span={4}>
+                <Grid.Col span={3}>
                   <TextInput
                     type="number"
                     placeholder="0"
@@ -1067,18 +1075,23 @@ export default function Invoice(props) {
                     classNames={{ input: classes.input }}
                 />
                 </Grid.Col>
-                <Grid.Col span={2}> <TextInput
+                <Grid.Col span={6}>
+                  <TextInput
+                    type="text"
+                    placeholder={t('CouponCode')}
+                    size={rem(40)}
+                    classNames={{ input: classes.input }}
+                />
+                </Grid.Col>
+                <Grid.Col span={6}> &nbsp; </Grid.Col>
+                <Grid.Col span={6}>
+                  <TextInput
                     type="number"
                     placeholder="0"
                     size={rem(40)}
                     classNames={{ input: classes.input }}
-                /></Grid.Col>
-                <Grid.Col span={3}> <TextInput
-                    type="number"
-                    placeholder="0"
-                    size={rem(40)}
-                    classNames={{ input: classes.input }}
-                /></Grid.Col>
+                />
+                </Grid.Col>
               </Grid>
             </Box>
             <Grid columns={12} gutter={{ base: 2 }} pl={"4"} pr={"4"}>

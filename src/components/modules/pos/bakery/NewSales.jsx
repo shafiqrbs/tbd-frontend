@@ -374,7 +374,7 @@ export default function NewSales(props) {
               >
                 <Grid.Col span={12}>
                   <TextInput
-                    radius="md"
+                    radius="sm"
                     leftSection={<IconSearch size={16} opacity={0.5} />}
                     size="md"
                     placeholder="SearchFood"
@@ -745,7 +745,7 @@ export default function NewSales(props) {
                         ]}
                         loaderSize="xs"
                         loaderColor="grape"
-                        height={height + 120}
+                        height={height - 30}
                         // backgroundColor={'black'}
                         scrollAreaProps={{ type: "never" }}
                       />
