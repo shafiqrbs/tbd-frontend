@@ -31,7 +31,10 @@ export default function MatrixIndex() {
                 roles={t("Roles")}
               />
               <Box p={8}>
-                <MatrixTable currencySymbol={configData?.currency?.symbol} />
+                <MatrixTable
+                    currencySymbol={configData?.currency?.symbol}
+                    configId = {configData?.configData?.id}
+                />
               </Box>
             </>
           )}

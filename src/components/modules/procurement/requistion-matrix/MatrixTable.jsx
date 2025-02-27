@@ -8,7 +8,6 @@ import {
     Button,
     Flex, Tooltip, rem,
 } from "@mantine/core";
-import _ShortcutTable from "../../shortcut/_ShortcutTable";
 import {DataTable} from "mantine-datatable";
 import matrixTable from "./Table.module.css";
 import {useDispatch} from "react-redux";
@@ -24,12 +23,14 @@ import {DateInput} from "@mantine/dates";
 import {getIndexEntityData} from "../../../../store/inventory/crudSlice.js";
 import {storeEntityData} from "../../../../store/core/crudSlice.js";
 import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
+import {modals} from "@mantine/modals";
 
 export default function MatrixTable(props) {
     const {t} = useTranslation();
     const {isOnline, mainAreaHeight} = useOutletContext();
     const tableHeight = mainAreaHeight - 106;
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
+    const [generateButton, setGenerateButton] = useState(false);
     const leftTableRef = useRef(null);
     const centerTableRef = useRef(null);
     const rightTableRef = useRef(null);
@@ -41,16 +42,19 @@ export default function MatrixTable(props) {
     const [indexData, setIndexData] = useState([])
     const [customers, setCustomers] = useState([])
 
+    const options = {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit'
+    };
     const fetchData = async () => {
-        const options = {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit'
-        };
+        !expectedDate && setExpectedDate(new Date())
+        setGenerateButton(false)
+
         const value = {
             url: 'inventory/requisition/matrix/board',
             param: {
-                expected_date: expectedDate ? new Date(expectedDate).toLocaleDateString("en-CA", options) : new Date().toLocaleDateString("en-CA", options),
+                expected_date: new Date(expectedDate).toLocaleDateString("en-CA", options),
             }
         }
 
@@ -114,6 +118,8 @@ export default function MatrixTable(props) {
         const [branchApproveQuantity, setBranchApproveQuantity] = useState(item[shopKey + "_approved_quantity"] || null);
         const [branchRequestQuantity, setBranchRequestQuantity] = useState(item[shopKey + "_requested_quantity"] || null);
 
+        (!generateButton && item.process === 'Confirmed') && setGenerateButton(true)
+
         const handleQuantityChange = (e) => {
             const newQuantity = e.currentTarget.value;
             setEditedQuantity(newQuantity);
@@ -138,7 +144,7 @@ export default function MatrixTable(props) {
             } else if (storeEntityData.fulfilled.match(resultAction)) {
                 if (resultAction.payload.data.status === 200) {
                     setFetching(true)
-                    showNotificationComponent(resultAction.payload.data.message, 'teal', 'lightgray', true, 1000, true)
+                    // showNotificationComponent(resultAction.payload.data.message, 'teal', 'lightgray', true, 1000, true)
                 } else {
                     showNotificationComponent(resultAction.payload.data.message, 'teal', 'lightgray', true, 1000, true)
                 }
@@ -147,7 +153,7 @@ export default function MatrixTable(props) {
 
         return (
             <TextInput
-                disabled={item[shopKey] <= 0}
+                disabled={item[shopKey] <= 0 || item.process === 'Confirmed'}
                 type="number"
                 size="xs"
                 value={editedQuantity}
@@ -161,6 +167,38 @@ export default function MatrixTable(props) {
             />
         );
     };
+
+
+    const handleGenerateMatrixBatch = async () => {
+        const options = {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit'
+        };
+
+        const values = {
+            expected_date: new Date(expectedDate).toLocaleDateString("en-CA", options),
+            config_id: props.configId
+        }
+
+        const value = {
+            url: 'inventory/requisition/matrix/board/batch-generate',
+            data: values
+        }
+
+        const resultAction = await dispatch(storeEntityData(value));
+
+        if (storeEntityData.rejected.match(resultAction)) {
+            showNotificationComponent(resultAction.payload.message, 'red', 'lightgray', true, 1000, true)
+        } else if (storeEntityData.fulfilled.match(resultAction)) {
+            if (resultAction.payload.data.status === 200) {
+                setFetching(true)
+                showNotificationComponent(resultAction.payload.data.message, 'teal', 'lightgray', true, 1000, true)
+            } else {
+                showNotificationComponent(resultAction.payload.data.message, 'teal', 'lightgray', true, 1000, true)
+            }
+        }
+    }
 
 
     return (
@@ -261,7 +299,7 @@ export default function MatrixTable(props) {
             </Box>
             <Box>
                 <Grid columns={24} gutter={{base: 8}}>
-                    <Grid.Col span={23}>
+                    <Grid.Col span={24}>
                         <Box bg={"white"} p={"xs"} className="borderRadiusAll">
                             <Box className="borderRadiusAll">
                                 <Grid columns={12} gutter={0}>
@@ -387,8 +425,20 @@ export default function MatrixTable(props) {
                                     <Grid.Col span={6}>
                                         <Stack right align="flex-end">
                                             <>
-                                                {!saveCreateLoading && isOnline && (
+                                                {!saveCreateLoading && isOnline && !generateButton && (
                                                     <Button
+                                                        onClick={async () => {
+                                                            modals.openConfirmModal({
+                                                                title: (<Text size="md"> {t("SuretoProcessMatrixData")}</Text>),
+                                                                children: (
+                                                                    <Text size="sm"> {t("FormConfirmationMessage")}</Text>),
+                                                                labels: {confirm: 'Confirm', cancel: 'Cancel'},
+                                                                onCancel: () => console.log('Cancel'),
+                                                                onConfirm: () => {
+                                                                    handleGenerateMatrixBatch()
+                                                                },
+                                                            });
+                                                        }}
                                                         size="xs"
                                                         color={`green.8`}
                                                         type="submit"
@@ -408,11 +458,6 @@ export default function MatrixTable(props) {
                                     </Grid.Col>
                                 </Grid>
                             </Box>
-                        </Box>
-                    </Grid.Col>
-                    <Grid.Col span={1}>
-                        <Box bg={"white"} pt={16} className="borderRadiusAll">
-                            <_ShortcutTable heightOffset={0}/>
                         </Box>
                     </Grid.Col>
                 </Grid>
