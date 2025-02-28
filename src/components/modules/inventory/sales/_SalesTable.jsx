@@ -183,11 +183,13 @@ function _SalesTable() {
                 if (resultAction.payload.data.status === 200) {
                     // Show success notification
                     showNotificationComponent(t("SalesComplete"), 'teal', 'lightgray', null, false, 1000, true)
+                }else{
+                    showNotificationComponent('Failed to process', 'red', 'lightgray', null, false, 1000, true)
                 }
             }
         } catch (error) {
             console.error("Error updating entity:", error);
-            showNotificationComponent(t("DeleteFailed"), 'red', 'lightgray', null, false, 1000, true)
+            showNotificationComponent('Failed to process', 'red', 'lightgray', null, false, 1000, true)
         }finally {
             fetchData();
         }

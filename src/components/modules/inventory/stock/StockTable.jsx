@@ -76,15 +76,7 @@ function StockTable(props) {
   const handleSwtich = (event, item) => {
     setChecked((prev) => ({ ...prev, [item.id]: !prev[item.id] }));
     setSwitchEnable((prev) => ({ ...prev, [item.id]: true }));
-    // const value = {
-    //     url: '',
-    //     data: {
-    //         status: event.currentTarget.checked,
-    //         id: item.id
-    //     }
-    // }
-    // dispatch(inlineUpdateEntityData(value))
-    // dispatch(setFetching(true))
+
     setTimeout(() => {
       setSwitchEnable((prev) => ({ ...prev, [item.id]: false }));
     }, 5000);
@@ -93,21 +85,6 @@ function StockTable(props) {
   const [downloadStockXLS, setDownloadStockXls] = useState(false);
 
   useEffect(() => {
-    /* const value = {
-      url: "inventory/product",
-      param: {
-        term: searchKeyword,
-        name: productFilterData.name,
-        alternative_name: productFilterData.alternative_name,
-        sku: productFilterData.sku,
-        sales_price: productFilterData.sales_price,
-        page: page,
-        offset: perPage,
-        type: "stock",
-      },
-    };
-    dispatch(getIndexEntityData(value)); */
-
     const fetchData = async () => {
       const value = {
         url: "inventory/product",
@@ -250,7 +227,6 @@ function StockTable(props) {
                   variant="subtle"
                   c="red.4"
                   onClick={() => {
-                    // console.log(item.id)
                     setId(item.id);
                     setMeasurementDrawer(true);
                   }}
