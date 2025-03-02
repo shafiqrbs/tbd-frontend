@@ -79,6 +79,7 @@ export default function BakeryIndex() {
           statusHistory: [],
           currentStatusStartTime: null,
           elapsedTime: "00:00:00",
+          value : item.value
         };
       });
 
