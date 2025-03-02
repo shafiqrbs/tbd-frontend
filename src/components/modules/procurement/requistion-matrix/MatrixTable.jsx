@@ -316,7 +316,7 @@ export default function MatrixTable(props) {
                                             columns={[
                                                 {
                                                     accessor: "product",
-                                                    title: "Product",
+                                                    title: t("Product"),
                                                     cellsClassName: matrixTable.idColumnCells,
                                                     width: 100,
                                                 },
@@ -346,7 +346,7 @@ export default function MatrixTable(props) {
                                             columns={
                                                 customers.length > 0 ? customers.map((shop) => ({
                                                         accessor: shop.toLowerCase().replace(/\s+/g, "_"),
-                                                        title: shop ? shop : 'Branch Name',
+                                                        title: shop ? shop : t("BranchName"),
                                                         width: 150,
                                                         render: (item) => {
                                                             const shopKey = shop.toLowerCase().replace(/\s+/g, "_");
@@ -357,7 +357,7 @@ export default function MatrixTable(props) {
 
                                                         {
                                                             accessor: "",
-                                                            title: "Branch Name",
+                                                            title: t("BranchName"),
                                                         }
                                                     ]
                                             }
@@ -386,19 +386,19 @@ export default function MatrixTable(props) {
 
                                                 {
                                                     accessor: "total_request_quantity",
-                                                    title: "Requested",
+                                                    title: t("Requested"),
                                                 },
                                                 {
                                                     accessor: "total_approved_quantity",
-                                                    title: "Approved",
+                                                    title: t("Approved"),
                                                 },
                                                 {
                                                     accessor: "vendor_stock_quantity",
-                                                    title: "Stock",
+                                                    title: t("Stock"),
                                                 },
                                                 {
                                                     accessor: "remaining_quantity",
-                                                    title: "Remaining",
+                                                    title: t("Remaining"),
                                                 },
                                             ]}
                                             records={indexData}

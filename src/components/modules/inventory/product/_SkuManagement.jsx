@@ -670,7 +670,7 @@ function _SkuManagement(props) {
                                                 ) : (
                                                     <Table.Tr>
                                                         <Table.Th colSpan="4" fz="xs" ta="center">
-                                                            No data available
+                                                        {t('NoDataAvailable')}
                                                         </Table.Th>
                                                     </Table.Tr>
                                                 )}

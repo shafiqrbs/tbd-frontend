@@ -190,7 +190,7 @@ function _RecipeForm() {
                                             ))
                                         ) : (
                                             <Text color="dimmed" ta="center">
-                                                {t('No data available')}
+                                                {t('NoDataAvailable')}
                                             </Text>
                                         )}
                                         <Box mt={'xs'} key={'111221122'}>

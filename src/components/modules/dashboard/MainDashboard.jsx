@@ -1154,7 +1154,7 @@ function MainDashboard(props) {
                           <NavLink
                               pl={"md"}
                               href="/production/batch/new"
-                              label={t("New Batch")}
+                              label={t("NewBatch")}
                               component="button"
                               onClick={(e) => {
                                 navigate("/production/batch/new");
@@ -1177,7 +1177,7 @@ function MainDashboard(props) {
                           <NavLink
                               pl={"md"}
                               href="/production/items"
-                              label={t("Production Items")}
+                              label={t("ProductionItems")}
                               component="button"
                               onClick={(e) => {
                                 navigate("/production/items");
@@ -1272,7 +1272,7 @@ function MainDashboard(props) {
                             <NavLink
                                 pl={"md"}
                                 href="/procurement/requisition-board"
-                                label={t("AllRequisitionN")}
+                                label={t("AllRequisition")}
                                 component="button"
                                 onClick={(e) => {
                                   navigate("/procurement/requisition-board");

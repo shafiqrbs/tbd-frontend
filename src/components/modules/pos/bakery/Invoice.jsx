@@ -1156,7 +1156,7 @@ export default function Invoice(props) {
                   leftSection={<IconPrinter />}
                   onClick={posPrint}
                 >
-                  {t("POS")}
+                  {t("Pos")}
                 </Button>
               </Grid.Col>
               <Grid.Col span={enableTable ? 3 : 4}>

@@ -541,7 +541,7 @@ export default function _RequisitionTable(props) {
                     setPrintPos(true);
                   }}
                 >
-                  {t("POS")}
+                  {t("Pos")}
                 </Button>
 
                 <Button
