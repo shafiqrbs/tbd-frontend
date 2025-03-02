@@ -140,12 +140,12 @@ function ProductionHeaderNavbar(props) {
                                 }} leftSection={<IconSettings style={{width: rem(14), height: rem(14)}}/>}>
                                     {t('ProductionSetting')}
                                 </Menu.Item>
-                                <Menu.Item href="/inventory/config"
+                                {/* <Menu.Item href="/inventory/config"
                                            component="button" onClick={(e) => {
                                     navigate('/inventory/config')
                                 }} leftSection={<IconSettings style={{width: rem(14), height: rem(14)}}/>}>
                                     {t('ProductionConfiguration')}
-                                </Menu.Item>
+                                </Menu.Item> */}
                             </Menu.Dropdown>
                         </Menu>
                     </Group>
