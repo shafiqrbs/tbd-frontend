@@ -176,9 +176,15 @@ function _SalesTable() {
         }
     }
 
-    const handleDomainCustomerSalesProcess = async (id) => {
+    const handleCustomerSalesProcess = async (id,type) => {
         try {
-            const resultAction = await dispatch(showInstantEntityData('inventory/sales/domain-customer/' + id));
+            let resultAction
+            if (type == 'NotDomain'){
+                resultAction = await dispatch(showInstantEntityData('inventory/sales/not-domain-customer/' + id));
+            }
+            if (type == 'Domain'){
+                resultAction = await dispatch(showInstantEntityData('inventory/sales/domain-customer/' + id));
+            }
             if (showInstantEntityData.fulfilled.match(resultAction)) {
                 if (resultAction.payload.data.status === 200) {
                     // Show success notification
@@ -319,7 +325,7 @@ function _SalesTable() {
                                                         </Menu.Target>
                                                         <Menu.Dropdown>
                                                             {
-                                                                (data.customer_group=='domain' && !data.is_domain_sales_completed) &&
+                                                                (data.customer_group=='Domain' && !data.is_domain_sales_completed) &&
                                                                 <Menu.Item
                                                                     onClick={()=>{
                                                                         modals.openConfirmModal({
@@ -329,7 +335,29 @@ function _SalesTable() {
                                                                             labels: {confirm: 'Confirm', cancel: 'Cancel'},
                                                                             onCancel: () => console.log('Cancel'),
                                                                             onConfirm: () => {
-                                                                                handleDomainCustomerSalesProcess(data.id)
+                                                                                handleCustomerSalesProcess(data.id,'Domain')
+                                                                            },
+                                                                        });
+                                                                    }}
+                                                                    component="a"
+                                                                    w={'200'}
+                                                                >
+                                                                    {t('SalesProcess')}
+                                                                </Menu.Item>
+                                                            }
+
+                                                            {
+                                                                (data.customer_group!='Domain' && !data.approved_by_id) &&
+                                                                <Menu.Item
+                                                                    onClick={()=>{
+                                                                        modals.openConfirmModal({
+                                                                            title: (<Text size="md"> {t("SalesConformation")}</Text>),
+                                                                            children: (
+                                                                                <Text size="sm"> {t("FormConfirmationMessage")}</Text>),
+                                                                            labels: {confirm: 'Confirm', cancel: 'Cancel'},
+                                                                            onCancel: () => console.log('Cancel'),
+                                                                            onConfirm: () => {
+                                                                                handleCustomerSalesProcess(data.id,'NotDomain')
                                                                             },
                                                                         });
                                                                     }}
@@ -340,7 +368,7 @@ function _SalesTable() {
                                                                 </Menu.Item>
                                                             }
                                                             {
-                                                                !data.invoice_batch_id &&
+                                                                !data.invoice_batch_id && !data.approved_by_id &&
                                                                 <Menu.Item
                                                                     onClick={() => {
                                                                         navigate(`/inventory/sales/edit/${data.id}`)
@@ -365,7 +393,7 @@ function _SalesTable() {
                                                                 {t('Show')}
                                                             </Menu.Item>
                                                             {
-                                                                !data.invoice_batch_id &&
+                                                                !data.invoice_batch_id && !data.approved_by_id &&
                                                                 <Menu.Item
                                                                     onClick={() => {
                                                                         modals.openConfirmModal({
