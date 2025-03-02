@@ -429,7 +429,7 @@ function MainDashboard(props) {
                             <NavLink
                                 pl={"md"}
                                 href="/inventory/opening-approve-stock"
-                                label={t("Opening Approve")}
+                                label={t("OpeningApprove")}
                                 component="button"
                                 onClick={(e) => {
                                   navigate("inventory/opening-approve-stock");
@@ -1131,7 +1131,7 @@ function MainDashboard(props) {
                           <NavLink
                               pl={"md"}
                               href="/production/batch"
-                              label={t("Production Batch")}
+                              label={t("ProductionBatch")}
                               component="button"
                               onClick={(e) => {
                                 navigate("/production/batch");

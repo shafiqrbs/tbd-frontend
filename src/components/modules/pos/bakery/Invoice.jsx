@@ -1143,7 +1143,7 @@ export default function Invoice(props) {
                       leftSection={<IconPrinter />}
                       onClick={handlePrintAll}
                     >
-                      {t("All Print")}
+                      {t("AllPrint")}
                     </Button>
                   </Tooltip>
                 </Grid.Col>

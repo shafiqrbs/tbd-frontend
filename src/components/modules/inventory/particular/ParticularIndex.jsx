@@ -58,7 +58,7 @@ function ParticularIndex() {
                     {configData &&
                         <>
                             <InventoryHeaderNavbar
-                                pageTitle={t('Inventory Particular')}
+                                pageTitle={t('InventoryParticular')}
                                 roles={t('Roles')}
                                 allowZeroPercentage=''
                                 currencySymbol=''
