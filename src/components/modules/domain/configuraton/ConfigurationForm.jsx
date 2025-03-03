@@ -115,6 +115,11 @@ function ConfigurationForm() {
             is_description: false,
             is_zero_receive_allow: false,
             is_purchase_by_purchase_price: false,
+            is_pos: false,
+            is_table_pos: false,
+            is_pay_first: false,
+            is_sales_auto_approved: false,
+            is_purchase_auto_approved: false,
             is_active_sms: false,
         },
         validate: {
@@ -160,7 +165,8 @@ function ConfigurationForm() {
                 'stock_item', 'custom_invoice_print', 'is_stock_history', 'condition_sales',
                 'store_ledger', 'is_marketing_executive', 'tlo_commission', 'sales_return',
                 'sr_commission', 'due_sales_without_customer', 'is_zero_receive_allow',
-                'is_purchase_by_purchase_price', 'is_active_sms'
+                'is_purchase_by_purchase_price','is_pos','is_table_pos',
+                'is_pay_first','is_sales_auto_approved','is_purchase_auto_approved','is_active_sms'
             ];
 
             // Convert Boolean values to 1 or 0 dynamically
@@ -763,6 +769,101 @@ function ConfigurationForm() {
                                         <Box pl={`xs`} pr={'xs'} className={'borderRadiusAll'}>
                                             <ScrollArea h={height} scrollbarSize={2} scrollbars="y" type="never">
                                                 <Box pt={'xs'} pl={'xs'}>
+                                                    <Box mt={'xs'}>
+                                                        <Grid gutter={{base: 1}}>
+                                                            <Grid.Col span={2}>
+                                                                <SwitchForm
+                                                                    tooltip={t('SalesAutoApproved')}
+                                                                    label=''
+                                                                    id={'is_sales_auto_approved'}
+                                                                    name={'is_sales_auto_approved'}
+                                                                    nextField={'is_purchase_auto_approved'}
+                                                                    form={form}
+                                                                    color="red"
+                                                                    position={'left'}
+                                                                    defaultChecked={configData.is_sales_auto_approved}
+                                                                />
+                                                            </Grid.Col>
+                                                            <Grid.Col span={6} fz={'sm'}
+                                                                      pt={'1'}>{t('SalesAutoApproved')}</Grid.Col>
+                                                        </Grid>
+                                                    </Box>
+                                                    <Box mt={'xs'}>
+                                                        <Grid gutter={{base: 1}}>
+                                                            <Grid.Col span={2}>
+                                                                <SwitchForm
+                                                                    tooltip={t('PurchaseAutoApproved')}
+                                                                    label=''
+                                                                    id={'is_purchase_auto_approved'}
+                                                                    name={'is_purchase_auto_approved'}
+                                                                    nextField={'is_pay_first'}
+                                                                    form={form}
+                                                                    color="red"
+                                                                    position={'left'}
+                                                                    defaultChecked={configData.is_purchase_auto_approved}
+                                                                />
+                                                            </Grid.Col>
+                                                            <Grid.Col span={6} fz={'sm'}
+                                                                      pt={'1'}>{t('PurchaseAutoApproved')}</Grid.Col>
+                                                        </Grid>
+                                                    </Box>
+                                                    <Box mt={'xs'}>
+                                                        <Grid gutter={{base: 1}}>
+                                                            <Grid.Col span={2}>
+                                                                <SwitchForm
+                                                                    tooltip={t('PosPayFirst')}
+                                                                    label=''
+                                                                    id={'is_pay_first'}
+                                                                    name={'is_pay_first'}
+                                                                    nextField={'is_pos'}
+                                                                    form={form}
+                                                                    color="red"
+                                                                    position={'left'}
+                                                                    defaultChecked={configData.is_pay_first}
+                                                                />
+                                                            </Grid.Col>
+                                                            <Grid.Col span={6} fz={'sm'}
+                                                                      pt={'1'}>{t('PosPayFirst')}</Grid.Col>
+                                                        </Grid>
+                                                    </Box>
+                                                    <Box mt={'xs'}>
+                                                        <Grid gutter={{base: 1}}>
+                                                            <Grid.Col span={2}>
+                                                                <SwitchForm
+                                                                    tooltip={t('PosEnable')}
+                                                                    label=''
+                                                                    id={'is_pos'}
+                                                                    name={'is_pos'}
+                                                                    nextField={'is_table_pos'}
+                                                                    form={form}
+                                                                    color="red"
+                                                                    position={'left'}
+                                                                    defaultChecked={configData.is_pos}
+                                                                />
+                                                            </Grid.Col>
+                                                            <Grid.Col span={6} fz={'sm'}
+                                                                      pt={'1'}>{t('PosEnable')}</Grid.Col>
+                                                        </Grid>
+                                                    </Box>
+                                                    <Box mt={'xs'}>
+                                                        <Grid gutter={{base: 1}}>
+                                                            <Grid.Col span={2}>
+                                                                <SwitchForm
+                                                                    tooltip={t('PosTableEnable')}
+                                                                    label=''
+                                                                    id={'is_table_pos'}
+                                                                    name={'is_table_pos'}
+                                                                    nextField={'custom_invoice'}
+                                                                    form={form}
+                                                                    color="red"
+                                                                    position={'left'}
+                                                                    defaultChecked={configData.is_table_pos}
+                                                                />
+                                                            </Grid.Col>
+                                                            <Grid.Col span={6} fz={'sm'}
+                                                                      pt={'1'}>{t('PosTableEnable')}</Grid.Col>
+                                                        </Grid>
+                                                    </Box>
                                                     <Box mt={'xs'}>
                                                         <Grid gutter={{base: 1}}>
                                                             <Grid.Col span={2}>

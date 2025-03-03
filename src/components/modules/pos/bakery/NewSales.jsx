@@ -282,11 +282,11 @@ export default function NewSales(props) {
         label: { color: "white" },
       }}
       // default color
-      bg={"#30444f"}
+      bg={"#1f2b32"}
       withItemsBorders={false}
       fullWidth
       // active color
-      color="#CBC4D1"
+      color="#fa5252"
       value={tableStatuses[tableId]}
       onChange={(status) => updateTableStatus(status)}
       data={[

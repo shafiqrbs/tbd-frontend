@@ -761,10 +761,10 @@ export default function Invoice(props) {
             loaderColor="grape"
             height={
               enableTable && checked
-                ? calculatedHeight - 170
+                ? calculatedHeight - 158
                 : enableTable
-                ? calculatedHeight - 120
-                : calculatedHeight - 8
+                ? calculatedHeight - 108
+                : calculatedHeight + 4
             }
             scrollAreaProps={{ type: "never" }}
           />
@@ -804,7 +804,7 @@ export default function Invoice(props) {
             gap={4}
             pl={4}
             pr={4}
-            mb={8}
+            mb={0}
           >
             <Grid
               columns={12}
@@ -1046,47 +1046,7 @@ export default function Invoice(props) {
               )}
             </Box>
             <Box m={4}>
-              {/*  <Group
-                justify="center"
-                grow
-                gap={"xs"}
-              >
-                <Box className={classes["box-green"]}>
-                  <Grid columns={12} gutter={0}>
-                    <Grid.Col span={4}>
-                      <Flex h={40} justify={"center"} align={"center"}>
-                        <Checkbox
-                          color="lime"
-                          size="lg"
-                          onChange={(event) => {
-                            console.log(
-                              "Checkbox clicked:",
-                              event.currentTarget.checked
-                            );
-                          }}
-                        />
-                      </Flex>
-                    </Grid.Col>
-                    <Grid.Col span={8}>
-                      <Flex h={40} justify={"center"} align={"center"}>
-                        <Text>{t("Flat")}</Text>
-                      </Flex>
-                    </Grid.Col>
-                  </Grid>
-                </Box>
-                <TextInput
-                  type="number"
-                  placeholder="0"
-                  size={rem(40)}
-                  classNames={{ input: classes.input }}
-                />
-                <TextInput
-                  type="number"
-                  placeholder="0"
-                  size={rem(40)}
-                  classNames={{ input: classes.input }}
-                />
-              </Group>*/}
+
               <Grid columns={24} gutter={{ base: 2 }} pl={"4"} pr={"4"}>
                 <Grid.Col span={3}>
                   <Switch

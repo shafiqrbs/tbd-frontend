@@ -738,5 +738,10 @@
   "ManageFileN" : "Manage File",
   "WarehouseN" : "Warehouse",
   "CoreSettingN" : "Core Setting",
+  "PosTableEnable" : "POS Table Enable",
+  "PosEnable" : "POS Enable",
+  "PosPayFirst" : "Pos Pay First",
+  "PurchaseAutoApproved" : "Purchase Auto Approved",
+  "SalesAutoApproved" : "Sales Auto Approved",
   "" : ""
 }
