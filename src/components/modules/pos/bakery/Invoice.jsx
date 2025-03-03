@@ -848,7 +848,7 @@ export default function Invoice(props) {
             <Group gap="10" pr={"sm"} align="center">
               <IconSum size="16" style={{ color: "black" }} />
               <Text fw={"bold"} fz={"sm"} c={"black"}>
-                {configData?.currency?.symbol} {salesDueAmount.toFixed(2)}
+                {configData?.currency?.symbol} {subtotal.toFixed(2)}
               </Text>
             </Group>
           </Group>
@@ -934,7 +934,7 @@ export default function Invoice(props) {
                   pb={4}
                 >
                   <Text fw={800} c={"white"} size={"lg"}>
-                    {configData?.currency?.symbol} {subtotal.toFixed(2)}
+                    {configData?.currency?.symbol} {salesTotalAmount.toFixed(2)}
                   </Text>
                   <Text fw={500} c={"white"} size={"md"}>
                     {t("Total")}
