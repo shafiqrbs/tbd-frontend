@@ -76,27 +76,6 @@ function MainDashboard(props) {
         <SimpleGrid cols={{ base: 1, md: 3 }} spacing="xs" mb={"xs"}>
         <Card shadow="md" radius="md" className={classes.card} padding="lg">
             <Grid gutter={{ base: 2 }}>
-              {/* demo role implement*/}
-              {/*{
-                ["condition_account", "expenditure", "purchase", "payroll_salary", "payroll"].some((value) => userRole.includes(value)) &&
-                  (
-                      <>
-                        <Grid.Col span={2}>
-                          <IconMoneybag
-                              style={{ width: rem(42), height: rem(42) }}
-                              stroke={2}
-                              color={theme.colors.teal[6]}
-                          />
-                        </Grid.Col>
-                        <Grid.Col span={10}>
-                          <Text fz="md" fw={500} className={classes.cardTitle}>
-                            {t("Sales&PurchaseOverview")}
-                          </Text>
-                        </Grid.Col>
-                      </>
-                  )
-              }*/}
-
               <Grid.Col span={2}>
                 <IconMoneybag
                     style={{ width: rem(42), height: rem(42) }}
@@ -168,7 +147,7 @@ function MainDashboard(props) {
         <ScrollArea h={height} scrollbarSize={2} type="never">
           <SimpleGrid cols={{ base: 1, md: 4 }} spacing="xs">
           {
-              configData?.domain?.modules?.includes("sales-purchase") && (
+              configData?.domain?.modules?.includes("pos") && (
                     <Card shadow="md" radius="md" className={classes.card} padding="lg">
                       <Grid gutter={{ base: 2 }}>
                         <Grid.Col span={2}>
