@@ -88,6 +88,7 @@ export default function Invoice(props) {
   const [salesByUser, setSalesByUser] = useState(null);
   const [salesByUserName, setSalesByUserName] = useState(null);
   const [salesByDropdownData, setSalesByDropdownData] = useState([]);
+  const [isDisabled, setIsDisabled] = useState(false);
 
   // Track additional tables per selected table
   const [additionalTableSelections, setAdditionalTableSelections] = useState(
@@ -213,11 +214,7 @@ export default function Invoice(props) {
   const [salesDiscountAmount, setSalesDiscountAmount] = useState(0);
   const [salesTotalAmount, setSalesTotalAmount] = useState(0);
   const [salesDueAmount, setSalesDueAmount] = useState(subtotal);
-  useEffect(() => {
-    const totalAmount = subtotal - salesDiscountAmount;
-    setSalesTotalAmount(totalAmount);
-    setSalesDueAmount(totalAmount);
-  }, [salesDiscountAmount]);
+
   useEffect(() => {
     let discountAmount = 0;
     if (form.values.discount && Number(form.values.discount) > 0) {
@@ -229,20 +226,34 @@ export default function Invoice(props) {
     }
     setSalesDiscountAmount(discountAmount);
 
-    let returnOrDueAmount = 0;
+    const totalAmount = subtotal - discountAmount;
+    setSalesTotalAmount(totalAmount);
+
     let receiveAmount =
-      form.values.receive_amount == "" ? 0 : form.values.receive_amount;
+      form.values.receive_amount === ""
+        ? 0
+        : Number(form.values.receive_amount);
     if (receiveAmount >= 0) {
-      const text = salesTotalAmount < receiveAmount ? "Return" : "Due";
+      const text = totalAmount < receiveAmount ? "Return" : "Due";
       setReturnOrDueText(text);
-      returnOrDueAmount = salesTotalAmount - receiveAmount;
+      const returnOrDueAmount = totalAmount - receiveAmount;
       setSalesDueAmount(returnOrDueAmount);
+    } else {
+      setSalesDueAmount(totalAmount);
     }
+
+    const isDisabled =
+      configData?.is_pay_first &&
+      (configData?.isZeroReceiveAllow
+        ? false
+        : totalAmount - receiveAmount > 0);
+    setIsDisabled(isDisabled);
   }, [
     form.values.discount,
     discountType,
     form.values.receive_amount,
-    salesTotalAmount,
+    subtotal,
+    configData,
   ]);
 
   // Initialize or update selections when table changes
@@ -293,7 +304,7 @@ export default function Invoice(props) {
     }
     let createdBy = JSON.parse(localStorage.getItem("user"));
     const formValue = {};
-    enableTable ? (formValue.is_pos = 1) : (formValue.is_pos = 0);
+    configData?.is_pos ? (formValue.is_pos = 1) : (formValue.is_pos = 0);
     formValue["customer_id"] = form.values.customer_id
       ? form.values.customer_id
       : defaultCustomerId;
@@ -1046,7 +1057,6 @@ export default function Invoice(props) {
               )}
             </Box>
             <Box m={4}>
-
               <Grid columns={24} gutter={{ base: 2 }} pl={"4"} pr={"4"}>
                 <Grid.Col span={3}>
                   <Switch
@@ -1114,7 +1124,6 @@ export default function Invoice(props) {
                   label={t("Hold")}
                   px={16}
                   py={2}
-                  position="top-end"
                   color="red"
                   withArrow
                   offset={2}
@@ -1140,7 +1149,6 @@ export default function Invoice(props) {
                     label={t("PrintAll")}
                     px={16}
                     py={2}
-                    position="top-end"
                     color="red"
                     withArrow
                     offset={2}
@@ -1151,6 +1159,7 @@ export default function Invoice(props) {
                     }}
                   >
                     <Button
+                      disabled={isDisabled}
                       bg={"green.5"}
                       size={"sm"}
                       fullWidth={true}
@@ -1164,6 +1173,7 @@ export default function Invoice(props) {
               )}
               <Grid.Col span={enableTable ? 3 : 4}>
                 <Button
+                  disabled={isDisabled}
                   bg={"#30444F"}
                   size={"sm"}
                   fullWidth={true}
@@ -1175,6 +1185,7 @@ export default function Invoice(props) {
               </Grid.Col>
               <Grid.Col span={enableTable ? 3 : 4}>
                 <Button
+                  disabled={isDisabled}
                   size={"sm"}
                   bg={"#00994f"}
                   fullWidth={true}

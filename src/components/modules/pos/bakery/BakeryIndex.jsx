@@ -11,6 +11,7 @@ import HeaderNavbar from "../HeaderNavbar.jsx";
 import { getCategoryDropdown } from "../../../../store/inventory/utilitySlice.js";
 import { setDropdownLoad } from "../../../../store/inventory/crudSlice.js";
 import getSettingParticularDropdownData from "../../../global-hook/dropdown/getSettingParticularDropdownData.js";
+import getConfigData from "../../../global-hook/config-data/getConfigData.js";
 
 export default function BakeryIndex() {
   const { isOnline, mainAreaHeight } = useOutletContext();
@@ -18,7 +19,7 @@ export default function BakeryIndex() {
   const progress = getLoadingProgress();
   const { t } = useTranslation();
   const dispatch = useDispatch();
-
+  const {configData,fetchData} = getConfigData()
   // category dropdown
   const dropdownLoad = useSelector(
     (state) => state.inventoryCrudSlice.dropdownLoad
@@ -96,8 +97,6 @@ export default function BakeryIndex() {
   }, [time]);
 
   const [tableId, setTableId] = useState(null);
-  const [enableTable, setEnableTable] = useState(true);
-
   return (
     <>
       {progress !== 100 && (
@@ -105,7 +104,7 @@ export default function BakeryIndex() {
       )}
       {progress === 100 && (
         <>
-          {enableTable && (
+          {!!(configData?.is_pos && configData?.is_table_pos) && (
             <HeaderNavbar
               pageTitle={t("ManageCustomer")}
               roles={t("Roles")}
@@ -130,7 +129,7 @@ export default function BakeryIndex() {
               <NewSales
                 tables={tables}
                 setTables={setTables}
-                enableTable={enableTable}
+                enableTable={!!(configData?.is_pos && configData?.is_table_pos)}
                 categoryDropdown={categoryDropdown}
                 tableId={tableId}
                 setTableId={setTableId}

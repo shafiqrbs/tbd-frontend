@@ -743,5 +743,6 @@
   "PosPayFirst" : "Pos Pay First",
   "PurchaseAutoApproved" : "Purchase Auto Approved",
   "SalesAutoApproved" : "Sales Auto Approved",
+  "PrintAll" : "Print All Data including kitchen, order, table",
   "" : ""
 }
