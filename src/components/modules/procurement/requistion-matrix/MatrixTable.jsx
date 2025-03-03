@@ -425,8 +425,9 @@ export default function MatrixTable(props) {
                                     <Grid.Col span={6}>
                                         <Stack right align="flex-end">
                                             <>
-                                                {!saveCreateLoading && isOnline && !generateButton && (
+                                                {!saveCreateLoading && isOnline && (
                                                     <Button
+                                                        disabled={generateButton}
                                                         onClick={async () => {
                                                             modals.openConfirmModal({
                                                                 title: (<Text size="md"> {t("SuretoProcessMatrixData")}</Text>),
