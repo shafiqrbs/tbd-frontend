@@ -60,7 +60,6 @@ function ProductionHeaderNavbar(props) {
         {link: '/production/batch', label: t('ProductionBatch'), show: currentRoute !== '/production/batch'},
         {link: '/production/items', label: t('ProductionItems'), show: true},
         {link: '/production/setting', label: t('ProductionSetting'), show: true},
-        {link: '/production/config', label: t('ProductionConfiguration'), show: true},
     ];
 
     const items = links
@@ -140,9 +139,9 @@ function ProductionHeaderNavbar(props) {
                                 }} leftSection={<IconSettings style={{width: rem(14), height: rem(14)}}/>}>
                                     {t('ProductionSetting')}
                                 </Menu.Item>
-                                <Menu.Item href="/inventory/config"
+                                <Menu.Item href="/production/config"
                                            component="button" onClick={(e) => {
-                                    navigate('/inventory/config')
+                                    navigate('/production/config')
                                 }} leftSection={<IconSettings style={{width: rem(14), height: rem(14)}}/>}>
                                     {t('ProductionConfiguration')}
                                 </Menu.Item>

@@ -21,12 +21,12 @@ const getSpotlightDropdownData = (t, configData) => {
             },
             {
               id: "setting",
-              label: t("CoreSetting"),
+              label: t("CoreSettingN"),
               description: t("WhereWePresentTheVendorInformationN"),
             },
             {
               id: "warehouse",
-              label: t("Warehouse"),
+              label: t("WarehouseN"),
               description: t("WhereWePresentTheWarehouseInformationN"),
             },
             {
@@ -36,7 +36,7 @@ const getSpotlightDropdownData = (t, configData) => {
             },
             {
               id: "file-upload",
-              label: t("ManageFile"),
+              label: t("ManageFileN"),
               description: t("WhereWePresentTheFileInformation"),
             },
           ]
@@ -142,7 +142,7 @@ const getSpotlightDropdownData = (t, configData) => {
             },
             {
               id: "setting",
-              label: t("ProductionSetting"),
+              label: t("ProductionSettingN"),
               description: t("WhereWePresentTheProductionInformationN"),
             },
             {
@@ -213,12 +213,12 @@ const getSpotlightDropdownData = (t, configData) => {
             },
             {
               id: "requisition",
-              label: t("Requisition"),
+              label: t("RequisitionN"),
               description: t("WhereWePresentTheTransactionModeInformationN"),
             },
             {
               id: "new-requisition",
-              label: t("NewRequisition"),
+              label: t("NewRequisitionN"),
               description: t("WhereWePresentTheTransactionModeInformationN"),
             },
           ]

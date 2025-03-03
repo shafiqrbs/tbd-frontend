@@ -52,6 +52,7 @@ import { isNotEmpty, useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
 import { useCartOperations } from "./utils/CartOperations";
 import { TransformProduct } from "./utils/TransformProduct";
+import SelectForm from "../../../form-builders/SelectForm";
 export default function Invoice(props) {
   const {
     setLoadCartProducts,
@@ -98,6 +99,9 @@ export default function Invoice(props) {
 
   const [posData, setPosData] = useState(null);
   const [profitShow, setProfitShow] = useState(false);
+  const [discountType, setDiscountType] = useState("Percent");
+  const [defaultCustomerId, setDefaultCustomerId] = useState(null);
+
   useEffect(() => {
     if (enableTable && tableId) {
       const tableCartKey = `table-${tableId}-pos-products`;
@@ -159,8 +163,12 @@ export default function Invoice(props) {
 
   const form = useForm({
     initialValues: {
-      transaction_mode_id: null,
-      user_id: null,
+      customer_id: "",
+      transaction_mode_id: "",
+      user_id: "",
+      receive_amount: "",
+      discount: "",
+      coupon_code: "",
     },
     validate: {
       transaction_mode_id: (value) =>
@@ -201,6 +209,41 @@ export default function Invoice(props) {
     (acc, item) => acc + item.sub_total,
     0
   );
+  const [returnOrDueText, setReturnOrDueText] = useState("Due");
+  const [salesDiscountAmount, setSalesDiscountAmount] = useState(0);
+  const [salesTotalAmount, setSalesTotalAmount] = useState(0);
+  const [salesDueAmount, setSalesDueAmount] = useState(subtotal);
+  useEffect(() => {
+    const totalAmount = subtotal - salesDiscountAmount;
+    setSalesTotalAmount(totalAmount);
+    setSalesDueAmount(totalAmount);
+  }, [salesDiscountAmount]);
+  useEffect(() => {
+    let discountAmount = 0;
+    if (form.values.discount && Number(form.values.discount) > 0) {
+      if (discountType === "Flat") {
+        discountAmount = Number(form.values.discount);
+      } else if (discountType === "Percent") {
+        discountAmount = (subtotal * Number(form.values.discount)) / 100;
+      }
+    }
+    setSalesDiscountAmount(discountAmount);
+
+    let returnOrDueAmount = 0;
+    let receiveAmount =
+      form.values.receive_amount == "" ? 0 : form.values.receive_amount;
+    if (receiveAmount >= 0) {
+      const text = salesTotalAmount < receiveAmount ? "Return" : "Due";
+      setReturnOrDueText(text);
+      returnOrDueAmount = salesTotalAmount - receiveAmount;
+      setSalesDueAmount(returnOrDueAmount);
+    }
+  }, [
+    form.values.discount,
+    discountType,
+    form.values.receive_amount,
+    salesTotalAmount,
+  ]);
 
   // Initialize or update selections when table changes
   useEffect(() => {
@@ -248,54 +291,79 @@ export default function Invoice(props) {
     if (validation.hasErrors) {
       return;
     }
-
+    let createdBy = JSON.parse(localStorage.getItem("user"));
     const formValue = {};
-    formValue.user_id = salesByUser;
+    enableTable ? (formValue.is_pos = 1) : (formValue.is_pos = 0);
+    formValue["customer_id"] = form.values.customer_id
+      ? form.values.customer_id
+      : defaultCustomerId;
+    formValue["sub_total"] = subtotal;
     formValue.transaction_mode_id = id;
-    enableTable
-      ? (formValue.sales_type = "restaurant")
-      : (formValue.sales_type = "bakery");
+    formValue["discount_type"] = discountType;
+    formValue["discount"] = salesDiscountAmount;
+    formValue["discount_calculation"] =
+      discountType === "Percent" ? form.values.discount : 0;
+    formValue["vat"] = 0;
+    formValue["total"] = salesTotalAmount;
+    formValue.user_id = salesByUser;
+    formValue["created_by_id"] = Number(createdBy["id"]);
+    formValue["invoice_date"] = new Date().toLocaleDateString("en-CA");
 
+    const hasReceiveAmount = form.values.receive_amount;
+
+    formValue["payment"] = hasReceiveAmount;
     let transformedArray = TransformProduct(tempCartProducts);
-
     formValue["items"] = transformedArray ? transformedArray : [];
 
+    //table calculation
+
+    let tableValue = null;
     if (enableTable && tableId) {
       // Get the selected table
       const selectedTable = tables.find((t) => t.id === tableId);
       // Calculate elapsed time
-      console.log(selectedTable);
-      let elapsedTime = "00:00:00";
-      if (selectedTable && selectedTable.currentStatusStartTime) {
-        const elapsedSeconds = Math.floor(
-          (new Date() - new Date(selectedTable.currentStatusStartTime)) / 1000
-        );
-        const hours = Math.floor(elapsedSeconds / 3600)
-          .toString()
-          .padStart(2, "0");
-        const minutes = Math.floor((elapsedSeconds % 3600) / 60)
-          .toString()
-          .padStart(2, "0");
-        const seconds = (elapsedSeconds % 60).toString().padStart(2, "0");
-        elapsedTime = `${hours}:${minutes}:${seconds}`;
-      }
+      tableValue = selectedTable.value;
+      // let elapsedTime = "00:00:00";
+      // if (selectedTable && selectedTable.currentStatusStartTime) {
+      //   const elapsedSeconds = Math.floor(
+      //     (new Date() - new Date(selectedTable.currentStatusStartTime)) / 1000
+      //   );
+      //   const hours = Math.floor(elapsedSeconds / 3600)
+      //     .toString()
+      //     .padStart(2, "0");
+      //   const minutes = Math.floor((elapsedSeconds % 3600) / 60)
+      //     .toString()
+      //     .padStart(2, "0");
+      //   const seconds = (elapsedSeconds % 60).toString().padStart(2, "0");
+      //   elapsedTime = `${hours}:${minutes}:${seconds}`;
+      // }
 
-      const tableData = {
-        mainTable: {
-          id: tableId,
-          status: selectedTable?.status || "Unknown",
-          status_change_time: selectedTable?.statusStartTime || "N/A",
-          elapsed_time: elapsedTime,
-        },
-        additionalTables: Array.from(additionalTableSelections[tableId] || []),
-      };
-      formValue["table_data"] = tableData;
+      // const tableData = {
+      //   mainTable: {
+      //     id: tableValue,
+      //     status: selectedTable?.status || "Unknown",
+      //     status_change_time: selectedTable?.statusStartTime || "N/A",
+      //     elapsed_time: elapsedTime,
+      //   },
+      //   additionalTables: Array.from(additionalTableSelections[tableId] || []),
+      // };
+      formValue["table_value"] = tableValue;
     }
 
     console.log(formValue);
+    setTempCartProducts([]);
+    setSalesDiscountAmount(0);
+    setSalesTotalAmount(0);
+    setSalesDueAmount(0);
+    setReturnOrDueText("Due");
+    setDiscountType("Percent");
+    setChecked(false);
+    setAdditionalTableSelections({});
     handleSubmitOrder();
     setSalesByUser(null);
+    setSalesByUserName(null);
     setId(null);
+    form.reset();
 
     if (enableTable) {
       setAdditionalTableSelections((prev) => {
@@ -350,7 +418,7 @@ export default function Invoice(props) {
       transaction_mode_id: id,
       createdByName: salesByUserName.label,
       grand_total: subtotal,
-      sales_type: enableTable ? "restaurant" : "bakery",
+      is_pos: enableTable ? 1 : 0,
     };
     let transformedArray = TransformProduct(tempCartProducts);
 
@@ -445,7 +513,7 @@ export default function Invoice(props) {
         w={"100%"}
         pl={10}
         pr={10}
-        h={'auto'}
+        h={"auto"}
         mih={enableTable ? height + 82 : height + 194}
         mah={enableTable ? height + 82 : height + 194}
         className={classes["box-white"]}
@@ -459,59 +527,36 @@ export default function Invoice(props) {
           align="flex-start"
           wrap="nowrap"
         >
-          <Tooltip
-            label={t("SalesBy")}
-            opened={!!form.errors.user_id}
-            bg={"orange.8"}
-            c={"white"}
-            withArrow
-            px={16}
-            py={2}
-            offset={2}
-            zIndex={999}
-            position="top-end"
-            transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
-          >
-            <Select
-              pt={8}
-              placeholder={enableTable ? t("OrderTakenBy") : t("SalesBy")}
-              data={salesByDropdownData}
-              value={form.values.user_id}
-              error={form.errors.user_id}
-              onChange={(value) => {
-                form.setFieldValue("user_id", value);
-                const selectedUser = salesByDropdownData.find(
-                  (user) => user.value === value
-                );
-                setSalesByUser(value);
-                setSalesByUserName(selectedUser);
-              }}
-              clearable
-              searchable
-              nothingFoundMessage="Nothing found..."
-              searchValue={searchValue}
-              onSearchChange={setSearchValue}
-              rightSection={
-                value || searchValue ? (
-                  <IconX
-                    style={{
-                      width: rem(16),
-                      height: rem(16),
-                      cursor: "pointer",
-                    }}
-                    onMouseDown={() => {
-                      setValue("");
-                      form.setFieldValue("user_id", null);
-                    }}
-                  />
-                ) : (
-                  <IconChevronDown
-                    style={{ width: rem(16), height: rem(16) }}
-                  />
-                )
-              }
-            />
-          </Tooltip>
+          <Box pt={8}>
+            <Tooltip
+              label={t("SalesBy")}
+              opened={!!form.errors.user_id}
+              bg={"orange.8"}
+              c={"white"}
+              withArrow
+              px={16}
+              py={2}
+              offset={2}
+              zIndex={999}
+              position="top-end"
+              transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
+            >
+              <SelectForm
+                pt={"xs"}
+                tooltip={t("SalesBy")}
+                label=""
+                placeholder={enableTable ? t("OrderTakenBy") : t("SalesBy")}
+                // required={true}
+                name={"user_id"}
+                form={form}
+                dropdownValue={salesByDropdownData}
+                id={"user_id"}
+                searchable={true}
+                value={salesByUser}
+                changeValue={setSalesByUser}
+              />
+            </Tooltip>
+          </Box>
 
           {enableTable && (
             <Button
@@ -547,8 +592,7 @@ export default function Invoice(props) {
             </Text>
           </Button>
         </Group>
-        <Box
-        >
+        <Box>
           <Paper
             h={32}
             p="4"
@@ -557,7 +601,7 @@ export default function Invoice(props) {
           >
             <Grid align="center">
               <Grid.Col span={11}>
-                <Text fz={'sm'} fw={500} c={checked ? "white" : "black"} pl={4}>
+                <Text fz={"sm"} fw={500} c={checked ? "white" : "black"} pl={4}>
                   {enableTable
                     ? t("SelectAdditionalTable")
                     : t("SelectedItems")}
@@ -641,17 +685,13 @@ export default function Invoice(props) {
               {
                 accessor: "id",
                 title: "S/N",
-                width:48,
+                width: 48,
                 render: (data, index) => index + 1,
               },
               {
                 accessor: "display_name",
                 title: t("Product"),
-                render: (data) => (
-                  <Text fz={'xs'}>
-                    {data.display_name}
-                  </Text>
-                )
+                render: (data) => <Text fz={"xs"}>{data.display_name}</Text>,
               },
               {
                 accessor: "quantity",
@@ -687,7 +727,8 @@ export default function Invoice(props) {
                 textAlign: "right",
                 render: (data) => (
                   <>
-                    {/*{configData?.currency?.symbol} */}{data.sales_price}
+                    {/*{configData?.currency?.symbol} */}
+                    {data.sales_price}
                   </>
                 ),
               },
@@ -695,11 +736,7 @@ export default function Invoice(props) {
                 accessor: "subtotal",
                 title: "Subtotal",
                 textAlign: "right",
-                render: (data) => (
-                  <>
-                    {data.sub_total.toFixed(2)}
-                  </>
-                ),
+                render: (data) => <>{data.sub_total.toFixed(2)}</>,
               },
               {
                 accessor: "action",
@@ -738,7 +775,7 @@ export default function Invoice(props) {
             pt={0}
             style={{
               borderTop: "2px solid #dee2e6",
-              background:"#dee2e6",
+              background: "#dee2e6",
             }}
           >
             <Text fw={"bold"} fz={"sm"} c={"black"} pl={"10"}>
@@ -747,7 +784,7 @@ export default function Invoice(props) {
             <Group gap="10" pr={"sm"} align="center">
               <IconSum size="16" style={{ color: "black" }} />
               <Text fw={"bold"} fz={"sm"} c={"black"}>
-                {configData?.currency?.symbol} {subtotal.toFixed(2)}
+                {configData?.currency?.symbol} {salesDueAmount.toFixed(2)}
               </Text>
             </Group>
           </Group>
@@ -784,36 +821,37 @@ export default function Invoice(props) {
                 <Grid pl={8} pr={8} bg={"#e8f5e9"}>
                   <Grid.Col span={6}>
                     <Group justify="space-between">
-                      <Text fz={'sm'} fw={500} c={"#333333"}>
+                      <Text fz={"sm"} fw={500} c={"#333333"}>
                         {t("DIS.")}
                       </Text>
-                      <Text fz={'sm'} fw={800} c={"#333333"}>
-                        {configData?.currency?.symbol} 0
+                      <Text fz={"sm"} fw={800} c={"#333333"}>
+                        {configData?.currency?.symbol}{" "}
+                        {salesDiscountAmount.toFixed(2)}
                       </Text>
                     </Group>
                     <Group justify="space-between">
-                      <Text fz={'sm'} fw={500} c={"#333333"}>
+                      <Text fz={"sm"} fw={500} c={"#333333"}>
                         {t("Type")}
                       </Text>
-                      <Text fz={'sm'} fw={800} c={"#333333"}>
-                        Flat
+                      <Text fz={"sm"} fw={800} c={"#333333"}>
+                        {discountType}
                       </Text>
                     </Group>
                   </Grid.Col>
                   <Grid.Col span={6}>
                     <Group justify="space-between">
-                      <Text fz={'sm'} fw={500} c={"#333333"}>
+                      <Text fz={"sm"} fw={500} c={"#333333"}>
                         {t("VAT")}
                       </Text>
-                      <Text fz={'sm'} fw={800} c={"#333333"}>
+                      <Text fz={"sm"} fw={800} c={"#333333"}>
                         {configData?.currency?.symbol} 0
                       </Text>
                     </Group>
                     <Group justify="space-between">
-                      <Text fz={'sm'} fw={500} c={"#333333"}>
+                      <Text fz={"sm"} fw={500} c={"#333333"}>
                         {t("SD")}
                       </Text>
-                      <Text fz={'sm'} fw={800} c={"#333333"}>
+                      <Text fz={"sm"} fw={800} c={"#333333"}>
                         {configData?.currency?.symbol} 0
                       </Text>
                     </Group>
@@ -841,30 +879,26 @@ export default function Invoice(props) {
               </Grid.Col>
               <Grid.Col span={3}>
                 <Stack
-                    grow
-                    gap={0}
-                    className={classes["box-border"]}
-                    align="center"
-                    justify="center"
-                    bg={"red"}
-                    pt={4}
-                    pb={4}
-                    mr={8}
+                  grow
+                  gap={0}
+                  className={classes["box-border"]}
+                  align="center"
+                  justify="center"
+                  bg={"red"}
+                  pt={4}
+                  pb={4}
+                  mr={8}
                 >
                   <Text fw={800} c={"white"} size={"lg"}>
-                    {configData?.currency?.symbol} {subtotal.toFixed(2)}
+                    {configData?.currency?.symbol} {salesDueAmount.toFixed(2)}
                   </Text>
                   <Text fw={500} c={"white"} size={"md"}>
-                    {t("Due")}
+                    {returnOrDueText}
                   </Text>
                 </Stack>
               </Grid.Col>
             </Grid>
-            <Box
-              className={classes["box-white"]}
-              ml={4}
-              mr={4}
-            >
+            <Box className={classes["box-white"]} ml={4} mr={4}>
               <ScrollArea
                 type="never"
                 pl={"sm"}
@@ -1012,7 +1046,7 @@ export default function Invoice(props) {
               )}
             </Box>
             <Box m={4}>
-            {/*  <Group
+              {/*  <Group
                 justify="center"
                 grow
                 gap={"xs"}
@@ -1056,41 +1090,61 @@ export default function Invoice(props) {
               <Grid columns={24} gutter={{ base: 2 }} pl={"4"} pr={"4"}>
                 <Grid.Col span={3}>
                   <Switch
-                      size="lg"
-                      w={'100%'}
-                      color={'red.3'}
-                      mt={'6'}
-                      ml={'6'}
-                      onLabel={t('%')}
-                      offLabel={t('Flat')}
-                      radius="xs"
-                      onChange={(event) => setProfitShow(event.currentTarget.checked)}
+                    size="lg"
+                    w={"100%"}
+                    color={"red.3"}
+                    mt={"6"}
+                    ml={"6"}
+                    onLabel={t("%")}
+                    offLabel={t("Flat")}
+                    radius="xs"
+                    checked={discountType === "Percent"}
+                    onChange={(event) => {
+                      setDiscountType(
+                        event.currentTarget.checked ? "Percent" : "Flat"
+                      );
+                    }}
                   />
                 </Grid.Col>
                 <Grid.Col span={3}>
                   <TextInput
                     type="number"
                     placeholder="0"
+                    value={form.values.discount}
+                    error={form.errors.discount}
                     size={rem(40)}
                     classNames={{ input: classes.input }}
-                />
+                    onChange={(event) => {
+                      form.setFieldValue("discount", event.target.value);
+                    }}
+                  />
                 </Grid.Col>
                 <Grid.Col span={6}>
                   <TextInput
                     type="text"
-                    placeholder={t('CouponCode')}
+                    placeholder={t("CouponCode")}
+                    value={form.values.coupon_code}
+                    error={form.errors.coupon_code}
                     size={rem(40)}
                     classNames={{ input: classes.input }}
-                />
+                    onChange={(event) => {
+                      form.setFieldValue("coupon_code", event.target.value);
+                    }}
+                  />
                 </Grid.Col>
                 <Grid.Col span={6}> &nbsp; </Grid.Col>
                 <Grid.Col span={6}>
                   <TextInput
                     type="number"
                     placeholder="0"
+                    value={form.values.receive_amount}
+                    error={form.errors.receive_amount}
                     size={rem(40)}
                     classNames={{ input: classes.input }}
-                />
+                    onChange={(event) => {
+                      form.setFieldValue("receive_amount", event.target.value);
+                    }}
+                  />
                 </Grid.Col>
               </Grid>
             </Box>
@@ -1143,7 +1197,7 @@ export default function Invoice(props) {
                       leftSection={<IconPrinter />}
                       onClick={handlePrintAll}
                     >
-                      {t("All Print")}
+                      {t("AllPrint")}
                     </Button>
                   </Tooltip>
                 </Grid.Col>
@@ -1156,7 +1210,7 @@ export default function Invoice(props) {
                   leftSection={<IconPrinter />}
                   onClick={posPrint}
                 >
-                  {t("POS")}
+                  {t("Pos")}
                 </Button>
               </Grid.Col>
               <Grid.Col span={enableTable ? 3 : 4}>

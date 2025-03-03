@@ -276,51 +276,89 @@ export default function NewSales(props) {
     setLoadCartProducts(true);
   };
   const renderStatusButtons = () => (
-    <Box bg="white" w={"100%"} mt={4} style={{ borderRadius: 4 }}>
-      <Group
-        grow
-        gap={4}
-        h={48}
-        justify="center"
-        align="center"
-        pl={8}
-        pr={8}
-        className="divider"
-      >
-        {["Order", "Kitchen", "Hold", "Reserved", "Free"].map((status) => {
-          const currentTableStatus = tableStatuses[tableId];
-          const isActive = currentTableStatus === status;
-          const bg = isActive ? "green.8" : "#E6F5ED";
-          const tc = isActive ? "white" : "#333333";
-
-          return (
-            <Tooltip
-              key={status}
-              disabled={!!tableId}
-              withArrow
-              px={16}
-              py={2}
-              offset={2}
-              zIndex={999}
-              position="top-end"
-              color="red"
-              label={t("PleaseSelectTable")}
-            >
-              <Button
-                disabled={!tableId}
-                bg={bg}
-                onClick={() => updateTableStatus(status)}
+    <SegmentedControl
+      mt={8}
+      styles={{
+        label: { color: "white" },
+      }}
+      // default color
+      bg={"#30444f"}
+      withItemsBorders={false}
+      fullWidth
+      // active color
+      color="#CBC4D1"
+      value={tableStatuses[tableId]}
+      onChange={(status) => updateTableStatus(status)}
+      data={[
+        {
+          label: (
+            <Center style={{ gap: 10 }}>
+              <Text
+                c={tableStatuses[tableId] === "Order" ? "black" : "white"}
+                fw={600}
               >
-                <Text c={tc} size="sm" fw={600}>
-                  {t(status)}
-                </Text>
-              </Button>
-            </Tooltip>
-          );
-        })}
-      </Group>
-    </Box>
+                {t("Order")}
+              </Text>
+            </Center>
+          ),
+          value: "Order",
+        },
+        {
+          label: (
+            <Center style={{ gap: 10 }}>
+              <Text
+                c={tableStatuses[tableId] === "Kitchen" ? "black" : "white"}
+                fw={600}
+              >
+                {t("Kitchen")}
+              </Text>
+            </Center>
+          ),
+          value: "Kitchen",
+        },
+        {
+          label: (
+            <Center style={{ gap: 10 }}>
+              <Text
+                c={tableStatuses[tableId] === "Hold" ? "black" : "white"}
+                fw={600}
+              >
+                {t("Hold")}
+              </Text>
+            </Center>
+          ),
+          value: "Hold",
+        },
+        {
+          label: (
+            <Center style={{ gap: 10 }}>
+              <Text
+                c={tableStatuses[tableId] === "Reserved" ? "black" : "white"}
+                fw={600}
+              >
+                {t("Reserved")}
+              </Text>
+            </Center>
+          ),
+          value: "Reserved",
+        },
+        {
+          label: (
+            <Center style={{ gap: 10 }}>
+              <Text
+                c={tableStatuses[tableId] === "Free" ? "black" : "white"}
+                fw={600}
+              >
+                {t("Free")}
+              </Text>
+            </Center>
+          ),
+          value: "Free",
+        },
+      ]}
+    />
   );
+
   return (
     <>
       <Grid columns={24} gutter={{ base: 8 }}>
@@ -377,7 +415,7 @@ export default function NewSales(props) {
                     radius="sm"
                     leftSection={<IconSearch size={16} opacity={0.5} />}
                     size="md"
-                    placeholder="SearchFood"
+                    placeholder={t("SearchFood")}
                     rightSection={
                       searchValue ? (
                         <Tooltip label="Clear" withArrow position="top">
@@ -412,7 +450,7 @@ export default function NewSales(props) {
                 <Grid.Col span={4}>
                   <SegmentedControl
                     styles={{
-                      label: { color: "white" }, 
+                      label: { color: "white" },
                     }}
                     bg={"green.6"}
                     withItemsBorders={false}
