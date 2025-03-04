@@ -476,6 +476,7 @@ function _AddCustomerFormPos(props) {
                   </Grid.Col>
                   <Grid.Col span={6} align={"center"}>
                     <Button
+                      disabled={!customerId}
                       fullWidth
                       size="xs"
                       color={`green.8`}
