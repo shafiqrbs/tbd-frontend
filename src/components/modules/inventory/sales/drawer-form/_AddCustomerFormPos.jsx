@@ -67,12 +67,7 @@ function _AddCustomerFormPos(props) {
       return (
         <Box>
           <Grid columns={24}>
-            <Grid.Col
-              span={8}
-              align={"left"}
-              fw={"600"}
-              fz={"14"}
-            >
+            <Grid.Col span={8} align={"left"} fw={"600"} fz={"14"}>
               {t("Outstanding")}
             </Grid.Col>
             <Grid.Col span={1}>:</Grid.Col>
@@ -252,33 +247,78 @@ function _AddCustomerFormPos(props) {
                   labels: { confirm: t("Submit"), cancel: t("Cancel") },
                   confirmProps: { color: "red" },
                   onCancel: () => console.log("Cancel"),
-                  onConfirm: () => {
+                  onConfirm: async () => {
                     setSaveCreateLoading(true);
                     const value = {
                       url: "core/customer",
                       data: values,
                     };
-                    dispatch(storeEntityData(value));
+                    try {
+                      const response = await dispatch(
+                        storeEntityData(value)
+                      ).unwrap();
+                      console.log("Customer creation response:", response);
 
-                    notifications.show({
-                      color: "teal",
-                      title: t("CreateSuccessfully"),
-                      icon: (
-                        <IconCheck
-                          style={{ width: rem(18), height: rem(18) }}
-                        />
-                      ),
-                      loading: false,
-                      autoClose: 700,
-                      style: { backgroundColor: "lightgray" },
-                    });
+                      notifications.show({
+                        color: "teal",
+                        title: t("CreateSuccessfully"),
+                        icon: (
+                          <IconCheck
+                            style={{ width: rem(18), height: rem(18) }}
+                          />
+                        ),
+                        loading: false,
+                        autoClose: 700,
+                        style: { backgroundColor: "lightgray" },
+                      });
+                      if (response && response?.data?.data) {
+                        const newCustomer = response?.data?.data;
+                        const coreCustomers = localStorage.getItem(
+                          "core-customers"
+                        )
+                          ? JSON.parse(localStorage.getItem("core-customers"))
+                          : [];
+                        const updatedCustomers = [
+                          ...coreCustomers,
+                          newCustomer,
+                        ];
+                        localStorage.setItem(
+                          "core-customers",
+                          JSON.stringify(updatedCustomers)
+                        );
 
-                    setTimeout(() => {
-                      dispatch(storeEntityData(value));
+                        setCustomerId(newCustomer.id);
+                        setCustomerObject(newCustomer);
+
+                        if (enableTable && tableId) {
+                          updateTableCustomer(
+                            tableId,
+                            newCustomer.id,
+                            newCustomer
+                          );
+                        }
+                      }
+
                       customerAddedForm.reset();
                       setRefreshCustomerDropdown(true);
-                      setValue("Existing");
-                    }, 700);
+                      // setValue("Existing");
+                      setCustomerDrawer(false);
+                      setSaveCreateLoading(false);
+                    } catch (error) {
+                      console.error("Error creating customer:", error);
+                      notifications.show({
+                        color: "red",
+                        title: t("CreateFailed"),
+                        message: error?.message || t("SomethingWentWrong"),
+                        icon: (
+                          <IconX style={{ width: rem(18), height: rem(18) }} />
+                        ),
+                        loading: false,
+                        autoClose: 2000,
+                        style: { backgroundColor: "lightgray" },
+                      });
+                      setSaveCreateLoading(false);
+                    }
                   },
                 });
               })}
@@ -386,124 +426,57 @@ function _AddCustomerFormPos(props) {
         ) : (
           <>
             <ScrollArea
-              h={height + 20}
+              h={height + 71}
               scrollbarSize={2}
               scrollbars="y"
               type="never"
             >
               <Box pt={"6"}>
-                <SelectForm
-                  tooltip={t("CustomerValidateMessage")}
-                  label=""
-                  placeholder={t("Customer")}
-                  required={false}
-                  nextField={"name"}
-                  name={"customer_id"}
-                  form={customerAddedForm}
-                  dropdownValue={customersDropdownData}
-                  id={"customer_id"}
-                  mt={1}
-                  searchable={true}
-                  value={customerId}
-                  changeValue={(value) => {
-                    setCustomerId(value);
-                    if (value) {
-                      const coreCustomers = localStorage.getItem(
-                        "core-customers"
-                      )
-                        ? JSON.parse(localStorage.getItem("core-customers"))
-                        : [];
-                      const customer = coreCustomers.find(
-                        (c) => String(c.id) === String(value)
-                      );
-                      if (customer) {
-                        setCustomerObject(customer);
-                        if (enableTable && tableId) {
-                          updateTableCustomer(tableId, value, customer);
+                <Grid columns={24} gutter={{ base: 8 }} align="center">
+                  <Grid.Col span={18} align={"center"}>
+                    <SelectForm
+                      tooltip={t("CustomerValidateMessage")}
+                      label=""
+                      placeholder={t("Customer")}
+                      required={false}
+                      nextField={"name"}
+                      name={"customer_id"}
+                      form={customerAddedForm}
+                      dropdownValue={customersDropdownData}
+                      id={"customer_id"}
+                      mt={1}
+                      searchable={true}
+                      value={customerId}
+                      changeValue={(value) => {
+                        setCustomerId(value);
+                        console.log(value);
+                        if (value) {
+                          const coreCustomers = localStorage.getItem(
+                            "core-customers"
+                          )
+                            ? JSON.parse(localStorage.getItem("core-customers"))
+                            : [];
+                          const customer = coreCustomers.find(
+                            (c) => String(c.id) === String(value)
+                          );
+                          if (customer) {
+                            setCustomerObject(customer);
+                            if (enableTable && tableId) {
+                              updateTableCustomer(tableId, value, customer);
+                            }
+                          }
+                        } else {
+                          setCustomerObject({});
+                          if (enableTable && tableId) {
+                            clearTableCustomer(tableId);
+                          }
                         }
-                      }
-                    } else {
-                      setCustomerObject({});
-                      if (enableTable && tableId) {
-                        clearTableCustomer(tableId);
-                      }
-                    }
-                  }}
-                />
-              </Box>
-
-              <>
-                <Box
-                  p={"md"}
-                  bg={"gray.1"}
-                  className="boxBackground borderRadiusAll"
-                  h={height - 23}
-                  w={"100%"}
-                >
-                  {customerDetails}
-                </Box>
-              </>
-            </ScrollArea>
-          </>
-        )}
-        <Box
-          pl={`xs`}
-          pr={8}
-          pt={"6"}
-          pb={"6"}
-          mb={"2"}
-          mt={4}
-          className={"boxBackground borderRadiusAll"}
-        >
-          <Group justify="space-between">
-            <Flex
-              gap="md"
-              justify="center"
-              align="center"
-              direction="row"
-              wrap="wrap"
-            >
-              <ActionIcon
-                variant="transparent"
-                size="sm"
-                color="red.6"
-                onClick={closeModel}
-                ml={"4"}
-              >
-                <IconX style={{ width: "100%", height: "100%" }} stroke={1.5} />
-              </ActionIcon>
-            </Flex>
-
-            <Group gap={8} mih={30}>
-              <Flex justify="flex-end" align="center" h="100%">
-                <Button
-                  variant="transparent"
-                  size="xs"
-                  color="red.4"
-                  type="reset"
-                  id=""
-                  comboboxProps={{ withinPortal: false }}
-                  p={0}
-                  onClick={() => {
-                    if (enableTable && tableId) {
-                      clearTableCustomer(tableId);
-                    }
-                    setCustomerId(null);
-                    setCustomerObject({});
-                    customerAddedForm.reset();
-                  }}
-                  rightSection={
-                    <IconRefreshDot
-                      style={{ width: "100%", height: "60%" }}
-                      stroke={1.5}
+                      }}
                     />
-                  }
-                ></Button>
-              </Flex>
-              <Stack align="flex-start">
-                <>
-                  {value === "Existing" ? (
+                  </Grid.Col>
+                  <Grid.Col span={6} align={"center"}>
                     <Button
+                      fullWidth
                       size="xs"
                       color={`green.8`}
                       onClick={() => {
@@ -524,9 +497,85 @@ function _AddCustomerFormPos(props) {
                         </Text>
                       </Flex>
                     </Button>
-                  ) : (
-                    !saveCreateLoading &&
-                    isOnline && (
+                  </Grid.Col>
+                </Grid>
+              </Box>
+
+              <>
+                <Box
+                  p={"md"}
+                  bg={"gray.1"}
+                  className="boxBackground borderRadiusAll"
+                  h={height + 26}
+                  w={"100%"}
+                >
+                  {customerDetails}
+                </Box>
+              </>
+            </ScrollArea>
+          </>
+        )}
+        {value === "New" && (
+          <Box
+            pl={`xs`}
+            pr={8}
+            pt={"6"}
+            pb={"6"}
+            mb={"2"}
+            mt={4}
+            className={"boxBackground borderRadiusAll"}
+          >
+            <Group justify="space-between">
+              <Flex
+                gap="md"
+                justify="center"
+                align="center"
+                direction="row"
+                wrap="wrap"
+              >
+                <ActionIcon
+                  variant="transparent"
+                  size="sm"
+                  color="red.6"
+                  onClick={closeModel}
+                  ml={"4"}
+                >
+                  <IconX
+                    style={{ width: "100%", height: "100%" }}
+                    stroke={1.5}
+                  />
+                </ActionIcon>
+              </Flex>
+
+              <Group gap={8} mih={30}>
+                <Flex justify="flex-end" align="center" h="100%">
+                  <Button
+                    variant="transparent"
+                    size="xs"
+                    color="red.4"
+                    type="reset"
+                    id=""
+                    comboboxProps={{ withinPortal: false }}
+                    p={0}
+                    onClick={() => {
+                      if (enableTable && tableId) {
+                        clearTableCustomer(tableId);
+                      }
+                      setCustomerId(null);
+                      setCustomerObject({});
+                      customerAddedForm.reset();
+                    }}
+                    rightSection={
+                      <IconRefreshDot
+                        style={{ width: "100%", height: "60%" }}
+                        stroke={1.5}
+                      />
+                    }
+                  ></Button>
+                </Flex>
+                <Stack align="flex-start">
+                  <>
+                    {!saveCreateLoading && isOnline && (
                       <Button
                         size="xs"
                         color={`green.8`}
@@ -544,13 +593,13 @@ function _AddCustomerFormPos(props) {
                           </Text>
                         </Flex>
                       </Button>
-                    )
-                  )}
-                </>
-              </Stack>
+                    )}
+                  </>
+                </Stack>
+              </Group>
             </Group>
-          </Group>
-        </Box>
+          </Box>
+        )}
       </Box>
     </>
   );
