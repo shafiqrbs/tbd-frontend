@@ -18,17 +18,28 @@ import { useTranslation } from "react-i18next";
 import { IconChevronRight, IconChevronLeft } from "@tabler/icons-react";
 
 function HeaderNavbar(props) {
-  const { tables, setTables, tableId, setTableId } = props;
+  const {
+    tables,
+    tableId,
+    setTableId,
+    tableCustomerMap,
+    setCustomerObject,
+  } = props;
   const { t, i18n } = useTranslation();
 
   const clicked = (id) => {
-    if(tableId === id){
-      setTableId(null)
+    if (tableId === id) {
+      setTableId(null);
+      setCustomerObject({}); 
     } else {
       setTableId(id);
+      if (tableCustomerMap && tableCustomerMap[id]) {
+        setCustomerObject(tableCustomerMap[id]);
+      } else {
+        setCustomerObject({});
+      }
     }
   };
-
   const scrollRef = useRef(null);
   const [showLeftArrow, setShowLeftArrow] = useState(false);
   const [showRightArrow, setShowRightArrow] = useState(false);
@@ -145,14 +156,11 @@ function HeaderNavbar(props) {
                     )}
                   </Flex>
                   <Center>
-                    <Text
-                    mt={8}
-                    mb={-28}
-                      fz="sm"
-                      fw={800}
-                      c={'#ff6b6b'}
-                    >
-                      +8801521334751
+                    <Text mt={8} mb={-28} fz="sm" fw={800} c={"#ff6b6b"}>
+                      {tableCustomerMap && tableCustomerMap[table.id]
+                        ? tableCustomerMap[table.id].mobile ||
+                          tableCustomerMap[table.id].name
+                        : ""}
                     </Text>
                   </Center>
                 </Flex>

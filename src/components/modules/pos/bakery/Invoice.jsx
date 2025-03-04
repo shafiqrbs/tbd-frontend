@@ -61,15 +61,18 @@ import AddCustomerDrawer from "../../inventory/sales/drawer-form/AddCustomerDraw
 import customerDataStoreIntoLocalStorage from "../../../global-hook/local-storage/customerDataStoreIntoLocalStorage.js";
 export default function Invoice(props) {
   const {
-    setLoadCartProducts,
-    loadCartProducts,
     products,
-    enableTable,
-    tables,
     tableId,
-    setTableId,
-    setTables,
+    tables,
+    enableTable,
+    setLoadCartProducts,
     handleSubmitOrder,
+    tableCustomerMap,
+    updateTableCustomer,
+    clearTableCustomer,
+    customerObject,
+    setCustomerObject,
+    loadCartProducts,
   } = props;
 
   const dispatch = useDispatch();
@@ -78,9 +81,6 @@ export default function Invoice(props) {
   const height = mainAreaHeight - 190;
   const calculatedHeight = height - 200; // Set minimum height
   const navigate = useNavigate();
-  const [value, setValue] = useState("");
-  const [searchValue, setSearchValue] = useState("");
-  const [customerMobile, setCustomerMobile] = useState("");
 
   const scrollRef = useRef(null);
   const [showLeftArrow, setShowLeftArrow] = useState(false);
@@ -105,7 +105,6 @@ export default function Invoice(props) {
   const [id, setId] = useState(null);
 
   const [posData, setPosData] = useState(null);
-  const [profitShow, setProfitShow] = useState(false);
   const [discountType, setDiscountType] = useState("Percent");
   const [defaultCustomerId, setDefaultCustomerId] = useState(null);
 
@@ -120,7 +119,21 @@ export default function Invoice(props) {
     }
     setLoadCartProducts(false);
   }, [loadCartProducts, tableId, enableTable]);
-
+  useEffect(() => {
+    if (
+      enableTable &&
+      tableId &&
+      tableCustomerMap &&
+      tableCustomerMap[tableId]
+    ) {
+      const tableCustomer = tableCustomerMap[tableId];
+      setCustomerId(tableCustomer.id);
+      setCustomerObject(tableCustomer);
+    } else if (enableTable && tableId) {
+      setCustomerId(null);
+      setCustomerObject({});
+    }
+  }, [tableId, enableTable, tableCustomerMap]);
   useEffect(() => {
     let coreUsers = localStorage.getItem("core-users")
       ? JSON.parse(localStorage.getItem("core-users"))
@@ -393,6 +406,7 @@ export default function Invoice(props) {
       handleSubmitOrder();
       setSalesByUser(null);
       setSalesByUserName(null);
+      clearTableCustomer(tableId);
       setId(null);
       form.reset();
     }, 500);
@@ -538,13 +552,25 @@ export default function Invoice(props) {
     form.reset();
     setPrintPos(true);
   };
-  const [customerId, setCustomerId ] = useState(null);
+  const [customerId, setCustomerId] = useState(null);
   const [customerDrawer, setCustomerDrawer] = useState(false);
-  const [customersDropdownData, setCustomersDropdownData] = useState([])
+  const [customersDropdownData, setCustomersDropdownData] = useState([]);
   const [refreshCustomerDropdown, setRefreshCustomerDropdown] = useState(false);
   const handleCustomerAdd = () => {
-    setCustomerDrawer(true);
+    if (enableTable && tableId) {
+      setCustomerDrawer(true);
+    } else if (!enableTable) {
+      setCustomerDrawer(true);
+    } else {
+      notifications.show({
+        color: "red",
+        title: t("Error"),
+        message: t("SelectATableFirst"),
+        autoClose: 2000,
+      });
+    }
   };
+
   useEffect(() => {
     const fetchCustomers = async () => {
       await customerDataStoreIntoLocalStorage();
@@ -571,6 +597,17 @@ export default function Invoice(props) {
     fetchCustomers();
   }, [refreshCustomerDropdown]);
 
+  useEffect(() => {
+    if (
+      enableTable &&
+      tableId &&
+      customerId &&
+      customerObject &&
+      Object.keys(customerObject).length > 0
+    ) {
+      updateTableCustomer(tableId, customerId, customerObject);
+    }
+  }, [customerId, customerObject, tableId, enableTable, updateTableCustomer]);
   return (
     <>
       <Box
@@ -640,7 +677,7 @@ export default function Invoice(props) {
             </Button>
           )}
           <Button
-            // disabled={tempCartProducts.length === 0}
+            disabled={!tableId}
             radius="sm"
             size="sm"
             color="red"
@@ -1258,14 +1295,20 @@ export default function Invoice(props) {
           )}
           {customerDrawer && (
             <AddCustomerDrawer
-            setCustomerId={setCustomerId}
-            customersDropdownData={customersDropdownData}
+              customerObject={customerObject}
+              setCustomerObject={setCustomerObject}
+              setCustomerId={setCustomerId}
+              customersDropdownData={customersDropdownData}
               setRefreshCustomerDropdown={setRefreshCustomerDropdown}
               focusField={"customer_id"}
-              fieldPrefix="sales_"
+              fieldPrefix="pos_"
               customerDrawer={customerDrawer}
               setCustomerDrawer={setCustomerDrawer}
               customerId={customerId}
+              enableTable={enableTable}
+              tableId={tableId}
+              updateTableCustomer={updateTableCustomer}
+              clearTableCustomer={clearTableCustomer}
             />
           )}
         </Box>
