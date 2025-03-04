@@ -48,6 +48,11 @@ export default function NewSales(props) {
     setTableId,
     tables,
     setTables,
+    tableCustomerMap,
+    updateTableCustomer,
+    clearTableCustomer,
+    customerObject,
+    setCustomerObject,
   } = props;
   const dispatch = useDispatch();
   const { t, i18n } = useTranslation();
@@ -250,6 +255,7 @@ export default function NewSales(props) {
     if (enableTable && tableId) {
       localStorage.removeItem(`table-${tableId}-pos-products`);
       updateTableStatus("Free");
+      clearTableCustomer(tableId);
 
       notifications.show({
         title: t("Success"),
@@ -797,15 +803,18 @@ export default function NewSales(props) {
         </Grid.Col>
         <Grid.Col span={9}>
           <Invoice
-            setLoadCartProducts={setLoadCartProducts}
-            loadCartProducts={loadCartProducts}
             products={products}
-            enableTable={enableTable}
-            tables={tables}
-            setTables={setTables}
             tableId={tableId}
-            setTableId={handleTableSelection}
+            tables={tables}
+            enableTable={enableTable}
+            setLoadCartProducts={setLoadCartProducts}
             handleSubmitOrder={handleSubmitOrder}
+            tableCustomerMap={tableCustomerMap}
+            updateTableCustomer={updateTableCustomer}
+            clearTableCustomer={clearTableCustomer}
+            customerObject={customerObject}
+            setCustomerObject={setCustomerObject}
+            loadCartProducts={loadCartProducts}
           />
         </Grid.Col>
       </Grid>

@@ -19,7 +19,7 @@ export default function BakeryIndex() {
   const progress = getLoadingProgress();
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  const {configData,fetchData} = getConfigData()
+  const { configData, fetchData } = getConfigData();
   // category dropdown
   const dropdownLoad = useSelector(
     (state) => state.inventoryCrudSlice.dropdownLoad
@@ -66,6 +66,30 @@ export default function BakeryIndex() {
   // );
 
   const [tables, setTables] = useState([]);
+  const [tableCustomerMap, setTableCustomerMap] = useState({});
+  const [customerObject, setCustomerObject] = useState({});
+
+  const updateTableCustomer = (tableId, customerId, customerData) => {
+    if (!tableId) return;
+
+    setTableCustomerMap((prev) => ({
+      ...prev,
+      [tableId]: {
+        id: customerId,
+        ...customerData,
+      },
+    }));
+  };
+
+  const clearTableCustomer = (tableId) => {
+    if (!tableId) return;
+
+    setTableCustomerMap((prev) => {
+      const newMap = { ...prev };
+      delete newMap[tableId];
+      return newMap;
+    });
+  };
 
   const tableData = getSettingParticularDropdownData("table");
 
@@ -80,7 +104,7 @@ export default function BakeryIndex() {
           statusHistory: [],
           currentStatusStartTime: null,
           elapsedTime: "00:00:00",
-          value : item.value
+          value: item.value,
         };
       });
 
@@ -97,6 +121,18 @@ export default function BakeryIndex() {
   }, [time]);
 
   const [tableId, setTableId] = useState(null);
+  useEffect(() => {
+    if (tableId && tableCustomerMap[tableId]) {
+      if (
+        JSON.stringify(customerObject) !==
+        JSON.stringify(tableCustomerMap[tableId])
+      ) {
+        setCustomerObject(tableCustomerMap[tableId]);
+      }
+    } else if (Object.keys(customerObject).length > 0) {
+      setCustomerObject({});
+    }
+  }, [tableId, tableCustomerMap, customerObject]);
   return (
     <>
       {progress !== 100 && (
@@ -108,12 +144,12 @@ export default function BakeryIndex() {
             <HeaderNavbar
               pageTitle={t("ManageCustomer")}
               roles={t("Roles")}
-              allowZeroPercentage=""
-              currencySymbol=""
               tables={tables}
-              setTables={setTables}
               tableId={tableId}
+              setTables={setTables}
               setTableId={setTableId}
+              tableCustomerMap={tableCustomerMap}
+              setCustomerObject={setCustomerObject}
             />
           )}
           <Box
@@ -127,12 +163,17 @@ export default function BakeryIndex() {
           >
             <Box pl={"4"}>
               <NewSales
-                tables={tables}
-                setTables={setTables}
                 enableTable={!!(configData?.is_pos && configData?.is_table_pos)}
                 categoryDropdown={categoryDropdown}
                 tableId={tableId}
                 setTableId={setTableId}
+                tables={tables}
+                setTables={setTables}
+                tableCustomerMap={tableCustomerMap}
+                updateTableCustomer={updateTableCustomer}
+                clearTableCustomer={clearTableCustomer}
+                customerObject={customerObject}
+                setCustomerObject={setCustomerObject}
               />
             </Box>
           </Box>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useOutletContext } from "react-router-dom";
 import { ActionIcon, Box, ScrollArea, Drawer, Text, Flex } from "@mantine/core";
 import { useTranslation } from "react-i18next";
@@ -17,7 +17,13 @@ function AddCustomerDrawer(props) {
     fieldPrefix,
     setCustomerId,
     customersDropdownData,
-    customerId
+    customerId,
+    customerObject,
+    setCustomerObject,
+    enableTable,
+    tableId,
+    updateTableCustomer,
+    clearTableCustomer,
   } = props;
   const { isOnline, mainAreaHeight } = useOutletContext();
   const { t, i18n } = useTranslation();
@@ -27,6 +33,8 @@ function AddCustomerDrawer(props) {
   };
   const locationDropdown = getLocationDropdownData();
   const customerGroupDropdownData = getCoreSettingCustomerGroupDropdownData();
+
+  
 
   return (
     <>
@@ -66,6 +74,9 @@ function AddCustomerDrawer(props) {
               <>
                 <Box ml={2} mr={2} mb={0}>
                   <_AddCustomerFormPos
+                    customerObject={customerObject}
+                    locationDropdown={locationDropdown}
+                    customerGroupDropdownData={customerGroupDropdownData}
                     setCustomerDrawer={setCustomerDrawer}
                     setRefreshCustomerDropdown={setRefreshCustomerDropdown}
                     focusField={focusField}
@@ -73,6 +84,11 @@ function AddCustomerDrawer(props) {
                     customersDropdownData={customersDropdownData}
                     setCustomerId={setCustomerId}
                     customerId={customerId}
+                    setCustomerObject={setCustomerObject}
+                    enableTable={enableTable}
+                    tableId={tableId}
+                    updateTableCustomer={updateTableCustomer}
+                    clearTableCustomer={clearTableCustomer} 
                   />
                 </Box>
               </>
