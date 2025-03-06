@@ -54,16 +54,6 @@ export default function BakeryIndex() {
     }, 100);
     return () => clearInterval(intervalId);
   }, []);
-  // const [tables, setTables] = useState(
-  //   Array.from({ length: 18 }, (_, i) => ({
-  //     id: i + 1,
-  //     time: time,
-  //     status: "Free",
-  //     statusHistory: [],
-  //     currentStatusStartTime: null,
-  //     elapsedTime: "00:00:00",
-  //   }))
-  // );
 
   const [tables, setTables] = useState([]);
   const [tableCustomerMap, setTableCustomerMap] = useState({});

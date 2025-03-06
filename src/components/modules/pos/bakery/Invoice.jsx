@@ -614,9 +614,7 @@ export default function Invoice(props) {
         w={"100%"}
         pl={10}
         pr={10}
-        h={"auto"}
-        mih={enableTable ? height + 82 : height + 194}
-        mah={enableTable ? height + 82 : height + 194}
+        h={enableTable ? height + 84 : height + 195}
         className={classes["box-white"]}
         style={{ display: "flex", flexDirection: "column" }}
       >
@@ -676,32 +674,11 @@ export default function Invoice(props) {
               </Text>
             </Button>
           )}
-          <Button
-            disabled={!tableId}
-            radius="sm"
-            size="sm"
-            color="red"
-            mt={8}
-            miw={122}
-            maw={122}
-            fullWidth
-            leftSection={<IconUserFilled height={14} width={14} stroke={2} />}
-            onClick={handleCustomerAdd}
-          >
-            <Text fw={600} size="sm">
-              {t("Customer")}
-            </Text>
-          </Button>
         </Group>
         <Box>
-          <Paper
-            h={32}
-            p="4"
-            radius="4"
-            style={{ backgroundColor: checked ? "#4CAF50" : "#E8F5E9" }}
-          >
+          <Paper h={32} p="4" radius="4" bg={checked ? "green.8" : "green.0"}>
             <Grid align="center">
-              <Grid.Col span={11}>
+              <Grid.Col span={11} mt={1}>
                 <Text fz={"sm"} fw={500} c={checked ? "white" : "black"} pl={4}>
                   {enableTable
                     ? t("SelectAdditionalTable")
@@ -724,13 +701,17 @@ export default function Invoice(props) {
                     <Checkbox
                       disabled={!tableId}
                       checked={checked}
-                      color="green.8"
+                      color="green.9"
+                      iconColor="dark.8"
                       onChange={(event) =>
                         setChecked(event.currentTarget.checked)
                       }
                       styles={(theme) => ({
                         input: {
-                          borderColor: "white",
+                          borderColor: "green",
+                        },
+                        inputFocus: {
+                          borderColor: "black",
                         },
                       })}
                     />
@@ -744,9 +725,9 @@ export default function Invoice(props) {
             <ScrollArea
               h={{ base: "auto", sm: enableTable ? 50 : "auto" }}
               type="never"
-              bg={"#E6F5ED99"}
+              bg={"green.0"}
             >
-              <Paper p="md" radius="md" bg={"#E6F5ED99"}>
+              <Paper p="md" radius="md" bg={"green.0"}>
                 <Grid columns={15} gutter="md">
                   {tables.map((item) => (
                     <Grid.Col span={3} key={item.id}>
@@ -803,7 +784,7 @@ export default function Invoice(props) {
                     <Group gap={8} justify="center">
                       <ActionIcon
                         size={"sm"}
-                        bg={"#596972"}
+                        bg={"gray.7"}
                         onClick={() => handleDecrement(data.product_id)}
                       >
                         <IconMinus height={"12"} width={"12"} />
@@ -813,7 +794,7 @@ export default function Invoice(props) {
                       </Text>
                       <ActionIcon
                         size={"sm"}
-                        bg={"#596972"}
+                        bg={"gray.7"}
                         onClick={() => handleIncrement(data.product_id)}
                       >
                         <IconPlus height={"12"} width={"12"} />
@@ -848,7 +829,7 @@ export default function Invoice(props) {
                     <ActionIcon
                       size="sm"
                       variant="white"
-                      color="#FF0000"
+                      color="red.8"
                       aria-label="Settings"
                       onClick={() => handleDelete(data.product_id)}
                     >
@@ -862,10 +843,10 @@ export default function Invoice(props) {
             loaderColor="grape"
             height={
               enableTable && checked
-                ? calculatedHeight - 158
+                ? calculatedHeight - 149
                 : enableTable
-                ? calculatedHeight - 108
-                : calculatedHeight + 4
+                ? calculatedHeight - 99
+                : calculatedHeight + 3
             }
             scrollAreaProps={{ type: "never" }}
           />
@@ -874,9 +855,9 @@ export default function Invoice(props) {
             justify="space-between"
             align="center"
             pt={0}
+            bg={"gray.4"}
             style={{
-              borderTop: "2px solid #dee2e6",
-              background: "#dee2e6",
+              borderTop: "2px solid var(--mantine-color-gray-4)",
             }}
           >
             <Text fw={"bold"} fz={"sm"} c={"black"} pl={"10"}>
@@ -919,40 +900,40 @@ export default function Invoice(props) {
               pb={8}
             >
               <Grid.Col span={6} pl={8}>
-                <Grid pl={8} pr={8} bg={"#e8f5e9"}>
+                <Grid pl={8} pr={8} bg={"green.0"}>
                   <Grid.Col span={6}>
                     <Group justify="space-between">
-                      <Text fz={"sm"} fw={500} c={"#333333"}>
+                      <Text fz={"sm"} fw={500} c={"black"}>
                         {t("DIS.")}
                       </Text>
-                      <Text fz={"sm"} fw={800} c={"#333333"}>
+                      <Text fz={"sm"} fw={800} c={"black"}>
                         {configData?.currency?.symbol}{" "}
                         {salesDiscountAmount.toFixed(2)}
                       </Text>
                     </Group>
                     <Group justify="space-between">
-                      <Text fz={"sm"} fw={500} c={"#333333"}>
+                      <Text fz={"sm"} fw={500} c={"black"}>
                         {t("Type")}
                       </Text>
-                      <Text fz={"sm"} fw={800} c={"#333333"}>
+                      <Text fz={"sm"} fw={800} c={"black"}>
                         {discountType}
                       </Text>
                     </Group>
                   </Grid.Col>
                   <Grid.Col span={6}>
                     <Group justify="space-between">
-                      <Text fz={"sm"} fw={500} c={"#333333"}>
+                      <Text fz={"sm"} fw={500} c={"black"}>
                         {t("VAT")}
                       </Text>
-                      <Text fz={"sm"} fw={800} c={"#333333"}>
+                      <Text fz={"sm"} fw={800} c={"black"}>
                         {configData?.currency?.symbol} 0
                       </Text>
                     </Group>
                     <Group justify="space-between">
-                      <Text fz={"sm"} fw={500} c={"#333333"}>
+                      <Text fz={"sm"} fw={500} c={"black"}>
                         {t("SD")}
                       </Text>
-                      <Text fz={"sm"} fw={800} c={"#333333"}>
+                      <Text fz={"sm"} fw={800} c={"black"}>
                         {configData?.currency?.symbol} 0
                       </Text>
                     </Group>
@@ -966,7 +947,7 @@ export default function Invoice(props) {
                   className={classes["box-border"]}
                   align="center"
                   justify="center"
-                  bg={"#30444f"}
+                  bg={"gray.8"}
                   pt={4}
                   pb={4}
                 >
@@ -1053,7 +1034,7 @@ export default function Invoice(props) {
                         }}
                       >
                         <Flex
-                          bg={mode.id === id ? "#E6F5ED" : "white"}
+                          bg={mode.id === id ? "green.0" : "white"}
                           direction="column"
                           align="center"
                           justify="center"
@@ -1100,7 +1081,7 @@ export default function Invoice(props) {
               {showLeftArrow && (
                 <ActionIcon
                   variant="filled"
-                  color="#EAECED"
+                  color="gray.2"
                   radius="xl"
                   size="lg"
                   h={24}
@@ -1117,14 +1098,14 @@ export default function Invoice(props) {
                     height={18}
                     width={18}
                     stroke={2}
-                    color="#30444F"
+                    color="gray.8"
                   />
                 </ActionIcon>
               )}
               {showRightArrow && (
                 <ActionIcon
                   variant="filled"
-                  color="#EAECED"
+                  color="gray.2"
                   radius="xl"
                   size="lg"
                   h={24}
@@ -1141,19 +1122,26 @@ export default function Invoice(props) {
                     height={18}
                     width={18}
                     stroke={2}
-                    color="#30444F"
+                    color="gray.8"
                   />
                 </ActionIcon>
               )}
             </Box>
-            <Box m={4}>
-              <Grid columns={24} gutter={{ base: 2 }} pl={"4"} pr={"4"}>
+            <Box m={0}>
+              <Grid
+                columns={24}
+                gutter={{ base: 2 }}
+                pl={"4"}
+                pr={"4"}
+                align="center"
+                justify="center"
+              >
                 <Grid.Col span={3}>
                   <Switch
                     size="lg"
                     w={"100%"}
                     color={"red.3"}
-                    mt={"6"}
+                    mt={"2"}
                     ml={"6"}
                     onLabel={t("%")}
                     offLabel={t("Flat")}
@@ -1169,7 +1157,7 @@ export default function Invoice(props) {
                 <Grid.Col span={3}>
                   <TextInput
                     type="number"
-                    placeholder="0"
+                    placeholder={t("Discount")}
                     value={form.values.discount}
                     error={form.errors.discount}
                     size={rem(40)}
@@ -1192,11 +1180,11 @@ export default function Invoice(props) {
                     }}
                   />
                 </Grid.Col>
-                <Grid.Col span={6}> &nbsp; </Grid.Col>
+                {/* <Grid.Col span={6}> &nbsp; </Grid.Col> */}
                 <Grid.Col span={6}>
                   <TextInput
                     type="number"
-                    placeholder="0"
+                    placeholder={t("Amount")}
                     value={form.values.receive_amount}
                     error={form.errors.receive_amount}
                     size={rem(40)}
@@ -1205,6 +1193,34 @@ export default function Invoice(props) {
                       form.setFieldValue("receive_amount", event.target.value);
                     }}
                   />
+                </Grid.Col>
+                <Grid.Col span={6}>
+                  <Button
+                    disabled={!tableId}
+                    fullWidth
+                    radius="sm"
+                    size="md"
+                    color="red"
+                    leftSection={
+                      customerObject && customerObject.name ? (
+                        <></>
+                      ) : (
+                        <IconUserFilled height={14} width={14} stroke={2} />
+                      )
+                    }
+                    onClick={handleCustomerAdd}
+                  >
+                    <Stack gap={0}>
+                      <Text fw={600} size="xs">
+                        {customerObject && customerObject.name
+                          ? customerObject.name
+                          : t("Customer")}
+                      </Text>
+                      <Text size="xs">
+                        {customerObject && customerObject.mobile}
+                      </Text>
+                    </Stack>
+                  </Button>
                 </Grid.Col>
               </Grid>
             </Box>
@@ -1225,6 +1241,7 @@ export default function Invoice(props) {
                 >
                   <Button
                     bg={"red.5"}
+                    c={"white"}
                     size={"sm"}
                     fullWidth={true}
                     leftSection={<IconHandStop />}
@@ -1252,6 +1269,7 @@ export default function Invoice(props) {
                       disabled={isDisabled}
                       bg={"green.5"}
                       size={"sm"}
+                      c={"white"}
                       fullWidth={true}
                       leftSection={<IconPrinter />}
                       onClick={handlePrintAll}
@@ -1264,7 +1282,8 @@ export default function Invoice(props) {
               <Grid.Col span={enableTable ? 3 : 4}>
                 <Button
                   disabled={isDisabled}
-                  bg={"#30444F"}
+                  bg={"gray.8"}
+                  c={"white"}
                   size={"sm"}
                   fullWidth={true}
                   leftSection={<IconPrinter />}
@@ -1277,7 +1296,8 @@ export default function Invoice(props) {
                 <Button
                   disabled={isDisabled}
                   size={"sm"}
-                  bg={"#00994f"}
+                  c={"white"}
+                  bg={"green.8"}
                   fullWidth={true}
                   leftSection={<IconDeviceFloppy />}
                   onClick={handlePrintAll}
