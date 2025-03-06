@@ -40,8 +40,7 @@ import tableCss from "./Table.module.css";
 import Invoice from "./Invoice.jsx";
 import { notifications } from "@mantine/notifications";
 import { useCartOperations } from "./utils/CartOperations.jsx";
-import InputNumberForm from "../../../form-builders/InputNumberForm.jsx";
-import { useForm } from "@mantine/form";
+import __ShortcutPos from "./__ShortcutPos.jsx";
 
 export default function NewSales(props) {
   const {
@@ -402,13 +401,13 @@ export default function NewSales(props) {
         <Grid.Col span={15}>
           <Grid columns={12} gutter={{ base: 8 }}>
             <Grid.Col span={2}>
-              <Box bg="white" w={"100%"} mt={6} className="border-radius">
+              <Box bg="white" w={"100%"} className="border-radius">
                 <ScrollArea
-                  h={enableTable ? height + 26 : height + 189}
+                  h={enableTable ? height + 32 : height + 195}
                   type="never"
                   scrollbars="y"
                 >
-                  <Box pt={"4"} pl={"8"} pr={"8"} pb={"8"}>
+                  <Box pl={"8"} pr={"8"} pb={"8"}>
                     {categoryDropdown.map((data) => (
                       <Box
                         style={{
@@ -449,7 +448,7 @@ export default function NewSales(props) {
                   pb={4}
                   className="border-radius"
                 >
-                  <Grid gutter={{ base: 4 }} grow align="center" mt={6}>
+                  <Grid gutter={{ base: 4 }} grow align="center" mt={4}>
                     <Grid.Col span={3}>
                       <Tooltip
                         label={t("BarcodeValidateMessage")}
@@ -620,12 +619,12 @@ export default function NewSales(props) {
                 <Box
                   bg="white"
                   w={"100%"}
-                  h={enableTable ? height - 24 : height + 139}
+                  h={enableTable ? height - 22 : height + 141}
                   mt={4}
                   className="border-radius"
                 >
                   <ScrollArea
-                    h={enableTable ? height - 24 : height + 139}
+                    h={enableTable ? height - 22 : height + 141}
                     type="never"
                     pt={"8"}
                     pl={"xs"}
@@ -932,6 +931,12 @@ export default function NewSales(props) {
             customerObject={customerObject}
             setCustomerObject={setCustomerObject}
             loadCartProducts={loadCartProducts}
+          />
+        </Grid.Col>
+        <Grid.Col span={1}>
+          <__ShortcutPos
+            FormSubmit={"EntityFormSubmit"}
+            Name={"CompanyName"}
           />
         </Grid.Col>
       </Grid>
