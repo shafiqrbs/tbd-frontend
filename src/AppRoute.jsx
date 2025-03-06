@@ -52,6 +52,7 @@ import FileUploadIndex from "./components/modules/core/file-upload/FileUploadInd
 import MatrixIndex from "./components/modules/procurement/requistion-matrix/MatrixIndex.jsx";
 import BakeryIndex from "./components/modules/pos/bakery/BakeryIndex.jsx";
 import ReportIndex from "./components/modules/reporting/reports/ReportIndex.jsx";
+import RequisitionUpdate from "./components/modules/procurement/purchase-requisition/RequisitionUpdate.jsx";
 
 function AppRoute() {
   return (
@@ -155,6 +156,7 @@ function AppRoute() {
         <Route path="/procurement/">
           <Route path="requisition" element={<Requisition />} />
           <Route path="new-requisition" element={<RequisitionInvoice />} />
+          <Route path="requisition/edit/:id" element={<RequisitionUpdate />} />
           <Route path="requisition-board" element={<MatrixIndex />} />
         </Route>
         <Route path="/reporting/">

@@ -240,6 +240,7 @@ export default function MatrixTable(props) {
                                                         <DateInput
                                                             disabled={fetching}
                                                             clearable
+                                                            maxDate={new Date()}
                                                             onChange={(e) => {
                                                                 setExpectedDate(e)
                                                                 e != ""

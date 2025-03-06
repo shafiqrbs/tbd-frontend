@@ -23,15 +23,16 @@ import {
   IconPencil,
   IconPrinter,
   IconEdit,
-  IconReceipt,
+  IconReceipt, IconTrashX,
 } from "@tabler/icons-react";
 import { useDispatch, useSelector } from "react-redux";
 import { setFetching } from "../../../../store/core/crudSlice";
 import _ShortcutTable from "../../shortcut/_ShortcutTable";
 import { useHotkeys } from "@mantine/hooks";
 import { InvoiceBatchPrintPos } from "../../inventory/invoice-batch/invoice-batch-print/InvoiceBatchPrintPos";
-import {getIndexEntityData} from "../../../../store/inventory/crudSlice.js";
+import {deleteEntityData, getIndexEntityData} from "../../../../store/inventory/crudSlice.js";
 import { PrintNormal } from "../requisition-print/PrintNormal.jsx";
+import {modals} from "@mantine/modals";
 
 export default function _RequisitionTable(props) {
   const printRef = useRef();
@@ -277,6 +278,65 @@ export default function _RequisitionTable(props) {
                                 />
                               </ActionIcon>
                             </Menu.Target>
+
+                            <Menu.Dropdown>
+                              {
+                                  data.process === 'New' &&
+                                  <Menu.Item
+                                      onClick={() => {
+                                        navigate(`/procurement/requisition/edit/${data.id}`)
+                                      }}
+                                      component="a"
+                                      w={'200'}
+                                  >
+                                    {t('Edit')}
+                                  </Menu.Item>
+                              }
+                              {/*<Menu.Item
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    setLoading(true)
+                                    setSalesViewData(data)
+                                    setSelectedRow(data.invoice)
+                                    data?.invoice_batch_id ? setChecked(true) : setChecked(false)
+                                  }}
+                                  component="a"
+                                  w={'200'}
+                              >
+                                {t('Show')}
+                              </Menu.Item>*/}
+                              {/*{
+                                  !data.invoice_batch_id && !data.approved_by_id &&
+                                  <Menu.Item
+                                      onClick={() => {
+                                        modals.openConfirmModal({
+                                          title: (
+                                              <Text size="md"> {t("FormConfirmationTitle")}</Text>
+                                          ),
+                                          children: (
+                                              <Text size="sm"> {t("FormConfirmationMessage")}</Text>
+                                          ),
+                                          labels: { confirm: 'Confirm', cancel: 'Cancel' },
+                                          confirmProps: { color: 'red.6' },
+                                          onCancel: () => console.log('Cancel'),
+                                          onConfirm: () => {
+                                            {
+                                              dispatch(deleteEntityData('inventory/sales/' + data.id));
+                                            }
+                                          },
+                                        });
+                                      }}
+                                      component="a"
+                                      w={'200'}
+                                      mt={'2'}
+                                      bg={'red.1'}
+                                      c={'red.6'}
+                                      rightSection={<IconTrashX style={{ width: rem(14), height: rem(14) }} />}
+                                  >
+                                    {t('Delete')}
+                                  </Menu.Item>
+                              }*/}
+                            </Menu.Dropdown>
                           </Menu>
                         </Box>
                       ),

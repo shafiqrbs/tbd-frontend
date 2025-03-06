@@ -755,5 +755,6 @@
   "OrderProcessedSuccessfully" : "Order Processed Successfully",
   "ValidationError" : "ValidationError",
   "CouponCode" : "Coupon Code",
+  "UpdateRequisition" : "Update Requisition",
   "" : ""
 }
