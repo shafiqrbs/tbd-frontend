@@ -20,3 +20,6 @@
   border: rem(1px) solid
     light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-5));
 }
+.border-radius{
+  border-radius: 4px;
+}
