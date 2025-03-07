@@ -23,7 +23,8 @@ function DatePickerForm(props) {
         id,
         sm,
         lg,
-        closeIcon
+        closeIcon,
+        disable
     } = props
     const { t, i18n } = useTranslation();
 
@@ -47,7 +48,7 @@ function DatePickerForm(props) {
                     clearable
                     defaultValue={new Date()}
                     size="sm"
-                    minDate={new Date()}
+                    minDate={disable && new Date()}
                     label={label}
                     placeholder={placeholder}
                     mt={mt}

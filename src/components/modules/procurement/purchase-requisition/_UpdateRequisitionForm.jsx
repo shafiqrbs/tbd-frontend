@@ -12,7 +12,7 @@ import {isNotEmpty, useForm} from "@mantine/form";
 import {getHotkeyHandler, useHotkeys} from "@mantine/hooks";
 import React, {useEffect, useState} from "react";
 import {useTranslation} from "react-i18next";
-import {useOutletContext} from "react-router-dom";
+import {useNavigate, useOutletContext} from "react-router-dom";
 import InputNumberForm from "../../../form-builders/InputNumberForm";
 import {
     IconBarcode,
@@ -33,19 +33,22 @@ import tableCss from "../../../../assets/css/Table.module.css";
 import ShortcutInvoice from "../../shortcut/ShortcutInvoice";
 import TextAreaForm from "../../../form-builders/TextAreaForm";
 import DatePickerForm from "../../../form-builders/DatePicker";
-import {storeEntityData} from "../../../../store/core/crudSlice.js";
 import {useDispatch} from "react-redux";
 import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
-import dayjs from 'dayjs';
+
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
+import {updateEntityData} from "../../../../store/inventory/crudSlice.js";
 
 
 export default function _UpdateRequisitionForm(props) {
-    const {currencySymbol,editedData} = props;
+    const {currencySymbol, editedData} = props;
     const {t} = useTranslation();
     const {isOnline, mainAreaHeight} = useOutletContext();
     const height = mainAreaHeight - 150;
     const [fetching] = useState(false);
     const dispatch = useDispatch()
+    const navigate = useNavigate();
 
     const [tempCardProducts, setTempCardProducts] = useState([]);
     const [loadCardProducts, setLoadCardProducts] = useState(false);
@@ -56,7 +59,6 @@ export default function _UpdateRequisitionForm(props) {
     }, [])
 
     // vendor dropdown
-
     const [vendorData, setVendorData] = useState(null);
     const [vendorsDropdownData, setVendorsDropdownData] = useState([]);
 
@@ -153,24 +155,18 @@ export default function _UpdateRequisitionForm(props) {
         },
     });
 
-    const options = {year: "numeric", month: "2-digit", day: "2-digit"};
-
-    console.log(editedData.expected_date)
-
-    // formValue["invoice_date"] = editedData.expected_date ? new Date(editedData.expected_date).toLocaleDateString("en-CA", options) : new Date().toLocaleDateString("en-CA");
-
+    dayjs.extend(customParseFormat);
     const requisitionForm = useForm({
         initialValues: {
-            // order_process: editedData?.process,
-            // narration: "",
-            // expected_date: editedData.expected_date ? new Date(editedData.expected_date) : '',
-            // expected_date: editedData.expected_date ? dayjs(editedData.expected_date, "DD-MM-YYYY").format("YYYY-MM-DD") : '',
+            expected_date: editedData.expected_date ? dayjs(editedData.expected_date, "DD-MM-YYYY").toDate() : new Date(),
+            invoice_date: editedData.invoice_date ? dayjs(editedData.invoice_date, "DD-MM-YYYY").toDate() : new Date(),
+            narration: editedData.remark,
         },
         validate: {
             expected_date: isNotEmpty(),
+            invoice_date: isNotEmpty(),
         },
     });
-
 
     const [selectProductDetails, setSelectProductDetails] = useState("");
 
@@ -183,7 +179,7 @@ export default function _UpdateRequisitionForm(props) {
         const filteredProducts = localProducts.filter(
             (product) => product.id === Number(productForm.values.product_id)
         );
-        console.log(filteredProducts)
+
         if (filteredProducts.length > 0) {
             const selectedProduct = filteredProducts[0];
             setSelectProductDetails(selectedProduct);
@@ -205,19 +201,10 @@ export default function _UpdateRequisitionForm(props) {
         }
     }, [productForm.values.product_id]);
 
+    let purchaseSubTotalAmount = tempCardProducts?.reduce((total, item) => total + item.sub_total, 0) || 0;
 
 
-    /*useEffect(() => {
-        const tempProducts = localStorage.getItem("temp-requisition-products");
-        setTempCardProducts(tempProducts ? JSON.parse(tempProducts) : []);
-        setLoadCardProducts(false);
-    }, [loadCardProducts]);*/
-
-    let purchaseSubTotalAmount =
-        tempCardProducts?.reduce((total, item) => total + item.sub_total, 0) || 0;
-
-
-    const changeSubTotalbyQuantity = (event) => {
+    const changeSubTotalByQuantity = (event) => {
         const quantity = Number(event.target.value);
         const purchase_price = Number(productForm.values.purchase_price);
         if (
@@ -250,7 +237,7 @@ export default function _UpdateRequisitionForm(props) {
         }
     };
 
-    const changePricebySubtotal = (event) => {
+    const changePriceBySubtotal = (event) => {
         const subTotal = Number(event.target.value);
         const quantity = Number(productForm.values.quantity);
 
@@ -263,15 +250,10 @@ export default function _UpdateRequisitionForm(props) {
         }
     };
 
-    // updates local stroage ,resets form, sets focus to product search
+    // updates local storage ,resets form, sets focus to product search
 
     function updateLocalStorageAndResetForm(addProducts, type) {
-        /*localStorage.setItem(
-            "temp-requisition-products",
-            JSON.stringify(addProducts)
-        );*/
         setTempCardProducts(addProducts);
-
         setSearchValue("");
         productForm.reset();
         setLoadCardProducts(true);
@@ -279,12 +261,10 @@ export default function _UpdateRequisitionForm(props) {
     }
 
     // Add product based on product id
-
     function handleAddProductByProductId(values, myCardProducts, localProducts) {
-        console.log(values,myCardProducts,localProducts)
+        console.log(values, myCardProducts, localProducts)
         const addProducts = [...myCardProducts, ...localProducts.reduce((acc, product) => {
             if (product.id === Number(values.product_id)) {
-                // console.log('ok')
                 acc.push({
                     product_id: product.id,
                     display_name: product.display_name,
@@ -299,23 +279,6 @@ export default function _UpdateRequisitionForm(props) {
             return acc;
         }, [])];
         updateLocalStorageAndResetForm(addProducts, 'productId');
-        /*const addProducts = localProducts.reduce((acc, product) => {
-            if (product.id === Number(values.product_id)) {
-                acc.push({
-                    product_id: product.id,
-                    display_name: product.display_name,
-                    quantity: Number(values.quantity),
-                    unit_name: product.unit_name,
-                    purchase_price: Number(values.purchase_price),
-                    sub_total: Number(values.sub_total),
-                    sales_price: Number(product.sales_price),
-                    vendor_id: productForm.values.vendor_id,
-                });
-            }
-            return acc;
-        }, myCardProducts);
-        setVendorData(null);
-        updateLocalStorageAndResetForm(addProducts, "productId");*/
     }
 
     // add product based on barcode
@@ -467,12 +430,12 @@ export default function _UpdateRequisitionForm(props) {
                                                     }
                                                 })}
                                             >
-                                                <SelectForm 
+                                                <SelectForm
                                                     tooltip={t("ChooseVendor")}
                                                     label=""
                                                     placeholder={t("Vendor")}
                                                     required={false}
-                                                    nextField="product_id"  
+                                                    nextField="product_id"
                                                     name="vendor_id"
                                                     form={productForm}
                                                     dropdownValue={vendorsDropdownData}
@@ -502,7 +465,7 @@ export default function _UpdateRequisitionForm(props) {
                                                                 />
                                                             </Grid.Col>
                                                             <Grid.Col span={8}>
-                                                                <SelectServerSideForm 
+                                                                <SelectServerSideForm
                                                                     disabled={!vendorData}
                                                                     tooltip={t("ChooseStockProduct")}
                                                                     label=""
@@ -529,7 +492,7 @@ export default function _UpdateRequisitionForm(props) {
                                                                     name={"quantity"}
                                                                     id={"quantity"}
                                                                     type={"number"}
-                                                                    onChange={changeSubTotalbyQuantity}
+                                                                    onChange={changeSubTotalByQuantity}
                                                                     rightSection={inputGroupText}
                                                                     rightSectionWidth={50}
                                                                 />
@@ -555,13 +518,12 @@ export default function _UpdateRequisitionForm(props) {
                                                                     label=""
                                                                     placeholder={t("SubTotal")}
                                                                     required={true}
-                                                                    // nextField={"EntityFormSubmit"}
                                                                     form={productForm}
                                                                     name={"sub_total"}
                                                                     id={"sub_total"}
                                                                     type={"number"}
                                                                     rightSection={inputGroupCurrency}
-                                                                    onChange={changePricebySubtotal}
+                                                                    onChange={changePriceBySubtotal}
                                                                     closeIcon={false}
                                                                     disabled={true}
                                                                 />
@@ -596,12 +558,7 @@ export default function _UpdateRequisitionForm(props) {
                                             <form
                                                 id="requisitionForm"
                                                 onSubmit={requisitionForm.onSubmit(async (values) => {
-                                                    const tempProducts = localStorage.getItem(
-                                                        "temp-requisition-products"
-                                                    );
-                                                    let items = tempProducts ? JSON.parse(tempProducts) : [];
-                                                    let createdBy = JSON.parse(localStorage.getItem("user"));
-                                                    let vendor = items.map((pro) => pro.vendor_id)
+                                                    let items = tempCardProducts ? tempCardProducts : [];
                                                     let transformedArray = items.map((product) => {
                                                         return {
                                                             product_id: product.product_id,
@@ -619,33 +576,23 @@ export default function _UpdateRequisitionForm(props) {
 
                                                     formValue["invoice_date"] = values.invoice_date ? new Date(values.invoice_date).toLocaleDateString("en-CA", options) : new Date().toLocaleDateString("en-CA");
                                                     formValue["expected_date"] = values.expected_date && new Date(values.expected_date).toLocaleDateString("en-CA", options);
-                                                    formValue["narration"] = values.narration;
-                                                    formValue["created_by_id"] = createdBy?.id;
+                                                    formValue["remark"] = values.narration;
                                                     formValue["items"] = transformedArray ? transformedArray : [];
+                                                    formValue["vendor_id"] = editedData.vendor_id;
+                                                    formValue["created_by_id"] = editedData.createdById;
                                                     formValue["process"] = "New";
-                                                    formValue["vendor_id"] = vendor[0];
 
                                                     const value = {
-                                                        url: 'inventory/requisition',
+                                                        url: 'inventory/requisition/' + editedData.id,
                                                         data: formValue
                                                     }
 
-                                                    const resultAction = await dispatch(storeEntityData(value));
-
-                                                    if (storeEntityData.rejected.match(resultAction)) {
-                                                        showNotificationComponent(resultAction.payload.message, 'red', 'lightgray', true, 1000, true)
-                                                    } else if (storeEntityData.fulfilled.match(resultAction)) {
-                                                        if (resultAction.payload.data.status === 200) {
-                                                            showNotificationComponent(resultAction.payload.data.message, 'teal', 'lightgray', true, 1000, true)
-                                                            setTimeout(() => {
-                                                                localStorage.removeItem("temp-requisition-products");
-                                                                requisitionForm.reset();
-                                                                setVendorData(null);
-                                                                setLoadCardProducts(true);
-                                                            }, 700)
-                                                        } else {
-                                                            showNotificationComponent(resultAction.payload.data.message, 'teal', 'lightgray', true, 1000, true)
-                                                        }
+                                                    const result = await dispatch(updateEntityData(value)).unwrap();
+                                                    if (result.data.status === 200) {
+                                                        showNotificationComponent(t('UpdateSuccessfully'), 'teal', 'lightgray', null, false, 1000)
+                                                        navigate('/procurement/requisition', {replace: true})
+                                                    } else {
+                                                        showNotificationComponent(t('FailedToUpdateData'), 'red', 'lightgray', null, false, 1000)
                                                     }
                                                 })}
                                             >
@@ -691,6 +638,7 @@ export default function _UpdateRequisitionForm(props) {
                                                                 }
                                                                 rightSectionWidth={30}
                                                                 closeIcon={true}
+                                                                disable={false}
                                                             />
                                                         </Box>
                                                     </Grid.Col>
@@ -742,19 +690,11 @@ export default function _UpdateRequisitionForm(props) {
                                                     const [editedQuantity, setEditedQuantity] = useState(
                                                         item.quantity
                                                     );
-
                                                     const handlQuantityChange = (e) => {
                                                         const editedQuantity = e.currentTarget.value;
                                                         setEditedQuantity(editedQuantity);
 
-                                                        const tempCardProducts = localStorage.getItem(
-                                                            "temp-requisition-products"
-                                                        );
-                                                        const cardProducts = tempCardProducts
-                                                            ? JSON.parse(tempCardProducts)
-                                                            : [];
-
-                                                        const updatedProducts = cardProducts.map(
+                                                        const updatedProducts = tempCardProducts.map(
                                                             (product) => {
                                                                 if (product.product_id === item.product_id) {
                                                                     return {
@@ -768,10 +708,7 @@ export default function _UpdateRequisitionForm(props) {
                                                             }
                                                         );
 
-                                                        localStorage.setItem(
-                                                            "temp-requisition-products",
-                                                            JSON.stringify(updatedProducts)
-                                                        );
+                                                        setTempCardProducts(updatedProducts)
                                                         setLoadCardProducts(true);
                                                     };
 

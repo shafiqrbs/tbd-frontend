@@ -98,7 +98,6 @@ export default function _GenericRequisitionForm(props) {
     });
 
     // vendor dropdown
-
     const [vendorData, setVendorData] = useState(null);
     const [vendorsDropdownData, setVendorsDropdownData] = useState([]);
 
@@ -109,7 +108,6 @@ export default function _GenericRequisitionForm(props) {
 
         // Filter vendor for domain vendor
         const filteredVendors = coreVendors.filter(vendor => vendor.sub_domain_id != null);
-        // console.log(filteredVendors)
         if (filteredVendors && filteredVendors.length > 0) {
             const transformedData = filteredVendors.map((type) => {
                 return {
@@ -200,7 +198,7 @@ export default function _GenericRequisitionForm(props) {
         tempCardProducts?.reduce((total, item) => total + item.sub_total, 0) || 0;
 
 
-    const changeSubTotalbyQuantity = (event) => {
+    const changeSubTotalByQuantity = (event) => {
         const quantity = Number(event.target.value);
         const purchase_price = Number(productForm.values.purchase_price);
         if (
@@ -216,7 +214,7 @@ export default function _GenericRequisitionForm(props) {
             productForm.setFieldValue("sub_total", quantity * purchase_price);
         }
     };
-    const changeSubTotalbyPrice = (event) => {
+    const changeSubTotalByPrice = (event) => {
         const purchase_price = Number(event.target.value);
         const quantity = Number(productForm.values.quantity);
         if (
@@ -233,7 +231,7 @@ export default function _GenericRequisitionForm(props) {
         }
     };
 
-    const changePricebySubtotal = (event) => {
+    const changePriceBySubtotal = (event) => {
         const subTotal = Number(event.target.value);
         const quantity = Number(productForm.values.quantity);
 
@@ -435,12 +433,12 @@ export default function _GenericRequisitionForm(props) {
                                                     }
                                                 })}
                                             >
-                                                <SelectForm 
+                                                <SelectForm
                                                     tooltip={t("ChooseVendor")}
                                                     label=""
                                                     placeholder={t("Vendor")}
                                                     required={false}
-                                                    nextField="product_id"  
+                                                    nextField="product_id"
                                                     name="vendor_id"
                                                     form={productForm}
                                                     dropdownValue={vendorsDropdownData}
@@ -470,7 +468,7 @@ export default function _GenericRequisitionForm(props) {
                                                                 />
                                                             </Grid.Col>
                                                             <Grid.Col span={8}>
-                                                                <SelectServerSideForm 
+                                                                <SelectServerSideForm
                                                                     disabled={!vendorData}
                                                                     tooltip={t("ChooseStockProduct")}
                                                                     label=""
@@ -497,7 +495,7 @@ export default function _GenericRequisitionForm(props) {
                                                                     name={"quantity"}
                                                                     id={"quantity"}
                                                                     type={"number"}
-                                                                    onChange={changeSubTotalbyQuantity}
+                                                                    onChange={changeSubTotalByQuantity}
                                                                     rightSection={inputGroupText}
                                                                     rightSectionWidth={50}
                                                                 />
@@ -514,7 +512,7 @@ export default function _GenericRequisitionForm(props) {
                                                                     rightSection={inputGroupCurrency}
                                                                     closeIcon={true}
                                                                     disabled={true}
-                                                                    onChange={changeSubTotalbyPrice}
+                                                                    onChange={changeSubTotalByPrice}
                                                                 />
                                                             </Grid.Col>
                                                             <Grid.Col span={4}>
@@ -523,13 +521,12 @@ export default function _GenericRequisitionForm(props) {
                                                                     label=""
                                                                     placeholder={t("SubTotal")}
                                                                     required={true}
-                                                                    // nextField={"EntityFormSubmit"}
                                                                     form={productForm}
                                                                     name={"sub_total"}
                                                                     id={"sub_total"}
                                                                     type={"number"}
                                                                     rightSection={inputGroupCurrency}
-                                                                    onChange={changePricebySubtotal}
+                                                                    onChange={changePriceBySubtotal}
                                                                     closeIcon={false}
                                                                     disabled={true}
                                                                 />
@@ -587,7 +584,7 @@ export default function _GenericRequisitionForm(props) {
 
                                                     formValue["invoice_date"] = values.invoice_date ? new Date(values.invoice_date).toLocaleDateString("en-CA", options) : new Date().toLocaleDateString("en-CA");
                                                     formValue["expected_date"] = values.expected_date && new Date(values.expected_date).toLocaleDateString("en-CA", options);
-                                                    formValue["narration"] = values.narration;
+                                                    formValue["remark"] = values.narration;
                                                     formValue["created_by_id"] = createdBy?.id;
                                                     formValue["items"] = transformedArray ? transformedArray : [];
                                                     formValue["process"] = "New";
@@ -710,7 +707,6 @@ export default function _GenericRequisitionForm(props) {
                                                     const [editedQuantity, setEditedQuantity] = useState(
                                                         item.quantity
                                                     );
-
                                                     const handlQuantityChange = (e) => {
                                                         const editedQuantity = e.currentTarget.value;
                                                         setEditedQuantity(editedQuantity);
