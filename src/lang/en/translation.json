@@ -756,5 +756,8 @@
   "ValidationError" : "ValidationError",
   "CouponCode" : "Coupon Code",
   "UpdateRequisition" : "Update Requisition",
+  "NewCustomer" : "New Customer",
+  "UserSales" : "User Sales",
+  "AdditionalTables" : "Additional Tables",
   "" : ""
 }

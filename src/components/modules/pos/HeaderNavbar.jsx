@@ -112,7 +112,7 @@ function HeaderNavbar(props) {
                   </Text>
                 </Badge>
                 <Flex
-                  bg={table.id === tableId ? "#30444F" : "white"}
+                  bg={table.id === tableId ? "gray.8" : "white"}
                   mt={"9"}
                   direction="column"
                   align="center"
@@ -140,7 +140,7 @@ function HeaderNavbar(props) {
                     w={92}
                     justify={"center"}
                     align={"center"}
-                    bg={table.id === tableId ? "white" : "#E6F5ED"}
+                    bg={table.id === tableId ? "white" : "green.0"}
                     style={{
                       borderRadius: "1px",
                     }}
@@ -156,7 +156,7 @@ function HeaderNavbar(props) {
                     )}
                   </Flex>
                   <Center>
-                    <Text mt={8} mb={-28} fz="sm" fw={800} c={"#ff6b6b"}>
+                    <Text mt={8} mb={-28} fz="sm" fw={800} c={"red.6"}>
                       {tableCustomerMap && tableCustomerMap[table.id]
                         ? tableCustomerMap[table.id].mobile ||
                           tableCustomerMap[table.id].name
