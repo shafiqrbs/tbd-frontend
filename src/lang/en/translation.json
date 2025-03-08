@@ -514,7 +514,7 @@
   "RetailInvoice": "Retail Invoice",
   "BillTo": "Bill To",
   "UserDetails": "User Details Information",
-  "MobileValidationRequired": "Enter mobile number ",
+  "MobileValidationRequired": "Enter mobile number",
   "VendorDetailsData": "Vendor Details Information",
   "NameRequiredMessage": "Enter name",
   "NameLengthMessage": "Name must be 2-20 characters long",
@@ -759,5 +759,6 @@
   "NewCustomer" : "New Customer",
   "UserSales" : "User Sales",
   "AdditionalTables" : "Additional Tables",
+  "NewReceiver" : "New Receiver",
   "" : ""
 }
