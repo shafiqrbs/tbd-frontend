@@ -33,17 +33,10 @@ import InputForm from "../../../../form-builders/InputForm.jsx";
 import PhoneNumber from "../../../../form-builders/PhoneNumberInput.jsx";
 import SelectForm from "../../../../form-builders/SelectForm.jsx";
 import TextAreaForm from "../../../../form-builders/TextAreaForm.jsx";
+import tableCss from "../../../../../assets/css/Table.module.css";
+import { DataTable } from "mantine-datatable";
 
 function _AddCustomerFormPos(props) {
-  const { t } = useTranslation();
-  const dispatch = useDispatch();
-  const { isOnline, mainAreaHeight } = useOutletContext();
-  const height = mainAreaHeight - 100; //TabList height 104
-  const [saveCreateLoading, setSaveCreateLoading] = useState(false);
-  const effectRan = useRef(false);
-  const [customerGroupData, setCustomerGroupData] = useState(null);
-  const [locationData, setLocationData] = useState(null);
-
   const {
     setCustomerDrawer,
     setRefreshCustomerDropdown,
@@ -62,6 +55,17 @@ function _AddCustomerFormPos(props) {
     clearTableCustomer,
   } = props;
 
+  const { t } = useTranslation();
+  const dispatch = useDispatch();
+  const { isOnline, mainAreaHeight } = useOutletContext();
+  const height = mainAreaHeight - 100; //TabList height 104
+  const [saveCreateLoading, setSaveCreateLoading] = useState(false);
+  const effectRan = useRef(false);
+  const [customerGroupData, setCustomerGroupData] = useState(null);
+  const [locationData, setLocationData] = useState(null);
+
+  const [customerIdForReceiver, setCustomerIdForReceiver] = useState(null);
+  const [indexData, setIndexData] = useState([]);
   const customerDetails = React.useMemo(() => {
     if (customerObject && customerId) {
       return (
@@ -186,6 +190,24 @@ function _AddCustomerFormPos(props) {
       },
     },
   });
+  const receiverAddedForm = useForm({
+    initialValues: {
+      name: "",
+      customer_id: "",
+      mobile: "",
+    },
+    validate: {
+      name: hasLength({ min: 2, max: 20 }),
+      mobile: (value) => {
+        if (!value) return t("MobileValidationRequired");
+        return null;
+      },
+      customer_id: (value) => {
+        if (!value) return t("CustomerValidationRequired");
+        return null;
+      },
+    },
+  });
   const closeModel = () => {
     if (enableTable && tableId) {
       clearTableCustomer(tableId);
@@ -195,6 +217,7 @@ function _AddCustomerFormPos(props) {
       setCustomerId(null);
       setCustomerObject({});
       customerAddedForm.reset();
+      receiverAddedForm.reset();
     }
     setCustomerDrawer(false);
   };
@@ -226,10 +249,18 @@ function _AddCustomerFormPos(props) {
               {
                 label: (
                   <Center style={{ gap: 10 }}>
-                    <Text fw={600}>{t("New")}</Text>
+                    <Text fw={600}>{t("NewCustomer")}</Text>
                   </Center>
                 ),
                 value: "New",
+              },
+              {
+                label: (
+                  <Center style={{ gap: 10 }}>
+                    <Text fw={600}>{t("NewReceiver")}</Text>
+                  </Center>
+                ),
+                value: "ReceivedBy",
               },
             ]}
           ></SegmentedControl>
@@ -423,7 +454,7 @@ function _AddCustomerFormPos(props) {
               </ScrollArea>
             </form>
           </Box>
-        ) : (
+        ) : value === "Existing" ? (
           <>
             <ScrollArea
               h={height + 71}
@@ -449,7 +480,6 @@ function _AddCustomerFormPos(props) {
                       value={customerId}
                       changeValue={(value) => {
                         setCustomerId(value);
-                        console.log(value);
                         if (value) {
                           const coreCustomers = localStorage.getItem(
                             "core-customers"
@@ -501,22 +531,185 @@ function _AddCustomerFormPos(props) {
                   </Grid.Col>
                 </Grid>
               </Box>
-
-              <>
-                <Box
-                  p={"md"}
-                  bg={"gray.1"}
-                  className="boxBackground borderRadiusAll"
-                  h={height + 26}
-                  w={"100%"}
-                >
-                  {customerDetails}
-                </Box>
-              </>
+              <Box
+              mt={4}
+                p={"md"}
+                bg={"gray.1"}
+                className="boxBackground borderRadiusAll"
+                h={300}
+                w={"100%"}
+              >
+                {customerDetails}
+              </Box>
+              <Box mt={"8"} className={'borderRadiusAll'}>
+                <DataTable
+                  classNames={{
+                    root: tableCss.root,
+                    table: tableCss.table,
+                    header: tableCss.header,
+                    footer: tableCss.footer,
+                    pagination: tableCss.pagination,
+                  }}
+                  records={indexData.data}
+                  columns={[
+                    {
+                      accessor: "index",
+                      title: t("S/N"),
+                      textAlignment: "right",
+                      render: (item) => indexData.data.indexOf(item) + 1,
+                    },
+                    { accessor: "name", title: t("Name") },
+                    { accessor: "mobile", title: t("Mobile") },
+                    { accessor: "order", title: t("Order") },
+                    {
+                      accessor: "action",
+                      title: t("Action"),
+                      textAlign: "right",
+                      render: (data) => (
+                        <Group gap={4} justify="right" wrap="nowrap">
+                          <Menu
+                            position="bottom-end"
+                            offset={3}
+                            withArrow
+                            trigger="hover"
+                            openDelay={100}
+                            closeDelay={400}
+                          >
+                            <Menu.Target>
+                              <ActionIcon
+                                size="sm"
+                                variant="outline"
+                                color="red"
+                                radius="xl"
+                                aria-label="Settings"
+                              >
+                                <IconDotsVertical
+                                  height={"16"}
+                                  width={"16"}
+                                  stroke={1.5}
+                                />
+                              </ActionIcon>
+                            </Menu.Target>
+                            <Menu.Dropdown>
+                              <Menu.Item
+                                onClick={() => {
+                                  setProvisionDrawer(true);
+                                }}
+                                target="_blank"
+                                component="a"
+                                w={"200"}
+                              >
+                                {t("AddProvision")}
+                              </Menu.Item>
+                            </Menu.Dropdown>
+                          </Menu>
+                        </Group>
+                      ),
+                    },
+                  ]}
+                  // fetching={fetching}
+                  // totalRecords={indexData.total}
+                  // recordsPerPage={perPage}
+                  // page={page}
+                  onPageChange={(p) => {
+                    setPage(p);
+                    setFetching(true);
+                  }}
+                  loaderSize="xs"
+                  loaderColor="grape"
+                  height={height - 300}
+                  scrollAreaProps={{ type: "never" }}
+                />
+              </Box>
             </ScrollArea>
           </>
+        ) : (
+          <>
+            <Box pl={`xs`} pr={"xs"} className={"borderRadiusAll"}>
+              <form
+                id="receiverAddedForm"
+                onSubmit={receiverAddedForm.onSubmit((values) => {
+                  modals.openConfirmModal({
+                    title: <Text size="md"> {t("FormConfirmationTitle")}</Text>,
+                    children: (
+                      <Text size="sm"> {t("FormConfirmationMessage")}</Text>
+                    ),
+                    labels: { confirm: t("Submit"), cancel: t("Cancel") },
+                    confirmProps: { color: "red" },
+                    onCancel: () => console.log("Cancel"),
+                    onConfirm: async () => {
+                      setSaveCreateLoading(true);
+                      console.log("values", values);
+                      setCustomerIdForReceiver(null);
+                      setValue("Existing");
+                      setSaveCreateLoading(false);
+                      receiverAddedForm.reset();
+                    },
+                  });
+                })}
+              >
+                <ScrollArea
+                  h={height + 18}
+                  scrollbarSize={2}
+                  scrollbars="y"
+                  type="never"
+                >
+                  <Box mt={"xs"}>
+                    <SelectForm
+                      tooltip={t("CustomerValidateMessage")}
+                      label=""
+                      placeholder={t("Customer")}
+                      required={false}
+                      nextField={"name"}
+                      name={"customer_id"}
+                      form={receiverAddedForm}
+                      dropdownValue={customersDropdownData}
+                      id={"customer_id"}
+                      mt={1}
+                      searchable={true}
+                      value={customerIdForReceiver}
+                      changeValue={(value) => {
+                        setCustomerIdForReceiver(value);
+                      }}
+                    />
+                  </Box>
+                  <Box mt={"xs"}>
+                    <InputForm
+                      tooltip={t("NameValidateMessage")}
+                      label={t("Name")}
+                      placeholder={t("ReceivedbyName")}
+                      required={true}
+                      nextField={fieldPrefix + "mobile"}
+                      form={receiverAddedForm}
+                      name={"name"}
+                      id={fieldPrefix + "name"}
+                      leftSection={<IconUserCircle size={16} opacity={0.5} />}
+                      rightIcon={""}
+                    />
+                  </Box>
+                  <Box mt={"8"}>
+                    <PhoneNumber
+                      tooltip={
+                        receiverAddedForm.errors.mobile
+                          ? receiverAddedForm.errors.mobile
+                          : t("MobileValidateMessage")
+                      }
+                      label={t("Mobile")}
+                      placeholder={t("Mobile")}
+                      required={true}
+                      nextField={fieldPrefix + "EntityCustomerFormSubmit"}
+                      form={receiverAddedForm}
+                      name={"mobile"}
+                      id={fieldPrefix + "mobile"}
+                      rightIcon={""}
+                    />
+                  </Box>
+                </ScrollArea>
+              </form>
+            </Box>
+          </>
         )}
-        {value === "New" && (
+        {(value === "New" || value === "ReceivedBy") && (
           <Box
             pl={`xs`}
             pr={8}
@@ -563,8 +756,10 @@ function _AddCustomerFormPos(props) {
                         clearTableCustomer(tableId);
                       }
                       setCustomerId(null);
+                      setCustomerIdForReceiver(null);
                       setCustomerObject({});
                       customerAddedForm.reset();
+                      receiverAddedForm.reset();
                     }}
                     rightSection={
                       <IconRefreshDot
@@ -581,7 +776,11 @@ function _AddCustomerFormPos(props) {
                         size="xs"
                         color={`green.8`}
                         type="submit"
-                        form={"customerAddedForm"}
+                        form={
+                          value === "New"
+                            ? "customerAddedForm"
+                            : "receiverAddedForm"
+                        }
                         id={fieldPrefix + "EntityCustomerFormSubmit"}
                         // onClick={() => {
                         //   console.log("Submit")
