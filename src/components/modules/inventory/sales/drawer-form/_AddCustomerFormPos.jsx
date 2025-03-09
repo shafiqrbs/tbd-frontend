@@ -532,7 +532,7 @@ function _AddCustomerFormPos(props) {
                 </Grid>
               </Box>
               <Box
-              mt={4}
+                mt={4}
                 p={"md"}
                 bg={"gray.1"}
                 className="boxBackground borderRadiusAll"
@@ -541,7 +541,7 @@ function _AddCustomerFormPos(props) {
               >
                 {customerDetails}
               </Box>
-              <Box mt={"8"} className={'borderRadiusAll'}>
+              <Box mt={"8"} className={"borderRadiusAll"}>
                 <DataTable
                   classNames={{
                     root: tableCss.root,
@@ -697,11 +697,37 @@ function _AddCustomerFormPos(props) {
                       label={t("Mobile")}
                       placeholder={t("Mobile")}
                       required={true}
-                      nextField={fieldPrefix + "EntityCustomerFormSubmit"}
+                      nextField={fieldPrefix + "email"}
                       form={receiverAddedForm}
                       name={"mobile"}
                       id={fieldPrefix + "mobile"}
                       rightIcon={""}
+                    />
+                  </Box>
+                  <Box mt={"8"}>
+                    <InputForm
+                      tooltip={t("InvalidEmail")}
+                      label={t("Email")}
+                      placeholder={t("Email")}
+                      required={false}
+                      nextField={fieldPrefix + "notes"}
+                      name={"email"}
+                      form={receiverAddedForm}
+                      mt={8}
+                      id={fieldPrefix + "email"}
+                    />
+                  </Box>
+                  <Box mt={"8"}>
+                    <InputForm
+                      tooltip={t("Notes")}
+                      label={t("Notes")}
+                      placeholder={t("Notes")}
+                      required={false}
+                      nextField={fieldPrefix + "EntityCustomerFormSubmit"}
+                      name={"notes"}
+                      form={receiverAddedForm}
+                      mt={8}
+                      id={fieldPrefix + "notes"}
                     />
                   </Box>
                 </ScrollArea>
@@ -749,7 +775,6 @@ function _AddCustomerFormPos(props) {
                     color="red.4"
                     type="reset"
                     id=""
-                    comboboxProps={{ withinPortal: false }}
                     p={0}
                     onClick={() => {
                       if (enableTable && tableId) {

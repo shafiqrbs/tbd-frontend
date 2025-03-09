@@ -394,7 +394,7 @@ export default function NewSales(props) {
       ]}
     />
   );
-  const [leftSide, SetLeftSide] = useState(true);
+  const [leftSide, SetLeftSide] = useState(false);
   return (
     <>
       <Grid columns={24} gutter={{ base: 8 }}>
