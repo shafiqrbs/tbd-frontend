@@ -33,8 +33,9 @@ import InputForm from "../../../../form-builders/InputForm.jsx";
 import PhoneNumber from "../../../../form-builders/PhoneNumberInput.jsx";
 import SelectForm from "../../../../form-builders/SelectForm.jsx";
 import TextAreaForm from "../../../../form-builders/TextAreaForm.jsx";
+import InputNumberForm from "../../../../form-builders/InputNumberForm.jsx";
 export default function __SplitPayment(props) {
-  const { closeDrawer, fieldPrefix } = props;
+  const { closeDrawer } = props;
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const { isOnline, mainAreaHeight } = useOutletContext();
@@ -61,54 +62,21 @@ export default function __SplitPayment(props) {
       }
     }
   }, [transactionModeData]);
-  const customerAddedForm = useForm({
-    initialValues: {
-      name: "",
-      email: "",
-      phone: "",
-      address: "",
-      city: "",
-      state: "",
-      zip: "",
-      country: "",
-      notes: "",
-    },
+  const splitPaymentForm = useForm({
+    initialValues: {},
   });
+  const clicked = (id) => {
+    setId(id);
+  };
   return (
     <form
-      onSubmit={customerAddedForm.onSubmit((values) => {
-        modals.openConfirmModal({
-          title: <Text size="md"> {t("FormConfirmationTitle")}</Text>,
-          children: <Text size="sm"> {t("FormConfirmationMessage")}</Text>,
-          labels: { confirm: t("Submit"), cancel: t("Cancel") },
-          confirmProps: { color: "red" },
-          onCancel: () => console.log("Cancel"),
-          onConfirm: () => {
-            setSaveCreateLoading(true);
-            const value = {
-              url: "core/customer",
-              data: customerAddedForm.values,
-            };
-            dispatch(storeEntityData(value));
-
-            notifications.show({
-              color: "teal",
-              title: t("CreateSuccessfully"),
-              icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
-              loading: false,
-              autoClose: 700,
-              style: { backgroundColor: "lightgray" },
-            });
-
-            setTimeout(() => {
-              dispatch(storeEntityData(value));
-              customerAddedForm.reset();
-              setRefreshCustomerDropdown(true);
-              setCustomerDrawer(false);
-              document.getElementById(focusField).focus();
-            }, 700);
-          },
-        });
+      onSubmit={splitPaymentForm.onSubmit((values) => {
+        const allValues = transactionModeData.map((mode) => ({
+          transaction_mode_id: mode.id,
+          partial_amount: values[`partial_amount_${mode.id}`],
+          remarks: values[`remarks_${mode.id}`],
+        }));
+        console.log("allValues", allValues);
       })}
     >
       <Box mb={0}>
@@ -140,24 +108,28 @@ export default function __SplitPayment(props) {
                   scrollbars="y"
                   type="never"
                 >
-                  <Grid columns={24} gutter={{ base: 8 }}>
-                    <Grid.Col span={6}>
-                      <Stack
-                        m={0}
-                        pt={8}
-                        pb={8}
-                        justify="flex-start"
-                        align="flex-start"
-                        gap="0"
-                        wrap="nowrap"
-                      >
-                        {transactionModeData.map((mode, index) => (
+                  {transactionModeData.map((mode, index) => (
+                    <Grid
+                      align="center"
+                      justify="center"
+                      columns={24}
+                      gutter={{ base: 8 }}
+                      key={index}
+                      onClick={() => {
+                          clicked(mode.id);
+                      }}
+                    >
+                      <Grid.Col span={6}>
+                        <Stack
+                          m={0}
+                          pt={8}
+                          pb={8}
+                          justify="flex-start"
+                          align="flex-start"
+                          gap="0"
+                          wrap="nowrap"
+                        >
                           <Box
-                            onClick={() => {
-                              // console.log("Clicked on method -", mode.id),
-                              clicked(mode.id);
-                            }}
-                            key={index}
                             p={4}
                             style={{
                               position: "relative",
@@ -203,11 +175,42 @@ export default function __SplitPayment(props) {
                               </Tooltip>
                             </Flex>
                           </Box>
-                        ))}
-                      </Stack>
-                    </Grid.Col>
-                    <Grid.Col span={18}></Grid.Col>
-                  </Grid>
+                        </Stack>
+                      </Grid.Col>
+                      <Grid.Col span={8}>
+                        <Box>
+                          <InputNumberForm
+                            tooltip={t("PartialAmount")}
+                            label={t("")}
+                            placeholder={t("PartialAmount")}
+                            required={false}
+                            nextField={"remarks"}
+                            name={`partial_amount_${mode.id}`}
+                            form={splitPaymentForm}
+                            id={`partial_amount_${mode.id}`}
+                          />
+                        </Box>
+                      </Grid.Col>
+                      <Grid.Col span={10}>
+                        <Box>
+                          <InputForm
+                            tooltip={t("Remarks")}
+                            label={t("")}
+                            placeholder={t("Remarks")}
+                            required={true}
+                            nextField={"EntitySplitFormSubmit"}
+                            form={splitPaymentForm}
+                            name={`remarks_${mode.id}`}
+                            id={`remarks_${mode.id}`}
+                            leftSection={
+                              <IconUserCircle size={16} opacity={0.5} />
+                            }
+                            rightIcon={""}
+                          />
+                        </Box>
+                      </Grid.Col>
+                    </Grid>
+                  ))}
                 </ScrollArea>
               </Box>
               <Box
@@ -251,7 +254,7 @@ export default function __SplitPayment(props) {
                         id=""
                         p={0}
                         onClick={() => {
-                          customerAddedForm.reset();
+                          splitPaymentForm.reset();
                         }}
                         rightSection={
                           <IconRefreshDot
@@ -268,12 +271,12 @@ export default function __SplitPayment(props) {
                             size="xs"
                             color={`green.8`}
                             type="submit"
-                            id={fieldPrefix + "EntityCustomerFormSubmit"}
+                            id={"EntitySplitFormSubmit"}
                             leftSection={<IconDeviceFloppy size={16} />}
                           >
                             <Flex direction={`column`} gap={0}>
                               <Text fz={14} fw={400}>
-                                {t("CreateAndSave")}
+                                {t("Save")}
                               </Text>
                             </Flex>
                           </Button>

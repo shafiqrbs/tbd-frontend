@@ -8,7 +8,6 @@ import __SplitPayment from "./__SplitPayment";
 export default function _CommonDrawer(props) {
   const { additionalItemDrawer, setAdditionalItemDrawer, eventName } = props;
 
-  const { isOnline, height } = useOutletContext();
   const closeDrawer = () => {
     setAdditionalItemDrawer(false);
   };

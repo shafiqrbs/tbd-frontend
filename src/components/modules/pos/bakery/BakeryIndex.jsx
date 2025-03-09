@@ -153,7 +153,6 @@ export default function BakeryIndex() {
           >
             <Box pl={"4"}>
               <NewSales
-                enableTable={!!(configData?.is_pos && configData?.is_table_pos)}
                 categoryDropdown={categoryDropdown}
                 tableId={tableId}
                 setTableId={setTableId}
