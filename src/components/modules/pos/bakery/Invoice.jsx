@@ -41,6 +41,8 @@ import {
   IconAlertCircle,
   IconHandStop,
   IconScissors,
+  IconCurrency,
+  IconPlusMinus,
 } from "@tabler/icons-react";
 import { DataTable } from "mantine-datatable";
 import { useDispatch, useSelector } from "react-redux";
@@ -61,12 +63,13 @@ import {
 import AddCustomerDrawer from "../../inventory/sales/drawer-form/AddCustomerDrawer.jsx";
 import customerDataStoreIntoLocalStorage from "../../../global-hook/local-storage/customerDataStoreIntoLocalStorage.js";
 import _CommonDrawer from "./drawer/_CommonDrawer.jsx";
+import InputNumberForm from "../../../form-builders/InputNumberForm.jsx";
+import { useScroll } from "./utils/ScrollOperations";
 export default function Invoice(props) {
   const {
     products,
     tableId,
     tables,
-    enableTable,
     setLoadCartProducts,
     handleSubmitOrder,
     tableCustomerMap,
@@ -81,13 +84,10 @@ export default function Invoice(props) {
   const { t, i18n } = useTranslation();
   const { isOnline, mainAreaHeight } = useOutletContext();
   const height = mainAreaHeight - 190;
-  const calculatedHeight = height - 200; // Set minimum height
-  const navigate = useNavigate();
+  const calculatedHeight = height - 200; //
 
-  const scrollRef = useRef(null);
-  const [showLeftArrow, setShowLeftArrow] = useState(false);
-  const [showRightArrow, setShowRightArrow] = useState(true);
   const { configData } = getConfigData();
+  const enableTable = !!(configData?.is_pos && configData?.is_table_pos);
   const [printPos, setPrintPos] = useState(false);
   const [tempCartProducts, setTempCartProducts] = useState([]);
 
@@ -149,33 +149,9 @@ export default function Invoice(props) {
       setSalesByDropdownData(transformedData);
     }
   }, []);
+  const { scrollRef, showLeftArrow, showRightArrow, handleScroll, scroll } =
+    useScroll();
 
-  // Scroll handling
-  const handleScroll = () => {
-    if (scrollRef.current) {
-      const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
-      setShowLeftArrow(scrollLeft > 0);
-      setShowRightArrow(scrollLeft < scrollWidth - clientWidth - 1);
-    }
-  };
-
-  useEffect(() => {
-    handleScroll();
-    window.addEventListener("resize", handleScroll);
-    return () => window.removeEventListener("resize", handleScroll);
-  }, []);
-
-  const scroll = (direction) => {
-    if (scrollRef.current) {
-      const scrollAmount = 300;
-      scrollRef.current.scrollBy({
-        left: direction === "left" ? -scrollAmount : scrollAmount,
-        behavior: "smooth",
-      });
-    }
-  };
-
-  // Form and validation
   const transactionModeData = JSON.parse(
     localStorage.getItem("accounting-transaction-mode")
   )
@@ -557,6 +533,7 @@ export default function Invoice(props) {
   const [customerDrawer, setCustomerDrawer] = useState(false);
   const [customersDropdownData, setCustomersDropdownData] = useState([]);
   const [refreshCustomerDropdown, setRefreshCustomerDropdown] = useState(false);
+
   const handleCustomerAdd = () => {
     if (enableTable && tableId) {
       setCustomerDrawer(true);
