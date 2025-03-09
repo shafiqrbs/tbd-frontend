@@ -920,35 +920,27 @@ function MainDashboard(props) {
                             />
                           </List.Item>
 
-                          <List.Item
-                              pl={"xs"}
-                              icon={
-                                <ThemeIcon
-                                    color="cyan.6"
-                                    size={20}
-                                    radius="xl"
-                                    variant="outline"
-                                >
-                                  <IconUsers />
-                                </ThemeIcon>
-                              }
-                          >
-                            <NavLink
-                                pl={"md"}
-                                href="core/warehouse"
-                                label={t("Warehouse")}
-                                component="button"
-                                onClick={(e) => {
-                                  navigate("core/warehouse");
-                                }}
-                                onAuxClick={(e) => {
-                                  // Handle middle mouse button click for browsers that support it
-                                  if (e.button === 1) {
-                                    window.open("/core/warehouse", "_blank");
+                          {configData?.sku_warehouse==1 && (
+                              <List.Item
+                                  pl="xs"
+                                  icon={
+                                    <ThemeIcon color="cyan.6" size={20} radius="xl" variant="outline">
+                                      <IconUsers />
+                                    </ThemeIcon>
                                   }
-                                }}
-                            />
-                          </List.Item>
+                              >
+                                <NavLink
+                                    pl="md"
+                                    href="/core/warehouse"
+                                    label={t("Warehouse")}
+                                    component="button"
+                                    onClick={() => navigate("/core/warehouse")}
+                                    onAuxClick={(e) => e.button === 1 && window.open("/core/warehouse", "_blank")}
+                                />
+                              </List.Item>
+                          )}
+
+
                           <List.Item
                               pl={"xs"}
                               icon={

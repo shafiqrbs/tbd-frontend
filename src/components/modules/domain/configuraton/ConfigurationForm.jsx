@@ -74,7 +74,7 @@ function ConfigurationForm() {
             country_id: '',
             currency_id: '',
             address: '',
-            sku_wearhouse: false,
+            sku_warehouse: false,
             sku_category: false,
             vat_enable: false,
             zakat_enable: false,
@@ -158,7 +158,7 @@ function ConfigurationForm() {
             }
 
             const booleanFields = [
-                'sku_wearhouse', 'sku_category', 'vat_enable', 'zakat_enable', 'remove_image',
+                'sku_warehouse', 'sku_category', 'vat_enable', 'zakat_enable', 'remove_image',
                 'invoice_print_logo', 'print_outstanding', 'pos_print', 'is_print_header',
                 'is_invoice_title', 'is_print_footer', 'is_powered', 'custom_invoice',
                 'bonus_from_stock', 'is_unit_price', 'is_description', 'zero_stock',
@@ -284,7 +284,7 @@ function ConfigurationForm() {
                                                             label={t('Address')}
                                                             placeholder={t('Address')}
                                                             required={false}
-                                                            nextField={'sku_wearhouse'}
+                                                            nextField={'sku_warehouse'}
                                                             name={'address'}
                                                             form={form}
                                                             mt={8}
@@ -302,12 +302,12 @@ function ConfigurationForm() {
                                                                     tooltip={t('Warehouse')}
                                                                     label=''
                                                                     nextField={'sku_category'}
-                                                                    name={'sku_wearhouse'}
+                                                                    name={'sku_warehouse'}
                                                                     form={form}
                                                                     color="red"
-                                                                    id={'sku_wearhouse'}
+                                                                    id={'sku_warehouse'}
                                                                     position={'left'}
-                                                                    defaultChecked={configData.sku_wearhouse}
+                                                                    defaultChecked={configData.sku_warehouse}
                                                                 />
                                                             </Grid.Col>
                                                             <Grid.Col span={6} fz={'sm'}

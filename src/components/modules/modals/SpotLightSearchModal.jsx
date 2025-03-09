@@ -204,54 +204,113 @@ function SpotLightSearchModal({onClose}) {
                                                 {groupData.group}
                                             </Text>
                                             <Grid columns={12} grow gutter={"xs"}>
-                                                {groupData.items.map((action, itemIndex) => (
-                                                    <GridCol key={itemIndex} span={6}>
-                                                        <Link
-                                                            to={action.id === "inhouse" ? "#" : action.group === "Production" || action.group === "প্রোডাকশন" ? `production/${action.id}` : action.group === "Core" || action.group === "কেন্দ্র" ? `core/${action.id}` : action.group === "Inventory" || action.group === "ইনভেন্টরি" ? `inventory/${action.id}` : action.group === "Domain" || action.group === "ডোমেইন" ? `domain/${action.id}` : action.group === "Accounting" || action.group === "একাউন্টিং" ? `accounting/${action.id}` : action.group === "Procurement" ? `procurement/${action.id}` : action.group === "Sales & Purchase" ? `inventory/${action.id}` : `/sitemap`}
-                                                            onClick={(e) => {
-                                                                navigate(action.group === "Production" || action.group === "প্রোডাকশন" ? `production/${action.id}` : action.group === "Core" || action.group === "কেন্দ্র" ? `core/${action.id}` : action.group === "Inventory" || action.group === "ইনভেন্টরি" ? `inventory/${action.id}` : action.group === "Domain" || action.group === "ডোমেইন" ? `domain/${action.id}` : action.group === "Accounting" || action.group === "একাউন্টিং" ? `accounting/${action.id}` : action.group === "Sales & Purchase" ? `inventory/${action.id}` : `/sitemap`);
-                                                                onClose();
-                                                            }}
-                                                            style={{textDecoration: "none", color: "inherit"}}
-                                                            onMouseEnter={() => {
-                                                                setHoveredIndex(action.index);
-                                                                setSelectedIndex(-1);
-                                                            }}
-                                                            onMouseLeave={() => setHoveredIndex(null)}
-                                                        >
-                                                            <Stack
-                                                                bg={"grey.2"}
-                                                                ml={"sm"}
-                                                                id={`item-${action.index}`}
-                                                                className={`
+                                                {/*{groupData.items.map((action, itemIndex) => (
+                                                    {
+                                                        action?.isShow && (
+                                                        <GridCol key={itemIndex} span={6}>
+                                                            <Link
+                                                                to={action.id === "inhouse" ? "#" : action.group === "Production" || action.group === "প্রোডাকশন" ? `production/${action.id}` : action.group === "Core" || action.group === "কেন্দ্র" ? `core/${action.id}` : action.group === "Inventory" || action.group === "ইনভেন্টরি" ? `inventory/${action.id}` : action.group === "Domain" || action.group === "ডোমেইন" ? `domain/${action.id}` : action.group === "Accounting" || action.group === "একাউন্টিং" ? `accounting/${action.id}` : action.group === "Procurement" ? `procurement/${action.id}` : action.group === "Sales & Purchase" ? `inventory/${action.id}` : `/sitemap`}
+                                                                onClick={(e) => {
+                                                                    navigate(action.group === "Production" || action.group === "প্রোডাকশন" ? `production/${action.id}` : action.group === "Core" || action.group === "কেন্দ্র" ? `core/${action.id}` : action.group === "Inventory" || action.group === "ইনভেন্টরি" ? `inventory/${action.id}` : action.group === "Domain" || action.group === "ডোমেইন" ? `domain/${action.id}` : action.group === "Accounting" || action.group === "একাউন্টিং" ? `accounting/${action.id}` : action.group === "Sales & Purchase" ? `inventory/${action.id}` : `/sitemap`);
+                                                                    onClose();
+                                                                }}
+                                                                style={{textDecoration: "none", color: "inherit"}}
+                                                                onMouseEnter={() => {
+                                                                    setHoveredIndex(action.index);
+                                                                    setSelectedIndex(-1);
+                                                                }}
+                                                                onMouseLeave={() => setHoveredIndex(null)}
+                                                            >
+                                                                <Stack
+                                                                    bg={"grey.2"}
+                                                                    ml={"sm"}
+                                                                    id={`item-${action.index}`}
+                                                                    className={`
                                                         ${filteredItems.indexOf(action) === selectedIndex ? "highlightedItem" : ""}
                                                         ${hoveredIndex === action.index ? "hoveredItem" : ""}
                                                     `}
-                                                                style={{
-                                                                    cursor: "pointer", padding: "8px",
+                                                                    style={{
+                                                                        cursor: "pointer", padding: "8px",
+                                                                    }}
+                                                                    gap={"0"}
+                                                                >
+                                                                    <Stack
+                                                                        direction="column"
+                                                                        mt={"xs"}
+                                                                        gap={"0"}
+                                                                        pl={"xs"}
+                                                                    >
+                                                                        <Title order={6} mt={"2px"} className="title">
+                                                                            {action.label}
+                                                                        </Title>
+                                                                        <Text
+                                                                            size="sm"
+                                                                            c={"#828282"}
+                                                                            className="description"
+                                                                        >
+                                                                            {action.description}
+                                                                        </Text>
+                                                                    </Stack>
+                                                                </Stack>
+                                                            </Link>
+                                                        </GridCol>
+                                                    )
+                                                    }
+
+                                                    ))}*/}
+
+                                                {groupData.items.map((action, itemIndex) => (
+                                                    action.isShow && (
+                                                        <GridCol key={itemIndex} span={6}>
+                                                            <Link
+                                                                to={action.id === "inhouse" ? "#" : action.group === "Production" || action.group === "প্রোডাকশন" ? `production/${action.id}` : action.group === "Core" || action.group === "কেন্দ্র" ? `core/${action.id}` : action.group === "Inventory" || action.group === "ইনভেন্টরি" ? `inventory/${action.id}` : action.group === "Domain" || action.group === "ডোমেইন" ? `domain/${action.id}` : action.group === "Accounting" || action.group === "একাউন্টিং" ? `accounting/${action.id}` : action.group === "Procurement" ? `procurement/${action.id}` : action.group === "Sales & Purchase" ? `inventory/${action.id}` : `/sitemap`}
+                                                                onClick={(e) => {
+                                                                    navigate(action.group === "Production" || action.group === "প্রোডাকশন" ? `production/${action.id}` : action.group === "Core" || action.group === "কেন্দ্র" ? `core/${action.id}` : action.group === "Inventory" || action.group === "ইনভেন্টরি" ? `inventory/${action.id}` : action.group === "Domain" || action.group === "ডোমেইন" ? `domain/${action.id}` : action.group === "Accounting" || action.group === "একাউন্টিং" ? `accounting/${action.id}` : action.group === "Sales & Purchase" ? `inventory/${action.id}` : `/sitemap`);
+                                                                    onClose();
                                                                 }}
-                                                                gap={"0"}
+                                                                style={{textDecoration: "none", color: "inherit"}}
+                                                                onMouseEnter={() => {
+                                                                    setHoveredIndex(action.index);
+                                                                    setSelectedIndex(-1);
+                                                                }}
+                                                                onMouseLeave={() => setHoveredIndex(null)}
                                                             >
                                                                 <Stack
-                                                                    direction="column"
-                                                                    mt={"xs"}
+                                                                    bg={"grey.2"}
+                                                                    ml={"sm"}
+                                                                    id={`item-${action.index}`}
+                                                                    className={`
+                                                        ${filteredItems.indexOf(action) === selectedIndex ? "highlightedItem" : ""}
+                                                        ${hoveredIndex === action.index ? "hoveredItem" : ""}
+                                                    `}
+                                                                    style={{
+                                                                        cursor: "pointer", padding: "8px",
+                                                                    }}
                                                                     gap={"0"}
-                                                                    pl={"xs"}
                                                                 >
-                                                                    <Title order={6} mt={"2px"} className="title">
-                                                                        {action.label}
-                                                                    </Title>
-                                                                    <Text
-                                                                        size="sm"
-                                                                        c={"#828282"}
-                                                                        className="description"
+                                                                    <Stack
+                                                                        direction="column"
+                                                                        mt={"xs"}
+                                                                        gap={"0"}
+                                                                        pl={"xs"}
                                                                     >
-                                                                        {action.description}
-                                                                    </Text>
+                                                                        <Title order={6} mt={"2px"} className="title">
+                                                                            {action.label}
+                                                                        </Title>
+                                                                        <Text
+                                                                            size="sm"
+                                                                            c={"#828282"}
+                                                                            className="description"
+                                                                        >
+                                                                            {action.description}
+                                                                        </Text>
+                                                                    </Stack>
                                                                 </Stack>
-                                                            </Stack>
-                                                        </Link>
-                                                    </GridCol>))}
+                                                            </Link>
+                                                        </GridCol>
+                                                    )
+                                                ))}
+
                                             </Grid>
                                         </React.Fragment>))) : (<Text align="center" size="md" c="#828282" mt="md">
                                     {t("NoResultsFoundTryDifferentSearchTerm")}

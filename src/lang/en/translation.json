@@ -702,6 +702,7 @@
   "expectedDate" : "Expected Date",
   "vendorMobile" : "Vendor Mobile",
   "BonusQuantity" : "Bonus Quantity",
+  "BonusQuantityTable" : "Bonus Qty.",
   "PosSales" : "Pos Sales",
   "PayFirst" : "Pay First",
   "WorkorderInvoice": "Workorder Invoice",
@@ -760,5 +761,8 @@
   "UserSales" : "User Sales",
   "AdditionalTables" : "Additional Tables",
   "NewReceiver" : "New Receiver",
+  "UpdateWarehouse" : "Update warehouse",
+  "WarehouseDetails" : "Warehouse Details",
+  "RemainQuantity" : "Rem. Qty",
   "" : ""
 }

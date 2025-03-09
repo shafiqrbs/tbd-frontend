@@ -49,7 +49,6 @@ function StockTable(props) {
 
   const fetching = useSelector((state) => state.crudSlice.fetching);
   const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword);
-  // const indexData = useSelector((state) => state.crudSlice.indexEntityData);
   const [indexData, setIndexData] = useState([]);
   const productFilterData = useSelector(
     (state) => state.inventoryCrudSlice.productFilterData
@@ -212,11 +211,11 @@ function StockTable(props) {
               textAlignment: "right   ",
               render: (item) => indexData.data.indexOf(item) + 1,
             },
-            { accessor: "product_type", title: t("NatureOfProduct") },
+            // { accessor: "product_type", title: t("NatureOfProduct") },
             { accessor: "category_name", title: t("Category") },
             { accessor: "product_name", title: t("Name") },
             { accessor: "barcode", title: t("Barcode") },
-            { accessor: "alternative_name", title: t("AlternativeName") },
+            // { accessor: "alternative_name", title: t("AlternativeName") },
             {
               accessor: "unit_name",
               title: t("Unit"),
@@ -260,9 +259,10 @@ function StockTable(props) {
               ),
             },
             { accessor: "vat", title: t("Vat") },
-            { accessor: "average_price", title: t("AveragePrice"), textAlign : "center" },
+            // { accessor: "average_price", title: t("AveragePrice"), textAlign : "center" },
+            { accessor: "bonus_quantity", title: t("BonusQuantityTable"), textAlign : "center" },
             { accessor: "quantity", title: t("Quantity"), textAlign : "center" },
-            { accessor: "bonus_quantity", title: t("BonusQuantity"), textAlign : "center" },
+            { accessor: "quantity", title: t("RemainQuantity"), textAlign : "center" },
             { accessor: "brand_name", title: t("Brand"), hidden: !isBrand },
             { accessor: "grade_name", title: t("Grade"), hidden: !isGrade },
             { accessor: "color_name", title: t("Color"), hidden: !isColor },
