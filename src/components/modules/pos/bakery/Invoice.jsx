@@ -40,6 +40,7 @@ import {
   IconDeviceFloppy,
   IconAlertCircle,
   IconHandStop,
+  IconScissors,
 } from "@tabler/icons-react";
 import { DataTable } from "mantine-datatable";
 import { useDispatch, useSelector } from "react-redux";
@@ -59,6 +60,7 @@ import {
 } from "../../../../store/inventory/crudSlice.js";
 import AddCustomerDrawer from "../../inventory/sales/drawer-form/AddCustomerDrawer.jsx";
 import customerDataStoreIntoLocalStorage from "../../../global-hook/local-storage/customerDataStoreIntoLocalStorage.js";
+import _CommonDrawer from "./drawer/_CommonDrawer.jsx";
 export default function Invoice(props) {
   const {
     products,
@@ -84,10 +86,9 @@ export default function Invoice(props) {
 
   const scrollRef = useRef(null);
   const [showLeftArrow, setShowLeftArrow] = useState(false);
-  const [showRightArrow, setShowRightArrow] = useState(false);
+  const [showRightArrow, setShowRightArrow] = useState(true);
   const { configData } = getConfigData();
   const [printPos, setPrintPos] = useState(false);
-
   const [tempCartProducts, setTempCartProducts] = useState([]);
 
   // Sales by user state management
@@ -608,6 +609,21 @@ export default function Invoice(props) {
       updateTableCustomer(tableId, customerId, customerObject);
     }
   }, [customerId, customerObject, tableId, enableTable, updateTableCustomer]);
+
+  const [additionalItemDrawer, setAdditionalItemDrawer] = useState();
+
+  const [eventName, setEventName] = useState(null);
+
+  const handleClick = (e) => {
+    if (e.currentTarget.name === "additionalProductAdd") {
+      setEventName(e.currentTarget.name);
+      setAdditionalItemDrawer(true);
+    } else if (e.currentTarget.name === "splitPayment") {
+      setEventName(e.currentTarget.name);
+      setAdditionalItemDrawer(true);
+    }
+  };
+
   return (
     <>
       <Box
@@ -773,7 +789,19 @@ export default function Invoice(props) {
               {
                 accessor: "display_name",
                 title: t("Product"),
-                render: (data) => <Text fz={"xs"}>{data.display_name}</Text>,
+                render: (data) => (
+                  <Text
+                    variant="subtle"
+                    style={{ cursor: "pointer" }}
+                    component="a"
+                    onClick={handleClick}
+                    name="additionalProductAdd"
+                    c={"red"}
+                    fz={"xs"}
+                  >
+                    {data.display_name}
+                  </Text>
+                ),
               },
               {
                 accessor: "quantity",
@@ -980,153 +1008,171 @@ export default function Invoice(props) {
                 </Stack>
               </Grid.Col>
             </Grid>
-            <Box className={classes["box-white"]} ml={4} mr={4}>
-              <ScrollArea
-                type="never"
-                pl={"sm"}
-                pr={"sm"}
-                viewportRef={scrollRef}
-                onScrollPositionChange={handleScroll}
-                style={{
-                  borderRadius: 4,
-                  border:
-                    form.errors.transaction_mode_id && !id
-                      ? "1px solid red"
-                      : "none",
-                }}
-              >
-                <Tooltip
-                  label={t("TransactionMode")}
-                  opened={!!form.errors.transaction_mode_id}
-                  px={16}
-                  py={2}
-                  position="top-end"
-                  bg={"orange.8"}
-                  c={"white"}
-                  withArrow
-                  offset={{ mainAxis: 5, crossAxis: 12 }}
-                  zIndex={999}
-                  transitionProps={{
-                    transition: "pop-bottom-left",
-                    duration: 500,
-                  }}
+            <Grid columns={24} gutter={2} align="center" justify="center">
+              <Grid.Col span={18}>
+                <Box
+                  className={classes["box-white"]}
+                  ml={4}
+                  mr={4}
+                  style={{ position: "relative" }}
                 >
-                  <Group
-                    m={0}
-                    pt={8}
-                    pb={8}
-                    justify="flex-start"
-                    align="flex-start"
-                    gap="0"
-                    wrap="nowrap"
+                  <ScrollArea
+                    type="never"
+                    pl={"1"}
+                    pr={"2"}
+                    viewportRef={scrollRef}
+                    onScrollPositionChange={handleScroll}
+                    style={{
+                      borderRadius: 4,
+                      border:
+                        form.errors.transaction_mode_id && !id
+                          ? "1px solid red"
+                          : "none",
+                    }}
                   >
-                    {transactionModeData.map((mode, index) => (
-                      <Box
-                        onClick={() => {
-                          // console.log("Clicked on method -", mode.id),
-                          clicked(mode.id);
-                        }}
-                        key={index}
-                        p={4}
-                        style={{
-                          position: "relative",
-                          cursor: "pointer",
-                        }}
+                    <Tooltip
+                      label={t("TransactionMode")}
+                      opened={!!form.errors.transaction_mode_id}
+                      px={16}
+                      py={2}
+                      position="top-end"
+                      bg={"orange.8"}
+                      c={"white"}
+                      withArrow
+                      offset={{ mainAxis: 5, crossAxis: 12 }}
+                      zIndex={999}
+                      transitionProps={{
+                        transition: "pop-bottom-left",
+                        duration: 500,
+                      }}
+                    >
+                      <Group
+                        m={0}
+                        pt={8}
+                        pb={8}
+                        justify="flex-start"
+                        align="flex-start"
+                        gap="0"
+                        wrap="nowrap"
                       >
-                        <Flex
-                          bg={mode.id === id ? "green.0" : "white"}
-                          direction="column"
-                          align="center"
-                          justify="center"
-                          p={4}
-                          style={{
-                            width: "100px",
-                            borderRadius: "8px",
-                          }}
-                        >
-                          <Tooltip
-                            label={mode.name}
-                            withArrow
-                            px={16}
-                            py={2}
-                            offset={2}
-                            zIndex={999}
-                            position="top"
-                            color="red"
+                        {transactionModeData.map((mode, index) => (
+                          <Box
+                            onClick={() => {
+                              // console.log("Clicked on method -", mode.id),
+                              clicked(mode.id);
+                            }}
+                            key={index}
+                            p={4}
+                            style={{
+                              position: "relative",
+                              cursor: "pointer",
+                            }}
                           >
-                            <Image
-                              mih={50}
-                              mah={50}
-                              fit="contain"
-                              src={
-                                isOnline
-                                  ? mode.path
-                                  : "/images/transaction-mode-offline.jpg"
-                              }
-                              fallbackSrc={`https://placehold.co/120x80/FFFFFF/2f9e44?text=${encodeURIComponent(
-                                mode.name
-                              )}`}
-                            ></Image>
-                          </Tooltip>
-
-                          {/* <Text pt={"4"} c={"#333333"} fw={500}>
-                              {mode.name}
-                            </Text> */}
-                        </Flex>
-                      </Box>
-                    ))}
-                  </Group>
-                </Tooltip>
-              </ScrollArea>
-              {showLeftArrow && (
-                <ActionIcon
-                  variant="filled"
-                  color="gray.2"
-                  radius="xl"
-                  size="lg"
-                  h={24}
-                  w={24}
-                  style={{
-                    position: "absolute",
-                    left: 5,
-                    top: "50%",
-                    transform: "translateY(-50%)",
-                  }}
-                  onClick={() => scroll("left")}
+                            <Flex
+                              bg={mode.id === id ? "green.0" : "white"}
+                              direction="column"
+                              align="center"
+                              justify="center"
+                              p={4}
+                              style={{
+                                width: "100px",
+                                borderRadius: "8px",
+                              }}
+                            >
+                              <Tooltip
+                                label={mode.name}
+                                withArrow
+                                px={16}
+                                py={2}
+                                offset={2}
+                                zIndex={999}
+                                position="top"
+                                color="red"
+                              >
+                                <Image
+                                  mih={50}
+                                  mah={50}
+                                  fit="contain"
+                                  src={
+                                    isOnline
+                                      ? mode.path
+                                      : "/images/transaction-mode-offline.jpg"
+                                  }
+                                  fallbackSrc={`https://placehold.co/120x80/FFFFFF/2f9e44?text=${encodeURIComponent(
+                                    mode.name
+                                  )}`}
+                                ></Image>
+                              </Tooltip>
+                            </Flex>
+                          </Box>
+                        ))}
+                      </Group>
+                    </Tooltip>
+                  </ScrollArea>
+                  {showLeftArrow && (
+                    <ActionIcon
+                      variant="filled"
+                      color="gray.2"
+                      radius="xl"
+                      size="lg"
+                      h={24}
+                      w={24}
+                      style={{
+                        position: "absolute",
+                        left: 5,
+                        top: "50%",
+                        transform: "translateY(-50%)",
+                      }}
+                      onClick={() => scroll("left")}
+                    >
+                      <IconChevronLeft
+                        height={18}
+                        width={18}
+                        stroke={2}
+                        color="black"
+                      />
+                    </ActionIcon>
+                  )}
+                  {showRightArrow && (
+                    <ActionIcon
+                      variant="filled"
+                      color="gray.2"
+                      radius="xl"
+                      size="lg"
+                      h={24}
+                      w={24}
+                      style={{
+                        position: "absolute",
+                        right: 5,
+                        top: "50%",
+                        transform: "translateY(-50%)",
+                      }}
+                      onClick={() => scroll("right")}
+                    >
+                      <IconChevronRight
+                        height={18}
+                        width={18}
+                        stroke={2}
+                        color="black"
+                      />
+                    </ActionIcon>
+                  )}
+                </Box>
+              </Grid.Col>
+              <Grid.Col span={6}>
+                <Button
+                  bg={"gray.8"}
+                  c={"white"}
+                  size={"sm"}
+                  fullWidth={true}
+                  name="splitPayment"
+                  leftSection={<IconScissors />}
+                  onClick={handleClick}
                 >
-                  <IconChevronLeft
-                    height={18}
-                    width={18}
-                    stroke={2}
-                    color="gray.8"
-                  />
-                </ActionIcon>
-              )}
-              {showRightArrow && (
-                <ActionIcon
-                  variant="filled"
-                  color="gray.2"
-                  radius="xl"
-                  size="lg"
-                  h={24}
-                  w={24}
-                  style={{
-                    position: "absolute",
-                    right: 5,
-                    top: "50%",
-                    transform: "translateY(-50%)",
-                  }}
-                  onClick={() => scroll("right")}
-                >
-                  <IconChevronRight
-                    height={18}
-                    width={18}
-                    stroke={2}
-                    color="gray.8"
-                  />
-                </ActionIcon>
-              )}
-            </Box>
+                  {t("Split")}
+                </Button>
+              </Grid.Col>
+            </Grid>
             <Box m={0}>
               <Grid
                 columns={24}
@@ -1329,6 +1375,13 @@ export default function Invoice(props) {
               tableId={tableId}
               updateTableCustomer={updateTableCustomer}
               clearTableCustomer={clearTableCustomer}
+            />
+          )}
+          {additionalItemDrawer && (
+            <_CommonDrawer
+              eventName={eventName}
+              additionalItemDrawer={additionalItemDrawer}
+              setAdditionalItemDrawer={setAdditionalItemDrawer}
             />
           )}
         </Box>
