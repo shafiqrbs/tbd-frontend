@@ -24,16 +24,18 @@ import { useTranslation } from "react-i18next";
 import { useWindowScroll } from "@mantine/hooks";
 import { useOutletContext } from "react-router-dom";
 import classes from "./Table.module.css";
+import getConfigData from "../../../global-hook/config-data/getConfigData";
 
 function __ShortcutPos(props) {
   const { t, i18n } = useTranslation();
   const { isOnline, mainAreaHeight } = useOutletContext();
-  const formHeight = mainAreaHeight - 106;
+  const height = mainAreaHeight - 106;
+  const { configData } = getConfigData();
   return (
     <>
       <ScrollArea
-        h={formHeight}
-        bg="gray.8"
+        h={!!configData?.is_table_pos ? height : height + 110}
+        bg="white"
         type="never"
         className="border-radius"
       >
@@ -57,16 +59,14 @@ function __ShortcutPos(props) {
                 variant={"light"}
                 color={`black`}
                 radius="xl"
-                onClick={(e) => {
-                  
-                }}
+                onClick={(e) => {}}
               >
                 <Flex direction={`column`} align={"center"}>
                   <IconDashboard size={16} />
                 </Flex>
               </Button>
             </Tooltip>
-            <Flex direction={`column`} align={"center"} fz={"12"} c={"gray.5"}>
+            <Flex direction={`column`} align={"center"} fz={"12"} c={"black"}>
               {t("Dashboard")}
             </Flex>
           </Flex>
@@ -89,16 +89,14 @@ function __ShortcutPos(props) {
                 variant={"light"}
                 color={`black`}
                 radius="xl"
-                onClick={(e) => {
-                  
-                }}
+                onClick={(e) => {}}
               >
                 <Flex direction={`column`} align={"center"}>
                   <IconReportMoney size={16} />
                 </Flex>
               </Button>
             </Tooltip>
-            <Flex direction={`column`} align={"center"} fz={"12"} c={"gray.5"}>
+            <Flex direction={`column`} align={"center"} fz={"12"} c={"black"}>
               {t("Sales")}
             </Flex>
           </Flex>
@@ -121,16 +119,14 @@ function __ShortcutPos(props) {
                 variant={"light"}
                 color={`black`}
                 radius="xl"
-                onClick={(e) => {
-                  
-                }}
+                onClick={(e) => {}}
               >
                 <Flex direction={`column`} align={"center"}>
                   <IconReportAnalytics size={16} />
                 </Flex>
               </Button>
             </Tooltip>
-            <Flex direction={`column`} align={"center"} fz={"12"} c={"gray.5"}>
+            <Flex direction={`column`} align={"center"} fz={"12"} c={"black"}>
               {t("UserSales")}
             </Flex>
           </Flex>
@@ -153,16 +149,14 @@ function __ShortcutPos(props) {
                 variant={"light"}
                 color={`black`}
                 radius="xl"
-                onClick={(e) => {
-                  
-                }}
+                onClick={(e) => {}}
               >
                 <Flex direction={`column`} align={"center"}>
                   <IconBuildingCottage size={16} />
                 </Flex>
               </Button>
             </Tooltip>
-            <Flex direction={`column`} align={"center"} fz={"12"} c={"gray.5"}>
+            <Flex direction={`column`} align={"center"} fz={"12"} c={"black"}>
               {t("Stock")}
             </Flex>
           </Flex>
@@ -186,7 +180,7 @@ function __ShortcutPos(props) {
                 color={`black`}
                 radius="xl"
                 onClick={(e) => {
-                  // 
+                  //
                 }}
               >
                 <Flex direction={`column`} align={"center"}>
@@ -198,12 +192,12 @@ function __ShortcutPos(props) {
               direction={`column`}
               align={"center"}
               fz={"12"}
-              c={"gray.5"}
+              c={"black"}
               wrap={"wrap"}
             >
               <Text
                 size="xs"
-                c="gray.5"
+                c="black"
                 ta="center"
                 w={56}
                 style={{
@@ -234,9 +228,7 @@ function __ShortcutPos(props) {
                 variant={"light"}
                 color={`black`}
                 radius="xl"
-                onClick={(e) => {
-                  
-                }}
+                onClick={(e) => {}}
               >
                 <Flex direction={`column`} align={"center"}>
                   <IconCellSignal4 size={16} />
@@ -247,12 +239,12 @@ function __ShortcutPos(props) {
               direction={`column`}
               align={"center"}
               fz={"12"}
-              c={"gray.5"}
+              c={"black"}
               wrap={"wrap"}
             >
               <Text
                 size="xs"
-                c="gray.5"
+                c="black"
                 ta="center"
                 w={56}
                 style={{
