@@ -285,6 +285,11 @@ export default function Invoice(props) {
     form.setFieldValue("split_amount", value);
     console.log("from form", form.values.split_amount);
   };
+  const [indexData, setIndexData] = useState(null);
+  const getAdditionalItem = (value) => {
+    setIndexData(value);
+    console.log(indexData);
+  };
   const handlePrintAll = () => {
     if (tempCartProducts.length === 0) {
       notifications.show({
@@ -771,17 +776,45 @@ export default function Invoice(props) {
                 accessor: "display_name",
                 title: t("Product"),
                 render: (data) => (
-                  <Text
-                    variant="subtle"
-                    style={{ cursor: "pointer" }}
-                    component="a"
-                    onClick={handleClick}
-                    name="additionalProductAdd"
-                    c={"red"}
-                    fz={"xs"}
+                  <Tooltip
+                    multiline
+                    w={220}
+                    label={
+                      indexData
+                        ? Array.isArray(indexData)
+                          ? indexData
+                              .map(
+                                (item) => `${item.display_name} (${item.qty})`
+                              )
+                              .join(", ")
+                          : `${indexData.display_name} (${indexData.qty})`
+                        : data.display_name
+                    }
+                    px={12}
+                    py={2}
+                    bg={"red.6"}
+                    c={"white"}
+                    withArrow
+                    position="top"
+                    offset={{ mainAxis: 5, crossAxis: 10 }}
+                    zIndex={999}
+                    transitionProps={{
+                      transition: "pop-bottom-left",
+                      duration: 500,
+                    }}
                   >
-                    {data.display_name}
-                  </Text>
+                    <Text
+                      variant="subtle"
+                      style={{ cursor: "pointer" }}
+                      component="a"
+                      onClick={handleClick}
+                      name="additionalProductAdd"
+                      c={"red"}
+                      fz={"xs"}
+                    >
+                      {data.display_name}
+                    </Text>
+                  </Tooltip>
                 ),
               },
               {
@@ -1361,6 +1394,7 @@ export default function Invoice(props) {
           {additionalItemDrawer && (
             <_CommonDrawer
               getSplitPayment={getSplitPayment}
+              getAdditionalItem={getAdditionalItem}
               salesDueAmount={salesDueAmount}
               eventName={eventName}
               additionalItemDrawer={additionalItemDrawer}
