@@ -6,7 +6,7 @@ import __AdditionalItems from "./__AdditionalItems";
 import __SplitPayment from "./__SplitPayment";
 
 export default function _CommonDrawer(props) {
-  const { additionalItemDrawer, setAdditionalItemDrawer, eventName } = props;
+  const { additionalItemDrawer, setAdditionalItemDrawer, eventName, salesDueAmount, getSplitPayment } = props;
 
   const closeDrawer = () => {
     setAdditionalItemDrawer(false);
@@ -45,7 +45,7 @@ export default function _CommonDrawer(props) {
           <Drawer.Body>
             <Box>
               {eventName === "splitPayment" && (
-                <__SplitPayment closeDrawer={closeDrawer} />
+                <__SplitPayment closeDrawer={closeDrawer} salesDueAmount={salesDueAmount} getSplitPayment={getSplitPayment} />
               )}
 
               {eventName === "additionalProductAdd" && (

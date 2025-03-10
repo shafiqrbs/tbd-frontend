@@ -280,7 +280,11 @@ export default function Invoice(props) {
       };
     });
   };
-
+  const getSplitPayment = (value) => {
+    console.log("from callback", value);
+    form.setFieldValue("split_amount", value);
+    console.log("from form", form.values.split_amount);
+  };
   const handlePrintAll = () => {
     if (tempCartProducts.length === 0) {
       notifications.show({
@@ -1356,6 +1360,8 @@ export default function Invoice(props) {
           )}
           {additionalItemDrawer && (
             <_CommonDrawer
+              getSplitPayment={getSplitPayment}
+              salesDueAmount={salesDueAmount}
               eventName={eventName}
               additionalItemDrawer={additionalItemDrawer}
               setAdditionalItemDrawer={setAdditionalItemDrawer}
