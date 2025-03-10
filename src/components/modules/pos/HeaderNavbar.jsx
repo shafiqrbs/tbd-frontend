@@ -16,21 +16,17 @@ import {
 } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import { IconChevronRight, IconChevronLeft } from "@tabler/icons-react";
+import { useScroll } from "./bakery/utils/ScrollOperations";
 
 function HeaderNavbar(props) {
-  const {
-    tables,
-    tableId,
-    setTableId,
-    tableCustomerMap,
-    setCustomerObject,
-  } = props;
+  const { tables, tableId, setTableId, tableCustomerMap, setCustomerObject } =
+    props;
   const { t, i18n } = useTranslation();
 
   const clicked = (id) => {
     if (tableId === id) {
       setTableId(null);
-      setCustomerObject({}); 
+      setCustomerObject({});
     } else {
       setTableId(id);
       if (tableCustomerMap && tableCustomerMap[id]) {
@@ -40,33 +36,9 @@ function HeaderNavbar(props) {
       }
     }
   };
-  const scrollRef = useRef(null);
-  const [showLeftArrow, setShowLeftArrow] = useState(false);
-  const [showRightArrow, setShowRightArrow] = useState(false);
+  const { scrollRef, showLeftArrow, showRightArrow, handleScroll, scroll } =
+    useScroll();
 
-  const handleScroll = () => {
-    if (scrollRef.current) {
-      const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
-      setShowLeftArrow(scrollLeft > 0);
-      setShowRightArrow(scrollLeft < scrollWidth - clientWidth - 1);
-    }
-  };
-
-  useEffect(() => {
-    handleScroll();
-    window.addEventListener("resize", handleScroll);
-    return () => window.removeEventListener("resize", handleScroll);
-  }, []);
-
-  const scroll = (direction) => {
-    if (scrollRef.current) {
-      const scrollAmount = 500;
-      scrollRef.current.scrollBy({
-        left: direction === "left" ? -scrollAmount : scrollAmount,
-        behavior: "smooth",
-      });
-    }
-  };
 
   return (
     <>

@@ -44,7 +44,6 @@ import __ShortcutPos from "./__ShortcutPos.jsx";
 
 export default function NewSales(props) {
   const {
-    enableTable,
     categoryDropdown,
     tableId,
     setTableId,
@@ -63,7 +62,7 @@ export default function NewSales(props) {
   const [selected, setSelected] = useState([]);
   const [id, setId] = useState(null);
   const { configData } = getConfigData();
-
+  const enableTable = !!(configData?.is_pos && configData?.is_table_pos);
   const [loadCartProducts, setLoadCartProducts] = useState(false);
   const [tempCartProducts, setTempCartProducts] = useState([]);
 
@@ -261,15 +260,6 @@ export default function NewSales(props) {
     return () => clearInterval(interval);
   }, []);
 
-  const handleTableSelection = (newTableId) => {
-    if (tableId === newTableId) {
-      setTableId(null);
-    } else {
-      setTableId(newTableId);
-      setLoadCartProducts(true);
-    }
-  };
-
   const handleSubmitOrder = () => {
     if (!tempCartProducts.length) {
       notifications.show({
@@ -407,7 +397,6 @@ export default function NewSales(props) {
               products={products}
               tableId={tableId}
               tables={tables}
-              enableTable={enableTable}
               setLoadCartProducts={setLoadCartProducts}
               handleSubmitOrder={handleSubmitOrder}
               tableCustomerMap={tableCustomerMap}
@@ -469,7 +458,12 @@ export default function NewSales(props) {
                     pb={4}
                     className="border-radius"
                   >
-                    <Grid columns={12} gutter={{ base: 4 }} align="center" mt={4}>
+                    <Grid
+                      columns={12}
+                      gutter={{ base: 4 }}
+                      align="center"
+                      mt={4}
+                    >
                       <Grid.Col span={3}>
                         <Tooltip
                           label={t("BarcodeValidateMessage")}
@@ -1479,7 +1473,6 @@ export default function NewSales(props) {
               products={products}
               tableId={tableId}
               tables={tables}
-              enableTable={enableTable}
               setLoadCartProducts={setLoadCartProducts}
               handleSubmitOrder={handleSubmitOrder}
               tableCustomerMap={tableCustomerMap}
