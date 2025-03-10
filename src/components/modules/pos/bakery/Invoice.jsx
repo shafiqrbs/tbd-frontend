@@ -285,6 +285,24 @@ export default function Invoice(props) {
     form.setFieldValue("split_amount", value);
     console.log("from form", form.values.split_amount);
   };
+  useEffect(() => {
+    if (form.values.split_amount) {
+      const totalAmount = subtotal - salesDiscountAmount;
+      let receiveAmount = 0;
+      for (let key in form.values.split_amount) {
+        receiveAmount += Number(form.values.split_amount[key].partial_amount);
+      }
+      console.log(receiveAmount);
+      if (receiveAmount >= 0) {
+        const text = totalAmount < receiveAmount ? "Return" : "Due";
+        setReturnOrDueText(text);
+        const returnOrDueAmount = totalAmount - receiveAmount;
+        setSalesDueAmount(returnOrDueAmount);
+      } else {
+        setSalesDueAmount(totalAmount);
+      }
+    }
+  }, [form.values.split_amount]);
   const [indexData, setIndexData] = useState(null);
   const getAdditionalItem = (value) => {
     setIndexData(value);

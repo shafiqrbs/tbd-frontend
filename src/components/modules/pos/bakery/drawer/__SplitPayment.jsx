@@ -94,6 +94,7 @@ export default function __SplitPayment(props) {
     <form
       onSubmit={splitPaymentForm.onSubmit((values) => {
         getSplitPayment(allValues);
+        closeDrawer()
       })}
     >
       <Box mb={0}>
