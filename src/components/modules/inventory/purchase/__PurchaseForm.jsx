@@ -228,6 +228,7 @@ function __PurchaseForm(props) {
                 let transformedArray = items.map(product => {
                     return {
                         "product_id": product.product_id,
+                        "warehouse_id": product.warehouse_id,
                         "quantity": product.quantity,
                         "purchase_price": product.purchase_price,
                         "sales_price": product.sales_price,

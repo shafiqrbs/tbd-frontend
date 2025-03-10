@@ -120,6 +120,7 @@ const utilitySlice = createSlice({
         coreLocationDropdownData : [],
         coreDesignationDropdownData : [],
         coreDepartmentDropdownData : [],
+        coreWarehouseDropdownData : [],
     },
     reducers : {
         setFetching : (state,action) => {
@@ -177,6 +178,9 @@ const utilitySlice = createSlice({
             }
             if (action.payload.type == 'department'){
                 state.coreDepartmentDropdownData = action.payload.data.data
+            }
+            if (action.payload.type == 'warehouse'){
+                state.coreWarehouseDropdownData = action.payload.data.data
             }
         })
 

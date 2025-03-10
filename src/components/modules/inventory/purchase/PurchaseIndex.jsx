@@ -20,8 +20,6 @@ function PurchaseIndex() {
     // Use the getConfigData hook
     const configData = getConfigData()
 
-
-
     return (
         <>
             {progress !== 100 &&
@@ -29,18 +27,19 @@ function PurchaseIndex() {
             {progress === 100 &&
                 <Box>
                     {
-                        configData &&
+                        configData.configData &&
                         <>
                             <_SalesPurchaseHeaderNavbar
                                 pageTitle={t('ManagePurchase')}
                                 roles={t('Roles')}
-                                allowZeroPercentage={configData?.zero_stock}
-                                currancySymbol={configData?.currency?.symbol}
+                                allowZeroPercentage={configData?.configData?.zero_stock}
+                                currancySymbol={configData?.configData?.currency?.symbol}
                             />
                             <Box p={'8'}>
                                 <_PurchaseTable
-                                    allowZeroPercentage={configData?.zero_stock}
-                                    currancySymbol={configData?.currency?.symbol}
+                                    allowZeroPercentage={configData?.configData?.zero_stock}
+                                    currancySymbol={configData?.configData?.currency?.symbol}
+                                    isWarehouse={configData?.configData?.sku_warehouse}
                                 />
                             </Box>
 

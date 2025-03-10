@@ -20,9 +20,11 @@ import ShortcutInvoice from "../../shortcut/ShortcutInvoice";
 import tableCss from "../../../../assets/css/Table.module.css";
 import productsDataStoreIntoLocalStorage from "../../../global-hook/local-storage/productsDataStoreIntoLocalStorage.js";
 import __UpdateInvoiceForm from "./__UpdateInvoiceForm.jsx";
+import SelectForm from "../../../form-builders/SelectForm.jsx";
+import getCoreWarehouseDropdownData from "../../../global-hook/dropdown/core/getCoreWarehouseDropdownData.js";
 
 function _UpdateInvoice(props) {
-    const { currencySymbol, isPurchaseByPurchasePrice,editedData } = props
+    const { currencySymbol, isPurchaseByPurchasePrice,editedData,isWarehouse } = props
     const { t, i18n } = useTranslation();
     const { isOnline, mainAreaHeight } = useOutletContext();
     const height = mainAreaHeight - 130; //TabList height 104
@@ -33,6 +35,10 @@ function _UpdateInvoice(props) {
 
     const [tempCardProducts, setTempCardProducts] = useState([])
     const [loadCardProducts, setLoadCardProducts] = useState(false)
+
+    /*get warehouse dropdown data*/
+    let warehouseDropdownData = getCoreWarehouseDropdownData()
+    const [warehouseData, setWarehouseData] = useState(null);
 
     let purchaseSubTotalAmount = tempCardProducts?.reduce((total, item) => total + item.sub_total, 0) || 0;
     let totalPurchaseAmount = tempCardProducts?.reduce((total, item) => total + (item.purchase_price * item.quantity), 0) || 0;
@@ -89,6 +95,8 @@ function _UpdateInvoice(props) {
                     purchase_price: Number(values.purchase_price),
                     sub_total: Number(values.sub_total),
                     sales_price: Number(product.sales_price),
+                    warehouse_id: values.warehouse_id?Number(values.warehouse_id):null,
+                    warehouse_name: values.warehouse_id?warehouseDropdownData.find(warehouse => warehouse.value === values.warehouse_id).label:null,
                 });
             }
             return acc;
@@ -105,7 +113,7 @@ function _UpdateInvoice(props) {
         if (barcodeExists) {
             const addProducts = localProducts.reduce((acc, product) => {
                 if (String(product.barcode) === String(values.barcode)) {
-                    acc = [...acc, createProductFromValues(product)];
+                    acc = [...acc, createProductFromValues(product,values)];
                 }
                 return acc;
             }, [...myCardProducts]);
@@ -138,7 +146,7 @@ function _UpdateInvoice(props) {
         }
     }
 
-    function createProductFromValues(product) {
+    function createProductFromValues(product,values) {
         return {
             product_id: product.id,
             display_name: product.display_name,
@@ -147,13 +155,15 @@ function _UpdateInvoice(props) {
             purchase_price: product.purchase_price,
             sub_total: Number(product.purchase_price),
             sales_price: Number(product.sales_price),
+            warehouse_id: values.warehouse_id ? Number(values.warehouse_id):null,
+            warehouse_name: values.warehouse_id?warehouseDropdownData.find(warehouse => warehouse.value === values.warehouse_id).label:null
         };
     }
 
 
     const form = useForm({
         initialValues: {
-            product_id: '', price: '', purchase_price: '', barcode: '', sub_total: '', quantity: ''
+            product_id: '', price: '', purchase_price: '', barcode: '', sub_total: '', quantity: '',warehouse_id : ''
         },
         validate: {
             product_id: (value, values) => {
@@ -278,6 +288,7 @@ function _UpdateInvoice(props) {
                                 if (!values.barcode && !values.product_id) {
                                     form.setFieldError('barcode', true);
                                     form.setFieldError('product_id', true);
+                                    isWarehouse && form.setFieldError('warehouse_id', true);
                                     setTimeout(() => { }, 1000)
                                 } else {
 
@@ -294,6 +305,28 @@ function _UpdateInvoice(props) {
                             })}>
                                 <Box pl={`xs`} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'}>
                                     <Box pb={'xs'}>
+                                        {
+                                            isWarehouse==1 &&
+                                            <Grid columns={24} gutter={{ base: 6 }}>
+                                                <Grid.Col span={24}>
+                                                    <SelectForm
+                                                        tooltip={t('Warehouse')}
+                                                        label=''
+                                                        placeholder={t('Warehouse')}
+                                                        required={false}
+                                                        nextField={'product_id'}
+                                                        name={'warehouse_id'}
+                                                        form={form}
+                                                        dropdownValue={warehouseDropdownData}
+                                                        id={'warehouse_id'}
+                                                        mt={1}
+                                                        searchable={true}
+                                                        value={warehouseData}
+                                                        changeValue={setWarehouseData}
+                                                    />
+                                                </Grid.Col>
+                                            </Grid>
+                                        }
                                         <Grid columns={24} gutter={{ base: 6 }}>
                                             <Grid.Col span={4}>
                                                 <InputNumberForm
@@ -420,7 +453,13 @@ function _UpdateInvoice(props) {
                                     {
                                         accessor: 'display_name',
                                         title: t("Name"),
-                                        width: '50%',
+                                        width: isWarehouse?'30%':'50%',
+                                    },
+                                    {
+                                        accessor: 'warehouse_name',
+                                        title: t("Warehouse"),
+                                        width: '20%',
+                                        hidden:!isWarehouse
                                     },
                                     {
                                         accessor: 'quantity',

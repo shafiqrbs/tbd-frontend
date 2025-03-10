@@ -41,8 +41,13 @@ import _PurchaseSearch from "./_PurchaseSearch.jsx";
 import {PurchasePrintNormal} from "./print-component/PurchasePrintNormal.jsx";
 import {PurchasePrintPos} from "./print-component/PurchasePrintPos.jsx";
 import {notifications} from "@mantine/notifications";
+import getConfigData from "../../../global-hook/config-data/getConfigData.js";
+import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
 
 function _PurchaseTable() {
+    const configData = getConfigData()
+    let isWarehouse = configData?.configData?.sku_warehouse
+
     const printRef = useRef();
     const dispatch = useDispatch();
     const {t, i18n} = useTranslation();
@@ -95,6 +100,12 @@ function _PurchaseTable() {
                 <Table.Td ta="left" fz="xs" width={"300"}>
                     {element.item_name}
                 </Table.Td>
+                {
+                    isWarehouse==1 &&
+                    <Table.Td ta="center" fz="xs" width={"60"}>
+                        {element.warehouse_name}
+                    </Table.Td>
+                }
                 <Table.Td ta="center" fz="xs" width={"60"}>
                     {element.quantity}
                 </Table.Td>
@@ -142,10 +153,11 @@ function _PurchaseTable() {
                 console.error('Error:', resultAction);
             } else if (getIndexEntityData.fulfilled.match(resultAction)) {
                 setIndexData(resultAction.payload);
-                setFetching(false);
             }
         } catch (err) {
             console.error('Unexpected error:', err);
+        }finally {
+            setFetching(false)
         }
     };
 
@@ -183,7 +195,9 @@ function _PurchaseTable() {
             onCancel: () => {
                 console.log("Cancel");
             },
-            onConfirm: () => handleConfirmPurchaseApprove(id), // Separate function for "onConfirm"
+            onConfirm: () => {
+                handleConfirmPurchaseApprove(id)
+            }, // Separate function for "onConfirm"
         });
     };
 
@@ -202,9 +216,6 @@ function _PurchaseTable() {
                         autoClose: 700,
                         style: {backgroundColor: "lightgray"},
                     });
-
-                    // Refresh index data
-                    await fetchData(); // Ensure fetchData is available in scope
                 }
             }
         } catch (error) {
@@ -219,6 +230,9 @@ function _PurchaseTable() {
                 autoClose: 700,
                 style: {backgroundColor: "lightgray"},
             });
+        } finally {
+            fetchData();
+            navigate(0)
         }
     };
 
@@ -329,9 +343,9 @@ function _PurchaseTable() {
                                                                     <Menu.Item
                                                                         onClick={(e) => {
                                                                             e.preventDefault();
+                                                                            // console.log(data.id)
                                                                             handlePurchaseApprove(data.id)
                                                                         }}
-                                                                        target="_blank"
                                                                         color="green"
                                                                         component="a"
                                                                         w={"200"}
@@ -624,6 +638,12 @@ function _PurchaseTable() {
                                                     <Table.Th fz="xs" ta="left" w={"300"}>
                                                         {t("Name")}
                                                     </Table.Th>
+                                                    {
+                                                        isWarehouse == 1 &&
+                                                        <Table.Th fz="xs" ta="left" w={"300"}>
+                                                            {t("Warehouse")}
+                                                        </Table.Th>
+                                                    }
                                                     <Table.Th fz="xs" ta="center" w={"60"}>
                                                         {t("QTY")}
                                                     </Table.Th>
@@ -641,7 +661,7 @@ function _PurchaseTable() {
                                             <Table.Tbody>{rows}</Table.Tbody>
                                             <Table.Tfoot>
                                                 <Table.Tr>
-                                                    <Table.Th colSpan={"5"} ta="right" fz="xs" w={"100"}>
+                                                    <Table.Th colSpan={isWarehouse?"6":"5"} ta="right" fz="xs" w={"100"}>
                                                         {t("SubTotal")}
                                                     </Table.Th>
                                                     <Table.Th ta="right" fz="xs" w={"100"}>
@@ -651,7 +671,7 @@ function _PurchaseTable() {
                                                     </Table.Th>
                                                 </Table.Tr>
                                                 <Table.Tr>
-                                                    <Table.Th colSpan={"5"} ta="right" fz="xs" w={"100"}>
+                                                    <Table.Th colSpan={isWarehouse?"6":"5"} ta="right" fz="xs" w={"100"}>
                                                         {t("Discount")}
                                                     </Table.Th>
                                                     <Table.Th ta="right" fz="xs" w={"100"}>
@@ -661,7 +681,7 @@ function _PurchaseTable() {
                                                     </Table.Th>
                                                 </Table.Tr>
                                                 <Table.Tr>
-                                                    <Table.Th colSpan={"5"} ta="right" fz="xs" w={"100"}>
+                                                    <Table.Th colSpan={isWarehouse?"6":"5"} ta="right" fz="xs" w={"100"}>
                                                         {t("Total")}
                                                     </Table.Th>
                                                     <Table.Th ta="right" fz="xs" w={"100"}>
@@ -671,7 +691,7 @@ function _PurchaseTable() {
                                                     </Table.Th>
                                                 </Table.Tr>
                                                 <Table.Tr>
-                                                    <Table.Th colSpan={"5"} ta="right" fz="xs" w={"100"}>
+                                                    <Table.Th colSpan={isWarehouse?"6":"5"} ta="right" fz="xs" w={"100"}>
                                                         {t("Receive")}
                                                     </Table.Th>
                                                     <Table.Th ta="right" fz="xs" w={"100"}>
@@ -681,7 +701,7 @@ function _PurchaseTable() {
                                                     </Table.Th>
                                                 </Table.Tr>
                                                 <Table.Tr>
-                                                    <Table.Th colSpan={"5"} ta="right" fz="xs" w={"100"}>
+                                                    <Table.Th colSpan={isWarehouse?"6":"5"} ta="right" fz="xs" w={"100"}>
                                                         {t("Due")}
                                                     </Table.Th>
                                                     <Table.Th ta="right" fz="xs" w={"100"}>

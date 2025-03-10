@@ -20,7 +20,6 @@ function PurchaseEdit() {
     const progress = getLoadingProgress()
     const configData = localStorage.getItem('config-data') ? JSON.parse(localStorage.getItem('config-data')) : []
 
-
     const dataStatus = useSelector((state) => state.inventoryCrudSlice.dataStatus);
     const editedData = useSelector((state) => state.inventoryCrudSlice.entityEditData);
     const [entityEditData,setEntityEditData] = useState({});
@@ -72,6 +71,7 @@ function PurchaseEdit() {
                                         currencySymbol={configData?.currency?.symbol}
                                         isPurchaseByPurchasePrice={configData?.is_purchase_by_purchase_price}
                                         editedData={editedData}
+                                        isWarehouse={configData?.sku_warehouse}
                                     />
                                 }
                             </Box>
