@@ -41,6 +41,8 @@ import {
   IconAlertCircle,
   IconHandStop,
   IconScissors,
+  IconCurrency,
+  IconPlusMinus,
 } from "@tabler/icons-react";
 import { DataTable } from "mantine-datatable";
 import { useDispatch, useSelector } from "react-redux";
@@ -61,12 +63,13 @@ import {
 import AddCustomerDrawer from "../../inventory/sales/drawer-form/AddCustomerDrawer.jsx";
 import customerDataStoreIntoLocalStorage from "../../../global-hook/local-storage/customerDataStoreIntoLocalStorage.js";
 import _CommonDrawer from "./drawer/_CommonDrawer.jsx";
+import InputNumberForm from "../../../form-builders/InputNumberForm.jsx";
+import { useScroll } from "./utils/ScrollOperations";
 export default function Invoice(props) {
   const {
     products,
     tableId,
     tables,
-    enableTable,
     setLoadCartProducts,
     handleSubmitOrder,
     tableCustomerMap,
@@ -81,13 +84,10 @@ export default function Invoice(props) {
   const { t, i18n } = useTranslation();
   const { isOnline, mainAreaHeight } = useOutletContext();
   const height = mainAreaHeight - 190;
-  const calculatedHeight = height - 200; // Set minimum height
-  const navigate = useNavigate();
+  const calculatedHeight = height - 200; //
 
-  const scrollRef = useRef(null);
-  const [showLeftArrow, setShowLeftArrow] = useState(false);
-  const [showRightArrow, setShowRightArrow] = useState(true);
   const { configData } = getConfigData();
+  const enableTable = !!(configData?.is_pos && configData?.is_table_pos);
   const [printPos, setPrintPos] = useState(false);
   const [tempCartProducts, setTempCartProducts] = useState([]);
 
@@ -149,33 +149,9 @@ export default function Invoice(props) {
       setSalesByDropdownData(transformedData);
     }
   }, []);
+  const { scrollRef, showLeftArrow, showRightArrow, handleScroll, scroll } =
+    useScroll();
 
-  // Scroll handling
-  const handleScroll = () => {
-    if (scrollRef.current) {
-      const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
-      setShowLeftArrow(scrollLeft > 0);
-      setShowRightArrow(scrollLeft < scrollWidth - clientWidth - 1);
-    }
-  };
-
-  useEffect(() => {
-    handleScroll();
-    window.addEventListener("resize", handleScroll);
-    return () => window.removeEventListener("resize", handleScroll);
-  }, []);
-
-  const scroll = (direction) => {
-    if (scrollRef.current) {
-      const scrollAmount = 300;
-      scrollRef.current.scrollBy({
-        left: direction === "left" ? -scrollAmount : scrollAmount,
-        behavior: "smooth",
-      });
-    }
-  };
-
-  // Form and validation
   const transactionModeData = JSON.parse(
     localStorage.getItem("accounting-transaction-mode")
   )
@@ -304,7 +280,34 @@ export default function Invoice(props) {
       };
     });
   };
-
+  const getSplitPayment = (value) => {
+    console.log("from callback", value);
+    form.setFieldValue("split_amount", value);
+    console.log("from form", form.values.split_amount);
+  };
+  useEffect(() => {
+    if (form.values.split_amount) {
+      const totalAmount = subtotal - salesDiscountAmount;
+      let receiveAmount = 0;
+      for (let key in form.values.split_amount) {
+        receiveAmount += Number(form.values.split_amount[key].partial_amount);
+      }
+      console.log(receiveAmount);
+      if (receiveAmount >= 0) {
+        const text = totalAmount < receiveAmount ? "Return" : "Due";
+        setReturnOrDueText(text);
+        const returnOrDueAmount = totalAmount - receiveAmount;
+        setSalesDueAmount(returnOrDueAmount);
+      } else {
+        setSalesDueAmount(totalAmount);
+      }
+    }
+  }, [form.values.split_amount]);
+  const [indexData, setIndexData] = useState(null);
+  const getAdditionalItem = (value) => {
+    setIndexData(value);
+    console.log(indexData);
+  };
   const handlePrintAll = () => {
     if (tempCartProducts.length === 0) {
       notifications.show({
@@ -557,6 +560,7 @@ export default function Invoice(props) {
   const [customerDrawer, setCustomerDrawer] = useState(false);
   const [customersDropdownData, setCustomersDropdownData] = useState([]);
   const [refreshCustomerDropdown, setRefreshCustomerDropdown] = useState(false);
+
   const handleCustomerAdd = () => {
     if (enableTable && tableId) {
       setCustomerDrawer(true);
@@ -790,17 +794,45 @@ export default function Invoice(props) {
                 accessor: "display_name",
                 title: t("Product"),
                 render: (data) => (
-                  <Text
-                    variant="subtle"
-                    style={{ cursor: "pointer" }}
-                    component="a"
-                    onClick={handleClick}
-                    name="additionalProductAdd"
-                    c={"red"}
-                    fz={"xs"}
+                  <Tooltip
+                    multiline
+                    w={220}
+                    label={
+                      indexData
+                        ? Array.isArray(indexData)
+                          ? indexData
+                              .map(
+                                (item) => `${item.display_name} (${item.qty})`
+                              )
+                              .join(", ")
+                          : `${indexData.display_name} (${indexData.qty})`
+                        : data.display_name
+                    }
+                    px={12}
+                    py={2}
+                    bg={"red.6"}
+                    c={"white"}
+                    withArrow
+                    position="top"
+                    offset={{ mainAxis: 5, crossAxis: 10 }}
+                    zIndex={999}
+                    transitionProps={{
+                      transition: "pop-bottom-left",
+                      duration: 500,
+                    }}
                   >
-                    {data.display_name}
-                  </Text>
+                    <Text
+                      variant="subtle"
+                      style={{ cursor: "pointer" }}
+                      component="a"
+                      onClick={handleClick}
+                      name="additionalProductAdd"
+                      c={"red"}
+                      fz={"xs"}
+                    >
+                      {data.display_name}
+                    </Text>
+                  </Tooltip>
                 ),
               },
               {
@@ -1379,6 +1411,9 @@ export default function Invoice(props) {
           )}
           {additionalItemDrawer && (
             <_CommonDrawer
+              getSplitPayment={getSplitPayment}
+              getAdditionalItem={getAdditionalItem}
+              salesDueAmount={salesDueAmount}
               eventName={eventName}
               additionalItemDrawer={additionalItemDrawer}
               setAdditionalItemDrawer={setAdditionalItemDrawer}
