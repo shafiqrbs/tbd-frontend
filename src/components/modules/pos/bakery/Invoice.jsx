@@ -43,6 +43,7 @@ import {
   IconScissors,
   IconCurrency,
   IconPlusMinus,
+  IconTicket,
 } from "@tabler/icons-react";
 import { DataTable } from "mantine-datatable";
 import { useDispatch, useSelector } from "react-redux";
@@ -104,6 +105,11 @@ export default function Invoice(props) {
   const [checked, setChecked] = useState(false);
 
   const [id, setId] = useState(null);
+
+  const [splitPaymentMap, setSplitPaymentMap] = useState({});
+  const [isSplitPaymentActive, setIsSplitPaymentActive] = useState({});
+  const currentTableKey = tableId || "general";
+  const isThisTableSplitPaymentActive = isSplitPaymentActive[currentTableKey];
 
   const [posData, setPosData] = useState(null);
   const [discountType, setDiscountType] = useState("Percent");
@@ -225,29 +231,37 @@ export default function Invoice(props) {
     const totalAmount = subtotal - discountAmount;
     setSalesTotalAmount(totalAmount);
 
-    let receiveAmount =
-      form.values.receive_amount === ""
-        ? 0
-        : Number(form.values.receive_amount);
-    if (receiveAmount >= 0) {
+    if (form.values.is_split_payment && form.values.split_total_amount) {
+      const receiveAmount = Number(form.values.split_total_amount);
       const text = totalAmount < receiveAmount ? "Return" : "Due";
       setReturnOrDueText(text);
       const returnOrDueAmount = totalAmount - receiveAmount;
       setSalesDueAmount(returnOrDueAmount);
     } else {
-      setSalesDueAmount(totalAmount);
+      let receiveAmount =
+        form.values.receive_amount === ""
+          ? 0
+          : Number(form.values.receive_amount);
+      if (receiveAmount >= 0) {
+        const text = totalAmount < receiveAmount ? "Return" : "Due";
+        setReturnOrDueText(text);
+        const returnOrDueAmount = totalAmount - receiveAmount;
+        setSalesDueAmount(returnOrDueAmount);
+      } else {
+        setSalesDueAmount(totalAmount);
+      }
     }
 
     const isDisabled =
       configData?.is_pay_first &&
-      (configData?.isZeroReceiveAllow
-        ? false
-        : totalAmount - receiveAmount > 0);
+      (configData?.isZeroReceiveAllow ? false : salesDueAmount > 0);
     setIsDisabled(isDisabled);
   }, [
     form.values.discount,
     discountType,
     form.values.receive_amount,
+    form.values.is_split_payment,
+    form.values.split_total_amount,
     subtotal,
     configData,
   ]);
@@ -280,10 +294,24 @@ export default function Invoice(props) {
       };
     });
   };
+
   const getSplitPayment = (value) => {
-    console.log("from callback", value);
-    form.setFieldValue("split_amount", value);
-    console.log("from form", form.values.split_amount);
+    setSplitPaymentMap((prev) => ({
+      ...prev,
+      [tableId || "general"]: value,
+    }));
+
+    setIsSplitPaymentActive((prev) => ({
+      ...prev,
+      [tableId || "general"]: true,
+    }));
+
+    const splitTotal = value.reduce(
+      (sum, item) => sum + Number(item.partial_amount),
+      0
+    );
+
+    setAdditionalItemDrawer(false);
   };
   useEffect(() => {
     if (form.values.split_amount) {
@@ -292,7 +320,7 @@ export default function Invoice(props) {
       for (let key in form.values.split_amount) {
         receiveAmount += Number(form.values.split_amount[key].partial_amount);
       }
-      console.log(receiveAmount);
+      // console.log(receiveAmount);
       if (receiveAmount >= 0) {
         const text = totalAmount < receiveAmount ? "Return" : "Due";
         setReturnOrDueText(text);
@@ -321,8 +349,14 @@ export default function Invoice(props) {
       return;
     }
 
-    const validation = form.validate();
-    if (validation.hasErrors) {
+    const currentTableKey = tableId || "general";
+    const isUsingSplitPayment = isSplitPaymentActive[currentTableKey];
+    const currentSplitPaymentData = splitPaymentMap[currentTableKey] || [];
+
+    if (
+      !isUsingSplitPayment &&
+      form.validateField("transaction_mode_id").hasError
+    ) {
       return;
     }
     let createdBy = JSON.parse(localStorage.getItem("user"));
@@ -330,7 +364,9 @@ export default function Invoice(props) {
     configData?.is_pos ? (formValue.is_pos = 1) : (formValue.is_pos = 0);
     formValue["customer_id"] = customerId;
     formValue["sub_total"] = subtotal;
-    formValue.transaction_mode_id = String(id);
+    if (!isUsingSplitPayment) {
+      formValue.transaction_mode_id = String(id);
+    }
     formValue["discount_type"] = discountType;
     formValue["discount"] = salesDiscountAmount;
     formValue["discount_calculation"] =
@@ -346,6 +382,10 @@ export default function Invoice(props) {
     const hasReceiveAmount = form.values.receive_amount;
 
     formValue["payment"] = hasReceiveAmount;
+    if (isUsingSplitPayment && currentSplitPaymentData.length > 0) {
+      formValue["split_payment_data"] = currentSplitPaymentData;
+      formValue["is_split_payment"] = true;
+    }
     let transformedArray = TransformProduct(tempCartProducts);
     formValue["items"] = transformedArray ? transformedArray : [];
 
@@ -383,7 +423,7 @@ export default function Invoice(props) {
       // };
       formValue["table_value"] = tableValue;
     }
-
+    console.log(formValue);
     const data = {
       url: "inventory/sales",
       data: formValue,
@@ -1101,11 +1141,11 @@ export default function Invoice(props) {
                             }}
                           >
                             <Flex
-                              bg={mode.id === id ? "green.0" : "white"}
+                              bg={mode.id === id ? "red.2" : "white"}
                               direction="column"
                               align="center"
                               justify="center"
-                              p={4}
+                              p={6}
                               style={{
                                 width: "100px",
                                 borderRadius: "8px",
@@ -1208,7 +1248,7 @@ export default function Invoice(props) {
             <Box m={0}>
               <Grid
                 columns={24}
-                gutter={{ base: 2 }}
+                gutter={{ base: 4 }}
                 pl={"4"}
                 pr={"4"}
                 align="center"
@@ -1220,7 +1260,6 @@ export default function Invoice(props) {
                     w={"100%"}
                     color={"red.3"}
                     mt={"2"}
-                    ml={"6"}
                     onLabel={t("%")}
                     offLabel={t("Flat")}
                     radius="xs"
@@ -1232,52 +1271,156 @@ export default function Invoice(props) {
                     }}
                   />
                 </Grid.Col>
-                <Grid.Col span={3}>
+                <Grid.Col span={3} bg={"red"}>
                   <TextInput
                     type="number"
                     placeholder={t("Discount")}
                     value={form.values.discount}
                     error={form.errors.discount}
-                    size={rem(40)}
+                    size={"sm"}
                     classNames={{ input: classes.input }}
                     onChange={(event) => {
                       form.setFieldValue("discount", event.target.value);
                     }}
                   />
                 </Grid.Col>
-                <Grid.Col span={6}>
+                <Grid.Col span={6} bg={"yellow"}>
                   <TextInput
                     type="text"
                     placeholder={t("CouponCode")}
                     value={form.values.coupon_code}
                     error={form.errors.coupon_code}
-                    size={rem(40)}
+                    size={"sm"}
                     classNames={{ input: classes.input }}
                     onChange={(event) => {
                       form.setFieldValue("coupon_code", event.target.value);
                     }}
+                    rightSection={
+                      <>
+                        <Tooltip
+                          label={t("CouponCode")}
+                          px={16}
+                          py={2}
+                          withArrow
+                          position={"left"}
+                          c={"black"}
+                          bg={`gray.1`}
+                          transitionProps={{
+                            transition: "pop-bottom-left",
+                            duration: 500,
+                          }}
+                        >
+                          <IconTicket size={16} opacity={0.5} />
+                        </Tooltip>
+                      </>
+                    }
                   />
                 </Grid.Col>
                 {/* <Grid.Col span={6}> &nbsp; </Grid.Col> */}
-                <Grid.Col span={6}>
-                  <TextInput
-                    type="number"
-                    placeholder={t("Amount")}
-                    value={form.values.receive_amount}
-                    error={form.errors.receive_amount}
-                    size={rem(40)}
-                    classNames={{ input: classes.input }}
-                    onChange={(event) => {
-                      form.setFieldValue("receive_amount", event.target.value);
+                <Grid.Col span={6} bg={"green"}>
+                  <Tooltip
+                    label={t("ReceiveAmountValidateMessage")}
+                    opened={!!form.errors.receive_amount}
+                    px={16}
+                    py={2}
+                    position="top-end"
+                    bg={`red.4`}
+                    c={"white"}
+                    withArrow
+                    offset={2}
+                    zIndex={999}
+                    transitionProps={{
+                      transition: "pop-bottom-left",
+                      duration: 500,
                     }}
-                  />
+                  >
+                    <TextInput
+                      type="number"
+                      placeholder={
+                        isThisTableSplitPaymentActive
+                          ? t("SplitPaymentActive")
+                          : t("Amount")
+                      }
+                      value={form.values.receive_amount}
+                      error={form.errors.receive_amount}
+                      size={"sm"}
+                      disabled={isThisTableSplitPaymentActive} // Only disabled when this table has active split payment
+                      rightSection={
+                        <>
+                          {form.values.receive_amount ? (
+                            <Tooltip
+                              label={t("Close")}
+                              withArrow
+                              bg={`red.1`}
+                              c={"red.3"}
+                            >
+                              <IconX
+                                size={16}
+                                color={"red"}
+                                opacity={1}
+                                onClick={() => {
+                                  form.setFieldValue("receive_amount", "");
+                                  // Also clear split payment data for this table
+                                  if (isThisTableSplitPaymentActive) {
+                                    setSplitPaymentMap((prev) => {
+                                      const updated = { ...prev };
+                                      delete updated[currentTableKey];
+                                      return updated;
+                                    });
+                                    setIsSplitPaymentActive((prev) => {
+                                      const updated = { ...prev };
+                                      delete updated[currentTableKey];
+                                      return updated;
+                                    });
+                                  }
+                                }}
+                              />
+                            </Tooltip>
+                          ) : isSplitPaymentActive ? (
+                            <Tooltip
+                              label={t("SplitPaymentActive")}
+                              withArrow
+                              position={"left"}
+                            >
+                              <IconScissors size={16} opacity={0.7} />
+                            </Tooltip>
+                          ) : (
+                            <Tooltip
+                              px={16}
+                              py={2}
+                              withArrow
+                              position={"left"}
+                              c={"black"}
+                              bg={`gray.1`}
+                              transitionProps={{
+                                transition: "pop-bottom-left",
+                                duration: 500,
+                              }}
+                              label={t("ReceiveAmountValidateMessage")}
+                            >
+                              <IconCurrency size={16} opacity={0.5} />
+                            </Tooltip>
+                          )}
+                        </>
+                      }
+                      leftSection={<IconPlusMinus size={16} opacity={0.5} />}
+                      classNames={{ input: classes.input }}
+                      onChange={(event) => {
+                        if (!isThisTableSplitPaymentActive) {
+                          form.setFieldValue(
+                            "receive_amount",
+                            event.target.value
+                          );
+                        }
+                      }}
+                    />
+                  </Tooltip>
                 </Grid.Col>
                 <Grid.Col span={6}>
                   <Button
                     disabled={!tableId}
                     fullWidth
-                    radius="sm"
-                    size="md"
+                    size="sm"
                     color="red"
                     leftSection={
                       customerObject && customerObject.name ? (
@@ -1372,7 +1515,7 @@ export default function Invoice(props) {
               </Grid.Col>
               <Grid.Col span={enableTable ? 3 : 4}>
                 <Button
-                  disabled={isDisabled}
+                  // disabled={isDisabled}
                   size={"sm"}
                   c={"white"}
                   bg={"green.8"}

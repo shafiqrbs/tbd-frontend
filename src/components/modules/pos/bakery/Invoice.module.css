@@ -15,17 +15,17 @@
     justify-content: left;
     align-items: center; */
   }
-  .input {
+  /* .input {
     color: black;
     font-size: 14px; 
     height: auto;
-    outline: 1px solid #40c057;
+    outline: 1px solid green;
     outline-offset: -2px;
   }
   .input:focus {
     outline: 2px solid #1f2b32;
     outline-offset: -2px;
-  }
+  } */
   .divider {
     border-top: #c0c0c0 solid 2px;
   }
