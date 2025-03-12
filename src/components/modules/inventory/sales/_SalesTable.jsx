@@ -92,7 +92,7 @@ function _SalesTable(props) {
             <Table.Td fz="xs" width={'20'}>{index + 1}</Table.Td>
             <Table.Td ta="left" fz="xs" width={'300'}>{element.name}</Table.Td>
             {
-                isWarehouse &&
+                isWarehouse==1 &&
                 <Table.Td ta="center" fz="xs" width={'60'}>{element.warehouse_name}</Table.Td>
             }
             <Table.Td ta="center" fz="xs" width={'60'}>{element.bonus_quantity}</Table.Td>
