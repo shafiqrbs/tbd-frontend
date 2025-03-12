@@ -250,12 +250,9 @@ export default function Invoice(props) {
     const totalAmount = subtotal - discountAmount;
     setSalesTotalAmount(totalAmount);
 
-    
     const currentReceiveAmount = tableReceiveAmounts[currentTableKey] || "";
 
-    
     if (isSplitPaymentActive) {
-      
       const splitPaymentTotal = currentTableSplitPayments.reduce(
         (total, payment) => total + Number(payment.partial_amount),
         0
@@ -266,7 +263,6 @@ export default function Invoice(props) {
       const returnOrDueAmount = totalAmount - splitPaymentTotal;
       setSalesDueAmount(returnOrDueAmount);
     } else {
-      
       let receiveAmount =
         currentReceiveAmount === "" ? 0 : Number(currentReceiveAmount);
       if (receiveAmount >= 0) {
@@ -287,15 +283,14 @@ export default function Invoice(props) {
     form.values.discount,
     discountType,
     tableReceiveAmounts[currentTableKey],
-    currentTableSplitPayments, 
-    isSplitPaymentActive, 
+    currentTableSplitPayments,
+    isSplitPaymentActive,
     subtotal,
     configData,
     currentTableKey,
-    tempCartProducts.length, 
+    tempCartProducts.length,
   ]);
 
-  
   useEffect(() => {
     if (tableId && !additionalTableSelections[tableId]) {
       setAdditionalTableSelections((prev) => ({
@@ -326,7 +321,6 @@ export default function Invoice(props) {
 
   const getSplitPayment = (splitPayments) => {
     updateTableSplitPayment(currentTableKey, splitPayments);
-    
   };
   useEffect(() => {
     if (form.values.split_amount) {
@@ -452,7 +446,6 @@ export default function Invoice(props) {
       style: { backgroundColor: "lightgray" },
     });
     setTimeout(() => {
-     
       setTempCartProducts([]);
       setSalesDiscountAmount(0);
       setSalesTotalAmount(0);
@@ -613,7 +606,6 @@ export default function Invoice(props) {
     setSalesByUserName(null);
     setId(null);
 
-  
     clearTableCustomer(tableId);
     setCustomerObject({});
     setCustomerId(null);
@@ -713,14 +705,12 @@ export default function Invoice(props) {
   };
 
   useEffect(() => {
-    
     const currentAmount = tableReceiveAmounts[currentTableKey] || "";
     form.setFieldValue("receive_amount", currentAmount);
   }, [currentTableKey, tableReceiveAmounts]);
 
   const clearSplitPayment = () => {
     if (currentTableKey) {
-
       clearTableSplitPayment(currentTableKey);
 
       form.setFieldValue(
@@ -737,9 +727,7 @@ export default function Invoice(props) {
     }
   };
 
-
   useEffect(() => {
-   
     if (tableId) {
       if (tableCustomerMap && tableCustomerMap[tableId]) {
         const tableCustomer = tableCustomerMap[tableId];
@@ -782,22 +770,10 @@ export default function Invoice(props) {
           wrap="nowrap"
         >
           <Box pt={8}>
-            <Tooltip
-              label={t("SalesBy")}
-              opened={!!form.errors.sales_by_id}
-              bg={"orange.8"}
-              c={"white"}
-              withArrow
-              px={16}
-              py={2}
-              offset={2}
-              zIndex={999}
-              position="top-end"
-              transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
-            >
               <SelectForm
                 pt={"xs"}
                 label=""
+                tooltip={"SalesBy"}
                 placeholder={enableTable ? t("OrderTakenBy") : t("SalesBy")}
                 // required={true}
                 name={"sales_by_id"}
@@ -807,8 +783,9 @@ export default function Invoice(props) {
                 searchable={true}
                 value={salesByUser}
                 changeValue={setSalesByUser}
+                color={"orange.8"}
+                position={"top-start"}
               />
-            </Tooltip>
           </Box>
 
           {enableTable && (
@@ -1174,7 +1151,19 @@ export default function Invoice(props) {
                 </Stack>
               </Grid.Col>
             </Grid>
-            <Grid columns={24} gutter={2} align="center" justify="center">
+            <Grid
+              columns={24}
+              gutter={2}
+              align="center"
+              justify="center"
+              style={{
+                borderRadius: 4,
+                border:
+                  form.errors.transaction_mode_id && !id
+                    ? "1px solid red"
+                    : "none",
+              }}
+            >
               <Grid.Col span={18}>
                 <Box
                   className={classes["box-white"]}
@@ -1188,24 +1177,16 @@ export default function Invoice(props) {
                     pr={"2"}
                     viewportRef={scrollRef}
                     onScrollPositionChange={handleScroll}
-                    style={{
-                      borderRadius: 4,
-                      border:
-                        form.errors.transaction_mode_id && !id
-                          ? "1px solid red"
-                          : "none",
-                    }}
                   >
                     <Tooltip
                       label={t("TransactionMode")}
                       opened={!!form.errors.transaction_mode_id}
                       px={16}
                       py={2}
-                      position="top-end"
                       bg={"orange.8"}
                       c={"white"}
                       withArrow
-                      offset={{ mainAxis: 5, crossAxis: 12 }}
+                      offset={{ mainAxis: 5, crossAxis: -364 }}
                       zIndex={999}
                       transitionProps={{
                         transition: "pop-bottom-left",
@@ -1450,7 +1431,7 @@ export default function Invoice(props) {
                       value={tableReceiveAmounts[currentTableKey] || ""}
                       error={form.errors.receive_amount}
                       size={"sm"}
-                      disabled={isThisTableSplitPaymentActive} 
+                      disabled={isThisTableSplitPaymentActive}
                       rightSection={
                         <>
                           {form.values.receive_amount ? (
@@ -1533,7 +1514,6 @@ export default function Invoice(props) {
                     py={2}
                     offset={2}
                     zIndex={999}
-                    position="top-end"
                     transitionProps={{
                       transition: "pop-bottom-left",
                       duration: 500,
