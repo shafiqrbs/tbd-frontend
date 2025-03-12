@@ -28,17 +28,22 @@ import InputForm from "../../../../form-builders/InputForm.jsx";
 import InputNumberForm from "../../../../form-builders/InputNumberForm.jsx";
 
 export default function __SplitPayment(props) {
-  const { closeDrawer, salesDueAmount, getSplitPayment } = props;
+  const {
+    closeDrawer,
+    salesDueAmount,
+    getSplitPayment,
+    currentSplitPayments,
+    tableSplitPaymentMap,
+  } = props;
   const { t } = useTranslation();
   const { isOnline, mainAreaHeight } = useOutletContext();
   const height = mainAreaHeight - 100;
   const [id, setId] = useState(null);
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [remainingAmount, setRemainingAmount] = useState(salesDueAmount);
-  
-  const transactionModeData = JSON.parse(
-    localStorage.getItem("accounting-transaction-mode")
-  ) || [];
+
+  const transactionModeData =
+    JSON.parse(localStorage.getItem("accounting-transaction-mode")) || [];
 
   const initialValues = transactionModeData.reduce((acc, mode) => {
     acc[`partial_amount_${mode.id}`] = "";
@@ -62,39 +67,64 @@ export default function __SplitPayment(props) {
     let totalPaidAmount = 0;
     const payments = [];
 
-    transactionModeData.forEach(mode => {
+    transactionModeData.forEach((mode) => {
       const amountField = `partial_amount_${mode.id}`;
       const remarksField = `remarks_${mode.id}`;
       const amount = splitPaymentForm.values[amountField];
-      
+
       if (amount && Number(amount) > 0) {
         totalPaidAmount += Number(amount);
-        
+
         payments.push({
           transaction_mode_id: mode.id,
           partial_amount: Number(amount),
-          remarks: splitPaymentForm.values[remarksField] || ""
+          remarks: splitPaymentForm.values[remarksField] || "",
         });
       }
     });
 
     setSplitPayments(payments);
-    setRemainingAmount((salesDueAmount - totalPaidAmount).toFixed(2));
-    
+    if (salesDueAmount !== 0) {
+      setRemainingAmount((salesDueAmount - totalPaidAmount).toFixed(2));
+    } else {
+      setRemainingAmount(0);
+    }
+
     // Enable save button only when amounts match exactly
     const amountMatches = Math.abs(totalPaidAmount - salesDueAmount) < 0.01;
     setSaveDisabled(!amountMatches || payments.length === 0);
-    
   }, [splitPaymentForm.values, salesDueAmount]);
 
   const handleFormSubmit = () => {
     if (saveDisabled) return;
-    
+
     // Pass split payment data back to parent
     getSplitPayment(splitPayments);
     setFormSubmitted(true);
   };
 
+  useEffect(() => {
+    if (currentSplitPayments && currentSplitPayments.length > 0) {
+      const values = { ...initialValues };
+
+      currentSplitPayments.forEach((payment) => {
+        values[`partial_amount_${payment.transaction_mode_id}`] =
+          payment.partial_amount;
+        values[`remarks_${payment.transaction_mode_id}`] =
+          payment.remarks || "";
+      });
+
+      splitPaymentForm.setValues(values);
+
+      setSplitPayments(currentSplitPayments);
+
+      const totalPaid = currentSplitPayments.reduce(
+        (sum, payment) => sum + Number(payment.partial_amount),
+        0
+      );
+      setRemainingAmount((salesDueAmount - totalPaid).toFixed(2));
+    }
+  }, []);
   return (
     <form onSubmit={splitPaymentForm.onSubmit(handleFormSubmit)}>
       <Box mb={0}>
@@ -115,15 +145,14 @@ export default function __SplitPayment(props) {
                       {t("SplitPayment")}
                     </Title>
                   </Grid.Col>
-                  <Grid.Col span={2} p={0}></Grid.Col>
-                  <Grid.Col span={4}>
+                  <Grid.Col span={6}>
                     <Group position="right">
-                      <Badge 
+                      <Badge
                         color={
-                          Number(remainingAmount) > 0 
-                            ? "red" 
-                            : Number(remainingAmount) < 0 
-                            ? "orange" 
+                          Number(remainingAmount) > 0
+                            ? "red"
+                            : Number(remainingAmount) < 0
+                            ? "orange"
                             : "green"
                         }
                         size="lg"
