@@ -139,27 +139,28 @@ export default function __SplitPayment(props) {
                 mb={"4"}
                 className={"boxBackground borderRadiusAll"}
               >
-                <Grid columns={12}>
+                <Grid columns={12} align="center" justify="right">
                   <Grid.Col span={6}>
                     <Title order={6} pt={"6"}>
                       {t("SplitPayment")}
                     </Title>
                   </Grid.Col>
-                  <Grid.Col span={6}>
-                    <Group position="right">
-                      <Badge
-                        color={
-                          Number(remainingAmount) > 0
-                            ? "red"
-                            : Number(remainingAmount) < 0
-                            ? "orange"
-                            : "green"
-                        }
-                        size="lg"
-                      >
-                        {t("Remaining")}: {remainingAmount}
-                      </Badge>
-                    </Group>
+                  <Grid.Col span={2}></Grid.Col>
+                  <Grid.Col span={4}>
+                    <Badge
+                    h={30}
+                      w={160}
+                      color={
+                        Number(remainingAmount) > 0
+                          ? "red"
+                          : Number(remainingAmount) < 0
+                          ? "orange"
+                          : "green"
+                      }
+                      size="md"
+                    >
+                      {t("Remaining")}: {remainingAmount}
+                    </Badge>
                   </Grid.Col>
                 </Grid>
               </Box>
