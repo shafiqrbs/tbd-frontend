@@ -54,6 +54,9 @@ export default function NewSales(props) {
     clearTableCustomer,
     customerObject,
     setCustomerObject,
+    updateTableSplitPayment,
+    clearTableSplitPayment,
+    tableSplitPaymentMap,
   } = props;
   const dispatch = useDispatch();
   const { t, i18n } = useTranslation();
@@ -1481,6 +1484,9 @@ export default function NewSales(props) {
               customerObject={customerObject}
               setCustomerObject={setCustomerObject}
               loadCartProducts={loadCartProducts}
+              updateTableSplitPayment={updateTableSplitPayment}
+              clearTableSplitPayment={clearTableSplitPayment}
+              tableSplitPaymentMap={tableSplitPaymentMap}
             />
           </Grid.Col>
         )}

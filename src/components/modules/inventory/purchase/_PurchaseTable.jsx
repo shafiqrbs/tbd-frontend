@@ -232,7 +232,7 @@ function _PurchaseTable() {
             });
         } finally {
             fetchData();
-            navigate(0)
+            // navigate(0)
         }
     };
 

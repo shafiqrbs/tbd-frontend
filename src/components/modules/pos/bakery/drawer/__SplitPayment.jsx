@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import {
   Button,
@@ -14,6 +14,7 @@ import {
   Tooltip,
   Image,
   Divider,
+  Badge,
 } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import {
@@ -22,24 +23,27 @@ import {
   IconUserCircle,
   IconX,
 } from "@tabler/icons-react";
-import { useDispatch } from "react-redux";
 import { useForm } from "@mantine/form";
 import InputForm from "../../../../form-builders/InputForm.jsx";
 import InputNumberForm from "../../../../form-builders/InputNumberForm.jsx";
 
 export default function __SplitPayment(props) {
-  const { closeDrawer, salesDueAmount, getSplitPayment } = props;
+  const {
+    closeDrawer,
+    salesDueAmount,
+    getSplitPayment,
+    currentSplitPayments,
+    tableSplitPaymentMap,
+  } = props;
   const { t } = useTranslation();
-  const dispatch = useDispatch();
   const { isOnline, mainAreaHeight } = useOutletContext();
-  const height = mainAreaHeight - 100; //TabList height 104
-  const [saveCreateLoading, setSaveCreateLoading] = useState(false);
+  const height = mainAreaHeight - 100;
   const [id, setId] = useState(null);
-  const transactionModeData = JSON.parse(
-    localStorage.getItem("accounting-transaction-mode")
-  )
-    ? JSON.parse(localStorage.getItem("accounting-transaction-mode"))
-    : [];
+  const [formSubmitted, setFormSubmitted] = useState(false);
+  const [remainingAmount, setRemainingAmount] = useState(salesDueAmount);
+
+  const transactionModeData =
+    JSON.parse(localStorage.getItem("accounting-transaction-mode")) || [];
 
   const initialValues = transactionModeData.reduce((acc, mode) => {
     acc[`partial_amount_${mode.id}`] = "";
@@ -52,51 +56,77 @@ export default function __SplitPayment(props) {
   });
 
   const clicked = (id) => {
+    if (formSubmitted) return;
     setId(id);
   };
 
-  const [allValues, setAllValues] = useState([]);
-  const [disabled, setDisabled] = useState(false);
+  const [splitPayments, setSplitPayments] = useState([]);
+  const [saveDisabled, setSaveDisabled] = useState(true);
 
   useEffect(() => {
-    setAllValues(
-      transactionModeData
-        .map((mode) => {
-          if (splitPaymentForm.values[`partial_amount_${mode.id}`]) {
-            return {
-              transaction_mode_id: mode.id,
-              partial_amount:
-                splitPaymentForm.values[`partial_amount_${mode.id}`],
-              remarks: splitPaymentForm.values[`remarks_${mode.id}`],
-            };
-          }
-        })
-        .filter((value) => value !== undefined)
-    );
     let totalPaidAmount = 0;
-    for (let mode of transactionModeData) {
-      if (splitPaymentForm.values[`partial_amount_${mode.id}`] === undefined) {
-        continue;
-      } else {
-        totalPaidAmount += Number(
-          splitPaymentForm.values[`partial_amount_${mode.id}`]
-        );
-      }
-    }
-    if (totalPaidAmount < salesDueAmount) {
-      setDisabled(true);
-    } else {
-      setDisabled(false);
-    }
-  }, [splitPaymentForm.values]);
+    const payments = [];
 
+    transactionModeData.forEach((mode) => {
+      const amountField = `partial_amount_${mode.id}`;
+      const remarksField = `remarks_${mode.id}`;
+      const amount = splitPaymentForm.values[amountField];
+
+      if (amount && Number(amount) > 0) {
+        totalPaidAmount += Number(amount);
+
+        payments.push({
+          transaction_mode_id: mode.id,
+          partial_amount: Number(amount),
+          remarks: splitPaymentForm.values[remarksField] || "",
+        });
+      }
+    });
+
+    setSplitPayments(payments);
+    if (salesDueAmount !== 0) {
+      setRemainingAmount((salesDueAmount - totalPaidAmount).toFixed(2));
+    } else {
+      setRemainingAmount(0);
+    }
+
+    // Enable save button only when amounts match exactly
+    const amountMatches = Math.abs(totalPaidAmount - salesDueAmount) < 0.01;
+    setSaveDisabled(!amountMatches || payments.length === 0);
+  }, [splitPaymentForm.values, salesDueAmount]);
+
+  const handleFormSubmit = () => {
+    if (saveDisabled) return;
+
+    // Pass split payment data back to parent
+    getSplitPayment(splitPayments);
+    setFormSubmitted(true);
+  };
+
+  useEffect(() => {
+    if (currentSplitPayments && currentSplitPayments.length > 0) {
+      const values = { ...initialValues };
+
+      currentSplitPayments.forEach((payment) => {
+        values[`partial_amount_${payment.transaction_mode_id}`] =
+          payment.partial_amount;
+        values[`remarks_${payment.transaction_mode_id}`] =
+          payment.remarks || "";
+      });
+
+      splitPaymentForm.setValues(values);
+
+      setSplitPayments(currentSplitPayments);
+
+      const totalPaid = currentSplitPayments.reduce(
+        (sum, payment) => sum + Number(payment.partial_amount),
+        0
+      );
+      setRemainingAmount((salesDueAmount - totalPaid).toFixed(2));
+    }
+  }, []);
   return (
-    <form
-      onSubmit={splitPaymentForm.onSubmit((values) => {
-        getSplitPayment(allValues);
-        closeDrawer()
-      })}
-    >
+    <form onSubmit={splitPaymentForm.onSubmit(handleFormSubmit)}>
       <Box mb={0}>
         <Grid columns={9} gutter={{ base: 6 }}>
           <Grid.Col span={9}>
@@ -109,14 +139,29 @@ export default function __SplitPayment(props) {
                 mb={"4"}
                 className={"boxBackground borderRadiusAll"}
               >
-                <Grid columns={12}>
+                <Grid columns={12} align="center" justify="right">
                   <Grid.Col span={6}>
                     <Title order={6} pt={"6"}>
                       {t("SplitPayment")}
                     </Title>
                   </Grid.Col>
-                  <Grid.Col span={2} p={0}></Grid.Col>
-                  <Grid.Col span={4}></Grid.Col>
+                  <Grid.Col span={2}></Grid.Col>
+                  <Grid.Col span={4}>
+                    <Badge
+                    h={30}
+                      w={160}
+                      color={
+                        Number(remainingAmount) > 0
+                          ? "red"
+                          : Number(remainingAmount) < 0
+                          ? "orange"
+                          : "green"
+                      }
+                      size="md"
+                    >
+                      {t("Remaining")}: {remainingAmount}
+                    </Badge>
+                  </Grid.Col>
                 </Grid>
               </Box>
               <Box pl={`xs`} pr={"xs"} className={"borderRadiusAll"}>
@@ -125,20 +170,19 @@ export default function __SplitPayment(props) {
                   scrollbarSize={2}
                   scrollbars="y"
                   type="never"
-                  pt={'xs'}
+                  pt={"xs"}
                 >
-                  
                   {transactionModeData.map((mode, index) => (
-                    <>
+                    <React.Fragment key={index}>
                       <Grid
                         align="center"
                         justify="center"
                         columns={24}
                         gutter={{ base: 8 }}
-                        key={index}
                         onClick={() => {
                           clicked(mode.id);
                         }}
+                        opacity={formSubmitted ? 0.8 : 1}
                       >
                         <Grid.Col span={6}>
                           <Stack
@@ -154,7 +198,7 @@ export default function __SplitPayment(props) {
                               p={4}
                               style={{
                                 position: "relative",
-                                cursor: "pointer",
+                                cursor: formSubmitted ? "default" : "pointer",
                               }}
                             >
                               <Flex
@@ -205,10 +249,11 @@ export default function __SplitPayment(props) {
                               label={t("")}
                               placeholder={t("PartialAmount")}
                               required={false}
-                              nextField={"remarks"}
+                              nextField={`remarks_${mode.id}`}
                               name={`partial_amount_${mode.id}`}
                               form={splitPaymentForm}
                               id={`partial_amount_${mode.id}`}
+                              disabled={formSubmitted}
                             />
                           </Box>
                         </Grid.Col>
@@ -218,7 +263,7 @@ export default function __SplitPayment(props) {
                               tooltip={t("Remarks")}
                               label={t("")}
                               placeholder={t("Remarks")}
-                              required={true}
+                              required={false}
                               nextField={"EntitySplitFormSubmit"}
                               form={splitPaymentForm}
                               name={`remarks_${mode.id}`}
@@ -227,12 +272,13 @@ export default function __SplitPayment(props) {
                                 <IconUserCircle size={16} opacity={0.5} />
                               }
                               rightIcon={""}
+                              disabled={formSubmitted}
                             />
                           </Box>
                         </Grid.Col>
                       </Grid>
                       <Divider my="xs" />
-                    </>
+                    </React.Fragment>
                   ))}
                 </ScrollArea>
               </Box>
@@ -269,29 +315,32 @@ export default function __SplitPayment(props) {
 
                   <Group gap={8}>
                     <Flex justify="flex-end" align="center" h="100%">
-                      <Button
-                        variant="transparent"
-                        size="xs"
-                        color="red.4"
-                        type="reset"
-                        id=""
-                        p={0}
-                        onClick={() => {
-                          splitPaymentForm.reset();
-                        }}
-                        rightSection={
-                          <IconRefreshDot
-                            style={{ width: "100%", height: "60%" }}
-                            stroke={1.5}
-                          />
-                        }
-                      ></Button>
+                      {!formSubmitted && (
+                        <Button
+                          variant="transparent"
+                          size="xs"
+                          color="red.4"
+                          type="reset"
+                          id=""
+                          p={0}
+                          onClick={() => {
+                            splitPaymentForm.reset();
+                            setRemainingAmount(salesDueAmount);
+                          }}
+                          rightSection={
+                            <IconRefreshDot
+                              style={{ width: "100%", height: "60%" }}
+                              stroke={1.5}
+                            />
+                          }
+                        ></Button>
+                      )}
                     </Flex>
                     <Stack align="flex-start">
                       <>
-                        {!saveCreateLoading && isOnline && (
+                        {!formSubmitted && (
                           <Button
-                            disabled={disabled}
+                            disabled={saveDisabled}
                             size="xs"
                             color={`green.8`}
                             type="submit"
@@ -303,6 +352,17 @@ export default function __SplitPayment(props) {
                                 {t("Save")}
                               </Text>
                             </Flex>
+                          </Button>
+                        )}
+                        {formSubmitted && (
+                          <Button
+                            size="xs"
+                            color="blue.6"
+                            onClick={closeDrawer}
+                          >
+                            <Text fz={14} fw={400}>
+                              {t("Close")}
+                            </Text>
                           </Button>
                         )}
                       </>

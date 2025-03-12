@@ -7,6 +7,8 @@ import {getHotkeyHandler} from "@mantine/hooks";
 
 const SelectForm = forwardRef((props, ref) => {
     const {
+      position,
+      color,
       label,
       placeholder,
       required,
@@ -45,8 +47,8 @@ const SelectForm = forwardRef((props, ref) => {
             opened={name in form.errors && !!form.errors[name]}
             px={16}
             py={2}
-            position="top-end"
-            bg="red.4"
+            position={position && position ? position : "top-end"}
+            bg={color && color ? color : "red.4"}
             c="white"
             withArrow
             offset={2}

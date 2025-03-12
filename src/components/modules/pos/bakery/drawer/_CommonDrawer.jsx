@@ -13,6 +13,8 @@ export default function _CommonDrawer(props) {
     salesDueAmount,
     getAdditionalItem,
     getSplitPayment,
+    currentSplitPayments,
+    tableSplitPaymentMap
   } = props;
 
   const closeDrawer = () => {
@@ -56,7 +58,9 @@ export default function _CommonDrawer(props) {
                   closeDrawer={closeDrawer}
                   salesDueAmount={salesDueAmount}
                   getSplitPayment={getSplitPayment}
-                />
+                  currentSplitPayments={currentSplitPayments}
+                  tableSplitPaymentMap={tableSplitPaymentMap}
+                  />
               )}
 
               {eventName === "additionalProductAdd" && (

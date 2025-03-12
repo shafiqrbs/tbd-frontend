@@ -81,6 +81,25 @@ export default function BakeryIndex() {
     });
   };
 
+  const [tableSplitPaymentMap, setTableSplitPaymentMap] = useState({});
+  const updateTableSplitPayment = (tableId, splitPayments) => {
+    if (!tableId) return;
+
+    setTableSplitPaymentMap((prev) => ({
+      ...prev,
+      [tableId]: splitPayments,
+    }));
+  };
+  const clearTableSplitPayment = (tableId) => {
+    if (!tableId) return;
+
+    setTableSplitPaymentMap((prev) => {
+      const newMap = { ...prev };
+      delete newMap[tableId];
+      return newMap;
+    });
+  };
+
   const tableData = getSettingParticularDropdownData("table");
 
   useEffect(() => {
@@ -163,6 +182,9 @@ export default function BakeryIndex() {
                 clearTableCustomer={clearTableCustomer}
                 customerObject={customerObject}
                 setCustomerObject={setCustomerObject}
+                updateTableSplitPayment={updateTableSplitPayment}
+                clearTableSplitPayment={clearTableSplitPayment}
+                tableSplitPaymentMap={tableSplitPaymentMap}
               />
             </Box>
           </Box>
