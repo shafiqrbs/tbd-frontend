@@ -232,6 +232,7 @@ function __PurchaseForm(props) {
                         "quantity": product.quantity,
                         "purchase_price": product.purchase_price,
                         "sales_price": product.sales_price,
+                        "bonus_quantity": product.bonus_quantity,
                         "sub_total": product.sub_total
                     }
                 });

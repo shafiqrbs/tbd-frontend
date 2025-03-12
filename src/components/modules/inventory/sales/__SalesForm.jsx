@@ -264,7 +264,9 @@ function __SalesForm(props) {
                         "uom": product.unit_name,
                         "unit_id": product.unit_id,
                         "purchase_price": product.purchase_price,
-                        "sub_total": product.sub_total
+                        "sub_total": product.sub_total,
+                        "warehouse_id": product.warehouse_id,
+                        "bonus_quantity" : product.bonus_quantity
                     }
                 });
 

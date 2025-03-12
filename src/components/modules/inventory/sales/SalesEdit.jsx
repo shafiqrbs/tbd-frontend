@@ -75,6 +75,7 @@ function SalesEdit() {
                                         isSMSActive={configData?.is_active_sms}
                                         isZeroReceiveAllow={configData?.is_zero_receive_allow}
                                         entityEditData={entityEditData}
+                                        isWarehouse={configData?.sku_warehouse}
                                     />
                                 }
                             </Box>

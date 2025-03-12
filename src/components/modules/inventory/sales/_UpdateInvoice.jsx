@@ -22,9 +22,11 @@ import productsDataStoreIntoLocalStorage from "../../../global-hook/local-storag
 import _addProduct from "../../popover-form/_addProduct.jsx";
 import __UpdateInvoiceForm from "./__UpdateInvoiceForm.jsx";
 import AddProductDrawer from "./drawer-form/AddProductDrawer.jsx";
+import SelectForm from "../../../form-builders/SelectForm.jsx";
+import getCoreWarehouseDropdownData from "../../../global-hook/dropdown/core/getCoreWarehouseDropdownData.js";
 
 function _UpdateInvoice(props) {
-    const { currencySymbol, allowZeroPercentage, domainId, isSMSActive, isZeroReceiveAllow, focusFrom, entityEditData } = props
+    const { currencySymbol, allowZeroPercentage, domainId, isSMSActive, isZeroReceiveAllow, focusFrom, entityEditData,isWarehouse } = props
     const { t, i18n } = useTranslation();
     const { isOnline, mainAreaHeight } = useOutletContext();
     const height = mainAreaHeight - 170; //TabList height 104
@@ -35,9 +37,10 @@ function _UpdateInvoice(props) {
 
     const [tempCardProducts, setTempCardProducts] = useState([])
     const [loadCardProducts, setLoadCardProducts] = useState(false)
-    // const [productDrawer, setProductDrawer] = useState(false)
 
-    // console.log(tempCardProducts)
+    /*get warehouse dropdown data*/
+    let warehouseDropdownData = getCoreWarehouseDropdownData()
+    const [warehouseData, setWarehouseData] = useState(null);
 
     let salesSubTotalAmount = tempCardProducts?.reduce((total, item) => total + item.sub_total, 0) || 0;
     let totalPurchaseAmount = tempCardProducts?.reduce((total, item) => total + (item.purchase_price * item.quantity), 0) || 0;
@@ -95,6 +98,9 @@ function _UpdateInvoice(props) {
                     uom: product.uom,
                     purchase_price: product.purchase_price,
                     sub_total: selectProductDetails.sub_total,
+                    warehouse_id: values.warehouse_id?Number(values.warehouse_id):null,
+                    warehouse_name: values.warehouse_id?warehouseDropdownData.find(warehouse => warehouse.value === values.warehouse_id).label:null,
+                    bonus_quantity : values.bonus_quantity
                 });
             }
             return acc;
@@ -108,7 +114,7 @@ function _UpdateInvoice(props) {
         if (barcodeExists) {
             const addProducts = localProducts.reduce((acc, product) => {
                 if (String(product.barcode) === String(values.barcode)) {
-                    acc.push(createProductFromValues(product));
+                    acc.push(createProductFromValues(product,values));
                 }
                 return acc;
             }, myCardProducts);
@@ -138,7 +144,7 @@ function _UpdateInvoice(props) {
         }
     }
 
-    function createProductFromValues(product) {
+    function createProductFromValues(product,values) {
         return {
             product_id: product.id,
             item_name: product.display_name,
@@ -151,12 +157,15 @@ function _UpdateInvoice(props) {
             purchase_price: product.purchase_price,
             sub_total: product.sales_price,
             unit_id: product.unit_id,
+            warehouse_id: values.warehouse_id?Number(values.warehouse_id):null,
+            warehouse_name: values.warehouse_id?warehouseDropdownData.find(warehouse => warehouse.value === values.warehouse_id).label:null,
+            bonus_quantity : values.bonus_quantity
         };
     }
 
     const form = useForm({
         initialValues: {
-            product_id: '', price: '', sales_price: '', percent: '', barcode: '', sub_total: '', quantity: ''
+            product_id: '', price: '', sales_price: '', percent: '', barcode: '', sub_total: '', quantity: '',warehouse_id:'',bonus_quantity:''
         },
         validate: {
             product_id: (value, values) => {
@@ -306,6 +315,7 @@ function _UpdateInvoice(props) {
                                 if (!values.barcode && !values.product_id) {
                                     form.setFieldError('barcode', true);
                                     form.setFieldError('product_id', true);
+                                    isWarehouse && form.setFieldError('warehouse_id', true);
                                     setTimeout(() => { }, 1000)
                                 } else {
 
@@ -349,22 +359,64 @@ function _UpdateInvoice(props) {
                                                 leftSection={<IconBarcode size={16} opacity={0.5} />}
                                             />
                                         </Grid.Col>
-                                        <Grid.Col span={20}>
+                                        <Grid.Col span={isWarehouse?10:16}>
                                             <SelectServerSideForm
-                                                tooltip={t('ChooseStockProduct')}
-                                                label=''
-                                                placeholder={t('ChooseStockProduct')}
+                                                tooltip={t("ChooseStockProduct")}
+                                                label=""
+                                                placeholder={t("ChooseStockProduct")}
                                                 required={false}
-                                                nextField={'quantity'}
-                                                name={'product_id'}
+                                                nextField={ isWarehouse?"warehouse_id" : "quantity"}
+                                                name={"product_id"}
                                                 ref={inputRef}
                                                 form={form}
-                                                id={'product_id'}
+                                                id={"product_id"}
                                                 searchable={true}
                                                 searchValue={searchValue}
                                                 setSearchValue={setSearchValue}
                                                 dropdownValue={productDropdown}
                                                 closeIcon={true}
+                                            />
+                                        </Grid.Col>
+                                        {
+                                            isWarehouse==1 &&
+                                            <Grid.Col span={6}>
+                                                <SelectForm
+                                                    tooltip={t('Warehouse')}
+                                                    label=''
+                                                    placeholder={t('Warehouse')}
+                                                    required={false}
+                                                    nextField={'bonus_quantity'}
+                                                    name={'warehouse_id'}
+                                                    form={form}
+                                                    dropdownValue={warehouseDropdownData}
+                                                    id={'warehouse_id'}
+                                                    mt={1}
+                                                    searchable={true}
+                                                    value={warehouseData}
+                                                    changeValue={setWarehouseData}
+                                                />
+                                            </Grid.Col>
+                                        }
+
+                                        <Grid.Col span={4}>
+                                            <InputButtonForm
+                                                type="number"
+                                                tooltip={t("BonusQuantity")}
+                                                label=""
+                                                placeholder={t("BonusQuantity")}
+                                                required={true}
+                                                nextField={"quantity"}
+                                                form={form}
+                                                name={"bonus_quantity"}
+                                                id={"bonus_quantity"}
+                                                leftSection={
+                                                    <IconSortAscendingNumbers
+                                                        size={16}
+                                                        opacity={0.5}
+                                                    />
+                                                }
+                                                rightSection={inputGroupText}
+                                                rightSectionWidth={50}
                                             />
                                         </Grid.Col>
                                     </Grid>
@@ -526,6 +578,11 @@ function _UpdateInvoice(props) {
                                         )
                                     },
                                     {
+                                        accessor: 'warehouse_name',
+                                        title: t("Warehouse"),
+                                        hidden:!isWarehouse
+                                    },
+                                    {
                                         accessor: 'price',
                                         title: t('Price'),
                                         textAlign: "right",
@@ -540,6 +597,11 @@ function _UpdateInvoice(props) {
                                         accessor: 'stock',
                                         title: t('Stock'),
                                         textAlign: "center"
+                                    },
+                                    {
+                                        accessor: 'bonus_quantity',
+                                        title: t("BonusQty"),
+                                        textAlign: "center",
                                     },
                                     {
                                         accessor: 'quantity',

@@ -256,7 +256,9 @@ function __UpdateInvoiceForm(props) {
                         "sales_price": product.sales_price,
                         "price": product.price,
                         "purchase_price": product.purchase_price,
-                        "sub_total": product.sub_total
+                        "sub_total": product.sub_total,
+                        "warehouse_id": product.warehouse_id,
+                        "bonus_quantity" : product.bonus_quantity
                     }
                 });
 

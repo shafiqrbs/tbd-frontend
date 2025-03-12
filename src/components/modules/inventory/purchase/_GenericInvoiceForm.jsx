@@ -8,7 +8,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import {
     IconDeviceFloppy, IconSum, IconX, IconBarcode,
-    IconPlus
+    IconPlus, IconSortAscendingNumbers
 } from "@tabler/icons-react";
 import { getHotkeyHandler, useHotkeys } from "@mantine/hooks";
 import { isNotEmpty, useForm } from "@mantine/form";
@@ -104,6 +104,7 @@ function _GenericInvoiceForm(props) {
                     sales_price: Number(product.sales_price),
                     warehouse_id: values.warehouse_id?Number(values.warehouse_id):null,
                     warehouse_name: values.warehouse_id?warehouseDropdownData.find(warehouse => warehouse.value === values.warehouse_id).label:null,
+                    bonus_quantity : values.bonus_quantity
                 });
             }
             return acc;
@@ -162,13 +163,14 @@ function _GenericInvoiceForm(props) {
             sales_price: Number(product.sales_price),
             warehouse_id: values.warehouse_id ? Number(values.warehouse_id):null,
             warehouse_name: values.warehouse_id?warehouseDropdownData.find(warehouse => warehouse.value === values.warehouse_id).label:null,
+            bonus_quantity : values.bonus_quantity
         };
     }
 
 
     const form = useForm({
         initialValues: {
-            product_id: '', price: '', purchase_price: '', barcode: '', sub_total: '', quantity: '',warehouse_id : ''
+            product_id: '', price: '', purchase_price: '', barcode: '', sub_total: '', quantity: '',warehouse_id : '',bonus_quantity:''
         },
         validate: {
             product_id: (value, values) => {
@@ -318,7 +320,7 @@ function _GenericInvoiceForm(props) {
                                         {
                                             isWarehouse==1 &&
                                             <Grid columns={24} gutter={{ base: 6 }}>
-                                                <Grid.Col span={24}>
+                                                <Grid.Col span={20}>
                                                     <SelectForm
                                                         tooltip={t('Warehouse')}
                                                         label=''
@@ -333,6 +335,28 @@ function _GenericInvoiceForm(props) {
                                                         searchable={true}
                                                         value={warehouseData}
                                                         changeValue={setWarehouseData}
+                                                    />
+                                                </Grid.Col>
+
+                                                <Grid.Col span={4}>
+                                                    <InputButtonForm
+                                                        type="number"
+                                                        tooltip={t("BonusQuantity")}
+                                                        label=""
+                                                        placeholder={t("BonusQuantity")}
+                                                        required={true}
+                                                        nextField={"quantity"}
+                                                        form={form}
+                                                        name={"bonus_quantity"}
+                                                        id={"bonus_quantity"}
+                                                        leftSection={
+                                                            <IconSortAscendingNumbers
+                                                                size={16}
+                                                                opacity={0.5}
+                                                            />
+                                                        }
+                                                        rightSection={inputGroupText}
+                                                        rightSectionWidth={50}
                                                     />
                                                 </Grid.Col>
                                             </Grid>
@@ -496,6 +520,10 @@ function _GenericInvoiceForm(props) {
                                         title: t("Warehouse"),
                                         width: '20%',
                                         hidden:!isWarehouse
+                                    },
+                                    {
+                                        accessor: 'bonus_quantity',
+                                        title: t("BonusQty"),
                                     },
                                     {
                                         accessor: 'quantity',

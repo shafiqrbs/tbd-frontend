@@ -214,6 +214,7 @@ function __UpdateInvoiceForm(props) {
                         "purchase_price": product.purchase_price,
                         "sales_price": product.sales_price,
                         "sub_total": product.sub_total,
+                        "bonus_quantity": product.bonus_quantity,
                         "warehouse_id": product.warehouse_id
                     }
                 });

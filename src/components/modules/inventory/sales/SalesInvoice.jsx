@@ -42,6 +42,7 @@ function SalesInvoice() {
                                         domainId={configData?.domain_id}
                                         isSMSActive={configData?.is_active_sms}
                                         isZeroReceiveAllow={configData?.is_zero_receive_allow}
+                                        isWarehouse={configData?.sku_warehouse}
                                     />
                                 }
                                 {

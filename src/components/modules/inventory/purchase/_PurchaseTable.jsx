@@ -107,6 +107,9 @@ function _PurchaseTable() {
                     </Table.Td>
                 }
                 <Table.Td ta="center" fz="xs" width={"60"}>
+                    {element.bonus_quantity}
+                </Table.Td>
+                <Table.Td ta="center" fz="xs" width={"60"}>
                     {element.quantity}
                 </Table.Td>
                 <Table.Td ta="right" fz="xs" width={"80"}>
@@ -645,6 +648,9 @@ function _PurchaseTable() {
                                                         </Table.Th>
                                                     }
                                                     <Table.Th fz="xs" ta="center" w={"60"}>
+                                                        {t("BonusQty")}
+                                                    </Table.Th>
+                                                    <Table.Th fz="xs" ta="center" w={"60"}>
                                                         {t("QTY")}
                                                     </Table.Th>
                                                     <Table.Th ta="right" fz="xs" w={"80"}>
@@ -661,7 +667,7 @@ function _PurchaseTable() {
                                             <Table.Tbody>{rows}</Table.Tbody>
                                             <Table.Tfoot>
                                                 <Table.Tr>
-                                                    <Table.Th colSpan={isWarehouse?"6":"5"} ta="right" fz="xs" w={"100"}>
+                                                    <Table.Th colSpan={isWarehouse?"7":"6"} ta="right" fz="xs" w={"100"}>
                                                         {t("SubTotal")}
                                                     </Table.Th>
                                                     <Table.Th ta="right" fz="xs" w={"100"}>
@@ -671,7 +677,7 @@ function _PurchaseTable() {
                                                     </Table.Th>
                                                 </Table.Tr>
                                                 <Table.Tr>
-                                                    <Table.Th colSpan={isWarehouse?"6":"5"} ta="right" fz="xs" w={"100"}>
+                                                    <Table.Th colSpan={isWarehouse?"7":"6"} ta="right" fz="xs" w={"100"}>
                                                         {t("Discount")}
                                                     </Table.Th>
                                                     <Table.Th ta="right" fz="xs" w={"100"}>
@@ -681,7 +687,7 @@ function _PurchaseTable() {
                                                     </Table.Th>
                                                 </Table.Tr>
                                                 <Table.Tr>
-                                                    <Table.Th colSpan={isWarehouse?"6":"5"} ta="right" fz="xs" w={"100"}>
+                                                    <Table.Th colSpan={isWarehouse?"7":"6"} ta="right" fz="xs" w={"100"}>
                                                         {t("Total")}
                                                     </Table.Th>
                                                     <Table.Th ta="right" fz="xs" w={"100"}>
@@ -691,7 +697,7 @@ function _PurchaseTable() {
                                                     </Table.Th>
                                                 </Table.Tr>
                                                 <Table.Tr>
-                                                    <Table.Th colSpan={isWarehouse?"6":"5"} ta="right" fz="xs" w={"100"}>
+                                                    <Table.Th colSpan={isWarehouse?"7":"6"} ta="right" fz="xs" w={"100"}>
                                                         {t("Receive")}
                                                     </Table.Th>
                                                     <Table.Th ta="right" fz="xs" w={"100"}>
@@ -701,7 +707,7 @@ function _PurchaseTable() {
                                                     </Table.Th>
                                                 </Table.Tr>
                                                 <Table.Tr>
-                                                    <Table.Th colSpan={isWarehouse?"6":"5"} ta="right" fz="xs" w={"100"}>
+                                                    <Table.Th colSpan={isWarehouse?"7":"6"} ta="right" fz="xs" w={"100"}>
                                                         {t("Due")}
                                                     </Table.Th>
                                                     <Table.Th ta="right" fz="xs" w={"100"}>

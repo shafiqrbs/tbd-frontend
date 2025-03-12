@@ -36,6 +36,8 @@ import _ShortcutInvoice from "../../shortcut/_ShortcutInvoice";
 import tableCss from "../../../../assets/css/Table.module.css";
 import productsDataStoreIntoLocalStorage from "../../../global-hook/local-storage/productsDataStoreIntoLocalStorage.js";
 import AddProductDrawer from "./drawer-form/AddProductDrawer.jsx";
+import SelectForm from "../../../form-builders/SelectForm.jsx";
+import getCoreWarehouseDropdownData from "../../../global-hook/dropdown/core/getCoreWarehouseDropdownData.js";
 
 function _GenericInvoiceForm(props) {
   const {
@@ -45,6 +47,7 @@ function _GenericInvoiceForm(props) {
     isSMSActive,
     isZeroReceiveAllow,
     focusFrom,
+    isWarehouse
   } = props;
   const { t, i18n } = useTranslation();
   const { isOnline, mainAreaHeight } = useOutletContext();
@@ -58,6 +61,10 @@ function _GenericInvoiceForm(props) {
   const [loadCardProducts, setLoadCardProducts] = useState(false);
 
   const [productDrawer, setProductDrawer] = useState(false);
+
+  /*get warehouse dropdown data*/
+  let warehouseDropdownData = getCoreWarehouseDropdownData()
+  const [warehouseData, setWarehouseData] = useState(null);
 
   let salesSubTotalAmount =
     tempCardProducts?.reduce((total, item) => total + item.sub_total, 0) || 0;
@@ -126,6 +133,9 @@ function _GenericInvoiceForm(props) {
           purchase_price: product.purchase_price,
           sub_total: selectProductDetails.sub_total,
           unit_id: product.unit_id,
+          warehouse_id: values.warehouse_id?Number(values.warehouse_id):null,
+          warehouse_name: values.warehouse_id?warehouseDropdownData.find(warehouse => warehouse.value === values.warehouse_id).label:null,
+          bonus_quantity : values.bonus_quantity
         });
       }
       return acc;
@@ -142,7 +152,7 @@ function _GenericInvoiceForm(props) {
     if (barcodeExists) {
       const addProducts = localProducts.reduce((acc, product) => {
         if (String(product.barcode) === String(values.barcode)) {
-          acc.push(createProductFromValues(product));
+          acc.push(createProductFromValues(product,values));
         }
         return acc;
       }, myCardProducts);
@@ -163,12 +173,13 @@ function _GenericInvoiceForm(props) {
   function updateLocalStorageAndResetForm(addProducts) {
     localStorage.setItem("temp-sales-products", JSON.stringify(addProducts));
     setSearchValue("");
+    setWarehouseData(null)
     form.reset();
     setLoadCardProducts(true);
     document.getElementById("product_id").focus();
   }
 
-  function createProductFromValues(product) {
+  function createProductFromValues(product,values) {
     return {
       product_id: product.id,
       display_name: product.display_name,
@@ -181,6 +192,9 @@ function _GenericInvoiceForm(props) {
       purchase_price: product.purchase_price,
       sub_total: product.sales_price,
       unit_id: product.unit_id,
+      warehouse_id: values.warehouse_id?Number(values.warehouse_id):null,
+      warehouse_name: values.warehouse_id?warehouseDropdownData.find(warehouse => warehouse.value === values.warehouse_id).label:null,
+      bonus_quantity : values.bonus_quantity
     };
   }
 
@@ -193,6 +207,8 @@ function _GenericInvoiceForm(props) {
       barcode: "",
       sub_total: "",
       quantity: "",
+      warehouse_id: "",
+      bonus_quantity: ""
     },
     validate: {
       product_id: (value, values) => {
@@ -390,6 +406,7 @@ function _GenericInvoiceForm(props) {
                     if (!values.barcode && !values.product_id) {
                       form.setFieldError("barcode", true);
                       form.setFieldError("product_id", true);
+                      isWarehouse && form.setFieldError('warehouse_id', true);
                       setTimeout(() => {}, 1000);
                     } else {
                       const cardProducts = localStorage.getItem(
@@ -440,6 +457,7 @@ function _GenericInvoiceForm(props) {
                     mb={"xs"}
                     className={"boxBackground borderRadiusAll"}
                   >
+
                     <Grid columns={24} gutter={{ base: 6 }}>
                       <Grid.Col span={4}>
                         <InputNumberForm
@@ -454,13 +472,13 @@ function _GenericInvoiceForm(props) {
                           leftSection={<IconBarcode size={16} opacity={0.5} />}
                         />
                       </Grid.Col>
-                      <Grid.Col span={20}>
+                      <Grid.Col span={isWarehouse?10:16}>
                         <SelectServerSideForm
                           tooltip={t("ChooseStockProduct")}
                           label=""
                           placeholder={t("ChooseStockProduct")}
                           required={false}
-                          nextField={"quantity"}
+                          nextField={ isWarehouse?"warehouse_id" : "quantity"}
                           name={"product_id"}
                           ref={inputRef}
                           form={form}
@@ -470,6 +488,48 @@ function _GenericInvoiceForm(props) {
                           setSearchValue={setSearchValue}
                           dropdownValue={productDropdown}
                           closeIcon={true}
+                        />
+                      </Grid.Col>
+                      {
+                          isWarehouse==1 &&
+                          <Grid.Col span={6}>
+                            <SelectForm
+                                tooltip={t('Warehouse')}
+                                label=''
+                                placeholder={t('Warehouse')}
+                                required={false}
+                                nextField={'bonus_quantity'}
+                                name={'warehouse_id'}
+                                form={form}
+                                dropdownValue={warehouseDropdownData}
+                                id={'warehouse_id'}
+                                mt={1}
+                                searchable={true}
+                                value={warehouseData}
+                                changeValue={setWarehouseData}
+                            />
+                          </Grid.Col>
+                      }
+
+                      <Grid.Col span={4}>
+                        <InputButtonForm
+                            type="number"
+                            tooltip={t("BonusQuantity")}
+                            label=""
+                            placeholder={t("BonusQuantity")}
+                            required={true}
+                            nextField={"quantity"}
+                            form={form}
+                            name={"bonus_quantity"}
+                            id={"bonus_quantity"}
+                            leftSection={
+                              <IconSortAscendingNumbers
+                                  size={16}
+                                  opacity={0.5}
+                              />
+                            }
+                            rightSection={inputGroupText}
+                            rightSectionWidth={50}
                         />
                       </Grid.Col>
                     </Grid>
@@ -655,6 +715,11 @@ function _GenericInvoiceForm(props) {
                       ),
                     },
                     {
+                      accessor: 'warehouse_name',
+                      title: t("Warehouse"),
+                      hidden:!isWarehouse
+                    },
+                    {
                       accessor: "price",
                       title: t("Price"),
                       textAlign: "right",
@@ -669,6 +734,11 @@ function _GenericInvoiceForm(props) {
                       textAlign: "center",
                     },
                     {
+                      accessor: 'bonus_quantity',
+                      title: t("BonusQty"),
+                      textAlign: "center",
+                    },
+                    {
                       accessor: "quantity",
                       title: t("Quantity"),
                       textAlign: "center",
@@ -678,7 +748,7 @@ function _GenericInvoiceForm(props) {
                           item.quantity
                         );
 
-                        const handlQuantityChange = (e) => {
+                        const handleQuantityChange = (e) => {
                           const editedQuantity = e.currentTarget.value;
                           setEditedQuantity(editedQuantity);
 
@@ -717,7 +787,7 @@ function _GenericInvoiceForm(props) {
                               label=""
                               size="xs"
                               value={editedQuantity}
-                              onChange={handlQuantityChange}
+                              onChange={handleQuantityChange}
                               onKeyDown={getHotkeyHandler([
                                 [
                                   "Enter",
@@ -1257,7 +1327,7 @@ function _GenericInvoiceForm(props) {
                           item.quantity
                         );
 
-                        const handlQuantityChange = (e) => {
+                        const handleQuantityChange = (e) => {
                           const editedQuantity = e.currentTarget.value;
                           setEditedQuantity(editedQuantity);
 
@@ -1296,7 +1366,7 @@ function _GenericInvoiceForm(props) {
                               label=""
                               size="xs"
                               value={editedQuantity}
-                              onChange={handlQuantityChange}
+                              onChange={handleQuantityChange}
                               onKeyDown={getHotkeyHandler([
                                 [
                                   "Enter",
