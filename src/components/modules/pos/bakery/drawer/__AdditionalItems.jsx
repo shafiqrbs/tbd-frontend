@@ -17,6 +17,7 @@ import { useTranslation } from "react-i18next";
 import {
   IconCheck,
   IconDeviceFloppy,
+  IconMessage,
   IconRefreshDot,
   IconUserCircle,
   IconX,
@@ -28,6 +29,7 @@ import { DataTable } from "mantine-datatable";
 import { hasLength, useForm } from "@mantine/form";
 import getConfigData from "../../../../global-hook/config-data/getConfigData.js";
 import { IconMinus, IconPlus } from "@tabler/icons-react";
+import TextAreaForm from "../../../../form-builders/TextAreaForm.jsx";
 
 export default function __AdditionalItems(props) {
   const { closeDrawer, getAdditionalItem } = props;
@@ -42,12 +44,38 @@ export default function __AdditionalItems(props) {
   const [refreshCustomerDropdown, setRefreshCustomerDropdown] = useState(false);
   const [disabled, setDisabled] = useState(false);
 
+  const form = useForm({
+    initialValues: {
+      comment: "",
+    },
+  });
+
   const [indexData, setIndexData] = useState({
     data: [
-      { id: 1, display_name: "Special Sweet Toast 1", sales_price: 10.0, qty: 2 },
-      { id: 2, display_name: "ItSpecial Sweet Toastem 2", sales_price: 15.5, qty: 1 },
-      { id: 3, display_name: "Special Sweet Toast 3", sales_price: 7.25, qty: 5 },
-      { id: 4, display_name: "ItSpecial Sweet Toastem 4", sales_price: 20.0, qty: 3 },
+      {
+        id: 1,
+        display_name: "Special Sweet Toast 1",
+        sales_price: 10.0,
+        qty: 2,
+      },
+      {
+        id: 2,
+        display_name: "ItSpecial Sweet Toastem 2",
+        sales_price: 15.5,
+        qty: 1,
+      },
+      {
+        id: 3,
+        display_name: "Special Sweet Toast 3",
+        sales_price: 7.25,
+        qty: 5,
+      },
+      {
+        id: 4,
+        display_name: "ItSpecial Sweet Toastem 4",
+        sales_price: 20.0,
+        qty: 3,
+      },
     ],
     total: 4,
   });
@@ -169,7 +197,7 @@ export default function __AdditionalItems(props) {
                     ]}
                     loaderSize="xs"
                     loaderColor="grape"
-                    height={height - 330}
+                    height={height - 440}
                     // backgroundColor={"black"}
                     scrollAreaProps={{ type: "never" }}
                   />
@@ -194,7 +222,42 @@ export default function __AdditionalItems(props) {
                       <Grid.Col span={4}></Grid.Col>
                     </Grid>
                   </Box>
-                  <Box className="borderRadiusAll" h={299}></Box>
+                  <Box className="borderRadiusAll" h={282}></Box>
+                </Box>
+                <Box>
+                  <Box
+                    pl={`xs`}
+                    pr={8}
+                    pt={"4"}
+                    pb={"6"}
+                    mb={"4"}
+                    mt={4}
+                    className={"boxBackground borderRadiusAll"}
+                  >
+                    <Grid columns={12}>
+                      <Grid.Col span={6}>
+                        <Title order={6} pt={"6"}>
+                          {t("Comments")}
+                        </Title>
+                      </Grid.Col>
+                      <Grid.Col span={2} p={0}></Grid.Col>
+                      <Grid.Col span={4}></Grid.Col>
+                    </Grid>
+                  </Box>
+                  <Box className="borderRadiusAll" h={80}>
+                    <Box p={"xs"}>
+                      <TextAreaForm
+                        tooltip={t("Comment")}
+                        label={t("")}
+                        placeholder={t("Comment")}
+                        // required={true}
+                        nextField={""}
+                        form={form}
+                        name={"comment"}
+                        id={"comment"}
+                      />
+                    </Box>
+                  </Box>
                 </Box>
               </ScrollArea>
               <Box
