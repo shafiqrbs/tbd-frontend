@@ -528,7 +528,7 @@ export default function Invoice(props) {
       invoice_time: new Date().toLocaleTimeString("en-CA"),
       sales_by_id: salesByUser,
       transaction_mode_id: id,
-      createdByName: salesByUserName.label,
+      createdByName: salesByUserName,
       grand_total: subtotal,
       is_pos: enableTable ? 1 : 0,
     };
@@ -687,20 +687,23 @@ export default function Invoice(props) {
     }
   }, [customerId, customerObject, tableId, enableTable, updateTableCustomer]);
 
-  const [additionalItemDrawer, setAdditionalItemDrawer] = useState();
+  const [commonDrawer, setCommonDrawer] = useState(false);
 
   const [eventName, setEventName] = useState(null);
 
   const handleClick = (e) => {
     if (e.currentTarget.name === "additionalProductAdd") {
       setEventName(e.currentTarget.name);
-      setAdditionalItemDrawer(true);
+      setCommonDrawer(true);
     } else if (e.currentTarget.name === "splitPayment") {
       form.setErrors({ ...form.errors, transaction_mode_id: null });
       setEventName(e.currentTarget.name);
-      setAdditionalItemDrawer(true);
+      setCommonDrawer(true);
     } else if (e.currentTarget.name === "clearSplitPayment") {
       clearSplitPayment();
+    } else if (e.currentTarget.name === "kitchen") {
+      setEventName(e.currentTarget.name);
+      setCommonDrawer(true);
     }
   };
 
@@ -770,22 +773,22 @@ export default function Invoice(props) {
           wrap="nowrap"
         >
           <Box pt={8}>
-              <SelectForm
-                pt={"xs"}
-                label=""
-                tooltip={"SalesBy"}
-                placeholder={enableTable ? t("OrderTakenBy") : t("SalesBy")}
-                // required={true}
-                name={"sales_by_id"}
-                form={form}
-                dropdownValue={salesByDropdownData}
-                id={"sales_by_id"}
-                searchable={true}
-                value={salesByUser}
-                changeValue={setSalesByUser}
-                color={"orange.8"}
-                position={"top-start"}
-              />
+            <SelectForm
+              pt={"xs"}
+              label=""
+              tooltip={"SalesBy"}
+              placeholder={enableTable ? t("OrderTakenBy") : t("SalesBy")}
+              // required={true}
+              name={"sales_by_id"}
+              form={form}
+              dropdownValue={salesByDropdownData}
+              id={"sales_by_id"}
+              searchable={true}
+              value={salesByUser}
+              changeValue={setSalesByUser}
+              color={"orange.8"}
+              position={"top-start"}
+            />
           </Box>
 
           {enableTable && (
@@ -794,11 +797,12 @@ export default function Invoice(props) {
               radius="sm"
               size="sm"
               color="green"
+              name={"kitchen"}
               mt={8}
               miw={122}
               maw={122}
               leftSection={<IconChefHat height={14} width={14} stroke={2} />}
-              onClick={printItem}
+              onClick={handleClick}
             >
               <Text fw={600} size="sm">
                 {t("Kitchen")}
@@ -1655,14 +1659,18 @@ export default function Invoice(props) {
               clearTableCustomer={clearTableCustomer}
             />
           )}
-          {additionalItemDrawer && (
+          {commonDrawer && (
             <_CommonDrawer
+              setLoadCartProducts={setLoadCartProducts}
+              enableTable={enableTable}
+              tableId={tableId}
+              loadCartProducts={loadCartProducts}
               getSplitPayment={getSplitPayment}
               getAdditionalItem={getAdditionalItem}
               salesDueAmount={salesDueAmount}
               eventName={eventName}
-              additionalItemDrawer={additionalItemDrawer}
-              setAdditionalItemDrawer={setAdditionalItemDrawer}
+              commonDrawer={commonDrawer}
+              setCommonDrawer={setCommonDrawer}
               currentSplitPayments={currentTableSplitPayments}
               tableSplitPaymentMap={tableSplitPaymentMap}
             />
