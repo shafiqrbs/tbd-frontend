@@ -14,16 +14,10 @@ import {
   Flex,
   Text,
   Tooltip,
-  Box,
-  Center,
-  Stack,
-  Container,
   ScrollArea,
 } from "@mantine/core";
 import { useTranslation } from "react-i18next";
-import { useWindowScroll } from "@mantine/hooks";
 import { useOutletContext } from "react-router-dom";
-import classes from "./Table.module.css";
 import getConfigData from "../../../global-hook/config-data/getConfigData";
 
 function __ShortcutPos(props) {

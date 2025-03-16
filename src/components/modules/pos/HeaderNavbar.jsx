@@ -1,16 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import {
   Box,
-  Button,
-  Grid,
-  Progress,
-  Title,
   Group,
   ActionIcon,
   Text,
   Badge,
   Flex,
-  Stack,
   Center,
   ScrollArea,
 } from "@mantine/core";
@@ -38,7 +33,6 @@ function HeaderNavbar(props) {
   };
   const { scrollRef, showLeftArrow, showRightArrow, handleScroll, scroll } =
     useScroll();
-
 
   return (
     <>
