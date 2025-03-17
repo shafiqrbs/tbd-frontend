@@ -53,6 +53,8 @@ import MatrixIndex from "./components/modules/procurement/requistion-matrix/Matr
 import BakeryIndex from "./components/modules/pos/bakery/BakeryIndex.jsx";
 import ReportIndex from "./components/modules/reporting/reports/ReportIndex.jsx";
 import RequisitionUpdate from "./components/modules/procurement/purchase-requisition/RequisitionUpdate.jsx";
+import ReconciliationIndex from "./components/modules/inventory/stock-reconciliation/ReconciliationIndex.jsx";
+import TransferIndex from "./components/modules/inventory/stock-transfer/TransferIndex.jsx";
 
 function AppRoute() {
   return (
@@ -116,6 +118,8 @@ function AppRoute() {
           />
           <Route path="config" element={<InventoryConfigurationIndex />} />
           <Route path="stock" element={<StockIndex />} />
+          <Route path="stock-reconciliation" element={<ReconciliationIndex />} />
+          <Route path="stock-transfer" element={<TransferIndex />} />
         </Route>
 
         <Route path="/production/">
