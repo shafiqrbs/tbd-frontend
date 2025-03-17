@@ -100,7 +100,6 @@ export default function Invoice(props) {
   const [salesByUserName, setSalesByUserName] = useState(null);
   const [salesByDropdownData, setSalesByDropdownData] = useState([]);
   const [isDisabled, setIsDisabled] = useState(false);
-
   // Track additional tables per selected table
   const [additionalTableSelections, setAdditionalTableSelections] = useState(
     {}
@@ -161,6 +160,13 @@ export default function Invoice(props) {
       setSalesByDropdownData(transformedData);
     }
   }, []);
+  useEffect(() => {
+    if (salesByUser) {
+      setSalesByUserName(
+        salesByDropdownData.find((item) => item.value === salesByUser).label
+      );
+    }
+  }, [salesByUser, salesByDropdownData]);
   const { scrollRef, showLeftArrow, showRightArrow, handleScroll, scroll } =
     useScroll();
 
@@ -792,22 +798,34 @@ export default function Invoice(props) {
           </Box>
 
           {enableTable && (
-            <Button
-              disabled={tempCartProducts.length === 0}
-              radius="sm"
-              size="sm"
-              color="green"
-              name={"kitchen"}
-              mt={8}
-              miw={122}
-              maw={122}
-              leftSection={<IconChefHat height={14} width={14} stroke={2} />}
-              onClick={handleClick}
+            <Tooltip
+              disabled={!(tempCartProducts.length === 0 || !salesByUser)}
+              color="red.6"
+              withArrow
+              px={16}
+              py={2}
+              offset={2}
+              zIndex={999}
+              position="top-end"
+              label={t("SelectProductandUser")}
             >
-              <Text fw={600} size="sm">
-                {t("Kitchen")}
-              </Text>
-            </Button>
+              <Button
+                disabled={tempCartProducts.length === 0 || !salesByUser}
+                radius="sm"
+                size="sm"
+                color="green"
+                name={"kitchen"}
+                mt={8}
+                miw={122}
+                maw={122}
+                leftSection={<IconChefHat height={14} width={14} stroke={2} />}
+                onClick={handleClick}
+              >
+                <Text fw={600} size="sm">
+                  {t("Kitchen")}
+                </Text>
+              </Button>
+            </Tooltip>
           )}
         </Group>
         <Box>
@@ -1661,6 +1679,7 @@ export default function Invoice(props) {
           )}
           {commonDrawer && (
             <_CommonDrawer
+              salesByUserName={salesByUserName}
               setLoadCartProducts={setLoadCartProducts}
               enableTable={enableTable}
               tableId={tableId}

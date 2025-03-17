@@ -19,7 +19,8 @@ export default function _CommonDrawer(props) {
     getSplitPayment,
     currentSplitPayments,
     tableSplitPaymentMap,
-    loadCartProducts
+    loadCartProducts,
+    salesByUserName,
   } = props;
 
   const closeDrawer = () => {
@@ -35,7 +36,7 @@ export default function _CommonDrawer(props) {
         bg={"gray.1"}
       >
         <Drawer.Overlay />
-        <Drawer.Content  style={{ overflow: "hidden" }}>
+        <Drawer.Content style={{ overflow: "hidden" }}>
           <Box>
             <Flex
               mih={40}
@@ -75,7 +76,14 @@ export default function _CommonDrawer(props) {
                 />
               )}
               {eventName === "kitchen" && (
-                <__KitchenPrint closeDrawer={closeDrawer} tableId={tableId} loadCartProducts={loadCartProducts} setLoadCartProducts={setLoadCartProducts} enableTable={enableTable} />
+                <__KitchenPrint
+                  salesByUserName={salesByUserName}
+                  closeDrawer={closeDrawer}
+                  tableId={tableId}
+                  loadCartProducts={loadCartProducts}
+                  setLoadCartProducts={setLoadCartProducts}
+                  enableTable={enableTable}
+                />
               )}
             </Box>
           </Drawer.Body>

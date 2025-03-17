@@ -5,7 +5,7 @@ import classes from "./SalesPrintPos.module.css";
 import { Grid, Text } from "@mantine/core";
 
 export default function KitchenPrint(props) {
-  const { selectedProducts, setPrint } = props;
+  const { selectedProducts, setPrint, salesByUserName } = props;
   const componentRef = useRef();
   const effectRan = useRef(false);
 
@@ -55,11 +55,20 @@ export default function KitchenPrint(props) {
               columns={24}
               gutter={0}
               className={`${classes["head-phone"]} ${classes["text-width-two"]}`}
-              mb={"xs"}
             >
               <Grid.Col span={6}>{t("Address")}</Grid.Col>
               <Grid.Col span={2}>:</Grid.Col>
               <Grid.Col span={16}>{configData?.address}</Grid.Col>
+            </Grid>
+            <Grid
+              columns={24}
+              gutter={0}
+              className={`${classes["head-phone"]} ${classes["text-width-two"]}`}
+              mb={"xs"}
+            >
+              <Grid.Col span={6}>{t("SalesBy")}</Grid.Col>
+              <Grid.Col span={2}>:</Grid.Col>
+              <Grid.Col span={16}>{salesByUserName}</Grid.Col>
             </Grid>
           </div>
         </header>
@@ -96,6 +105,14 @@ export default function KitchenPrint(props) {
               ))}
             </tbody>
           </table>
+
+          <Text
+            className={`${classes["footer-company"]} ${classes["invoice-text"]}`}
+            mt={"md"}
+            mb={0}
+          >
+            {t("Note")} : {selectedProducts?.note}
+          </Text>
         </main>
       </div>
     </>

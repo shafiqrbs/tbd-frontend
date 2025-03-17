@@ -24,6 +24,7 @@ export default function __KitchenPrint(props) {
     setLoadCartProducts,
     tableId,
     enableTable,
+    salesByUserName
   } = props;
   const { isOnline, mainAreaHeight } = useOutletContext();
   const height = mainAreaHeight - 100;
@@ -40,7 +41,6 @@ export default function __KitchenPrint(props) {
     }
     setLoadCartProducts(false);
   }, [loadCartProducts, tableId, enableTable]);
-
   const products = [
     {
       product_id: 1235,
@@ -96,7 +96,7 @@ export default function __KitchenPrint(props) {
       quantity: 81,
       unit_name: "KG",
       sales_price: 30,
-      type: "Toilet",
+      type: "Sushi",
     },
   ];
   const [selectedProducts, setSelectedProducts] = useState([]);
@@ -209,6 +209,7 @@ export default function __KitchenPrint(props) {
       {print && (
         <div style={{ display: "none" }}>
           <KitchenPrint
+            salesByUserName={salesByUserName}
             setPrint={setPrint}
             selectedProducts={selectedProducts}
           />
