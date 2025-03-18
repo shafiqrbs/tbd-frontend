@@ -17,9 +17,10 @@ import { useDispatch } from "react-redux";
 import { useOutletContext } from "react-router-dom";
 import { isNotEmpty, useForm } from "@mantine/form";
 import { modals } from "@mantine/modals";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useHotkeys } from "@mantine/hooks";
 import Shortcut from "../../shortcut/Shortcut";
+import InputForm from "../../../form-builders-filter/InputForm";
 
 export default function ReconciliationForm() {
   const { t, i18n } = useTranslation();
@@ -41,6 +42,46 @@ export default function ReconciliationForm() {
       product_id: isNotEmpty(),
     },
   });
+
+  const [productId, setProductId] = useState(null);
+  const [warehouseId, setWarehouseId] = useState(null);
+  const [warehouses, setWarehouses] = useState([]);
+  const [modeQuantity, setModeQuantity] = useState(null);
+  const [modeBonus, setModeBonus] = useState(null);
+
+  const products = [
+    { value: "1", label: "Product 1" },
+    { value: "2", label: "Product 2" },
+    { value: "3", label: "Product 3" },
+  ];
+  const mode = [
+    { value: "1", label: "Mode 1" },
+    { value: "2", label: "Mode 2" },
+    { value: "3", label: "Mode 3" },
+  ];
+  useEffect(() => {
+    if (productId === "1") {
+      setWarehouses([
+        { value: "warehouseM", label: "Warehouse M" },
+        { value: "warehouseN", label: "Warehouse N" },
+      ]);
+    } else if (productId === "2") {
+      setWarehouses([
+        { value: "warehouseP", label: "Warehouse P" },
+        { value: "warehouseQ", label: "Warehouse Q" },
+      ]);
+    } else if (productId === "3") {
+      setWarehouses([
+        { value: "warehouseR", label: "Warehouse R" },
+        { value: "warehouseS", label: "Warehouse S" },
+      ]);
+    } else {
+      setWarehouses([]);
+    }
+    setWarehouseId(null);
+    form.setFieldValue("warehouse_id", "");
+  }, [productId]);
+
   useHotkeys(
     [
       [
@@ -87,28 +128,7 @@ export default function ReconciliationForm() {
             confirmProps: { color: "red" },
             onCancel: () => console.log("Cancel"),
             onConfirm: () => {
-              const value = {
-                url: "core/customer",
-                data: values,
-              };
-              dispatch(storeEntityData(value));
-              notifications.show({
-                color: "teal",
-                title: t("CreateSuccessfully"),
-                icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
-                loading: false,
-                autoClose: 700,
-                style: { backgroundColor: "lightgray" },
-              });
-              setTimeout(() => {
-                customerDataStoreIntoLocalStorage();
-                form.reset();
-                setMarketingExeData(null);
-                setCustomerGroupData(null);
-                setLocationData(null);
-                dispatch(setEntityNewData([]));
-                dispatch(setFetching(true));
-              }, 700);
+              console.log(values);
             },
           });
         })}
@@ -164,11 +184,77 @@ export default function ReconciliationForm() {
                   >
                     <Box>
                       <Box>
+                        <Box mt={"8"}>
+                          <SelectForm
+                            tooltip={t("Product")}
+                            label={t("Product")}
+                            placeholder={t("ChooseProduct")}
+                            required={false}
+                            nextField={"warehouse_id"}
+                            name={"product_id"}
+                            form={form}
+                            dropdownValue={products}
+                            mt={8}
+                            id={"product_id"}
+                            searchable={false}
+                            value={productId}
+                            changeValue={setProductId}
+                          />
+                        </Box>
+                      </Box>
+                      <Box mt={"xs"}>
+                        <SelectForm
+                          tooltip={t("Warehouse")}
+                          label={t("Warehouse")}
+                          placeholder={t("ChooseWarehouse")}
+                          required={false}
+                          nextField={"mode_quantity_id"}
+                          name={"warehouse_id"}
+                          form={form}
+                          dropdownValue={warehouses}
+                          mt={8}
+                          id={"warehouse_id"}
+                          searchable={false}
+                          value={warehouseId}
+                          changeValue={setWarehouseId}
+                          disabled={!productId}
+                        />
+                      </Box>
+                      <Box mt={"xs"}>
                         <Grid gutter={{ base: 6 }}>
-                          <Grid.Col span={11}>
-                            <Box mt={"8"}></Box>
+                          <Grid.Col span={6}>
+                            <Box>
+                              <SelectForm
+                                tooltip={t("Mode")}
+                                label={t("Mode")}
+                                placeholder={t("ChooseWarehouse")}
+                                required={false}
+                                nextField={"mode_quantity"}
+                                name={"mode_quantity_id"}
+                                form={form}
+                                dropdownValue={mode}
+                                mt={8}
+                                id={"mode_quantity_id"}
+                                searchable={false}
+                                value={modeQuantity}
+                                changeValue={setModeQuantity}
+                              />
+                            </Box>
                           </Grid.Col>
-                          <Grid.Col span={1}>
+                          <Grid.Col span={6}>
+                            <Box mt={8}>
+                              <InputForm
+                                tooltip={t("ModeQuantity")}
+                                label={t("ModeQuantity")}
+                                placeholder={t("ModeQuantity")}
+                                required={false}
+                                nextField={"mode_bonus_id"}
+                                name={"mode_quantity"}
+                                form={form}
+                                mt={8}
+                                id={"mode_quantity"}
+                              />
+                            </Box>
                           </Grid.Col>
                         </Grid>
                       </Box>
@@ -176,21 +262,38 @@ export default function ReconciliationForm() {
                       <Box mt={"xs"}>
                         <Grid gutter={{ base: 6 }}>
                           <Grid.Col span={6}>
-                            <Box></Box>
+                            <Box>
+                              <SelectForm
+                                tooltip={t("Mode")}
+                                label={t("Mode")}
+                                placeholder={t("ChooseModeBonus")}
+                                required={false}
+                                nextField={"mode_bonus"}
+                                name={"mode_bonus_id"}
+                                form={form}
+                                dropdownValue={mode}
+                                mt={8}
+                                id={"mode_bonus_id"}
+                                searchable={false}
+                                value={modeBonus}
+                                changeValue={setModeBonus}
+                              />
+                            </Box>
                           </Grid.Col>
                           <Grid.Col span={6}>
-                            <Box></Box>
-                          </Grid.Col>
-                        </Grid>
-                      </Box>
-                      <Box mt={"xs"}></Box>
-                      <Box mt={"xs"}>
-                        <Grid gutter={{ base: 6 }}>
-                          <Grid.Col span={6}>
-                            <Box></Box>
-                          </Grid.Col>
-                          <Grid.Col span={6}>
-                            <Box></Box>
+                            <Box mt={8}>
+                              <InputForm
+                                tooltip={t("ModeBonus")}
+                                label={t("ModeBonus")}
+                                placeholder={t("ModeBonus")}
+                                required={false}
+                                nextField={"EntityFormSubmit"}
+                                name={"mode_bonus"}
+                                form={form}
+                                mt={8}
+                                id={"mode_bonus"}
+                              />
+                            </Box>
                           </Grid.Col>
                         </Grid>
                       </Box>

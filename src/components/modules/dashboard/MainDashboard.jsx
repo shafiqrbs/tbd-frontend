@@ -764,6 +764,64 @@ function MainDashboard(props) {
                           >
                             <NavLink
                                 pl={"md"}
+                                href="/inventory/stock-transfer"
+                                label={t("StockTransfer")}
+                                component="button"
+                                onClick={(e) => {
+                                  navigate("inventory/stock-transfer");
+                                }}
+                                onAuxClick={(e) => {
+                                  // Handle middle mouse button click for browsers that support it
+                                  if (e.button === 1) {
+                                    window.open("/inventory/stock-transfer", "_blank");
+                                  }
+                                }}
+                            />
+                          </List.Item>
+                          <List.Item
+                              pl={"xs"}
+                              icon={
+                                <ThemeIcon
+                                    color="yellow.6"
+                                    size={20}
+                                    radius="xl"
+                                    variant="outline"
+                                >
+                                  <IconCategory2 />
+                                </ThemeIcon>
+                              }
+                          >
+                            <NavLink
+                                pl={"md"}
+                                href="/inventory/stock-reconciliation"
+                                label={t("StockReconciliation")}
+                                component="button"
+                                onClick={(e) => {
+                                  navigate("inventory/stock-reconciliation");
+                                }}
+                                onAuxClick={(e) => {
+                                  // Handle middle mouse button click for browsers that support it
+                                  if (e.button === 1) {
+                                    window.open("/inventory/stock-reconciliation", "_blank");
+                                  }
+                                }}
+                            />
+                          </List.Item>
+                          <List.Item
+                              pl={"xs"}
+                              icon={
+                                <ThemeIcon
+                                    color="yellow.6"
+                                    size={20}
+                                    radius="xl"
+                                    variant="outline"
+                                >
+                                  <IconCategory2 />
+                                </ThemeIcon>
+                              }
+                          >
+                            <NavLink
+                                pl={"md"}
                                 href="/inventory/particular"
                                 label={t("Particular")}
                                 component="button"
