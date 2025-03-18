@@ -20,7 +20,7 @@ import { modals } from "@mantine/modals";
 import { useState, useEffect } from "react";
 import { useHotkeys } from "@mantine/hooks";
 import Shortcut from "../../shortcut/Shortcut";
-import InputForm from "../../../form-builders-filter/InputForm";
+import InputForm from "../../../form-builders/InputForm";
 
 export default function ReconciliationForm() {
   const { t, i18n } = useTranslation();
@@ -87,7 +87,7 @@ export default function ReconciliationForm() {
       [
         "alt+n",
         () => {
-          document.getElementById("customer_group_id").click();
+          document.getElementById("product_id").click();
         },
       ],
     ],

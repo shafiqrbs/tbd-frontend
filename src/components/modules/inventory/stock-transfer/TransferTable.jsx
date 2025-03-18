@@ -42,10 +42,11 @@ export default function TransferTable() {
               textAlignment: "right",
               render: (item) => indexData.data.indexOf(item) + 1,
             },
-            { accessor: "product_name", title: t("Name"), width: 100 },
-            { accessor: "warehouse", title: t("Warehouse"), width: 200 },
-            { accessor: "mode_quantity", title: t("ModeQuantity"), width: 200 },
-            { accessor: "mode_bonus", title: t("ModeBonus") },
+            { accessor: "from_warehouse", title: t("FromWarehouse"), width: 200 },
+            { accessor: "to_warehouse", title: t("ToWarehouse"), width: 200 },
+            { accessor: "stock_item", title: t("StockItem"), width: 200 },
+            { accessor: "quantity", title: t("Quantity") },
+            { accessor: "bonus_quantity", title: t("BonusQuantity") },
             {
               accessor: "action",
               title: t("Action"),
@@ -131,9 +132,7 @@ export default function TransferTable() {
                             labels: { confirm: "Confirm", cancel: "Cancel" },
                             onCancel: () => console.log("Cancel"),
                             onConfirm: () => {
-                              dispatch(
-                                deleteEntityData("core/customer/" + data.id)
-                              );
+                              
                             },
                           });
                         }}

@@ -20,6 +20,7 @@ import { modals } from "@mantine/modals";
 import { useState } from "react";
 import { useHotkeys } from "@mantine/hooks";
 import Shortcut from "../../shortcut/Shortcut";
+import InputForm from "../../../form-builders/InputForm";
 
 export default function TransferForm() {
   const { t, i18n } = useTranslation();
@@ -30,17 +31,30 @@ export default function TransferForm() {
   const [saveCreateLoading, setSaveCreateLoading] = useState(false);
   const form = useForm({
     initialValues: {
-      product_id: "",
-      warehouse_id: "",
-      mode_quantity_id: "",
-      mode_quantity: "",
-      mode_bonus_id: "",
-      mode_bonus: "",
+      from_warehouse_id: "",
+      to_warehouse_id: "",
+      stock_item_id: "",
+      quantity: "",
+      bonus_quantity: "",
     },
     validate: {
-      product_id: isNotEmpty(),
+      from_warehouse_id: isNotEmpty(),
     },
   });
+  const warehouse = [
+    { label: "Warehouse 1", value: "1" },
+    { label: "Warehouse 2", value: "2" },
+    { label: "Warehouse 3", value: "3" },
+  ];
+  const stockItem = [
+    { label: "Stock Item 1", value: "1" },
+    { label: "Stock Item 2", value: "2" },
+    { label: "Stock Item 3", value: "3" },
+  ];
+  const [fromWarehouseId, setFromWarehouseId] = useState(null);
+  const [toWarehouseId, setToWarehouseId] = useState(null);
+  const [stockItemId, setStockItemId] = useState(null);
+
   useHotkeys(
     [
       [
@@ -87,28 +101,7 @@ export default function TransferForm() {
             confirmProps: { color: "red" },
             onCancel: () => console.log("Cancel"),
             onConfirm: () => {
-              const value = {
-                url: "core/customer",
-                data: values,
-              };
-              dispatch(storeEntityData(value));
-              notifications.show({
-                color: "teal",
-                title: t("CreateSuccessfully"),
-                icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
-                loading: false,
-                autoClose: 700,
-                style: { backgroundColor: "lightgray" },
-              });
-              setTimeout(() => {
-                customerDataStoreIntoLocalStorage();
-                form.reset();
-                setMarketingExeData(null);
-                setCustomerGroupData(null);
-                setLocationData(null);
-                dispatch(setEntityNewData([]));
-                dispatch(setFetching(true));
-              }, 700);
+              console.log(values);
             },
           });
         })}
@@ -163,40 +156,91 @@ export default function TransferForm() {
                     type="never"
                   >
                     <Box>
+                      <Box mt={"8"}>
+                        <SelectForm
+                          tooltip={t("FromWarehouse")}
+                          label={t("FromWarehouse")}
+                          placeholder={t("FromWarehouse")}
+                          required={false}
+                          nextField={"to_warehouse_id"}
+                          name={"from_warehouse_id"}
+                          form={form}
+                          dropdownValue={warehouse}
+                          mt={8}
+                          id={"from_warehouse_id"}
+                          searchable={false}
+                          value={fromWarehouseId}
+                          changeValue={setFromWarehouseId}
+                        />
+                      </Box>
+                      <Box mt={"xs"}>
+                        <SelectForm
+                          tooltip={t("ToWarehouse")}
+                          label={t("ToWarehouse")}
+                          placeholder={t("ToWarehouse")}
+                          required={false}
+                          nextField={"stock_item_id"}
+                          name={"to_warehouse_id"}
+                          form={form}
+                          dropdownValue={warehouse}
+                          mt={8}
+                          id={"to_warehouse_id"}
+                          searchable={false}
+                          value={toWarehouseId}
+                          changeValue={setToWarehouseId}
+                        />
+                      </Box>
+                      <Box mt={"xs"}>
+                        <SelectForm
+                          tooltip={t("StockItem")}
+                          label={t("StockItem")}
+                          placeholder={t("StockItem")}
+                          required={false}
+                          nextField={"quantity"}
+                          name={"stock_item_id"}
+                          form={form}
+                          dropdownValue={stockItem}
+                          mt={8}
+                          id={"stock_item_id"}
+                          searchable={false}
+                          value={stockItemId}
+                          changeValue={setStockItemId}
+                        />
+                      </Box>
                       <Box>
                         <Grid gutter={{ base: 6 }}>
-                          <Grid.Col span={11}>
-                            <Box mt={"8"}></Box>
+                          <Grid.Col span={6}>
+                            <Box>
+                              <InputForm
+                                tooltip={t("Quantity")}
+                                label={t("Quantity")}
+                                placeholder={t("Quantity")}
+                                required={false}
+                                nextField={"bonus_quantity"}
+                                name={"quantity"}
+                                form={form}
+                                mt={8}
+                                id={"quantity"}
+                              />
+                            </Box>
                           </Grid.Col>
-                          <Grid.Col span={1}>
+                          <Grid.Col span={6}>
+                            <Box>
+                              <InputForm
+                                tooltip={t("BonusQuantity")}
+                                label={t("BonusQuantity")}
+                                placeholder={t("BonusQuantity")}
+                                required={false}
+                                nextField={"EntityFormSubmit"}
+                                name={"bonus_quantity"}
+                                form={form}
+                                mt={8}
+                                id={"bonus_quantity"}
+                              />
+                            </Box>
                           </Grid.Col>
                         </Grid>
                       </Box>
-                      <Box mt={"xs"}></Box>
-                      <Box mt={"xs"}>
-                        <Grid gutter={{ base: 6 }}>
-                          <Grid.Col span={6}>
-                            <Box></Box>
-                          </Grid.Col>
-                          <Grid.Col span={6}>
-                            <Box></Box>
-                          </Grid.Col>
-                        </Grid>
-                      </Box>
-                      <Box mt={"xs"}></Box>
-                      <Box mt={"xs"}>
-                        <Grid gutter={{ base: 6 }}>
-                          <Grid.Col span={6}>
-                            <Box></Box>
-                          </Grid.Col>
-                          <Grid.Col span={6}>
-                            <Box></Box>
-                          </Grid.Col>
-                        </Grid>
-                      </Box>
-                      <Box mt={"xs"}></Box>
-                      <Box mt={"xs"}></Box>
-                      <Box mt={"xs"} mb={"xs"}></Box>
                     </Box>
                   </ScrollArea>
                 </Box>

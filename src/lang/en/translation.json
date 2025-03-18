@@ -764,6 +764,14 @@
   "UpdateWarehouse" : "Update warehouse",
   "WarehouseDetails" : "Warehouse Details",
   "RemainQuantity" : "Rem. Qty",
+  "ManageStockReconciliation" : "Manage Stock Reconciliation",
   "BonusQty" : "Bonus Qty",
+  "ModeQuantity" : "Mode Quantity",
+  "ModeBonus" : "Mode Bonus",
+  "StockReconciliation" : "Stock Reconciliation",
+  "ManageStockTransfer" : "Manage Stock Transfer",
+  "FromWarehouse" : "From Warehouse",
+  "ToWarehouse" : "To Warehouse",
+  "TransferStock" : "Transfer Stock",
   "" : ""
 }
