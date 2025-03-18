@@ -60,7 +60,7 @@ export default function TransferForm() {
       [
         "alt+n",
         () => {
-          document.getElementById("customer_group_id").click();
+          document.getElementById("from_warehouse_id").click();
         },
       ],
     ],
@@ -252,7 +252,7 @@ export default function TransferForm() {
               <Shortcut
                 form={form}
                 FormSubmit={"EntityFormSubmit"}
-                Name={"customer_group_id"}
+                Name={"from_warehouse_id"}
                 inputType="select"
               />
             </Box>

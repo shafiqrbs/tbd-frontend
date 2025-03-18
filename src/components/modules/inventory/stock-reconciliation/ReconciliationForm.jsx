@@ -22,6 +22,7 @@ import { useHotkeys } from "@mantine/hooks";
 import Shortcut from "../../shortcut/Shortcut";
 import InputForm from "../../../form-builders/InputForm";
 
+
 export default function ReconciliationForm() {
   const { t, i18n } = useTranslation();
   const dispatch = useDispatch();
@@ -311,7 +312,7 @@ export default function ReconciliationForm() {
               <Shortcut
                 form={form}
                 FormSubmit={"EntityFormSubmit"}
-                Name={"customer_group_id"}
+                Name={"product_id"}
                 inputType="select"
               />
             </Box>
