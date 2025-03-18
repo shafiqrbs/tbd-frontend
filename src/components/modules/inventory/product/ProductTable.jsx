@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState, useRef} from "react";
 import {useNavigate, useOutletContext} from "react-router-dom";
 import {
     Group,
@@ -8,7 +8,7 @@ import {
     Menu,
     rem,
     Switch,
-    Flex, Image
+    Flex, Image, Modal, Button
 } from "@mantine/core";
 import {useTranslation} from "react-i18next";
 import {IconCheck, IconDotsVertical, IconTrashX} from "@tabler/icons-react";
@@ -29,12 +29,13 @@ import _ProductSearch from "./_ProductSearch";
 import {modals} from "@mantine/modals";
 import tableCss from "../../../../assets/css/Table.module.css";
 import ProductViewDrawer from "./ProductViewDrawer.jsx";
-import {notifications} from "@mantine/notifications";
-import {setDeleteMessage} from "../../../../store/inventory/crudSlice.js";
-import vendorDataStoreIntoLocalStorage from "../../../global-hook/local-storage/vendorDataStoreIntoLocalStorage.js";
 import OverviewModal from "../product-overview/OverviewModal.jsx";
 import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
 import AddMeasurement from "../modal/AddMeasurement.jsx";
+import {Carousel} from "@mantine/carousel";
+import '@mantine/carousel/styles.css';
+import Autoplay from 'embla-carousel-autoplay';
+
 
 function ProductTable(props) {
     const {categoryDropdown} = props;
@@ -53,9 +54,6 @@ function ProductTable(props) {
     const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword);
     const productFilterData = useSelector(
         (state) => state.inventoryCrudSlice.productFilterData
-    );
-    const entityDataDelete = useSelector(
-        (state) => state.inventoryCrudSlice.entityDataDelete
     );
     const fetchingReload = useSelector((state) => state.crudSlice.fetching);
 
@@ -172,7 +170,7 @@ function ProductTable(props) {
                                         setId(item.id)
                                         setMeasurementDrawer(true)
                                     }}
-                                    style={{ cursor: "pointer" }}
+                                    style={{cursor: "pointer"}}
 
                                 >
                                     {item.unit_name}
@@ -180,29 +178,84 @@ function ProductTable(props) {
 
                             )
                         },
-                        {accessor: "quantity", title: t("Quantity"), textAlign : "center"},
-                        {accessor: "bonus_quantity", title: t("BonusQuantity"), textAlign : "center"},
+                        {accessor: "quantity", title: t("Quantity"), textAlign: "center"},
+                        {accessor: "bonus_quantity", title: t("BonusQuantity"), textAlign: "center"},
                         {
-                                      accessor: "feature_image",
-                                      textAlign : "center",
-                                      title: t("Image"),
-                                      width: "100px",
-                                      render: (item) => (
+                            accessor: "feature_image",
+                            textAlign: "center",
+                            title: t("Image"),
+                            width: "100px",
+
+                            render: (item) => {
+                                const [opened, setOpened] = useState(false);
+                                const autoplay = useRef(Autoplay({delay: 2000}));
+
+                                const images = [
+                                    item?.images?.feature_image ? import.meta.env.VITE_IMAGE_GATEWAY_URL + item.images.feature_image : null,
+                                    item?.images?.path_one ? import.meta.env.VITE_IMAGE_GATEWAY_URL + item.images.path_one : null,
+                                    item?.images?.path_two ? import.meta.env.VITE_IMAGE_GATEWAY_URL + item.images.path_two : null,
+                                    item?.images?.path_three ? import.meta.env.VITE_IMAGE_GATEWAY_URL + item.images.path_three : null,
+                                    item?.images?.path_four ? import.meta.env.VITE_IMAGE_GATEWAY_URL + item.images.path_four : null,
+                                ].filter(Boolean);
+
+                                return (
+                                    <>
                                         <Image
-                                          mih={50}
-                                          mah={50}
-                                          fit="contain"
-                                          // src={
-                                          //   isOnline
-                                          //     ? mode.path
-                                          //     : "/images/transaction-mode-offline.jpg"
-                                          // }
-                                          fallbackSrc={`https://placehold.co/120x80/FFFFFF/2f9e44?text=${encodeURIComponent(
-                                            item.product_name
-                                          )}`}
-                                        ></Image>
-                                      ),
-                                    },
+                                            mih={50}
+                                            mah={50}
+                                            fit="contain"
+                                            src={images.length > 0 ? images[0] : `https://placehold.co/120x80/FFFFFF/2f9e44?text=${encodeURIComponent(item.product_name)}`}
+                                            style={{cursor: 'pointer'}}
+                                            onClick={() => setOpened(true)}
+                                        />
+
+                                        <Modal
+                                            opened={opened}
+                                            onClose={() => setOpened(false)}
+                                            size="lg"
+                                            centered
+                                            styles={{
+                                                content: {overflow: 'hidden'}, // Ensure modal content doesn't overflow
+                                            }}
+                                        >
+                                            <Carousel
+                                                withIndicators
+                                                height={700}
+                                                // plugins={[autoplay.current]}
+                                                onMouseEnter={autoplay.current.stop}
+                                                onMouseLeave={autoplay.current.reset}
+                                            >
+                                                {images.map((img, index) => (
+                                                    <Carousel.Slide key={index}>
+                                                        <div
+                                                            style={{
+                                                                display: 'flex',
+                                                                justifyContent: 'center',
+                                                                alignItems: 'center',
+                                                                height: '100%',
+                                                                overflow: 'hidden',
+                                                            }}
+                                                        >
+                                                            <Image
+                                                                src={img}
+                                                                fit="contain"
+                                                                style={{
+                                                                    transition: 'transform 0.3s ease-in-out',
+                                                                    maxWidth: '100%', // Ensure image fits within the slide
+                                                                    maxHeight: '100%',
+                                                                }}
+                                                                onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.2)'}
+                                                                onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+                                                            />
+                                                        </div>
+                                                    </Carousel.Slide>
+                                                ))}
+                                            </Carousel>
+                                        </Modal>
+                                    </>
+                                );
+                            }
+                        },
                         {
                             accessor: "status",
                             title: t("Status"),
@@ -346,7 +399,8 @@ function ProductTable(props) {
                 <OverviewModal viewModal={viewModal} setViewModal={setViewModal}/>
             )}
             {measurementDrawer && (
-                <AddMeasurement measurementDrawer={measurementDrawer} setMeasurementDrawer={setMeasurementDrawer} id={id}/>
+                <AddMeasurement measurementDrawer={measurementDrawer} setMeasurementDrawer={setMeasurementDrawer}
+                                id={id}/>
             )}
         </>
     );

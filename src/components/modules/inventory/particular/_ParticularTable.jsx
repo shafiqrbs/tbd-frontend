@@ -150,6 +150,7 @@ function _ParticularTable(props) {
                                                         onCancel: () => console.log('Cancel'),
                                                         onConfirm: () => {
                                                             dispatch(deleteEntityData('inventory/particular/' + data.id))
+                                                            setParticularFetching(true)
                                                             notifications.show({
                                                                 color: 'red',
                                                                 title: t('DeleteSuccessfully'),

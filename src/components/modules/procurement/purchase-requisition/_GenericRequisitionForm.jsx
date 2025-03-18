@@ -648,6 +648,7 @@ export default function _GenericRequisitionForm(props) {
                                                                 form={requisitionForm}
                                                                 name={"expected_date"}
                                                                 id={"expected_date"}
+                                                                disable={true}
                                                                 leftSection={
                                                                     <IconCalendar size={16} opacity={0.5}/>
                                                                 }

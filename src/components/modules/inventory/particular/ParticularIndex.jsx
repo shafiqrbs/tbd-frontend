@@ -73,11 +73,16 @@ function ParticularIndex() {
                                     <Grid.Col span={9}>
                                         {
                                             insertType === 'create'
-                                                ? <_ParticularForm settingTypeDropdown={settingTypeDropdown}
-                                                    formSubmitId={'EntityFormSubmit'} />
+                                                ? <_ParticularForm
+                                                    settingTypeDropdown={settingTypeDropdown}
+                                                    formSubmitId={'EntityFormSubmit'}
+                                                    setParticularFetching={setParticularFetching}
+                                                />
                                                 :
-                                                <_ParticularUpdateForm settingTypeDropdown={settingTypeDropdown}
-                                                    formSubmitId={'EntityFormSubmit'}  setParticularFetching={setParticularFetching} />
+                                                <_ParticularUpdateForm
+                                                    settingTypeDropdown={settingTypeDropdown}
+                                                    formSubmitId={'EntityFormSubmit'}
+                                                    setParticularFetching={setParticularFetching} />
                                         }
                                     </Grid.Col>
                                 </Grid>
