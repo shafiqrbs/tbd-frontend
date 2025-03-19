@@ -157,87 +157,148 @@ export default function TransferForm() {
                   >
                     <Box>
                       <Box mt={"8"}>
-                        <SelectForm
-                          tooltip={t("FromWarehouse")}
-                          label={t("FromWarehouse")}
-                          placeholder={t("FromWarehouse")}
-                          required={false}
-                          nextField={"to_warehouse_id"}
-                          name={"from_warehouse_id"}
-                          form={form}
-                          dropdownValue={warehouse}
-                          mt={8}
-                          id={"from_warehouse_id"}
-                          searchable={false}
-                          value={fromWarehouseId}
-                          changeValue={setFromWarehouseId}
-                        />
+                        <Grid
+                          columns={12}
+                          gutter={{ base: 6 }}
+                          align="center"
+                          justify="start"
+                        >
+                          <Grid.Col span={3} mt={8}>
+                            <Text fw={400} fz={14}>
+                              {t("FromWarehouse")}
+                            </Text>
+                          </Grid.Col>
+                          <Grid.Col span={9}>
+                            <SelectForm
+                              label={t("")}
+                              placeholder={t("FromWarehouse")}
+                              required={false}
+                              nextField={"to_warehouse_id"}
+                              name={"from_warehouse_id"}
+                              form={form}
+                              dropdownValue={warehouse}
+                              mt={8}
+                              id={"from_warehouse_id"}
+                              searchable={false}
+                              value={fromWarehouseId}
+                              changeValue={setFromWarehouseId}
+                            />
+                          </Grid.Col>
+                        </Grid>
                       </Box>
                       <Box mt={"xs"}>
-                        <SelectForm
-                          tooltip={t("ToWarehouse")}
-                          label={t("ToWarehouse")}
-                          placeholder={t("ToWarehouse")}
-                          required={false}
-                          nextField={"stock_item_id"}
-                          name={"to_warehouse_id"}
-                          form={form}
-                          dropdownValue={warehouse}
-                          mt={8}
-                          id={"to_warehouse_id"}
-                          searchable={false}
-                          value={toWarehouseId}
-                          changeValue={setToWarehouseId}
-                        />
+                        <Grid
+                          columns={12}
+                          gutter={{ base: 6 }}
+                          align="center"
+                          justify="start"
+                        >
+                          <Grid.Col span={3} mt={8}>
+                            <Text fw={400} fz={14}>
+                              {t("ToWarehouse")}
+                            </Text>
+                          </Grid.Col>
+                          <Grid.Col span={9}>
+                            <SelectForm
+                              tooltip={t("ToWarehouse")}
+                              label={t("")}
+                              placeholder={t("ToWarehouse")}
+                              required={false}
+                              nextField={"stock_item_id"}
+                              name={"to_warehouse_id"}
+                              form={form}
+                              dropdownValue={warehouse}
+                              mt={8}
+                              id={"to_warehouse_id"}
+                              searchable={false}
+                              value={toWarehouseId}
+                              changeValue={setToWarehouseId}
+                            />
+                          </Grid.Col>
+                        </Grid>
                       </Box>
                       <Box mt={"xs"}>
-                        <SelectForm
-                          tooltip={t("StockItem")}
-                          label={t("StockItem")}
-                          placeholder={t("StockItem")}
-                          required={false}
-                          nextField={"quantity"}
-                          name={"stock_item_id"}
-                          form={form}
-                          dropdownValue={stockItem}
-                          mt={8}
-                          id={"stock_item_id"}
-                          searchable={false}
-                          value={stockItemId}
-                          changeValue={setStockItemId}
-                        />
+                        <Grid
+                          columns={12}
+                          gutter={{ base: 6 }}
+                          align="center"
+                          justify="start"
+                        >
+                          <Grid.Col span={3} mt={8}>
+                            <Text fw={400} fz={14}>
+                              {t("StockItem")}
+                            </Text>
+                          </Grid.Col>
+                          <Grid.Col span={9}>
+                            <SelectForm
+                              tooltip={t("StockItem")}
+                              label={t("")}
+                              placeholder={t("StockItem")}
+                              required={false}
+                              nextField={"quantity"}
+                              name={"stock_item_id"}
+                              form={form}
+                              dropdownValue={stockItem}
+                              mt={8}
+                              id={"stock_item_id"}
+                              searchable={false}
+                              value={stockItemId}
+                              changeValue={setStockItemId}
+                            />
+                          </Grid.Col>
+                        </Grid>
                       </Box>
                       <Box>
-                        <Grid gutter={{ base: 6 }}>
-                          <Grid.Col span={6}>
-                            <Box>
-                              <InputForm
-                                tooltip={t("Quantity")}
-                                label={t("Quantity")}
-                                placeholder={t("Quantity")}
-                                required={false}
-                                nextField={"bonus_quantity"}
-                                name={"quantity"}
-                                form={form}
-                                mt={8}
-                                id={"quantity"}
-                              />
-                            </Box>
+                        <Grid
+                          columns={12}
+                          gutter={{ base: 6 }}
+                          align="center"
+                          justify="start"
+                        >
+                          <Grid.Col span={3} mt={8}>
+                            <Text fw={400} fz={14}>
+                              {t("Quantity")}
+                            </Text>
                           </Grid.Col>
-                          <Grid.Col span={6}>
-                            <Box>
-                              <InputForm
-                                tooltip={t("BonusQuantity")}
-                                label={t("BonusQuantity")}
-                                placeholder={t("BonusQuantity")}
-                                required={false}
-                                nextField={"EntityFormSubmit"}
-                                name={"bonus_quantity"}
-                                form={form}
-                                mt={8}
-                                id={"bonus_quantity"}
-                              />
-                            </Box>
+                          <Grid.Col span={9}>
+                            <InputForm
+                              tooltip={t("Quantity")}
+                              label={t("")}
+                              placeholder={t("Quantity")}
+                              required={false}
+                              nextField={"bonus_quantity"}
+                              name={"quantity"}
+                              form={form}
+                              mt={8}
+                              id={"quantity"}
+                            />
+                          </Grid.Col>
+                        </Grid>
+                      </Box>
+                      <Box>
+                        <Grid
+                          columns={12}
+                          gutter={{ base: 6 }}
+                          align="center"
+                          justify="start"
+                        >
+                          <Grid.Col span={3} mt={8}>
+                            <Text fw={400} fz={14}>
+                              {t("BonusQuantity")}
+                            </Text>
+                          </Grid.Col>
+                          <Grid.Col span={9}>
+                            <InputForm
+                              tooltip={t("BonusQuantity")}
+                              label={t("")}
+                              placeholder={t("BonusQuantity")}
+                              required={false}
+                              nextField={"EntityFormSubmit"}
+                              name={"bonus_quantity"}
+                              form={form}
+                              mt={8}
+                              id={"bonus_quantity"}
+                            />
                           </Grid.Col>
                         </Grid>
                       </Box>
