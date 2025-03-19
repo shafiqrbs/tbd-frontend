@@ -1363,6 +1363,49 @@ export default function Invoice(props) {
                 align="center"
                 justify="center"
               >
+                  <Grid.Col span={6}>
+                      <Tooltip
+                          label={t("ChooseCustomer")}
+                          opened={!!form.errors.customer_id}
+                          bg={"orange.8"}
+                          c={"white"}
+                          withArrow
+                          px={16}
+                          py={2}
+                          offset={2}
+                          zIndex={999}
+                          transitionProps={{
+                              transition: "pop-bottom-left",
+                              duration: 500,
+                          }}
+                      >
+                          <Button
+                              disabled={!tableId}
+                              fullWidth
+                              size="sm"
+                              color="red"
+                              leftSection={
+                                  customerObject && customerObject.name ? (
+                                      <></>
+                                  ) : (
+                                      <IconUserFilled height={14} width={14} stroke={2} />
+                                  )
+                              }
+                              onClick={handleCustomerAdd}
+                          >
+                              <Stack gap={0}>
+                                  <Text fw={600} size="xs">
+                                      {customerObject && customerObject.name
+                                          ? customerObject.name
+                                          : t("Customer")}
+                                  </Text>
+                                  <Text size="xs">
+                                      {customerObject && customerObject.mobile}
+                                  </Text>
+                              </Stack>
+                          </Button>
+                      </Tooltip>
+                  </Grid.Col>
                 <Grid.Col span={3}>
                   <Switch
                     size="lg"
@@ -1525,49 +1568,7 @@ export default function Invoice(props) {
                     />
                   </Tooltip>
                 </Grid.Col>
-                <Grid.Col span={6}>
-                  <Tooltip
-                    label={t("ChooseCustomer")}
-                    opened={!!form.errors.customer_id}
-                    bg={"orange.8"}
-                    c={"white"}
-                    withArrow
-                    px={16}
-                    py={2}
-                    offset={2}
-                    zIndex={999}
-                    transitionProps={{
-                      transition: "pop-bottom-left",
-                      duration: 500,
-                    }}
-                  >
-                    <Button
-                      disabled={!tableId}
-                      fullWidth
-                      size="sm"
-                      color="red"
-                      leftSection={
-                        customerObject && customerObject.name ? (
-                          <></>
-                        ) : (
-                          <IconUserFilled height={14} width={14} stroke={2} />
-                        )
-                      }
-                      onClick={handleCustomerAdd}
-                    >
-                      <Stack gap={0}>
-                        <Text fw={600} size="xs">
-                          {customerObject && customerObject.name
-                            ? customerObject.name
-                            : t("Customer")}
-                        </Text>
-                        <Text size="xs">
-                          {customerObject && customerObject.mobile}
-                        </Text>
-                      </Stack>
-                    </Button>
-                  </Tooltip>
-                </Grid.Col>
+
               </Grid>
             </Box>
             <Grid columns={12} gutter={{ base: 2 }} pl={"4"} pr={"4"}>

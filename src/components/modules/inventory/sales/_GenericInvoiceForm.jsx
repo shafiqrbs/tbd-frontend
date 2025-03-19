@@ -459,6 +459,26 @@ function _GenericInvoiceForm(props) {
                   >
 
                     <Grid columns={24} gutter={{ base: 6 }}>
+                      {
+                        isWarehouse==1 &&
+                        <Grid.Col span={6}>
+                          <SelectForm
+                              tooltip={t('Warehouse')}
+                              label=''
+                              placeholder={t('Warehouse')}
+                              required={false}
+                              nextField={'bonus_quantity'}
+                              name={'warehouse_id'}
+                              form={form}
+                              dropdownValue={warehouseDropdownData}
+                              id={'warehouse_id'}
+                              mt={1}
+                              searchable={true}
+                              value={warehouseData}
+                              changeValue={setWarehouseData}
+                          />
+                        </Grid.Col>
+                      }
                       <Grid.Col span={4}>
                         <InputNumberForm
                           tooltip={t("BarcodeValidateMessage")}
@@ -472,6 +492,7 @@ function _GenericInvoiceForm(props) {
                           leftSection={<IconBarcode size={16} opacity={0.5} />}
                         />
                       </Grid.Col>
+
                       <Grid.Col span={isWarehouse?10:16}>
                         <SelectServerSideForm
                           tooltip={t("ChooseStockProduct")}
@@ -490,53 +511,9 @@ function _GenericInvoiceForm(props) {
                           closeIcon={true}
                         />
                       </Grid.Col>
-                      {
-                          isWarehouse==1 &&
-                          <Grid.Col span={6}>
-                            <SelectForm
-                                tooltip={t('Warehouse')}
-                                label=''
-                                placeholder={t('Warehouse')}
-                                required={false}
-                                nextField={'bonus_quantity'}
-                                name={'warehouse_id'}
-                                form={form}
-                                dropdownValue={warehouseDropdownData}
-                                id={'warehouse_id'}
-                                mt={1}
-                                searchable={true}
-                                value={warehouseData}
-                                changeValue={setWarehouseData}
-                            />
-                          </Grid.Col>
-                      }
 
                       <Grid.Col span={4}>
                         <InputButtonForm
-                            type="number"
-                            tooltip={t("BonusQuantity")}
-                            label=""
-                            placeholder={t("BonusQuantity")}
-                            required={true}
-                            nextField={"quantity"}
-                            form={form}
-                            name={"bonus_quantity"}
-                            id={"bonus_quantity"}
-                            leftSection={
-                              <IconSortAscendingNumbers
-                                  size={16}
-                                  opacity={0.5}
-                              />
-                            }
-                            rightSection={inputGroupText}
-                            rightSectionWidth={50}
-                        />
-                      </Grid.Col>
-                    </Grid>
-                    <Box mt={"xs"} pb={"xs"}>
-                      <Grid columns={24} gutter={{ base: 6 }}>
-                        <Grid.Col span={4}>
-                          <InputButtonForm
                             type="number"
                             tooltip=""
                             label=""
@@ -551,8 +528,14 @@ function _GenericInvoiceForm(props) {
                             }
                             rightSectionWidth={30}
                             disabled={true}
-                          />
-                        </Grid.Col>
+                        />
+                      </Grid.Col>
+
+                    </Grid>
+                    <Box mt={"xs"} pb={"xs"}>
+                      <Grid columns={24} gutter={{ base: 6 }}>
+
+
                         <Grid.Col span={4}>
                           <InputButtonForm
                             type="number"
@@ -572,6 +555,27 @@ function _GenericInvoiceForm(props) {
                             }
                             rightSection={inputGroupText}
                             rightSectionWidth={50}
+                          />
+                        </Grid.Col>
+                        <Grid.Col span={4}>
+                          <InputButtonForm
+                              type="number"
+                              tooltip={t("BonusQuantity")}
+                              label=""
+                              placeholder={t("BonusQuantity")}
+                              required={true}
+                              nextField={"quantity"}
+                              form={form}
+                              name={"bonus_quantity"}
+                              id={"bonus_quantity"}
+                              leftSection={
+                                <IconSortAscendingNumbers
+                                    size={16}
+                                    opacity={0.5}
+                                />
+                              }
+                              rightSection={inputGroupText}
+                              rightSectionWidth={50}
                           />
                         </Grid.Col>
                         <Grid.Col span={4}>

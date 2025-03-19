@@ -142,6 +142,8 @@ export default function BakeryIndex() {
       setCustomerObject({});
     }
   }, [tableId, tableCustomerMap, customerObject]);
+  console.log(configData.is_table_pos);
+  console.log(configData.is_pos);
   return (
     <>
       {progress !== 100 && (
