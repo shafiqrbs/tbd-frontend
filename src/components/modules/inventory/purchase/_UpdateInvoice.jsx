@@ -495,7 +495,7 @@ function _UpdateInvoice(props) {
                                         render: (item) => {
                                             const [editedQuantity, setEditedQuantity] = useState(item.quantity);
 
-                                            const handlQuantityChange = (e) => {
+                                            const handleQuantityChange = (e) => {
                                                 const editedQuantity = e.currentTarget.value;
                                                 setEditedQuantity(editedQuantity);
 
@@ -520,7 +520,7 @@ function _UpdateInvoice(props) {
                                                         label=""
                                                         size="xs"
                                                         value={editedQuantity}
-                                                        onChange={handlQuantityChange}
+                                                        onChange={handleQuantityChange}
                                                         onKeyDown={getHotkeyHandler([
                                                             ['Enter', (e) => {
                                                                 document.getElementById('inline-update-quantity-' + item.product_id).focus();

@@ -181,7 +181,7 @@ function OverViewDetails(props) {
                                                             <Text fz="xs" fw={600} pt={2} >:</Text>
                                                         </Grid.Col>
                                                         <Grid.Col span={6}>
-                                                            <Text fz="xs" fw={600} pt={2} >{showEntityData?.id}</Text>
+                                                            <Text fz="xs" fw={600} pt={2} >{showEntityData?.stock_quantity}</Text>
                                                         </Grid.Col>
                                                     </Grid>
                                                 </Grid.Col>
