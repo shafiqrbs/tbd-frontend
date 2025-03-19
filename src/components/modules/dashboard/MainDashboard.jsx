@@ -751,6 +751,122 @@ function MainDashboard(props) {
                                                 />
                                             </List.Item>
                                             <List.Item
+                              pl={"xs"}
+                              icon={
+                                <ThemeIcon
+                                    color="yellow.6"
+                                    size={20}
+                                    radius="xl"
+                                    variant="outline"
+                                >
+                                  <IconCategory2 />
+                                </ThemeIcon>
+                              }
+                          >
+                            <NavLink
+                                pl={"md"}
+                                href="/inventory/stock-transfer"
+                                label={t("StockTransfer")}
+                                component="button"
+                                onClick={(e) => {
+                                  navigate("inventory/stock-transfer");
+                                }}
+                                onAuxClick={(e) => {
+                                  // Handle middle mouse button click for browsers that support it
+                                  if (e.button === 1) {
+                                    window.open("/inventory/stock-transfer", "_blank");
+                                  }
+                                }}
+                            />
+                          </List.Item>
+                          <List.Item
+                              pl={"xs"}
+                              icon={
+                                <ThemeIcon
+                                    color="yellow.6"
+                                    size={20}
+                                    radius="xl"
+                                    variant="outline"
+                                >
+                                  <IconCategory2 />
+                                </ThemeIcon>
+                              }
+                          >
+                            <NavLink
+                                pl={"md"}
+                                href="/inventory/stock-reconciliation"
+                                label={t("StockReconciliation")}
+                                component="button"
+                                onClick={(e) => {
+                                  navigate("inventory/stock-reconciliation");
+                                }}
+                                onAuxClick={(e) => {
+                                  // Handle middle mouse button click for browsers that support it
+                                  if (e.button === 1) {
+                                    window.open("/inventory/stock-reconciliation", "_blank");
+                                  }
+                                }}
+                            />
+                          </List.Item>
+                          <List.Item
+                              pl={"xs"}
+                              icon={
+                                <ThemeIcon
+                                    color="yellow.6"
+                                    size={20}
+                                    radius="xl"
+                                    variant="outline"
+                                >
+                                  <IconCategory2 />
+                                </ThemeIcon>
+                              }
+                          >
+                            <NavLink
+                                pl={"md"}
+                                href="/inventory/coupon-code"
+                                label={t("CouponCode")}
+                                component="button"
+                                onClick={(e) => {
+                                  navigate("inventory/coupon-code");
+                                }}
+                                onAuxClick={(e) => {
+                                  // Handle middle mouse button click for browsers that support it
+                                  if (e.button === 1) {
+                                    window.open("/inventory/coupon-code", "_blank");
+                                  }
+                                }}
+                            />
+                          </List.Item>
+                          <List.Item
+                              pl={"xs"}
+                              icon={
+                                <ThemeIcon
+                                    color="yellow.6"
+                                    size={20}
+                                    radius="xl"
+                                    variant="outline"
+                                >
+                                  <IconCategory2 />
+                                </ThemeIcon>
+                              }
+                          >
+                            <NavLink
+                                pl={"md"}
+                                href="/inventory/barcode-print"
+                                label={t("BarcodePrint")}
+                                component="button"
+                                onClick={(e) => {
+                                  navigate("inventory/barcode-print");
+                                }}
+                                onAuxClick={(e) => {
+                                  // Handle middle mouse button click for browsers that support it
+                                  if (e.button === 1) {
+                                    window.open("/inventory/barcode-print", "_blank");
+                                  }
+                                }}
+                            />
+                          </List.Item>
+                                            <List.Item
                                                 pl={"xs"}
                                                 icon={
                                                     <ThemeIcon
