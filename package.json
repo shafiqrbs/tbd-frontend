@@ -33,6 +33,7 @@
     "axios": "^1.6.7",
     "clsx": "^2.1.0",
     "dayjs": "^1.11.10",
+    "embla-carousel-autoplay": "^8.5.2",
     "embla-carousel-react": "^7.1.0",
     "i18next": "^23.8.2",
     "i18next-browser-languagedetector": "^7.2.0",

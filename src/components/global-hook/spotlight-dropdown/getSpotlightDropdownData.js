@@ -242,7 +242,7 @@ const getSpotlightDropdownData = (t, configData) => {
                         id: "requisition-board",
                         label: t("AllRequisitionN"),
                         description: t("WhereWePresentTheDomainInformationN"),
-                        isShow: true
+                        isShow: configData?.child_domain_exists
                     },
                     {
                         id: "requisition",

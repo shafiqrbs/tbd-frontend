@@ -295,6 +295,7 @@ function __SalesForm(props) {
 
                 const hasReceiveAmount = form.values.receive_amount;
                 const isDefaultCustomer = !form.values.customer_id || form.values.customer_id == defaultCustomerId;
+
                 formValue['payment'] = hasReceiveAmount
                     ? (customerData && customerData != defaultCustomerId
                         ? form.values.receive_amount

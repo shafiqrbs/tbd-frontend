@@ -21,7 +21,7 @@ import SelectForm from "../../../form-builders/SelectForm.jsx";
 import SwitchForm from "../../../form-builders/SwitchForm.jsx";
 
 function _ParticularForm(props) {
-    const {settingTypeDropdown, formSubmitId} = props
+    const {settingTypeDropdown, formSubmitId,setParticularFetching} = props
     const {t, i18n} = useTranslation();
     const dispatch = useDispatch();
     const {isOnline, mainAreaHeight} = useOutletContext();
@@ -87,7 +87,7 @@ function _ParticularForm(props) {
                                 settingsForm.reset()
                                 setSettingTypeData(null)
                                 setSaveCreateLoading(false)
-                                dispatch(setFetching(true))
+                                setParticularFetching(true)
                             }, 700)
                         },
                     });
