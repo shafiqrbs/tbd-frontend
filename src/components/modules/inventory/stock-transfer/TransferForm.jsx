@@ -248,7 +248,7 @@ export default function TransferForm() {
                           </Grid.Col>
                         </Grid>
                       </Box>
-                      <Box>
+                      <Box mt={'xs'}>
                         <Grid
                           columns={12}
                           gutter={{ base: 6 }}
@@ -275,7 +275,7 @@ export default function TransferForm() {
                           </Grid.Col>
                         </Grid>
                       </Box>
-                      <Box>
+                      <Box mt={'xs'}  mb={"xs"}>
                         <Grid
                           columns={12}
                           gutter={{ base: 6 }}

@@ -22,7 +22,6 @@ import { useHotkeys } from "@mantine/hooks";
 import Shortcut from "../../shortcut/Shortcut";
 import InputForm from "../../../form-builders/InputForm";
 
-
 export default function ReconciliationForm() {
   const { t, i18n } = useTranslation();
   const dispatch = useDispatch();
@@ -56,9 +55,9 @@ export default function ReconciliationForm() {
     { value: "3", label: "Product 3" },
   ];
   const mode = [
-    { value: "1", label: "Mode 1" },
-    { value: "2", label: "Mode 2" },
-    { value: "3", label: "Mode 3" },
+    { value: "1", label: "Plus" },
+    { value: "2", label: "Minus" },
+    { value: "3", label: "Damage" },
   ];
   useEffect(() => {
     if (productId === "1") {
@@ -186,121 +185,185 @@ export default function ReconciliationForm() {
                     <Box>
                       <Box>
                         <Box mt={"8"}>
-                          <SelectForm
-                            tooltip={t("Product")}
-                            label={t("Product")}
-                            placeholder={t("ChooseProduct")}
-                            required={false}
-                            nextField={"warehouse_id"}
-                            name={"product_id"}
-                            form={form}
-                            dropdownValue={products}
-                            mt={8}
-                            id={"product_id"}
-                            searchable={false}
-                            value={productId}
-                            changeValue={setProductId}
-                          />
+                          <Grid
+                            columns={12}
+                            gutter={{ base: 6 }}
+                            align="center"
+                            justify="start"
+                          >
+                            <Grid.Col span={3} mt={8}>
+                              <Text fw={400} fz={14}>
+                                {t("Product")}
+                              </Text>
+                            </Grid.Col>
+                            <Grid.Col span={9}>
+                              <SelectForm
+                                tooltip={t("Product")}
+                                label={t("")}
+                                placeholder={t("ChooseProduct")}
+                                required={false}
+                                nextField={"warehouse_id"}
+                                name={"product_id"}
+                                form={form}
+                                dropdownValue={products}
+                                mt={8}
+                                id={"product_id"}
+                                searchable={false}
+                                value={productId}
+                                changeValue={setProductId}
+                              />
+                            </Grid.Col>
+                          </Grid>
                         </Box>
                       </Box>
                       <Box mt={"xs"}>
-                        <SelectForm
-                          tooltip={t("Warehouse")}
-                          label={t("Warehouse")}
-                          placeholder={t("ChooseWarehouse")}
-                          required={false}
-                          nextField={"mode_quantity_id"}
-                          name={"warehouse_id"}
-                          form={form}
-                          dropdownValue={warehouses}
-                          mt={8}
-                          id={"warehouse_id"}
-                          searchable={false}
-                          value={warehouseId}
-                          changeValue={setWarehouseId}
-                          disabled={!productId}
-                        />
-                      </Box>
-                      <Box mt={"xs"}>
-                        <Grid gutter={{ base: 6 }}>
-                          <Grid.Col span={6}>
-                            <Box>
-                              <SelectForm
-                                tooltip={t("Mode")}
-                                label={t("Mode")}
-                                placeholder={t("ChooseWarehouse")}
-                                required={false}
-                                nextField={"mode_quantity"}
-                                name={"mode_quantity_id"}
-                                form={form}
-                                dropdownValue={mode}
-                                mt={8}
-                                id={"mode_quantity_id"}
-                                searchable={false}
-                                value={modeQuantity}
-                                changeValue={setModeQuantity}
-                              />
-                            </Box>
+                        <Grid
+                          columns={12}
+                          gutter={{ base: 6 }}
+                          align="center"
+                          justify="start"
+                        >
+                          <Grid.Col span={3} mt={8}>
+                            <Text fw={400} fz={14}>
+                              {t("Warehouse")}
+                            </Text>
                           </Grid.Col>
-                          <Grid.Col span={6}>
-                            <Box mt={8}>
-                              <InputForm
-                                tooltip={t("ModeQuantity")}
-                                label={t("ModeQuantity")}
-                                placeholder={t("ModeQuantity")}
-                                required={false}
-                                nextField={"mode_bonus_id"}
-                                name={"mode_quantity"}
-                                form={form}
-                                mt={8}
-                                id={"mode_quantity"}
-                              />
-                            </Box>
+                          <Grid.Col span={9}>
+                            <SelectForm
+                              tooltip={t("Warehouse")}
+                              label={t("")}
+                              placeholder={t("ChooseWarehouse")}
+                              required={false}
+                              nextField={"mode_quantity_id"}
+                              name={"warehouse_id"}
+                              form={form}
+                              dropdownValue={warehouses}
+                              mt={8}
+                              id={"warehouse_id"}
+                              searchable={false}
+                              value={warehouseId}
+                              changeValue={setWarehouseId}
+                              disabled={!productId}
+                            />
                           </Grid.Col>
                         </Grid>
                       </Box>
-                      <Box mt={"xs"}></Box>
                       <Box mt={"xs"}>
-                        <Grid gutter={{ base: 6 }}>
-                          <Grid.Col span={6}>
-                            <Box>
-                              <SelectForm
-                                tooltip={t("Mode")}
-                                label={t("Mode")}
-                                placeholder={t("ChooseModeBonus")}
-                                required={false}
-                                nextField={"mode_bonus"}
-                                name={"mode_bonus_id"}
-                                form={form}
-                                dropdownValue={mode}
-                                mt={8}
-                                id={"mode_bonus_id"}
-                                searchable={false}
-                                value={modeBonus}
-                                changeValue={setModeBonus}
-                              />
-                            </Box>
+                        <Grid
+                          columns={12}
+                          gutter={{ base: 6 }}
+                          align="center"
+                          justify="start"
+                        >
+                          <Grid.Col span={3} mt={8}>
+                            <Text fw={400} fz={14}>
+                              {t("QuantityMode")}
+                            </Text>
                           </Grid.Col>
-                          <Grid.Col span={6}>
-                            <Box mt={8}>
-                              <InputForm
-                                tooltip={t("ModeBonus")}
-                                label={t("ModeBonus")}
-                                placeholder={t("ModeBonus")}
-                                required={false}
-                                nextField={"EntityFormSubmit"}
-                                name={"mode_bonus"}
-                                form={form}
-                                mt={8}
-                                id={"mode_bonus"}
-                              />
-                            </Box>
+                          <Grid.Col span={9}>
+                            <SelectForm
+                              tooltip={t("ChooseQuantityMode")}
+                              label={t("")}
+                              placeholder={t("ChooseQuantityMode")}
+                              required={false}
+                              nextField={"mode_quantity"}
+                              name={"mode_quantity_id"}
+                              form={form}
+                              dropdownValue={mode}
+                              mt={8}
+                              id={"mode_quantity_id"}
+                              searchable={false}
+                              value={modeQuantity}
+                              changeValue={setModeQuantity}
+                            />
                           </Grid.Col>
                         </Grid>
                       </Box>
-                      <Box mt={"xs"}></Box>
-                      <Box mt={"xs"}></Box>
-                      <Box mt={"xs"} mb={"xs"}></Box>
+                      <Box mt={"xs"}>
+                        <Grid
+                          columns={12}
+                          gutter={{ base: 6 }}
+                          align="center"
+                          justify="start"
+                        >
+                          <Grid.Col span={3} mt={8}>
+                            <Text fw={400} fz={14}>
+                              {t("ModeQuantity")}
+                            </Text>
+                          </Grid.Col>
+                          <Grid.Col span={9}>
+                            <InputForm
+                              tooltip={t("ModeQuantity")}
+                              label={t("")}
+                              placeholder={t("ModeQuantity")}
+                              required={false}
+                              nextField={"mode_bonus_id"}
+                              name={"mode_quantity"}
+                              form={form}
+                              mt={8}
+                              id={"mode_quantity"}
+                            />
+                          </Grid.Col>
+                        </Grid>
+                      </Box>
+                      <Box mt={"xs"}>
+                        <Grid
+                          columns={12}
+                          gutter={{ base: 6 }}
+                          align="center"
+                          justify="start"
+                        >
+                          <Grid.Col span={3} mt={8}>
+                            <Text fw={400} fz={14}>
+                              {t("BonusMode")}
+                            </Text>
+                          </Grid.Col>
+                          <Grid.Col span={9}>
+                            <SelectForm
+                              tooltip={t("ChooseBonusMode")}
+                              label={t("")}
+                              placeholder={t("ChooseBonusMode")}
+                              required={false}
+                              nextField={"mode_bonus"}
+                              name={"mode_bonus_id"}
+                              form={form}
+                              dropdownValue={mode}
+                              mt={8}
+                              id={"mode_bonus_id"}
+                              searchable={false}
+                              value={modeBonus}
+                              changeValue={setModeBonus}
+                            />
+                          </Grid.Col>
+                        </Grid>
+                      </Box>
+                      <Box mt={"xs"}>
+                        <Grid
+                          columns={12}
+                          gutter={{ base: 6 }}
+                          align="center"
+                          justify="start"
+                        >
+                          <Grid.Col span={3} mt={8}>
+                            <Text fw={400} fz={14}>
+                              {t("ModeBonus")}
+                            </Text>
+                          </Grid.Col>
+                          <Grid.Col span={9}>
+                            <InputForm
+                              tooltip={t("ModeBonus")}
+                              label={t("")}
+                              placeholder={t("ModeBonus")}
+                              required={false}
+                              nextField={"EntityFormSubmit"}
+                              name={"mode_bonus"}
+                              form={form}
+                              mt={8}
+                              id={"mode_bonus"}
+                            />
+                          </Grid.Col>
+                        </Grid>
+                      </Box>
                     </Box>
                   </ScrollArea>
                 </Box>

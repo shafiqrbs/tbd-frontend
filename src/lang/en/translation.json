@@ -774,5 +774,11 @@
   "FromWarehouse" : "From Warehouse",
   "ToWarehouse" : "To Warehouse",
   "TransferStock" : "Transfer Stock",
+  "ChooseProduct" : "Choose Product",
+  "ChooseQuantityMode" : "Choose Quantity Mode",
+  "ChooseWarehouse" : "Choose Warehouse",
+  "ChooseBonusMode" : "Choose Bonus Mode",
+  "QuantityMode" : "Quantity Mode",
+  "BonusMode" : "Bonus Mode",
   "" : ""
 }
