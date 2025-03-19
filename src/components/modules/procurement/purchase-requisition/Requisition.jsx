@@ -8,7 +8,7 @@ import _RequisitionTable from "./_RequisitionTable.jsx";
 export default function Requisition() {
   const { t } = useTranslation();
   const progress = getLoadingProgress();
-  const configData = getConfigData();
+  const {configData} = getConfigData();
 
   return (
     <>

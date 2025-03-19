@@ -9,7 +9,7 @@ import { Progress, Box, Grid } from "@mantine/core";
 export default function BarcodePrintIndex() {
   const { t } = useTranslation();
   const progress = getLoadingProgress();
-  const configData = getConfigData();
+  const {configData} = getConfigData();
   return (
     <>
       {progress !== 100 && (

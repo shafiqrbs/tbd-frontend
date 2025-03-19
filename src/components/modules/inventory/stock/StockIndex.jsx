@@ -22,7 +22,7 @@ function StockIndex() {
   const dispatch = useDispatch();
 
   const progress = getLoadingProgress();
-  const configData = getConfigData();
+  const {configData} = getConfigData();
 
   const dropdownLoad = useSelector(
     (state) => state.inventoryCrudSlice.dropdownLoad

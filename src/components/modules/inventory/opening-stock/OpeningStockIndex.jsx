@@ -12,7 +12,7 @@ import _CreateOpeningForm from "./_CreateOpeningForm.jsx";
 function OpeningStockIndex() {
     const { t, i18n } = useTranslation();
     const progress = getLoadingProgress()
-    const configData = getConfigData()
+    const {configData} = getConfigData()
 
     return (
         <>

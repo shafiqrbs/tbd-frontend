@@ -11,7 +11,7 @@ import _OpeningApproveTable from "./_OpeningApproveTable.jsx";
 function OpeningApproveIndex() {
     const { t, i18n } = useTranslation();
     const progress = getLoadingProgress()
-    const configData = getConfigData()
+    const {configData} = getConfigData()
 
     return (
         <>

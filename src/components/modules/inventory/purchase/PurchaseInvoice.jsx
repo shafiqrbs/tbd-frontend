@@ -11,7 +11,7 @@ import _GenericInvoiceForm from "./_GenericInvoiceForm.jsx";
 function PurchaseInvoice() {
     const { t, i18n } = useTranslation();
     const progress = getLoadingProgress()
-    const configData = getConfigData()
+    const {configData} = getConfigData()
 
     return (
         <>

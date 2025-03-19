@@ -18,7 +18,7 @@ function PurchaseIndex() {
     const progress = getLoadingProgress()
 
     // Use the getConfigData hook
-    const configData = getConfigData()
+    const {configData} = getConfigData()
 
     return (
         <>

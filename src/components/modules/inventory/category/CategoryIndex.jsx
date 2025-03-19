@@ -24,7 +24,7 @@ function CategoryIndex() {
     const dropdownLoad = useSelector((state) => state.inventoryCrudSlice.dropdownLoad)
 
     const progress = getLoadingProgress()
-    const configData = getConfigData()
+    const {configData} = getConfigData()
     const navigate = useNavigate()
 
     const { categoryId } = useParams();

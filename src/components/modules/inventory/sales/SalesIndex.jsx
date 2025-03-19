@@ -16,7 +16,7 @@ function SalesIndex() {
     const insertType = useSelector((state) => state.crudSlice.insertType)
 
     const progress = getLoadingProgress()
-    const configData = getConfigData()
+    const {configData} = getConfigData()
 
 
     return (

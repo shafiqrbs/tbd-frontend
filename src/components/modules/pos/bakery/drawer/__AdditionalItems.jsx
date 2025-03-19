@@ -37,7 +37,7 @@ export default function __AdditionalItems(props) {
   const dispatch = useDispatch();
   const { isOnline, mainAreaHeight } = useOutletContext();
   const height = mainAreaHeight - 100; //TabList height 104
-  const configData = getConfigData();
+  const {configData} = getConfigData();
 
   const additionalItemsForm = useForm({});
   const [saveCreateLoading, setSaveCreateLoading] = useState(false);

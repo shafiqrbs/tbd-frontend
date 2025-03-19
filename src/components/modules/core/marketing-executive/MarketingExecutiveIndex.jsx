@@ -27,7 +27,7 @@ function MarketingExecutiveIndex() {
     const insertType = useSelector((state) => state.inventoryCrudSlice.insertType)
 
     const progress = getLoadingProgress()
-    const configData = getConfigData()
+    const {configData} = getConfigData()
     const navigate = useNavigate()
 
     const { id } = useParams();

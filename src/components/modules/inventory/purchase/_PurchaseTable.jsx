@@ -45,7 +45,7 @@ import getConfigData from "../../../global-hook/config-data/getConfigData.js";
 import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
 
 function _PurchaseTable() {
-    const configData = getConfigData()
+    const {configData} = getConfigData()
     let isWarehouse = configData?.configData?.sku_warehouse
 
     const printRef = useRef();

@@ -18,7 +18,7 @@ function HeadSubGroupIndex() {
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const insertType = useSelector((state) => state.crudSlice.insertType)
-    const configData = getConfigData()
+    const {configData} = getConfigData()
     const progress = getLoadingProgress()
 
     const { id } = useParams()

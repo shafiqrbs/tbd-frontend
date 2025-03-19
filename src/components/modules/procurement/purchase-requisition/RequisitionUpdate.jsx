@@ -14,7 +14,7 @@ import {IconCheck} from "@tabler/icons-react";
 export default function RequisitionUpdate() {
     const {t} = useTranslation();
     const progress = getLoadingProgress();
-    const configData = getConfigData();
+    const {configData} = getConfigData();
     const {id} = useParams()
     const dispatch = useDispatch()
     const navigate = useNavigate()
