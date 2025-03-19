@@ -1,10 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
-    Box, Button,
-    Grid, Progress, Title
+    Box,Progress, 
 } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from "react-redux";
 import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress.js";
 import getConfigData from "../../../global-hook/config-data/getConfigData.js";
 import _SalesTable from "./_SalesTable.jsx";
@@ -12,8 +10,6 @@ import _SalesPurchaseHeaderNavbar from "../../domain/configuraton/_SalesPurchase
 
 function SalesIndex() {
     const { t, i18n } = useTranslation();
-    const dispatch = useDispatch();
-    const insertType = useSelector((state) => state.crudSlice.insertType)
 
     const progress = getLoadingProgress()
     const {configData} = getConfigData()

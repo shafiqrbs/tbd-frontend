@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useOutletContext } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   rem,
   Grid,
@@ -13,7 +13,6 @@ import { useTranslation } from "react-i18next";
 import {
   IconBrandOkRu,
   IconFileTypeXls,
-  IconFilter,
   IconInfoCircle,
   IconPdf,
   IconRestore,
@@ -22,7 +21,6 @@ import {
 } from "@tabler/icons-react";
 import { useHotkeys } from "@mantine/hooks";
 import { useDispatch, useSelector } from "react-redux";
-import { setSearchKeyword } from "../../../../store/core/crudSlice.js";
 import FilterModel from "../../filter/FilterModel.jsx";
 import {
   setFetching,
@@ -30,20 +28,12 @@ import {
   storeEntityData,
 } from "../../../../store/inventory/crudSlice.js";
 import { DateInput } from "@mantine/dates";
-import {
-  setCategoryGroupFilterData,
-  setCustomerFilterData,
-  setUserFilterData,
-  setVendorFilterData,
-} from "../../../../store/core/crudSlice";
-import { setProductFilterData } from "../../../../store/inventory/crudSlice";
 import __FilterPopover from "./__FilterPopover.jsx";
 
 function _SalesSearch(props) {
   const { t, i18n } = useTranslation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { isOnline } = useOutletContext();
 
   const [searchKeywordTooltip, setSearchKeywordTooltip] = useState(false);
   const [customerTooltip, setCustomerTooltip] = useState(false);
