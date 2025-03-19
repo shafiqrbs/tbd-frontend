@@ -13,38 +13,33 @@ function _InvoiceBatchSearch(props) {
 
     return (
         <>
-            <Grid columns={40} justify="flex-start" align="flex-end" >
-                <Grid.Col span={32}>
-                    <Grid gutter={'2'}>
-                        <Grid.Col span={3}>
-                            <Box>
+            <Grid columns={24} justify="flex-start" align="flex-end">
+                <Grid.Col span={15}>
+                    <Grid columns={24}>
+                        <Grid.Col span={6}>
+                            <Box mt={"1"}>
                                 <SearchKeyword />
-                            </Box>
+                            </Box >
                         </Grid.Col>
-                        <Grid.Col span={5}>
-                            <Box>
+                        <Grid.Col span={6}>
+                            <Box mt={"1"}>
                                 <SearchChooseCustomer />
                             </Box>
                         </Grid.Col>
-                        <Grid.Col span={2}>
-                            <Box>
+                        <Grid.Col span={6}>
+                            <Box mt={"1"}>
                                 <SearchStartDate />
                             </Box>
                         </Grid.Col>
-                        <Grid.Col span={2}>
-                            <Box>
+                        <Grid.Col span={6}>
+                            <Box mt={"1"}>
                                 <SearchEndDate />
                             </Box>
                         </Grid.Col>
                     </Grid>
                 </Grid.Col>
-                <Grid.Col span="auto">
-                    <Flex gap="xs"
-                        justify="center"
-                        align="center"
-                        direction="row">
-                        <SearchActionMenu />
-                    </Flex>
+                <Grid.Col span={'auto'}>
+                    <SearchActionMenu />
                 </Grid.Col>
             </Grid>
 

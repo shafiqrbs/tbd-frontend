@@ -1,12 +1,11 @@
 import React, {useEffect, useState} from "react";
-import {useOutletContext} from "react-router-dom";
 import {
     rem,
     Grid, Tooltip, TextInput, ActionIcon, Select, Button,
 } from "@mantine/core";
 import {useTranslation} from 'react-i18next';
 import {
-    IconBrandOkRu,
+    IconCalendar,
     IconFilter,
     IconInfoCircle,
     IconRestore,
@@ -15,7 +14,6 @@ import {
 } from "@tabler/icons-react";
 import {useHotkeys} from "@mantine/hooks";
 import {useDispatch, useSelector} from "react-redux";
-import {setSearchKeyword} from "../../../../store/core/crudSlice.js";
 import FilterModel from "../../filter/FilterModel.jsx";
 import {setFetching, setPurchaseFilterData} from "../../../../store/inventory/crudSlice.js";
 import {DateInput} from "@mantine/dates";
@@ -23,7 +21,6 @@ import {DateInput} from "@mantine/dates";
 function _PurchaseSearch(props) {
     const {t, i18n} = useTranslation();
     const dispatch = useDispatch();
-    const {isOnline} = useOutletContext();
 
     const [searchKeywordTooltip, setSearchKeywordTooltip] = useState(false)
     const [vendorTooltip, setVendorTooltip] = useState(false)
@@ -180,6 +177,24 @@ function _PurchaseSearch(props) {
                             }}
                             value={purchaseFilterData.start_date}
                             placeholder={t('StartDate')}
+                            leftSection={<IconCalendar size={16} opacity={0.5} />}
+                            rightSection={
+                                <Tooltip
+                                label={t("StartDate")}
+                                px={16}
+                                py={2}
+                                withArrow
+                                position={"left"}
+                                c={"black"}
+                                bg={`gray.1`}
+                                transitionProps={{
+                                    transition: "pop-bottom-left",
+                                    duration: 500,
+                                }}
+                                >
+                                    <IconInfoCircle size={16} opacity={0.5} />
+                                </Tooltip>
+                            }
                         />
                     </Tooltip>
                 </Grid.Col>
@@ -208,6 +223,24 @@ function _PurchaseSearch(props) {
                                         }, 1000))
                             }}
                             placeholder={t('EndDate')}
+                            leftSection={<IconCalendar size={16} opacity={0.5} />}
+                            rightSection={
+                                <Tooltip
+                                label={t("EndDate")}
+                                px={16}
+                                py={2}
+                                withArrow
+                                position={"left"}
+                                c={"black"}
+                                bg={`gray.1`}
+                                transitionProps={{
+                                    transition: "pop-bottom-left",
+                                    duration: 500,
+                                }}
+                                >
+                                    <IconInfoCircle size={16} opacity={0.5} />
+                                </Tooltip>
+                            }
                         />
                     </Tooltip>
                 </Grid.Col>

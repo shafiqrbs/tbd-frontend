@@ -18,6 +18,7 @@ import {
   IconRestore,
   IconSearch,
   IconX,
+  IconCalendar
 } from "@tabler/icons-react";
 import { useHotkeys } from "@mantine/hooks";
 import { useDispatch, useSelector } from "react-redux";
@@ -232,6 +233,24 @@ function _SalesSearch(props) {
                   }}
                   value={salesFilterData.start_date}
                   placeholder={t("StartDate")}
+                  leftSection={<IconCalendar size={16} opacity={0.5} />}
+                  rightSection={
+                      <Tooltip
+                      label={t("StartDate")}
+                      px={16}
+                      py={2}
+                      withArrow
+                      position={"left"}
+                      c={"black"}
+                      bg={`gray.1`}
+                      transitionProps={{
+                          transition: "pop-bottom-left",
+                          duration: 500,
+                      }}
+                      >
+                          <IconInfoCircle size={16} opacity={0.5} />
+                      </Tooltip>
+                  }
                 />
               </Tooltip>
             </Grid.Col>
@@ -268,6 +287,24 @@ function _SalesSearch(props) {
                         }, 1000));
                   }}
                   placeholder={t("EndDate")}
+                  leftSection={<IconCalendar size={16} opacity={0.5} />}
+                  rightSection={
+                      <Tooltip
+                      label={t("EndDate")}
+                      px={16}
+                      py={2}
+                      withArrow
+                      position={"left"}
+                      c={"black"}
+                      bg={`gray.1`}
+                      transitionProps={{
+                          transition: "pop-bottom-left",
+                          duration: 500,
+                      }}
+                      >
+                          <IconInfoCircle size={16} opacity={0.5} />
+                      </Tooltip>
+                  }
                 />
               </Tooltip>
             </Grid.Col>
@@ -309,28 +346,6 @@ function _SalesSearch(props) {
               </Tooltip>
             </ActionIcon>
             <__FilterPopover />
-            {/* <ActionIcon
-                            variant="default"
-                            size="lg"
-                            c={'gray.6'}
-                            aria-label="Settings"
-                            onClick={(e) => {
-                                setFilterModel(true)
-                            }}
-                        >
-                            <Tooltip
-                                label={t("FilterButton")}
-                                px={16}
-                                py={2}
-                                withArrow
-                                position={"bottom"}
-                                c={'red'}
-                                bg={`red.1`}
-                                transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
-                            >
-                                <IconFilter style={{ width: rem(18) }} stroke={1.0} />
-                            </Tooltip>
-                        </ActionIcon> */}
             <ActionIcon
               variant="default"
               c={"gray.6"}

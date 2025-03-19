@@ -643,10 +643,6 @@ export default function _GenericRequisitionForm(props) {
                                                                 leftSection={
                                                                     <IconCalendar size={16} opacity={0.5}/>
                                                                 }
-                                                                rightSection={
-                                                                    <IconCalendar size={16} opacity={0.5}/>
-                                                                }
-                                                                rightSectionWidth={30}
                                                                 closeIcon={true}
                                                             />
                                                         </Box>
@@ -665,10 +661,6 @@ export default function _GenericRequisitionForm(props) {
                                                                 leftSection={
                                                                     <IconCalendar size={16} opacity={0.5}/>
                                                                 }
-                                                                rightSection={
-                                                                    <IconCalendar size={16} opacity={0.5}/>
-                                                                }
-                                                                rightSectionWidth={30}
                                                                 closeIcon={true}
                                                             />
                                                         </Box>

@@ -12,6 +12,7 @@ import { useHotkeys } from "@mantine/hooks";
 import { useDispatch, useSelector } from "react-redux";
 import { setFetching, setInvoiceBatchFilterData } from "../../store/inventory/crudSlice.js";
 import _FilterSearch from '../../components/modules/inventory/invoice-batch/drawer/_FilterSearch.jsx'
+import __FilterPopover from "../modules/inventory/product/__FilterPopover.jsx";
 
 function SearchActionMenu(props) {
     const { t, i18n } = useTranslation();
@@ -35,7 +36,7 @@ function SearchActionMenu(props) {
         <>
 
             <Box>
-                <ActionIcon.Group mt={'1'} justify="center">
+                <ActionIcon.Group justify="center">
                     <ActionIcon variant="default"
                         c={'red.4'}
                         size="lg" aria-label="Filter"
@@ -63,28 +64,7 @@ function SearchActionMenu(props) {
                             <IconSearch style={{ width: rem(18) }} stroke={1.5} />
                         </Tooltip>
                     </ActionIcon>
-                    <ActionIcon
-                        variant="default"
-                        size="lg"
-                        c={'gray.6'}
-                        aria-label="Settings"
-                        onClick={(e) => {
-                            setFilterModel(true)
-                        }}
-                    >
-                        <Tooltip
-                            label={t("FilterButton")}
-                            px={16}
-                            py={2}
-                            withArrow
-                            position={"bottom"}
-                            c={'red'}
-                            bg={`red.1`}
-                            transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
-                        >
-                            <IconFilter style={{ width: rem(18) }} stroke={1.0} />
-                        </Tooltip>
-                    </ActionIcon>
+                    <__FilterPopover />
                     <ActionIcon variant="default" c={'gray.6'}
                         size="lg" aria-label="Settings">
                         <Tooltip

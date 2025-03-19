@@ -43,8 +43,8 @@ function InvoiceBatchTable() {
     const dispatch = useDispatch();
     const { t, i18n } = useTranslation();
     const { isOnline, mainAreaHeight } = useOutletContext();
-    const tableHeight = mainAreaHeight - 98; //TabList height 104
-    const height = mainAreaHeight - 264; //TabList height 104
+    const tableHeight = mainAreaHeight - 106; //TabList height 104
+    const height = mainAreaHeight - 304; //TabList height 104
     const [batchViewModal, setBatchViewModal] = useState(false);
     const [addTransactionDrawer, setAddTransactionDrawer] = useState(false);
     const perPage = 50;
@@ -146,16 +146,21 @@ function InvoiceBatchTable() {
 
     return (
         <>
-
+            <Box>
+                <Grid columns={24} gutter={{ base: 8 }}>
+                    <Grid.Col span={24} >
+                        <Box pl={`xs`} pb={'4'} pr={'xs'} pt={'4'} mb={'4'} className={'boxBackground borderRadiusAll'} >
+                            <_InvoiceBatchSearch checkList={[]} />
+                        </Box>
+                    </Grid.Col>
+                </Grid>
+            </Box>
+            
             <Box>
                 <Grid columns={24} gutter={{ base: 8 }}>
                     <Grid.Col span={15} >
                         <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
-                            <Box pl={`xs`} pr={8} pt={'6'} pb={'4'} className={'boxBackground borderRadiusAll border-bottom-none'} >
-                                <_InvoiceBatchSearch checkList={[]} />
-                            </Box>
-                            <Box className={'borderRadiusAll border-top-none'}>
-
+                            <Box className={'borderRadiusAll'}>
                                 <DataTable
                                     classNames={{
                                         root: tableCss.root,
@@ -270,17 +275,6 @@ function InvoiceBatchTable() {
                                                             </ActionIcon>
                                                         </Menu.Target>
                                                         <Menu.Dropdown>
-                                                            {/* <Menu.Item
-                                                                onClick={(e) => {
-                                                                    e.preventDefault();
-                                                                    setBatchLedgerModal(true)
-                                                                }}
-                                                                target=""
-                                                                component="a"
-                                                                w={'200'}
-                                                            >
-                                                                {t('Test')}
-                                                            </Menu.Item> */}
                                                             <Menu.Item
                                                                 onClick={(e) => {
                                                                     e.preventDefault();
@@ -347,11 +341,11 @@ function InvoiceBatchTable() {
                                     loaderProps={{ color: 'red' }}
                                 />
                             }
-                            <Box h={'42'} pl={`xs`} mb={4} fz={'sm'} fw={'600'} pr={8} pt={'xs'} className={'boxBackground textColor borderRadiusAll'} >
+                            <Box h={'36'} pl={`xs`} fz={'sm'} fw={'600'} pr={8} pt={'6'} mb={'4'} className={'boxBackground textColor borderRadiusAll'} >
                                 {t('Invoice')}: {invoiceBatchData && invoiceBatchData.invoice && invoiceBatchData.invoice}
                             </Box>
-                            <Box className={'borderRadiusAll border-top-none'} fz={'sm'}  >
-                                <ScrollArea h={100} type="never">
+                            <Box className={'borderRadiusAll'} fz={'sm'}  >
+                                <ScrollArea h={122} type="never">
                                     <Box pl={`xs`} fz={'sm'} fw={'600'} pr={'xs'} pt={'6'} pb={'xs'} className={'boxBackground textColor'} >
                                         <Grid gutter={{ base: 4 }}>
                                             <Grid.Col span={'6'}>
@@ -409,7 +403,7 @@ function InvoiceBatchTable() {
                                         </Grid>
                                     </Box>
                                 </ScrollArea>
-                                <ScrollArea h={height + 31} scrollbarSize={2} type="never" >
+                                <ScrollArea h={height} scrollbarSize={2} type="never" >
                                     <Box>
                                         <Table stickyHeader >
                                             <Table.Thead>
@@ -459,7 +453,7 @@ function InvoiceBatchTable() {
                                     </Box>
                                 </ScrollArea>
                             </Box>
-                            <Button.Group mb={2}>
+                            <Button.Group mb={1}>
                                 <Button
                                     fullWidth={true}
                                     variant="filled"
@@ -480,7 +474,7 @@ function InvoiceBatchTable() {
                                         setPrintPos(true)
                                     }}
                                 >
-                                    {t('POS')}
+                                    {t('Pos')}
                                 </Button>
 
                                 <Button
@@ -501,7 +495,7 @@ function InvoiceBatchTable() {
                     <Grid.Col span={1} >
                         <Box bg={'white'} className={'borderRadiusAll'} pt={'16'}>
                             <_ShortcutTable
-                                heightOffset={56}
+                                heightOffset={28}
                                 form=''
                                 FormSubmit={'EntityFormSubmit'}
                                 Name={'CompanyName'}
