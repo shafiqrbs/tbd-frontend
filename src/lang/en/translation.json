@@ -770,6 +770,7 @@
   "ModeBonus" : "Mode Bonus",
   "StockReconciliation" : "Stock Reconciliation",
   "ManageStockTransfer" : "Manage Stock Transfer",
+  "StockTransfer" : "Stock Transfer",
   "FromWarehouse" : "From Warehouse",
   "ToWarehouse" : "To Warehouse",
   "TransferStock" : "Transfer Stock",
