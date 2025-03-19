@@ -54,7 +54,7 @@ function SearchEndDate(props) {
                         leftSection={<IconCalendar size={16} opacity={0.5} />}
                         rightSection={
                             <Tooltip
-                            label={t("StartDate")}
+                            label={t("EndDate")}
                             px={16}
                             py={2}
                             withArrow

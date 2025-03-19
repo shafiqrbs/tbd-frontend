@@ -72,7 +72,7 @@ function SearchKeyword(props) {
                                 </Tooltip>
                                 :
                                 <Tooltip
-                                    label={t("FieldIsRequired")}
+                                    label={t("EnterSearchAnyKeyword")}
                                     withArrow
                                     position={"bottom"}
                                     c={'red'}
