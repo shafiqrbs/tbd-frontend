@@ -148,7 +148,7 @@ export default function ReconciliationForm() {
                   <Grid>
                     <Grid.Col span={6}>
                       <Title order={6} pt={"6"}>
-                        {t("StockReconciliation")}
+                        {t("CreateStockReconciliation")}
                       </Title>
                     </Grid.Col>
                     <Grid.Col span={6}>

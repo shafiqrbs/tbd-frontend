@@ -121,7 +121,7 @@ export default function TransferForm() {
                   <Grid>
                     <Grid.Col span={6}>
                       <Title order={6} pt={"6"}>
-                        {t("TransferStock")}
+                        {t("CreateTransferStock")}
                       </Title>
                     </Grid.Col>
                     <Grid.Col span={6}>
