@@ -1,36 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useOutletContext } from "react-router-dom";
-import {
-    rem,
-    Grid, Tooltip, TextInput, ActionIcon, Select, Button, Flex, Box
+import {Tooltip, Select,Box
 } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
-import {
-    IconBrandOkRu, IconFileTypeXls,
-    IconFilter,
-    IconInfoCircle, IconPdf,
-    IconRestore,
-    IconSearch,
-    IconX,
-} from "@tabler/icons-react";
 import { useHotkeys } from "@mantine/hooks";
 import { useDispatch, useSelector } from "react-redux";
-import { setSearchKeyword } from "../../store/core/crudSlice.js";
-import FilterModel from "../modules/filter/FilterModel.jsx";
-import { setFetching, setInvoiceBatchFilterData, storeEntityData } from "../../store/inventory/crudSlice.js";
+import {  setInvoiceBatchFilterData } from "../../store/inventory/crudSlice.js";
 
 
 function SearchChooseCustomer(props) {
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
-    const navigate = useNavigate()
-    const { isOnline } = useOutletContext();
 
-    const [searchKeywordTooltip, setSearchKeywordTooltip] = useState(false)
     const [customerTooltip, setCustomerTooltip] = useState(false)
-    const [startDateTooltip, setStartDateTooltip] = useState(false)
-    const [endDateTooltip, setEndDateTooltip] = useState(false)
-    const [filterModel, setFilterModel] = useState(false)
 
     const invoiceBatchFilterData = useSelector((state) => state.inventoryCrudSlice.invoiceBatchFilterData)
 

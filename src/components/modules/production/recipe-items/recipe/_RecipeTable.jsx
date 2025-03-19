@@ -107,7 +107,6 @@ function _RecipeTable() {
                         footer: tableCss.footer,
                         pagination: tableCss.pagination,
                     }}
-                    withTableBorder={1}
                     records={indexData.data}
                     columns={[
                         {
@@ -130,7 +129,7 @@ function _RecipeTable() {
                             accessor: 'quantity',
                             title: t('Quantity'),
                             textAlign: "center",
-                            width: '100px',
+                            width: '130px',
                             render: (item) => {
                                 const [editedQuantity, setEditedQuantity] = useState(item.quantity);
                                 const handleQuantityChange = (e) => {

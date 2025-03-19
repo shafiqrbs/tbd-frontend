@@ -1,56 +1,25 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
-import {
-    rem,
-    Grid, Tooltip, TextInput, ActionIcon, Select, Button, Flex, Box
+import {Tooltip, TextInput, Box
 } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
 import {
-    IconBrandOkRu, IconFileTypeXls,
-    IconFilter,
-    IconInfoCircle, IconPdf,
-    IconRestore,
+    IconInfoCircle,
     IconSearch,
     IconX,
 } from "@tabler/icons-react";
 import { useHotkeys } from "@mantine/hooks";
 import { useDispatch, useSelector } from "react-redux";
-import { setSearchKeyword } from "../../store/core/crudSlice.js";
-import FilterModel from "../modules/filter/FilterModel.jsx";
-import { setFetching, setInvoiceBatchFilterData, storeEntityData } from "../../store/inventory/crudSlice.js";
+import {  setInvoiceBatchFilterData } from "../../store/inventory/crudSlice.js";
 
 
 function SearchKeyword(props) {
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
-    const navigate = useNavigate()
-    const { isOnline } = useOutletContext();
 
     const [searchKeywordTooltip, setSearchKeywordTooltip] = useState(false)
-    const [customerTooltip, setCustomerTooltip] = useState(false)
-    const [startDateTooltip, setStartDateTooltip] = useState(false)
-    const [endDateTooltip, setEndDateTooltip] = useState(false)
-    const [filterModel, setFilterModel] = useState(false)
 
     const invoiceBatchFilterData = useSelector((state) => state.inventoryCrudSlice.invoiceBatchFilterData)
-
-    /*START GET CUSTOMER DROPDOWN FROM LOCAL STORAGE*/
-    const [customersDropdownData, setCustomersDropdownData] = useState([])
-    const [refreshCustomerDropdown, setRefreshCustomerDropdown] = useState(false)
-
-    useEffect(() => {
-        let coreCustomers = localStorage.getItem('core-customers');
-        coreCustomers = coreCustomers ? JSON.parse(coreCustomers) : []
-        if (coreCustomers && coreCustomers.length > 0) {
-            const transformedData = coreCustomers.map(type => {
-                return ({ 'label': type.mobile + ' -- ' + type.name, 'value': String(type.id) })
-            });
-            setCustomersDropdownData(transformedData);
-            setRefreshCustomerDropdown(false)
-        }
-    }, [refreshCustomerDropdown])
-    /*END GET CUSTOMER DROPDOWN FROM LOCAL STORAGE*/
-
 
     useHotkeys(
         [['alt+F', () => {

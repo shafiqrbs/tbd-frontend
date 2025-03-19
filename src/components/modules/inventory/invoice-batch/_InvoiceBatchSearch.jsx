@@ -1,31 +1,7 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate, useOutletContext } from "react-router-dom";
+import React from "react";
 import {
-    rem,
-    Grid, Tooltip, TextInput, ActionIcon, Select, Button, Flex, Box
+    Grid, Flex, Box
 } from "@mantine/core";
-import { useTranslation } from 'react-i18next';
-import {
-    IconBrandOkRu, IconFileTypeXls,
-    IconFilter,
-    IconInfoCircle, IconPdf,
-    IconRestore,
-    IconSearch,
-    IconX,
-} from "@tabler/icons-react";
-import { useHotkeys } from "@mantine/hooks";
-import { useDispatch, useSelector } from "react-redux";
-import { setSearchKeyword } from "../../../../store/core/crudSlice.js";
-import FilterModel from "../../filter/FilterModel.jsx";
-import { setFetching, setInvoiceBatchFilterData, storeEntityData } from "../../../../store/inventory/crudSlice.js";
-import { DateInput } from "@mantine/dates";
-import {
-    setCategoryGroupFilterData,
-    setCustomerFilterData,
-    setUserFilterData,
-    setVendorFilterData
-} from "../../../../store/core/crudSlice";
-import { setProductFilterData } from "../../../../store/inventory/crudSlice";
 import SearchKeyword from "../../../advance-search/SearchKeyword.jsx";
 import SearchChooseCustomer from "../../../../components/advance-search/SearchChooseCustomer.jsx";
 import SearchStartDate from "../../../advance-search/SearchStartDate.jsx";
@@ -37,38 +13,33 @@ function _InvoiceBatchSearch(props) {
 
     return (
         <>
-            <Grid columns={40} justify="flex-start" align="flex-end" >
-                <Grid.Col span={32}>
-                    <Grid gutter={'2'}>
-                        <Grid.Col span={3}>
-                            <Box>
+            <Grid columns={24} justify="flex-start" align="flex-end">
+                <Grid.Col span={15}>
+                    <Grid columns={24}>
+                        <Grid.Col span={6}>
+                            <Box mt={"1"}>
                                 <SearchKeyword />
-                            </Box>
+                            </Box >
                         </Grid.Col>
-                        <Grid.Col span={5}>
-                            <Box>
+                        <Grid.Col span={6}>
+                            <Box mt={"1"}>
                                 <SearchChooseCustomer />
                             </Box>
                         </Grid.Col>
-                        <Grid.Col span={2}>
-                            <Box>
+                        <Grid.Col span={6}>
+                            <Box mt={"1"}>
                                 <SearchStartDate />
                             </Box>
                         </Grid.Col>
-                        <Grid.Col span={2}>
-                            <Box>
+                        <Grid.Col span={6}>
+                            <Box mt={"1"}>
                                 <SearchEndDate />
                             </Box>
                         </Grid.Col>
                     </Grid>
                 </Grid.Col>
-                <Grid.Col span="auto">
-                    <Flex gap="xs"
-                        justify="center"
-                        align="center"
-                        direction="row">
-                        <SearchActionMenu />
-                    </Flex>
+                <Grid.Col span={'auto'}>
+                    <SearchActionMenu />
                 </Grid.Col>
             </Grid>
 

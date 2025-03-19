@@ -614,6 +614,7 @@ function MainDashboard(props) {
                             )
                         }
 
+            
                         {
                             configData?.domain?.modules?.includes("inventory") && (
                                 <Card shadow="md" radius="md" className={classes.card} padding="lg">

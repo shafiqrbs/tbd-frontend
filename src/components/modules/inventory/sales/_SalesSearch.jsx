@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useOutletContext } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   rem,
   Grid,
@@ -13,16 +13,15 @@ import { useTranslation } from "react-i18next";
 import {
   IconBrandOkRu,
   IconFileTypeXls,
-  IconFilter,
   IconInfoCircle,
   IconPdf,
   IconRestore,
   IconSearch,
   IconX,
+  IconCalendar
 } from "@tabler/icons-react";
 import { useHotkeys } from "@mantine/hooks";
 import { useDispatch, useSelector } from "react-redux";
-import { setSearchKeyword } from "../../../../store/core/crudSlice.js";
 import FilterModel from "../../filter/FilterModel.jsx";
 import {
   setFetching,
@@ -30,20 +29,12 @@ import {
   storeEntityData,
 } from "../../../../store/inventory/crudSlice.js";
 import { DateInput } from "@mantine/dates";
-import {
-  setCategoryGroupFilterData,
-  setCustomerFilterData,
-  setUserFilterData,
-  setVendorFilterData,
-} from "../../../../store/core/crudSlice";
-import { setProductFilterData } from "../../../../store/inventory/crudSlice";
 import __FilterPopover from "./__FilterPopover.jsx";
 
 function _SalesSearch(props) {
   const { t, i18n } = useTranslation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { isOnline } = useOutletContext();
 
   const [searchKeywordTooltip, setSearchKeywordTooltip] = useState(false);
   const [customerTooltip, setCustomerTooltip] = useState(false);
@@ -242,6 +233,24 @@ function _SalesSearch(props) {
                   }}
                   value={salesFilterData.start_date}
                   placeholder={t("StartDate")}
+                  leftSection={<IconCalendar size={16} opacity={0.5} />}
+                  rightSection={
+                      <Tooltip
+                      label={t("StartDate")}
+                      px={16}
+                      py={2}
+                      withArrow
+                      position={"left"}
+                      c={"black"}
+                      bg={`gray.1`}
+                      transitionProps={{
+                          transition: "pop-bottom-left",
+                          duration: 500,
+                      }}
+                      >
+                          <IconInfoCircle size={16} opacity={0.5} />
+                      </Tooltip>
+                  }
                 />
               </Tooltip>
             </Grid.Col>
@@ -278,6 +287,24 @@ function _SalesSearch(props) {
                         }, 1000));
                   }}
                   placeholder={t("EndDate")}
+                  leftSection={<IconCalendar size={16} opacity={0.5} />}
+                  rightSection={
+                      <Tooltip
+                      label={t("EndDate")}
+                      px={16}
+                      py={2}
+                      withArrow
+                      position={"left"}
+                      c={"black"}
+                      bg={`gray.1`}
+                      transitionProps={{
+                          transition: "pop-bottom-left",
+                          duration: 500,
+                      }}
+                      >
+                          <IconInfoCircle size={16} opacity={0.5} />
+                      </Tooltip>
+                  }
                 />
               </Tooltip>
             </Grid.Col>
@@ -319,28 +346,6 @@ function _SalesSearch(props) {
               </Tooltip>
             </ActionIcon>
             <__FilterPopover />
-            {/* <ActionIcon
-                            variant="default"
-                            size="lg"
-                            c={'gray.6'}
-                            aria-label="Settings"
-                            onClick={(e) => {
-                                setFilterModel(true)
-                            }}
-                        >
-                            <Tooltip
-                                label={t("FilterButton")}
-                                px={16}
-                                py={2}
-                                withArrow
-                                position={"bottom"}
-                                c={'red'}
-                                bg={`red.1`}
-                                transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
-                            >
-                                <IconFilter style={{ width: rem(18) }} stroke={1.0} />
-                            </Tooltip>
-                        </ActionIcon> */}
             <ActionIcon
               variant="default"
               c={"gray.6"}

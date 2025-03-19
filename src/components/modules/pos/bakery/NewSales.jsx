@@ -416,7 +416,7 @@ export default function NewSales(props) {
               <Grid.Col span={2}>
                 <Box bg="white" w={"100%"} className="border-radius">
                   <ScrollArea
-                    h={enableTable ? height + 32 : height + 195}
+                    h={enableTable ? height + 30 : height + 195}
                     type="never"
                     scrollbars="y"
                   >

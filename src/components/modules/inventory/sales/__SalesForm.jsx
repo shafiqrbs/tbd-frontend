@@ -606,7 +606,6 @@ function __SalesForm(props) {
                                                 name={'invoice_date'}
                                                 id={'invoice_date'}
                                                 leftSection={<IconCalendar size={16} opacity={0.5} />}
-                                                rightSection={<IconCalendar size={16} opacity={0.5} />}
                                                 rightSectionWidth={30}
                                                 closeIcon={true}
                                             />

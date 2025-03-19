@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next";
 
 export default function MatrixIndex() {
   const progress = getLoadingProgress();
-  const configData = getConfigData();
+  const {configData} = getConfigData();
   const { t } = useTranslation();
 
   return (

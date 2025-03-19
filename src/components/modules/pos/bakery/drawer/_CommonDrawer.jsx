@@ -4,33 +4,39 @@ import { IconX } from "@tabler/icons-react";
 import { useEffect } from "react";
 import __AdditionalItems from "./__AdditionalItems";
 import __SplitPayment from "./__SplitPayment";
+import __KitchenPrint from "./__KitchenPrint";
 
 export default function _CommonDrawer(props) {
   const {
-    additionalItemDrawer,
-    setAdditionalItemDrawer,
+    setLoadCartProducts,
+    enableTable,
+    tableId,
+    commonDrawer,
+    setCommonDrawer,
     eventName,
     salesDueAmount,
     getAdditionalItem,
     getSplitPayment,
     currentSplitPayments,
-    tableSplitPaymentMap
+    tableSplitPaymentMap,
+    loadCartProducts,
+    salesByUserName,
   } = props;
 
   const closeDrawer = () => {
-    setAdditionalItemDrawer(false);
+    setCommonDrawer(false);
   };
   return (
     <>
       <Drawer.Root
-        opened={additionalItemDrawer}
+        opened={commonDrawer}
         position="right"
         onClose={closeDrawer}
         size={"30%"}
         bg={"gray.1"}
       >
         <Drawer.Overlay />
-        <Drawer.Content>
+        <Drawer.Content style={{ overflow: "hidden" }}>
           <Box>
             <Flex
               mih={40}
@@ -60,13 +66,23 @@ export default function _CommonDrawer(props) {
                   getSplitPayment={getSplitPayment}
                   currentSplitPayments={currentSplitPayments}
                   tableSplitPaymentMap={tableSplitPaymentMap}
-                  />
+                />
               )}
 
               {eventName === "additionalProductAdd" && (
                 <__AdditionalItems
                   closeDrawer={closeDrawer}
                   getAdditionalItem={getAdditionalItem}
+                />
+              )}
+              {eventName === "kitchen" && (
+                <__KitchenPrint
+                  salesByUserName={salesByUserName}
+                  closeDrawer={closeDrawer}
+                  tableId={tableId}
+                  loadCartProducts={loadCartProducts}
+                  setLoadCartProducts={setLoadCartProducts}
+                  enableTable={enableTable}
                 />
               )}
             </Box>

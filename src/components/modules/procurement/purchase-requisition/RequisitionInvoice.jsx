@@ -9,8 +9,8 @@ import _GenericRequisitionForm from "./_GenericRequisitionForm";
 export default function RequisitionInvoice() {
   const { t } = useTranslation();
   const progress = getLoadingProgress();
-  const configData = getConfigData();
-
+  const {configData} = getConfigData();
+  
   return (
     <>
       {progress !== 100 && (

@@ -121,6 +121,7 @@ function ConfigurationForm() {
             is_sales_auto_approved: false,
             is_purchase_auto_approved: false,
             is_active_sms: false,
+            is_kitchen: false
         },
         validate: {
             business_model_id: isNotEmpty(),
@@ -166,7 +167,7 @@ function ConfigurationForm() {
                 'store_ledger', 'is_marketing_executive', 'tlo_commission', 'sales_return',
                 'sr_commission', 'due_sales_without_customer', 'is_zero_receive_allow',
                 'is_purchase_by_purchase_price','is_pos','is_table_pos',
-                'is_pay_first','is_sales_auto_approved','is_purchase_auto_approved','is_active_sms'
+                'is_pay_first','is_sales_auto_approved','is_purchase_auto_approved','is_active_sms', 'is_kitchen'
             ];
 
             // Convert Boolean values to 1 or 0 dynamically
@@ -853,7 +854,7 @@ function ConfigurationForm() {
                                                                     label=''
                                                                     id={'is_table_pos'}
                                                                     name={'is_table_pos'}
-                                                                    nextField={'custom_invoice'}
+                                                                    nextField={'is_kitchen'}
                                                                     form={form}
                                                                     color="red"
                                                                     position={'left'}
@@ -862,6 +863,25 @@ function ConfigurationForm() {
                                                             </Grid.Col>
                                                             <Grid.Col span={6} fz={'sm'}
                                                                       pt={'1'}>{t('PosTableEnable')}</Grid.Col>
+                                                        </Grid>
+                                                    </Box>
+                                                    <Box mt={'xs'}>
+                                                        <Grid gutter={{base: 1}}>
+                                                            <Grid.Col span={2}>
+                                                                <SwitchForm
+                                                                    tooltip={t('KitchenEnable')}
+                                                                    label=''
+                                                                    id={'is_kitchen'}
+                                                                    name={'is_kitchen'}
+                                                                    nextField={'custom_invoice'}
+                                                                    form={form}
+                                                                    color="red"
+                                                                    position={'left'}
+                                                                    defaultChecked={configData.is_kitchen}
+                                                                />
+                                                            </Grid.Col>
+                                                            <Grid.Col span={6} fz={'sm'}
+                                                                      pt={'1'}>{t('KitchenEnable')}</Grid.Col>
                                                         </Grid>
                                                     </Box>
                                                     <Box mt={'xs'}>

@@ -134,7 +134,7 @@ export default function __SplitPayment(props) {
               <Box
                 pl={`xs`}
                 pr={8}
-                pt={"4"}
+                pt={"0"}
                 pb={"6"}
                 mb={"4"}
                 className={"boxBackground borderRadiusAll"}
@@ -148,7 +148,8 @@ export default function __SplitPayment(props) {
                   <Grid.Col span={2}></Grid.Col>
                   <Grid.Col span={4}>
                     <Badge
-                    h={30}
+                      mt={6}
+                      h={26}
                       w={160}
                       color={
                         Number(remainingAmount) > 0

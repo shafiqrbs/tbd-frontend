@@ -21,7 +21,7 @@ function SitemapIndex() {
     const insertType = useSelector((state) => state.crudSlice.insertType)
 
     const progress = getLoadingProgress()
-    const configData = getConfigData()
+    const {configData} = getConfigData()
 
     const { id } = useParams();
     const navigate = useNavigate();

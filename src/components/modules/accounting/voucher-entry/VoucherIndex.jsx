@@ -24,7 +24,7 @@ function VoucherIndex() {
     const dispatch = useDispatch();
     const insertType = useSelector((state) => state.crudSlice.insertType)
 
-    const configData = getConfigData();
+    const {configData} = getConfigData();
     const progress = getLoadingProgress();
     const { isOnline, mainAreaHeight } = useOutletContext();
     const height = mainAreaHeight - 500;
