@@ -55,6 +55,8 @@ import ReportIndex from "./components/modules/reporting/reports/ReportIndex.jsx"
 import RequisitionUpdate from "./components/modules/procurement/purchase-requisition/RequisitionUpdate.jsx";
 import ReconciliationIndex from "./components/modules/inventory/stock-reconciliation/ReconciliationIndex.jsx";
 import TransferIndex from "./components/modules/inventory/stock-transfer/TransferIndex.jsx";
+import CouponIndex from "./components/modules/inventory/coupon-code/CouponIndex.jsx";
+import BarcodePrintIndex from "./components/modules/inventory/barcode-print/BarcodePrintIndex.jsx";
 
 function AppRoute() {
   return (
@@ -120,6 +122,8 @@ function AppRoute() {
           <Route path="stock" element={<StockIndex />} />
           <Route path="stock-reconciliation" element={<ReconciliationIndex />} />
           <Route path="stock-transfer" element={<TransferIndex />} />
+          <Route path="coupon-code" element={<CouponIndex />} />
+          <Route path="barcode-print" element={<BarcodePrintIndex />} />
         </Route>
 
         <Route path="/production/">

@@ -822,6 +822,64 @@ function MainDashboard(props) {
                           >
                             <NavLink
                                 pl={"md"}
+                                href="/inventory/coupon-code"
+                                label={t("CouponCode")}
+                                component="button"
+                                onClick={(e) => {
+                                  navigate("inventory/coupon-code");
+                                }}
+                                onAuxClick={(e) => {
+                                  // Handle middle mouse button click for browsers that support it
+                                  if (e.button === 1) {
+                                    window.open("/inventory/coupon-code", "_blank");
+                                  }
+                                }}
+                            />
+                          </List.Item>
+                          <List.Item
+                              pl={"xs"}
+                              icon={
+                                <ThemeIcon
+                                    color="yellow.6"
+                                    size={20}
+                                    radius="xl"
+                                    variant="outline"
+                                >
+                                  <IconCategory2 />
+                                </ThemeIcon>
+                              }
+                          >
+                            <NavLink
+                                pl={"md"}
+                                href="/inventory/barcode-print"
+                                label={t("BarcodePrint")}
+                                component="button"
+                                onClick={(e) => {
+                                  navigate("inventory/barcode-print");
+                                }}
+                                onAuxClick={(e) => {
+                                  // Handle middle mouse button click for browsers that support it
+                                  if (e.button === 1) {
+                                    window.open("/inventory/barcode-print", "_blank");
+                                  }
+                                }}
+                            />
+                          </List.Item>
+                          <List.Item
+                              pl={"xs"}
+                              icon={
+                                <ThemeIcon
+                                    color="yellow.6"
+                                    size={20}
+                                    radius="xl"
+                                    variant="outline"
+                                >
+                                  <IconCategory2 />
+                                </ThemeIcon>
+                              }
+                          >
+                            <NavLink
+                                pl={"md"}
                                 href="/inventory/particular"
                                 label={t("Particular")}
                                 component="button"
