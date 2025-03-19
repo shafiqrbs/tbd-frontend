@@ -23,7 +23,8 @@ import {
     IconStackPush,
     IconCalendar,
     IconSortAscendingNumbers,
-    IconCoinMonero
+    IconCoinMonero,
+    IconCurrency
 } from "@tabler/icons-react";
 import SelectServerSideForm from "../../../form-builders/SelectServerSideForm";
 import InputButtonForm from "../../../form-builders/InputButtonForm";
@@ -509,7 +510,7 @@ export default function _GenericRequisitionForm(props) {
                                                                 />
                                                             </Grid.Col>
                                                             <Grid.Col span={3}>
-                                                                <InputButtonForm
+                                                                <InputNumberForm
                                                                     type="number"
                                                                     tooltip={t("PurchasePriceValidateMessage")}
                                                                     label=""
@@ -518,7 +519,7 @@ export default function _GenericRequisitionForm(props) {
                                                                     form={productForm}
                                                                     name={"purchase_price"}
                                                                     id={"purchase_price"}
-                                                                    rightSection={inputGroupCurrency}
+                                                                    rightIcon={<IconCurrency size={16} opacity={0.5} />}
                                                                     closeIcon={true}
                                                                     disabled={true}
                                                                     onChange={changeSubTotalByPrice}
