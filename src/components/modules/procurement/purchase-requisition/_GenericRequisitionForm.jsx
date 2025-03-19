@@ -22,6 +22,8 @@ import {
     IconPrinter,
     IconStackPush,
     IconCalendar,
+    IconSortAscendingNumbers,
+    IconCoinMonero
 } from "@tabler/icons-react";
 import SelectServerSideForm from "../../../form-builders/SelectServerSideForm";
 import InputButtonForm from "../../../form-builders/InputButtonForm";
@@ -498,10 +500,17 @@ export default function _GenericRequisitionForm(props) {
                                                                     onChange={changeSubTotalByQuantity}
                                                                     rightSection={inputGroupText}
                                                                     rightSectionWidth={50}
+                                                                    leftSection={
+                                                                    <IconSortAscendingNumbers
+                                                                        size={16}
+                                                                        opacity={0.5}
+                                                                        />
+                                                                    }
                                                                 />
                                                             </Grid.Col>
                                                             <Grid.Col span={3}>
                                                                 <InputButtonForm
+                                                                    type="number"
                                                                     tooltip={t("PurchasePriceValidateMessage")}
                                                                     label=""
                                                                     placeholder={t("PurchasePrice")}
@@ -513,6 +522,9 @@ export default function _GenericRequisitionForm(props) {
                                                                     closeIcon={true}
                                                                     disabled={true}
                                                                     onChange={changeSubTotalByPrice}
+                                                                    leftSection={
+                                                                    <IconCoinMonero size={16} opacity={0.5} />
+                                                                    }
                                                                 />
                                                             </Grid.Col>
                                                             <Grid.Col span={4}>
@@ -525,6 +537,7 @@ export default function _GenericRequisitionForm(props) {
                                                                     name={"sub_total"}
                                                                     id={"sub_total"}
                                                                     type={"number"}
+                                                                    leftSection={<IconSum size={16} opacity={0.5} />}
                                                                     rightSection={inputGroupCurrency}
                                                                     onChange={changePriceBySubtotal}
                                                                     closeIcon={false}
