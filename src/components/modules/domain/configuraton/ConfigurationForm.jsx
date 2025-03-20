@@ -19,6 +19,8 @@ import getCountryDropdownData from "../../../global-hook/dropdown/getCountryDrop
 import getCurrencyDropdownData from "../../../global-hook/dropdown/getCurrencyDropdownData.js";
 import {showEntityData} from "../../../../store/core/crudSlice.js";
 import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
+import getSettingPosInvoiceModeDropdownData
+    from "../../../global-hook/dropdown/getSettingPosInvoiceModeDropdownData.js";
 
 function ConfigurationForm() {
     const {id} = useParams()
@@ -28,7 +30,9 @@ function ConfigurationForm() {
 
     const [countryId, setCountryId] = useState(configData?.country_id?.toString() || '');
     const [businessModelId, setBusinessModelId] = useState(configData?.business_model_id?.toString() || '');
+    const [posInvoiceModeId, setPosInvoiceModeId] = useState(configData?.pos_invoice_mode_id?.toString() || '');
     const [currencyId, setCurrencyId] = useState(configData?.currency_id?.toString() || '');
+    const posInvoiceModeDropdown = getSettingPosInvoiceModeDropdownData()
 
     useEffect(() => {
         const fetchData = async () => {
@@ -42,6 +46,7 @@ function ConfigurationForm() {
                     // Update state variables with fetched values
                     setCountryId(result.data.data.country_id?.toString() || '');
                     setBusinessModelId(result.data.data.business_model_id?.toString() || '');
+                    setPosInvoiceModeId(result.data.data.pos_invoice_mode_id?.toString() || '');
                     setCurrencyId(result.data.data.currency_id?.toString() || '');
                 }
             } catch (error) {
@@ -71,6 +76,7 @@ function ConfigurationForm() {
     const form = useForm({
         initialValues: {
             business_model_id: '',
+            pos_invoice_mode_id: '',
             country_id: '',
             currency_id: '',
             address: '',
@@ -116,7 +122,6 @@ function ConfigurationForm() {
             is_zero_receive_allow: false,
             is_purchase_by_purchase_price: false,
             is_pos: false,
-            is_table_pos: false,
             is_pay_first: false,
             is_sales_auto_approved: false,
             is_purchase_auto_approved: false,
@@ -154,6 +159,8 @@ function ConfigurationForm() {
         try {
             setSaveCreateLoading(true);
 
+            !posInvoiceModeId && (form.values['pos_invoice_mode_id'] = null);
+
             if (files) {
                 form.values['logo'] = files[0]
             }
@@ -166,7 +173,7 @@ function ConfigurationForm() {
                 'stock_item', 'custom_invoice_print', 'is_stock_history', 'condition_sales',
                 'store_ledger', 'is_marketing_executive', 'tlo_commission', 'sales_return',
                 'sr_commission', 'due_sales_without_customer', 'is_zero_receive_allow',
-                'is_purchase_by_purchase_price','is_pos','is_table_pos',
+                'is_purchase_by_purchase_price','is_pos',
                 'is_pay_first','is_sales_auto_approved','is_purchase_auto_approved','is_active_sms', 'is_kitchen'
             ];
 
@@ -587,7 +594,7 @@ function ConfigurationForm() {
                                                                 <SwitchForm
                                                                     tooltip={t('PrintPowered')}
                                                                     label=''
-                                                                    nextField={'print_footer_text'}
+                                                                    nextField={'pos_invoice_mode_id'}
                                                                     name={'is_powered'}
                                                                     form={form}
                                                                     color="red"
@@ -600,6 +607,29 @@ function ConfigurationForm() {
                                                                       pt={'1'}>{t('PrintPowered')}</Grid.Col>
                                                         </Grid>
                                                     </Box>
+
+                                                    <Box mt={'xs'}>
+                                                        <Box mt={'xs'}>
+                                                            <SelectForm
+                                                                tooltip={t('PosInvoiceMode')}
+                                                                label={t('PosInvoiceMode')}
+                                                                placeholder={t('ChoosePosInvoiceMode')}
+                                                                required={false}
+                                                                nextField={'print_footer_text'}
+                                                                name={'pos_invoice_mode_id'}
+                                                                form={form}
+                                                                dropdownValue={posInvoiceModeDropdown}
+                                                                mt={8}
+                                                                id={'pos_invoice_mode_id'}
+                                                                searchable={false}
+                                                                value={posInvoiceModeId}
+                                                                changeValue={setPosInvoiceModeId}
+                                                                clearable={true}
+                                                                allowDeselect={true}
+                                                            />
+                                                        </Box>
+                                                    </Box>
+
                                                     <Box mt={'xs'}>
                                                         <TextAreaForm
                                                             tooltip={t('PrintFooterText')}
@@ -613,6 +643,7 @@ function ConfigurationForm() {
                                                             id={'print_footer_text'}
                                                         />
                                                     </Box>
+
                                                     <Grid columns={12} gutter={{base: 8}}>
                                                         <Grid.Col span={6}>
                                                             <Box mt={'xs'}>
@@ -835,7 +866,7 @@ function ConfigurationForm() {
                                                                     label=''
                                                                     id={'is_pos'}
                                                                     name={'is_pos'}
-                                                                    nextField={'is_table_pos'}
+                                                                    nextField={'is_kitchen'}
                                                                     form={form}
                                                                     color="red"
                                                                     position={'left'}
@@ -846,25 +877,7 @@ function ConfigurationForm() {
                                                                       pt={'1'}>{t('PosEnable')}</Grid.Col>
                                                         </Grid>
                                                     </Box>
-                                                    <Box mt={'xs'}>
-                                                        <Grid gutter={{base: 1}}>
-                                                            <Grid.Col span={2}>
-                                                                <SwitchForm
-                                                                    tooltip={t('PosTableEnable')}
-                                                                    label=''
-                                                                    id={'is_table_pos'}
-                                                                    name={'is_table_pos'}
-                                                                    nextField={'is_kitchen'}
-                                                                    form={form}
-                                                                    color="red"
-                                                                    position={'left'}
-                                                                    defaultChecked={configData.is_table_pos}
-                                                                />
-                                                            </Grid.Col>
-                                                            <Grid.Col span={6} fz={'sm'}
-                                                                      pt={'1'}>{t('PosTableEnable')}</Grid.Col>
-                                                        </Grid>
-                                                    </Box>
+
                                                     <Box mt={'xs'}>
                                                         <Grid gutter={{base: 1}}>
                                                             <Grid.Col span={2}>

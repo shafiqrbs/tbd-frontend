@@ -1,0 +1,33 @@
+.box-border {
+    background-color: #e6f5ed;
+    border-radius: 4px;
+  }
+  .box-white {
+    background-color: white;
+    border-radius: 4px;
+  }
+  .box-green {
+    background-color: #00542b;
+    border-radius: 4px;
+  
+    /* padding: 4px; */
+    /* display: flex;
+    justify-content: left;
+    align-items: center; */
+  }
+  /* .input {
+    color: black;
+    font-size: 14px; 
+    height: auto;
+    outline: 1px solid green;
+    outline-offset: -2px;
+  }
+  .input:focus {
+    outline: 2px solid #1f2b32;
+    outline-offset: -2px;
+  } */
+  .divider {
+    border-top: #c0c0c0 solid 2px;
+  }
+ 
+  

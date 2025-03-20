@@ -1,0 +1,25 @@
+@import url("https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap");
+
+.pressable-card {
+  cursor: pointer;
+  transition: transform 0.1s ease-in-out;
+}
+
+.pressable-card:active {
+  transform: scale(0.97);
+}
+.card.border {
+  border: 3px solid #00542b;
+}
+
+.card.border-not {
+  border: 3px solid #eaeced;
+}
+
+.card {
+  border: rem(1px) solid
+    light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-5));
+}
+.border-radius{
+  border-radius: 4px;
+}

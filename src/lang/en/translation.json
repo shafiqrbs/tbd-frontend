@@ -786,5 +786,7 @@
   "ManageCouponCode" : "Manage Coupon Code",
   "CreateCouponCode" : "Create Coupon Code",
   "CreateBarcodePrint" : "Create Barcode Print",
+  "PosInvoiceMode" : "Pos invoice mode",
+  "ChoosePosInvoiceMode" : "Choose pos invoice mode",
   "" : ""
 }

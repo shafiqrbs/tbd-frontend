@@ -105,10 +105,9 @@ export default function BakeryIndex() {
   useEffect(() => {
     if (tableData && tableData.length > 0) {
       const transformedTables = tableData.map((item) => {
-        // const tableId = parseInt(item.label.split("-")[1]);
+        const tableId = parseInt(item.label.split("-")[1]);
         return {
-          // id: tableId,
-          id: item.value,
+          id: tableId,
           time: time,
           status: "Free",
           statusHistory: [],
@@ -143,7 +142,8 @@ export default function BakeryIndex() {
       setCustomerObject({});
     }
   }, [tableId, tableCustomerMap, customerObject]);
-
+  console.log(configData.is_table_pos);
+  console.log(configData.is_pos);
   return (
     <>
       {progress !== 100 && (
@@ -151,7 +151,7 @@ export default function BakeryIndex() {
       )}
       {progress === 100 && (
         <>
-          {!!(configData?.is_pos && configData?.pos_invoice_mode?.slug) && (
+          {!!(configData?.is_pos && configData?.is_table_pos) && (
             <HeaderNavbar
               pageTitle={t("ManageCustomer")}
               roles={t("Roles")}
