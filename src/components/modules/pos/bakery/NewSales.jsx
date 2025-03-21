@@ -33,10 +33,10 @@ import {
   IconBarcode,
 } from "@tabler/icons-react";
 import { useDispatch, useSelector } from "react-redux";
-import classes from "./Table.module.css";
+import classes from "./css/Table.module.css";
 import getConfigData from "../../../global-hook/config-data/getConfigData";
 import { DataTable } from "mantine-datatable";
-import tableCss from "./Table.module.css";
+import tableCss from "./css/Table.module.css";
 import Invoice from "./Invoice.jsx";
 import { notifications } from "@mantine/notifications";
 import { useCartOperations } from "./utils/CartOperations.jsx";

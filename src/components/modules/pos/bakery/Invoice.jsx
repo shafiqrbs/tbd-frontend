@@ -47,8 +47,8 @@ import {
 } from "@tabler/icons-react";
 import { DataTable } from "mantine-datatable";
 import { useDispatch, useSelector } from "react-redux";
-import tableCss from "./Table.module.css";
-import classes from "./Invoice.module.css";
+import tableCss from "./css/Table.module.css";
+import classes from "./css/Invoice.module.css";
 import { IconChefHat } from "@tabler/icons-react";
 import getConfigData from "../../../global-hook/config-data/getConfigData";
 import { SalesPrintPos } from "../print/pos/SalesPrintPos";
