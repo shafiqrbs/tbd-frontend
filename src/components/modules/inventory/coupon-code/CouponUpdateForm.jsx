@@ -20,11 +20,11 @@ import {
   IconPercentage,
 } from "@tabler/icons-react";
 import { useTranslation } from "react-i18next";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useOutletContext } from "react-router-dom";
 import { isNotEmpty, useForm } from "@mantine/form";
 import { modals } from "@mantine/modals";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useHotkeys } from "@mantine/hooks";
 import Shortcut from "../../shortcut/Shortcut";
 import InputForm from "../../../form-builders/InputForm";
@@ -40,26 +40,34 @@ export default function CouponForm() {
 
   const [saveCreateLoading, setSaveCreateLoading] = useState(false);
   const [modeId, setModeId] = useState(null);
+  const entityEditData = useSelector((state) => state.crudSlice.entityEditData);
+  const formLoading = useSelector((state) => state.crudSlice.formLoading);
+  const [formLoad, setFormLoad] = useState(true);
   const mode = [
     { label: "Flat", value: "1" },
     { label: "Percent", value: "2" },
   ];
   const form = useForm({
     initialValues: {
-      name: "",
-      quantity: "",
-      amount: "",
-      limit: "",
-      minimum_sales_amount: "",
-      mode_id: "",
-      start_date: "",
-      end_date: "",
-      is_sms: "",
+      name: entityEditData?.name || "",
+      quantity: entityEditData?.quantity || "",
+      amount: entityEditData?.amount || "",
+      limit: entityEditData?.limit || "",
+      minimum_sales_amount: entityEditData?.minimum_sales_amount || "",
+      mode_id: entityEditData?.mode_id || "",
+      start_date: entityEditData?.start_date || "",
+      end_date: entityEditData?.end_date || "",
+      is_sms: entityEditData?.is_sms || "",
     },
     validate: {
       name: isNotEmpty(),
     },
   });
+
+  useEffect(() => {
+    setFormLoad(true);
+    setFormDataForUpdate(true);
+  }, [dispatch, formLoading]);
 
   useHotkeys(
     [

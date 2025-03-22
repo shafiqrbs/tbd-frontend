@@ -1,15 +1,17 @@
 import { useTranslation } from "react-i18next";
 import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress";
 import getConfigData from "../../../global-hook/config-data/getConfigData";
-import ReconciliationForm from "./BarcodePrintForm";
-import ReconciliationTable from "./BarcodePrintTable";
+import BarcodePrintForm from "./BarcodePrintForm";
+import BarcodePrintView from "./BarcodePrintView";
 import InventoryHeaderNavbar from "../../domain/configuraton/InventoryHeaderNavbar";
 import { Progress, Box, Grid } from "@mantine/core";
+import { useState } from "react";
 
 export default function BarcodePrintIndex() {
   const { t } = useTranslation();
   const progress = getLoadingProgress();
-  const {configData} = getConfigData();
+  const { configData } = getConfigData();
+  const [preview, setPreview] = useState(false);
   return (
     <>
       {progress !== 100 && (
@@ -36,11 +38,17 @@ export default function BarcodePrintIndex() {
                 <Grid columns={24} gutter={{ base: 8 }}>
                   <Grid.Col span={15}>
                     <Box bg={"white"} p={"xs"} className={"borderRadiusAll"}>
-                      <ReconciliationTable />
+                      <BarcodePrintView
+                        preview={preview}
+                        setPreview={setPreview}
+                      />
                     </Box>
                   </Grid.Col>
                   <Grid.Col span={9}>
-                    <ReconciliationForm />
+                    <BarcodePrintForm
+                      preview={preview}
+                      setPreview={setPreview}
+                    />
                   </Grid.Col>
                 </Grid>
               </Box>

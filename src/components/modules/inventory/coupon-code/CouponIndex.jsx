@@ -5,11 +5,37 @@ import CouponForm from "./CouponForm";
 import CouponTable from "./CouponTable";
 import InventoryHeaderNavbar from "../../domain/configuraton/InventoryHeaderNavbar";
 import { Progress, Box, Grid } from "@mantine/core";
+import { useNavigate, useParams } from "react-router-dom";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  editEntityData,
+  setEntityNewData,
+  setFormLoading,
+  setInsertType,
+  setSearchKeyword,
+} from "../../../../store/inventory/crudSlice";
 
 export default function CouponIndex() {
   const { t } = useTranslation();
   const progress = getLoadingProgress();
-  const {configData} = getConfigData();
+  const { configData } = getConfigData();
+  const { id } = useParams();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const insertType = useSelector((state) => state.inventoryCrudSlice.insertType)
+  useEffect(() => {
+    if (id) {
+      dispatch(setInsertType("update"));
+      dispatch(editEntityData(`inventory/coupon-code/${id}`));
+      dispatch(setFormLoading(true));
+    } else if (!id) {
+      dispatch(setInsertType("create"));
+      dispatch(setSearchKeyword(""));
+      dispatch(setEntityNewData([]));
+      navigate("/inventory/coupon-code", { replace: true });
+    }
+  }, [id, dispatch, navigate]);
   return (
     <>
       {progress !== 100 && (
@@ -40,7 +66,13 @@ export default function CouponIndex() {
                     </Box>
                   </Grid.Col>
                   <Grid.Col span={9}>
-                    <CouponForm />
+                    {insertType === "create" ? (
+                      <CouponForm
+                      />
+                    ) : (
+                      <CouponUpdateForm
+                      />
+                    )}
                   </Grid.Col>
                 </Grid>
               </Box>
