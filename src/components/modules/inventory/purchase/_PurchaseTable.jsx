@@ -46,7 +46,7 @@ import {showNotificationComponent} from "../../../core-component/showNotificatio
 
 function _PurchaseTable() {
     const {configData} = getConfigData()
-    let isWarehouse = configData?.configData?.sku_warehouse
+    let isWarehouse = configData?.sku_warehouse
 
     const printRef = useRef();
     const dispatch = useDispatch();
