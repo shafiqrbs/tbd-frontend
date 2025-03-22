@@ -7,7 +7,10 @@ import {
 import { useTranslation } from 'react-i18next';
 import {
     IconDeviceFloppy, IconX, IconBarcode, IconChevronsRight, IconArrowRight, IconLoader,
-    IconPlus, IconDotsVertical, IconCheck
+    IconPlus, IconDotsVertical, IconCheck,
+    IconSortAscendingNumbers,
+    IconPlusMinus,
+    IconSum
 } from "@tabler/icons-react";
 import { getHotkeyHandler, useHotkeys } from "@mantine/hooks";
 import { useDispatch, useSelector } from "react-redux";
@@ -31,6 +34,7 @@ import AddProductDrawer from "../sales/drawer-form/AddProductDrawer.jsx";
 import {modals} from "@mantine/modals";
 import FileUploadModel from "../../../core-component/FileUploadModel.jsx";
 import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
+import InputForm from "../../../form-builders/InputForm.jsx";
 
 function _CreateOpeningForm(props) {
     const { currencySymbol } = props
@@ -373,7 +377,7 @@ function _CreateOpeningForm(props) {
                                                 />
                                             </Grid.Col>
                                             <Grid.Col span={3}>
-                                                <InputButtonForm
+                                                <InputForm
                                                     tooltip={t('QuantityValidateMessage')}
                                                     label=''
                                                     placeholder={t('Quantity')}
@@ -383,12 +387,16 @@ function _CreateOpeningForm(props) {
                                                     name={'opening_quantity'}
                                                     id={'opening_quantity'}
                                                     type={'number'}
+                                                    leftSection={
+                                                        <IconSortAscendingNumbers 
+                                                        size={16} opacity={0.5} />
+                                                    }
                                                     rightSection={inputGroupText}
                                                     rightSectionWidth={50}
                                                 />
                                             </Grid.Col>
                                             <Grid.Col span={2}>
-                                                <InputButtonForm
+                                                <InputForm
                                                     tooltip={t('PurchasePriceValidateMessage')}
                                                     label=''
                                                     placeholder={t('PurchasePrice')}
@@ -398,13 +406,17 @@ function _CreateOpeningForm(props) {
                                                     name={'purchase_price'}
                                                     id={'purchase_price'}
                                                     type={'number'}
+                                                    leftSection={
+                                                        <IconPlusMinus 
+                                                        size={16} opacity={0.5} />
+                                                    }
                                                     rightSection={inputGroupCurrency}
                                                     closeIcon={true}
 
                                                 />
                                             </Grid.Col>
                                             <Grid.Col span={2}>
-                                                <InputButtonForm
+                                                <InputForm
                                                     tooltip={t('PurchasePriceValidateMessage')}
                                                     label=''
                                                     placeholder={t('SalesPrice')}
@@ -414,13 +426,17 @@ function _CreateOpeningForm(props) {
                                                     name={'sales_price'}
                                                     id={'sales_price'}
                                                     type={'number'}
+                                                    leftSection={
+                                                        <IconPlusMinus 
+                                                        size={16} opacity={0.5} />
+                                                    }
                                                     rightSection={inputGroupCurrency}
                                                     closeIcon={true}
 
                                                 />
                                             </Grid.Col>
                                             <Grid.Col span={2}>
-                                                <InputButtonForm
+                                                <InputForm
                                                     tooltip={t('SubTotalValidateMessage')}
                                                     label=''
                                                     placeholder={t('SubTotal')}
@@ -428,8 +444,12 @@ function _CreateOpeningForm(props) {
                                                     nextField={'EntityFormSubmit'}
                                                     form={form}
                                                     name={'sub_total'}
-                                                    id={'sub_total'}
                                                     type={'number'}
+                                                    leftSection={
+                                                        <IconSum 
+                                                        size={16} opacity={0.5} />
+                                                    }
+                                                    id={'sub_total'}
                                                     rightSection={inputGroupCurrency}
                                                     closeIcon={false}
                                                     disabled={true}

@@ -1,6 +1,6 @@
 import {
   ActionIcon,
-  Tooltip,
+  Group,
   Grid,
   Box,
   Title,
@@ -11,56 +11,94 @@ import {
   Text,
 } from "@mantine/core";
 import SelectForm from "../../../form-builders/SelectForm";
-import { IconUsersGroup, IconDeviceFloppy } from "@tabler/icons-react";
+import {
+  IconUsersGroup,
+  IconDeviceFloppy,
+  IconSortAscendingNumbers,
+  IconBarcode,
+} from "@tabler/icons-react";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 import { useOutletContext } from "react-router-dom";
 import { isNotEmpty, useForm } from "@mantine/form";
 import { modals } from "@mantine/modals";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useHotkeys } from "@mantine/hooks";
 import Shortcut from "../../shortcut/Shortcut";
 import InputForm from "../../../form-builders/InputForm";
+import SelectServerSideForm from "../../../form-builders/SelectServerSideForm";
 
-export default function BarcodePrintForm() {
+export default function BarcodePrintForm(props) {
+  const { preview, setPreview } = props;
   const { t, i18n } = useTranslation();
   const dispatch = useDispatch();
   const { isOnline, mainAreaHeight } = useOutletContext();
   const height = mainAreaHeight - 100;
 
   const [saveCreateLoading, setSaveCreateLoading] = useState(false);
+  const [barcodeTypeId, setBarcodeTypeId] = useState(null);
+  const [quantity, setQuantity] = useState(10);
+  const [print, setPrint] = useState(false);
+  const [searchValue, setSearchValue] = useState("");
+  const [productDropdown, setProductDropdown] = useState([]);
+
+  useEffect(() => {
+    if (searchValue.length > 0) {
+      const storedProducts = localStorage.getItem("core-products");
+      const localProducts = storedProducts ? JSON.parse(storedProducts) : [];
+
+      // Filter products where product_nature is not 'raw-materials'
+      const filteredProducts = localProducts.filter(
+        (product) => product.product_nature !== "raw-materials"
+      );
+
+      const lowerCaseSearchTerm = searchValue.toLowerCase();
+      const fieldsToSearch = ["product_name"];
+      const productFilterData = filteredProducts.filter((product) =>
+        fieldsToSearch.some(
+          (field) =>
+            product[field] &&
+            String(product[field]).toLowerCase().includes(lowerCaseSearchTerm)
+        )
+      );
+      const formattedProductData = productFilterData.map((type) => ({
+        label: type.product_name,
+        value: String(type.id),
+      }));
+
+      setProductDropdown(formattedProductData);
+    } else {
+      setProductDropdown([]);
+    }
+  }, [searchValue]);
+
+  const handlePrint = () => {
+    print ? setPrint(false) : setPrint(true);
+  };
+  const handlePreview = () => {
+    preview ? setPreview(false) : setPreview(true);
+  };
   const form = useForm({
     initialValues: {
-      from_warehouse_id: "",
-      to_warehouse_id: "",
-      stock_item_id: "",
+      barcode_type_id: "",
       quantity: "",
-      bonus_quantity: "",
     },
     validate: {
-      from_warehouse_id: isNotEmpty(),
+      barcode_type_id: isNotEmpty(),
     },
   });
-  const warehouse = [
-    { label: "Warehouse 1", value: "1" },
-    { label: "Warehouse 2", value: "2" },
-    { label: "Warehouse 3", value: "3" },
+  const value = [
+    { label: "Stock", value: "1" },
+    { label: "Product batch", value: "2" },
+    { label: "Unique Barcode", value: "3" },
   ];
-  const stockItem = [
-    { label: "Stock Item 1", value: "1" },
-    { label: "Stock Item 2", value: "2" },
-    { label: "Stock Item 3", value: "3" },
-  ];
-  const [fromWarehouseId, setFromWarehouseId] = useState(null);
-  const [toWarehouseId, setToWarehouseId] = useState(null);
-  const [stockItemId, setStockItemId] = useState(null);
 
   useHotkeys(
     [
       [
         "alt+n",
         () => {
-          document.getElementById("from_warehouse_id").click();
+          document.getElementById("barcode_type_id").click();
         },
       ],
     ],
@@ -137,7 +175,6 @@ export default function BarcodePrintForm() {
                             >
                               <Flex direction={`column`} gap={0}>
                                 <Text fz={14} fw={400}>
-                                  {" "}
                                   {t("CreateAndSave")}
                                 </Text>
                               </Flex>
@@ -150,22 +187,127 @@ export default function BarcodePrintForm() {
                 </Box>
                 <Box pl={`xs`} pr={"xs"} className={"borderRadiusAll"}>
                   <ScrollArea
-                    h={height}
+                    h={height - 47}
                     scrollbarSize={2}
                     scrollbars="y"
                     type="never"
                   >
                     <Box>
                       <Box mt={"8"}>
+                        <SelectServerSideForm
+                          tooltip={t("ChooseStockProduct")}
+                          label={t("ChooseStockProduct")}
+                          placeholder={t("ChooseStockProduct")}
+                          required={false}
+                          nextField={"barcode_type_id"}
+                          name={"product_id"}
+                          form={form}
+                          id={"product_id"}
+                          searchable={true}
+                          searchValue={searchValue}
+                          setSearchValue={setSearchValue}
+                          dropdownValue={productDropdown}
+                          closeIcon={true}
+                        />
                       </Box>
-                      <Box mt={"xs"}>
+                      <Box mt={"8"}>
+                        <SelectForm
+                          tooltip={t("BarcodeType")}
+                          label={t("BarcodeType")}
+                          placeholder={t("ChooseBarcodeType")}
+                          required={false}
+                          nextField={"name"}
+                          name={"barcode_type_id"}
+                          form={form}
+                          dropdownValue={value}
+                          mt={8}
+                          id={"barcode_type_id"}
+                          searchable={false}
+                          value={barcodeTypeId}
+                          changeValue={setBarcodeTypeId}
+                        />
                       </Box>
-                      <Box mt={"xs"}>
-                      </Box>
-                      <Box>
+                      <Box mt={"md"}>
+                        <Grid columns={24} gutter={{ base: 8 }}>
+                          <Grid.Col span={5}>
+                            <Text fz={14} fw={600} mt={8}>
+                              {t("Quantity")}
+                            </Text>
+                          </Grid.Col>
+                          <Grid.Col span={6}>
+                            <Text ta={"center"} fz={14} fw={600} mt={8}>
+                              {quantity}
+                            </Text>
+                          </Grid.Col>
+                          <Grid.Col span={5}>
+                            <Text fz={14} fw={600} mt={8}>
+                              {t("PrintQuantity")}
+                            </Text>
+                          </Grid.Col>
+                          <Grid.Col span={8}>
+                            <InputForm
+                              tooltip={t("PrintQuantity")}
+                              label={t("")}
+                              placeholder={t("PrintQuantity")}
+                              required={false}
+                              name={"quantity"}
+                              leftSection={
+                                <IconSortAscendingNumbers
+                                  size={16}
+                                  opacity={0.5}
+                                />
+                              }
+                              form={form}
+                              type={"number"}
+                            />
+                          </Grid.Col>
+                        </Grid>
                       </Box>
                     </Box>
                   </ScrollArea>
+                </Box>
+                <Box
+                  pl={`xs`}
+                  pr={8}
+                  pt={"6"}
+                  pb={"6"}
+                  mb={"4"}
+                  className={"boxBackground borderRadiusAll"}
+                  mt={4}
+                >
+                  <Grid>
+                    <Grid.Col span={6}></Grid.Col>
+                    <Grid.Col span={6}>
+                      <Group justify="flex-end">
+                        <>
+                          <Button
+                            size="xs"
+                            color={`red.6`}
+                            onClick={handlePreview}
+                            leftSection={<IconBarcode size={16} />}
+                          >
+                            <Flex direction={`column`} gap={0}>
+                              <Text fz={14} fw={400}>
+                                {t("Preview")}
+                              </Text>
+                            </Flex>
+                          </Button>
+                          <Button
+                            size="xs"
+                            color={`red.6`}
+                            onClick={handlePrint}
+                            leftSection={<IconBarcode size={16} />}
+                          >
+                            <Flex direction={`column`} gap={0}>
+                              <Text fz={14} fw={400}>
+                                {t("Print")}
+                              </Text>
+                            </Flex>
+                          </Button>
+                        </>
+                      </Group>
+                    </Grid.Col>
+                  </Grid>
                 </Box>
               </Box>
             </Box>
@@ -175,7 +317,7 @@ export default function BarcodePrintForm() {
               <Shortcut
                 form={form}
                 FormSubmit={"EntityFormSubmit"}
-                Name={"from_warehouse_id"}
+                Name={"barcode_type_id"}
                 inputType="select"
               />
             </Box>

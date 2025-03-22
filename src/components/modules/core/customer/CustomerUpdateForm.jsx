@@ -8,7 +8,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import {
     IconCheck,
-    IconDeviceFloppy, IconUsersGroup,
+    IconDeviceFloppy, IconPlusMinus, IconUsersGroup,
 } from "@tabler/icons-react";
 import { useHotkeys } from "@mantine/hooks";
 import InputForm from "../../../form-builders/InputForm";
@@ -316,6 +316,10 @@ function CustomerUpdateForm(props) {
                                                     <Grid.Col span={6} >
                                                         <Box >
                                                             <InputForm
+                                                                type={'number'}
+                                                                leftSection={(
+                                                                    <IconPlusMinus size={16} opacity={0.5} />
+                                                                )}
                                                                 tooltip={t('CreditLimitValidationMessage')}
                                                                 label={t('CreditLimit')}
                                                                 placeholder={t('CreditLimit')}

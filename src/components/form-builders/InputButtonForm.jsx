@@ -54,7 +54,7 @@ function InputButtonForm(props) {
                             }],
                         ])}
                         rightSection={props.rightSection}
-                        rightSectionWidth={48}
+                        rightSectionWidth={34}
                         leftSection={props.leftSection}
                         withAsterisk={required}
 

@@ -46,14 +46,14 @@ import {showNotificationComponent} from "../../../core-component/showNotificatio
 
 function _PurchaseTable() {
     const {configData} = getConfigData()
-    let isWarehouse = configData?.configData?.sku_warehouse
+    let isWarehouse = configData?.sku_warehouse
 
     const printRef = useRef();
     const dispatch = useDispatch();
     const {t, i18n} = useTranslation();
     const {isOnline, mainAreaHeight} = useOutletContext();
     const tableHeight = mainAreaHeight - 106; //TabList height 104
-    const height = mainAreaHeight - 282; //TabList height 104
+    const height = mainAreaHeight - 304; //TabList height 104
 
     const perPage = 50;
     const [page, setPage] = useState(1);
@@ -244,14 +244,7 @@ function _PurchaseTable() {
             <Box>
                 <Grid columns={24} gutter={{base: 8}}>
                     <Grid.Col span={24}>
-                        <Box
-                            pl={`xs`}
-                            pb={"4"}
-                            pr={"xs"}
-                            pt={"4"}
-                            mb={"4"}
-                            className={"boxBackground borderRadiusAll"}
-                        >
+                        <Box pl={`xs`} pb={'4'} pr={'xs'} pt={'4'} mb={'4'} className={'boxBackground borderRadiusAll'} >
                             <Grid>
                                 <Grid.Col>
                                     <Stack>
@@ -484,13 +477,7 @@ function _PurchaseTable() {
                     </Grid.Col>
 
                     <Grid.Col span={8}>
-                        <Box
-                            bg={"white"}
-                            p={"xs"}
-                            className={"borderRadiusAll"}
-                            ref={printRef}
-                            pos={"relative"}
-                        >
+                        <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} ref={printRef} pos="relative">
                             {loading && (
                                 <LoadingOverlay
                                     visible={loading}
@@ -499,31 +486,15 @@ function _PurchaseTable() {
                                     loaderProps={{color: "red"}}
                                 />
                             )}
-                            <Box
-                                h={"36"}
-                                pl={`xs`}
-                                fz={"sm"}
-                                fw={"600"}
-                                pr={8}
-                                pt={"6"}
-                                mb={"4"}
-                                className={"boxBackground textColor borderRadiusAll"}
-                            >
+                             <Box h={'36'} pl={`xs`} fz={'sm'} fw={'600'} pr={8} pt={'6'} mb={'4'} className={'boxBackground textColor borderRadiusAll'} >
                                 {t("Invoice")}:{" "}
                                 {purchaseViewData &&
                                     purchaseViewData.invoice &&
                                     purchaseViewData.invoice}
                             </Box>
                             <Box className={"borderRadiusAll"} fz={"sm"}>
-                                <Box
-                                    pl={`xs`}
-                                    fz={"sm"}
-                                    fw={"600"}
-                                    pr={"xs"}
-                                    pt={"6"}
-                                    pb={"xs"}
-                                    className={"boxBackground textColor"}
-                                >
+                                <ScrollArea h={122} type="never">
+                                <Box pl={`xs`} fz={'sm'} fw={'600'} pr={'xs'} pt={'6'} pb={'xs'} className={'boxBackground textColor'} >
                                     <Grid gutter={{base: 4}}>
                                         <Grid.Col span={"6"}>
                                             <Grid columns={15} gutter={{base: 4}}>
@@ -630,6 +601,7 @@ function _PurchaseTable() {
                                         </Grid.Col>
                                     </Grid>
                                 </Box>
+                                </ScrollArea>
                                 <ScrollArea h={height} scrollbarSize={2} type="never">
                                     <Box>
                                         <Table stickyHeader>
@@ -724,7 +696,7 @@ function _PurchaseTable() {
                                     </Box>
                                 </ScrollArea>
                             </Box>
-                            <Button.Group>
+                            <Button.Group mb={'1'}>
                                 <Button
                                     fullWidth={true}
                                     variant="filled"

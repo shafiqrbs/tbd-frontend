@@ -70,6 +70,10 @@ function InventoryConfigurationForm() {
             pos_sales: inventoryConfigData.pos_sales || "",
             with_table: inventoryConfigData.with_table || "",
             pay_first: inventoryConfigData.pay_first || "",
+            is_barcode_productName: inventoryConfigData.is_barcode_productName || "",
+            is_barcode_sku: inventoryConfigData.is_barcode_sku || "",
+            is_barcode_companyName: inventoryConfigData.is_barcode_companyName || "",
+            is_barcode_price: inventoryConfigData.is_barcode_price || "",
         },
     });
 
@@ -158,7 +162,11 @@ function InventoryConfigurationForm() {
             "is_sku",
             "pos_sales",
             "with_table",
-            "pay_first"
+            "pay_first",
+            "is_barcode_productName",
+            "is_barcode_sku",
+            "is_barcode_companyName",
+            "is_barcode_price",
         ];
 
         properties.forEach((property) => {
@@ -214,7 +222,7 @@ function InventoryConfigurationForm() {
 
                 <Grid columns={24} gutter={{base: 8}}>
                     <Grid.Col span={7}>
-                        <Box bg={"white"} p={"xs"} className={"borderRadiusAll"}>
+                        <Box bg={"white"} p={"xs"} className={"borderRadiusAll"} mb={"8"}>
                             <Box bg={"white"}>
                                 <Box
                                     pl={`xs`}
@@ -234,7 +242,7 @@ function InventoryConfigurationForm() {
                                 </Box>
                                 <Box pl={`xs`} pr={"xs"} className={"borderRadiusAll"}>
                                     <ScrollArea
-                                        h={height}
+                                        h={height / 2 - 40}
                                         scrollbarSize={2}
                                         scrollbars="y"
                                         type="never"
@@ -428,13 +436,13 @@ function InventoryConfigurationForm() {
                                                     </Grid.Col>
                                                 </Grid>
                                             </Box>
-                                            <Box mt={"xs"}>
+                                            <Box mt={"xs"} mb={'xs'}>
                                                 <Grid gutter={{base: 1}}>
                                                     <Grid.Col span={2}>
                                                         <SwitchForm
                                                             tooltip={t("Model")}
                                                             label=""
-                                                            nextField={"zero_stock"}
+                                                            nextField={"is_barcode_productName"}
                                                             name={"is_model"}
                                                             form={form}
                                                             color="red"
@@ -445,6 +453,121 @@ function InventoryConfigurationForm() {
                                                     </Grid.Col>
                                                     <Grid.Col span={6} fz={"sm"} pt={"1"}>
                                                         {t("Model")}
+                                                    </Grid.Col>
+                                                </Grid>
+                                            </Box>
+                                        </Box>
+                                    </ScrollArea>
+                                </Box>
+                            </Box>
+                        </Box>
+                        <Box bg={"white"} p={"xs"} className={"borderRadiusAll"}>
+                            <Box bg={"white"}>
+                                <Box
+                                    pl={`xs`}
+                                    pr={8}
+                                    pt={"8"}
+                                    pb={"10"}
+                                    mb={"4"}
+                                    className={"boxBackground borderRadiusAll"}
+                                >
+                                    <Grid>
+                                        <Grid.Col>
+                                            <Title order={6} pt={"4"}>
+                                                {t("BarcodePrint")}
+                                            </Title>
+                                        </Grid.Col>
+                                    </Grid>
+                                </Box>
+                                <Box pl={`xs`} pr={"xs"} className={"borderRadiusAll"}>
+                                    <ScrollArea
+                                        h={height / 2 - 40}
+                                        scrollbarSize={2}
+                                        scrollbars="y"
+                                        type="never"
+                                    >
+                                        <Box pt={"xs"} pl={"xs"}>
+                                            <Box mt={"xs"}>
+                                                <Grid gutter={{base: 1}}>
+                                                    <Grid.Col span={2}>
+                                                        <SwitchForm
+                                                            tooltip={t("ProductName")}
+                                                            label=""
+                                                            nextField={"is_barcode_sku"}
+                                                            name={"is_barcode_productName"}
+                                                            form={form}
+                                                            color="red"
+                                                            id={"is_barcode_productName"}
+                                                            position={"left"}
+                                                            defaultChecked={inventoryConfigData.is_barcode_productName}
+                                                        />
+                                                    </Grid.Col>
+                                                    <Grid.Col span={6} fz={"sm"} pt={"1"}>
+                                                        {t("ProductName")}
+                                                    </Grid.Col>
+                                                </Grid>
+                                            </Box>
+                                            <Box mt={"xs"}>
+                                                <Grid gutter={{base: 1}}>
+                                                    <Grid.Col span={2}>
+                                                        <SwitchForm
+                                                            tooltip={t("Sku")}
+                                                            label=""
+                                                            nextField={"is_barcode_companyName"}
+                                                            name={"is_barcode_sku"}
+                                                            form={form}
+                                                            color="red"
+                                                            id={"is_barcode_sku"}
+                                                            position={"left"}
+                                                            defaultChecked={inventoryConfigData.is_barcode_sku}
+                                                        />
+                                                    </Grid.Col>
+                                                    <Grid.Col span={6} fz={"sm"} pt={"1"}>
+                                                        {t("SKU")}
+                                                    </Grid.Col>
+                                                </Grid>
+                                            </Box>
+                                            <Box mt={"xs"}>
+                                                <Grid gutter={{base: 1}}>
+                                                    <Grid.Col span={2}>
+                                                        <SwitchForm
+                                                            tooltip={t("CompanyName")}
+                                                            label=""
+                                                            nextField={"is_barcode_price"}
+                                                            name={"is_barcode_companyName"}
+                                                            form={form}
+                                                            color="red"
+                                                            id={"is_barcode_companyName"}
+                                                            position={"left"}
+                                                            defaultChecked={
+                                                                inventoryConfigData.is_barcode_companyName
+                                                            }
+                                                        />
+                                                    </Grid.Col>
+                                                    <Grid.Col span={6} fz={"sm"} pt={"1"}>
+                                                        {t("CompanyName")}
+                                                    </Grid.Col>
+                                                </Grid>
+                                            </Box>
+                                            <Box mt={"xs"}>
+                                                <Grid gutter={{base: 1}}>
+                                                    <Grid.Col span={2}>
+                                                        <SwitchForm
+                                                            tooltip={t("Price")}
+                                                            label=""
+                                                            nextField="zero_stock"
+                                                            name={"is_barcode_price"}
+                                                            form={form}
+                                                            color="red"
+                                                            id={"is_barcode_price"}
+                                                            position={"left"}
+                                                            defaultChecked={
+                                                                inventoryConfigData.is_barcode_price
+                                                            }
+                                                        />
+                                                    </Grid.Col>
+                                                    <Grid.Col span={6} fz={"sm"} pt={"1"}>
+                                                        {t("Price")}
                                                     </Grid.Col>
                                                 </Grid>
                                             </Box>

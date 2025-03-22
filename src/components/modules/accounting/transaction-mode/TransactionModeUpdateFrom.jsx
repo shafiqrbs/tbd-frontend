@@ -8,7 +8,8 @@ import {
 import { useTranslation } from 'react-i18next';
 import {
     IconCheck,
-    IconDeviceFloppy
+    IconDeviceFloppy,
+    IconPlusMinus
 } from "@tabler/icons-react";
 import { useDisclosure, useHotkeys } from "@mantine/hooks";
 import { useDispatch, useSelector } from "react-redux";
@@ -289,7 +290,7 @@ function TransactionModeUpdateFrom(props) {
                                                         />
                                                     </Box>
                                                     <Box mt={'xs'}>
-                                                        <InputNumberForm
+                                                        <InputForm
                                                             tooltip={t('ServiceChargeValidationMessage')}
                                                             label={t('ServiceCharge')}
                                                             placeholder={t('ServiceCharge')}
@@ -299,6 +300,10 @@ function TransactionModeUpdateFrom(props) {
                                                             form={form}
                                                             mt={'md'}
                                                             id={'service_charge'}
+                                                            type={'number'}
+                                                            leftSection={
+                                                                <IconPlusMinus size={16} opacity={0.5} />
+                                                            }
                                                         />
                                                     </Box>
                                                     <Box mt={'xs'}>

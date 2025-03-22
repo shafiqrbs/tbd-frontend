@@ -34,7 +34,7 @@ function SalesIndex() {
                                 <_SalesTable
                                     allowZeroPercentage={configData?.zero_stock}
                                     currancySymbol={configData?.currency?.symbol}
-                                    isWarehouse={configData?.configData?.sku_warehouse}
+                                    isWarehouse={configData?.sku_warehouse}
                                 />
                             </Box>
 
