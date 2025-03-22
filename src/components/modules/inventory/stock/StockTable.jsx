@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import {
   Group,
@@ -10,6 +10,7 @@ import {
   rem,
   Text,
   Image,
+  Modal,
 } from "@mantine/core";
 
 import { DataTable } from "mantine-datatable";
@@ -35,6 +36,8 @@ import {
 } from "../../../../store/core/crudSlice.js";
 import { modals } from "@mantine/modals";
 import AddMeasurement from "../modal/AddMeasurement.jsx";
+import { Carousel } from "@mantine/carousel";
+import Autoplay from "embla-carousel-autoplay";
 
 function StockTable(props) {
   const { categoryDropdown } = props;
@@ -242,21 +245,75 @@ function StockTable(props) {
               textAlign : "center",
               title: t("Image"),
               width: "100px",
-              render: (item) => (
-                <Image
-                  mih={50}
-                  mah={50}
-                  fit="contain"
-                  // src={
-                  //   isOnline
-                  //     ? mode.path
-                  //     : "/images/transaction-mode-offline.jpg"
-                  // }
-                  fallbackSrc={`https://placehold.co/120x80/FFFFFF/2f9e44?text=${encodeURIComponent(
-                    item.product_name
-                  )}`}
-                ></Image>
-              ),
+              render: (item) => {
+                const [opened, setOpened] = useState(false);
+                const autoplay = useRef(Autoplay({delay: 2000}));
+
+                const images = [
+                    item?.images?.feature_image ? import.meta.env.VITE_IMAGE_GATEWAY_URL + item.images.feature_image : null,
+                    item?.images?.path_one ? import.meta.env.VITE_IMAGE_GATEWAY_URL + item.images.path_one : null,
+                    item?.images?.path_two ? import.meta.env.VITE_IMAGE_GATEWAY_URL + item.images.path_two : null,
+                    item?.images?.path_three ? import.meta.env.VITE_IMAGE_GATEWAY_URL + item.images.path_three : null,
+                    item?.images?.path_four ? import.meta.env.VITE_IMAGE_GATEWAY_URL + item.images.path_four : null,
+                ].filter(Boolean);
+
+                return (
+                    <>
+                        <Image
+                            mih={50}
+                            mah={50}
+                            fit="contain"
+                            src={images.length > 0 ? images[0] : `https://placehold.co/120x80/FFFFFF/2f9e44?text=${encodeURIComponent(item.product_name)}`}
+                            style={{cursor: 'pointer'}}
+                            onClick={() => setOpened(true)}
+                        />
+
+                        <Modal
+                            opened={opened}
+                            onClose={() => setOpened(false)}
+                            size="lg"
+                            centered
+                            styles={{
+                                content: {overflow: 'hidden'}, // Ensure modal content doesn't overflow
+                            }}
+                        >
+                            <Carousel
+                                withIndicators
+                                height={700}
+                                // plugins={[autoplay.current]}
+                                onMouseEnter={autoplay.current.stop}
+                                onMouseLeave={autoplay.current.reset}
+                            >
+                                {images.map((img, index) => (
+                                    <Carousel.Slide key={index}>
+                                        <div
+                                            style={{
+                                                display: 'flex',
+                                                justifyContent: 'center',
+                                                alignItems: 'center',
+                                                height: '100%',
+                                                overflow: 'hidden',
+                                            }}
+                                        >
+                                            <Image
+                                                src={img}
+                                                fit="contain"
+                                                style={{
+                                                    transition: 'transform 0.3s ease-in-out',
+                                                    maxWidth: '100%', // Ensure image fits within the slide
+                                                    maxHeight: '100%',
+                                                }}
+                                                onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.2)'}
+                                                onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+                                            />
+                                        </div>
+                                    </Carousel.Slide>
+                                ))}
+                            </Carousel>
+                        </Modal>
+                    </>
+                );
+            }
             },
             { accessor: "vat", title: t("Vat") },
             // { accessor: "average_price", title: t("AveragePrice"), textAlign : "center" },

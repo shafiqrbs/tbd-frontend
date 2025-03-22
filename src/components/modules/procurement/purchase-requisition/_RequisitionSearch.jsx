@@ -12,6 +12,7 @@ import {
 import { useTranslation } from "react-i18next";
 import {
   IconBrandOkRu,
+  IconCalendar,
   IconFileTypeXls,
   IconFilter,
   IconInfoCircle,
@@ -223,6 +224,24 @@ function _RequisitionSearch(props) {
                   }}
                   value={requisitionFilterData.start_date}
                   placeholder={t("StartDate")}
+                  leftSection={<IconCalendar size={16} opacity={0.5} />}
+                  rightSection={
+                      <Tooltip
+                      label={t("StartDate")}
+                      px={16}
+                      py={2}
+                      withArrow
+                      position={"left"}
+                      c={"black"}
+                      bg={`gray.1`}
+                      transitionProps={{
+                          transition: "pop-bottom-left",
+                          duration: 500,
+                      }}
+                      >
+                          <IconInfoCircle size={16} opacity={0.5} />
+                      </Tooltip>
+                  }
                 />
               </Tooltip>
             </Grid.Col>
@@ -259,6 +278,24 @@ function _RequisitionSearch(props) {
                         }, 1000));
                   }}
                   placeholder={t("EndDate")}
+                  leftSection={<IconCalendar size={16} opacity={0.5} />}
+                  rightSection={
+                      <Tooltip
+                      label={t("StartDate")}
+                      px={16}
+                      py={2}
+                      withArrow
+                      position={"left"}
+                      c={"black"}
+                      bg={`gray.1`}
+                      transitionProps={{
+                          transition: "pop-bottom-left",
+                          duration: 500,
+                      }}
+                      >
+                          <IconInfoCircle size={16} opacity={0.5} />
+                      </Tooltip>
+                  }
                 />
               </Tooltip>
             </Grid.Col>

@@ -33,7 +33,7 @@ export default function MatrixIndex() {
               <Box p={8}>
                 <MatrixTable
                     currencySymbol={configData?.currency?.symbol}
-                    configId = {configData?.configData?.id}
+                    configId = {configData?.id}
                 />
               </Box>
             </>
