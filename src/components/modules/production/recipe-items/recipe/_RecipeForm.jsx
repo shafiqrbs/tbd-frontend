@@ -1,12 +1,15 @@
 import React from "react";
 import {useNavigate, useOutletContext, useParams} from "react-router-dom";
 import {
-    Button, rem, Flex, Grid, Box, ScrollArea, Text, Title, Stack, TextInput
+    Button, rem, Flex, Grid, Box, ScrollArea, Text, Title, Stack, TextInput,
+    Tooltip
 } from "@mantine/core";
 import {useTranslation} from 'react-i18next';
 import {
     IconCheck,
-    IconDeviceFloppy
+    IconDeviceFloppy,
+    IconInfoCircle,
+    IconPlusMinus
 } from "@tabler/icons-react";
 import {useHotkeys} from "@mantine/hooks";
 import {useDispatch, useSelector} from "react-redux";
@@ -160,6 +163,24 @@ function _RecipeForm() {
                                                                 <Grid.Col span={6}>
                                                                     <Box>
                                                                         <TextInput
+                                                                            leftSection={<IconPlusMinus size={16} opacity={0.5}/>}
+                                                                            rightSection={
+                                                                                <Tooltip
+                                                                                label={t("Amount")}
+                                                                                px={16}
+                                                                                py={2}
+                                                                                withArrow
+                                                                                position={"left"}
+                                                                                c={"black"}
+                                                                                bg={`gray.1`}
+                                                                                transitionProps={{
+                                                                                    transition: "pop-bottom-left",
+                                                                                    duration: 500,
+                                                                                }}
+                                                                                >
+                                                                                    <IconInfoCircle size={16} opacity={0.5} />
+                                                                                </Tooltip>
+                                                                            }
                                                                             type='number'
                                                                             id={item.slug}
                                                                             size="sm"
