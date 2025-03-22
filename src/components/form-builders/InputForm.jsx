@@ -9,7 +9,7 @@ import { getHotkeyHandler } from "@mantine/hooks";
 
 function InputForm(props) {
 
-    const { label, placeholder, required, nextField, name, form, tooltip, mt, id, disabled } = props
+    const { label, placeholder, required, nextField, name, form, tooltip, mt, id, disabled, type, leftSection, rightSection } = props
 
     const { t, i18n } = useTranslation();
 
@@ -31,6 +31,7 @@ function InputForm(props) {
                     transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
                 >
                     <TextInput
+                        type={type}
                         id={id}
                         size="sm"
                         label={label}
@@ -46,7 +47,7 @@ function InputForm(props) {
                                     document.getElementById(nextField).focus()
                             }],
                         ])}
-                        leftSection={props.leftSection ? props.leftSection : ''}
+                        leftSection={leftSection}
                         rightSection={
                             form.values[name] ?
                                 <Tooltip
@@ -70,7 +71,7 @@ function InputForm(props) {
                                     bg={`gray.1`}
                                     transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
                                 >
-                                    {props.rightIcon ? props.rightIcon : <IconInfoCircle size={16} opacity={0.5} />}
+                                    {rightSection ? rightSection : <IconInfoCircle size={16} opacity={0.5} />}
                                 </Tooltip>
                         }
                         withAsterisk={required}
