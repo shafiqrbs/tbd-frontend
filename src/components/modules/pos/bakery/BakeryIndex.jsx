@@ -24,8 +24,6 @@ export default function BakeryIndex() {
     const dropdownLoad = useSelector((state) => state.inventoryCrudSlice.dropdownLoad);
     const categoryDropdownData = useSelector((state) => state.inventoryUtilitySlice.categoryDropdownData);
 
-    console.log(categoryDropdownData)
-
     // ✅ Local State
     const [time, setTime] = useState(new Date().toLocaleTimeString());
     const [tables, setTables] = useState([]);
@@ -97,15 +95,15 @@ export default function BakeryIndex() {
 
     // ✅ Memoized Transformed Table Data
     const transformedTables = useMemo(() => {
-        return indexData.map(({id, particular_name, username, name, customer_id, is_active}) => {
+        return indexData.map(({id, particular_name, username, customer_name, customer_id, is_active,table_id,user_id}) => {
             let particularName =
                 invoiceMode === "table"
-                    ? `${particular_name} ${id}`
+                    ? `${particular_name}`
                     : invoiceMode === "user"
-                        ? `${username} ${id}`
+                        ? `${username}`
                         : invoiceMode === "customer"
-                            ? `${name} ${customer_id}`
-                            : `Unknown ${id}`;
+                            ? `${customer_name}`
+                            : `Unknown`;
 
             return {
                 id,
@@ -114,6 +112,9 @@ export default function BakeryIndex() {
                 currentStatusStartTime: null,
                 elapsedTime: "00:00:00",
                 value: particularName,
+                customer_id: customer_id,
+                table_id: table_id,
+                user_id: user_id,
             };
         });
     }, [indexData, invoiceMode]);
@@ -189,6 +190,7 @@ export default function BakeryIndex() {
                             setTableId={setTableId}
                             tableCustomerMap={tableCustomerMap}
                             setCustomerObject={setCustomerObject}
+                            invoiceMode={invoiceMode}
                         />
                     )}
                     <Box
@@ -215,6 +217,7 @@ export default function BakeryIndex() {
                                 updateTableSplitPayment={updateTableSplitPayment}
                                 clearTableSplitPayment={clearTableSplitPayment}
                                 tableSplitPaymentMap={tableSplitPaymentMap}
+                                invoiceMode={invoiceMode}
                             />
                         </Box>
                     </Box>

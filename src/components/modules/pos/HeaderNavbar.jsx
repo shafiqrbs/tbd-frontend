@@ -3,23 +3,47 @@ import {Box, Group, ActionIcon, Text, Badge, Flex, Center, ScrollArea} from "@ma
 import {useTranslation} from "react-i18next";
 import {IconChevronRight, IconChevronLeft} from "@tabler/icons-react";
 import {useScroll} from "./bakery/utils/ScrollOperations";
+import {storeEntityData} from "../../../store/core/crudSlice.js";
+import {useDispatch} from "react-redux";
+import {showNotificationComponent} from "../../core-component/showNotificationComponent.jsx";
 
-function HeaderNavbar({tables, tableId, setTableId, tableCustomerMap, setCustomerObject}) {
+function HeaderNavbar({tables, tableId, setTableId, tableCustomerMap, setCustomerObject, invoiceMode}) {
     const {t} = useTranslation();
+    const dispatch = useDispatch();
     const {scrollRef, showLeftArrow, showRightArrow, handleScroll, scroll} = useScroll();
 
-    // ✅ Optimized Click Handler (Ensures No Unnecessary State Updates)
-    const clicked = (id) => {
-        if (tableId === id) {
-            if (tableId !== null) {
-                setTableId(null);
-                setCustomerObject({});
+    const HandleParticularClick = async (invoice) => {
+        const newTableId = tableId === invoice.id ? null : invoice.id;
+        setTableId(newTableId);
+        setCustomerObject(tableCustomerMap[invoice.id] || {});
+
+        // Determine valueId dynamically
+        const valueId = {
+            table: invoice.table_id,
+            customer: invoice.customer_id,
+            user: invoice.user_id,
+        }[invoiceMode] || '';
+
+        // Prepare request data
+        const data = {
+            url: 'inventory/pos/inline-update',
+            data: {
+                invoice_id: invoice.id,
+                field_name: invoiceMode,
+                value: valueId,
+            },
+        };
+
+        // Dispatch and handle response
+        try {
+            const resultAction = await dispatch(storeEntityData(data));
+
+            if (resultAction.payload?.status !== 200) {
+                showNotificationComponent(resultAction.payload?.message || 'Error updating invoice', 'red', '', '', true);
             }
-        } else {
-            if (tableId !== id) {
-                setTableId(id);
-                setCustomerObject(tableCustomerMap[id] || {});
-            }
+        } catch (error) {
+            showNotificationComponent('Request failed. Please try again.', 'red', '', '', true);
+            console.error('Error updating invoice:', error);
         }
     };
 
@@ -32,7 +56,7 @@ function HeaderNavbar({tables, tableId, setTableId, tableCustomerMap, setCustome
                     {tables.map((table) => {
                         const customer = tableCustomerMap[table.id] || {};
                         return (
-                            <Box key={table.id} onClick={() => clicked(table.id)}
+                            <Box key={table.id} onClick={() => HandleParticularClick(table)}
                                  style={{position: "relative", width: "140px", cursor: "pointer"}}>
 
                                 {/* ✅ Badge for Status (Same Styling) */}
@@ -51,7 +75,8 @@ function HeaderNavbar({tables, tableId, setTableId, tableCustomerMap, setCustome
                                         borderRadius: "100px",
                                     }}
                                 >
-                                    <Text c={"#FFFFFF"} fw={600} fz={"sm"}>{ tableId == table.id ? 'Reserved' : 'Free'}</Text>
+                                    <Text c={"#FFFFFF"} fw={600}
+                                          fz={"sm"}>{tableId == table.id ? 'Reserved' : 'Free'}</Text>
                                 </Badge>
 
                                 {/* ✅ Table Component (Same Design, Optimized for Performance) */}
