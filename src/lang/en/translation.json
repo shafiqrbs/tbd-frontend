@@ -788,5 +788,22 @@
   "CreateBarcodePrint" : "Create Barcode Print",
   "PosInvoiceMode" : "Pos invoice mode",
   "ChoosePosInvoiceMode" : "Choose pos invoice mode",
-  "" : ""
+  "" : "",
+  "PrintQuantity" : "Print Quantity",
+  "ChooseBarcodeType" : "Choose Barcode Type",
+  "CouponName" : "Coupon Name",
+  "CouponQuantity" : "Coupon Quantity",
+  "DiscountAmount" : "Discount Amount",
+  "CouponDiscountAmount" : "Coupon Discount Amount",
+  "CouponLimit" : "Coupon Limit",
+  "MinimumSalesAmount" : "Minimum Sales Amount",
+  "ChooseStartDate" : "Choose Start Date",
+  "ChooseEndDate" : "Choose End Date",
+  "SendCustomerSms" : "Send Customer via SMS",
+  "ChooseCouponMode" : "Choose Coupon Mode",
+  "SmsEnable" : "Sms Enable",
+  "MinAmount" : "Min. Amount",
+  "DisMode" : "Dis. Mode",
+  "DisAmount" : "Dis. Amount",
+  "BarcodeType" : "Barcode Type"
 }

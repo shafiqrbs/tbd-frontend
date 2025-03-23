@@ -269,7 +269,7 @@ export default function CouponForm() {
                           <Grid.Col span={12}>
                             <DatePickerForm
                               tooltip={t("ChooseStartDate")}
-                              label="StartDate"
+                              label={t("StartDate")}
                               placeholder={t("ChooseStartDate")}
                               required={false}
                               nextField={"end_date"}
@@ -285,7 +285,7 @@ export default function CouponForm() {
                           <Grid.Col span={12}>
                             <DatePickerForm
                               tooltip={t("ChooseEndDate")}
-                              label="EndDate"
+                              label={t("EndDate")}
                               placeholder={t("ChooseEndDate")}
                               required={false}
                               nextField={"is_sms"}

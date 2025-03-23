@@ -66,7 +66,8 @@ export default function NewSales(props) {
     const [selected, setSelected] = useState([]);
     const [id, setId] = useState(null);
     const {configData} = getConfigData();
-    const enableTable = !!(configData?.is_pos && configData?.is_table_pos);
+    //is_table_pos undefined thats why not rendering
+    const enableTable = !!(configData?.is_pos && invoiceMode==='table');
     const [loadCartProducts, setLoadCartProducts] = useState(false);
     const [tempCartProducts, setTempCartProducts] = useState([]);
 
