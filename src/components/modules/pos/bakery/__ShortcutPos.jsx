@@ -23,7 +23,7 @@ import getConfigData from "../../../global-hook/config-data/getConfigData";
 function __ShortcutPos(props) {
   const { t, i18n } = useTranslation();
   const { isOnline, mainAreaHeight } = useOutletContext();
-  const height = mainAreaHeight - 106;
+  const height = mainAreaHeight - 190;
   const { configData } = getConfigData();
   return (
     <>
