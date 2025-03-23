@@ -41,6 +41,8 @@ import Invoice from "./Invoice.jsx";
 import {notifications} from "@mantine/notifications";
 import {useCartOperations} from "./utils/CartOperations.jsx";
 import __ShortcutPos from "./__ShortcutPos.jsx";
+import {storeEntityData} from "../../../../store/inventory/crudSlice.js";
+import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
 
 export default function NewSales(props) {
     const {
@@ -675,11 +677,48 @@ export default function NewSales(props) {
                                                                                 : "3px solid white",
                                                                         },
                                                                     })}
-                                                                    onClick={(e) => {
+                                                                    onClick={async (e) => {
                                                                         e.preventDefault();
                                                                         e.stopPropagation();
                                                                         handleSelect(product.id);
                                                                         handleIncrement(product.id);
+
+                                                                        const data = {
+                                                                            url: "inventory/pos/inline-update",
+                                                                            data: {
+                                                                                invoice_id: tableId,
+                                                                                field_name: "items",
+                                                                                value: product,
+                                                                            },
+                                                                        };
+                                                                        data.data.value.quantity = 1;
+
+                                                                        // Dispatch and handle response
+                                                                        try {
+                                                                            const resultAction = await dispatch(
+                                                                                storeEntityData(data)
+                                                                            );
+
+                                                                            if (resultAction.payload?.status !== 200) {
+                                                                                showNotificationComponent(
+                                                                                    resultAction.payload?.message ||
+                                                                                    "Error updating invoice",
+                                                                                    "red",
+                                                                                    "",
+                                                                                    "",
+                                                                                    true
+                                                                                );
+                                                                            }
+                                                                        } catch (error) {
+                                                                            showNotificationComponent(
+                                                                                "Request failed. Please try again.",
+                                                                                "red",
+                                                                                "",
+                                                                                "",
+                                                                                true
+                                                                            );
+                                                                            console.error("Error updating invoice:", error);
+                                                                        }
                                                                     }}
                                                                 >
                                                                     <Image
@@ -688,7 +727,6 @@ export default function NewSales(props) {
                                                                         mah={120}
                                                                         w="auto"
                                                                         fit="cover"
-                                                                        // src={product.img}
                                                                         src={`${
                                                                             import.meta.env.VITE_IMAGE_GATEWAY_URL
                                                                         }/uploads/inventory/product/feature_image/${
@@ -768,9 +806,45 @@ export default function NewSales(props) {
                                                                         },
                                                                     })}
                                                                     padding="xs"
-                                                                    onClick={() => {
+                                                                    onClick={async () => {
                                                                         handleSelect(product.id);
                                                                         handleIncrement(product.id);
+                                                                        const data = {
+                                                                            url: "inventory/pos/inline-update",
+                                                                            data: {
+                                                                                invoice_id: tableId,
+                                                                                field_name: "items",
+                                                                                value: product,
+                                                                            },
+                                                                        };
+                                                                        data.data.value.quantity = 1;
+
+                                                                        // Dispatch and handle response
+                                                                        try {
+                                                                            const resultAction = await dispatch(
+                                                                                storeEntityData(data)
+                                                                            );
+
+                                                                            if (resultAction.payload?.status !== 200) {
+                                                                                showNotificationComponent(
+                                                                                    resultAction.payload?.message ||
+                                                                                    "Error updating invoice",
+                                                                                    "red",
+                                                                                    "",
+                                                                                    "",
+                                                                                    true
+                                                                                );
+                                                                            }
+                                                                        } catch (error) {
+                                                                            showNotificationComponent(
+                                                                                "Request failed. Please try again.",
+                                                                                "red",
+                                                                                "",
+                                                                                "",
+                                                                                true
+                                                                            );
+                                                                            console.error("Error updating invoice:", error);
+                                                                        }
                                                                     }}
                                                                 >
                                                                     <Grid columns={12}>
@@ -903,7 +977,48 @@ export default function NewSales(props) {
                                                                         <ActionIcon
                                                                             size={"sm"}
                                                                             bg={"gray.7"}
-                                                                            onClick={() => handleDecrement(data.id)}
+                                                                            onClick={async () => {
+                                                                                handleDecrement(data.id)
+
+                                                                                /*const ff = tempCartProducts.find((item) => item.product_id === data.id)?.quantity ?? 0
+                                                                                console.log(ff)*/
+                                                                                /*const itemData = {
+                                                                                    url: "inventory/pos/inline-update",
+                                                                                    data: {
+                                                                                        invoice_id: tableId,
+                                                                                        field_name: "items",
+                                                                                        value: product,
+                                                                                    },
+                                                                                };
+                                                                                itemData.data.value.quantity = 1;
+
+                                                                                // Dispatch and handle response
+                                                                                try {
+                                                                                    const resultAction = await dispatch(
+                                                                                        storeEntityData(itemData)
+                                                                                    );
+
+                                                                                    if (resultAction.payload?.status !== 200) {
+                                                                                        showNotificationComponent(
+                                                                                            resultAction.payload?.message ||
+                                                                                            "Error updating invoice",
+                                                                                            "red",
+                                                                                            "",
+                                                                                            "",
+                                                                                            true
+                                                                                        );
+                                                                                    }
+                                                                                } catch (error) {
+                                                                                    showNotificationComponent(
+                                                                                        "Request failed. Please try again.",
+                                                                                        "red",
+                                                                                        "",
+                                                                                        "",
+                                                                                        true
+                                                                                    );
+                                                                                    console.error("Error updating invoice:", error);
+                                                                                }*/
+                                                                            }}
                                                                         >
                                                                             <IconMinus height={"12"} width={"12"}/>
                                                                         </ActionIcon>
