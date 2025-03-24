@@ -5,6 +5,7 @@ import tableCss from "../../../../assets/css/Table.module.css";
 import { useState } from "react";
 import { DataTable } from "mantine-datatable";
 import KeywordSearch from "../../filter/KeywordSearch";
+import BarcodeGenerator from "./barcode-generator/BarcodeGenerator";
 
 export default function BarcodePrintView(props) {
   const { preview, setPreview } = props;
@@ -78,6 +79,7 @@ export default function BarcodePrintView(props) {
           type="never"
           p={"xs"}
         >
+          {<BarcodeGenerator value={"1234567890"} />}
           {preview &&
             Array.from({ length: Math.ceil(images.length / 3) }).map(
               (_, rowIndex) => (
