@@ -31,8 +31,10 @@ export default function BakeryIndex() {
     const [customerObject, setCustomerObject] = useState({});
     const [tableSplitPaymentMap, setTableSplitPaymentMap] = useState({});
     const [indexData, setIndexData] = useState([]);
+    const [invoiceData, setInvoiceData] = useState([]);
     const [invoiceMode, setInvoiceMode] = useState(null);
     const [tableId, setTableId] = useState(null);
+    const [reloadInvoiceData, setReloadInvoiceData] = useState(false);
 
     // ✅ Optimized Category Dropdown Fetching
 
@@ -84,6 +86,31 @@ export default function BakeryIndex() {
         fetchData();
     }, [dispatch]);
 
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const resultAction = await dispatch(getIndexEntityData({
+                    url: "inventory/pos/invoice-details",
+                    param: {
+                        invoice_id: tableId
+                    }
+                }));
+                if (getIndexEntityData.fulfilled.match(resultAction)) {
+                    setInvoiceData(resultAction.payload.data);
+                    setCustomerObject(resultAction?.payload?.data?.customer)
+                } else {
+                    console.error("Error fetching data:", resultAction);
+                }
+            } catch (err) {
+                console.error("Unexpected error:", err);
+            } finally {
+                setReloadInvoiceData(false)
+            }
+        };
+        fetchData();
+    }, [dispatch, tableId, reloadInvoiceData]);
+
+
     // ✅ Memoized Active Table Extraction
     const tableIdMemoized = useMemo(() => {
         return indexData.find((item) => item.is_active)?.id || null;
@@ -95,7 +122,16 @@ export default function BakeryIndex() {
 
     // ✅ Memoized Transformed Table Data
     const transformedTables = useMemo(() => {
-        return indexData.map(({id, particular_name, username, customer_name, customer_id, is_active,table_id,user_id}) => {
+        return indexData.map(({
+                                  id,
+                                  particular_name,
+                                  username,
+                                  customer_name,
+                                  customer_id,
+                                  is_active,
+                                  table_id,
+                                  user_id
+                              }) => {
             let particularName =
                 invoiceMode === "table"
                     ? `${particular_name}`
@@ -218,6 +254,9 @@ export default function BakeryIndex() {
                                 clearTableSplitPayment={clearTableSplitPayment}
                                 tableSplitPaymentMap={tableSplitPaymentMap}
                                 invoiceMode={invoiceMode}
+                                invoiceData={invoiceData}
+                                reloadInvoiceData={reloadInvoiceData}
+                                setReloadInvoiceData={setReloadInvoiceData}
                             />
                         </Box>
                     </Box>

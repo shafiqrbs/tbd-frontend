@@ -54,6 +54,7 @@ function _AddCustomerFormPos(props) {
         tableId,
         updateTableCustomer,
         clearTableCustomer,
+        setReloadInvoiceData
     } = props;
 
     const {t} = useTranslation();
@@ -541,6 +542,8 @@ function _AddCustomerFormPos(props) {
                                                 } catch (error) {
                                                     showNotificationComponent('Request failed. Please try again.', 'red', '', '', true);
                                                     console.error('Error updating invoice:', error);
+                                                }finally {
+                                                    setReloadInvoiceData(true)
                                                 }
                                             }}
                                             leftSection={<IconDeviceFloppy size={16}/>}

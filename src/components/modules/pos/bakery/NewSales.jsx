@@ -59,8 +59,12 @@ export default function NewSales(props) {
         updateTableSplitPayment,
         clearTableSplitPayment,
         tableSplitPaymentMap,
-        invoiceMode
+        invoiceMode,
+        invoiceData,
+        reloadInvoiceData,
+        setReloadInvoiceData
     } = props;
+
     const dispatch = useDispatch();
     const {t, i18n} = useTranslation();
     const {isOnline, mainAreaHeight} = useOutletContext();
@@ -69,7 +73,7 @@ export default function NewSales(props) {
     const [id, setId] = useState(null);
     const {configData} = getConfigData();
     //is_table_pos undefined thats why not rendering
-    const enableTable = !!(configData?.is_pos && invoiceMode==='table');
+    const enableTable = !!(configData?.is_pos && invoiceMode === 'table');
     const [loadCartProducts, setLoadCartProducts] = useState(false);
     const [tempCartProducts, setTempCartProducts] = useState([]);
 
@@ -680,8 +684,8 @@ export default function NewSales(props) {
                                                                     onClick={async (e) => {
                                                                         e.preventDefault();
                                                                         e.stopPropagation();
-                                                                        handleSelect(product.id);
-                                                                        handleIncrement(product.id);
+                                                                        // handleSelect(product.id);
+                                                                        // handleIncrement(product.id);
 
                                                                         const data = {
                                                                             url: "inventory/pos/inline-update",
@@ -718,6 +722,8 @@ export default function NewSales(props) {
                                                                                 true
                                                                             );
                                                                             console.error("Error updating invoice:", error);
+                                                                        } finally {
+                                                                            setReloadInvoiceData(true)
                                                                         }
                                                                     }}
                                                                 >
@@ -809,6 +815,7 @@ export default function NewSales(props) {
                                                                     onClick={async () => {
                                                                         handleSelect(product.id);
                                                                         handleIncrement(product.id);
+
                                                                         const data = {
                                                                             url: "inventory/pos/inline-update",
                                                                             data: {
@@ -844,6 +851,8 @@ export default function NewSales(props) {
                                                                                 true
                                                                             );
                                                                             console.error("Error updating invoice:", error);
+                                                                        } finally {
+                                                                            setReloadInvoiceData(true)
                                                                         }
                                                                     }}
                                                                 >
@@ -1605,6 +1614,9 @@ export default function NewSales(props) {
                             clearTableSplitPayment={clearTableSplitPayment}
                             tableSplitPaymentMap={tableSplitPaymentMap}
                             invoiceMode={invoiceMode}
+                            invoiceData={invoiceData}
+                            reloadInvoiceData={reloadInvoiceData}
+                            setReloadInvoiceData={setReloadInvoiceData}
                         />
                     </Grid.Col>
                 )}
