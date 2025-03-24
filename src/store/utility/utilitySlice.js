@@ -62,6 +62,7 @@ const utilitySlice = createSlice({
     productSizeDropdown: [],
     moduleDropdownData: [],
     posTableData: [],
+    productLocationData: [],
     utilityProductTypeDropdownData: [],
     productModelDropdown: [],
     posInvoiceModeDropdownData: [],
@@ -94,6 +95,9 @@ const utilitySlice = createSlice({
       }
       if (action.payload.type === "table") {
         state.posTableData = action.payload.data.data;
+      }
+      if (action.payload.type === "location") {
+        state.productLocationData = action.payload.data.data;
       }
       if (action.payload.type === "size") {
         state.productSizeDropdown = action.payload.data.data;

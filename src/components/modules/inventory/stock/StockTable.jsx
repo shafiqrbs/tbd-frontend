@@ -38,9 +38,11 @@ import { modals } from "@mantine/modals";
 import AddMeasurement from "../modal/AddMeasurement.jsx";
 import { Carousel } from "@mantine/carousel";
 import Autoplay from "embla-carousel-autoplay";
+import SelectForm from "../../../form-builders/SelectForm.jsx";
+import { useForm } from "@mantine/form";
 
 function StockTable(props) {
-  const { categoryDropdown } = props;
+  const { categoryDropdown, locationData } = props;
   const dispatch = useDispatch();
   const { t, i18n } = useTranslation();
   const { isOnline, mainAreaHeight } = useOutletContext();
@@ -181,6 +183,14 @@ function StockTable(props) {
     }
   }, [downloadStockXLS, dispatch]);
 
+  // Location Dropdown
+  const form = useForm({
+    initialValues: {
+      location_id: "",
+    },
+  });
+  const [locationMap, setLocationMap] = useState({});
+
   return (
     <>
       <Box
@@ -238,88 +248,130 @@ function StockTable(props) {
                 </Text>
               ),
             },
-            { accessor: "purchase_price", title: t("PurchasePrice"), textAlign : "center" },
-            { accessor: "sales_price", title: t("SalesPrice"), textAlign : "center" },
+            {
+              accessor: "purchase_price",
+              title: t("PurchasePrice"),
+              textAlign: "center",
+            },
+            {
+              accessor: "sales_price",
+              title: t("SalesPrice"),
+              textAlign: "center",
+            },
             {
               accessor: "feature_image",
-              textAlign : "center",
+              textAlign: "center",
               title: t("Image"),
               width: "100px",
               render: (item) => {
                 const [opened, setOpened] = useState(false);
-                const autoplay = useRef(Autoplay({delay: 2000}));
+                const autoplay = useRef(Autoplay({ delay: 2000 }));
 
                 const images = [
-                    item?.images?.feature_image ? import.meta.env.VITE_IMAGE_GATEWAY_URL + item.images.feature_image : null,
-                    item?.images?.path_one ? import.meta.env.VITE_IMAGE_GATEWAY_URL + item.images.path_one : null,
-                    item?.images?.path_two ? import.meta.env.VITE_IMAGE_GATEWAY_URL + item.images.path_two : null,
-                    item?.images?.path_three ? import.meta.env.VITE_IMAGE_GATEWAY_URL + item.images.path_three : null,
-                    item?.images?.path_four ? import.meta.env.VITE_IMAGE_GATEWAY_URL + item.images.path_four : null,
+                  item?.images?.feature_image
+                    ? import.meta.env.VITE_IMAGE_GATEWAY_URL +
+                      item.images.feature_image
+                    : null,
+                  item?.images?.path_one
+                    ? import.meta.env.VITE_IMAGE_GATEWAY_URL +
+                      item.images.path_one
+                    : null,
+                  item?.images?.path_two
+                    ? import.meta.env.VITE_IMAGE_GATEWAY_URL +
+                      item.images.path_two
+                    : null,
+                  item?.images?.path_three
+                    ? import.meta.env.VITE_IMAGE_GATEWAY_URL +
+                      item.images.path_three
+                    : null,
+                  item?.images?.path_four
+                    ? import.meta.env.VITE_IMAGE_GATEWAY_URL +
+                      item.images.path_four
+                    : null,
                 ].filter(Boolean);
 
                 return (
-                    <>
-                        <Image
-                            mih={50}
-                            mah={50}
-                            fit="contain"
-                            src={images.length > 0 ? images[0] : `https://placehold.co/120x80/FFFFFF/2f9e44?text=${encodeURIComponent(item.product_name)}`}
-                            style={{cursor: 'pointer'}}
-                            onClick={() => setOpened(true)}
-                        />
+                  <>
+                    <Image
+                      mih={50}
+                      mah={50}
+                      fit="contain"
+                      src={
+                        images.length > 0
+                          ? images[0]
+                          : `https://placehold.co/120x80/FFFFFF/2f9e44?text=${encodeURIComponent(
+                              item.product_name
+                            )}`
+                      }
+                      style={{ cursor: "pointer" }}
+                      onClick={() => setOpened(true)}
+                    />
 
-                        <Modal
-                            opened={opened}
-                            onClose={() => setOpened(false)}
-                            size="lg"
-                            centered
-                            styles={{
-                                content: {overflow: 'hidden'}, // Ensure modal content doesn't overflow
-                            }}
-                        >
-                            <Carousel
-                                withIndicators
-                                height={700}
-                                // plugins={[autoplay.current]}
-                                onMouseEnter={autoplay.current.stop}
-                                onMouseLeave={autoplay.current.reset}
+                    <Modal
+                      opened={opened}
+                      onClose={() => setOpened(false)}
+                      size="lg"
+                      centered
+                      styles={{
+                        content: { overflow: "hidden" }, // Ensure modal content doesn't overflow
+                      }}
+                    >
+                      <Carousel
+                        withIndicators
+                        height={700}
+                        // plugins={[autoplay.current]}
+                        onMouseEnter={autoplay.current.stop}
+                        onMouseLeave={autoplay.current.reset}
+                      >
+                        {images.map((img, index) => (
+                          <Carousel.Slide key={index}>
+                            <div
+                              style={{
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                height: "100%",
+                                overflow: "hidden",
+                              }}
                             >
-                                {images.map((img, index) => (
-                                    <Carousel.Slide key={index}>
-                                        <div
-                                            style={{
-                                                display: 'flex',
-                                                justifyContent: 'center',
-                                                alignItems: 'center',
-                                                height: '100%',
-                                                overflow: 'hidden',
-                                            }}
-                                        >
-                                            <Image
-                                                src={img}
-                                                fit="contain"
-                                                style={{
-                                                    transition: 'transform 0.3s ease-in-out',
-                                                    maxWidth: '100%', // Ensure image fits within the slide
-                                                    maxHeight: '100%',
-                                                }}
-                                                onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.2)'}
-                                                onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
-                                            />
-                                        </div>
-                                    </Carousel.Slide>
-                                ))}
-                            </Carousel>
-                        </Modal>
-                    </>
+                              <Image
+                                src={img}
+                                fit="contain"
+                                style={{
+                                  transition: "transform 0.3s ease-in-out",
+                                  maxWidth: "100%", // Ensure image fits within the slide
+                                  maxHeight: "100%",
+                                }}
+                                onMouseEnter={(e) =>
+                                  (e.currentTarget.style.transform =
+                                    "scale(1.2)")
+                                }
+                                onMouseLeave={(e) =>
+                                  (e.currentTarget.style.transform = "scale(1)")
+                                }
+                              />
+                            </div>
+                          </Carousel.Slide>
+                        ))}
+                      </Carousel>
+                    </Modal>
+                  </>
                 );
-            }
+              },
             },
             { accessor: "vat", title: t("Vat") },
             // { accessor: "average_price", title: t("AveragePrice"), textAlign : "center" },
-            { accessor: "bonus_quantity", title: t("BonusQuantityTable"), textAlign : "center" },
-            { accessor: "quantity", title: t("Quantity"), textAlign : "center" },
-            { accessor: "quantity", title: t("RemainQuantity"), textAlign : "center" },
+            {
+              accessor: "bonus_quantity",
+              title: t("BonusQuantityTable"),
+              textAlign: "center",
+            },
+            { accessor: "quantity", title: t("Quantity"), textAlign: "center" },
+            {
+              accessor: "quantity",
+              title: t("RemainQuantity"),
+              textAlign: "center",
+            },
             { accessor: "brand_name", title: t("Brand"), hidden: !isBrand },
             { accessor: "grade_name", title: t("Grade"), hidden: !isGrade },
             { accessor: "color_name", title: t("Color"), hidden: !isColor },
@@ -341,6 +393,33 @@ function StockTable(props) {
                     offLabel="Disable"
                     onChange={(event) => {
                       handleSwtich(event, item);
+                    }}
+                  />
+                </>
+              ),
+            },
+            {
+              accessor: "location",
+              title: t("Location"),
+              textAlign: "center",
+              width: 220,
+              render: (item) => (
+                <>
+                  <SelectForm
+                    tooltip={t("ChooseProductLocation")}
+                    placeholder={t("ChooseProductLocation")}
+                    required={true}
+                    name={"location_id"}
+                    form={form}
+                    dropdownValue={locationData}
+                    id={"location_id"}
+                    searchable={true}
+                    value={locationMap[item.id] || null}
+                    changeValue={(value) => {
+                      setLocationMap((prev) => ({
+                        ...prev,
+                        [item.id]: value,
+                      }));
                     }}
                   />
                 </>
