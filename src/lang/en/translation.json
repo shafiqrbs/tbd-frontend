@@ -805,5 +805,6 @@
   "MinAmount" : "Min. Amount",
   "DisMode" : "Dis. Mode",
   "DisAmount" : "Dis. Amount",
-  "BarcodeType" : "Barcode Type"
+  "BarcodeType" : "Barcode Type",
+  "ProductAddon" : "Product Addon"
 }
