@@ -333,7 +333,7 @@ export default function Invoice(props) {
     const [indexData, setIndexData] = useState(null);
     const getAdditionalItem = (value) => {
         setIndexData(value);
-        console.log(indexData);
+        // console.log(indexData);
     };
     const [customerId, setCustomerId] = useState(invoiceData?.customer_id);
     const [customerDrawer, setCustomerDrawer] = useState(false);
