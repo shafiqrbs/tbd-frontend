@@ -13,7 +13,7 @@ import {
 import SelectForm from "../../../form-builders/SelectForm";
 import { IconUsersGroup, IconDeviceFloppy } from "@tabler/icons-react";
 import { useTranslation } from "react-i18next";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useOutletContext } from "react-router-dom";
 import { isNotEmpty, useForm } from "@mantine/form";
 import { modals } from "@mantine/modals";
@@ -23,20 +23,22 @@ import Shortcut from "../../shortcut/Shortcut";
 import InputForm from "../../../form-builders/InputForm";
 import useSettingParticularDropdownData from "../../../global-hook/dropdown/getSettingParticularDropdownData.js";
 
-export default function TransferForm() {
+export default function TransferUpdateForm() {
   const { t, i18n } = useTranslation();
   const dispatch = useDispatch();
   const { isOnline, mainAreaHeight } = useOutletContext();
   const height = mainAreaHeight - 100;
 
+  const entityEditData = useSelector((state) => state.crudSlice.entityEditData);
+
   const [saveCreateLoading, setSaveCreateLoading] = useState(false);
   const form = useForm({
     initialValues: {
-      from_warehouse_id: "",
-      to_warehouse_id: "",
-      stock_item_id: "",
-      quantity: "",
-      bonus_quantity: "",
+      from_warehouse_id: entityEditData?.from_warehouse_id || "",
+      toWarehouseId: entityEditData?.to_warehouse_id || "",
+      stockItemId: entityEditData?.stock_item_id || "",
+      quantity: entityEditData?.quantity || "",
+      bonusQuantity: entityEditData?.bonus_quantity || "",
     },
     validate: {
       from_warehouse_id: isNotEmpty(),
@@ -56,7 +58,6 @@ export default function TransferForm() {
   const warehouses = useSettingParticularDropdownData("wearhouse");
 
   useEffect(() => {
-
     setFilteredFromWarehouseOptions(warehouses);
     setFilteredToWarehouseOptions(warehouses);
 
@@ -92,7 +93,7 @@ export default function TransferForm() {
         (option) => option.value !== toWarehouseId
       );
       setFilteredFromWarehouseOptions(filtered);
-      
+
       if (fromWarehouseId === toWarehouseId) {
         setFromWarehouseId(null);
         form.setFieldValue("from_warehouse_id", "");
