@@ -1,22 +1,16 @@
-import React, {useEffect, useRef, useState} from "react";
-import {useNavigate, useOutletContext} from "react-router-dom";
+import React, {useEffect, useState} from "react";
+import {useOutletContext} from "react-router-dom";
 import {
     Group,
     Box,
     ActionIcon,
     Text,
-    Menu,
-    rem,
     TextInput,
-    Center,
     Button,
     Grid,
     Flex,
     ScrollArea,
-    Divider,
     Image,
-    Select,
-    SimpleGrid,
     Tooltip,
     Checkbox,
     Paper,
@@ -27,9 +21,6 @@ import {useTranslation} from "react-i18next";
 import {
     IconChevronRight,
     IconChevronLeft,
-    IconCheck,
-    IconSearch,
-    IconChevronDown,
     IconX,
     IconPlus,
     IconMinus,
@@ -38,7 +29,6 @@ import {
     IconUserFilled,
     IconPrinter,
     IconDeviceFloppy,
-    IconAlertCircle,
     IconHandStop,
     IconScissors,
     IconCurrency,
@@ -46,27 +36,25 @@ import {
     IconTicket,
 } from "@tabler/icons-react";
 import {DataTable} from "mantine-datatable";
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch} from "react-redux";
 import tableCss from "./css/Table.module.css";
 import classes from "./css/Invoice.module.css";
 import {IconChefHat} from "@tabler/icons-react";
 import getConfigData from "../../../global-hook/config-data/getConfigData";
 import {SalesPrintPos} from "../print/pos/SalesPrintPos";
-import {isNotEmpty, useForm} from "@mantine/form";
+import {useForm} from "@mantine/form";
 import {notifications} from "@mantine/notifications";
 import {useCartOperations} from "./utils/CartOperations";
-import {TransformProduct} from "./utils/TransformProduct";
 import SelectForm from "../../../form-builders/SelectForm";
 import {
-    getSalesDetails,
     storeEntityData,
 } from "../../../../store/inventory/crudSlice.js";
 import AddCustomerDrawer from "../../inventory/sales/drawer-form/AddCustomerDrawer.jsx";
 import customerDataStoreIntoLocalStorage from "../../../global-hook/local-storage/customerDataStoreIntoLocalStorage.js";
 import _CommonDrawer from "./drawer/_CommonDrawer.jsx";
-import InputNumberForm from "../../../form-builders/InputNumberForm.jsx";
 import {useScroll} from "./utils/ScrollOperations";
 import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
+import {getIndexEntityData} from "../../../../store/core/crudSlice.js";
 
 export default function Invoice(props) {
     const {
@@ -74,7 +62,6 @@ export default function Invoice(props) {
         tableId,
         tables,
         setLoadCartProducts,
-        handleSubmitOrder,
         tableCustomerMap,
         updateTableCustomer,
         clearTableCustomer,
@@ -172,13 +159,7 @@ export default function Invoice(props) {
             setSalesByDropdownData(transformedData);
         }
     }, []);
-    /*useEffect(() => {
-      if (salesByUser) {
-        setSalesByUserName(
-          salesByDropdownData.find((item) => item.value === salesByUser).label
-        );
-      }
-    }, [salesByUser, salesByDropdownData]);*/
+
     const {scrollRef, showLeftArrow, showRightArrow, handleScroll, scroll} =
         useScroll();
 
@@ -333,7 +314,6 @@ export default function Invoice(props) {
     const [indexData, setIndexData] = useState(null);
     const getAdditionalItem = (value) => {
         setIndexData(value);
-        // console.log(indexData);
     };
     const [customerId, setCustomerId] = useState(invoiceData?.customer_id);
     const [customerDrawer, setCustomerDrawer] = useState(false);
@@ -478,9 +458,54 @@ export default function Invoice(props) {
                 setSalesDiscountAmount(invoiceData?.percentage);
             }
         }
-      }, [invoiceData, discountType]);
+    }, [invoiceData, discountType]);
     const handleSave = () => {
-        console.log(invoiceData.id)
+        if (!salesByUser || salesByUser == 'undefined') {
+            showNotificationComponent(t('ChooseUser'), 'red', '', '', true, 1000, true)
+            return
+        }
+
+        if (!invoiceData.transaction_mode_id) {
+            showNotificationComponent(t('ChooseTransactionMode'), 'red', '', '', true, 1000, true)
+            return
+        }
+
+        if (!customerId) {
+            showNotificationComponent(t('ChooseCustomer'), 'red', '', '', true, 1000, true)
+            return
+        }
+
+        if (!invoiceData.payment) {
+            showNotificationComponent(t('PaymentAmount'), 'red', '', '', true, 1000, true)
+            return
+        }
+
+        const fetchData = async () => {
+            try {
+                const resultAction = await dispatch(getIndexEntityData({
+                    url: "inventory/pos/sales-complete/" + invoiceData.id,
+                    param: {}
+                }));
+                if (getIndexEntityData.fulfilled.match(resultAction)) {
+                    showNotificationComponent(t('SalesComplete'), 'blue', '', '', true, 1000, true)
+                    // Delay the page reload slightly to allow UI notification to be seen
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 500);  // Reload after 1 second
+                } else {
+                    console.error("Error fetching data:", resultAction);
+                }
+            } catch (err) {
+                console.error("Unexpected error:", err);
+            } finally {
+                setSalesByUser(null)
+                setCustomerId(null)
+                setCustomerObject(null)
+                // setTableId(null)
+                setReloadInvoiceData(true)
+            }
+        };
+        fetchData();
     }
     return (
         <>
@@ -529,7 +554,7 @@ export default function Invoice(props) {
 
                     {enableTable && (
                         <Tooltip
-                            disabled={!(invoiceData?.invoice_items.length === 0 || !salesByUser)}
+                            disabled={!(invoiceData?.invoice_items?.length === 0 || !salesByUser)}
                             color="red.6"
                             withArrow
                             px={16}
@@ -540,7 +565,7 @@ export default function Invoice(props) {
                             label={t("SelectProductandUser")}
                         >
                             <Button
-                                disabled={invoiceData?.invoice_items.length === 0 || !salesByUser}
+                                disabled={invoiceData?.invoice_items?.length === 0 || !salesByUser}
                                 radius="sm"
                                 size="sm"
                                 color="green"
@@ -732,7 +757,6 @@ export default function Invoice(props) {
                                 textAlign: "right",
                                 render: (data) => (
                                     <>
-                                        {/*{configData?.currency?.symbol} */}
                                         {data.sales_price}
                                     </>
                                 ),
@@ -1150,9 +1174,9 @@ export default function Invoice(props) {
                                         onChange={async (event) => {
                                             const newDiscountType = event.currentTarget.checked ? "Percent" : "Flat";
                                             setDiscountType(newDiscountType);
-                                            
+
                                             const currentDiscountValue = salesDiscountAmount;
-                                            
+
                                             const data = {
                                                 url: "inventory/pos/inline-update",
                                                 data: {
@@ -1162,14 +1186,14 @@ export default function Invoice(props) {
                                                     discount_amount: currentDiscountValue
                                                 },
                                             };
-                                    
+
                                             setSalesDiscountAmount(currentDiscountValue);
-                                    
+
                                             try {
                                                 const resultAction = await dispatch(
                                                     storeEntityData(data)
                                                 );
-                                    
+
                                                 if (resultAction.payload?.status !== 200) {
                                                     showNotificationComponent(
                                                         resultAction.payload?.message ||
@@ -1282,7 +1306,6 @@ export default function Invoice(props) {
                                         }
                                     />
                                 </Grid.Col>
-                                {/* <Grid.Col span={6}> &nbsp; </Grid.Col> */}
                                 <Grid.Col span={6} bg={"green"}>
                                     <Tooltip
                                         label={t("ReceiveAmountValidateMessage")}
@@ -1414,7 +1437,7 @@ export default function Invoice(props) {
                                                     setTableReceiveAmounts((prev) => ({
                                                         ...prev,
                                                         [currentTableKey]: newValue,
-                                                      }));
+                                                    }));
                                                 }
                                             }}
                                         />

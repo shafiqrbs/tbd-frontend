@@ -1,15 +1,13 @@
 import React, {useEffect, useState} from "react";
-import {useNavigate, useOutletContext} from "react-router-dom";
+import {useOutletContext} from "react-router-dom";
 import {
     Group,
     Box,
     ActionIcon,
     Text,
-    Menu,
     Center,
     TextInput,
     Tooltip,
-    Button,
     Grid,
     Flex,
     Stack,
@@ -25,14 +23,12 @@ import {
     IconBaselineDensitySmall,
     IconSearch,
     IconInfoCircle,
-    IconSum,
     IconMinus,
     IconPlus,
-    IconTrash,
     IconX,
     IconBarcode,
 } from "@tabler/icons-react";
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch} from "react-redux";
 import classes from "./css/Table.module.css";
 import getConfigData from "../../../global-hook/config-data/getConfigData";
 import {DataTable} from "mantine-datatable";
@@ -63,7 +59,6 @@ export default function NewSales(props) {
         setReloadInvoiceData
     } = props;
 
-    const dispatch = useDispatch();
     const {t, i18n} = useTranslation();
     const {isOnline, mainAreaHeight} = useOutletContext();
     const height = mainAreaHeight - 190; //TabList height 104
@@ -197,7 +192,7 @@ export default function NewSales(props) {
         setOriginalProducts(filteredProducts);
     }, [id]);
 
-    const {handleIncrement, handleDecrement, handleClearCart, getCartProducts} =
+    const {handleIncrement, handleDecrement} =
         useCartOperations({
             enableTable,
             tableId,
@@ -397,592 +392,554 @@ export default function NewSales(props) {
     const [leftSide, SetLeftSide] = useState(false);
     return (
         <>
-    <Grid columns={24} gutter={{base: 8}}>
-        <Grid.Col span={1}>
-            <__ShortcutPos FormSubmit={"EntityFormSubmit"} Name={"CompanyName"}/>
-        </Grid.Col>
-        {leftSide ? (
-            <Grid.Col span={8}>
-                <Invoice
-                    products={products}
-                    tableId={tableId}
-                    tables={tables}
-                    setLoadCartProducts={setLoadCartProducts}
-                    handleSubmitOrder={handleSubmitOrder}
-                    tableCustomerMap={tableCustomerMap}
-                    updateTableCustomer={updateTableCustomer}
-                    clearTableCustomer={clearTableCustomer}
-                    customerObject={customerObject}
-                    setCustomerObject={setCustomerObject}
-                    loadCartProducts={loadCartProducts}
-                />
-            </Grid.Col>
-        ) : (
-            <Grid.Col span={15}>
-                <Grid columns={12} gutter={{base: 8}}>
-                    <Grid.Col span={2}>
-                        <Box bg="white" w={"100%"} className="border-radius">
-                            <ScrollArea
-                                h={enableTable ? height + 30 : height + 195}
-                                type="never"
-                                scrollbars="y"
-                            >
-                                <Box pl={"8"} pr={"8"} pb={"8"}>
-                                    {categoryDropdown.map((data) => (
-                                        <Box
-                                            style={{
-                                                borderRadius: 4,
-                                            }}
-                                            className={`${classes["pressable-card"]} border-radius`}
-                                            mih={40}
-                                            mt={"4"}
-                                            variant="default"
-                                            key={data.value}
-                                            onClick={() => {
-                                                filterProductsbyCategory(data.value);
-                                            }}
-                                            bg={data.value === id ? "green.8" : "gray.8"}
-                                        >
-                                            <Text
-                                                size={"md"}
-                                                pl={14}
-                                                pt={8}
-                                                fw={500}
-                                                c={data.value === id ? "white" : "gray.4"}
-                                            >
-                                                {data.label}
-                                            </Text>
-                                        </Box>
-                                    ))}
-                                </Box>
-                            </ScrollArea>
-                        </Box>
+            <Grid columns={24} gutter={{base: 8}}>
+                <Grid.Col span={1}>
+                    <__ShortcutPos FormSubmit={"EntityFormSubmit"} Name={"CompanyName"}/>
+                </Grid.Col>
+                {leftSide ? (
+                    <Grid.Col span={8}>
+                        <Invoice
+                            products={products}
+                            tableId={tableId}
+                            setTableId={setTableId}
+                            tables={tables}
+                            setLoadCartProducts={setLoadCartProducts}
+                            handleSubmitOrder={handleSubmitOrder}
+                            tableCustomerMap={tableCustomerMap}
+                            updateTableCustomer={updateTableCustomer}
+                            clearTableCustomer={clearTableCustomer}
+                            customerObject={customerObject}
+                            setCustomerObject={setCustomerObject}
+                            loadCartProducts={loadCartProducts}
+                        />
                     </Grid.Col>
-                    <Grid.Col span={10}>
-                        <Stack gap={0}>
-                            <Box
-                                bg={"gray.8"}
-                                pt={0}
-                                pr={4}
-                                pl={4}
-                                pb={4}
-                                className="border-radius"
-                            >
-                                <Grid
-                                    columns={12}
-                                    gutter={{base: 4}}
-                                    align="center"
-                                    mt={4}
-                                >
-                                    <Grid.Col span={3}>
-                                        <Tooltip
-                                            label={t("BarcodeValidateMessage")}
-                                            opened={!isValidBarcode}
-                                            px={16}
-                                            py={2}
-                                            position="top-end"
-                                            bg={`red.4`}
-                                            c={"white"}
-                                            withArrow
-                                            offset={2}
-                                            zIndex={999}
-                                            transitionProps={{
-                                                transition: "pop-bottom-left",
-                                                duration: 500,
-                                            }}
-                                        >
-                                            <TextInput
-                                                type="number"
-                                                name="barcode"
-                                                id="barcode"
-                                                size="md"
-                                                label={""}
-                                                placeholder={t("Barcode")}
-                                                value={barcode}
-                                                onChange={(event) => {
-                                                    setBarcode(event.target.value);
-                                                    // handleBarcodeSearch(barcode);
-                                                }}
-                                                onKeyPress={(e) => {
-                                                    if (e.key === "Enter" && barcode) {
-                                                        handleBarcodeSearch(barcode);
-                                                    }
-                                                }}
-                                                autoComplete="off"
-                                                leftSection={
-                                                    <IconBarcode size={16} opacity={0.5}/>
-                                                }
-                                                rightSection={
-                                                    barcode ? (
-                                                        <Tooltip
-                                                            label={t("Clear")}
-                                                            withArrow
-                                                            bg={`gray.1`}
-                                                            c={`gray.7`}
-                                                        >
-                                                            <ActionIcon
-                                                                size="sm"
-                                                                variant="transparent"
-                                                                onClick={() => {
-                                                                    setBarcode("");
-                                                                    setIsValidBarcode(true);
-                                                                }}
-                                                            >
-                                                                <IconX color="red" size={16}/>
-                                                            </ActionIcon>
-                                                        </Tooltip>
-                                                    ) : (
-                                                        <Tooltip
-                                                            label={t("ScanOrTypeBarcode")}
-                                                            px={16}
-                                                            py={2}
-                                                            withArrow
-                                                            position={"left"}
-                                                            c={"black"}
-                                                            bg={`gray.1`}
-                                                            transitionProps={{
-                                                                transition: "pop-bottom-left",
-                                                                duration: 500,
-                                                            }}
-                                                        >
-                                                            <IconInfoCircle size={16} opacity={0.5}/>
-                                                        </Tooltip>
-                                                    )
-                                                }
-                                            />
-                                        </Tooltip>
-                                    </Grid.Col>
-                                    <Grid.Col span={6}>
-                                        <TextInput
-                                            radius="sm"
-                                            leftSection={<IconSearch size={16} opacity={0.5}/>}
-                                            size="md"
-                                            placeholder={t("SearchFood")}
-                                            rightSection={
-                                                searchValue ? (
-                                                    <Tooltip label="Clear" withArrow position="top">
-                                                        <IconX
-                                                            color="red"
-                                                            size={16}
-                                                            opacity={0.5}
-                                                            style={{cursor: "pointer"}}
-                                                            onClick={() => {
-                                                                setSearchValue("");
-                                                                filterList("");
-                                                            }}
-                                                        />
-                                                    </Tooltip>
-                                                ) : (
-                                                    <Tooltip
-                                                        label="Field is required"
-                                                        withArrow
-                                                        position="top"
-                                                        color="red"
-                                                    >
-                                                        <IconInfoCircle size={16} opacity={0.5}/>
-                                                    </Tooltip>
-                                                )
-                                            }
-                                            onChange={(event) => {
-                                                setSearchValue(event.target.value);
-                                                filterList(event.target.value);
-                                            }}
-                                        />
-                                    </Grid.Col>
-                                    <Grid.Col span={3}>
-                                        <SegmentedControl
-                                            styles={{
-                                                label: {color: "white"},
-                                            }}
-                                            bg={"green.6"}
-                                            withItemsBorders={false}
-                                            fullWidth
-                                            color="green.4"
-                                            value={value}
-                                            onChange={setValue}
-                                            data={[
-                                                {
-                                                    label: (
-                                                        <Center style={{gap: 10}}>
-                                                            <IconLayoutGrid
-                                                                height={"24"}
-                                                                width={"24"}
-                                                                stroke={1.5}
-                                                            />
-                                                        </Center>
-                                                    ),
-                                                    value: "grid",
-                                                },
-                                                {
-                                                    label: (
-                                                        <Center style={{gap: 10}}>
-                                                            <IconListDetails
-                                                                height={"24"}
-                                                                width={"24"}
-                                                                stroke={1.5}
-                                                            />
-                                                        </Center>
-                                                    ),
-                                                    value: "list",
-                                                },
-                                                {
-                                                    label: (
-                                                        <Center style={{gap: 10}}>
-                                                            <IconBaselineDensitySmall
-                                                                height={"24"}
-                                                                width={"24"}
-                                                                stroke={1.5}
-                                                            />
-                                                            {/* <span>Minimal</span> */}
-                                                        </Center>
-                                                    ),
-                                                    value: "minimal",
-                                                },
-                                            ]}
-                                        />
-                                    </Grid.Col>
-                                </Grid>
-                            </Box>
-                            <Box
-                                bg="white"
-                                w={"100%"}
-                                h={enableTable ? height - 22 : height + 141}
-                                mt={4}
-                                className="border-radius"
-                            >
-                                <ScrollArea
-                                    h={enableTable ? height - 22 : height + 141}
-                                    type="never"
-                                    pt={"8"}
-                                    pl={"xs"}
-                                    pr={"xs"}
-                                    pb={"6"}
-                                    scrollbars="y"
-                                >
-                                    {/* 1  */}
-            {value === "grid" && (
-                <Grid columns={12} gutter={{base: 8}}>
-                    {products.length > 0 ? (
-                        products?.map((product) => (
-                            <Grid.Col span={3} key={product.id}>
-                                <Card
-                                    shadow="md"
-                                    radius="md"
-                                    padding="xs"
-                                    styles={(theme) => ({
-                                        root: {
-                                            cursor: "pointer",
-                                            transition: "transform 0.5s ease-in-out",
-                                            transform: selected.includes(product.id)
-                                                ? "scale(0.97)"
-                                                : undefined,
-                                            border: selected.includes(product.id)
-                                                ? "3px solid green.8"
-                                                : "3px solid white",
-                                        },
-                                    })}
-                                    onClick={() => {
-                                        handleSelect(product.id);
-                                        handleIncrement(product.id);
-                                    }}
-                                >
-                                    <Image
-                                        radius="sm"
-                                        mih={120}
-                                        mah={120}
-                                        w="auto"
-                                        fit="cover"
-                                        src={`${
-                                            import.meta.env.VITE_IMAGE_GATEWAY_URL
-                                        }/uploads/inventory/product/feature_image/${
-                                            product.feature_image
-                                        }`}
-                                        fallbackSrc={`https://placehold.co/120x80/FFFFFF/2f9e44?text=${encodeURIComponent(
-                                            product.display_name
-                                        )}`}
-                                    />
-                                    <Text
-                                        fw={600}
-                                        size="sm"
-                                        fz={"13"}
-                                        mt={"4"}
-                                        ta={"left"}
+                ) : (
+                    <Grid.Col span={15}>
+                        <Grid columns={12} gutter={{base: 8}}>
+                            <Grid.Col span={2}>
+                                <Box bg="white" w={"100%"} className="border-radius">
+                                    <ScrollArea
+                                        h={enableTable ? height + 30 : height + 195}
+                                        type="never"
+                                        scrollbars="y"
                                     >
-                                        {product.display_name}
-                                    </Text>
-
-                                    <Text
-                                        styles={{
-                                            root: {
-                                                marginTop: "auto",
-                                            },
-                                        }}
-                                        ta={"right"}
-                                        fw={900}
-                                        fz={"18"}
-                                        size="md"
-                                        c={"green.9"}
-                                    >
-                                        {configData?.currency?.symbol}{" "}
-                                        {product.sales_price}
-                                    </Text>
-                                </Card>
-                            </Grid.Col>
-                        ))
-                    ) : (
-                        <>
-                            <Flex
-                                m={"sm"}
-                                h={"100%"}
-                                w={"100%"}
-                                justify="center"
-                                align="center"
-                            >
-                                <Text
-                                    ta={"center"}
-                                    fw={"normal"}
-                                    fz={"md"}
-                                    c={"black"}
-                                >
-                                    No product found in this category
-                                </Text>
-                            </Flex>
-                        </>
-                    )}
-                </Grid>
-            )}
-                {/* 2 */}
-            {value === "list" && (
-                <Grid columns={12} gutter={8}>
-                    {products.length > 0 ? (
-                        products?.map((product) => (
-                            <Grid.Col key={product.id} span={6}>
-                                <Card
-                                    shadow="md"
-                                    radius="md"
-                                    styles={(theme) => ({
-                                        root: {
-                                            cursor: "pointer",
-                                            transform: selected.includes(product.id)
-                                                ? "scale(0.97)"
-                                                : undefined,
-                                            border: selected.includes(product.id)
-                                                ? "3px solid #00542b"
-                                                : "3px solid #eaeced",
-                                        },
-                                    })}
-                                    padding="xs"
-                                    onClick={() => {
-                                        handleSelect(product.id);
-                                        handleIncrement(product.id)
-                                    }}
-                                >
-                                    <Grid columns={12}>
-                                        <Grid.Col span={6}>
-                                            <Card p={0}>
-                                                <Image
-                                                    mih={120}
-                                                    mah={120}
-                                                    miw={70}
-                                                    fit="cover"
-                                                    // src={product.img}
-                                                    src={`${
-                                                        import.meta.env
-                                                            .VITE_IMAGE_GATEWAY_URL
-                                                    }/uploads/inventory/product/feature_image/${
-                                                        product.feature_image
-                                                    }`}
-                                                    fallbackSrc={`https://placehold.co/120x80/FFFFFF/2f9e44?text=${encodeURIComponent(
-                                                        product.display_name
-                                                    )}`}
-                                                />
-                                            </Card>
-                                        </Grid.Col>
-                                        <Grid.Col span={6}>
-                                            <Stack
-                                                radius="md"
-                                                mih={"118"}
-                                                bg="var(--mantine-color-body)"
-                                                align="stretch"
-                                                justify="space-between"
-                                                gap="md"
-                                            >
-                                                <Text
-                                                    fw={600}
-                                                    size="sm"
-                                                    fz={"13"}
+                                        <Box pl={"8"} pr={"8"} pb={"8"}>
+                                            {categoryDropdown.map((data) => (
+                                                <Box
+                                                    style={{
+                                                        borderRadius: 4,
+                                                    }}
+                                                    className={`${classes["pressable-card"]} border-radius`}
+                                                    mih={40}
                                                     mt={"4"}
-                                                >
-                                                    {product.display_name}
-                                                </Text>
-                                                <Flex
-                                                    gap="md"
-                                                    justify="flex-end"
-                                                    align="flex-end"
-                                                    direction="row"
-                                                    wrap="nowrap"
+                                                    variant="default"
+                                                    key={data.value}
+                                                    onClick={() => {
+                                                        filterProductsbyCategory(data.value);
+                                                    }}
+                                                    bg={data.value === id ? "green.8" : "gray.8"}
                                                 >
                                                     <Text
-                                                        ta={"right"}
-                                                        fw={900}
-                                                        fz={"18"}
-                                                        size="md"
-                                                        c={"green.9"}
+                                                        size={"md"}
+                                                        pl={14}
+                                                        pt={8}
+                                                        fw={500}
+                                                        c={data.value === id ? "white" : "gray.4"}
                                                     >
-                                                        {configData?.currency?.symbol}{" "}
-                                                        {product.sales_price}
+                                                        {data.label}
                                                     </Text>
-                                                </Flex>
-                                            </Stack>
-                                        </Grid.Col>
-                                    </Grid>
-                                </Card>
+                                                </Box>
+                                            ))}
+                                        </Box>
+                                    </ScrollArea>
+                                </Box>
                             </Grid.Col>
-                        ))
-                    ) : (
-                        <>
-                            <Flex
-                                m={"sm"}
-                                h={"100%"}
-                                w={"100%"}
-                                justify="center"
-                                align="center"
-                            >
-                                <Text
-                                    ta={"center"}
-                                    fw={"normal"}
-                                    fz={"md"}
-                                    c={"black"}
-                                >
-                                    No product found in this category
-                                </Text>
-                            </Flex>
-                        </>
-                    )}
-                </Grid>
-            )}
-                                            {/* 3 */}
-            {value === "minimal" && (
-                <>
-                    <DataTable
-                        classNames={{
-                            root: tableCss.root,
-                            table: tableCss.table,
-                            header: tableCss.header,
-                            footer: tableCss.footer,
-                            pagination: tableCss.pagination,
-                        }}
-                        records={products}
-                        columns={[
-                            {
-                                accessor: "id",
-                                title: "S/N",
-                                render: (data, index) => index + 1,
-                            },
-                            {
-                                accessor: "display_name",
-                                title: t("Product"),
-                            },
-                            {
-                                accessor: "price",
-                                title: t("Price"),
-                                textAlign: "center",
-                                render: (data) => (
-                                    <>
-                                        {configData?.currency?.symbol}{" "}
-                                        {data.sales_price}
-                                    </>
-                                ),
-                            },
-                            {
-                                accessor: "qty",
-                                title: t("Qty"),
-                                textAlign: "center",
-                                backgroundColor: "blue",
-                                render: (data) => (
-                                    <Group
-                                        gap={8}
-                                        justify="center"
-                                        align="center"
+                            <Grid.Col span={10}>
+                                <Stack gap={0}>
+                                    <Box
+                                        bg={"gray.8"}
+                                        pt={0}
+                                        pr={4}
+                                        pl={4}
+                                        pb={4}
+                                        className="border-radius"
                                     >
-                                        <ActionIcon
-                                            size={"sm"}
-                                            bg={"gray.7"}
-                                            onClick={async () => {
-                                                handleDecrement(data.id)
-
-                                                /*const ff = tempCartProducts.find((item) => item.product_id === data.id)?.quantity ?? 0
-                                                console.log(ff)*/
-                                                /*const itemData = {
-                                                    url: "inventory/pos/inline-update",
-                                                    data: {
-                                                        invoice_id: tableId,
-                                                        field_name: "items",
-                                                        value: product,
-                                                    },
-                                                };
-                                                itemData.data.value.quantity = 1;
-
-                                                // Dispatch and handle response
-                                                try {
-                                                    const resultAction = await dispatch(
-                                                        storeEntityData(itemData)
-                                                    );
-
-                                                    if (resultAction.payload?.status !== 200) {
-                                                        showNotificationComponent(
-                                                            resultAction.payload?.message ||
-                                                            "Error updating invoice",
-                                                            "red",
-                                                            "",
-                                                            "",
-                                                            true
-                                                        );
+                                        <Grid
+                                            columns={12}
+                                            gutter={{base: 4}}
+                                            align="center"
+                                            mt={4}
+                                        >
+                                            <Grid.Col span={3}>
+                                                <Tooltip
+                                                    label={t("BarcodeValidateMessage")}
+                                                    opened={!isValidBarcode}
+                                                    px={16}
+                                                    py={2}
+                                                    position="top-end"
+                                                    bg={`red.4`}
+                                                    c={"white"}
+                                                    withArrow
+                                                    offset={2}
+                                                    zIndex={999}
+                                                    transitionProps={{
+                                                        transition: "pop-bottom-left",
+                                                        duration: 500,
+                                                    }}
+                                                >
+                                                    <TextInput
+                                                        type="number"
+                                                        name="barcode"
+                                                        id="barcode"
+                                                        size="md"
+                                                        label={""}
+                                                        placeholder={t("Barcode")}
+                                                        value={barcode}
+                                                        onChange={(event) => {
+                                                            setBarcode(event.target.value);
+                                                            // handleBarcodeSearch(barcode);
+                                                        }}
+                                                        onKeyPress={(e) => {
+                                                            if (e.key === "Enter" && barcode) {
+                                                                handleBarcodeSearch(barcode);
+                                                            }
+                                                        }}
+                                                        autoComplete="off"
+                                                        leftSection={
+                                                            <IconBarcode size={16} opacity={0.5}/>
+                                                        }
+                                                        rightSection={
+                                                            barcode ? (
+                                                                <Tooltip
+                                                                    label={t("Clear")}
+                                                                    withArrow
+                                                                    bg={`gray.1`}
+                                                                    c={`gray.7`}
+                                                                >
+                                                                    <ActionIcon
+                                                                        size="sm"
+                                                                        variant="transparent"
+                                                                        onClick={() => {
+                                                                            setBarcode("");
+                                                                            setIsValidBarcode(true);
+                                                                        }}
+                                                                    >
+                                                                        <IconX color="red" size={16}/>
+                                                                    </ActionIcon>
+                                                                </Tooltip>
+                                                            ) : (
+                                                                <Tooltip
+                                                                    label={t("ScanOrTypeBarcode")}
+                                                                    px={16}
+                                                                    py={2}
+                                                                    withArrow
+                                                                    position={"left"}
+                                                                    c={"black"}
+                                                                    bg={`gray.1`}
+                                                                    transitionProps={{
+                                                                        transition: "pop-bottom-left",
+                                                                        duration: 500,
+                                                                    }}
+                                                                >
+                                                                    <IconInfoCircle size={16} opacity={0.5}/>
+                                                                </Tooltip>
+                                                            )
+                                                        }
+                                                    />
+                                                </Tooltip>
+                                            </Grid.Col>
+                                            <Grid.Col span={6}>
+                                                <TextInput
+                                                    radius="sm"
+                                                    leftSection={<IconSearch size={16} opacity={0.5}/>}
+                                                    size="md"
+                                                    placeholder={t("SearchFood")}
+                                                    rightSection={
+                                                        searchValue ? (
+                                                            <Tooltip label="Clear" withArrow position="top">
+                                                                <IconX
+                                                                    color="red"
+                                                                    size={16}
+                                                                    opacity={0.5}
+                                                                    style={{cursor: "pointer"}}
+                                                                    onClick={() => {
+                                                                        setSearchValue("");
+                                                                        filterList("");
+                                                                    }}
+                                                                />
+                                                            </Tooltip>
+                                                        ) : (
+                                                            <Tooltip
+                                                                label="Field is required"
+                                                                withArrow
+                                                                position="top"
+                                                                color="red"
+                                                            >
+                                                                <IconInfoCircle size={16} opacity={0.5}/>
+                                                            </Tooltip>
+                                                        )
                                                     }
-                                                } catch (error) {
-                                                    showNotificationComponent(
-                                                        "Request failed. Please try again.",
-                                                        "red",
-                                                        "",
-                                                        "",
-                                                        true
-                                                    );
-                                                    console.error("Error updating invoice:", error);
-                                                }*/
-                                            }}
+                                                    onChange={(event) => {
+                                                        setSearchValue(event.target.value);
+                                                        filterList(event.target.value);
+                                                    }}
+                                                />
+                                            </Grid.Col>
+                                            <Grid.Col span={3}>
+                                                <SegmentedControl
+                                                    styles={{
+                                                        label: {color: "white"},
+                                                    }}
+                                                    bg={"green.6"}
+                                                    withItemsBorders={false}
+                                                    fullWidth
+                                                    color="green.4"
+                                                    value={value}
+                                                    onChange={setValue}
+                                                    data={[
+                                                        {
+                                                            label: (
+                                                                <Center style={{gap: 10}}>
+                                                                    <IconLayoutGrid
+                                                                        height={"24"}
+                                                                        width={"24"}
+                                                                        stroke={1.5}
+                                                                    />
+                                                                </Center>
+                                                            ),
+                                                            value: "grid",
+                                                        },
+                                                        {
+                                                            label: (
+                                                                <Center style={{gap: 10}}>
+                                                                    <IconListDetails
+                                                                        height={"24"}
+                                                                        width={"24"}
+                                                                        stroke={1.5}
+                                                                    />
+                                                                </Center>
+                                                            ),
+                                                            value: "list",
+                                                        },
+                                                        {
+                                                            label: (
+                                                                <Center style={{gap: 10}}>
+                                                                    <IconBaselineDensitySmall
+                                                                        height={"24"}
+                                                                        width={"24"}
+                                                                        stroke={1.5}
+                                                                    />
+                                                                    {/* <span>Minimal</span> */}
+                                                                </Center>
+                                                            ),
+                                                            value: "minimal",
+                                                        },
+                                                    ]}
+                                                />
+                                            </Grid.Col>
+                                        </Grid>
+                                    </Box>
+                                    <Box
+                                        bg="white"
+                                        w={"100%"}
+                                        h={enableTable ? height - 22 : height + 141}
+                                        mt={4}
+                                        className="border-radius"
+                                    >
+                                        <ScrollArea
+                                            h={enableTable ? height - 22 : height + 141}
+                                            type="never"
+                                            pt={"8"}
+                                            pl={"xs"}
+                                            pr={"xs"}
+                                            pb={"6"}
+                                            scrollbars="y"
                                         >
-                                            <IconMinus height={"12"} width={"12"}/>
-                                        </ActionIcon>
-                                        <Text
-                                            size="sm"
-                                            ta={"center"}
-                                            fw={600}
-                                            maw={30}
-                                            miw={30}
-                                        >
-                                            {invoiceData?.invoice_items.find(
-                                                (item) => item.product_id === data.id
-                                            )?.quantity ?? 0}
-                                        </Text>
-                                        <ActionIcon
-                                            size={"sm"}
-                                            bg={"gray.7"}
-                                            onClick={() => handleIncrement(data.id)}
-                                        >
-                                            <IconPlus height={"12"} width={"12"}/>
-                                        </ActionIcon>
-                                    </Group>
-                                ),
-                            },
-                        ]}
-                        loaderSize="xs"
-                        loaderColor="grape"
-                        height={height - 30}
-                        // backgroundColor={'black'}
-                        scrollAreaProps={{type: "never"}}
-                    />
-                </>
-            )}
+                                            {/* 1  */}
+                                            {value === "grid" && (
+                                                <Grid columns={12} gutter={{base: 8}}>
+                                                    {products.length > 0 ? (
+                                                        products?.map((product) => (
+                                                            <Grid.Col span={3} key={product.id}>
+                                                                <Card
+                                                                    shadow="md"
+                                                                    radius="md"
+                                                                    padding="xs"
+                                                                    styles={(theme) => ({
+                                                                        root: {
+                                                                            cursor: "pointer",
+                                                                            transition: "transform 0.5s ease-in-out",
+                                                                            transform: selected.includes(product.id)
+                                                                                ? "scale(0.97)"
+                                                                                : undefined,
+                                                                            border: selected.includes(product.id)
+                                                                                ? "3px solid green.8"
+                                                                                : "3px solid white",
+                                                                        },
+                                                                    })}
+                                                                    onClick={() => {
+                                                                        handleSelect(product.id);
+                                                                        handleIncrement(product.id);
+                                                                    }}
+                                                                >
+                                                                    <Image
+                                                                        radius="sm"
+                                                                        mih={120}
+                                                                        mah={120}
+                                                                        w="auto"
+                                                                        fit="cover"
+                                                                        src={`${
+                                                                            import.meta.env.VITE_IMAGE_GATEWAY_URL
+                                                                        }/uploads/inventory/product/feature_image/${
+                                                                            product.feature_image
+                                                                        }`}
+                                                                        fallbackSrc={`https://placehold.co/120x80/FFFFFF/2f9e44?text=${encodeURIComponent(
+                                                                            product.display_name
+                                                                        )}`}
+                                                                    />
+                                                                    <Text
+                                                                        fw={600}
+                                                                        size="sm"
+                                                                        fz={"13"}
+                                                                        mt={"4"}
+                                                                        ta={"left"}
+                                                                    >
+                                                                        {product.display_name}
+                                                                    </Text>
+
+                                                                    <Text
+                                                                        styles={{
+                                                                            root: {
+                                                                                marginTop: "auto",
+                                                                            },
+                                                                        }}
+                                                                        ta={"right"}
+                                                                        fw={900}
+                                                                        fz={"18"}
+                                                                        size="md"
+                                                                        c={"green.9"}
+                                                                    >
+                                                                        {configData?.currency?.symbol}{" "}
+                                                                        {product.sales_price}
+                                                                    </Text>
+                                                                </Card>
+                                                            </Grid.Col>
+                                                        ))
+                                                    ) : (
+                                                        <>
+                                                            <Flex
+                                                                m={"sm"}
+                                                                h={"100%"}
+                                                                w={"100%"}
+                                                                justify="center"
+                                                                align="center"
+                                                            >
+                                                                <Text
+                                                                    ta={"center"}
+                                                                    fw={"normal"}
+                                                                    fz={"md"}
+                                                                    c={"black"}
+                                                                >
+                                                                    No product found in this category
+                                                                </Text>
+                                                            </Flex>
+                                                        </>
+                                                    )}
+                                                </Grid>
+                                            )}
+                                            {/* 2 */}
+                                            {value === "list" && (
+                                                <Grid columns={12} gutter={8}>
+                                                    {products.length > 0 ? (
+                                                        products?.map((product) => (
+                                                            <Grid.Col key={product.id} span={6}>
+                                                                <Card
+                                                                    shadow="md"
+                                                                    radius="md"
+                                                                    styles={(theme) => ({
+                                                                        root: {
+                                                                            cursor: "pointer",
+                                                                            transform: selected.includes(product.id)
+                                                                                ? "scale(0.97)"
+                                                                                : undefined,
+                                                                            border: selected.includes(product.id)
+                                                                                ? "3px solid #00542b"
+                                                                                : "3px solid #eaeced",
+                                                                        },
+                                                                    })}
+                                                                    padding="xs"
+                                                                    onClick={() => {
+                                                                        handleSelect(product.id);
+                                                                        handleIncrement(product.id)
+                                                                    }}
+                                                                >
+                                                                    <Grid columns={12}>
+                                                                        <Grid.Col span={6}>
+                                                                            <Card p={0}>
+                                                                                <Image
+                                                                                    mih={120}
+                                                                                    mah={120}
+                                                                                    miw={70}
+                                                                                    fit="cover"
+                                                                                    // src={product.img}
+                                                                                    src={`${
+                                                                                        import.meta.env
+                                                                                            .VITE_IMAGE_GATEWAY_URL
+                                                                                    }/uploads/inventory/product/feature_image/${
+                                                                                        product.feature_image
+                                                                                    }`}
+                                                                                    fallbackSrc={`https://placehold.co/120x80/FFFFFF/2f9e44?text=${encodeURIComponent(
+                                                                                        product.display_name
+                                                                                    )}`}
+                                                                                />
+                                                                            </Card>
+                                                                        </Grid.Col>
+                                                                        <Grid.Col span={6}>
+                                                                            <Stack
+                                                                                radius="md"
+                                                                                mih={"118"}
+                                                                                bg="var(--mantine-color-body)"
+                                                                                align="stretch"
+                                                                                justify="space-between"
+                                                                                gap="md"
+                                                                            >
+                                                                                <Text
+                                                                                    fw={600}
+                                                                                    size="sm"
+                                                                                    fz={"13"}
+                                                                                    mt={"4"}
+                                                                                >
+                                                                                    {product.display_name}
+                                                                                </Text>
+                                                                                <Flex
+                                                                                    gap="md"
+                                                                                    justify="flex-end"
+                                                                                    align="flex-end"
+                                                                                    direction="row"
+                                                                                    wrap="nowrap"
+                                                                                >
+                                                                                    <Text
+                                                                                        ta={"right"}
+                                                                                        fw={900}
+                                                                                        fz={"18"}
+                                                                                        size="md"
+                                                                                        c={"green.9"}
+                                                                                    >
+                                                                                        {configData?.currency?.symbol}{" "}
+                                                                                        {product.sales_price}
+                                                                                    </Text>
+                                                                                </Flex>
+                                                                            </Stack>
+                                                                        </Grid.Col>
+                                                                    </Grid>
+                                                                </Card>
+                                                            </Grid.Col>
+                                                        ))
+                                                    ) : (
+                                                        <>
+                                                            <Flex
+                                                                m={"sm"}
+                                                                h={"100%"}
+                                                                w={"100%"}
+                                                                justify="center"
+                                                                align="center"
+                                                            >
+                                                                <Text
+                                                                    ta={"center"}
+                                                                    fw={"normal"}
+                                                                    fz={"md"}
+                                                                    c={"black"}
+                                                                >
+                                                                    No product found in this category
+                                                                </Text>
+                                                            </Flex>
+                                                        </>
+                                                    )}
+                                                </Grid>
+                                            )}
+                                            {/* 3 */}
+                                            {value === "minimal" && (
+                                                <>
+                                                    <DataTable
+                                                        classNames={{
+                                                            root: tableCss.root,
+                                                            table: tableCss.table,
+                                                            header: tableCss.header,
+                                                            footer: tableCss.footer,
+                                                            pagination: tableCss.pagination,
+                                                        }}
+                                                        records={products}
+                                                        columns={[
+                                                            {
+                                                                accessor: "id",
+                                                                title: "S/N",
+                                                                render: (data, index) => index + 1,
+                                                            },
+                                                            {
+                                                                accessor: "display_name",
+                                                                title: t("Product"),
+                                                            },
+                                                            {
+                                                                accessor: "price",
+                                                                title: t("Price"),
+                                                                textAlign: "center",
+                                                                render: (data) => (
+                                                                    <>
+                                                                        {configData?.currency?.symbol}{" "}
+                                                                        {data.sales_price}
+                                                                    </>
+                                                                ),
+                                                            },
+                                                            {
+                                                                accessor: "qty",
+                                                                title: t("Qty"),
+                                                                textAlign: "center",
+                                                                backgroundColor: "blue",
+                                                                render: (data) => (
+                                                                    <Group
+                                                                        gap={8}
+                                                                        justify="center"
+                                                                        align="center"
+                                                                    >
+                                                                        <ActionIcon
+                                                                            size={"sm"}
+                                                                            bg={"gray.7"}
+                                                                            onClick={async () => {
+                                                                                handleDecrement(data.id)
+                                                                            }}
+                                                                        >
+                                                                            <IconMinus height={"12"} width={"12"}/>
+                                                                        </ActionIcon>
+                                                                        <Text
+                                                                            size="sm"
+                                                                            ta={"center"}
+                                                                            fw={600}
+                                                                            maw={30}
+                                                                            miw={30}
+                                                                        >
+                                                                            {invoiceData?.invoice_items.find(
+                                                                                (item) => item.product_id === data.id
+                                                                            )?.quantity ?? 0}
+                                                                        </Text>
+                                                                        <ActionIcon
+                                                                            size={"sm"}
+                                                                            bg={"gray.7"}
+                                                                            onClick={() => handleIncrement(data.id)}
+                                                                        >
+                                                                            <IconPlus height={"12"} width={"12"}/>
+                                                                        </ActionIcon>
+                                                                    </Group>
+                                                                ),
+                                                            },
+                                                        ]}
+                                                        loaderSize="xs"
+                                                        loaderColor="grape"
+                                                        height={height - 30}
+                                                        // backgroundColor={'black'}
+                                                        scrollAreaProps={{type: "never"}}
+                                                    />
+                                                </>
+                                            )}
                                         </ScrollArea>
                                     </Box>
                                 </Stack>
@@ -1262,7 +1219,6 @@ export default function NewSales(props) {
                                                                         mah={120}
                                                                         w="auto"
                                                                         fit="cover"
-                                                                        // src={product.img}
                                                                         src={`${
                                                                             import.meta.env.VITE_IMAGE_GATEWAY_URL
                                                                         }/uploads/inventory/product/feature_image/${
@@ -1355,7 +1311,6 @@ export default function NewSales(props) {
                                                                                     mah={120}
                                                                                     miw={70}
                                                                                     fit="cover"
-                                                                                    // src={product.img}
                                                                                     src={`${
                                                                                         import.meta.env
                                                                                             .VITE_IMAGE_GATEWAY_URL
@@ -1493,7 +1448,9 @@ export default function NewSales(props) {
                                                                         <ActionIcon
                                                                             size={"sm"}
                                                                             bg={"gray.7"}
-                                                                            onClick={() => {handleIncrement(data.id);}}
+                                                                            onClick={() => {
+                                                                                handleIncrement(data.id);
+                                                                            }}
                                                                         >
                                                                             <IconPlus height={"12"} width={"12"}/>
                                                                         </ActionIcon>
@@ -1504,7 +1461,6 @@ export default function NewSales(props) {
                                                         loaderSize="xs"
                                                         loaderColor="grape"
                                                         height={height - 30}
-                                                        // backgroundColor={'black'}
                                                         scrollAreaProps={{type: "never"}}
                                                     />
                                                 </>
