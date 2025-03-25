@@ -5,9 +5,9 @@ import TransferForm from "./TransferForm";
 import TransferTable from "./TransferTable";
 import InventoryHeaderNavbar from "../../domain/configuraton/InventoryHeaderNavbar";
 import { Progress, Box, Grid } from "@mantine/core";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   setInsertType,
   editEntityData,
@@ -20,6 +20,8 @@ export default function TransferIndex() {
   const { configData } = getConfigData();
   const { id } = useParams();
   const insertType = useSelector((state) => state.crudSlice.insertType);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (id) {
