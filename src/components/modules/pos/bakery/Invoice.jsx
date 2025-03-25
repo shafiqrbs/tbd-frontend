@@ -100,7 +100,6 @@ export default function Invoice(props) {
     const enableTable = !!(configData?.is_pos && invoiceMode === 'table');
     const [printPos, setPrintPos] = useState(false);
     const [tempCartProducts, setTempCartProducts] = useState([]);
-
     // Sales by user state management
     const [salesByUser, setSalesByUser] = useState(String(invoiceData?.sales_by_id));
     const [salesByUserName, setSalesByUserName] = useState(null);
@@ -274,76 +273,13 @@ export default function Invoice(props) {
         tableId,
         products,
         setLoadCartProducts,
+        setReloadInvoiceData
     });
 
     const subtotal = tempCartProducts.reduce(
         (acc, item) => acc + item.sub_total,
         0
     );
-
-
-    /*useEffect(() => {
-      /!*if (tempCartProducts.length === 0) {
-        setSalesDiscountAmount(0);
-        setSalesTotalAmount(0);
-        setSalesDueAmount(0);
-        setReturnOrDueText("Due");
-        return;
-      }*!/
-
-      let discountAmount = discountAmount;
-      if (form.values.discount && Number(form.values.discount) > 0) {
-        if (discountType === "Flat") {
-          discountAmount = Number(form.values.discount);
-        } else if (discountType === "Percent") {
-          discountAmount = (subtotal * Number(form.values.discount)) / 100;
-        }
-      }
-      setSalesDiscountAmount(discountAmount);
-
-      const totalAmount = subtotal - discountAmount;
-      setSalesTotalAmount(totalAmount);
-
-      const currentReceiveAmount = tableReceiveAmounts[currentTableKey] || "";
-
-      if (isSplitPaymentActive) {
-        const splitPaymentTotal = currentTableSplitPayments.reduce(
-          (total, payment) => total + Number(payment.partial_amount),
-          0
-        );
-
-        const text = totalAmount < splitPaymentTotal ? "Return" : "Due";
-        setReturnOrDueText(text);
-        const returnOrDueAmount = totalAmount - splitPaymentTotal;
-        setSalesDueAmount(returnOrDueAmount);
-      } else {
-        let receiveAmount =
-          currentReceiveAmount === "" ? 0 : Number(currentReceiveAmount);
-        if (receiveAmount >= 0) {
-          const text = totalAmount < receiveAmount ? "Return" : "Due";
-          setReturnOrDueText(text);
-          const returnOrDueAmount = totalAmount - receiveAmount;
-          setSalesDueAmount(returnOrDueAmount);
-        } else {
-          setSalesDueAmount(totalAmount);
-        }
-      }
-
-      const isDisabled =
-        configData?.is_pay_first &&
-        (configData?.isZeroReceiveAllow ? false : salesDueAmount > 0);
-      setIsDisabled(isDisabled);
-    }, [
-      form.values.discount,
-      discountType,
-      tableReceiveAmounts[currentTableKey],
-      currentTableSplitPayments,
-      isSplitPaymentActive,
-      subtotal,
-      configData,
-      currentTableKey,
-      // tempCartProducts.length,
-    ]);*/
 
     useEffect(() => {
         if (tableId && !additionalTableSelections[tableId]) {
@@ -397,268 +333,8 @@ export default function Invoice(props) {
     const [indexData, setIndexData] = useState(null);
     const getAdditionalItem = (value) => {
         setIndexData(value);
-        console.log(indexData);
+        // console.log(indexData);
     };
-    /*const handlePrintAll = () => {
-     /!* if (tempCartProducts.length === 0) {
-        notifications.show({
-          title: t("ValidationError"),
-          position: "top-right",
-          autoClose: 1000,
-          withCloseButton: true,
-          message: t("Add at least one product"),
-          color: "red",
-        });
-        return;
-      }*!/
-
-      const currentTableKey = tableId || "general";
-      const isUsingSplitPayment = isSplitPaymentActive;
-      const currentSplitPaymentData = tableSplitPaymentMap[currentTableKey] || [];
-
-      const validation = form.validate();
-      if (validation.hasErrors) {
-        return;
-      }
-      let createdBy = JSON.parse(localStorage.getItem("user"));
-      const formValue = {};
-      configData?.is_pos ? (formValue.is_pos = 1) : (formValue.is_pos = 0);
-      formValue["customer_id"] = customerId;
-      formValue["sub_total"] = subtotal;
-      if (!isUsingSplitPayment) {
-        formValue.transaction_mode_id = String(transactionModeId);
-      }
-      formValue["discount_type"] = discountType;
-      formValue["discount"] = salesDiscountAmount;
-      formValue["discount_calculation"] =
-        discountType === "Percent" ? form.values.discount : 0;
-      formValue["vat"] = 0;
-      formValue["total"] = salesTotalAmount;
-      formValue.sales_by_id = salesByUser;
-      formValue["created_by_id"] = Number(createdBy["id"]);
-      // formValue["invoice_date"] = new Date().toLocaleDateString("en-CA");
-      formValue["process"] = "";
-      formValue["narration"] = "";
-
-      const hasReceiveAmount = form.values.receive_amount;
-
-      formValue["payment"] = hasReceiveAmount;
-      if (isUsingSplitPayment && currentSplitPaymentData.length > 0) {
-        formValue["split_payment_data"] = currentSplitPaymentData;
-        formValue["is_split_payment"] = true;
-      }
-      let transformedArray = TransformProduct(tempCartProducts);
-      formValue["items"] = transformedArray ? transformedArray : [];
-
-      //table calculation
-
-      let tableValue = null;
-      if (enableTable && tableId) {
-        // Get the selected table
-        const selectedTable = tables.find((t) => t.id === tableId);
-        // Calculate elapsed time
-        tableValue = selectedTable.value;
-        formValue["table_value"] = tableValue;
-      }
-
-      const data = {
-        url: "inventory/sales",
-        data: formValue,
-      };
-      dispatch(storeEntityData(data));
-
-      notifications.show({
-        color: "teal",
-        title: t("CreateSuccessfully"),
-        icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
-        loading: false,
-        autoClose: 700,
-        style: { backgroundColor: "lightgray" },
-      });
-      setTimeout(() => {
-        setTempCartProducts([]);
-        setSalesDiscountAmount(0);
-        setSalesTotalAmount(0);
-        setSalesDueAmount(0);
-        setReturnOrDueText("Due");
-        setDiscountType("Percent");
-        setChecked(false);
-        setAdditionalTableSelections({});
-        handleSubmitOrder();
-        setSalesByUser(null);
-        setSalesByUserName(null);
-
-        // Clear customer data
-        clearTableCustomer(tableId);
-        setCustomerObject({});
-        setCustomerId(null);
-
-        // Clear split payment data
-        clearTableSplitPayment(currentTableKey);
-
-        // Clear receive amount for this table
-        setTableReceiveAmounts((prev) => {
-          const updated = { ...prev };
-          delete updated[currentTableKey];
-          return updated;
-        });
-
-        setTransactionModeId(null);
-        form.reset();
-      }, 500);
-
-      if (enableTable) {
-        setAdditionalTableSelections((prev) => {
-          const newSelections = { ...prev };
-          delete newSelections[tableId];
-          return newSelections;
-        });
-        setChecked(false);
-      }
-
-      form.reset();
-    };*/
-
-    /*const printItem = () => {
-      const formValue = {};
-      let transformedArray = TransformProduct(tempCartProducts);
-      formValue["items"] = transformedArray ? transformedArray : [];
-      console.log(formValue);
-    };
-    if (!localStorage.getItem("temp-requistion-invoice")) {
-      localStorage.setItem("temp-requistion-invoice", JSON.stringify([]));
-    }*/
-
-    function tempLocalPosInvoice(addInvoice) {
-        const existingInvoices = localStorage.getItem("temp-pos-invoice");
-        const invoices = existingInvoices ? JSON.parse(existingInvoices) : [];
-        localStorage.setItem("temp-pos-print", JSON.stringify(addInvoice));
-        invoices.push(addInvoice);
-        localStorage.setItem("temp-pos-invoice", JSON.stringify(invoices));
-    }
-
-    /*const posPrint = () => {
-      if (tempCartProducts.length === 0) {
-        notifications.show({
-          title: t("ValidationError"),
-          position: "top-right",
-          autoClose: 1000,
-          withCloseButton: true,
-          message: t("Add at least one product"),
-          color: "red",
-        });
-        return;
-      }
-      const validation = form.validate();
-      if (validation.hasErrors) {
-        return;
-      }
-      const formValue = {
-        invoice_id: Math.floor(Math.random() * (999999 - 100000 + 1)) + 100000,
-        invoice_date: new Date().toLocaleDateString("en-CA"),
-        invoice_time: new Date().toLocaleTimeString("en-CA"),
-        sales_by_id: salesByUser,
-        transaction_mode_id: transactionModeId,
-        createdByName: salesByUserName,
-        grand_total: subtotal,
-        is_pos: enableTable ? 1 : 0,
-      };
-      let transformedArray = TransformProduct(tempCartProducts);
-
-      formValue.items = transformedArray || [];
-      if (enableTable && tableId) {
-        const selectedTable = tables.find((t) => t.id === tableId);
-        const currentTime = new Date();
-        let statusHistory = [...(selectedTable.statusHistory || [])];
-
-        if (
-          selectedTable.currentStatusStartTime &&
-          selectedTable.status !== "Free"
-        ) {
-          const currentElapsed =
-            currentTime - new Date(selectedTable.currentStatusStartTime);
-          statusHistory.push({
-            status: selectedTable.status,
-            startTime: selectedTable.currentStatusStartTime,
-            endTime: currentTime,
-            elapsedTime: currentElapsed,
-          });
-        }
-        const formattedStatusHistory = statusHistory.map((entry) => {
-          const elapsedSeconds = Math.floor(entry.elapsedTime / 1000);
-          const hours = Math.floor(elapsedSeconds / 3600)
-            .toString()
-            .padStart(2, "0");
-          const minutes = Math.floor((elapsedSeconds % 3600) / 60)
-            .toString()
-            .padStart(2, "0");
-          const seconds = (elapsedSeconds % 60).toString().padStart(2, "0");
-
-          return {
-            status: entry.status,
-            elapsed_time: `${hours}:${minutes}:${seconds}`,
-            start_time: new Date(entry.startTime).toISOString(),
-            end_time: new Date(entry.endTime).toISOString(),
-          };
-        });
-        const totalElapsedMs = statusHistory.reduce(
-          (total, entry) => total + entry.elapsedTime,
-          0
-        );
-        const totalSeconds = Math.floor(totalElapsedMs / 1000);
-        const totalHours = Math.floor(totalSeconds / 3600)
-          .toString()
-          .padStart(2, "0");
-        const totalMinutes = Math.floor((totalSeconds % 3600) / 60)
-          .toString()
-          .padStart(2, "0");
-        const totalSecondsRemainder = (totalSeconds % 60)
-          .toString()
-          .padStart(2, "0");
-        const tableData = {
-          mainTable: {
-            id: tableId,
-            status: selectedTable.status,
-            status_change_history: formattedStatusHistory,
-            total_elapsed_time: `${totalHours}:${totalMinutes}:${totalSecondsRemainder}`,
-          },
-          additionalTables: Array.from(additionalTableSelections[tableId] || []),
-        };
-
-        formValue.table_data = tableData;
-      }
-
-      console.log("Print Data:", formValue);
-      tempLocalPosInvoice(formValue);
-      setPosData(formValue);
-      handleSubmitOrder();
-
-      setSalesByUser(null);
-      setSalesByUserName(null);
-      setTransactionModeId(null);
-
-      clearTableCustomer(tableId);
-      setCustomerObject({});
-      setCustomerId(null);
-      clearTableSplitPayment(currentTableKey);
-      setTableReceiveAmounts((prev) => {
-        const updated = { ...prev };
-        delete updated[currentTableKey];
-        return updated;
-      });
-
-      if (enableTable) {
-        setAdditionalTableSelections((prev) => {
-          const newSelections = { ...prev };
-          delete newSelections[tableId];
-          return newSelections;
-        });
-        setChecked(false);
-      }
-
-      form.reset();
-      setPrintPos(true);
-    };*/
     const [customerId, setCustomerId] = useState(invoiceData?.customer_id);
     const [customerDrawer, setCustomerDrawer] = useState(false);
     const [customersDropdownData, setCustomersDropdownData] = useState([]);
@@ -785,6 +461,27 @@ export default function Invoice(props) {
         }
     }, [tableId]);
 
+    // Foysal code 25/03/2025
+
+    const [currentPaymentInput, setCurrentPaymentInput] = useState(invoiceData?.payment || "");
+    useEffect(() => {
+        if (invoiceData) {
+            setDiscountType(invoiceData.discount_type || "Percent");
+            setSalesTotalAmount(invoiceData.sub_total || 0);
+            setSalesTotalWithoutDiscountAmount((invoiceData.sub_total || 0) - (invoiceData.discount || 0));
+            setSalesDueAmount((invoiceData.sub_total || 0) - ((invoiceData.payment || 0) + (invoiceData.discount || 0)));
+            setReturnOrDueText((invoiceData.sub_total || 0) > (invoiceData.payment || 0) ? "Due" : "Return");
+            setCurrentPaymentInput(invoiceData?.payment || "");
+            if (invoiceData.discount_type === "Flat") {
+                setSalesDiscountAmount(invoiceData?.discount || 0);
+            } else if (invoiceData.discount_type === "Percent") {
+                setSalesDiscountAmount(invoiceData?.percentage);
+            }
+        }
+      }, [invoiceData, discountType]);
+    const handleSave = () => {
+        console.log(invoiceData.id)
+    }
     return (
         <>
             <Box
@@ -1092,7 +789,7 @@ export default function Invoice(props) {
                         <Group gap="10" pr={"sm"} align="center">
                             <IconSum size="16" style={{color: "black"}}/>
                             <Text fw={"bold"} fz={"sm"} c={"black"}>
-                                {configData?.currency?.symbol} {salesTotalAmount.toFixed(2)}
+                                {configData?.currency?.symbol} {salesTotalAmount && salesTotalAmount ? salesTotalAmount.toFixed(2) : 0}
                             </Text>
                         </Group>
                     </Group>
@@ -1135,7 +832,7 @@ export default function Invoice(props) {
                                                 </Text>
                                                 <Text fz={"sm"} fw={800} c={"black"}>
                                                     {configData?.currency?.symbol}{" "}
-                                                    {salesDiscountAmount.toFixed(2)}
+                                                    {invoiceData?.discount || 0}
                                                 </Text>
                                             </Group>
                                             <Group justify="space-between">
@@ -1451,31 +1148,28 @@ export default function Invoice(props) {
                                         radius="xs"
                                         checked={discountType == "Percent"}
                                         onChange={async (event) => {
-                                            setDiscountType(
-                                                event.currentTarget.checked ? "Percent" : "Flat"
-                                            );
+                                            const newDiscountType = event.currentTarget.checked ? "Percent" : "Flat";
+                                            setDiscountType(newDiscountType);
+                                            
+                                            const currentDiscountValue = salesDiscountAmount;
+                                            
                                             const data = {
                                                 url: "inventory/pos/inline-update",
                                                 data: {
                                                     invoice_id: tableId,
                                                     field_name: "discount_type",
-                                                    value: event.currentTarget.checked ? "Percent" : "Flat",
-                                                    discount_amount: discountType === "Percent" ? invoiceData?.percentage : invoiceData?.discount
+                                                    value: newDiscountType,
+                                                    discount_amount: currentDiscountValue
                                                 },
                                             };
-
-                                            if (discountType == "Flat") {
-                                                setSalesDiscountAmount(invoiceData?.discount)
-                                            } else if (discountType == "Percent") {
-                                                setSalesDiscountAmount((invoiceData?.sub_total * Number(invoiceData?.percentage)) / 100)
-                                            }
-
-                                            // Dispatch and handle response
+                                    
+                                            setSalesDiscountAmount(currentDiscountValue);
+                                    
                                             try {
                                                 const resultAction = await dispatch(
                                                     storeEntityData(data)
                                                 );
-
+                                    
                                                 if (resultAction.payload?.status !== 200) {
                                                     showNotificationComponent(
                                                         resultAction.payload?.message ||
@@ -1505,12 +1199,15 @@ export default function Invoice(props) {
                                     <TextInput
                                         type="number"
                                         placeholder={t("Discount")}
-                                        value={form.values.discount ? form.values.discount : discountType == 'Percent' ? invoiceData?.percentage : invoiceData?.discount}
+                                        value={salesDiscountAmount}
                                         error={form.errors.discount}
                                         size={"sm"}
                                         classNames={{input: classes.input}}
                                         onChange={(event) => {
                                             form.setFieldValue("discount", event.target.value);
+                                            const newValue = event.target.value;
+                                            setSalesDiscountAmount(newValue);
+                                            form.setFieldValue("discount", newValue);
                                         }}
                                         onBlur={async (event) => {
                                             const data = {
@@ -1522,7 +1219,6 @@ export default function Invoice(props) {
                                                     discount_type: discountType
                                                 },
                                             };
-
                                             // Dispatch and handle response
                                             try {
                                                 const resultAction = await dispatch(
@@ -1650,7 +1346,7 @@ export default function Invoice(props) {
                                                     ? t("SplitPaymentActive")
                                                     : t("Amount")
                                             }
-                                            value={invoiceData?.payment}
+                                            value={currentPaymentInput}
                                             error={form.errors.receive_amount}
                                             size={"sm"}
                                             disabled={isThisTableSplitPaymentActive}
@@ -1711,15 +1407,14 @@ export default function Invoice(props) {
                                             classNames={{input: classes.input}}
                                             onChange={async (event) => {
                                                 if (!isThisTableSplitPaymentActive) {
-                                                    form.setFieldValue(
-                                                        "receive_amount",
-                                                        event.target.value
-                                                    );
+                                                    const newValue = event.target.value;
+                                                    setCurrentPaymentInput(newValue);
+                                                    form.setFieldValue("receive_amount", newValue);
 
                                                     setTableReceiveAmounts((prev) => ({
                                                         ...prev,
-                                                        [currentTableKey]: event.target.value,
-                                                    }));
+                                                        [currentTableKey]: newValue,
+                                                      }));
                                                 }
                                             }}
                                         />
@@ -1803,7 +1498,7 @@ export default function Invoice(props) {
                                     bg={"green.8"}
                                     fullWidth={true}
                                     leftSection={<IconDeviceFloppy/>}
-                                    // onClick={handlePrintAll}
+                                    onClick={handleSave}
                                 >
                                     {t("Save")}
                                 </Button>

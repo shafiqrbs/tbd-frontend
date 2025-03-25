@@ -806,5 +806,6 @@
   "DisMode" : "Dis. Mode",
   "DisAmount" : "Dis. Amount",
   "BarcodeType" : "Barcode Type",
-  "ProductAddon" : "Product Addon"
+  "ProductAddon" : "Product Addon",
+  "ChooseProductLocation" : "Choose Product Location"
 }
