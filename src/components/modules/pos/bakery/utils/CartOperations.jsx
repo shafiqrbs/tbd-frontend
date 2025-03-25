@@ -1,6 +1,10 @@
-import { useCallback } from 'react';
-import { notifications } from '@mantine/notifications';
-import { useTranslation } from 'react-i18next';
+import { useCallback } from "react";
+import { notifications } from "@mantine/notifications";
+import { useTranslation } from "react-i18next";
+import { storeEntityData } from "../../../../../store/inventory/crudSlice";
+import { useDispatch } from "react-redux";
+import { showNotificationComponent } from "../../../../core-component/showNotificationComponent";
+storeEntityData;
 
 export const useCartOperations = ({
   enableTable,
@@ -10,12 +14,15 @@ export const useCartOperations = ({
   updateTableStatus,
   setLoadCartProducts,
   tables,
-  setTables
+  setTables,
+  setReloadInvoiceData,
 }) => {
   const { t } = useTranslation();
-
+  const dispatch = useDispatch();
   const getStorageKey = useCallback(() => {
-    return enableTable && tableId ? `table-${tableId}-pos-products` : "temp-pos-products";
+    return enableTable && tableId
+      ? `table-${tableId}-pos-products`
+      : "temp-pos-products";
   }, [enableTable, tableId]);
 
   const getCartProducts = useCallback(() => {
@@ -23,135 +30,161 @@ export const useCartOperations = ({
     return cartProducts ? JSON.parse(cartProducts) : [];
   }, [getStorageKey]);
 
-  const validateProductPrice = useCallback((product) => {
-    if (product.sales_price === 0 || product.sales_price === null) {
+  const updateTableStatusIfNeeded = useCallback(
+    (cartLength) => {
+      if (!enableTable || !tableId) return;
+
+      if (cartLength === 1 && currentStatus === "Free") {
+        updateTableStatus("Occupied");
+      } else if (cartLength === 0 && currentStatus === "Occupied") {
+        // Update both table status and tables state
+        updateTableStatus("Free");
+        if (tables && setTables) {
+          setTables(
+            tables.map((table) =>
+              table.id === tableId ? { ...table, status: "Free" } : table
+            )
+          );
+        }
+      }
+    },
+    [enableTable, tableId, currentStatus, updateTableStatus, tables, setTables]
+  );
+
+  const handleIncrement = useCallback(
+    async (productId) => {
+      if (!products) {
+        const storedProducts = localStorage.getItem("core-products");
+        const allProducts = storedProducts ? JSON.parse(storedProducts) : [];
+        product = allProducts.find((p) => p.id === productId);
+      }
+      const product = products?.find((p) => p.id === productId);
+      const data = {
+        url: "inventory/pos/inline-update",
+        data: {
+          invoice_id: tableId,
+          field_name: "items",
+          value: {
+            ...product,
+            quantity: 1,
+          },
+        },
+      };
+      try {
+        const resultAction = await dispatch(storeEntityData(data));
+
+        if (resultAction.payload?.status !== 200) {
+          showNotificationComponent(
+            resultAction.payload?.message || "Error updating invoice",
+            "red",
+            "",
+            "",
+            true
+          );
+        }
+      } catch (error) {
+        showNotificationComponent(
+          "Request failed. Please try again.",
+          "red",
+          "",
+          "",
+          true
+        );
+        console.error("Error updating invoice:", error);
+      } finally {
+        setReloadInvoiceData(true);
+      }
+    },
+    [products, tableId, dispatch, setReloadInvoiceData]
+  );
+
+  const handleDecrement = useCallback(
+    (productId) => {
+      const myCartProducts = getCartProducts();
+
+      const updatedProducts = myCartProducts
+        .map((item) => {
+          if (item.product_id === productId) {
+            const newQuantity = Math.max(0, item.quantity - 1);
+            return {
+              ...item,
+              quantity: newQuantity,
+              sub_total: newQuantity * item.sales_price,
+            };
+          }
+          return item;
+        })
+        .filter((item) => item.quantity > 0);
+
+      updateTableStatusIfNeeded(updatedProducts.length);
+      localStorage.setItem(getStorageKey(), JSON.stringify(updatedProducts));
+      setLoadCartProducts(true);
+    },
+    [
+      getStorageKey,
+      getCartProducts,
+      updateTableStatusIfNeeded,
+      setLoadCartProducts,
+    ]
+  );
+
+  const handleDelete = useCallback(
+    (productId) => {
+      const myCartProducts = getCartProducts();
+
+      const updatedProducts = myCartProducts.filter(
+        (item) => item.product_id !== productId
+      );
+
+      // Show notification for successful deletion
       notifications.show({
-        title: t("Error"),
+        title: t("Success"),
+        message: t("Item removed from cart"),
+        color: "green",
         position: "bottom-right",
         autoClose: 2000,
-        withCloseButton: true,
-        message: t("Sales price cant be zero"),
-        color: "red",
       });
-      return false;
-    }
-    return true;
-  }, [t]);
 
-  const updateTableStatusIfNeeded = useCallback((cartLength) => {
-    if (!enableTable || !tableId) return;
-
-    if (cartLength === 1 && currentStatus === "Free") {
-      updateTableStatus("Occupied");
-    } else if (cartLength === 0 && currentStatus === "Occupied") {
-      // Update both table status and tables state
-      updateTableStatus("Free");
-      if (tables && setTables) {
-        setTables(tables.map((table) =>
-          table.id === tableId ? { ...table, status: "Free" } : table
-        ));
-      }
-    }
-  }, [enableTable, tableId, currentStatus, updateTableStatus, tables, setTables]);
-
-  const handleIncrement = useCallback((productId) => {
-    const product = products.find((p) => p.id === productId);
-    if (!validateProductPrice(product)) return;
-
-    const myCartProducts = getCartProducts();
-    let found = false;
-
-    const updatedProducts = myCartProducts.map((item) => {
-      if (item.product_id === productId) {
-        found = true;
-        const newQuantity = item.quantity + 1;
-        return {
-          ...item,
-          quantity: newQuantity,
-          sub_total: newQuantity * item.sales_price,
-        };
-      }
-      return item;
-    });
-
-    if (!found) {
-      updatedProducts.push({
-        product_id: product.id,
-        display_name: product.display_name,
-        quantity: 1,
-        unit_name: product.unit_name,
-        purchase_price: Number(product.purchase_price),
-        sub_total: Number(product.sales_price),
-        sales_price: Number(product.sales_price),
-      });
-    }
-
-    updateTableStatusIfNeeded(updatedProducts.length);
-    localStorage.setItem(getStorageKey(), JSON.stringify(updatedProducts));
-    setLoadCartProducts(true);
-  }, [products, getStorageKey, validateProductPrice, updateTableStatusIfNeeded, setLoadCartProducts]);
-
-  const handleDecrement = useCallback((productId) => {
-    const myCartProducts = getCartProducts();
-
-    const updatedProducts = myCartProducts
-      .map((item) => {
-        if (item.product_id === productId) {
-          const newQuantity = Math.max(0, item.quantity - 1);
-          return {
-            ...item,
-            quantity: newQuantity,
-            sub_total: newQuantity * item.sales_price,
-          };
-        }
-        return item;
-      })
-      .filter((item) => item.quantity > 0);
-
-    updateTableStatusIfNeeded(updatedProducts.length);
-    localStorage.setItem(getStorageKey(), JSON.stringify(updatedProducts));
-    setLoadCartProducts(true);
-  }, [getStorageKey, getCartProducts, updateTableStatusIfNeeded, setLoadCartProducts]);
-
-  const handleDelete = useCallback((productId) => {
-    const myCartProducts = getCartProducts();
-    
-    const updatedProducts = myCartProducts.filter(
-      (item) => item.product_id !== productId
-    );
-
-    // Show notification for successful deletion
-    notifications.show({
-      title: t("Success"),
-      message: t("Item removed from cart"),
-      color: "green",
-      position: "bottom-right",
-      autoClose: 2000,
-    });
-
-    updateTableStatusIfNeeded(updatedProducts.length);
-    localStorage.setItem(getStorageKey(), JSON.stringify(updatedProducts));
-    setLoadCartProducts(true);
-  }, [getCartProducts, getStorageKey, updateTableStatusIfNeeded, setLoadCartProducts]);
+      updateTableStatusIfNeeded(updatedProducts.length);
+      localStorage.setItem(getStorageKey(), JSON.stringify(updatedProducts));
+      setLoadCartProducts(true);
+    },
+    [
+      getCartProducts,
+      getStorageKey,
+      updateTableStatusIfNeeded,
+      setLoadCartProducts,
+    ]
+  );
 
   const handleClearCart = useCallback(() => {
     localStorage.removeItem(getStorageKey());
     if (enableTable && tableId) {
       updateTableStatus("Free");
       if (tables && setTables) {
-        setTables(tables.map((table) =>
-          table.id === tableId ? { ...table, status: "Free" } : table
-        ));
+        setTables(
+          tables.map((table) =>
+            table.id === tableId ? { ...table, status: "Free" } : table
+          )
+        );
       }
     }
     setLoadCartProducts(true);
-  }, [getStorageKey, enableTable, tableId, updateTableStatus, tables, setTables, setLoadCartProducts]);
+  }, [
+    getStorageKey,
+    enableTable,
+    tableId,
+    updateTableStatus,
+    tables,
+    setTables,
+    setLoadCartProducts,
+  ]);
 
   return {
     handleIncrement,
     handleDecrement,
     handleDelete,
     handleClearCart,
-    getCartProducts
+    getCartProducts,
   };
 };

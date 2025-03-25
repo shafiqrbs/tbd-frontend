@@ -273,6 +273,7 @@ export default function Invoice(props) {
         tableId,
         products,
         setLoadCartProducts,
+        setReloadInvoiceData
     });
 
     const subtotal = tempCartProducts.reduce(
