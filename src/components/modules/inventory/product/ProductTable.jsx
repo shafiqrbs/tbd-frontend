@@ -35,6 +35,7 @@ import AddMeasurement from "../modal/AddMeasurement.jsx";
 import {Carousel} from "@mantine/carousel";
 import '@mantine/carousel/styles.css';
 import Autoplay from 'embla-carousel-autoplay';
+import __DrawerAddon from "./__DrawerAddon";
 
 
 function ProductTable(props) {
@@ -121,6 +122,10 @@ function ProductTable(props) {
         }
         setFetching(true)
     }
+
+    // addonDrawer
+    const [addonDrawer, setAddonDrawer] = useState(false);
+
     return (
         <>
             <Box
@@ -335,7 +340,16 @@ function ProductTable(props) {
                                             >
                                                 {t("Show")}
                                             </Menu.Item>
-
+                                            <Menu.Item
+                                                onClick={() => {
+                                                    setAddonDrawer(true);
+                                                }}
+                                                target="_blank"
+                                                component="a"
+                                                w={"200"}
+                                            >
+                                                {t("Addon")}
+                                            </Menu.Item>
                                             {!data.parent_id && (
                                                 <Menu.Item
                                                     target="_blank"
@@ -402,6 +416,11 @@ function ProductTable(props) {
                 <AddMeasurement measurementDrawer={measurementDrawer} setMeasurementDrawer={setMeasurementDrawer}
                                 id={id}/>
             )}
+            {
+                addonDrawer && (
+                    <__DrawerAddon addonDrawer={addonDrawer} setAddonDrawer={setAddonDrawer} id={id}/>
+                )
+            }
         </>
     );
 }

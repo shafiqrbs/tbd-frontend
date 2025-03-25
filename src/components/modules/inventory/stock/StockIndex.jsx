@@ -6,15 +6,11 @@ import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoa
 import getConfigData from "../../../global-hook/config-data/getConfigData.js";
 import InventoryHeaderNavbar from "../../domain/configuraton/InventoryHeaderNavbar";
 import {
-  editEntityData,
   setDropdownLoad,
-  setEntityNewData,
-  setFormLoading,
-  setInsertType,
-  setSearchKeyword,
 } from "../../../../store/inventory/crudSlice.js";
 import StockTable from "./StockTable.jsx";
 import { getCategoryDropdown } from "../../../../store/inventory/utilitySlice.js";
+import getSettingParticularDropdownData from "../../../global-hook/dropdown/getSettingParticularDropdownData.js";
 
 function StockIndex() {
   const { t, i18n } = useTranslation();
@@ -50,6 +46,8 @@ function StockIndex() {
     dispatch(setDropdownLoad(false));
   }, [dropdownLoad]);
 
+  const locationData = getSettingParticularDropdownData("location");
+
   return (
     <>
       {progress !== 100 && (
@@ -76,7 +74,7 @@ function StockIndex() {
                 <Grid columns={24} gutter={{ base: 8 }}>
                   <Grid.Col span={24}>
                     <Box bg={"white"} p={"xs"} className={"borderRadiusAll"}>
-                      <StockTable categoryDropdown={categoryDropdown} />
+                      <StockTable categoryDropdown={categoryDropdown} locationData={locationData} />
                     </Box>
                   </Grid.Col>
                 </Grid>

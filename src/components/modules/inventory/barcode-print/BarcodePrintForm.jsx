@@ -168,14 +168,14 @@ export default function BarcodePrintForm(props) {
                           {!saveCreateLoading && isOnline && (
                             <Button
                               size="xs"
-                              color={`green.8`}
+                              color={`red.6`}
                               type="submit"
                               id="EntityFormSubmit"
                               leftSection={<IconDeviceFloppy size={16} />}
                             >
                               <Flex direction={`column`} gap={0}>
                                 <Text fz={14} fw={400}>
-                                  {t("CreateAndSave")}
+                                  {t("Add")}
                                 </Text>
                               </Flex>
                             </Button>
@@ -186,84 +186,87 @@ export default function BarcodePrintForm(props) {
                   </Grid>
                 </Box>
                 <Box pl={`xs`} pr={"xs"} className={"borderRadiusAll"}>
+                  <Box>
+                    <Box mt={"8"}>
+                      <SelectServerSideForm
+                        tooltip={t("ChooseStockProduct")}
+                        label={t("ChooseStockProduct")}
+                        placeholder={t("ChooseStockProduct")}
+                        required={false}
+                        nextField={"barcode_type_id"}
+                        name={"product_id"}
+                        form={form}
+                        id={"product_id"}
+                        searchable={true}
+                        searchValue={searchValue}
+                        setSearchValue={setSearchValue}
+                        dropdownValue={productDropdown}
+                        closeIcon={true}
+                      />
+                    </Box>
+                    <Box mt={"8"}>
+                      <SelectForm
+                        tooltip={t("BarcodeType")}
+                        label={t("BarcodeType")}
+                        placeholder={t("ChooseBarcodeType")}
+                        required={false}
+                        nextField={"name"}
+                        name={"barcode_type_id"}
+                        form={form}
+                        dropdownValue={value}
+                        mt={8}
+                        id={"barcode_type_id"}
+                        searchable={false}
+                        value={barcodeTypeId}
+                        changeValue={setBarcodeTypeId}
+                      />
+                    </Box>
+                    <Box mt={"md"}>
+                      <Grid columns={24} gutter={{ base: 8 }}>
+                        <Grid.Col span={5}>
+                          <Text fz={14} fw={600} mt={8}>
+                            {t("Quantity")}
+                          </Text>
+                        </Grid.Col>
+                        <Grid.Col span={6}>
+                          <Text ta={"center"} fz={14} fw={600} mt={8}>
+                            {quantity}
+                          </Text>
+                        </Grid.Col>
+                        <Grid.Col span={5}>
+                          <Text fz={14} fw={600} mt={8}>
+                            {t("PrintQuantity")}
+                          </Text>
+                        </Grid.Col>
+                        <Grid.Col span={8}>
+                          <InputForm
+                            tooltip={t("PrintQuantity")}
+                            label={t("")}
+                            placeholder={t("PrintQuantity")}
+                            required={false}
+                            name={"quantity"}
+                            leftSection={
+                              <IconSortAscendingNumbers
+                                size={16}
+                                opacity={0.5}
+                              />
+                            }
+                            form={form}
+                            type={"number"}
+                          />
+                        </Grid.Col>
+                      </Grid>
+                    </Box>
+                  </Box>
                   <ScrollArea
-                    h={height - 47}
+                    m={"xs"}
+                    h={height - 258}
                     scrollbarSize={2}
                     scrollbars="y"
                     type="never"
+                    // bg={"yellow"}
                   >
-                    <Box>
-                      <Box mt={"8"}>
-                        <SelectServerSideForm
-                          tooltip={t("ChooseStockProduct")}
-                          label={t("ChooseStockProduct")}
-                          placeholder={t("ChooseStockProduct")}
-                          required={false}
-                          nextField={"barcode_type_id"}
-                          name={"product_id"}
-                          form={form}
-                          id={"product_id"}
-                          searchable={true}
-                          searchValue={searchValue}
-                          setSearchValue={setSearchValue}
-                          dropdownValue={productDropdown}
-                          closeIcon={true}
-                        />
-                      </Box>
-                      <Box mt={"8"}>
-                        <SelectForm
-                          tooltip={t("BarcodeType")}
-                          label={t("BarcodeType")}
-                          placeholder={t("ChooseBarcodeType")}
-                          required={false}
-                          nextField={"name"}
-                          name={"barcode_type_id"}
-                          form={form}
-                          dropdownValue={value}
-                          mt={8}
-                          id={"barcode_type_id"}
-                          searchable={false}
-                          value={barcodeTypeId}
-                          changeValue={setBarcodeTypeId}
-                        />
-                      </Box>
-                      <Box mt={"md"}>
-                        <Grid columns={24} gutter={{ base: 8 }}>
-                          <Grid.Col span={5}>
-                            <Text fz={14} fw={600} mt={8}>
-                              {t("Quantity")}
-                            </Text>
-                          </Grid.Col>
-                          <Grid.Col span={6}>
-                            <Text ta={"center"} fz={14} fw={600} mt={8}>
-                              {quantity}
-                            </Text>
-                          </Grid.Col>
-                          <Grid.Col span={5}>
-                            <Text fz={14} fw={600} mt={8}>
-                              {t("PrintQuantity")}
-                            </Text>
-                          </Grid.Col>
-                          <Grid.Col span={8}>
-                            <InputForm
-                              tooltip={t("PrintQuantity")}
-                              label={t("")}
-                              placeholder={t("PrintQuantity")}
-                              required={false}
-                              name={"quantity"}
-                              leftSection={
-                                <IconSortAscendingNumbers
-                                  size={16}
-                                  opacity={0.5}
-                                />
-                              }
-                              form={form}
-                              type={"number"}
-                            />
-                          </Grid.Col>
-                        </Grid>
-                      </Box>
-                    </Box>
+                    <Box></Box>
                   </ScrollArea>
                 </Box>
                 <Box
@@ -282,7 +285,7 @@ export default function BarcodePrintForm(props) {
                         <>
                           <Button
                             size="xs"
-                            color={`red.6`}
+                            color={`green.8`}
                             onClick={handlePreview}
                             leftSection={<IconBarcode size={16} />}
                           >
