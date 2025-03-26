@@ -765,9 +765,6 @@
   "WarehouseDetails" : "Warehouse Details",
   "RemainQuantity" : "Rem. Qty",
   "ManageStockReconciliation" : "Manage Stock Reconciliation",
-  "BonusQty" : "Bonus Qty",
-  "ModeQuantity" : "Mode Quantity",
-  "ModeBonus" : "Mode Bonus",
   "CreateStockReconciliation" : "Create Stock Reconciliation",
   "StockReconciliation" : "Stock Reconciliation",
   "ManageStockTransfer" : "Manage Stock Transfer",
@@ -807,5 +804,7 @@
   "DisAmount" : "Dis. Amount",
   "BarcodeType" : "Barcode Type",
   "ProductAddon" : "Select add-ons for product",
-  "ChooseProductLocation" : "Choose Product Location"
+  "ChooseProductLocation" : "Choose Product Location",
+  "ChooseBonusQuantity" : "Choose Bonus Quantity",
+  "ReconciliationDetailsData" : "ReconciliationDetailsData"
 }
