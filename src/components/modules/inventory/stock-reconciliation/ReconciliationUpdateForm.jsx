@@ -17,7 +17,7 @@ import {
   IconSortAscendingNumbers,
 } from "@tabler/icons-react";
 import { useTranslation } from "react-i18next";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useOutletContext } from "react-router-dom";
 import { isNotEmpty, useForm } from "@mantine/form";
 import { modals } from "@mantine/modals";
@@ -27,21 +27,23 @@ import Shortcut from "../../shortcut/Shortcut";
 import InputForm from "../../../form-builders/InputForm";
 import getSettingParticularDropdownData from "../../../global-hook/dropdown/getSettingParticularDropdownData.js";
 
-export default function ReconciliationForm() {
+export default function ReconciliationUpdateForm() {
   const { t, i18n } = useTranslation();
   const dispatch = useDispatch();
   const { isOnline, mainAreaHeight } = useOutletContext();
   const height = mainAreaHeight - 100;
 
   const [saveCreateLoading, setSaveCreateLoading] = useState(false);
+  const entityEditData = useSelector((state) => state.crudSlice.entityEditData);
+
   const form = useForm({
     initialValues: {
-      product_id: "",
-      warehouse_id: "",
-      quantity_id: "",
-      quantity: "",
-      bonus_id: "",
-      bonus: "",
+      product_id: entityEditData?.product_id || "",
+      warehouse_id: entityEditData?.warehouse_id || "",
+      quantity_id: entityEditData?.quantity_id || "",
+      quantity: entityEditData?.quantity || "",
+      mode_quantity: entityEditData?.mode_quantity || "",
+      bonus: entityEditData?.bonus || "",
     },
     validate: {
       product_id: isNotEmpty(),
@@ -50,7 +52,6 @@ export default function ReconciliationForm() {
 
   const [productId, setProductId] = useState(null);
   const [warehouseId, setWarehouseId] = useState(null);
-  const [warehouses, setWarehouses] = useState([]);
   const [modeQuantity, setModeQuantity] = useState(null);
   const [modeBonus, setModeBonus] = useState(null);
   const [stockItemDropdown, setStockItemDropdown] = useState([]);
