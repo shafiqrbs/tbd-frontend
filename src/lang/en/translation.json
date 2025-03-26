@@ -806,5 +806,15 @@
   "ProductAddon" : "Select add-ons for product",
   "ChooseProductLocation" : "Choose Product Location",
   "ChooseBonusQuantity" : "Choose Bonus Quantity",
-  "ReconciliationDetailsData" : "ReconciliationDetailsData"
+  "ReconciliationDetailsData" : "ReconciliationDetailsData",
+  "VoucherMode" : "Voucher Mode",
+  "ChooseMotherAccount" : "Choose Mother Account",
+  "InProgress" : "In Progress",
+  "PaymentMode" : "Payment Mode",
+  "LedgerHead" : "Ledger Head",
+  "VoucherRefNo" : "Voucher Ref No",
+  "ReceiveVoucherDate" : "Receive Voucher Date",
+  "LedgerName" : "Ledger Name",
+  "AddVoucher" : "Add Voucher",
+  "ChooseHeadGroup" : "Choose Head Group"
 }

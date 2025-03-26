@@ -35,27 +35,10 @@ function VoucherTableNew() {
     const [customerViewModel, setCustomerViewModel] = useState(false)
 
     const fetching = useSelector((state) => state.crudSlice.fetching)
-    const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword)
     const indexData = useSelector((state) => state.crudSlice.indexEntityData)
-    const customerFilterData = useSelector((state) => state.crudSlice.customerFilterData)
     const data = [
         { issue_date: '12/06/24', ref_voucher: 'rfiusdhf985644', voucher_type: 'voucher', amount: 50000, status: 'new', approved_by: 'foysal' }
     ]
-
-
-    useEffect(() => {
-        const value = {
-            url: 'core/customer',
-            param: {
-                term: searchKeyword,
-                name: customerFilterData.name,
-                mobile: customerFilterData.mobile,
-                page: page,
-                offset: perPage
-            }
-        }
-        dispatch(getIndexEntityData(value))
-    }, [fetching]);
 
     return (
         <>
@@ -63,7 +46,7 @@ function VoucherTableNew() {
             <Box className={'borderRadiusAllVoucherNew'} bg={'white'}>
                 <Box bg='white' className="borderRadiusAll" m={'xs'}>
                     <Box className="boxBackground" pl={`xs`} pb={'sm'} pr={8} pt={'xs'} bg={'white'}>
-                        <VoucherSearch module={'customer'} />
+                        <VoucherSearch module={'voucher'} />
                     </Box>
                 </Box>
                 <Box className={'borderRadiusAllVoucher'} p={'xs'} bg={'white'}>

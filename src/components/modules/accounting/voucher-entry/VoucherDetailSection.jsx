@@ -15,7 +15,7 @@ export default function VoucherDetailSection(props) {
         <Box >
             <Box p={"xs"} pt={'0'} className={"borderRadiusAll"}>
                 <Box pl={`xs`} pr={8} pt={'6'} pb={'6'} mb={'4'} mt={'xs'} className={'boxBackground borderRadiusAll'} >
-                    <Grid>
+                    <Grid align='center' justify='center'>
                         <Grid.Col span={9}>
                             <Title order={6} pl={"6"}>
                                 {t("VoucherMode")}
@@ -95,7 +95,7 @@ export default function VoucherDetailSection(props) {
                                         pr={'12'}
                                         mb={'xs'}
                                         variant={'light'}
-                                        color={`red`}
+                                        color={`red.5`}
                                         radius="xl"
                                         onClick={(e) => {
                                             props.form.reset()
@@ -132,8 +132,8 @@ export default function VoucherDetailSection(props) {
                                         pl={'12'}
                                         pr={'12'}
                                         mb={'xs'}
-                                        variant={'filled'}
-                                        color={`red`}
+                                        variant={'light'}
+                                        color={`red.5`}
                                         radius="xl"
                                         onClick={(e) => {
                                             document.getElementById(props.FormSubmit).click()
@@ -170,8 +170,8 @@ export default function VoucherDetailSection(props) {
                                         pl={'12'}
                                         pr={'12'}
                                         mb={'xs'}
-                                        variant={'filled'}
-                                        color={`red`}
+                                        variant={'light'}
+                                        color={`red.5`}
                                         radius="xl"
                                         onClick={(e) => {
                                             document.getElementById(props.FormSubmit).click()
@@ -208,8 +208,8 @@ export default function VoucherDetailSection(props) {
                                         pl={'12'}
                                         pr={'12'}
                                         mb={'xs'}
-                                        variant={'filled'}
-                                        color={`red`}
+                                        variant={'light'}
+                                        color={`red.5`}
                                         radius="xl"
                                         onClick={(e) => {
                                             document.getElementById(props.FormSubmit).click()

@@ -24,7 +24,7 @@ function AccountingHeaderNavbar(props) {
     const links = [
         { link: '/accounting/voucher-entry', label: t('VoucherEntry') },
         { link: '/accounting/ledger', label: t('AccountLedger') },
-        { link: '/accounting/reports', label: t('AccountReports') },
+        // { link: '/accounting/reports', label: t('AccountReports') },
     ];
     const items = links.map((link) => (
         <a
