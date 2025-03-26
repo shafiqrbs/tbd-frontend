@@ -342,6 +342,7 @@ function ProductTable(props) {
                                             </Menu.Item>
                                             <Menu.Item
                                                 onClick={() => {
+                                                    setId(data.id);
                                                     setAddonDrawer(true);
                                                 }}
                                                 target="_blank"

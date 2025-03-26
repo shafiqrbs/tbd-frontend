@@ -18,20 +18,22 @@ import { useTranslation } from "react-i18next";
 import { useOutletContext } from "react-router-dom";
 import { DataTable } from "mantine-datatable";
 import tableCss from "../../../../assets/css/Table.module.css";
+import { useDispatch } from "react-redux";
+import { notifications } from "@mantine/notifications";
 
 export default function __DrawerAddon(props) {
   const { addonDrawer, setAddonDrawer, id } = props;
-
   const { t } = useTranslation();
-
+  const dispatch = useDispatch();
   const { mainAreaHeight, isOnline } = useOutletContext();
-
   const height = mainAreaHeight;
-
   const [indexData, setIndexData] = useState(null);
   const [saveCreateLoading, setSaveCreateLoading] = useState(false);
 
+  const [addonMap, setAddonMap] = useState({});
+
   useEffect(() => {
+    console.log(id)
     setIndexData({
       data: [
         {
@@ -63,10 +65,55 @@ export default function __DrawerAddon(props) {
         },
       ],
     });
-  }, []);
+
+  }, [id]);
+
   const closeDrawer = () => {
     setAddonDrawer(false);
   };
+
+  const handleToggleAddon = (addon) => {
+    setAddonMap((prevMap) => {
+      const newMap = { ...prevMap };
+
+      if (prevMap[addon.id]) {
+
+        delete newMap[addon.id];
+      } else {
+        newMap[addon.id] = addon;
+      }
+
+      return newMap;
+    });
+  };
+
+  const handleSaveAddons = async () => {
+    try {
+      setSaveCreateLoading(true);
+      const selectedAddonIds = Object.keys(addonMap);
+
+      console.log("Saving add-ons for product ID:", id);
+      console.log("Selected add-on IDs:", selectedAddonIds);
+
+      notifications.show({
+        title: t("Success"),
+        message: t("Add-ons updated successfully"),
+        color: "green",
+      });
+
+      closeDrawer();
+    } catch (error) {
+      console.error("Error saving add-ons:", error);
+      notifications.show({
+        title: t("Error"),
+        message: t("Failed to update add-ons"),
+        color: "red",
+      });
+    } finally {
+      setSaveCreateLoading(false);
+    }
+  };
+
   return (
     <>
       <Drawer.Root
@@ -110,7 +157,7 @@ export default function __DrawerAddon(props) {
                 <Grid>
                   <Grid.Col span={6}>
                     <Title order={6} pt={"6"}>
-                      {/* {t("")} */}
+                      {t("ProductAddon")}
                     </Title>
                   </Grid.Col>
                   <Grid.Col span={6}>
@@ -120,13 +167,12 @@ export default function __DrawerAddon(props) {
                           <Button
                             size="xs"
                             color={`green.8`}
-                            type="submit"
-                            id="EntityFormSubmit"
+                            onClick={handleSaveAddons}
                             leftSection={<IconDeviceFloppy size={16} />}
+                            loading={saveCreateLoading}
                           >
                             <Flex direction={`column`} gap={0}>
                               <Text fz={14} fw={400}>
-                                {" "}
                                 {t("Update")}
                               </Text>
                             </Flex>
@@ -137,7 +183,10 @@ export default function __DrawerAddon(props) {
                   </Grid.Col>
                 </Grid>
               </Box>
-              <ScrollArea className="boxBackground borderRadiusAll" h={height - 50}>
+              <ScrollArea
+                className="boxBackground borderRadiusAll"
+                h={height - 50}
+              >
                 <DataTable
                   classNames={{
                     root: tableCss.root,
@@ -165,7 +214,12 @@ export default function __DrawerAddon(props) {
                       render: (data) => (
                         <>
                           <Center>
-                            <Checkbox color="red.6" variant="filled" />
+                            <Checkbox
+                              color="red.6"
+                              variant="filled"
+                              checked={!!addonMap[data.id]}
+                              onChange={() => handleToggleAddon(data)}
+                            />
                           </Center>
                         </>
                       ),
