@@ -35,7 +35,6 @@ export default function BakeryIndex() {
     const [invoiceMode, setInvoiceMode] = useState(null);
     const [tableId, setTableId] = useState(null);
     const [reloadInvoiceData, setReloadInvoiceData] = useState(false);
-    const [reloadParticularData, setReloadParticularData] = useState(false);
 
     // ✅ Optimized Category Dropdown Fetching
 
@@ -98,7 +97,6 @@ export default function BakeryIndex() {
                 }));
                 if (getIndexEntityData.fulfilled.match(resultAction)) {
                     setInvoiceData(resultAction.payload.data);
-                    setCustomerObject(resultAction?.payload?.data?.customer)
                 } else {
                     console.error("Error fetching data:", resultAction);
                 }

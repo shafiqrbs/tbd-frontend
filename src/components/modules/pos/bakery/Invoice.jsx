@@ -73,7 +73,7 @@ export default function Invoice(props) {
         tableSplitPaymentMap,
         invoiceMode,
         invoiceData,
-        reloadInvoiceData,
+        setTables,
         setReloadInvoiceData
     } = props;
 
@@ -88,7 +88,7 @@ export default function Invoice(props) {
     const [printPos, setPrintPos] = useState(false);
     const [tempCartProducts, setTempCartProducts] = useState([]);
     // Sales by user state management
-    const [salesByUser, setSalesByUser] = useState(String(invoiceData?.sales_by_id));
+    const [salesByUser, setSalesByUser] = useState(String(invoiceData?.sales_by_id || null));
     const [salesByUserName, setSalesByUserName] = useState(null);
     const [salesByDropdownData, setSalesByDropdownData] = useState([]);
     const [isDisabled, setIsDisabled] = useState(false);
@@ -105,7 +105,7 @@ export default function Invoice(props) {
     );
     const [checked, setChecked] = useState(false);
 
-    const [transactionModeId, setTransactionModeId] = useState(invoiceData?.transaction_mode_id);
+    const [transactionModeId, setTransactionModeId] = useState(invoiceData?.transaction_mode_id || null);
 
     const currentTableKey = tableId || "general";
     const currentTableSplitPayments = tableSplitPaymentMap[currentTableKey] || [];
@@ -118,18 +118,6 @@ export default function Invoice(props) {
     const [defaultCustomerId, setDefaultCustomerId] = useState(null);
 
     const [tableReceiveAmounts, setTableReceiveAmounts] = useState({});
-
-    useEffect(() => {
-        if (enableTable && tableId) {
-            const tableCartKey = `table-${tableId}-pos-products`;
-            const tempProducts = localStorage.getItem(tableCartKey);
-            setTempCartProducts(tempProducts ? JSON.parse(tempProducts) : []);
-        } else {
-            const tempProducts = localStorage.getItem("temp-pos-products");
-            setTempCartProducts(tempProducts ? JSON.parse(tempProducts) : []);
-        }
-        setLoadCartProducts(false);
-    }, [loadCartProducts, tableId, enableTable]);
     useEffect(() => {
         if (
             enableTable &&
@@ -315,7 +303,7 @@ export default function Invoice(props) {
     const getAdditionalItem = (value) => {
         setIndexData(value);
     };
-    const [customerId, setCustomerId] = useState(invoiceData?.customer_id);
+    const [customerId, setCustomerId] = useState(invoiceData?.customer_id || null);
     const [customerDrawer, setCustomerDrawer] = useState(false);
     const [customersDropdownData, setCustomersDropdownData] = useState([]);
     const [refreshCustomerDropdown, setRefreshCustomerDropdown] = useState(false);
@@ -452,6 +440,7 @@ export default function Invoice(props) {
             setSalesDueAmount((invoiceData.sub_total || 0) - ((invoiceData.payment || 0) + (invoiceData.discount || 0)));
             setReturnOrDueText((invoiceData.sub_total || 0) > (invoiceData.payment || 0) ? "Due" : "Return");
             setCurrentPaymentInput(invoiceData?.payment || "");
+            setTransactionModeId(invoiceData?.transaction_mode_id || "");
             if (invoiceData.discount_type === "Flat") {
                 setSalesDiscountAmount(invoiceData?.discount || 0);
             } else if (invoiceData.discount_type === "Percent") {
@@ -459,6 +448,17 @@ export default function Invoice(props) {
             }
         }
     }, [invoiceData, discountType]);
+    const updateTableStatus = async (newStatus) => {
+        if (!tableId) return;
+        
+        setTables(prevTables => 
+            prevTables.map(table => 
+                table.id === tableId 
+                    ? {...table, status: newStatus} 
+                    : table
+            )
+        );
+    };
     const handleSave = () => {
         if (!salesByUser || salesByUser == 'undefined') {
             showNotificationComponent(t('ChooseUser'), 'red', '', '', true, 1000, true)
@@ -488,10 +488,20 @@ export default function Invoice(props) {
                 }));
                 if (getIndexEntityData.fulfilled.match(resultAction)) {
                     showNotificationComponent(t('SalesComplete'), 'blue', '', '', true, 1000, true)
-                    // Delay the page reload slightly to allow UI notification to be seen
-                    setTimeout(() => {
-                        window.location.reload();
-                    }, 500);  // Reload after 1 second
+                    clearTableCustomer(tableId);
+                    setSalesByUser(null);
+                    setCustomerId(null);
+                    setTransactionModeId(null);
+                    setCurrentPaymentInput("");
+                    setSalesDiscountAmount(0);
+                    setSalesTotalAmount(0);
+                    setSalesTotalWithoutDiscountAmount(0);
+                    setSalesDueAmount(0);
+                    setReturnOrDueText("Due");
+                    setDiscountType("Percent");
+                    setCustomerObject({});
+                    updateTableStatus('Free');
+                    setReloadInvoiceData(true);
                 } else {
                     console.error("Error fetching data:", resultAction);
                 }
@@ -501,7 +511,6 @@ export default function Invoice(props) {
                 setSalesByUser(null)
                 setCustomerId(null)
                 setCustomerObject(null)
-                // setTableId(null)
                 setReloadInvoiceData(true)
             }
         };

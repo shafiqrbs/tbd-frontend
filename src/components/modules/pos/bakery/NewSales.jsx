@@ -265,48 +265,6 @@ export default function NewSales(props) {
         return () => clearInterval(interval);
     }, []);
 
-    const handleSubmitOrder = () => {
-        if (!tempCartProducts.length) {
-            notifications.show({
-                title: t("ValidationError"),
-                position: "top-right",
-                autoClose: 1000,
-                withCloseButton: true,
-                message: t("AddAtLeastOneProduct"),
-                color: "red",
-            });
-            return;
-        }
-
-        if (enableTable && tableId) {
-            localStorage.removeItem(`table-${tableId}-pos-products`);
-            updateTableStatus("Free");
-            clearTableCustomer(tableId);
-
-            notifications.show({
-                title: t("Success"),
-                position: "top-right",
-                autoClose: 2000,
-                withCloseButton: true,
-                message:
-                    t("OrderforTable") + ` ${tableId} ` + t("ProcessedSuccessfully"),
-                color: "green",
-            });
-        } else {
-            localStorage.removeItem("temp-pos-products");
-
-            notifications.show({
-                title: t("Success"),
-                position: "top-right",
-                autoClose: 1000,
-                withCloseButton: true,
-                message: t("OrderProcessedSuccessfully"),
-                color: "green",
-            });
-        }
-
-        setLoadCartProducts(true);
-    };
     const renderStatusButtons = () => (
         <SegmentedControl
             mt={8}
@@ -404,7 +362,6 @@ export default function NewSales(props) {
                             setTableId={setTableId}
                             tables={tables}
                             setLoadCartProducts={setLoadCartProducts}
-                            handleSubmitOrder={handleSubmitOrder}
                             tableCustomerMap={tableCustomerMap}
                             updateTableCustomer={updateTableCustomer}
                             clearTableCustomer={clearTableCustomer}
@@ -1478,8 +1435,8 @@ export default function NewSales(props) {
                             products={products}
                             tableId={tableId}
                             tables={tables}
+                            setTables={setTables}
                             setLoadCartProducts={setLoadCartProducts}
-                            handleSubmitOrder={handleSubmitOrder}
                             tableCustomerMap={tableCustomerMap}
                             updateTableCustomer={updateTableCustomer}
                             clearTableCustomer={clearTableCustomer}
