@@ -5,15 +5,19 @@ import tableCss from "../../../../assets/css/Table.module.css";
 import { useState } from "react";
 import { DataTable } from "mantine-datatable";
 import KeywordSearch from "../../filter/KeywordSearch";
+import _CouponViewDrawer from "./_CouponViewDrawer";
 
 export default function CouponTable() {
   const { t } = useTranslation();
   const { isOnline, mainAreaHeight } = useOutletContext();
   const height = mainAreaHeight - 98;
+
   const [indexData, setIndexData] = useState([]);
   const [fetching, setFetching] = useState(false);
   const [page, setPage] = useState(1);
   const perPage = 50;
+  const [viewDrawer, setViewDrawer] = useState(false);
+
   return (
     <>
       <Box
@@ -81,16 +85,6 @@ export default function CouponTable() {
                     </Menu.Target>
                     <Menu.Dropdown>
                       <Menu.Item
-                        onClick={() => {
-                          setProvisionDrawer(true);
-                        }}
-                        target="_blank"
-                        component="a"
-                        w={"200"}
-                      >
-                        {t("AddProvision")}
-                      </Menu.Item>
-                      <Menu.Item
                         onClick={() => {}}
                         target="_blank"
                         component="a"
@@ -99,7 +93,9 @@ export default function CouponTable() {
                         {t("Edit")}
                       </Menu.Item>
                       <Menu.Item
-                        onClick={() => {}}
+                        onClick={() => {
+                          setViewDrawer(true);
+                        }}
                         target="_blank"
                         component="a"
                         w={"200"}
@@ -161,6 +157,12 @@ export default function CouponTable() {
           scrollAreaProps={{ type: "never" }}
         />
       </Box>
+      {viewDrawer && (
+        <_CouponViewDrawer
+          viewDrawer={viewDrawer}
+          setViewDrawer={setViewDrawer}
+        />
+      )}
     </>
   );
 }
