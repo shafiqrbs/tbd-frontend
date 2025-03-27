@@ -750,7 +750,6 @@
   "NoProductWithBarcode" : "No Product With Barcode",
   "AddedToCart" : "Added To Cart",
   "ProductFound" : "Product Found",
-  "AddAtLeastOneProduct" : "Add at least one product",
   "OrderforTable" : "Order for Table",
   "ProcessedSuccessfully" : "Processed Successfully",
   "OrderProcessedSuccessfully" : "Order Processed Successfully",
@@ -806,7 +805,7 @@
   "ProductAddon" : "Select add-ons for product",
   "ChooseProductLocation" : "Choose Product Location",
   "ChooseBonusQuantity" : "Choose Bonus Quantity",
-  "ReconciliationDetailsData" : "ReconciliationDetailsData",
+  "ReconciliationDetailsData" : "Reconciliation Details Data",
   "VoucherMode" : "Voucher Mode",
   "ChooseMotherAccount" : "Choose Mother Account",
   "InProgress" : "In Progress",
@@ -816,5 +815,8 @@
   "ReceiveVoucherDate" : "Receive Voucher Date",
   "LedgerName" : "Ledger Name",
   "AddVoucher" : "Add Voucher",
-  "ChooseHeadGroup" : "Choose Head Group"
+  "ChooseHeadGroup" : "Choose Head Group",
+  "NoProductAdded" : "No Product Added",
+  "ChooseUser" : "Choose User",
+  "PaymentAmount" : "Payment Amount"
 }
