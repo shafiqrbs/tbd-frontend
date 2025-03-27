@@ -263,6 +263,15 @@ export default function Header({ isOnline, configData }) {
                     paddingLeft: 16,
                   }}
                 >
+                  <Tooltip
+                      label={
+                        configData && configData.domain
+                            ? configData.domain.company_name
+                            : ""
+                      }
+                      bg={`red.5`}
+                      withArrow
+                  >
                   <Anchor
                     target="_blank"
                     underline="never"
@@ -282,6 +291,7 @@ export default function Header({ isOnline, configData }) {
                       pl={6}
                     ></Image>
                   </Anchor>
+                  </Tooltip>
                 </div>
               ) : (
                 <NavLink
