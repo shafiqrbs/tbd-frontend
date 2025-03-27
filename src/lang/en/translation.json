@@ -818,5 +818,12 @@
   "ChooseHeadGroup" : "Choose Head Group",
   "NoProductAdded" : "No Product Added",
   "ChooseUser" : "Choose User",
-  "PaymentAmount" : "Payment Amount"
+  "PaymentAmount" : "Payment Amount",
+  "QuickEmployeeGroup" : "Would you like to add a new employee group?",
+  "QuickDesignationGroup" : "Would you like to add a new designation group?",
+  "QuickDepartmentGroup" : "Would you like to add a new department group?",
+  "QuickLocationGroup" : "Would you like to add a new location group?",
+  "Bakery" : "Bakery",
+  "EnterName" : "Enter a name",
+  "EnterMobile" : "Enter a mobile number"
 }

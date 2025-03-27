@@ -7,7 +7,7 @@ function SalesFilterForm(props) {
     const {t, i18n} = useTranslation();
 
     useHotkeys([['alt+n', () => {
-        document.getElementById('Name').focus()
+        document.getElementById('name').focus()
     }]], []);
 
 
@@ -16,8 +16,8 @@ function SalesFilterForm(props) {
             <InputForm
                 label={t("Name")}
                 placeholder = {t("Name")}
-                nextField = {"Mobile"}
-                id={'Name'}
+                nextField = {"mobile"}
+                id={'name'}
                 name={'name'}
                 module={props.module}
             />
@@ -25,8 +25,8 @@ function SalesFilterForm(props) {
             <InputForm
                 label={t("Mobile")}
                 placeholder = {t("Mobile")}
-                nextField = {"CompanyNameFilter"}
-                id={'Mobile'}
+                nextField = {"company_name"}
+                id={'mobile'}
                 name={'mobile'}
                 module={props.module}
             />
@@ -35,7 +35,7 @@ function SalesFilterForm(props) {
                 label={t("CompanyName")}
                 placeholder = {t("CompanyName")}
                 nextField = {"submit"}
-                id={'CompanyNameFilter'}
+                id={'company_name'}
                 name={'company_name'}
                 module={props.module}
             />
