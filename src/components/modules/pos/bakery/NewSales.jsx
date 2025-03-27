@@ -56,7 +56,8 @@ export default function NewSales(props) {
         invoiceMode,
         invoiceData,
         reloadInvoiceData,
-        setReloadInvoiceData
+        setReloadInvoiceData,
+        setInvoiceData
     } = props;
 
     const {t, i18n} = useTranslation();
@@ -68,7 +69,6 @@ export default function NewSales(props) {
     //is_table_pos undefined thats why not rendering
     const enableTable = !!(configData?.is_pos && invoiceMode === 'table');
     const [loadCartProducts, setLoadCartProducts] = useState(false);
-    const [tempCartProducts, setTempCartProducts] = useState([]);
 
     const [originalProducts, setOriginalProducts] = useState([]);
     const [products, setProducts] = useState([]);
@@ -162,18 +162,6 @@ export default function NewSales(props) {
         });
         setTableStatuses(newTableStatuses);
     }, [tables]);
-
-    useEffect(() => {
-        if (enableTable && tableId) {
-            const tableCartKey = `table-${tableId}-pos-products`;
-            const tempProducts = localStorage.getItem(tableCartKey);
-            setTempCartProducts(tempProducts ? JSON.parse(tempProducts) : []);
-        } else {
-            const tempProducts = localStorage.getItem("temp-pos-products");
-            setTempCartProducts(tempProducts ? JSON.parse(tempProducts) : []);
-        }
-        setLoadCartProducts(false);
-    }, [loadCartProducts, tableId, enableTable]);
 
     useEffect(() => {
         const storedProducts = localStorage.getItem("core-products");
@@ -357,6 +345,7 @@ export default function NewSales(props) {
                 {leftSide ? (
                     <Grid.Col span={8}>
                         <Invoice
+                            setInvoiceData={setInvoiceData}
                             products={products}
                             tableId={tableId}
                             setTableId={setTableId}
@@ -368,6 +357,14 @@ export default function NewSales(props) {
                             customerObject={customerObject}
                             setCustomerObject={setCustomerObject}
                             loadCartProducts={loadCartProducts}
+                            setTables={setTables}
+                            updateTableSplitPayment={updateTableSplitPayment}
+                            clearTableSplitPayment={clearTableSplitPayment}
+                            tableSplitPaymentMap={tableSplitPaymentMap}
+                            invoiceMode={invoiceMode}
+                            invoiceData={invoiceData}
+                            reloadInvoiceData={reloadInvoiceData}
+                            setReloadInvoiceData={setReloadInvoiceData}
                         />
                     </Grid.Col>
                 ) : (
@@ -956,7 +953,7 @@ export default function NewSales(props) {
                                         pb={4}
                                         className="border-radius"
                                     >
-                                        <Grid gutter={{base: 4}} grow align="center" mt={4}>
+                                        <Grid gutter={{base: 4}} align="center" mt={4}>
                                             <Grid.Col span={3}>
                                                 <Tooltip
                                                     label={t("BarcodeValidateMessage")}
@@ -1432,6 +1429,7 @@ export default function NewSales(props) {
                 ) : (
                     <Grid.Col span={8}>
                         <Invoice
+                            setInvoiceData={setInvoiceData}
                             products={products}
                             tableId={tableId}
                             tables={tables}
@@ -1450,6 +1448,7 @@ export default function NewSales(props) {
                             invoiceData={invoiceData}
                             reloadInvoiceData={reloadInvoiceData}
                             setReloadInvoiceData={setReloadInvoiceData}
+                            setTableId={setTableId}
                         />
                     </Grid.Col>
                 )}

@@ -74,7 +74,9 @@ export default function Invoice(props) {
         invoiceMode,
         invoiceData,
         setTables,
-        setReloadInvoiceData
+        setReloadInvoiceData,
+        setTableId,
+        setInvoiceData
     } = props;
 
     const dispatch = useDispatch();
@@ -86,9 +88,8 @@ export default function Invoice(props) {
     const {configData} = getConfigData();
     const enableTable = !!(configData?.is_pos && invoiceMode === 'table');
     const [printPos, setPrintPos] = useState(false);
-    const [tempCartProducts, setTempCartProducts] = useState([]);
     // Sales by user state management
-    const [salesByUser, setSalesByUser] = useState(String(invoiceData?.sales_by_id || null));
+    const [salesByUser, setSalesByUser] = useState(String(invoiceData?.sales_by_id || ""));
     const [salesByUserName, setSalesByUserName] = useState(null);
     const [salesByDropdownData, setSalesByDropdownData] = useState([]);
     const [isDisabled, setIsDisabled] = useState(false);
@@ -105,8 +106,7 @@ export default function Invoice(props) {
     );
     const [checked, setChecked] = useState(false);
 
-    const [transactionModeId, setTransactionModeId] = useState(invoiceData?.transaction_mode_id || null);
-
+    const [transactionModeId, setTransactionModeId] = useState(invoiceData?.transaction_mode_id || "");
     const currentTableKey = tableId || "general";
     const currentTableSplitPayments = tableSplitPaymentMap[currentTableKey] || [];
     const isSplitPaymentActive = currentTableSplitPayments.length > 0;
@@ -245,10 +245,6 @@ export default function Invoice(props) {
         setReloadInvoiceData
     });
 
-    const subtotal = tempCartProducts.reduce(
-        (acc, item) => acc + item.sub_total,
-        0
-    );
 
     useEffect(() => {
         if (tableId && !additionalTableSelections[tableId]) {
@@ -303,7 +299,7 @@ export default function Invoice(props) {
     const getAdditionalItem = (value) => {
         setIndexData(value);
     };
-    const [customerId, setCustomerId] = useState(invoiceData?.customer_id || null);
+    const [customerId, setCustomerId] = useState(invoiceData?.customer_id || "");
     const [customerDrawer, setCustomerDrawer] = useState(false);
     const [customersDropdownData, setCustomersDropdownData] = useState([]);
     const [refreshCustomerDropdown, setRefreshCustomerDropdown] = useState(false);
@@ -415,17 +411,6 @@ export default function Invoice(props) {
                 setCustomerId(null);
                 setCustomerObject({});
             }
-
-            const tableCartKey = `table-${tableId}-pos-products`;
-            const tempProducts = localStorage.getItem(tableCartKey);
-            setTempCartProducts(tempProducts ? JSON.parse(tempProducts) : []);
-
-            if (!tempProducts || JSON.parse(tempProducts).length === 0) {
-                setSalesDiscountAmount(0);
-                setSalesTotalAmount(0);
-                setSalesDueAmount(0);
-                setReturnOrDueText("Due");
-            }
         }
     }, [tableId]);
 
@@ -460,6 +445,10 @@ export default function Invoice(props) {
         );
     };
     const handleSave = () => {
+        if(!invoiceData.invoice_items || invoiceData.invoice_items.length === 0) {
+            showNotificationComponent(t('NoProductAdded'), 'red', '', '', true, 1000, true)
+            return
+        }
         if (!salesByUser || salesByUser == 'undefined') {
             showNotificationComponent(t('ChooseUser'), 'red', '', '', true, 1000, true)
             return
@@ -481,6 +470,7 @@ export default function Invoice(props) {
         }
 
         const fetchData = async () => {
+            setIsDisabled(true);
             try {
                 const resultAction = await dispatch(getIndexEntityData({
                     url: "inventory/pos/sales-complete/" + invoiceData.id,
@@ -502,6 +492,10 @@ export default function Invoice(props) {
                     setCustomerObject({});
                     updateTableStatus('Free');
                     setReloadInvoiceData(true);
+                    setTableId(null);
+                    setIndexData(null);
+                    setInvoiceData(null);
+                    form.reset()
                 } else {
                     console.error("Error fetching data:", resultAction);
                 }
@@ -512,6 +506,8 @@ export default function Invoice(props) {
                 setCustomerId(null)
                 setCustomerObject(null)
                 setReloadInvoiceData(true)
+
+                setIsDisabled(false);
             }
         };
         fetchData();
@@ -534,9 +530,8 @@ export default function Invoice(props) {
                     align="flex-start"
                     wrap="nowrap"
                 >
-                    <Box pt={8}>
                         <SelectForm
-                            pt={"xs"}
+                            pt={"8"}
                             label=""
                             tooltip={"SalesBy"}
                             placeholder={enableTable ? t("OrderTakenBy") : t("SalesBy")}
@@ -559,8 +554,6 @@ export default function Invoice(props) {
                                 },
                             }}
                         />
-                    </Box>
-
                     {enableTable && (
                         <Tooltip
                             disabled={!(invoiceData?.invoice_items?.length === 0 || !salesByUser)}
@@ -679,7 +672,7 @@ export default function Invoice(props) {
                             footer: tableCss.footer,
                             pagination: tableCss.pagination,
                         }}
-                        records={invoiceData.invoice_items}
+                        records={invoiceData ? invoiceData.invoice_items : []}
                         columns={[
                             {
                                 accessor: "id",
@@ -900,7 +893,6 @@ export default function Invoice(props) {
                             </Grid.Col>
                             <Grid.Col span={3}>
                                 <Stack
-                                    grow
                                     gap={0}
                                     className={classes["box-border"]}
                                     align="center"
@@ -919,7 +911,6 @@ export default function Invoice(props) {
                             </Grid.Col>
                             <Grid.Col span={3}>
                                 <Stack
-                                    grow
                                     gap={0}
                                     className={classes["box-border"]}
                                     align="center"

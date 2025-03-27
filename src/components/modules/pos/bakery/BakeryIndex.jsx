@@ -87,6 +87,7 @@ export default function BakeryIndex() {
     }, [dispatch]);
 
     useEffect(() => {
+        if (tableId === null) return;
         const fetchData = async () => {
             try {
                 const resultAction = await dispatch(getIndexEntityData({
@@ -171,9 +172,9 @@ export default function BakeryIndex() {
 
     // ✅ Optimized Customer Object State Update
     useEffect(() => {
-        if (tableId && selectedCustomer && JSON.stringify(customerObject) !== JSON.stringify(selectedCustomer)) {
+        if (tableId && selectedCustomer && JSON.stringify(customerObject || {}) !== JSON.stringify(selectedCustomer)) {
             setCustomerObject(selectedCustomer);
-        } else if (!tableId && Object.keys(customerObject).length > 0) {
+        } else if (!tableId && customerObject && Object.keys(customerObject).length > 0) {
             setCustomerObject({});
         }
     }, [tableId, selectedCustomer]);
@@ -239,6 +240,7 @@ export default function BakeryIndex() {
                     >
                         <Box pl={"4"}>
                             <NewSales
+                                setInvoiceData={setInvoiceData}
                                 categoryDropdown={categoryDropdown}
                                 tableId={tableId}
                                 setTableId={setTableId}
