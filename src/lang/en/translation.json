@@ -29,7 +29,7 @@
   "CustomerName": "Customer Name",
   "NameValidateMessage": "Provide a valid name for the customer",
   "CustomerGroup": "Customer Group",
-  "ChooseCustomerGroup": "Choose Customer Group",
+  "ChooseCustomerGroup": "Choose customer group",
   "CreditLimit": "Credit Limit",
   "CreditLimitValidationMessage": "Credit Limit must be a positive number",
   "CreditLimitValidateMessage": "Credit limit must be a number or fractional value",
