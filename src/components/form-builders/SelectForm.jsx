@@ -28,7 +28,8 @@ const SelectForm = forwardRef((props, ref) => {
         clearable = true,
         allowDeselect = true,
         inlineUpdate = false,
-        updateDetails = null
+        updateDetails = null,
+        pt
     } = props;
     const dispatch = useDispatch();
 
@@ -76,6 +77,7 @@ const SelectForm = forwardRef((props, ref) => {
                     transitionProps={{transition: "pop-bottom-left", duration: 500}}
                 >
                     <Select
+                        pt={pt}
                         ref={ref}
                         id={id}
                         label={label}

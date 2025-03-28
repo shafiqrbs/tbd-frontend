@@ -7,17 +7,17 @@ function CategoryGroupFilterForm(props) {
     const {t, i18n} = useTranslation();
 
     useHotkeys([['alt+n', () => {
-        document.getElementById('Name').focus()
+        document.getElementById('name').focus()
     }]], []);
 
 
     return (
         <>
             <InputForm
-                label={"Name"}
-                placeholder = {"Name"}
+                label={t("Name")}
+                placeholder = {t("Name")}
                 nextField = {"submit"}
-                id={'Name'}
+                id={'name'}
                 name={'name'}
                 module={props.module}
             />

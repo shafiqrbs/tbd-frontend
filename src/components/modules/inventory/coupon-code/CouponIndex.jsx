@@ -15,6 +15,7 @@ import {
   setInsertType,
   setSearchKeyword,
 } from "../../../../store/inventory/crudSlice";
+import CouponUpdateForm from "./CouponUpdateForm";
 
 export default function CouponIndex() {
   const { t } = useTranslation();
@@ -23,7 +24,9 @@ export default function CouponIndex() {
   const { id } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const insertType = useSelector((state) => state.inventoryCrudSlice.insertType)
+  const insertType = useSelector(
+    (state) => state.inventoryCrudSlice.insertType
+  );
   useEffect(() => {
     if (id) {
       dispatch(setInsertType("update"));
@@ -67,11 +70,9 @@ export default function CouponIndex() {
                   </Grid.Col>
                   <Grid.Col span={9}>
                     {insertType === "create" ? (
-                      <CouponForm
-                      />
+                      <CouponForm />
                     ) : (
-                      <CouponUpdateForm
-                      />
+                      <CouponUpdateForm />
                     )}
                   </Grid.Col>
                 </Grid>

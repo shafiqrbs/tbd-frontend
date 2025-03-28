@@ -146,7 +146,7 @@ function InputForm(props) {
                                 }} />
                             </Tooltip>
                         ) : (
-                            <Tooltip label={placeholder} withArrow position={"bottom"} c={'indigo'} bg={`indigo.1`}>
+                            <Tooltip label={placeholder} withArrow position={"bottom"} bg={`red.4`}>
                                 <IconInfoCircle size={16} opacity={0.5} />
                             </Tooltip>
                         )

@@ -18,7 +18,7 @@ import {useTranslation} from "react-i18next";
 import {
     IconArrowsExchange,
     IconCheck,
-    IconDeviceFloppy, IconUsersGroup,
+    IconDeviceFloppy, IconDoor, IconMapPin, IconUser, IconUsersGroup,
 } from "@tabler/icons-react";
 import {useHotkeys} from "@mantine/hooks";
 import InputForm from "../../../form-builders/InputForm";
@@ -509,7 +509,7 @@ function _UserUpdateForm() {
                                                     loaderProps={{color: "red.6"}}
                                                 />
                                                 <Box>
-                                                    <Grid gutter={{base: 2}}>
+                                                    <Grid gutter={{base: 6}}>
                                                         <Grid.Col span={11}>
                                                             <Box mt={'8'}>
                                                                 <SelectForm
@@ -538,7 +538,7 @@ function _UserUpdateForm() {
                                                                     offset={{crossAxis: '-110', mainAxis: '5'}}
                                                                     withArrow
                                                                     transitionProps={{duration: 200}}
-                                                                    label={t('QuickCustomerGroup')}
+                                                                    label={t('QuickEmployeeGroup')}
                                                                 >
                                                                     <ActionIcon variant="outline" bg={'white'}
                                                                                 size={'lg'} color="red.5" mt={'1'}
@@ -1056,14 +1056,14 @@ function _UserUpdateForm() {
                                                                 offset={{crossAxis: '-110', mainAxis: '5'}}
                                                                 withArrow
                                                                 transitionProps={{duration: 200}}
-                                                                label={t('QuickCustomerGroup')}
+                                                                label={t('QuickDesignationGroup')}
                                                             >
                                                                 <ActionIcon variant="outline" bg={'white'} size={'lg'}
                                                                             color="red.5" mt={'1'} aria-label="Settings"
                                                                             onClick={() => {
                                                                                 setGroupDrawer(true)
                                                                             }}>
-                                                                    <IconUsersGroup
+                                                                    <IconUser
                                                                         style={{width: '100%', height: '70%'}}
                                                                         stroke={1.5}/>
                                                                 </ActionIcon>
@@ -1102,14 +1102,14 @@ function _UserUpdateForm() {
                                                                 offset={{crossAxis: '-110', mainAxis: '5'}}
                                                                 withArrow
                                                                 transitionProps={{duration: 200}}
-                                                                label={t('QuickCustomerGroup')}
+                                                                label={t('QuickDepartmentGroup')}
                                                             >
                                                                 <ActionIcon variant="outline" bg={'white'} size={'lg'}
                                                                             color="red.5" mt={'1'} aria-label="Settings"
                                                                             onClick={() => {
                                                                                 setGroupDrawer(true)
                                                                             }}>
-                                                                    <IconUsersGroup
+                                                                    <IconDoor
                                                                         style={{width: '100%', height: '70%'}}
                                                                         stroke={1.5}/>
                                                                 </ActionIcon>
@@ -1148,14 +1148,14 @@ function _UserUpdateForm() {
                                                                 offset={{crossAxis: '-110', mainAxis: '5'}}
                                                                 withArrow
                                                                 transitionProps={{duration: 200}}
-                                                                label={t('QuickCustomerGroup')}
+                                                                label={t('QuickLocationGroup')}
                                                             >
                                                                 <ActionIcon variant="outline" bg={'white'} size={'lg'}
                                                                             color="red.5" mt={'1'} aria-label="Settings"
                                                                             onClick={() => {
                                                                                 setGroupDrawer(true)
                                                                             }}>
-                                                                    <IconUsersGroup
+                                                                    <IconMapPin
                                                                         style={{width: '100%', height: '70%'}}
                                                                         stroke={1.5}/>
                                                                 </ActionIcon>

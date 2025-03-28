@@ -56,7 +56,8 @@ export default function NewSales(props) {
         invoiceMode,
         invoiceData,
         reloadInvoiceData,
-        setReloadInvoiceData
+        setReloadInvoiceData,
+        setInvoiceData
     } = props;
 
     const {t, i18n} = useTranslation();
@@ -68,7 +69,6 @@ export default function NewSales(props) {
     //is_table_pos undefined thats why not rendering
     const enableTable = !!(configData?.is_pos && invoiceMode === 'table');
     const [loadCartProducts, setLoadCartProducts] = useState(false);
-    const [tempCartProducts, setTempCartProducts] = useState([]);
 
     const [originalProducts, setOriginalProducts] = useState([]);
     const [products, setProducts] = useState([]);
@@ -164,18 +164,6 @@ export default function NewSales(props) {
     }, [tables]);
 
     useEffect(() => {
-        if (enableTable && tableId) {
-            const tableCartKey = `table-${tableId}-pos-products`;
-            const tempProducts = localStorage.getItem(tableCartKey);
-            setTempCartProducts(tempProducts ? JSON.parse(tempProducts) : []);
-        } else {
-            const tempProducts = localStorage.getItem("temp-pos-products");
-            setTempCartProducts(tempProducts ? JSON.parse(tempProducts) : []);
-        }
-        setLoadCartProducts(false);
-    }, [loadCartProducts, tableId, enableTable]);
-
-    useEffect(() => {
         const storedProducts = localStorage.getItem("core-products");
         const localProducts = storedProducts ? JSON.parse(storedProducts) : [];
         const filteredProducts = localProducts.filter((product) => {
@@ -265,48 +253,6 @@ export default function NewSales(props) {
         return () => clearInterval(interval);
     }, []);
 
-    const handleSubmitOrder = () => {
-        if (!tempCartProducts.length) {
-            notifications.show({
-                title: t("ValidationError"),
-                position: "top-right",
-                autoClose: 1000,
-                withCloseButton: true,
-                message: t("AddAtLeastOneProduct"),
-                color: "red",
-            });
-            return;
-        }
-
-        if (enableTable && tableId) {
-            localStorage.removeItem(`table-${tableId}-pos-products`);
-            updateTableStatus("Free");
-            clearTableCustomer(tableId);
-
-            notifications.show({
-                title: t("Success"),
-                position: "top-right",
-                autoClose: 2000,
-                withCloseButton: true,
-                message:
-                    t("OrderforTable") + ` ${tableId} ` + t("ProcessedSuccessfully"),
-                color: "green",
-            });
-        } else {
-            localStorage.removeItem("temp-pos-products");
-
-            notifications.show({
-                title: t("Success"),
-                position: "top-right",
-                autoClose: 1000,
-                withCloseButton: true,
-                message: t("OrderProcessedSuccessfully"),
-                color: "green",
-            });
-        }
-
-        setLoadCartProducts(true);
-    };
     const renderStatusButtons = () => (
         <SegmentedControl
             mt={8}
@@ -399,18 +345,26 @@ export default function NewSales(props) {
                 {leftSide ? (
                     <Grid.Col span={8}>
                         <Invoice
+                            setInvoiceData={setInvoiceData}
                             products={products}
                             tableId={tableId}
                             setTableId={setTableId}
                             tables={tables}
                             setLoadCartProducts={setLoadCartProducts}
-                            handleSubmitOrder={handleSubmitOrder}
                             tableCustomerMap={tableCustomerMap}
                             updateTableCustomer={updateTableCustomer}
                             clearTableCustomer={clearTableCustomer}
                             customerObject={customerObject}
                             setCustomerObject={setCustomerObject}
                             loadCartProducts={loadCartProducts}
+                            setTables={setTables}
+                            updateTableSplitPayment={updateTableSplitPayment}
+                            clearTableSplitPayment={clearTableSplitPayment}
+                            tableSplitPaymentMap={tableSplitPaymentMap}
+                            invoiceMode={invoiceMode}
+                            invoiceData={invoiceData}
+                            reloadInvoiceData={reloadInvoiceData}
+                            setReloadInvoiceData={setReloadInvoiceData}
                         />
                     </Grid.Col>
                 ) : (
@@ -999,7 +953,7 @@ export default function NewSales(props) {
                                         pb={4}
                                         className="border-radius"
                                     >
-                                        <Grid gutter={{base: 4}} grow align="center" mt={4}>
+                                        <Grid gutter={{base: 4}} align="center" mt={4}>
                                             <Grid.Col span={3}>
                                                 <Tooltip
                                                     label={t("BarcodeValidateMessage")}
@@ -1475,11 +1429,12 @@ export default function NewSales(props) {
                 ) : (
                     <Grid.Col span={8}>
                         <Invoice
+                            setInvoiceData={setInvoiceData}
                             products={products}
                             tableId={tableId}
                             tables={tables}
+                            setTables={setTables}
                             setLoadCartProducts={setLoadCartProducts}
-                            handleSubmitOrder={handleSubmitOrder}
                             tableCustomerMap={tableCustomerMap}
                             updateTableCustomer={updateTableCustomer}
                             clearTableCustomer={clearTableCustomer}
@@ -1493,6 +1448,7 @@ export default function NewSales(props) {
                             invoiceData={invoiceData}
                             reloadInvoiceData={reloadInvoiceData}
                             setReloadInvoiceData={setReloadInvoiceData}
+                            setTableId={setTableId}
                         />
                     </Grid.Col>
                 )}

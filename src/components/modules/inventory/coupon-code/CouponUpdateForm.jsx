@@ -32,7 +32,7 @@ import { DateInput } from "@mantine/dates";
 import DatePickerForm from "../../../form-builders/DatePicker";
 import SwitchForm from "../../../form-builders/SwitchForm";
 
-export default function CouponForm() {
+export default function CouponUpdateForm() {
   const { t, i18n } = useTranslation();
   const dispatch = useDispatch();
   const { isOnline, mainAreaHeight } = useOutletContext();
@@ -43,6 +43,8 @@ export default function CouponForm() {
   const entityEditData = useSelector((state) => state.crudSlice.entityEditData);
   const formLoading = useSelector((state) => state.crudSlice.formLoading);
   const [formLoad, setFormLoad] = useState(true);
+  const [setFormData, setFormDataForUpdate] = useState(false);
+
   const mode = [
     { label: "Flat", value: "1" },
     { label: "Percent", value: "2" },

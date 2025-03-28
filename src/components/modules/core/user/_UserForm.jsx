@@ -185,7 +185,7 @@ function _UserForm() {
                                     <ScrollArea h={height} scrollbarSize={2} scrollbars="y" type="never">
                                         <Box>
                                             <Box>
-                                                <Grid gutter={{base: 2}}>
+                                                <Grid gutter={{base: 6}}>
                                                     <Grid.Col span={11}>
                                                         <Box mt={'8'}>
                                                             <SelectForm
@@ -213,7 +213,7 @@ function _UserForm() {
                                                                 offset={{crossAxis: '-110', mainAxis: '5'}}
                                                                 withArrow
                                                                 transitionProps={{duration: 200}}
-                                                                label={t('QuickCustomerGroup')}
+                                                                label={t('QuickEmployeeGroup')}
                                                             >
                                                                 <ActionIcon variant="outline" bg={'white'}
                                                                             size={'lg'} color="red.5" mt={'1'}

@@ -7,24 +7,24 @@ function CustomerFilterForm(props) {
     const {t, i18n} = useTranslation();
 
     useHotkeys([['alt+n', () => {
-        document.getElementById('Name').focus()
+        document.getElementById('name').focus()
     }]], []);
 
 
     return (
         <>
             <InputForm
-                label={"Name"}
-                placeholder = {"Name"}
+                label={t("Name")}
+                placeholder = {t("EnterName")}
                 nextField = {"mobile"}
-                id={'Name'}
+                id={'name'}
                 name={'name'}
                 module={props.module}
             />
 
             <InputForm
-                label={"Mobile"}
-                placeholder = {"Mobile"}
+                label={t("Mobile")}
+                placeholder = {t("EnterMobile")}
                 nextField = {"submit"}
                 id={'mobile'}
                 name={'mobile'}

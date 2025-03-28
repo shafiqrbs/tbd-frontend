@@ -7,7 +7,7 @@ function WarehouseFilterForm(props) {
     const {t, i18n} = useTranslation();
 
     useHotkeys([['alt+n', () => {
-        document.getElementById('Name').focus()
+        document.getElementById('name').focus()
     }]], []);
 
 
@@ -16,7 +16,7 @@ function WarehouseFilterForm(props) {
             <InputForm
                 label={t("Name")}
                 placeholder = {t("Name")}
-                nextField = {"Mobile"}
+                nextField = {"mobile"}
                 id={'Name'}
                 name={'name'}
                 module={props.module}
@@ -25,8 +25,8 @@ function WarehouseFilterForm(props) {
             <InputForm
                 label={t("Mobile")}
                 placeholder = {t("Mobile")}
-                nextField = {"Location"}
-                id={'Mobile'}
+                nextField = {"location"}
+                id={'mobile'}
                 name={'mobile'}
                 module={props.module}
             />
@@ -35,7 +35,7 @@ function WarehouseFilterForm(props) {
                 label={t("Location")}
                 placeholder = {t("Location")}
                 nextField = {"submit"}
-                id={'Location'}
+                id={'location'}
                 name={'location'}
                 module={props.module}
             />

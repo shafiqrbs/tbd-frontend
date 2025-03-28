@@ -5,15 +5,19 @@ import tableCss from "../../../../assets/css/Table.module.css";
 import { useState } from "react";
 import { DataTable } from "mantine-datatable";
 import KeywordSearch from "../../filter/KeywordSearch";
+import _TransferViewDrawer from "./_TransferViewDrawer";
 
 export default function TransferTable() {
   const { t } = useTranslation();
   const { isOnline, mainAreaHeight } = useOutletContext();
   const height = mainAreaHeight - 98;
+
   const [indexData, setIndexData] = useState([]);
   const [fetching, setFetching] = useState(false);
   const [page, setPage] = useState(1);
   const perPage = 50;
+  const [viewDrawer, setViewDrawer] = useState(false);
+
   return (
     <>
       <Box
@@ -42,9 +46,12 @@ export default function TransferTable() {
               textAlignment: "right",
               render: (item) => indexData.data.indexOf(item) + 1,
             },
-            { accessor: "from_warehouse", title: t("FromWarehouse"), width: 200 },
-            { accessor: "to_warehouse", title: t("ToWarehouse"), width: 200 },
-            { accessor: "stock_item", title: t("StockItem"), width: 200 },
+            {
+              accessor: "from_warehouse",
+              title: t("FromWarehouse"),
+            },
+            { accessor: "to_warehouse", title: t("ToWarehouse") },
+            { accessor: "stock_item", title: t("StockItem") },
             { accessor: "quantity", title: t("Quantity") },
             { accessor: "bonus_quantity", title: t("BonusQuantity") },
             {
@@ -78,19 +85,7 @@ export default function TransferTable() {
                     </Menu.Target>
                     <Menu.Dropdown>
                       <Menu.Item
-                        onClick={() => {
-                          setProvisionDrawer(true);
-                        }}
-                        target="_blank"
-                        component="a"
-                        w={"200"}
-                      >
-                        {t("AddProvision")}
-                      </Menu.Item>
-                      <Menu.Item
-                        onClick={() => {
-
-                        }}
+                        onClick={() => {}}
                         target="_blank"
                         component="a"
                         w={"200"}
@@ -99,7 +94,7 @@ export default function TransferTable() {
                       </Menu.Item>
                       <Menu.Item
                         onClick={() => {
-                          
+                          setViewDrawer(true);
                         }}
                         target="_blank"
                         component="a"
@@ -131,9 +126,7 @@ export default function TransferTable() {
                             confirmProps: { color: "red.6" },
                             labels: { confirm: "Confirm", cancel: "Cancel" },
                             onCancel: () => console.log("Cancel"),
-                            onConfirm: () => {
-                              
-                            },
+                            onConfirm: () => {},
                           });
                         }}
                         rightSection={
@@ -164,6 +157,12 @@ export default function TransferTable() {
           scrollAreaProps={{ type: "never" }}
         />
       </Box>
+      {viewDrawer && (
+        <_TransferViewDrawer
+          viewDrawer={viewDrawer}
+          setViewDrawer={setViewDrawer}
+        />
+      )}
     </>
   );
 }

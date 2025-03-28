@@ -21,50 +21,42 @@ import { useDispatch, useSelector } from "react-redux";
 import { useOutletContext } from "react-router-dom";
 import { isNotEmpty, useForm } from "@mantine/form";
 import { modals } from "@mantine/modals";
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { useHotkeys } from "@mantine/hooks";
 import Shortcut from "../../shortcut/Shortcut";
 import InputForm from "../../../form-builders/InputForm";
-import useSettingParticularDropdownData from "../../../global-hook/dropdown/getSettingParticularDropdownData.js";
+import getSettingParticularDropdownData from "../../../global-hook/dropdown/getSettingParticularDropdownData.js";
 
-export default function TransferUpdateForm() {
+export default function ReconciliationUpdateForm() {
   const { t, i18n } = useTranslation();
   const dispatch = useDispatch();
   const { isOnline, mainAreaHeight } = useOutletContext();
   const height = mainAreaHeight - 100;
 
+  const [saveCreateLoading, setSaveCreateLoading] = useState(false);
   const entityEditData = useSelector((state) => state.crudSlice.entityEditData);
 
-  const [saveCreateLoading, setSaveCreateLoading] = useState(false);
   const form = useForm({
     initialValues: {
-      from_warehouse_id: entityEditData?.from_warehouse_id || "",
-      toWarehouseId: entityEditData?.to_warehouse_id || "",
-      stockItemId: entityEditData?.stock_item_id || "",
+      product_id: entityEditData?.product_id || "",
+      warehouse_id: entityEditData?.warehouse_id || "",
+      quantity_id: entityEditData?.quantity_id || "",
       quantity: entityEditData?.quantity || "",
-      bonusQuantity: entityEditData?.bonus_quantity || "",
+      mode_quantity: entityEditData?.mode_quantity || "",
+      bonus: entityEditData?.bonus || "",
     },
     validate: {
-      from_warehouse_id: isNotEmpty(),
+      product_id: isNotEmpty(),
     },
   });
 
-  const [fromWarehouseId, setFromWarehouseId] = useState(null);
-  const [toWarehouseId, setToWarehouseId] = useState(null);
-  const [stockItemId, setStockItemId] = useState(null);
+  const [productId, setProductId] = useState(null);
+  const [warehouseId, setWarehouseId] = useState(null);
+  const [modeQuantity, setModeQuantity] = useState(null);
+  const [modeBonus, setModeBonus] = useState(null);
   const [stockItemDropdown, setStockItemDropdown] = useState([]);
-  const warehouseOptions = useSettingParticularDropdownData("wearhouse");
-  const [filteredFromWarehouseOptions, setFilteredFromWarehouseOptions] =
-    useState([]);
-  const [filteredToWarehouseOptions, setFilteredToWarehouseOptions] = useState(
-    []
-  );
-  const warehouses = useSettingParticularDropdownData("wearhouse");
 
   useEffect(() => {
-    setFilteredFromWarehouseOptions(warehouses);
-    setFilteredToWarehouseOptions(warehouses);
-
     const storedProducts = localStorage.getItem("core-products");
     const localProducts = storedProducts ? JSON.parse(storedProducts) : [];
 
@@ -73,46 +65,20 @@ export default function TransferUpdateForm() {
       value: String(type.id),
     }));
     setStockItemDropdown(formattedProductData);
-  }, [warehouseOptions]);
-
-  useEffect(() => {
-    if (fromWarehouseId) {
-      const filtered = warehouseOptions.filter(
-        (option) => option.value !== fromWarehouseId
-      );
-      setFilteredToWarehouseOptions(filtered);
-
-      if (toWarehouseId === fromWarehouseId) {
-        setToWarehouseId(null);
-        form.setFieldValue("to_warehouse_id", "");
-      }
-    } else {
-      setFilteredToWarehouseOptions(warehouseOptions);
-    }
-  }, [fromWarehouseId, warehouseOptions]);
-
-  useEffect(() => {
-    if (toWarehouseId) {
-      const filtered = warehouseOptions.filter(
-        (option) => option.value !== toWarehouseId
-      );
-      setFilteredFromWarehouseOptions(filtered);
-
-      if (fromWarehouseId === toWarehouseId) {
-        setFromWarehouseId(null);
-        form.setFieldValue("from_warehouse_id", "");
-      }
-    } else {
-      setFilteredFromWarehouseOptions(warehouseOptions);
-    }
-  }, [toWarehouseId, warehouseOptions]);
+    console.log(stockItemDropdown);
+  }, []);
+  const mode = [
+    { value: "1", label: "Plus" },
+    { value: "2", label: "Minus" },
+    { value: "3", label: "Damage" },
+  ];
 
   useHotkeys(
     [
       [
         "alt+n",
         () => {
-          document.getElementById("from_warehouse_id").click();
+          document.getElementById("product_id").click();
         },
       ],
     ],
@@ -173,7 +139,7 @@ export default function TransferUpdateForm() {
                   <Grid>
                     <Grid.Col span={6}>
                       <Title order={6} pt={"6"}>
-                        {t("CreateTransferStock")}
+                        {t("CreateStockReconciliation")}
                       </Title>
                     </Grid.Col>
                     <Grid.Col span={6}>
@@ -208,7 +174,40 @@ export default function TransferUpdateForm() {
                     type="never"
                   >
                     <Box>
-                      <Box mt={"8"}>
+                      <Box>
+                        <Box mt={"8"}>
+                          <Grid
+                            columns={12}
+                            gutter={{ base: 6 }}
+                            align="center"
+                            justify="start"
+                          >
+                            <Grid.Col span={3} mt={8}>
+                              <Text fw={400} fz={14}>
+                                {t("Product")}
+                              </Text>
+                            </Grid.Col>
+                            <Grid.Col span={9}>
+                              <SelectForm
+                                tooltip={t("Product")}
+                                label={t("")}
+                                placeholder={t("ChooseProduct")}
+                                required={false}
+                                nextField={"warehouse_id"}
+                                name={"product_id"}
+                                form={form}
+                                dropdownValue={stockItemDropdown}
+                                mt={8}
+                                id={"product_id"}
+                                searchable={false}
+                                value={productId}
+                                changeValue={setProductId}
+                              />
+                            </Grid.Col>
+                          </Grid>
+                        </Box>
+                      </Box>
+                      <Box mt={"xs"}>
                         <Grid
                           columns={12}
                           gutter={{ base: 6 }}
@@ -217,23 +216,27 @@ export default function TransferUpdateForm() {
                         >
                           <Grid.Col span={3} mt={8}>
                             <Text fw={400} fz={14}>
-                              {t("FromWarehouse")}
+                              {t("Warehouse")}
                             </Text>
                           </Grid.Col>
                           <Grid.Col span={9}>
                             <SelectForm
+                              tooltip={t("Warehouse")}
                               label={t("")}
-                              placeholder={t("FromWarehouse")}
+                              placeholder={t("ChooseWarehouse")}
                               required={false}
-                              nextField={"to_warehouse_id"}
-                              name={"from_warehouse_id"}
+                              nextField={"quantity_id"}
+                              name={"warehouse_id"}
                               form={form}
-                              dropdownValue={filteredFromWarehouseOptions}
+                              dropdownValue={getSettingParticularDropdownData(
+                                "wearhouse"
+                              )}
                               mt={8}
-                              id={"from_warehouse_id"}
+                              id={"warehouse_id"}
                               searchable={false}
-                              value={fromWarehouseId}
-                              changeValue={setFromWarehouseId}
+                              value={warehouseId}
+                              changeValue={setWarehouseId}
+                              disabled={!productId}
                             />
                           </Grid.Col>
                         </Grid>
@@ -247,55 +250,24 @@ export default function TransferUpdateForm() {
                         >
                           <Grid.Col span={3} mt={8}>
                             <Text fw={400} fz={14}>
-                              {t("ToWarehouse")}
+                              {t("QuantityMode")}
                             </Text>
                           </Grid.Col>
                           <Grid.Col span={9}>
                             <SelectForm
-                              tooltip={t("ToWarehouse")}
+                              tooltip={t("ChooseQuantityMode")}
                               label={t("")}
-                              placeholder={t("ToWarehouse")}
-                              required={false}
-                              nextField={"stock_item_id"}
-                              name={"to_warehouse_id"}
-                              form={form}
-                              dropdownValue={filteredToWarehouseOptions}
-                              mt={8}
-                              id={"to_warehouse_id"}
-                              searchable={false}
-                              value={toWarehouseId}
-                              changeValue={setToWarehouseId}
-                            />
-                          </Grid.Col>
-                        </Grid>
-                      </Box>
-                      <Box mt={"xs"}>
-                        <Grid
-                          columns={12}
-                          gutter={{ base: 6 }}
-                          align="center"
-                          justify="start"
-                        >
-                          <Grid.Col span={3} mt={8}>
-                            <Text fw={400} fz={14}>
-                              {t("StockItem")}
-                            </Text>
-                          </Grid.Col>
-                          <Grid.Col span={9}>
-                            <SelectForm
-                              tooltip={t("StockItem")}
-                              label={t("")}
-                              placeholder={t("StockItem")}
+                              placeholder={t("ChooseQuantityMode")}
                               required={false}
                               nextField={"quantity"}
-                              name={"stock_item_id"}
+                              name={"quantity_id"}
                               form={form}
-                              dropdownValue={stockItemDropdown}
+                              dropdownValue={mode}
                               mt={8}
-                              id={"stock_item_id"}
+                              id={"quantity_id"}
                               searchable={false}
-                              value={stockItemId}
-                              changeValue={setStockItemId}
+                              value={modeQuantity}
+                              changeValue={setModeQuantity}
                             />
                           </Grid.Col>
                         </Grid>
@@ -318,7 +290,7 @@ export default function TransferUpdateForm() {
                               label={t("")}
                               placeholder={t("Quantity")}
                               required={false}
-                              nextField={"bonus_quantity"}
+                              nextField={"bonus_id"}
                               name={"quantity"}
                               form={form}
                               mt={8}
@@ -334,7 +306,38 @@ export default function TransferUpdateForm() {
                           </Grid.Col>
                         </Grid>
                       </Box>
-                      <Box mt={"xs"} mb={"xs"}>
+                      <Box mt={"xs"}>
+                        <Grid
+                          columns={12}
+                          gutter={{ base: 6 }}
+                          align="center"
+                          justify="start"
+                        >
+                          <Grid.Col span={3} mt={8}>
+                            <Text fw={400} fz={14}>
+                              {t("BonusMode")}
+                            </Text>
+                          </Grid.Col>
+                          <Grid.Col span={9}>
+                            <SelectForm
+                              tooltip={t("ChooseBonusMode")}
+                              label={t("")}
+                              placeholder={t("ChooseBonusMode")}
+                              required={false}
+                              nextField={"bonus"}
+                              name={"bonus_id"}
+                              form={form}
+                              dropdownValue={mode}
+                              mt={8}
+                              id={"bonus_id"}
+                              searchable={false}
+                              value={modeBonus}
+                              changeValue={setModeBonus}
+                            />
+                          </Grid.Col>
+                        </Grid>
+                      </Box>
+                      <Box mt={"xs"}>
                         <Grid
                           columns={12}
                           gutter={{ base: 6 }}
@@ -353,10 +356,10 @@ export default function TransferUpdateForm() {
                               placeholder={t("BonusQuantity")}
                               required={false}
                               nextField={"EntityFormSubmit"}
-                              name={"bonus_quantity"}
+                              name={"bonus"}
                               form={form}
                               mt={8}
-                              id={"bonus_quantity"}
+                              id={"bonus"}
                               type="number"
                               leftSection={
                                 <IconSortAscendingNumbers
@@ -379,7 +382,7 @@ export default function TransferUpdateForm() {
               <Shortcut
                 form={form}
                 FormSubmit={"EntityFormSubmit"}
-                Name={"from_warehouse_id"}
+                Name={"product_id"}
                 inputType="select"
               />
             </Box>

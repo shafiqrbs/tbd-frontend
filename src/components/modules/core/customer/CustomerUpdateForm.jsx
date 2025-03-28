@@ -13,7 +13,7 @@ import {
 import { useHotkeys } from "@mantine/hooks";
 import InputForm from "../../../form-builders/InputForm";
 import { useDispatch, useSelector } from "react-redux";
-import { hasLength, useForm } from "@mantine/form";
+import { hasLength, isNotEmpty, useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
 import { modals } from "@mantine/modals";
 
@@ -62,6 +62,7 @@ function CustomerUpdateForm(props) {
         },
         validate: {
             name: hasLength({ min: 2, max: 50 }),
+            customer_group_id : isNotEmpty(),
             mobile: (value) => {
                 if (!value) return t('MobileValidationRequired');
             },
@@ -228,10 +229,10 @@ function CustomerUpdateForm(props) {
                                                     <Grid.Col span={12} >
                                                         <Box mt={'8'}>
                                                             <SelectForm
-                                                                tooltip={t('CustomerGroup')}
+                                                                tooltip={t('ChooseCustomerGroup')}
                                                                 label={t('CustomerGroup')}
                                                                 placeholder={t('ChooseCustomerGroup')}
-                                                                required={false}
+                                                                required={true}
                                                                 nextField={'name'}
                                                                 name={'customer_group_id'}
                                                                 form={form}

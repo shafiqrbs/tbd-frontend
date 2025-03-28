@@ -11,7 +11,11 @@ import {
   Text,
 } from "@mantine/core";
 import SelectForm from "../../../form-builders/SelectForm";
-import { IconUsersGroup, IconDeviceFloppy } from "@tabler/icons-react";
+import {
+  IconUsersGroup,
+  IconDeviceFloppy,
+  IconSortAscendingNumbers,
+} from "@tabler/icons-react";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 import { useOutletContext } from "react-router-dom";
@@ -56,7 +60,6 @@ export default function TransferForm() {
   const warehouses = useSettingParticularDropdownData("wearhouse");
 
   useEffect(() => {
-
     setFilteredFromWarehouseOptions(warehouses);
     setFilteredToWarehouseOptions(warehouses);
 
@@ -92,7 +95,7 @@ export default function TransferForm() {
         (option) => option.value !== toWarehouseId
       );
       setFilteredFromWarehouseOptions(filtered);
-      
+
       if (fromWarehouseId === toWarehouseId) {
         setFromWarehouseId(null);
         form.setFieldValue("from_warehouse_id", "");
@@ -318,6 +321,13 @@ export default function TransferForm() {
                               form={form}
                               mt={8}
                               id={"quantity"}
+                              type="number"
+                              leftSection={
+                                <IconSortAscendingNumbers
+                                  size={16}
+                                  opacity={0.5}
+                                />
+                              }
                             />
                           </Grid.Col>
                         </Grid>
@@ -345,6 +355,13 @@ export default function TransferForm() {
                               form={form}
                               mt={8}
                               id={"bonus_quantity"}
+                              type="number"
+                              leftSection={
+                                <IconSortAscendingNumbers
+                                  size={16}
+                                  opacity={0.5}
+                                />
+                              }
                             />
                           </Grid.Col>
                         </Grid>

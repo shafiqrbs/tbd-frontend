@@ -11,7 +11,11 @@ import {
   Text,
 } from "@mantine/core";
 import SelectForm from "../../../form-builders/SelectForm";
-import { IconUsersGroup, IconDeviceFloppy } from "@tabler/icons-react";
+import {
+  IconUsersGroup,
+  IconDeviceFloppy,
+  IconSortAscendingNumbers,
+} from "@tabler/icons-react";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 import { useOutletContext } from "react-router-dom";
@@ -21,6 +25,7 @@ import { useState, useEffect } from "react";
 import { useHotkeys } from "@mantine/hooks";
 import Shortcut from "../../shortcut/Shortcut";
 import InputForm from "../../../form-builders/InputForm";
+import getSettingParticularDropdownData from "../../../global-hook/dropdown/getSettingParticularDropdownData.js";
 
 export default function ReconciliationForm() {
   const { t, i18n } = useTranslation();
@@ -33,10 +38,10 @@ export default function ReconciliationForm() {
     initialValues: {
       product_id: "",
       warehouse_id: "",
-      mode_quantity_id: "",
-      mode_quantity: "",
-      mode_bonus_id: "",
-      mode_bonus: "",
+      quantity_id: "",
+      quantity: "",
+      bonus_id: "",
+      bonus: "",
     },
     validate: {
       product_id: isNotEmpty(),
@@ -48,39 +53,24 @@ export default function ReconciliationForm() {
   const [warehouses, setWarehouses] = useState([]);
   const [modeQuantity, setModeQuantity] = useState(null);
   const [modeBonus, setModeBonus] = useState(null);
+  const [stockItemDropdown, setStockItemDropdown] = useState([]);
 
-  const products = [
-    { value: "1", label: "Product 1" },
-    { value: "2", label: "Product 2" },
-    { value: "3", label: "Product 3" },
-  ];
+  useEffect(() => {
+    const storedProducts = localStorage.getItem("core-products");
+    const localProducts = storedProducts ? JSON.parse(storedProducts) : [];
+
+    const formattedProductData = localProducts.map((type) => ({
+      label: type.product_name,
+      value: String(type.id),
+    }));
+    setStockItemDropdown(formattedProductData);
+    console.log(stockItemDropdown);
+  }, []);
   const mode = [
     { value: "1", label: "Plus" },
     { value: "2", label: "Minus" },
     { value: "3", label: "Damage" },
   ];
-  useEffect(() => {
-    if (productId === "1") {
-      setWarehouses([
-        { value: "warehouseM", label: "Warehouse M" },
-        { value: "warehouseN", label: "Warehouse N" },
-      ]);
-    } else if (productId === "2") {
-      setWarehouses([
-        { value: "warehouseP", label: "Warehouse P" },
-        { value: "warehouseQ", label: "Warehouse Q" },
-      ]);
-    } else if (productId === "3") {
-      setWarehouses([
-        { value: "warehouseR", label: "Warehouse R" },
-        { value: "warehouseS", label: "Warehouse S" },
-      ]);
-    } else {
-      setWarehouses([]);
-    }
-    setWarehouseId(null);
-    form.setFieldValue("warehouse_id", "");
-  }, [productId]);
 
   useHotkeys(
     [
@@ -205,7 +195,7 @@ export default function ReconciliationForm() {
                                 nextField={"warehouse_id"}
                                 name={"product_id"}
                                 form={form}
-                                dropdownValue={products}
+                                dropdownValue={stockItemDropdown}
                                 mt={8}
                                 id={"product_id"}
                                 searchable={false}
@@ -234,10 +224,12 @@ export default function ReconciliationForm() {
                               label={t("")}
                               placeholder={t("ChooseWarehouse")}
                               required={false}
-                              nextField={"mode_quantity_id"}
+                              nextField={"quantity_id"}
                               name={"warehouse_id"}
                               form={form}
-                              dropdownValue={warehouses}
+                              dropdownValue={getSettingParticularDropdownData(
+                                "wearhouse"
+                              )}
                               mt={8}
                               id={"warehouse_id"}
                               searchable={false}
@@ -266,12 +258,12 @@ export default function ReconciliationForm() {
                               label={t("")}
                               placeholder={t("ChooseQuantityMode")}
                               required={false}
-                              nextField={"mode_quantity"}
-                              name={"mode_quantity_id"}
+                              nextField={"quantity"}
+                              name={"quantity_id"}
                               form={form}
                               dropdownValue={mode}
                               mt={8}
-                              id={"mode_quantity_id"}
+                              id={"quantity_id"}
                               searchable={false}
                               value={modeQuantity}
                               changeValue={setModeQuantity}
@@ -288,20 +280,27 @@ export default function ReconciliationForm() {
                         >
                           <Grid.Col span={3} mt={8}>
                             <Text fw={400} fz={14}>
-                              {t("ModeQuantity")}
+                              {t("Quantity")}
                             </Text>
                           </Grid.Col>
                           <Grid.Col span={9}>
                             <InputForm
-                              tooltip={t("ModeQuantity")}
+                              tooltip={t("Quantity")}
                               label={t("")}
-                              placeholder={t("ModeQuantity")}
+                              placeholder={t("Quantity")}
                               required={false}
-                              nextField={"mode_bonus_id"}
-                              name={"mode_quantity"}
+                              nextField={"bonus_id"}
+                              name={"quantity"}
                               form={form}
                               mt={8}
-                              id={"mode_quantity"}
+                              id={"quantity"}
+                              type="number"
+                              leftSection={
+                                <IconSortAscendingNumbers
+                                  size={16}
+                                  opacity={0.5}
+                                />
+                              }
                             />
                           </Grid.Col>
                         </Grid>
@@ -324,12 +323,12 @@ export default function ReconciliationForm() {
                               label={t("")}
                               placeholder={t("ChooseBonusMode")}
                               required={false}
-                              nextField={"mode_bonus"}
-                              name={"mode_bonus_id"}
+                              nextField={"bonus"}
+                              name={"bonus_id"}
                               form={form}
                               dropdownValue={mode}
                               mt={8}
-                              id={"mode_bonus_id"}
+                              id={"bonus_id"}
                               searchable={false}
                               value={modeBonus}
                               changeValue={setModeBonus}
@@ -346,20 +345,27 @@ export default function ReconciliationForm() {
                         >
                           <Grid.Col span={3} mt={8}>
                             <Text fw={400} fz={14}>
-                              {t("ModeBonus")}
+                              {t("BonusQuantity")}
                             </Text>
                           </Grid.Col>
                           <Grid.Col span={9}>
                             <InputForm
-                              tooltip={t("ModeBonus")}
+                              tooltip={t("BonusQuantity")}
                               label={t("")}
-                              placeholder={t("ModeBonus")}
+                              placeholder={t("BonusQuantity")}
                               required={false}
                               nextField={"EntityFormSubmit"}
-                              name={"mode_bonus"}
+                              name={"bonus"}
                               form={form}
                               mt={8}
-                              id={"mode_bonus"}
+                              id={"bonus"}
+                              type="number"
+                              leftSection={
+                                <IconSortAscendingNumbers
+                                  size={16}
+                                  opacity={0.5}
+                                />
+                              }
                             />
                           </Grid.Col>
                         </Grid>

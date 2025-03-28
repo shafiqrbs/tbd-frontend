@@ -5,11 +5,37 @@ import ReconciliationForm from "./ReconciliationForm";
 import ReconciliationTable from "./ReconciliationTable";
 import InventoryHeaderNavbar from "../../domain/configuraton/InventoryHeaderNavbar";
 import { Progress, Box, Grid } from "@mantine/core";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
+import { useEffect } from "react";
+import {
+  setInsertType,
+  editEntityData,
+  setFormLoading,
+} from "../../../../store/inventory/crudSlice";
+import ReconciliationUpdateForm from "./ReconciliationUpdateForm";
 
 export default function ReconciliationIndex() {
   const { t } = useTranslation();
   const progress = getLoadingProgress();
-  const {configData} = getConfigData();
+  const { id } = useParams();
+  const { configData } = getConfigData();
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const insertType = useSelector((state) => state.crudSlice.insertType);
+
+  useEffect(() => {
+    if (id) {
+      dispatch(setInsertType("update"));
+      dispatch(editEntityData(`inventory/stock-reconciliation/${id}`));
+      dispatch(setFormLoading(true));
+    } else if (!id) {
+      dispatch(setInsertType("create"));
+      navigate("/inventory/stock-reconciliation", { replace: true });
+    }
+  }, [id, dispatch, navigate]);
   return (
     <>
       {progress !== 100 && (
@@ -40,7 +66,11 @@ export default function ReconciliationIndex() {
                     </Box>
                   </Grid.Col>
                   <Grid.Col span={9}>
-                    <ReconciliationForm />
+                    {insertType === "create" ? (
+                      <ReconciliationForm />
+                    ) : (
+                      <ReconciliationUpdateForm />
+                    )}
                   </Grid.Col>
                 </Grid>
               </Box>

@@ -1,14 +1,10 @@
 import React, { useEffect, useState } from "react";
 import {
-    Box, Button,
-    Grid, Progress, Title, Group, Burger, Menu, rem, ActionIcon,
+    Box, Progress,
     Tabs,
-    Divider
 } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from "react-redux";
-import { setInsertType } from "../../../../store/inventory/crudSlice";
-import { setSearchKeyword } from "../../../../store/core/crudSlice";
 import getConfigData from "../../../global-hook/config-data/getConfigData.js";
 import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress.js";
 import VoucherFormIndex from "./VoucherFromIndex.jsx";
@@ -18,7 +14,6 @@ import { useOutletContext } from "react-router-dom";
 import VoucherTableInProgress from "./VoucherTableInProgress.jsx";
 import VoucherTableApprove from "./VoucherTableApprove.jsx";
 import VoucherTableArchive from "./VoucherTableArchive.jsx";
-import { Tooltip } from "recharts";
 function VoucherIndex() {
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
@@ -34,32 +29,6 @@ function VoucherIndex() {
         setActiveTab('');
     }, []);
 
-    useEffect(() => {
-        dispatch(setInsertType('create'))
-        dispatch(setSearchKeyword(''))
-    }, [])
-
-    const rightButtons = (
-        <Group
-            pos='absolute'
-            right={0}
-            gap={0}>
-            <Tooltip
-                label={t('Tooltip')}
-                px={20}
-                py={3}
-                color={'red.6'}
-                offset={2}
-                transtionProps={{ transition: 'pop-bottom-left', duration: 500 }}>
-                <Button
-                    size="sm"
-                    variant="filled"
-                    color="red.6">
-                    {t('NewVoucher')}
-                </Button>
-            </Tooltip>
-        </Group>
-    )
 
     return (
         <>
