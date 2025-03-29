@@ -828,5 +828,6 @@
   "EnterMobile" : "Enter a mobile number",
   "EnterLocation" : "Provide a location",
   "EnterEmail" : "Provide an email",
-  "EnterAddress" : "Provide an address"
+  "EnterAddress" : "Provide an address",
+  "WarehouseDetailsData" : "Warehouse Details Data"
 }
