@@ -8,55 +8,13 @@ import KeywordSearch from "../../filter/KeywordSearch";
 import BarcodeGenerator from "./barcode-generator/BarcodeGenerator";
 
 export default function BarcodePrintView(props) {
-  const { preview, setPreview } = props;
+  const { preview, setPreview, barcodeObjects, setBarcodeObjects } = props;
   const { t } = useTranslation();
   const { isOnline, mainAreaHeight } = useOutletContext();
   const height = mainAreaHeight - 98;
   const [indexData, setIndexData] = useState([]);
   const [fetching, setFetching] = useState(false);
   const [page, setPage] = useState(1);
-  const images = [
-    {
-      id: 1,
-      src: "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-7.png",
-    },
-    {
-      id: 2,
-      src: "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-7.png",
-    },
-    {
-      id: 3,
-      src: "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-7.png",
-    },
-    {
-      id: 4,
-      src: "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-7.png",
-    },
-    {
-      id: 5,
-      src: "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-7.png",
-    },
-    {
-      id: 6,
-      src: "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-7.png",
-    },
-    {
-      id: 7,
-      src: "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-7.png",
-    },
-    {
-      id: 8,
-      src: "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-7.png",
-    },
-    {
-      id: 9,
-      src: "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-7.png",
-    },
-    {
-      id: 10,
-      src: "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-7.png",
-    },
-  ];
   const perPage = 50;
   return (
     <>
@@ -79,9 +37,8 @@ export default function BarcodePrintView(props) {
           type="never"
           p={"xs"}
         >
-          {<BarcodeGenerator value={"1234567890"} />}
           {preview &&
-            Array.from({ length: Math.ceil(images.length / 3) }).map(
+            Array.from({ length: Math.ceil(barcodeObjects.length / 3) }).map(
               (_, rowIndex) => (
                 <Grid
                   key={`row-${rowIndex}`}
@@ -90,12 +47,14 @@ export default function BarcodePrintView(props) {
                   align="center"
                   justify="flex-start"
                   mt={"sm"}
-                >
-                  {images.slice(rowIndex * 3, rowIndex * 3 + 3).map((image) => (
-                    <Grid.Col key={image.id} span={8} p={8} align="center">
-                      <Image h={200} w={200} radius="md" src={image.src} />
-                    </Grid.Col>
-                  ))}
+                > 
+                  {barcodeObjects
+                    .slice(rowIndex * 3, rowIndex * 3 + 3)
+                    .map((item, index) => (
+                      <Grid.Col key={index} span={8} p={8} align="center">
+                        <BarcodeGenerator value={`${item.product_id} ${item.barcode_type_id}`} />
+                      </Grid.Col>
+                    ))}
                 </Grid>
               )
             )}

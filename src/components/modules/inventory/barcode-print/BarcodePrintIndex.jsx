@@ -12,6 +12,7 @@ export default function BarcodePrintIndex() {
   const progress = getLoadingProgress();
   const { configData } = getConfigData();
   const [preview, setPreview] = useState(false);
+  const [barcodeObjects, setBarcodeObjects] = useState([]);
   return (
     <>
       {progress !== 100 && (
@@ -39,6 +40,8 @@ export default function BarcodePrintIndex() {
                   <Grid.Col span={15}>
                     <Box bg={"white"} p={"xs"} className={"borderRadiusAll"}>
                       <BarcodePrintView
+                        barcodeObjects={barcodeObjects}
+                        setBarcodeObjects={setBarcodeObjects}
                         preview={preview}
                         setPreview={setPreview}
                       />
@@ -46,6 +49,8 @@ export default function BarcodePrintIndex() {
                   </Grid.Col>
                   <Grid.Col span={9}>
                     <BarcodePrintForm
+                      barcodeObjects={barcodeObjects}
+                      setBarcodeObjects={setBarcodeObjects}
                       preview={preview}
                       setPreview={setPreview}
                     />
