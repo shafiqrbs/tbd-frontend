@@ -526,5 +526,9 @@
   "EnterName" : " নাম লিখুন",
   "EnterMobile" : "মোবাইল নাম্বার লিখুন",
   "VendorDetailsData" : "বিক্রেতার বিস্তারিত তথ্য",
+  "UserDetails" : "ব্যবহারকারীর বিস্তারিত তথ্য",
+  "EnterLocation" : "লোকেশন লিখুন",
+  "EnterEmail" : "ইমেইল লিখুন",
+  "EnterAddress" : "ঠিকানা লিখুন",
   "" : ""
 }

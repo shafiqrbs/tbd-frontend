@@ -15,7 +15,7 @@ function WarehouseFilterForm(props) {
         <>
             <InputForm
                 label={t("Name")}
-                placeholder = {t("Name")}
+                placeholder = {t("EnterName")}
                 nextField = {"mobile"}
                 id={'Name'}
                 name={'name'}
@@ -24,7 +24,7 @@ function WarehouseFilterForm(props) {
 
             <InputForm
                 label={t("Mobile")}
-                placeholder = {t("Mobile")}
+                placeholder = {t("EnterMobile")}
                 nextField = {"location"}
                 id={'mobile'}
                 name={'mobile'}
@@ -33,7 +33,7 @@ function WarehouseFilterForm(props) {
 
             <InputForm
                 label={t("Location")}
-                placeholder = {t("Location")}
+                placeholder = {t("EnterLocation")}
                 nextField = {"submit"}
                 id={'location'}
                 name={'location'}

@@ -119,7 +119,7 @@ function WarehouseForm({ adjustment }) {
                                     <ScrollArea h={height} scrollbarSize={2} scrollbars="y" type="never">
                                         <Box mt={'xs'}>
                                             <InputForm
-                                                tooltip={t('Name')}
+                                                tooltip={t('EnterName')}
                                                 label={t('Name')}
                                                 placeholder={t('Name')}
                                                 required
@@ -131,7 +131,7 @@ function WarehouseForm({ adjustment }) {
                                         </Box>
                                         <Box mt={'xs'}>
                                             <InputForm
-                                                tooltip={t('Location')}
+                                                tooltip={t('EnterLocation')}
                                                 label={t('Location')}
                                                 placeholder={t('Location')}
                                                 required
@@ -143,7 +143,7 @@ function WarehouseForm({ adjustment }) {
                                         </Box>
                                         <Box mt={'xs'}>
                                             <InputForm
-                                                tooltip={t('ContractPerson')}
+                                                tooltip={t('EnterName')}
                                                 label={t('ContractPerson')}
                                                 placeholder={t('ContractPerson')}
                                                 required
@@ -155,7 +155,7 @@ function WarehouseForm({ adjustment }) {
                                         </Box>
                                         <Box mt={'xs'}>
                                             <PhoneNumber
-                                                tooltip={form.errors.mobile ? form.errors.mobile : t('MobileValidateMessage')}
+                                                tooltip={t("EnterMobile")}
                                                 label={t('Mobile')}
                                                 placeholder={t('Mobile')}
                                                 required
@@ -167,7 +167,7 @@ function WarehouseForm({ adjustment }) {
                                         </Box>
                                         <Box mt={'xs'}>
                                             <InputForm
-                                                tooltip={t('Email')}
+                                                tooltip={t('EnterEmail')}
                                                 label={t('Email')}
                                                 placeholder={t('Email')}
                                                 nextField={'address'}
@@ -178,7 +178,7 @@ function WarehouseForm({ adjustment }) {
                                         </Box>
                                         <Box mt={'xs'}>
                                             <InputForm
-                                                tooltip={t('Address')}
+                                                tooltip={t('EnterAddress')}
                                                 label={t('Address')}
                                                 placeholder={t('Address')}
                                                 nextField={'WarehouseFormSubmit'}

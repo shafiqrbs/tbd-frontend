@@ -825,5 +825,8 @@
   "QuickLocationGroup" : "Would you like to add a new location group?",
   "Bakery" : "Bakery",
   "EnterName" : "Enter a name",
-  "EnterMobile" : "Enter a mobile number"
+  "EnterMobile" : "Enter a mobile number",
+  "EnterLocation" : "Provide a location",
+  "EnterEmail" : "Provide an email",
+  "EnterAddress" : "Provide an address"
 }
