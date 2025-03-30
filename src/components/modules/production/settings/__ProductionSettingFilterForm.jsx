@@ -2,14 +2,13 @@ import {useState} from "react";
 import {useTranslation} from 'react-i18next';
 import InputForm from "../../../form-builders-filter/InputForm.jsx";
 import {useHotkeys} from "@mantine/hooks";
-import getProSettingTypeDropdownData from "../../../global-hook/dropdown/getProSettingTypeDropdownData.js";
 import SelectForm from "../../../form-builders-filter/SelectForm.jsx";
 import React from "react";
+import getParticularTypeDropdownData from "../../../global-hook/dropdown/core/getSettingTypeDropdownData.js";
 
 function __ProductionSettingFilterForm(props) {
 
     const {t, i18} = useTranslation();
-    const settingTypeDropdown = getProSettingTypeDropdownData()
 
     useHotkeys([['alt+n', () => {
         document.getElementById('ParentName').focus()
@@ -21,7 +20,7 @@ function __ProductionSettingFilterForm(props) {
         <>
             <InputForm
                 label={t("Name")}
-                placeHolder={t("Name")}
+                placeholder={t("EnterName")}
                 nextField={"setting_type"}
                 id={"name"}
                 name={"name"}
@@ -30,14 +29,14 @@ function __ProductionSettingFilterForm(props) {
 
             <SelectForm
                 label={t('SettingType')}
-                placeholder={t('SettingType')}
+                placeholder={t('ChooseSettingType')}
                 mt={1}
                 clearable={true}
                 searchable={true}
                 required={false}
                 nextField={'submit'}
                 name={'setting_type_id'}
-                dropdownValue={settingTypeDropdown}
+                dropdownValue={getParticularTypeDropdownData()}
                 id={'setting_type'}
                 value={settingTypeData}
                 changeValue={setSettingTypeData}

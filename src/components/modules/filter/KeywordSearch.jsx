@@ -224,7 +224,8 @@ function KeywordSearch(props) {
                                     } else if (props.module === 'production-setting') {
                                         dispatch(setProductionSettingFilterData({
                                             ...productionSettingFilterData,
-                                            name: ''
+                                            name: '',
+                                            setting_type_id: ''
                                         }));
                                     }else if (props.module === 'category') {
                                         dispatch(setCategoryFilterData({

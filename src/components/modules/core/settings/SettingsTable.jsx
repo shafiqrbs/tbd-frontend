@@ -112,7 +112,7 @@ function SettingsTable(props) {
     return (
         <>
             <Box pl={`xs`} pr={8} pt={'6'} pb={'4'} className={'boxBackground borderRadiusAll border-bottom-none'} >
-                <KeywordSearch module={'category'} />
+                <KeywordSearch module={'production-setting'} />
             </Box>
             <Box className={'borderRadiusAll border-top-none'}>
                 <DataTable

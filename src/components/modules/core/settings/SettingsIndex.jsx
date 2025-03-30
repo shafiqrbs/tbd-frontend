@@ -20,6 +20,7 @@ import SettingsTable from "./SettingsTable.jsx";
 import SettingsForm from "./SettingsForm.jsx";
 import SettingsUpdateForm from "./SettingsUpdateForm.jsx";
 import getParticularTypeDropdownData from "../../../global-hook/dropdown/core/getSettingTypeDropdownData.js";
+import { setProductionSettingFilterData } from "../../../../store/production/crudSlice.js";
 
 function SettingsIndex() {
     const { t, i18n } = useTranslation();
@@ -34,6 +35,8 @@ function SettingsIndex() {
     const { id } = useParams();
     const settingTypeDropdown = getParticularTypeDropdownData()
 
+    const productionSettingFilterData = useSelector((state) => state.productionCrudSlice.productionSettingFilterData)
+
 
     useEffect(() => {
         if (id) {
@@ -44,6 +47,11 @@ function SettingsIndex() {
             dispatch(setInsertType('create'));
             dispatch(setSearchKeyword(''));
             dispatch(setEntityNewData([]));
+            dispatch(setProductionSettingFilterData({
+                ...productionSettingFilterData,
+                setting_type_id: '',
+                name: '',
+            }))
             navigate('/core/setting', { replace: true });
         }
     }, [id, dispatch, navigate]);

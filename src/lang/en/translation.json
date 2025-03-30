@@ -832,5 +832,6 @@
   "WarehouseDetailsData" : "Warehouse Details Data",
   "EnterFileName" : "Enter file name",
   "EnterFileType" : "Enter file type",
-  "EnterCreatedDate" : "Enter created date"
+  "EnterCreatedDate" : "Enter created date",
+  "ChooseSettingType" : "Choose setting type"
 }
