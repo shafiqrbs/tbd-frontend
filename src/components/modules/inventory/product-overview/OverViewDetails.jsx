@@ -282,13 +282,13 @@ function OverViewDetails(props) {
                                                 </Grid>
 
                                                 <Grid columns={24}>
-                                                    <Grid.Col span={10} align={'left'} fw={'600'} fz={'14'}>{t('Smallest Saleable Unit')}</Grid.Col>
+                                                    <Grid.Col span={10} align={'left'} fw={'600'} fz={'14'}>{t('SmallestSaleableUnit')}</Grid.Col>
                                                     <Grid.Col span={1}>:</Grid.Col>
                                                     <Grid.Col span={'13'}>{showEntityData && showEntityData?.smallest_saleable_unit && showEntityData?.smallest_saleable_unit}</Grid.Col>
                                                 </Grid>
 
                                                 <Grid columns={24}>
-                                                    <Grid.Col span={10} align={'left'} fw={'600'} fz={'14'}>{t('Unit Description')}</Grid.Col>
+                                                    <Grid.Col span={10} align={'left'} fw={'600'} fz={'14'}>{t('UnitDescription')}</Grid.Col>
                                                     <Grid.Col span={1}>:</Grid.Col>
                                                     <Grid.Col span={'13'}>{showEntityData && showEntityData?.unit_description && showEntityData?.unit_description}</Grid.Col>
                                                 </Grid>
@@ -391,19 +391,19 @@ function OverViewDetails(props) {
                                                 </Grid>
 
                                                 <Grid columns={24}>
-                                                    <Grid.Col span={9} align={'left'} fw={'600'} fz={'14'}>{t('Transaction Type')}</Grid.Col>
+                                                    <Grid.Col span={9} align={'left'} fw={'600'} fz={'14'}>{t('TransactionType')}</Grid.Col>
                                                     <Grid.Col span={1}>:</Grid.Col>
                                                     <Grid.Col span={'14'}>{showEntityData && showEntityData?.transaction_type && showEntityData?.transaction_type}</Grid.Col>
                                                 </Grid>
 
                                                 <Grid columns={24}>
-                                                    <Grid.Col span={9} align={'left'} fw={'600'} fz={'14'}>{t('Quantity In')}</Grid.Col>
+                                                    <Grid.Col span={9} align={'left'} fw={'600'} fz={'14'}>{t('QuantityIn')}</Grid.Col>
                                                     <Grid.Col span={1}>:</Grid.Col>
                                                     <Grid.Col span={'14'}>{showEntityData && showEntityData?.quantity_in && showEntityData?.quantity_in}</Grid.Col>
                                                 </Grid>
 
                                                 <Grid columns={24}>
-                                                    <Grid.Col span={9} align={'left'} fw={'600'} fz={'14'}>{t('Quantity Out')}</Grid.Col>
+                                                    <Grid.Col span={9} align={'left'} fw={'600'} fz={'14'}>{t('QuantityOut')}</Grid.Col>
                                                     <Grid.Col span={1}>:</Grid.Col>
                                                     <Grid.Col span={'14'}>{showEntityData && showEntityData?.quantity_out && showEntityData?.quantity_out}</Grid.Col>
                                                 </Grid>
@@ -415,13 +415,13 @@ function OverViewDetails(props) {
                                                 </Grid>
 
                                                 <Grid columns={24}>
-                                                    <Grid.Col span={9} align={'left'} fw={'600'} fz={'14'}>{t('Reference Number')}</Grid.Col>
+                                                    <Grid.Col span={9} align={'left'} fw={'600'} fz={'14'}>{t('ReferenceNumber')}</Grid.Col>
                                                     <Grid.Col span={1}>:</Grid.Col>
                                                     <Grid.Col span={'14'}>{showEntityData && showEntityData?.reference_number && showEntityData?.reference_number}</Grid.Col>
                                                 </Grid>
 
                                                 <Grid columns={24}>
-                                                    <Grid.Col span={9} align={'left'} fw={'600'} fz={'14'}>{t('Supplier/Customer')}</Grid.Col>
+                                                    <Grid.Col span={9} align={'left'} fw={'600'} fz={'14'}>{t('SupplierCustomer')}</Grid.Col>
                                                     <Grid.Col span={1}>:</Grid.Col>
                                                     <Grid.Col span={'14'}>{showEntityData && showEntityData?.supplier_or_customer && showEntityData?.supplier_or_customer}</Grid.Col>
                                                 </Grid>
@@ -439,79 +439,79 @@ function OverViewDetails(props) {
                                                 </Grid>
 
                                                 <Grid columns={24}>
-                                                    <Grid.Col span={9} align={'left'} fw={'600'} fz={'14'}>{t('Cost per Unit')}</Grid.Col>
+                                                    <Grid.Col span={9} align={'left'} fw={'600'} fz={'14'}>{t('CostPerUnit')}</Grid.Col>
                                                     <Grid.Col span={1}>:</Grid.Col>
                                                     <Grid.Col span={'14'}>{showEntityData && showEntityData?.cost_per_unit && showEntityData?.cost_per_unit}</Grid.Col>
                                                 </Grid>
 
                                                 <Grid columns={24}>
-                                                    <Grid.Col span={9} align={'left'} fw={'600'} fz={'14'}>{t('Total Cost')}</Grid.Col>
+                                                    <Grid.Col span={9} align={'left'} fw={'600'} fz={'14'}>{t('TotalCost')}</Grid.Col>
                                                     <Grid.Col span={1}>:</Grid.Col>
                                                     <Grid.Col span={'14'}>{showEntityData && showEntityData?.total_cost && showEntityData?.total_cost}</Grid.Col>
                                                 </Grid>
 
                                                 <Grid columns={24}>
-                                                    <Grid.Col span={9} align={'left'} fw={'600'} fz={'14'}>{t('Batch/Lot Number')}</Grid.Col>
+                                                    <Grid.Col span={9} align={'left'} fw={'600'} fz={'14'}>{t('BatchLotNumber')}</Grid.Col>
                                                     <Grid.Col span={1}>:</Grid.Col>
                                                     <Grid.Col span={'14'}>{showEntityData && showEntityData?.batch_lot_number && showEntityData?.batch_lot_number}</Grid.Col>
                                                 </Grid>
 
                                                 <Grid columns={24}>
-                                                    <Grid.Col span={9} align={'left'} fw={'600'} fz={'14'}>{t('Expiry Date')}</Grid.Col>
+                                                    <Grid.Col span={9} align={'left'} fw={'600'} fz={'14'}>{t('ExpiryDate')}</Grid.Col>
                                                     <Grid.Col span={1}>:</Grid.Col>
                                                     <Grid.Col span={'14'}>{showEntityData && showEntityData?.expiry_date && showEntityData?.expiry_date}</Grid.Col>
                                                 </Grid>
 
                                                 <Grid columns={24}>
-                                                    <Grid.Col span={9} align={'left'} fw={'600'} fz={'14'}>{t('Serial Number')}</Grid.Col>
+                                                    <Grid.Col span={9} align={'left'} fw={'600'} fz={'14'}>{t('SerialNumber')}</Grid.Col>
                                                     <Grid.Col span={1}>:</Grid.Col>
                                                     <Grid.Col span={'14'}>{showEntityData && showEntityData?.serial_number && showEntityData?.serial_number}</Grid.Col>
                                                 </Grid>
 
                                                 <Grid columns={24}>
-                                                    <Grid.Col span={9} align={'left'} fw={'600'} fz={'14'}>{t('User/Operator')}</Grid.Col>
+                                                    <Grid.Col span={9} align={'left'} fw={'600'} fz={'14'}>{t('UserOperator')}</Grid.Col>
                                                     <Grid.Col span={1}>:</Grid.Col>
                                                     <Grid.Col span={'14'}>{showEntityData && showEntityData?.user_or_operator && showEntityData?.user_or_operator}</Grid.Col>
                                                 </Grid>
 
                                                 <Grid columns={24}>
-                                                    <Grid.Col span={9} align={'left'} fw={'600'} fz={'14'}>{t('Reorder Level')}</Grid.Col>
+                                                    <Grid.Col span={9} align={'left'} fw={'600'} fz={'14'}>{t('ReorderLevel')}</Grid.Col>
                                                     <Grid.Col span={1}>:</Grid.Col>
                                                     <Grid.Col span={'14'}>{showEntityData && showEntityData?.reorder_level && showEntityData?.reorder_level}</Grid.Col>
                                                 </Grid>
 
                                                 <Grid columns={24}>
-                                                    <Grid.Col span={9} align={'left'} fw={'600'} fz={'14'}>{t('Reason for Adjustment')}</Grid.Col>
+                                                    <Grid.Col span={9} align={'left'} fw={'600'} fz={'14'}>{t('ReasonForAdjustment')}</Grid.Col>
                                                     <Grid.Col span={1}>:</Grid.Col>
                                                     <Grid.Col span={'14'}>{showEntityData && showEntityData?.reason_for_adjustment && showEntityData?.reason_for_adjustment}</Grid.Col>
                                                 </Grid>
 
                                                 <Grid columns={24}>
-                                                    <Grid.Col span={9} align={'left'} fw={'600'} fz={'14'}>{t('Supplier Invoice Number')}</Grid.Col>
+                                                    <Grid.Col span={9} align={'left'} fw={'600'} fz={'14'}>{t('SupplierInvoiceNumber')}</Grid.Col>
                                                     <Grid.Col span={1}>:</Grid.Col>
                                                     <Grid.Col span={'14'}>{showEntityData && showEntityData?.supplier_invoice_number && showEntityData?.supplier_invoice_number}</Grid.Col>
                                                 </Grid>
 
                                                 <Grid columns={24}>
-                                                    <Grid.Col span={9} align={'left'} fw={'600'} fz={'14'}>{t('Order Number')}</Grid.Col>
+                                                    <Grid.Col span={9} align={'left'} fw={'600'} fz={'14'}>{t('OrderNumber')}</Grid.Col>
                                                     <Grid.Col span={1}>:</Grid.Col>
                                                     <Grid.Col span={'14'}>{showEntityData && showEntityData?.order_number && showEntityData?.order_number}</Grid.Col>
                                                 </Grid>
 
                                                 <Grid columns={24}>
-                                                    <Grid.Col span={9} align={'left'} fw={'600'} fz={'14'}>{t('Transport/Shipping Information')}</Grid.Col>
+                                                    <Grid.Col span={9} align={'left'} fw={'600'} fz={'14'}>{t('TransportShippingInformation')}</Grid.Col>
                                                     <Grid.Col span={1}>:</Grid.Col>
                                                     <Grid.Col span={'14'}>{showEntityData && showEntityData?.transport_shipping_information && showEntityData?.transport_shipping_information}</Grid.Col>
                                                 </Grid>
 
                                                 <Grid columns={24}>
-                                                    <Grid.Col span={9} align={'left'} fw={'600'} fz={'14'}>{t('Condition of Goods')}</Grid.Col>
+                                                    <Grid.Col span={9} align={'left'} fw={'600'} fz={'14'}>{t('ConditionOfGoods')}</Grid.Col>
                                                     <Grid.Col span={1}>:</Grid.Col>
                                                     <Grid.Col span={'14'}>{showEntityData && showEntityData?.condition_of_goods && showEntityData?.condition_of_goods}</Grid.Col>
                                                 </Grid>
 
                                                 <Grid columns={24}>
-                                                    <Grid.Col span={9} align={'left'} fw={'600'} fz={'14'}>{t('Warehouse/Storage Bin')}</Grid.Col>
+                                                    <Grid.Col span={9} align={'left'} fw={'600'} fz={'14'}>{t('WarehouseStorageBin')}</Grid.Col>
                                                     <Grid.Col span={1}>:</Grid.Col>
                                                     <Grid.Col span={'14'}>{showEntityData && showEntityData?.warehouse_storage_bin && showEntityData?.warehouse_storage_bin}</Grid.Col>
                                                 </Grid>

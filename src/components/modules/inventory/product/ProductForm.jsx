@@ -298,7 +298,7 @@ function ProductForm(props) {
                                         </Box>
                                         <Box mt={'xs'}>
                                             <InputForm
-                                                tooltip={t('DisplayName')}
+                                                tooltip={t('EnterDisplayName')}
                                                 label={t('DisplayName')}
                                                 placeholder={t('DisplayName')}
                                                 required={false}
@@ -311,7 +311,7 @@ function ProductForm(props) {
                                         </Box>
                                         <Box mt={'xs'}>
                                             <InputForm
-                                                tooltip={t('LanguageName')}
+                                                tooltip={t('EnterLanguageName')}
                                                 label={t('LanguageName')}
                                                 placeholder={t('LanguageName')}
                                                 required={false}
@@ -428,7 +428,7 @@ function ProductForm(props) {
                                                 <Grid columns={12} gutter={{ base: 1 }}>
                                                     <Grid.Col span={12}>
                                                         <TextAreaForm
-                                                            tooltip={t('Description')}
+                                                            tooltip={t('EnterDescription')}
                                                             label={t('Description')}
                                                             placeholder={t('Description')}
                                                             required={false}
