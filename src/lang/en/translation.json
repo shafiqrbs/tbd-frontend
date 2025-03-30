@@ -829,5 +829,8 @@
   "EnterLocation" : "Provide a location",
   "EnterEmail" : "Provide an email",
   "EnterAddress" : "Provide an address",
-  "WarehouseDetailsData" : "Warehouse Details Data"
+  "WarehouseDetailsData" : "Warehouse Details Data",
+  "EnterFileName" : "Enter file name",
+  "EnterFileType" : "Enter file type",
+  "EnterCreatedDate" : "Enter created date"
 }

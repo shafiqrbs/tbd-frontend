@@ -531,5 +531,8 @@
   "EnterEmail" : "ইমেইল লিখুন",
   "EnterAddress" : "ঠিকানা লিখুন",
   "WarehouseDetailsData" : "ওয়্যারহাউসের বিস্তারিত তথ্য",
+  "EnterFileName" : "ফাইলের নাম লিখুন",
+  "EnterFileType" : "ফাইলের টাইপ লিখুন",
+  "EnterCreatedDate" : "ক্রিয়েটেড ডেট লিখুন",
   "" : ""
 }

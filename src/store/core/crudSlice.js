@@ -131,6 +131,7 @@ const crudSlice = createSlice({
         entityUpdateId: null,
         entityIsUpdate: false,
         customerFilterData: { name: '', mobile: '' },
+        fileUploadFilterData: { file_type: '', original_name: '', created: '' },
         vendorFilterData: { name: '', mobile: '', company_name: '' },
         userFilterData: { name: '', mobile: '', email: '' },
         warehouseFilterData: { name: '', mobile: '', email: '',location:'' },
@@ -198,6 +199,11 @@ const crudSlice = createSlice({
             state.requisitionFilterData.end_date = action.payload.end_date
             state.requisitionFilterData.searchKeyword = action.payload.searchKeyword
         },
+        setFileUploadFilterData: (state, action) => {
+            state.fileUploadFilterData.file_type = action.payload.file_type
+            state.fileUploadFilterData.original_name = action.payload.original_name
+            state.fileUploadFilterData.created = action.payload.created
+        },
 
     },
 
@@ -258,6 +264,6 @@ const crudSlice = createSlice({
     }
 })
 
-export const { setFetching, setFormLoading, setInsertType, setSearchKeyword, setEntityUpdateId, setEntityIsUpdate, setEditEntityData, setCustomerFilterData, setVendorFilterData, setUserFilterData, setValidationData, setEntityNewData, setCategoryGroupFilterData, setDeleteMessage,setWarehouseFilterData ,setRequisitionFilterData} = crudSlice.actions
+export const { setFetching, setFormLoading, setInsertType, setSearchKeyword, setEntityUpdateId, setEntityIsUpdate, setEditEntityData, setCustomerFilterData, setVendorFilterData, setUserFilterData, setValidationData, setEntityNewData, setCategoryGroupFilterData, setDeleteMessage,setWarehouseFilterData ,setRequisitionFilterData, setFileUploadFilterData} = crudSlice.actions
 
 export default crudSlice.reducer;

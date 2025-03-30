@@ -18,6 +18,7 @@ import { useOutletContext } from "react-router-dom";
 import { IconSearch, IconX } from "@tabler/icons-react";
 import __ProductionSettingFilterForm from "../production/settings/__ProductionSettingFilterForm.jsx";
 import WarehouseFilterForm from "../core/warehouse/WarehouseFilterForm.jsx";
+import FileUploadFilterForm from "../core/file-upload/FIleUploadFIlterForm.jsx";
 
 function FilterModel(props) {
     const { t, i18n } = useTranslation();
@@ -62,6 +63,7 @@ function FilterModel(props) {
                             {props.module === 'product' && <ProductFilterForm module={props.module} />}
                             {props.module === 'category' && <CategoryFilterForm module={props.module} />}
                             {props.module === 'production-setting' && <__ProductionSettingFilterForm module={props.module} />}
+                            {props.module === 'file-upload' && <FileUploadFilterForm module={props.module} />}
                         </Box>
                         <Box pl={`xs`} pr={8} pt={'6'} pb={'6'} mb={'2'} mt={4} className={'boxBackground borderRadiusAll'}>
                             <Group justify="flex-end">

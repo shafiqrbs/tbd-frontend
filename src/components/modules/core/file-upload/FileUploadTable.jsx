@@ -61,6 +61,7 @@ function FileUploadTable() {
 
     const [indexData, setIndexData] = useState([]);
     const fetchingReload = useSelector((state) => state.crudSlice.fetching);
+    const fileUploadFilterData = useSelector((state) => state.crudSlice.fileUploadFilterData)
 
     useEffect(() => {
         const fetchFileData = async () => {
@@ -69,6 +70,9 @@ function FileUploadTable() {
                 url: "core/file-upload",
                 param: {
                     term: searchKeyword,
+                    file_type: fileUploadFilterData.file_type,
+                    original_name : fileUploadFilterData.original_name,
+                    created : fileUploadFilterData.created,
                     page: page,
                     offset: perPage,
                 },
@@ -89,7 +93,7 @@ function FileUploadTable() {
         };
 
         fetchFileData();
-    }, [dispatch, searchKeyword, page, fetchingReload, loading]);
+    }, [dispatch,fileUploadFilterData, searchKeyword, page, fetchingReload, loading]);
 
     const processUploadFile = (id) => {
         setLoading(true);
