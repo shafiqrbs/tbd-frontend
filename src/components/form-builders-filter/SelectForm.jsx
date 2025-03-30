@@ -4,6 +4,7 @@ import {
 } from "@mantine/core";
 import {useDispatch, useSelector} from "react-redux";
 import {setProductionSettingFilterData} from "../../store/production/crudSlice.js";
+import { setFileUploadFilterData } from "../../store/core/crudSlice.js";
 
 function SelectForm(props) {
     const {
@@ -23,6 +24,7 @@ function SelectForm(props) {
     } = props
     const dispatch = useDispatch();
     const productionSettingFilterData = useSelector((state) => state.productionCrudSlice.productionSettingFilterData)
+    const fileUploadFilterData = useSelector((state) => state.crudSlice.fileUploadFilterData)
 
     return (
         <>
@@ -41,6 +43,11 @@ function SelectForm(props) {
                     if (module === 'production-setting') {
                         changeValue(e)
                         dispatch(setProductionSettingFilterData({ ...productionSettingFilterData, [name]: e }))
+                        document.getElementById(nextField).focus();
+                    }
+                    if( module === 'file-upload') {
+                        changeValue(e)
+                        dispatch(setFileUploadFilterData({ ...fileUploadFilterData, [name]: e }))
                         document.getElementById(nextField).focus();
                     }
                 }}

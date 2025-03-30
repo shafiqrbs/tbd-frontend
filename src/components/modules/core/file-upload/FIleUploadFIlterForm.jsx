@@ -1,10 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import InputForm from "../../../form-builders-filter/InputForm.jsx";
 import { useHotkeys } from "@mantine/hooks";
+import SelectForm from "../../../form-builders-filter/SelectForm.jsx";
 
 export default function FileUploadFilterForm(props) {
   const { t, i18n } = useTranslation();
+
+  const [excelFileType, setExcelFileType] = useState(null);
 
   useHotkeys(
     [
@@ -17,7 +20,9 @@ export default function FileUploadFilterForm(props) {
     ],
     []
   );
-
+  if (excelFileType){
+    console.log("excelFileType", excelFileType);
+  }
   return (
     <>
       <InputForm
@@ -29,12 +34,27 @@ export default function FileUploadFilterForm(props) {
         module={props.module}
       />
 
-      <InputForm
-        label={t("FileType")}
-        placeholder={t("EnterFileType")}
+      <SelectForm
+        label={t("ChooseExcelType")}
+        placeholder={t("ChooseExcelType")}
+        mt={1}
+        clearable={true}
+        searchable={true}
+        required={false}
         nextField={"created"}
-        id={"file_type"}
         name={"file_type"}
+        dropdownValue={[
+          "Opening-Stock",
+          "Finish-Goods",
+          "Production",
+          "Product",
+          "User",
+        ]}
+        id={"file_type"}
+        value={excelFileType}
+        changeValue={setExcelFileType}
+        comboboxProps={true}
+        allowDeselect={false}
         module={props.module}
       />
       <InputForm

@@ -11,7 +11,7 @@ function __ProductionSettingFilterForm(props) {
     const {t, i18} = useTranslation();
 
     useHotkeys([['alt+n', () => {
-        document.getElementById('ParentName').focus()
+        document.getElementById('name').focus()
     }]], []);
 
     const [settingTypeData, setSettingTypeData] = useState(null);
