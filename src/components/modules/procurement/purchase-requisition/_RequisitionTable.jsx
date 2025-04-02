@@ -191,7 +191,7 @@ export default function _RequisitionTable(props) {
                                         },
                                         {
                                             accessor: "expected_date",
-                                            title: t("expectedDate"),
+                                            title: t("ExpectedDate"),
                                         },
                                         {
                                             accessor: "invoice",
