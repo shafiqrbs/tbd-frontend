@@ -585,8 +585,8 @@ function __SalesForm(props) {
                                                 color={'red.3'}
                                                 mt={'2'}
                                                 ml={'6'}
-                                                onLabel={t('Profit')}
-                                                offLabel={t('Hide')}
+                                                onLabel={t("Profit")}
+                                                offLabel={t("Hide")}
                                                 radius="xs"
                                                 onChange={(event) => setProfitShow(event.currentTarget.checked)}
                                             />

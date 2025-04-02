@@ -869,5 +869,7 @@
   "Total Tax Incidence": "Total Tax Incidence",
   "Image": "Image",
   "BarcodePrintList" : "Barcode Print List",
-  "Flat" : "Flat"
+  "Flat" : "Flat",
+  "Hide" : "Hide",
+  "Profit" : "Profit"
 }

@@ -615,7 +615,8 @@ function SampleInvoiceForm(props) {
                                         <Grid gutter={{base: 6}}>
                                             <Grid.Col span={3}>
                                                 <Switch fullWidth  size="lg" w={'100%'} color={'red.3'}
-                                                        ml={'6'} pb={'8'} onLabel={t('Profit')} offLabel={t('Hide')}
+                                                        ml={'6'} pb={'8'} onLabel={t("Profit")}
+                                                        offLabel={t("Hide")}
                                                         radius="xs"/>
                                             </Grid.Col>
                                             <Grid.Col span={3}><Center fz={'xs'} mt={'8'}
