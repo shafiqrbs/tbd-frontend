@@ -332,7 +332,7 @@ function _AddTransaction(props) {
                                                                 discountType === 'Flat' ? <IconCurrencyTaka size={14} /> :
                                                                     <IconPercentage size={14} />
                                                             } color="red.4">
-                                                            {discountType}
+                                                            {discountType === 'Flat' ? t('Flat') : t('Percent')}
                                                         </Button>
                                                     </Grid.Col>
                                                     <Grid.Col span={4}>

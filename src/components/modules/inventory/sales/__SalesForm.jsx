@@ -612,7 +612,7 @@ function __SalesForm(props) {
                                         </Grid.Col>
                                         <Grid.Col span={4}>
                                             <Box fz={'xl'} pr={'8'} mt={'4'} c={'red'} style={{ textAlign: 'right', float: 'right' }} fw={'800'}>
-                                                {returnOrDueText} {currencySymbol} {salesDueAmount.toFixed(2)}
+                                            {returnOrDueText === 'Due' ? t('Due') : t('Return')} {currencySymbol} {salesDueAmount.toFixed(2)}
                                             </Box>
                                         </Grid.Col>
                                     </Grid>
@@ -629,7 +629,7 @@ function __SalesForm(props) {
                                                         discountType === 'Flat' ? <IconCurrencyTaka size={14} /> :
                                                             <IconPercentage size={14} />
                                                     } color="red.4">
-                                                    {discountType}
+                                                    {discountType === 'Flat' ? t('Flat') : t('Percent')}
                                                 </Button>
                                             </Grid.Col>
                                             <Grid.Col span={4}>

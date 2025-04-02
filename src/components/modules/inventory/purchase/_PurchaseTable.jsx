@@ -620,7 +620,7 @@ function _PurchaseTable() {
                                                         </Table.Th>
                                                     }
                                                     <Table.Th fz="xs" ta="center" w={"60"}>
-                                                        {t("BonusQty")}
+                                                        {t("BonusQuantityTable")}
                                                     </Table.Th>
                                                     <Table.Th fz="xs" ta="center" w={"60"}>
                                                         {t("QTY")}

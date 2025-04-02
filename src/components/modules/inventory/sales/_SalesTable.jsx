@@ -571,7 +571,7 @@ function _SalesTable(props) {
                                                         </Table.Th>
                                                     }
                                                     <Table.Th fz="xs" ta="center" w={"60"}>
-                                                        {t("BonusQty")}
+                                                        {t("BonusQuantityTable")}
                                                     </Table.Th>
                                                     <Table.Th fz="xs" ta="center" w={'60'}>{t('QTY')}</Table.Th>
                                                     <Table.Th ta="right" fz="xs" w={'80'}>{t('UOM')}</Table.Th>

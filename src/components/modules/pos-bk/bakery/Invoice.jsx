@@ -1109,7 +1109,7 @@ export default function Invoice(props) {
                         {t("Type")}
                       </Text>
                       <Text fz={"sm"} fw={800} c={"black"}>
-                        {discountType}
+                        {discountType === 'Flat' ? t('Flat') : t('Percent')}
                       </Text>
                     </Group>
                   </Grid.Col>
@@ -1168,7 +1168,7 @@ export default function Invoice(props) {
                     {configData?.currency?.symbol} {salesDueAmount.toFixed(2)}
                   </Text>
                   <Text fw={500} c={"white"} size={"md"}>
-                    {returnOrDueText}
+                  {returnOrDueText === 'Due' ? t('Due') : t('Return')}
                   </Text>
                 </Stack>
               </Grid.Col>

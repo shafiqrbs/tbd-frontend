@@ -523,7 +523,7 @@ function _GenericInvoiceForm(props) {
                                     },
                                     {
                                         accessor: 'bonus_quantity',
-                                        title: t("BonusQty"),
+                                        title: t("BonusQuantityTable"),
                                     },
                                     {
                                         accessor: 'quantity',

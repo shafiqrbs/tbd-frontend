@@ -461,7 +461,7 @@ function __UpdateInvoiceForm(props) {
 
                                         </Grid.Col>
                                         <Grid.Col span={7}><Center fz={'md'} mt={'4'} c={'red'}
-                                            fw={'800'}>{returnOrDueText} {currencySymbol} {purchaseDueAmount.toFixed(2)}</Center></Grid.Col>
+                                            fw={'800'}>{returnOrDueText === 'Due' ? t('Due') : t('Return')} {currencySymbol} {purchaseDueAmount.toFixed(2)}</Center></Grid.Col>
                                     </Grid>
                                     <Box mt={'xs'} h={1} bg={`red.3`}></Box>
                                     <Grid gutter={{ base: 6 }} mt={'xs'}>
@@ -477,7 +477,7 @@ function __UpdateInvoiceForm(props) {
                                                     discountType === 'Flat' ? <IconCurrencyTaka size={14} /> :
                                                         <IconPercentage size={14} />
                                                 } color="red.4">
-                                                {discountType}
+                                                {discountType === 'Flat' ? t('Flat') : t('Percent')}
                                             </Button>
                                         </Grid.Col>
                                         <Grid.Col span={4}>

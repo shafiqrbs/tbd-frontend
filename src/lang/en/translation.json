@@ -866,5 +866,8 @@
   "Recurring Deposit": "Recurring Deposit",
   "Advance Trade Vat": "Advance Trade VAT",
   "Regulatory Duty": "Regulatory Duty",
-  "Total Tax Incidence": "Total Tax Incidence"
+  "Total Tax Incidence": "Total Tax Incidence",
+  "Image": "Image",
+  "BarcodePrintList" : "Barcode Print List",
+  "Flat" : "Flat"
 }

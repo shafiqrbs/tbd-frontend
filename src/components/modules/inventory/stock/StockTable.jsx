@@ -262,7 +262,6 @@ function StockTable(props) {
               accessor: "feature_image",
               textAlign: "center",
               title: t("Image"),
-              width: "100px",
               render: (item) => {
                 const [opened, setOpened] = useState(false);
                 const autoplay = useRef(Autoplay({ delay: 2000 }));
@@ -380,7 +379,6 @@ function StockTable(props) {
             {
               accessor: "status",
               title: t("Status"),
-              width: 70,
               render: (item) => (
                 <>
                   <Switch
@@ -402,7 +400,6 @@ function StockTable(props) {
               accessor: "location",
               title: t("Location"),
               textAlign: "center",
-              width: 220,
               render: (item) => (
                 <>
                   <SelectForm
