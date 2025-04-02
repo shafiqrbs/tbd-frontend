@@ -22,10 +22,10 @@ function VoucherTableInProgress() {
 
     const perPage = 50;
     const [page, setPage] = useState(1);
-    const [fetchin, setFetching] = useState(false)
+    const [fetching, setFetching] = useState(false)
     const [customerViewModel, setCustomerViewModel] = useState(false)
 
-    const indexData = useSelector((state) => state.crudSlice.indexEntityData)
+    const [indexData, setIndexData] = useState(null)
 
     const data = [
         { issue_date: '12/06/24', ref_voucher: 'rfiusdhf985644', voucher_type: 'voucher', amount: 50000, status: 'new', approved_by: 'foysal' }
@@ -117,7 +117,7 @@ function VoucherTableInProgress() {
                             ]
                             }
                             fetching={fetching}
-                            totalRecords={indexData.total}
+                            totalRecords={indexData ? indexData?.total : 0}
                             recordsPerPage={perPage}
                             page={page}
                             onPageChange={(p) => {

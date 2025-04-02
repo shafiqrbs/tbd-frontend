@@ -30,7 +30,7 @@ function VoucherTableArchive() {
 
     const [fetching, setFetching] = useState(false)
     const customerFilterData = useSelector((state) => state.crudSlice.customerFilterData)
-
+    const [indexData, setIndexData] = useState(null)
 
     return (
         <>
@@ -106,7 +106,7 @@ function VoucherTableArchive() {
                             ]
                             }
                             fetching={fetching}
-                            totalRecords={indexData.total}
+                            totalRecords={indexData ? indexData.total : 0}
                             recordsPerPage={perPage}
                             page={page}
                             onPageChange={(p) => {
