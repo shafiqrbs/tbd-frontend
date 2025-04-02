@@ -871,5 +871,8 @@
   "BarcodePrintList" : "Barcode Print List",
   "Flat" : "Flat",
   "Hide" : "Hide",
-  "Profit" : "Profit"
+  "Profit" : "Profit",
+  "Less" : "Less",
+  "More" : "More",
+  "Update" : "Update"
 }

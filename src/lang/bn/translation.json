@@ -622,5 +622,18 @@
   "Profit" : "প্রফিট",
   "PurchaseInvoice" : "পার্চেজ ইনভয়েস",
   "BatchInvoice" : "ব্যাচ ইনভয়েস",
+  "WorkorderInvoice" : "ওয়ার্ক অর্ডার ইনভয়েস",
+  "IssueQty" : "ইস্যু কোয়ান্টিটি",
+  "ReceiveQty" : "রিসিভ কোয়ান্টিটি",
+  "DamageQty" : "ড্যামেজ কোয়ান্টিটি",
+  "StockQty" : "স্টক কোয়ান্টিটি",
+  "TotalQuantity" : "টোটাল কোয়ান্টিটি",
+  "Less" : "কম",
+  "More" : "বেশি",
+  "Update" : "আপডেট",
+  "ItemRestore" : "আইটেম রিস্টোর",
+  "ChooseProductionProcedure" : "প্রোডাকশন প্রসিডিউর নির্বাচন করুন",
+  "ConsumptionMethod" : "কনজাম্পশন মেথড",
+  "ChooseConsumptionMethod" : "কনজাম্পশন মেথড নির্বাচন করুন",
   "" : ""
 }
