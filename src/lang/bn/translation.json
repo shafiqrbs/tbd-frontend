@@ -620,5 +620,7 @@
   "ChooseBarcodeType" : "বারকোড টাইপ নির্বাচন করুন",
   "Hide" : "হাইড",
   "Profit" : "প্রফিট",
+  "PurchaseInvoice" : "পার্চেজ ইনভয়েস",
+  "BatchInvoice" : "ব্যাচ ইনভয়েস",
   "" : ""
 }
