@@ -52,7 +52,7 @@ function StockTable(props) {
   const perPage = 50;
   const [page, setPage] = useState(1);
 
-  const fetching = useSelector((state) => state.crudSlice.fetching);
+  const fetching = useSelector((state) => state.productionCrudSlice.fetching);
   const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword);
   const [indexData, setIndexData] = useState([]);
   const productFilterData = useSelector(
@@ -221,8 +221,8 @@ function StockTable(props) {
             {
               accessor: "index",
               title: t("S/N"),
-              textAlignment: "right   ",
-              render: (item) => indexData.data.indexOf(item) + 1,
+              textAlignment: "right",
+              render: (item) => indexData.data.indexOf(item) + 1 + (page - 1) * perPage,
             },
             // { accessor: "product_type", title: t("NatureOfProduct") },
             { accessor: "category_name", title: t("Category") },
