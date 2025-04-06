@@ -155,8 +155,7 @@ function DomainTable(props) {
 
                                         <Menu.Item
                                             onClick={() => {
-                                                //code to show data
-                                                // dispatch(showEntityData('domain/edit/' + data.id))
+                                                
                                             }}
                                             target="_blank"
                                             component="a"

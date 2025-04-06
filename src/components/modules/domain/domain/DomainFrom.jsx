@@ -286,7 +286,7 @@ function DomainForm(props) {
                                                                 <Group mt="xs">
                                                                     {
                                                                         modulesData.map((module, index) => (
-                                                                            <Tooltip key={index} mt={'8'} label={module.name}>
+                                                                            <Tooltip key={index} mt={'8'} label={t(module.name)}>
                                                                                 <Checkbox
                                                                                     value={module.slug}
                                                                                     label={t(module.name)}

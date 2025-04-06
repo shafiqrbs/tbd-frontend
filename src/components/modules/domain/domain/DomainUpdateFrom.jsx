@@ -346,10 +346,10 @@ function DomainUpdateForm(props) {
                                                             <Group mt="xs">
                                                                 {
                                                                     modulesData.map((module, index) => (
-                                                                        <Tooltip key={index} mt={'8'} label={module.name}>
+                                                                        <Tooltip key={index} mt={'8'} label={t(module.name)}>
                                                                             <Checkbox
                                                                                 value={module.slug}
-                                                                                label={module.name}
+                                                                                label={t(module.name)}
                                                                             />
                                                                         </Tooltip>
                                                                     ))
@@ -368,10 +368,10 @@ function DomainUpdateForm(props) {
                                                             <Group mt="xs">
                                                                 {
                                                                     productTypeCheckbox.map((type, index) => (
-                                                                        <Tooltip key={index} mt={'8'} label={type.name}>
+                                                                        <Tooltip key={index} mt={'8'} label={t(type.name)}>
                                                                             <Checkbox
                                                                                 value={String(type.id)}
-                                                                                label={type.name}
+                                                                                label={t(type.name)}
                                                                             />
                                                                         </Tooltip>
                                                                     ))

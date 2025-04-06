@@ -884,5 +884,17 @@
   "DropImagesHere" : "Drop Images Here",
   "ItemManagement" : "Item Management",
   "Sales & Purchase" : "Sales & Purchase",
-  "POS" : "POS"
+  "POS" : "POS",
+  "UpdateDomain" : "Update Domain",
+  "Raw Materials" : "Raw Materials",
+  "Post-production" : "Post-production",
+  "Service" : "Service",
+  "Virtual" : "Virtual",
+  "Mid Production" : "Mid Production",
+  "Pre-production" : "Pre-production",
+  "selectProductType" : "Select product type",
+  "PointOfSales" : "Point Of Sales",
+  "DiscountPercent" : "Discount Percent",
+  "DiscountPercentValidateMessage" : "Discount percent must be between 0-99",
+  "LogoutAltL" : "Logout (Alt + L)"
 }
