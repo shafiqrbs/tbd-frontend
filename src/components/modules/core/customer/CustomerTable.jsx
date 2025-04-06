@@ -40,7 +40,6 @@ function CustomerTable() {
     const fetchingReload = useSelector((state) => state.crudSlice.fetching)
     const customerFilterData = useSelector((state) => state.crudSlice.customerFilterData)
     const [customerObject, setCustomerObject] = useState({});
-
     const [viewDrawer, setViewDrawer] = useState(false)
     const [provisionDrawer, setProvisionDrawer] = useState(false)
 
@@ -97,7 +96,7 @@ function CustomerTable() {
 
         fetchData();
     }, [dispatch, searchKeyword, customerFilterData, page,fetchingReload]);
-
+    // console.log(indexData)
     return (
         <>
 
@@ -126,6 +125,7 @@ function CustomerTable() {
                         { accessor: 'mobile', title: t("Mobile"), width: 200 },
                         { accessor: 'customer_group', title: t("CustomerGroup") },
                         { accessor: 'credit_limit', title: t("CreditLimit") },
+                        { accessor: 'discount_percent', title: t("Discount")+" %"},
                         {
                             accessor: "action",
                             title: t("Action"),

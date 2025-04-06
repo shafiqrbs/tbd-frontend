@@ -13,6 +13,10 @@ import {
     Grid,
     NavLink,
     Box,
+    Image,
+    Tooltip,
+    Title,
+    Divider
 } from "@mantine/core";
 import {
     IconUsers,
@@ -34,6 +38,7 @@ import {
 import {useTranslation} from "react-i18next";
 import classes from "../../../assets/css/FeaturesCards.module.css";
 import getConfigData from "../../global-hook/config-data/getConfigData.js";
+import pos from "../../../assets/images/pos/pos.png";
 
 function MainDashboard(props) {
     const {configData, fetchData} = getConfigData();
@@ -52,7 +57,6 @@ function MainDashboard(props) {
     const targetValues = ["condition_account", "expenditure", "purchase", "payroll_salary", "payroll"];
     const anyExist = targetValues.some((value) => userRole.includes(value));
     /* end for user role check */
-
 
     const {t, i18n} = useTranslation();
     const height = props.height - 105; //TabList height 104
@@ -73,60 +77,57 @@ function MainDashboard(props) {
     return (
         <>
             <Container fluid mt={"xs"}>
-                <SimpleGrid cols={{base: 1, md: 3}} spacing="xs" mb={"xs"}>
+                <SimpleGrid cols={{base: 1, md: 4}} spacing="xs" mb={"xs"}>
                     <Card shadow="md" radius="md" className={classes.card} padding="lg">
                         <Grid gutter={{base: 2}}>
-                            <Grid.Col span={2}>
-                                <IconMoneybag
-                                    style={{width: rem(42), height: rem(42)}}
-                                    stroke={2}
-                                    color={theme.colors.teal[6]}
-                                />
+                            <Grid.Col span={6} >
+                                <Tooltip
+                                    label={t("PointOfSales")} withArrow position="top-center"
+                                    bg={`red.4`}
+                                    px={16}
+                                    py={2}
+                                    c={'white'}
+                                    offset={2}
+                                    transitionProps={{ transition: "pop-bottom-left", duration: 500 }}>
+                                    <Image
+                                        bg={"green.8"}
+                                        h={60}
+                                        radius="sm"
+                                        src={pos}
+                                        fit="cover"
+                                        w="100%"
+                                        onClick={() => {
+                                            navigate("/pos/bakery");
+                                        }
+                                        }
+                                        style={{cursor: "pointer"}}
+                                    />
+                                </Tooltip>
                             </Grid.Col>
-                            <Grid.Col span={10}>
-                                <Text fz="md" fw={500} className={classes.cardTitle}>
-                                    {t("Pos")}
-                                </Text>
+                            <Grid.Col span={"6"}>
+                                <Title order={4} align="center" mt={0} mb={0} >
+                                    {t("Sales")}
+                                </Title>
+                                <Divider my={5}/>
+                                <Grid columns={18} >
+                                    <Grid.Col span={8}>
+                                        <Title order={5} align="right" mt={0} mb={0} >
+                                        {configData?.currency?.symbol} 0.00
+                                        </Title>
+                                    </Grid.Col>
+                                    <Grid.Col span={2} >
+                                    <Box style={{border: "1px solid #e0e0e0", height: "100%", width: "2px"}}></Box>
+                                    </Grid.Col>
+                                    <Grid.Col span={8}>
+                                        <Title order={5} align="left" mt={0} mb={0} >
+                                            0
+                                        </Title>
+                                    </Grid.Col>
+                                </Grid>
                             </Grid.Col>
                         </Grid>
                     </Card>
-                    <Card shadow="md" radius="md" className={classes.card} padding="lg">
-                        <Grid gutter={{base: 2}}>
-                            {/* demo role implement*/}
-                            {/*{
-                ["condition_account", "expenditure", "purchase", "payroll_salary", "payroll"].some((value) => userRole.includes(value)) &&
-                  (
-                      <>
-                        <Grid.Col span={2}>
-                          <IconMoneybag
-                              style={{ width: rem(42), height: rem(42) }}
-                              stroke={2}
-                              color={theme.colors.teal[6]}
-                          />
-                        </Grid.Col>
-                        <Grid.Col span={10}>
-                          <Text fz="md" fw={500} className={classes.cardTitle}>
-                            {t("Sales&PurchaseOverview")}
-                          </Text>
-                        </Grid.Col>
-                      </>
-                  )
-              }*/}
-
-                            <Grid.Col span={2}>
-                                <IconMoneybag
-                                    style={{width: rem(42), height: rem(42)}}
-                                    stroke={2}
-                                    color={theme.colors.teal[6]}
-                                />
-                            </Grid.Col>
-                            <Grid.Col span={10}>
-                                <Text fz="md" fw={500} className={classes.cardTitle}>
-                                    {t("Sales&PurchaseOverview")}
-                                </Text>
-                            </Grid.Col>
-                        </Grid>
-                    </Card>
+                    
                     <Card shadow="md" radius="md" className={classes.card} padding="lg">
                         <Grid gutter={{base: 2}}>
                             <Grid.Col span={2}>
@@ -143,62 +144,63 @@ function MainDashboard(props) {
                             </Grid.Col>
                         </Grid>
                     </Card>
+                    <Card shadow="md" radius="md" className={classes.card} padding="lg">
+                        <Grid gutter={{base: 2}}>
+                            <Grid.Col span={2}>
+                                <IconShoppingCart
+                                    style={{width: rem(42), height: rem(42)}}
+                                    stroke={2}
+                                    color={theme.colors.blue[6]}
+                                />
+                            </Grid.Col>
+                            <Grid.Col span={10}>
+                                <Text fz="md" fw={500} className={classes.cardTitle}>
+                                    {t("Procurement")}
+                                </Text>
+                            </Grid.Col>
+                        </Grid>
+                    </Card>
+                    <Card shadow="md" radius="md" className={classes.card} padding="lg">
+                        <Grid gutter={{base: 2}}>
+                            {/* demo role implement*/}
+                            {/*{
+                                ["condition_account", "expenditure", "purchase", "payroll_salary", "payroll"].some((value) => userRole.includes(value)) &&
+                                (
+                                    <>
+                                        <Grid.Col span={2}>
+                                        <IconMoneybag
+                                            style={{ width: rem(42), height: rem(42) }}
+                                            stroke={2}
+                                            color={theme.colors.teal[6]}
+                                        />
+                                        </Grid.Col>
+                                        <Grid.Col span={10}>
+                                        <Text fz="md" fw={500} className={classes.cardTitle}>
+                                            {t("Sales&PurchaseOverview")}
+                                        </Text>
+                                        </Grid.Col>
+                                    </>
+                                )
+                            }*/}
+
+                            <Grid.Col span={2}>
+                                <IconMoneybag
+                                    style={{width: rem(42), height: rem(42)}}
+                                    stroke={2}
+                                    color={theme.colors.orange[6]}
+                                />
+                            </Grid.Col>
+                            <Grid.Col span={10}>
+                                <Text fz="md" fw={500} className={classes.cardTitle}>
+                                    {t("InventoryandProduct")}
+                                </Text>
+                            </Grid.Col>
+                        </Grid>
+                    </Card>
                 </SimpleGrid>
                 <ScrollArea h={height} scrollbarSize={2} type="never">
                     <SimpleGrid cols={{base: 1, md: 4}} spacing="xs">
-                        {
-                            configData?.domain?.modules?.includes("pos") && (
-                                <Card shadow="md" radius="md" className={classes.card} padding="lg">
-                                    <Grid gutter={{base: 2}}>
-                                        <Grid.Col span={2}>
-                                            <IconBuildingStore
-                                                style={{width: rem(42), height: rem(42)}}
-                                                stroke={2}
-                                                color={theme.colors.teal[6]}
-                                            />
-                                        </Grid.Col>
-                                        <Grid.Col span={10}>
-                                            <Text fz="md" fw={500} className={classes.cardTitle}>
-                                                {t("PosManagement")}
-                                            </Text>
-                                        </Grid.Col>
-                                    </Grid>
-                                    <Box fz="sm" c="dimmed" mt="sm">
-                                        <List spacing="ms" size="sm" center>
-                                            <List.Item
-                                                pl={"xs"}
-                                                icon={
-                                                    <ThemeIcon
-                                                        color="teal.6"
-                                                        size={20}
-                                                        radius="xl"
-                                                        variant="outline"
-                                                    >
-                                                        <IconBasket/>
-                                                    </ThemeIcon>
-                                                }
-                                            >
-                                                <NavLink
-                                                    pl={"md"}
-                                                    href="/pos/bakery"
-                                                    label={t("Bakery")}
-                                                    component="button"
-                                                    onClick={(e) => {
-                                                        navigate("pos/bakery");
-                                                    }}
-                                                    onAuxClick={(e) => {
-                                                        // Handle middle mouse button click for browsers that support it
-                                                        if (e.button === 1) {
-                                                            window.open("/pos/bakery", "_blank");
-                                                        }
-                                                    }}
-                                                />
-                                            </List.Item>
-                                        </List>
-                                    </Box>
-                                </Card>
-                            )
-                        }
+                        
                         {
                             configData?.domain?.modules?.includes("sales-purchase") && (
                                 <Card shadow="md" radius="md" className={classes.card} padding="lg">
@@ -427,7 +429,7 @@ function MainDashboard(props) {
                                 </Card>
                             )
                         }
-
+                        
                         {
                             configData?.domain?.modules?.includes("accounting") && (
                                 <Card shadow="md" radius="md" className={classes.card} padding="lg">
@@ -613,8 +615,123 @@ function MainDashboard(props) {
                                 </Card>
                             )
                         }
+                        {
+                            configData?.domain?.modules?.includes("procurement") && (
+                                <Card shadow="md" radius="md" className={classes.card} padding="lg">
+                                    <Grid gutter={{base: 2}}>
+                                        <Grid.Col span={2}>
+                                            <IconShoppingCart
+                                                style={{width: rem(42), height: rem(42)}}
+                                                stroke={2}
+                                                color={theme.colors.blue[6]}
+                                            />
+                                        </Grid.Col>
+                                        <Grid.Col span={10}>
+                                            <Text fz="md" fw={500} className={classes.cardTitle}>
+                                                {t("Procurement")}
+                                            </Text>
+                                        </Grid.Col>
+                                    </Grid>
+                                    <Box fz="sm" c="dimmed" mt="sm">
+                                        <List spacing="ms" size="sm" center>
+                                            {
+                                                configData?.child_domain_exists &&
+                                                (
+                                                    <List.Item
+                                                        pl={"xs"}
+                                                        icon={
+                                                            <ThemeIcon
+                                                                color="blue.6"
+                                                                size={20}
+                                                                radius="xl"
+                                                                variant="outline"
+                                                            >
+                                                                <IconShoppingBag/>
+                                                            </ThemeIcon>
+                                                        }
+                                                    >
+                                                        <NavLink
+                                                            pl={"md"}
+                                                            href="/procurement/requisition-board"
+                                                            label={t("AllRequisition")}
+                                                            component="button"
+                                                            onClick={(e) => {
+                                                                navigate("/procurement/requisition-board");
+                                                            }}
+                                                            onAuxClick={(e) => {
+                                                                // Handle middle mouse button click for browsers that support it
+                                                                if (e.button === 1) {
+                                                                    window.open("/procurement/requisition-board", "_blank");
+                                                                }
+                                                            }}
+                                                        />
+                                                    </List.Item>
+                                                )
+                                            }
 
-            
+                                            <List.Item
+                                                pl={"xs"}
+                                                icon={
+                                                    <ThemeIcon
+                                                        color="blue.6"
+                                                        size={20}
+                                                        radius="xl"
+                                                        variant="outline"
+                                                    >
+                                                        <IconShoppingBag/>
+                                                    </ThemeIcon>
+                                                }
+                                            >
+                                                <NavLink
+                                                    pl={"md"}
+                                                    href="/procurement/requisition"
+                                                    label={t("Requisition")}
+                                                    component="button"
+                                                    onClick={(e) => {
+                                                        navigate("/procurement/requisition");
+                                                    }}
+                                                    onAuxClick={(e) => {
+                                                        // Handle middle mouse button click for browsers that support it
+                                                        if (e.button === 1) {
+                                                            window.open("/procurement/requisition", "_blank");
+                                                        }
+                                                    }}
+                                                />
+                                            </List.Item>
+                                            <List.Item
+                                                pl={"xs"}
+                                                icon={
+                                                    <ThemeIcon
+                                                        color="blue.6"
+                                                        size={20}
+                                                        radius="xl"
+                                                        variant="outline"
+                                                    >
+                                                        <IconShoppingBagPlus/>
+                                                    </ThemeIcon>
+                                                }
+                                            >
+                                                <NavLink
+                                                    pl={"md"}
+                                                    href="/procurement/new-requisition"
+                                                    label={t("NewRequisition")}
+                                                    component="button"
+                                                    onClick={(e) => {
+                                                        navigate("/procurement/new-requisition");
+                                                    }}
+                                                    onAuxClick={(e) => {
+                                                        // Handle middle mouse button click for browsers that support it
+                                                        if (e.button === 1) {
+                                                            window.open("/procurement/new-requisition", "_blank");
+                                                        }
+                                                    }}
+                                                />
+                                            </List.Item>
+                                        </List>
+                                    </Box>
+                                </Card>
+                            )
+                        }
                         {
                             configData?.domain?.modules?.includes("inventory") && (
                                 <Card shadow="md" radius="md" className={classes.card} padding="lg">
@@ -929,7 +1046,68 @@ function MainDashboard(props) {
                                 </Card>
                             )
                         }
-
+                        {
+                            configData?.domain?.modules?.includes("domain") && (
+                                <Card shadow="md" radius="md" className={classes.card} padding="lg">
+                                    <Grid gutter={{base: 2}}>
+                                        <Grid.Col span={2}>
+                                            <IconMoneybag
+                                                style={{width: rem(42), height: rem(42)}}
+                                                stroke={2}
+                                                color={theme.colors.blue[6]}
+                                            />
+                                        </Grid.Col>
+                                        <Grid.Col span={10}>
+                                            <Text fz="md" fw={500} className={classes.cardTitle}>
+                                                {t("ManageDomain")}
+                                            </Text>
+                                        </Grid.Col>
+                                    </Grid>
+                                    <Box fz="sm" c="dimmed" mt="sm">
+                                        <List spacing="ms" size="sm" center>
+                                            {/*<List.Item pl={'xs'} icon={<ThemeIcon color="blue.6" size={20} radius="xl" variant="outline" ><IconBasket/></ThemeIcon>}>
+                                    <NavLink pl={'md'} href="accounting/sales" label={t('ManageSales')} component="button" onClick={(e)=>{navigate('inventory/sales')}}  />
+                                </List.Item>
+                                <List.Item pl={'xs'} icon={<ThemeIcon color="blue.6" size={20} radius="xl" variant="outline" ><IconShoppingBagSearch/></ThemeIcon>}>
+                                    <NavLink pl={'md'} href="accounting/sales-invoice" label={t('NewSales')} component="button" onClick={(e)=>{navigate('inventory/sales')}}  />
+                                </List.Item>
+                                <List.Item pl={'xs'} icon={<ThemeIcon color="blue.6" size={20} radius="xl" variant="outline" ><IconShoppingBagPlus/></ThemeIcon>}>
+                                    <NavLink pl={'md'} href="accounting/purchase" label={t('ManagePurchase')} component="button" onClick={(e)=>{navigate('inventory/sales')}}  />
+                                </List.Item>*/}
+                                            <List.Item
+                                                pl={"xs"}
+                                                icon={
+                                                    <ThemeIcon
+                                                        color="blue.6"
+                                                        size={20}
+                                                        radius="xl"
+                                                        variant="outline"
+                                                    >
+                                                        <IconCurrencyMonero/>
+                                                    </ThemeIcon>
+                                                }
+                                            >
+                                                <NavLink
+                                                    pl={"md"}
+                                                    href="/domain"
+                                                    label={t("ManageDomain")}
+                                                    component="button"
+                                                    onClick={(e) => {
+                                                        navigate("/domain");
+                                                    }}
+                                                    onAuxClick={(e) => {
+                                                        // Handle middle mouse button click for browsers that support it
+                                                        if (e.button === 1) {
+                                                            window.open("/domain", "_blank");
+                                                        }
+                                                    }}
+                                                />
+                                            </List.Item>
+                                        </List>
+                                    </Box>
+                                </Card>
+                            )
+                        }
                         {
                             configData?.domain?.modules?.includes("core") && (
                                 <Card shadow="md" radius="md" className={classes.card} padding="lg">
@@ -1121,69 +1299,6 @@ function MainDashboard(props) {
                                 </Card>
                             )
                         }
-
-                        {
-                            configData?.domain?.modules?.includes("domain") && (
-                                <Card shadow="md" radius="md" className={classes.card} padding="lg">
-                                    <Grid gutter={{base: 2}}>
-                                        <Grid.Col span={2}>
-                                            <IconMoneybag
-                                                style={{width: rem(42), height: rem(42)}}
-                                                stroke={2}
-                                                color={theme.colors.blue[6]}
-                                            />
-                                        </Grid.Col>
-                                        <Grid.Col span={10}>
-                                            <Text fz="md" fw={500} className={classes.cardTitle}>
-                                                {t("ManageDomain")}
-                                            </Text>
-                                        </Grid.Col>
-                                    </Grid>
-                                    <Box fz="sm" c="dimmed" mt="sm">
-                                        <List spacing="ms" size="sm" center>
-                                            {/*<List.Item pl={'xs'} icon={<ThemeIcon color="blue.6" size={20} radius="xl" variant="outline" ><IconBasket/></ThemeIcon>}>
-                                    <NavLink pl={'md'} href="accounting/sales" label={t('ManageSales')} component="button" onClick={(e)=>{navigate('inventory/sales')}}  />
-                                </List.Item>
-                                <List.Item pl={'xs'} icon={<ThemeIcon color="blue.6" size={20} radius="xl" variant="outline" ><IconShoppingBagSearch/></ThemeIcon>}>
-                                    <NavLink pl={'md'} href="accounting/sales-invoice" label={t('NewSales')} component="button" onClick={(e)=>{navigate('inventory/sales')}}  />
-                                </List.Item>
-                                <List.Item pl={'xs'} icon={<ThemeIcon color="blue.6" size={20} radius="xl" variant="outline" ><IconShoppingBagPlus/></ThemeIcon>}>
-                                    <NavLink pl={'md'} href="accounting/purchase" label={t('ManagePurchase')} component="button" onClick={(e)=>{navigate('inventory/sales')}}  />
-                                </List.Item>*/}
-                                            <List.Item
-                                                pl={"xs"}
-                                                icon={
-                                                    <ThemeIcon
-                                                        color="blue.6"
-                                                        size={20}
-                                                        radius="xl"
-                                                        variant="outline"
-                                                    >
-                                                        <IconCurrencyMonero/>
-                                                    </ThemeIcon>
-                                                }
-                                            >
-                                                <NavLink
-                                                    pl={"md"}
-                                                    href="/domain"
-                                                    label={t("ManageDomain")}
-                                                    component="button"
-                                                    onClick={(e) => {
-                                                        navigate("/domain");
-                                                    }}
-                                                    onAuxClick={(e) => {
-                                                        // Handle middle mouse button click for browsers that support it
-                                                        if (e.button === 1) {
-                                                            window.open("/domain", "_blank");
-                                                        }
-                                                    }}
-                                                />
-                                            </List.Item>
-                                        </List>
-                                    </Box>
-                                </Card>
-                            )
-                        }
                         {
                             configData?.domain?.modules?.includes("production") && (
                                 <Card shadow="md" radius="md" className={classes.card} padding="lg">
@@ -1319,124 +1434,6 @@ function MainDashboard(props) {
                                                 />
                                             </List.Item>
 
-                                        </List>
-                                    </Box>
-                                </Card>
-                            )
-                        }
-
-                        {
-                            configData?.domain?.modules?.includes("procurement") && (
-                                <Card shadow="md" radius="md" className={classes.card} padding="lg">
-                                    <Grid gutter={{base: 2}}>
-                                        <Grid.Col span={2}>
-                                            <IconShoppingCart
-                                                style={{width: rem(42), height: rem(42)}}
-                                                stroke={2}
-                                                color={theme.colors.blue[6]}
-                                            />
-                                        </Grid.Col>
-                                        <Grid.Col span={10}>
-                                            <Text fz="md" fw={500} className={classes.cardTitle}>
-                                                {t("Procurement")}
-                                            </Text>
-                                        </Grid.Col>
-                                    </Grid>
-                                    <Box fz="sm" c="dimmed" mt="sm">
-                                        <List spacing="ms" size="sm" center>
-                                            {
-                                                configData?.child_domain_exists &&
-                                                (
-                                                    <List.Item
-                                                        pl={"xs"}
-                                                        icon={
-                                                            <ThemeIcon
-                                                                color="blue.6"
-                                                                size={20}
-                                                                radius="xl"
-                                                                variant="outline"
-                                                            >
-                                                                <IconShoppingBag/>
-                                                            </ThemeIcon>
-                                                        }
-                                                    >
-                                                        <NavLink
-                                                            pl={"md"}
-                                                            href="/procurement/requisition-board"
-                                                            label={t("AllRequisition")}
-                                                            component="button"
-                                                            onClick={(e) => {
-                                                                navigate("/procurement/requisition-board");
-                                                            }}
-                                                            onAuxClick={(e) => {
-                                                                // Handle middle mouse button click for browsers that support it
-                                                                if (e.button === 1) {
-                                                                    window.open("/procurement/requisition-board", "_blank");
-                                                                }
-                                                            }}
-                                                        />
-                                                    </List.Item>
-                                                )
-                                            }
-
-                                            <List.Item
-                                                pl={"xs"}
-                                                icon={
-                                                    <ThemeIcon
-                                                        color="blue.6"
-                                                        size={20}
-                                                        radius="xl"
-                                                        variant="outline"
-                                                    >
-                                                        <IconShoppingBag/>
-                                                    </ThemeIcon>
-                                                }
-                                            >
-                                                <NavLink
-                                                    pl={"md"}
-                                                    href="/procurement/requisition"
-                                                    label={t("Requisition")}
-                                                    component="button"
-                                                    onClick={(e) => {
-                                                        navigate("/procurement/requisition");
-                                                    }}
-                                                    onAuxClick={(e) => {
-                                                        // Handle middle mouse button click for browsers that support it
-                                                        if (e.button === 1) {
-                                                            window.open("/procurement/requisition", "_blank");
-                                                        }
-                                                    }}
-                                                />
-                                            </List.Item>
-                                            <List.Item
-                                                pl={"xs"}
-                                                icon={
-                                                    <ThemeIcon
-                                                        color="blue.6"
-                                                        size={20}
-                                                        radius="xl"
-                                                        variant="outline"
-                                                    >
-                                                        <IconShoppingBagPlus/>
-                                                    </ThemeIcon>
-                                                }
-                                            >
-                                                <NavLink
-                                                    pl={"md"}
-                                                    href="/procurement/new-requisition"
-                                                    label={t("NewRequisition")}
-                                                    component="button"
-                                                    onClick={(e) => {
-                                                        navigate("/procurement/new-requisition");
-                                                    }}
-                                                    onAuxClick={(e) => {
-                                                        // Handle middle mouse button click for browsers that support it
-                                                        if (e.button === 1) {
-                                                            window.open("/procurement/new-requisition", "_blank");
-                                                        }
-                                                    }}
-                                                />
-                                            </List.Item>
                                         </List>
                                     </Box>
                                 </Card>

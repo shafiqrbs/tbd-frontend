@@ -10,6 +10,8 @@ import {
   ScrollArea,
   Text,
   Checkbox,
+  Table,
+  Center,
 } from "@mantine/core";
 import SelectForm from "../../../form-builders/SelectForm";
 import {
@@ -74,7 +76,21 @@ export default function BarcodePrintForm(props) {
   }, [searchValue]);
 
   const handlePrint = () => {
-    print ? setPrint(false) : setPrint(true);
+    console.log("Barcode Objects:", barcodeObjects);
+
+    setPrint(!print);
+
+    if (!print) {
+      const checkedBarcodes = barcodeObjects.filter((item) => item.is_checked);
+
+      if (checkedBarcodes.length > 0) {
+        localStorage.removeItem("barcode-objects");
+
+        setTimeout(() => {
+          setBarcodeObjects([]);
+        }, 1000);
+      }
+    }
   };
   const handlePreview = () => {
     preview ? setPreview(false) : setPreview(true);
@@ -129,7 +145,37 @@ export default function BarcodePrintForm(props) {
     ],
     []
   );
-  const [checked, setChecked] = useState(false);
+  const rows =
+    barcodeObjects &&
+    barcodeObjects.map((item, index) => (
+      <Table.Tr key={index}>
+        <Table.Td fz="xs">{index + 1}</Table.Td>
+        <Table.Td ta="left" fz="xs">
+          {item.product_id}
+        </Table.Td>
+        <Table.Td ta="center" fz="xs">
+          {item.quantity}
+        </Table.Td>
+        <Table.Td fz="xs">
+          <Center>
+            <Checkbox
+              color="red"
+              checked={item.is_checked || false}
+              onChange={() => {
+                // Create a new array with the updated item
+                const updatedObjects = barcodeObjects.map((obj, idx) => {
+                  if (idx === index) {
+                    return { ...obj, is_checked: !obj.is_checked };
+                  }
+                  return obj;
+                });
+                setBarcodeObjects(updatedObjects);
+              }}
+            />
+          </Center>
+        </Table.Td>
+      </Table.Tr>
+    ));
   return (
     <>
       <Grid columns={9} gutter={{ base: 8 }}>
@@ -190,17 +236,28 @@ export default function BarcodePrintForm(props) {
                         labels: { confirm: t("Submit"), cancel: t("Cancel") },
                         confirmProps: { color: "red" },
                         onCancel: () => console.log("Cancel"),
+                        // Fix the onConfirm function in the form submission:
                         onConfirm: () => {
                           const newBarcodeObject = {
                             ...values,
                             barcode_type_id: barcodeTypeId,
                             product_id: values.product_id,
                             quantity: values.quantity,
+                            is_checked: false,
                           };
-                          setBarcodeObjects((prevObjects) => [
-                            ...prevObjects,
+
+                          const updatedBarcodeObjects = [
+                            ...barcodeObjects,
                             newBarcodeObject,
-                          ]);
+                          ];
+
+                          localStorage.setItem(
+                            "barcode-objects",
+                            JSON.stringify(updatedBarcodeObjects)
+                          );
+
+                          setBarcodeObjects(updatedBarcodeObjects);
+
                           setBarcodeTypeId(null);
                           setSearchValue("");
                           form.reset();
@@ -287,52 +344,40 @@ export default function BarcodePrintForm(props) {
                   scrollbarSize={2}
                   scrollbars="y"
                   type="never"
+                  mr={-10}
+                  ml={-10}
                 >
-                  <Box>
+                  <Box
+                    pl={`xs`}
+                    pr={8}
+                    pt={"4"}
+                    pb={"4"}
+                    mb={"4"}
+                    className={"boxBackground"}
+                  >
                     <Title order={6} pt={"xs"} pb={"xs"}>
                       {t("BarcodePrintList")}
                     </Title>
-                    {barcodeObjects.length > 0 &&
-                      barcodeObjects.map((item, index) => (
-                        <Box
-                          key={index}
-                          className={"borderRadiusAll"}
-                          mb={4}
-                          p={8}
-                        >
-                          <Grid
-                            columns={24}
-                            gutter={{ base: 8 }}
-                            align="center"
-                            justify="center"
-                          >
-                            <Grid.Col span={6}>
-                              <Text fz={14} fw={600}>
-                                {index + 1}. {t("ProductName")}
-                              </Text>
-                            </Grid.Col>
-                            <Grid.Col span={6} align="center">
-                              <Text fz={14} fw={600}>
-                                {item.product_id}
-                              </Text>
-                            </Grid.Col>
-                            <Grid.Col span={5}>
-                              <Text fz={14} fw={600}>
-                                {t("Quantity")}
-                              </Text>
-                            </Grid.Col>
-                            <Grid.Col span={5} align="flex-start">
-                              <Text fz={14} fw={600}>
-                                {item.quantity}
-                              </Text>
-                            </Grid.Col>
-                            <Grid.Col span={2} align="center">
-                              <Checkbox color="red" onChange={setChecked} />
-                            </Grid.Col>
-                          </Grid>
-                        </Box>
-                      ))}
                   </Box>
+                  {barcodeObjects.length > 0 && (
+                    <Table>
+                      <Table.Thead>
+                        <Table.Tr>
+                          <Table.Th fz="xs">{t("S/N")}</Table.Th>
+                          <Table.Th fz="xs" ta="left">
+                            {t("ProductName")}
+                          </Table.Th>
+                          <Table.Th fz="xs" ta="center">
+                            {t("Quantity")}
+                          </Table.Th>
+                          <Table.Th fz="xs" ta="center">
+                            {t("Enable")}
+                          </Table.Th>
+                        </Table.Tr>
+                      </Table.Thead>
+                      <Table.Tbody>{rows}</Table.Tbody>
+                    </Table>
+                  )}
                 </ScrollArea>
               </Box>
               <Box

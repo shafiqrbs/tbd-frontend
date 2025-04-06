@@ -150,7 +150,8 @@ function KeywordSearch(props) {
                                 <IconSearch style={{ width: rem(18) }} stroke={1.5} />
                             </Tooltip>
                         </ActionIcon>
-                        <ActionIcon
+                        {props.module !== 'category' && props.module !== 'category-group' && props.module !== 'particular' &&(
+                            <ActionIcon
                             variant="default"
                             size="lg"
                             c={'gray.6'}
@@ -172,6 +173,7 @@ function KeywordSearch(props) {
                                 <IconFilter style={{ width: rem(18) }} stroke={1.0} />
                             </Tooltip>
                         </ActionIcon>
+                        )}
                         <ActionIcon variant="default" c={'gray.6'}
                             size="lg" aria-label="Settings">
                             <Tooltip
