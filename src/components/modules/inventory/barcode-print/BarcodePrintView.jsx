@@ -16,29 +16,36 @@ export default function BarcodePrintView(props) {
   const [fetching, setFetching] = useState(false);
   const [page, setPage] = useState(1);
   const perPage = 50;
+
+  // Filter only checked barcode objects
+  const checkedBarcodes = barcodeObjects.filter((item) => item.is_checked);
+  
+  // Generate all barcodes based on quantities
+  const barcodeArray = [];
+  
+  checkedBarcodes.forEach(item => {
+    const quantity = parseInt(item.quantity) || 1;
+    for (let i = 0; i < quantity; i++) {
+      barcodeArray.push({
+        ...item,
+        index: i + 1
+      });
+    }
+  });
+
   return (
     <>
-      <Box
-        pl={`xs`}
-        pr={8}
-        pt={"6"}
-        pb={"4"}
-        className={"boxBackground borderRadiusAll"}
-      >
-        <Title order={6} pt={6} pb={4}>
-          {t("Preview")}
-        </Title>
-      </Box>
       <Box mt={"4"} className={"borderRadiusAll"}>
         <ScrollArea
-          h={height}
+          h={height + 43}
           scrollbarSize={2}
           scrollbars="y"
           type="never"
           p={"xs"}
         >
           {preview &&
-            Array.from({ length: Math.ceil(barcodeObjects.length / 3) }).map(
+            barcodeArray.length > 0 &&
+            Array.from({ length: Math.ceil(barcodeArray.length / 3) }).map(
               (_, rowIndex) => (
                 <Grid
                   key={`row-${rowIndex}`}
@@ -47,17 +54,25 @@ export default function BarcodePrintView(props) {
                   align="center"
                   justify="flex-start"
                   mt={"sm"}
-                > 
-                  {barcodeObjects
+                >
+                  {barcodeArray
                     .slice(rowIndex * 3, rowIndex * 3 + 3)
                     .map((item, index) => (
                       <Grid.Col key={index} span={8} p={8} align="center">
-                        <BarcodeGenerator value={`${item.product_id} ${item.barcode_type_id}`} />
+                        <BarcodeGenerator
+                          value={`${item.product_id} ${item.barcode_type_id} `}
+                        />
                       </Grid.Col>
                     ))}
                 </Grid>
               )
             )}
+
+          {preview && checkedBarcodes.length === 0 && (
+            <Box p="md" ta="center">
+              <Title order={4}>{t("No barcodes selected for printing")}</Title>
+            </Box>
+          )}
         </ScrollArea>
       </Box>
     </>

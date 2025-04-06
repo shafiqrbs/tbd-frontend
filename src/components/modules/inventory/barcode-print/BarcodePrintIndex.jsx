@@ -5,7 +5,7 @@ import BarcodePrintForm from "./BarcodePrintForm";
 import BarcodePrintView from "./BarcodePrintView";
 import InventoryHeaderNavbar from "../../domain/configuraton/InventoryHeaderNavbar";
 import { Progress, Box, Grid } from "@mantine/core";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function BarcodePrintIndex() {
   const { t } = useTranslation();
@@ -13,6 +13,22 @@ export default function BarcodePrintIndex() {
   const { configData } = getConfigData();
   const [preview, setPreview] = useState(false);
   const [barcodeObjects, setBarcodeObjects] = useState([]);
+  useEffect(() => {
+    const storedBarcodes = localStorage.getItem("barcode-objects");
+    if (storedBarcodes) {
+      try {
+        const parsedBarcodes = JSON.parse(storedBarcodes);
+        if (Array.isArray(parsedBarcodes) && parsedBarcodes.length > 0) {
+          setBarcodeObjects(parsedBarcodes);
+        }
+      } catch (error) {
+        console.error(
+          "Error parsing barcode objects from localStorage:",
+          error
+        );
+      }
+    }
+  }, []);
   return (
     <>
       {progress !== 100 && (
