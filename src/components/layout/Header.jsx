@@ -50,7 +50,7 @@ import SpotLightSearchModal from "../modules/modals/SpotLightSearchModal.jsx";
 import { useDispatch } from "react-redux";
 import { setInventoryShowDataEmpty } from "../../store/inventory/crudSlice.js";
 import shortcutDropdownData from "../global-hook/shortcut-dropdown/shortcutDropdownData.js";
-import Sandra_Logo from "../../assets/images/sandra_logo.jpeg";
+import logo_default from "../../assets/images/logo_default.png";
 import ImageUploadDropzone from "../form-builders/ImageUploadDropzone";
 
 const languages = [
@@ -59,7 +59,7 @@ const languages = [
 ];
 
 export default function Header({ isOnline, configData }) {
-  console.log(configData);
+  // console.log(configData);
 
   const [opened, { open, close }] = useDisclosure(false);
   const { t, i18n } = useTranslation();
@@ -135,7 +135,7 @@ export default function Header({ isOnline, configData }) {
     ],
     []
   );
-
+  
   const shortcuts = (
     <Stack spacing="xs">
       {list
@@ -234,6 +234,18 @@ export default function Header({ isOnline, configData }) {
         ))}
     </Stack>
   );
+
+  useHotkeys(
+    [
+      [
+        "alt+l",
+        () => {
+          logout();
+        },
+      ],
+    ],
+    []
+  );
   return (
     <>
       <Modal.Root opened={opened} onClose={close} size="64%">
@@ -278,18 +290,27 @@ export default function Header({ isOnline, configData }) {
                     target="_blank"
                     underline="never"
                     onClick={() => {
-                      navigate("/");
+                      if (!configData?.path) {
+                          navigate(`/domain/config/${configData?.domain?.id}`);
+                        }
+                      else{
+                        navigate("/");
+                      }
                     }}
                     onAuxClick={(e) => {
-                      if (e.button === 1) {
-                        window.open("/", "_blank");
+                      if (!configData?.path) {
+                        window.open(`/domain/config/${configData?.domain?.id}`);
+                      }
+                      else{
+                        window.open("/");
                       }
                     }}
                   >
                     <Image
                       mah={40}
                       radius="md"
-                      src={import.meta.env.VITE_IMAGE_GATEWAY_URL + 'uploads/inventory/logo/' + configData.path}
+                      src={import.meta.env.VITE_IMAGE_GATEWAY_URL + '/uploads/inventory/logo/' + configData.path}
+                      fallbackSrc={logo_default}
                       pl={6}
                     ></Image>
                   </Anchor>
@@ -504,7 +525,7 @@ export default function Header({ isOnline, configData }) {
                 </ActionIcon>
               </Tooltip>
               <Tooltip
-                label={t("Logout")}
+                label={t("LogoutAltL")}
                 bg={`red.5`}
                 withArrow
                 position={"left"}
