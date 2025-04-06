@@ -880,5 +880,6 @@
   "VendorVoucher" : "Vendor Voucher",
   "ContraVoucher" : "Contra Voucher",
   "DebitNote" : "Debit Note",
-  "CreditNote" : "Credit Note"
+  "CreditNote" : "Credit Note",
+  "DropImagesHere" : "Drop Images Here"
 }

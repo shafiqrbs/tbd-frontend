@@ -652,5 +652,7 @@
   "ReceiveVoucherDate" : "রিসিভ ভাউচার ডেট",
   "VoucherRefNo" : "ভাউচার রেফারেন্স নম্বর",
   "AddVoucher" : "অ্যাড ভাউচার",
+  "IsSelected" : "নির্বাচিত",
+  "DropImagesHere" : "এখানে ইমেজ ড্রপ করুন",
   "" : ""
 }
