@@ -51,6 +51,7 @@ import { useDispatch } from "react-redux";
 import { setInventoryShowDataEmpty } from "../../store/inventory/crudSlice.js";
 import shortcutDropdownData from "../global-hook/shortcut-dropdown/shortcutDropdownData.js";
 import Sandra_Logo from "../../assets/images/sandra_logo.jpeg";
+import ImageUploadDropzone from "../form-builders/ImageUploadDropzone";
 
 const languages = [
   { label: "EN", value: "en", flag: flagGB },
@@ -58,6 +59,8 @@ const languages = [
 ];
 
 export default function Header({ isOnline, configData }) {
+  console.log(configData);
+
   const [opened, { open, close }] = useDisclosure(false);
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
@@ -82,7 +85,6 @@ export default function Header({ isOnline, configData }) {
         navigate("/login");
       }
     };
-
     const timeoutId = setTimeout(checkConfigData, 500);
 
     return () => clearTimeout(timeoutId);
@@ -254,7 +256,6 @@ export default function Header({ isOnline, configData }) {
         <Grid columns={24} gutter={{ base: 2 }} justify="space-between">
           <Grid.Col span={3}>
             {configData?.domain ? (
-              configData?.domain?.company_name === "Sandra" ? (
                 <div
                   style={{
                     display: "flex",
@@ -269,7 +270,8 @@ export default function Header({ isOnline, configData }) {
                             ? configData.domain.company_name
                             : ""
                       }
-                      bg={`red.5`}
+                      bg={`green`}
+                      position="right"
                       withArrow
                   >
                   <Anchor
@@ -287,13 +289,13 @@ export default function Header({ isOnline, configData }) {
                     <Image
                       mah={40}
                       radius="md"
-                      src={Sandra_Logo}
+                      src={import.meta.env.VITE_IMAGE_GATEWAY_URL + 'uploads/inventory/logo/' + configData.path}
                       pl={6}
                     ></Image>
                   </Anchor>
                   </Tooltip>
                 </div>
-              ) : (
+               /*(
                 <NavLink
                   href="/"
                   c={"red"}
@@ -308,7 +310,7 @@ export default function Header({ isOnline, configData }) {
                     navigate("/");
                   }}
                 />
-              )
+              )*/
             ) : (
               <></>
             )}
