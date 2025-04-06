@@ -873,5 +873,16 @@
   "Profit" : "Profit",
   "Less" : "Less",
   "More" : "More",
-  "Update" : "Update"
+  "Update" : "Update",
+  "ChoosePaymentMode" : "Choose Payment Mode",
+  "ChooseLedgerHead" : "Choose Ledger Head",
+  "CustomerVoucher" : "Customer Voucher",
+  "VendorVoucher" : "Vendor Voucher",
+  "ContraVoucher" : "Contra Voucher",
+  "DebitNote" : "Debit Note",
+  "CreditNote" : "Credit Note",
+  "DropImagesHere" : "Drop Images Here",
+  "ItemManagement" : "Item Management",
+  "Sales & Purchase" : "Sales & Purchase",
+  "POS" : "POS"
 }

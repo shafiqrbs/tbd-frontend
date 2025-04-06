@@ -317,7 +317,7 @@ function TransactionModeForm(props) {
                                                                         files && files.length > 0 && files[0].path ?
                                                                             files[0].path
                                                                             :
-                                                                            <span>Drop images here <span style={{ color: 'red' }}>*</span></span>
+                                                                            <span>{t("DropImagesHere")} <span style={{ color: 'red' }}>*</span></span>
                                                                     }
                                                                 </Text>
                                                             </Dropzone>

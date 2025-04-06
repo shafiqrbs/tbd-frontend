@@ -354,7 +354,7 @@ function InventoryConfigurationForm() {
 
 
                                             <Text fw={500} fz={"md"} mt={"lg"}>
-                                                {t("Item Management")}
+                                                {t("ItemManagement")}
                                             </Text>
                                             <Box mt={"xs"}>
                                                 <Grid gutter={{base: 1}}>
