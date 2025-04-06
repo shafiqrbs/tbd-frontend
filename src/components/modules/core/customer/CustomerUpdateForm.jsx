@@ -8,7 +8,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import {
     IconCheck,
-    IconDeviceFloppy, IconPlusMinus, IconUsersGroup,
+    IconDeviceFloppy, IconPlusMinus, IconUsersGroup,IconPercentage
 } from "@tabler/icons-react";
 import { useHotkeys } from "@mantine/hooks";
 import InputForm from "../../../form-builders/InputForm";
@@ -59,6 +59,7 @@ function CustomerUpdateForm(props) {
             location_id: entityEditData?.location_id || '',
             marketing_id: entityEditData?.marketing_id || '',
             address: entityEditData?.address || '',
+            discount_percent : entityEditData?.discount_percent || '',
         },
         validate: {
             name: hasLength({ min: 2, max: 50 }),
@@ -81,7 +82,15 @@ function CustomerUpdateForm(props) {
                 }
                 return null;
             },
-
+            discount_percent : (value) => {
+                if (value) {
+                    const validFormat = /^(?:[0-9]|[1-9][0-9])(\.\d{1,2})?$/.test(value);
+                    if (!validFormat) {
+                        return true;
+                    }
+                }
+                return null;
+            }
         }
     });
     useEffect(() => {
@@ -101,6 +110,7 @@ function CustomerUpdateForm(props) {
                 email: entityEditData?.email || '',
                 location_id: entityEditData?.location_id || '',
                 marketing_id: entityEditData?.marketing_id || '',
+                discount_percent: entityEditData?.discount_percent || '',
                 address: entityEditData?.address || '',
             })
         }
@@ -136,6 +146,7 @@ function CustomerUpdateForm(props) {
                 email: entityEditData?.email || '',
                 location_id: entityEditData?.location_id || '',
                 marketing_id: entityEditData?.marketing_id || '',
+                discount_percent: entityEditData?.discount_percent || '',
                 address: entityEditData?.address || '',
             };
             form.setValues(originalValues);
@@ -305,11 +316,28 @@ function CustomerUpdateForm(props) {
                                                     label={t('Email')}
                                                     placeholder={t('Email')}
                                                     required={false}
-                                                    nextField={'credit_limit'}
+                                                    nextField={'discount_percent'}
                                                     name={'email'}
                                                     form={form}
                                                     mt={8}
                                                     id={'email'}
+                                                />
+                                            </Box>
+                                            <Box mt={'xs'}>
+                                                <InputForm
+                                                    type={'number'}
+                                                    leftSection={(
+                                                        <IconPercentage size={16} opacity={0.5} />
+                                                    )}
+                                                    tooltip={t('DiscountPercentValidateMessage')}
+                                                    label={t('DiscountPercent')}
+                                                    placeholder={t('DiscountPercent')}
+                                                    required={false}
+                                                    nextField={'credit_limit'}
+                                                    name={'discount_percent'}
+                                                    form={form}
+                                                    mt={8}
+                                                    id={'discount_percent'}
                                                 />
                                             </Box>
                                             <Box mt={'xs'}>

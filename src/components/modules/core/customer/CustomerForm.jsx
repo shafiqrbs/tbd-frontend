@@ -8,7 +8,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import {
     IconCheck,
-    IconDeviceFloppy, IconPlusMinus, IconUsersGroup
+    IconDeviceFloppy, IconPercentage, IconPlusMinus, IconUsersGroup
 } from "@tabler/icons-react";
 import { useHotkeys } from "@mantine/hooks";
 import { useDispatch, useSelector } from "react-redux";
@@ -51,6 +51,7 @@ function CustomerForm(props) {
             location_id: '',
             marketing_id: '',
             address: '',
+            discount_percent : ''
         },
         validate: {
             name: hasLength({ min: 2, max: 20 }),
@@ -75,6 +76,15 @@ function CustomerForm(props) {
                 }
                 return null;
             },
+            discount_percent : (value) => {
+                if (value) {
+                    const validFormat = /^(?:[0-9]|[1-9][0-9])(\.\d{1,2})?$/.test(value);
+                    if (!validFormat) {
+                        return true;
+                    }
+                }
+                return null;
+            }
         }
     });
 
@@ -106,6 +116,7 @@ function CustomerForm(props) {
                     labels: { confirm: t('Submit'), cancel: t('Cancel') }, confirmProps: { color: 'red' },
                     onCancel: () => console.log('Cancel'),
                     onConfirm: () => {
+                        // console.log(values)
                         const value = {
                             url: 'core/customer',
                             data: values
@@ -128,7 +139,6 @@ function CustomerForm(props) {
                             dispatch(setEntityNewData([]))
                             dispatch(setFetching(true))
                         }, 700)
-
                     },
                 });
             })}>
@@ -262,11 +272,28 @@ function CustomerForm(props) {
                                                     label={t('Email')}
                                                     placeholder={t('Email')}
                                                     required={false}
-                                                    nextField={'credit_limit'}
+                                                    nextField={'discount_percent'}
                                                     name={'email'}
                                                     form={form}
                                                     mt={8}
                                                     id={'email'}
+                                                />
+                                            </Box>
+                                            <Box mt={'xs'}>
+                                                <InputForm
+                                                    type={'number'}
+                                                    leftSection={(
+                                                        <IconPercentage size={16} opacity={0.5} />
+                                                    )}
+                                                    tooltip={t('DiscountPercentValidateMessage')}
+                                                    label={t('DiscountPercent')}
+                                                    placeholder={t('DiscountPercent')}
+                                                    required={false}
+                                                    nextField={'credit_limit'}
+                                                    name={'discount_percent'}
+                                                    form={form}
+                                                    mt={8}
+                                                    id={'discount_percent'}
                                                 />
                                             </Box>
                                             <Box mt={'xs'}>
