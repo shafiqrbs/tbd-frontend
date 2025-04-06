@@ -46,7 +46,7 @@ function __ShortcutPos(props) {
               transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
             >
               <Button
-                bg={"red.6"}
+                bg={"#4CAF50"}
                 size="md"
                 pl={"12"}
                 pr={"12"}
@@ -55,8 +55,8 @@ function __ShortcutPos(props) {
                 radius="xl"
                 onClick={(e) => {}}
               >
-                <Flex direction={`column`} align={"center"}>
-                  <IconDashboard size={16} />
+                <Flex direction={`column`}  align={"center"}>
+                  <IconDashboard size={16} color={'white'} />
                 </Flex>
               </Button>
             </Tooltip>
@@ -76,7 +76,7 @@ function __ShortcutPos(props) {
               transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
             >
               <Button
-                bg={"red.6"}
+                bg={"#E53935"}
                 size="md"
                 pl={"12"}
                 pr={"12"}
@@ -86,7 +86,7 @@ function __ShortcutPos(props) {
                 onClick={(e) => {}}
               >
                 <Flex direction={`column`} align={"center"}>
-                  <IconReportMoney size={16} />
+                  <IconReportMoney size={16} color={'white'} />
                 </Flex>
               </Button>
             </Tooltip>
@@ -106,7 +106,7 @@ function __ShortcutPos(props) {
               transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
             >
               <Button
-                bg={"red.6"}
+                bg={"#3F51B5"}
                 size="md"
                 pl={"12"}
                 pr={"12"}
@@ -116,7 +116,7 @@ function __ShortcutPos(props) {
                 onClick={(e) => {}}
               >
                 <Flex direction={`column`} align={"center"}>
-                  <IconReportAnalytics size={16} />
+                  <IconReportAnalytics size={16} color={'white'} />
                 </Flex>
               </Button>
             </Tooltip>
@@ -136,7 +136,7 @@ function __ShortcutPos(props) {
               transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
             >
               <Button
-                bg={"red.6"}
+                bg={"#FFC107"}
                 size="md"
                 pl={"12"}
                 pr={"12"}
@@ -146,7 +146,7 @@ function __ShortcutPos(props) {
                 onClick={(e) => {}}
               >
                 <Flex direction={`column`} align={"center"}>
-                  <IconBuildingCottage size={16} />
+                  <IconBuildingCottage size={16} color={'white'} />
                 </Flex>
               </Button>
             </Tooltip>
@@ -166,7 +166,7 @@ function __ShortcutPos(props) {
               transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
             >
               <Button
-                bg={"red.6"}
+                bg={"#673AB7"}
                 size="md"
                 pl={"12"}
                 pr={"12"}
@@ -178,7 +178,7 @@ function __ShortcutPos(props) {
                 }}
               >
                 <Flex direction={`column`} align={"center"}>
-                  <IconArmchair2 size={16} />
+                  <IconArmchair2 size={16} color={'white'} />
                 </Flex>
               </Button>
             </Tooltip>
@@ -215,7 +215,7 @@ function __ShortcutPos(props) {
               transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
             >
               <Button
-                bg={"red.6"}
+                bg={"#009688"}
                 size="md"
                 pl={"12"}
                 pr={"12"}
@@ -225,7 +225,7 @@ function __ShortcutPos(props) {
                 onClick={(e) => {}}
               >
                 <Flex direction={`column`} align={"center"}>
-                  <IconCellSignal4 size={16} />
+                  <IconCellSignal4 size={16} color={'white'} />
                 </Flex>
               </Button>
             </Tooltip>

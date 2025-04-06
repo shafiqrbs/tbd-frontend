@@ -33,7 +33,7 @@ import {
     IconScissors,
     IconCurrency,
     IconPlusMinus,
-    IconTicket,
+    IconTicket, IconCurrencyTaka, IconPercentage,
 } from "@tabler/icons-react";
 import {DataTable} from "mantine-datatable";
 import {useDispatch} from "react-redux";
@@ -55,6 +55,7 @@ import _CommonDrawer from "./drawer/_CommonDrawer.jsx";
 import {useScroll} from "./utils/ScrollOperations";
 import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
 import {getIndexEntityData} from "../../../../store/core/crudSlice.js";
+import {useToggle} from "@mantine/hooks";
 
 export default function Invoice(props) {
     const {
@@ -1138,7 +1139,7 @@ export default function Invoice(props) {
                                             disabled={!tableId}
                                             fullWidth
                                             size="sm"
-                                            color="red"
+                                            color="#0077b6"
                                             leftSection={
                                                 customerObject && customerObject.name ? (
                                                     <></>
@@ -1161,7 +1162,50 @@ export default function Invoice(props) {
                                         </Button>
                                     </Tooltip>
                                 </Grid.Col>
+                                <Grid.Col span={6} bg={"yellow"}>
+                                    <TextInput
+                                        type="text"
+                                        placeholder={t("CouponCode")}
+                                        value={form.values.coupon_code}
+                                        error={form.errors.coupon_code}
+                                        size={"sm"}
+                                        classNames={{input: classes.input}}
+                                        onChange={(event) => {
+                                            form.setFieldValue("coupon_code", event.target.value);
+                                        }}
+                                        rightSection={
+                                            <>
+                                                <Tooltip
+                                                    label={t("CouponCode")}
+                                                    px={16}
+                                                    py={2}
+                                                    withArrow
+                                                    position={"left"}
+                                                    c={"black"}
+                                                    bg={`gray.1`}
+                                                    transitionProps={{
+                                                        transition: "pop-bottom-left",
+                                                        duration: 500,
+                                                    }}
+                                                >
+                                                    <IconTicket size={16} opacity={0.5}/>
+                                                </Tooltip>
+                                            </>
+                                        }
+                                    />
+                                </Grid.Col>
                                 <Grid.Col span={3}>
+                                    <Button
+                                        fullWidth={true}
+                                        onClick={() => discountType === "Flat" ? setDiscountType("Percent") : setDiscountType("Flat")}
+                                        variant="filled"
+                                        fz={'xs'}
+                                        leftSection={
+                                            discountType === 'Flat' ? <IconCurrencyTaka size={14} /> :
+                                                <IconPercentage size={14} />
+                                        } color="red.4">
+                                        {discountType === 'Flat' ? t('Flat') : t('Percent')}
+                                    </Button>
                                     <Switch
                                         size="lg"
                                         w={"100%"}
@@ -1274,38 +1318,6 @@ export default function Invoice(props) {
                                         }}
                                     />
                                 </Grid.Col>
-                                <Grid.Col span={6} bg={"yellow"}>
-                                    <TextInput
-                                        type="text"
-                                        placeholder={t("CouponCode")}
-                                        value={form.values.coupon_code}
-                                        error={form.errors.coupon_code}
-                                        size={"sm"}
-                                        classNames={{input: classes.input}}
-                                        onChange={(event) => {
-                                            form.setFieldValue("coupon_code", event.target.value);
-                                        }}
-                                        rightSection={
-                                            <>
-                                                <Tooltip
-                                                    label={t("CouponCode")}
-                                                    px={16}
-                                                    py={2}
-                                                    withArrow
-                                                    position={"left"}
-                                                    c={"black"}
-                                                    bg={`gray.1`}
-                                                    transitionProps={{
-                                                        transition: "pop-bottom-left",
-                                                        duration: 500,
-                                                    }}
-                                                >
-                                                    <IconTicket size={16} opacity={0.5}/>
-                                                </Tooltip>
-                                            </>
-                                        }
-                                    />
-                                </Grid.Col>
                                 <Grid.Col span={6} bg={"green"}>
                                     <Tooltip
                                         label={t("ReceiveAmountValidateMessage")}
@@ -1313,7 +1325,7 @@ export default function Invoice(props) {
                                         px={16}
                                         py={2}
                                         position="top-end"
-                                        bg={`red.4`}
+                                        bg={'#90e0ef'}
                                         c={"white"}
                                         withArrow
                                         offset={2}
@@ -1461,7 +1473,7 @@ export default function Invoice(props) {
                                     }}
                                 >
                                     <Button
-                                        bg={"red.5"}
+                                        bg={"#f4a261"}
                                         c={"white"}
                                         size={"sm"}
                                         fullWidth={true}
@@ -1488,7 +1500,7 @@ export default function Invoice(props) {
                                     >
                                         <Button
                                             disabled={isDisabled}
-                                            bg={"green.5"}
+                                            bg={"#2a9d8f"}
                                             size={"sm"}
                                             c={"white"}
                                             fullWidth={true}
@@ -1503,7 +1515,7 @@ export default function Invoice(props) {
                             <Grid.Col span={enableTable ? 3 : 4}>
                                 <Button
                                     disabled={isDisabled}
-                                    bg={"gray.8"}
+                                    bg={"#264653"}
                                     c={"white"}
                                     size={"sm"}
                                     fullWidth={true}
@@ -1518,7 +1530,7 @@ export default function Invoice(props) {
                                     // disabled={isDisabled}
                                     size={"sm"}
                                     c={"white"}
-                                    bg={"green.8"}
+                                    bg={"#38b000"}
                                     fullWidth={true}
                                     leftSection={<IconDeviceFloppy/>}
                                     onClick={handleSave}
