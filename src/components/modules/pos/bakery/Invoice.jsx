@@ -118,6 +118,8 @@ export default function Invoice(props) {
     const [discountType, setDiscountType] = useState("Percent");
     const [defaultCustomerId, setDefaultCustomerId] = useState(null);
 
+    const [disabledDiscountButton, setDisabledDiscountButton] = useState(false);
+
     const [tableReceiveAmounts, setTableReceiveAmounts] = useState({});
     useEffect(() => {
         if (
@@ -1196,17 +1198,73 @@ export default function Invoice(props) {
                                 </Grid.Col>
                                 <Grid.Col span={3}>
                                     <Button
+                                        p={0}
+                                        disabled={disabledDiscountButton}
                                         fullWidth={true}
-                                        onClick={() => discountType === "Flat" ? setDiscountType("Percent") : setDiscountType("Flat")}
+                                        onClick={async () => {
+                                            setDisabledDiscountButton(true)
+                                            const newDiscountType = discountType === "Percent" ? "Flat" : "Percent";
+                                            setDiscountType(newDiscountType);
+
+                                            const currentDiscountValue = salesDiscountAmount;
+
+                                            const data = {
+                                                url: "inventory/pos/inline-update",
+                                                data: {
+                                                    invoice_id: tableId,
+                                                    field_name: "discount_type",
+                                                    value: newDiscountType,
+                                                    discount_amount: currentDiscountValue
+                                                },
+                                            };
+
+                                            setSalesDiscountAmount(currentDiscountValue);
+
+                                            try {
+                                                const resultAction = await dispatch(
+                                                    storeEntityData(data)
+                                                );
+
+                                                if (resultAction.payload?.status !== 200) {
+                                                    showNotificationComponent(
+                                                        resultAction.payload?.message ||
+                                                        "Error updating invoice",
+                                                        "red",
+                                                        "",
+                                                        "",
+                                                        true
+                                                    );
+                                                }
+                                            } catch (error) {
+                                                showNotificationComponent(
+                                                    "Request failed. Please try again.",
+                                                    "red",
+                                                    "",
+                                                    "",
+                                                    true
+                                                );
+                                                console.error("Error updating invoice:", error);
+                                            } finally {
+                                                setReloadInvoiceData(true)
+                                                setTimeout(() => {
+                                                    setDisabledDiscountButton(false);
+                                                }, 500);
+                                            }
+                                        }}
                                         variant="filled"
                                         fz={'xs'}
-                                        leftSection={
-                                            discountType === 'Flat' ? <IconCurrencyTaka size={14} /> :
-                                                <IconPercentage size={14} />
-                                        } color="red.4">
-                                        {discountType === 'Flat' ? t('Flat') : t('Percent')}
+                                        color="red.4"
+                                        >
+                                        <Group m={0} p={0} gap={0} align="center">
+                                            {discountType === 'Flat' ? <IconCurrencyTaka size={16} /> :
+                                                <IconPercentage  size={14} />}
+                                                <Text pt={discountType === 'Flat' ? 4 : 1} ta={"center"} fz={'xs'} fw={"bold"} c={"white"} pl={4} pr={4}>
+                                                    {discountType === 'Flat' ? configData?.currency?.symbol : t('Per')}
+                                                </Text>
+                                        </Group>
+                                        
                                     </Button>
-                                    <Switch
+                                    {/* <Switch
                                         size="lg"
                                         w={"100%"}
                                         color={"red.3"}
@@ -1261,7 +1319,7 @@ export default function Invoice(props) {
                                                 setReloadInvoiceData(true)
                                             }
                                         }}
-                                    />
+                                    /> */}
                                 </Grid.Col>
                                 <Grid.Col span={3} bg={"red"}>
                                     <TextInput
