@@ -881,5 +881,8 @@
   "ContraVoucher" : "Contra Voucher",
   "DebitNote" : "Debit Note",
   "CreditNote" : "Credit Note",
-  "DropImagesHere" : "Drop Images Here"
+  "DropImagesHere" : "Drop Images Here",
+  "ItemManagement" : "Item Management",
+  "Sales & Purchase" : "Sales & Purchase",
+  "POS" : "POS"
 }

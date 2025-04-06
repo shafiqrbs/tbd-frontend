@@ -289,7 +289,7 @@ function DomainForm(props) {
                                                                             <Tooltip key={index} mt={'8'} label={module.name}>
                                                                                 <Checkbox
                                                                                     value={module.slug}
-                                                                                    label={module.name}
+                                                                                    label={t(module.name)}
                                                                                 />
                                                                             </Tooltip>
                                                                         ))
