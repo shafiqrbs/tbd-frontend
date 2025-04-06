@@ -194,13 +194,12 @@ function ProductTable(props) {
                             render: (item) => {
                                 const [opened, setOpened] = useState(false);
                                 const autoplay = useRef(Autoplay({delay: 2000}));
-
                                 const images = [
-                                    item?.images?.feature_image ? import.meta.env.VITE_IMAGE_GATEWAY_URL + item.images.feature_image : null,
-                                    item?.images?.path_one ? import.meta.env.VITE_IMAGE_GATEWAY_URL + item.images.path_one : null,
-                                    item?.images?.path_two ? import.meta.env.VITE_IMAGE_GATEWAY_URL + item.images.path_two : null,
-                                    item?.images?.path_three ? import.meta.env.VITE_IMAGE_GATEWAY_URL + item.images.path_three : null,
-                                    item?.images?.path_four ? import.meta.env.VITE_IMAGE_GATEWAY_URL + item.images.path_four : null,
+                                    item?.images?.feature_image ? `${import.meta.env.VITE_IMAGE_GATEWAY_URL}/${item?.images?.feature_image}` : null,
+                                    item?.images?.path_one ? `${import.meta.env.VITE_IMAGE_GATEWAY_URL}/${item?.images?.path_one}` : null,
+                                    item?.images?.path_two ? `${import.meta.env.VITE_IMAGE_GATEWAY_URL}/${item?.images?.path_two}` : null,
+                                    item?.images?.path_three ? `${import.meta.env.VITE_IMAGE_GATEWAY_URL}/${item?.images?.path_three}` : null,
+                                    item?.images?.path_four ? `${import.meta.env.VITE_IMAGE_GATEWAY_URL}/${item?.images?.path_four}` : null,
                                 ].filter(Boolean);
 
                                 return (
