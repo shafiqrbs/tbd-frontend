@@ -156,7 +156,7 @@ function SettingsForm(props) {
                                                     <SelectForm
                                                         tooltip={t('SettingType')}
                                                         label={t('SettingType')}
-                                                        placeholder={t('SettingType')}
+                                                        placeholder={t('ChooseSettingType')}
                                                         required={true}
                                                         nextField={'setting_name'}
                                                         name={'setting_type_id'}

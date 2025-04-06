@@ -8,7 +8,8 @@ import {
 import { useTranslation } from 'react-i18next';
 import {
     IconDeviceFloppy, IconSum, IconX, IconBarcode,
-    IconPlus, IconSortAscendingNumbers
+    IconPlus, IconSortAscendingNumbers,
+    IconPlusMinus
 } from "@tabler/icons-react";
 import { getHotkeyHandler, useHotkeys } from "@mantine/hooks";
 import { isNotEmpty, useForm } from "@mantine/form";
@@ -393,6 +394,7 @@ function _GenericInvoiceForm(props) {
                                             </Grid.Col>
                                             <Grid.Col span={3}>
                                                 <InputButtonForm
+                                                type="number"
                                                     tooltip={t('QuantityValidateMessage')}
                                                     label=''
                                                     placeholder={t('Quantity')}
@@ -401,8 +403,13 @@ function _GenericInvoiceForm(props) {
                                                     form={form}
                                                     name={'quantity'}
                                                     id={'quantity'}
-                                                    type={'number'}
                                                     rightSection={inputGroupText}
+                                                    leftSection={
+                                                        <IconSortAscendingNumbers
+                                                        size={16}
+                                                        opacity={0.5}
+                                                    />
+                                                    }
                                                     rightSectionWidth={50}
                                                 />
                                             </Grid.Col>
@@ -420,6 +427,9 @@ function _GenericInvoiceForm(props) {
                                                     rightSection={inputGroupCurrency}
                                                     closeIcon={true}
                                                     disabled={!isPurchaseByPurchasePrice}
+                                                    leftSection={
+                                                        <IconPlusMinus size={16} opacity={0.5} />
+                                                    }
                                                 />
                                             </Grid.Col>
                                             <Grid.Col span={3}>
@@ -436,6 +446,7 @@ function _GenericInvoiceForm(props) {
                                                     rightSection={inputGroupCurrency}
                                                     closeIcon={false}
                                                     disabled={isPurchaseByPurchasePrice ? true : false}
+                                                    leftSection={<IconSum size={16} opacity={0.5} />}
                                                 />
                                             </Grid.Col>
                                             <Grid.Col span={2}>
@@ -523,7 +534,7 @@ function _GenericInvoiceForm(props) {
                                     },
                                     {
                                         accessor: 'bonus_quantity',
-                                        title: t("BonusQty"),
+                                        title: t("BonusQuantityTable"),
                                     },
                                     {
                                         accessor: 'quantity',

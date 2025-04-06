@@ -9,6 +9,7 @@ import {
   Flex,
   ScrollArea,
   Text,
+  Checkbox,
 } from "@mantine/core";
 import SelectForm from "../../../form-builders/SelectForm";
 import {
@@ -29,7 +30,7 @@ import InputForm from "../../../form-builders/InputForm";
 import SelectServerSideForm from "../../../form-builders/SelectServerSideForm";
 
 export default function BarcodePrintForm(props) {
-  const { preview, setPreview } = props;
+  const { preview, setPreview, barcodeObjects, setBarcodeObjects } = props;
   const { t, i18n } = useTranslation();
   const dispatch = useDispatch();
   const { isOnline, mainAreaHeight } = useOutletContext();
@@ -128,65 +129,85 @@ export default function BarcodePrintForm(props) {
     ],
     []
   );
+  const [checked, setChecked] = useState(false);
   return (
     <>
-      <form
-        onSubmit={form.onSubmit((values) => {
-          modals.openConfirmModal({
-            title: <Text size="md"> {t("FormConfirmationTitle")}</Text>,
-            children: <Text size="sm"> {t("FormConfirmationMessage")}</Text>,
-            labels: { confirm: t("Submit"), cancel: t("Cancel") },
-            confirmProps: { color: "red" },
-            onCancel: () => console.log("Cancel"),
-            onConfirm: () => {
-              console.log(values);
-            },
-          });
-        })}
-      >
-        <Grid columns={9} gutter={{ base: 8 }}>
-          <Grid.Col span={8}>
-            <Box bg={"white"} p={"xs"} className={"borderRadiusAll"}>
-              <Box bg={"white"}>
-                <Box
-                  pl={`xs`}
-                  pr={8}
-                  pt={"6"}
-                  pb={"6"}
-                  mb={"4"}
-                  className={"boxBackground borderRadiusAll"}
-                >
-                  <Grid>
-                    <Grid.Col span={6}>
-                      <Title order={6} pt={"6"}>
-                        {t("CreateBarcodePrint")}
-                      </Title>
-                    </Grid.Col>
-                    <Grid.Col span={6}>
-                      <Stack right align="flex-end">
-                        <>
-                          {!saveCreateLoading && isOnline && (
-                            <Button
-                              size="xs"
-                              color={`red.6`}
-                              type="submit"
-                              id="EntityFormSubmit"
-                              leftSection={<IconDeviceFloppy size={16} />}
-                            >
-                              <Flex direction={`column`} gap={0}>
-                                <Text fz={14} fw={400}>
-                                  {t("Add")}
-                                </Text>
-                              </Flex>
-                            </Button>
-                          )}
-                        </>
-                      </Stack>
-                    </Grid.Col>
-                  </Grid>
-                </Box>
-                <Box pl={`xs`} pr={"xs"} className={"borderRadiusAll"}>
-                  <Box>
+      <Grid columns={9} gutter={{ base: 8 }}>
+        <Grid.Col span={8}>
+          <Box bg={"white"} p={"xs"} className={"borderRadiusAll"}>
+            <Box bg={"white"}>
+              {/* title box */}
+              <Box
+                pl={`xs`}
+                pr={8}
+                pt={"6"}
+                pb={"6"}
+                mb={"4"}
+                className={"boxBackground borderRadiusAll"}
+              >
+                <Grid>
+                  <Grid.Col span={6}>
+                    <Title order={6} pt={"6"}>
+                      {t("CreateBarcodePrint")}
+                    </Title>
+                  </Grid.Col>
+                  <Grid.Col span={6}>
+                    <Stack right align="flex-end">
+                      <>
+                        {!saveCreateLoading && isOnline && (
+                          <Button
+                            id="barcodePrintFormSubmit"
+                            size="xs"
+                            form="barcodePrintForm"
+                            color={`red.6`}
+                            type="submit"
+                            leftSection={<IconDeviceFloppy size={16} />}
+                          >
+                            <Flex direction={`column`} gap={0}>
+                              <Text fz={14} fw={400}>
+                                {t("Add")}
+                              </Text>
+                            </Flex>
+                          </Button>
+                        )}
+                      </>
+                    </Stack>
+                  </Grid.Col>
+                </Grid>
+              </Box>
+              <Box pl={`xs`} pr={"xs"} className={"borderRadiusAll"}>
+                <Box>
+                  <form
+                    id="barcodePrintForm"
+                    onSubmit={form.onSubmit((values) => {
+                      modals.openConfirmModal({
+                        title: (
+                          <Text size="md"> {t("FormConfirmationTitle")}</Text>
+                        ),
+                        children: (
+                          <Text size="sm"> {t("FormConfirmationMessage")}</Text>
+                        ),
+                        labels: { confirm: t("Submit"), cancel: t("Cancel") },
+                        confirmProps: { color: "red" },
+                        onCancel: () => console.log("Cancel"),
+                        onConfirm: () => {
+                          const newBarcodeObject = {
+                            ...values,
+                            barcode_type_id: barcodeTypeId,
+                            product_id: values.product_id,
+                            quantity: values.quantity,
+                          };
+                          setBarcodeObjects((prevObjects) => [
+                            ...prevObjects,
+                            newBarcodeObject,
+                          ]);
+                          setBarcodeTypeId(null);
+                          setSearchValue("");
+                          form.reset();
+                        },
+                      });
+                    })}
+                  >
                     <Box mt={"8"}>
                       <SelectServerSideForm
                         tooltip={t("ChooseStockProduct")}
@@ -244,6 +265,7 @@ export default function BarcodePrintForm(props) {
                             label={t("")}
                             placeholder={t("PrintQuantity")}
                             required={false}
+                            nextField={"barcodePrintFormSubmit"}
                             name={"quantity"}
                             leftSection={
                               <IconSortAscendingNumbers
@@ -257,76 +279,119 @@ export default function BarcodePrintForm(props) {
                         </Grid.Col>
                       </Grid>
                     </Box>
-                  </Box>
-                  <ScrollArea
-                    m={"xs"}
-                    h={height - 258}
-                    scrollbarSize={2}
-                    scrollbars="y"
-                    type="never"
-                    // bg={"yellow"}
-                  >
-                    <Box></Box>
-                  </ScrollArea>
+                  </form>
                 </Box>
-                <Box
-                  pl={`xs`}
-                  pr={8}
-                  pt={"6"}
-                  pb={"6"}
-                  mb={"4"}
-                  className={"boxBackground borderRadiusAll"}
-                  mt={4}
+                <ScrollArea
+                  mt={"lg"}
+                  h={height - 258}
+                  scrollbarSize={2}
+                  scrollbars="y"
+                  type="never"
                 >
-                  <Grid>
-                    <Grid.Col span={6}></Grid.Col>
-                    <Grid.Col span={6}>
-                      <Group justify="flex-end">
-                        <>
-                          <Button
-                            size="xs"
-                            color={`green.8`}
-                            onClick={handlePreview}
-                            leftSection={<IconBarcode size={16} />}
+                  <Box>
+                    <Title order={6} pt={"xs"} pb={"xs"}>
+                      {t("BarcodePrintList")}
+                    </Title>
+                    {barcodeObjects.length > 0 &&
+                      barcodeObjects.map((item, index) => (
+                        <Box
+                          key={index}
+                          className={"borderRadiusAll"}
+                          mb={4}
+                          p={8}
+                        >
+                          <Grid
+                            columns={24}
+                            gutter={{ base: 8 }}
+                            align="center"
+                            justify="center"
                           >
-                            <Flex direction={`column`} gap={0}>
-                              <Text fz={14} fw={400}>
-                                {t("Preview")}
+                            <Grid.Col span={6}>
+                              <Text fz={14} fw={600}>
+                                {index + 1}. {t("ProductName")}
                               </Text>
-                            </Flex>
-                          </Button>
-                          <Button
-                            size="xs"
-                            color={`red.6`}
-                            onClick={handlePrint}
-                            leftSection={<IconBarcode size={16} />}
-                          >
-                            <Flex direction={`column`} gap={0}>
-                              <Text fz={14} fw={400}>
-                                {t("Print")}
+                            </Grid.Col>
+                            <Grid.Col span={6} align="center">
+                              <Text fz={14} fw={600}>
+                                {item.product_id}
                               </Text>
-                            </Flex>
-                          </Button>
-                        </>
-                      </Group>
-                    </Grid.Col>
-                  </Grid>
-                </Box>
+                            </Grid.Col>
+                            <Grid.Col span={5}>
+                              <Text fz={14} fw={600}>
+                                {t("Quantity")}
+                              </Text>
+                            </Grid.Col>
+                            <Grid.Col span={5} align="flex-start">
+                              <Text fz={14} fw={600}>
+                                {item.quantity}
+                              </Text>
+                            </Grid.Col>
+                            <Grid.Col span={2} align="center">
+                              <Checkbox color="red" onChange={setChecked} />
+                            </Grid.Col>
+                          </Grid>
+                        </Box>
+                      ))}
+                  </Box>
+                </ScrollArea>
+              </Box>
+              <Box
+                pl={`xs`}
+                pr={8}
+                pt={"6"}
+                pb={"6"}
+                mb={"4"}
+                className={"boxBackground borderRadiusAll"}
+                mt={4}
+              >
+                <Grid>
+                  <Grid.Col span={6}></Grid.Col>
+                  <Grid.Col span={6}>
+                    <Group justify="flex-end">
+                      <>
+                        <Button
+                          size="xs"
+                          color={`green.8`}
+                          onClick={handlePreview}
+                          leftSection={<IconBarcode size={16} />}
+                        >
+                          <Flex direction={`column`} gap={0}>
+                            <Text fz={14} fw={400}>
+                              {t("Preview")}
+                            </Text>
+                          </Flex>
+                        </Button>
+                        <Button
+                          size="xs"
+                          color={`red.6`}
+                          onClick={handlePrint}
+                          leftSection={<IconBarcode size={16} />}
+                        >
+                          <Flex direction={`column`} gap={0}>
+                            <Text fz={14} fw={400}>
+                              {t("Print")}
+                            </Text>
+                          </Flex>
+                        </Button>
+                      </>
+                    </Group>
+                  </Grid.Col>
+                </Grid>
               </Box>
             </Box>
-          </Grid.Col>
-          <Grid.Col span={1}>
-            <Box bg={"white"} className={"borderRadiusAll"} pt={"16"}>
-              <Shortcut
-                form={form}
-                FormSubmit={"EntityFormSubmit"}
-                Name={"barcode_type_id"}
-                inputType="select"
-              />
-            </Box>
-          </Grid.Col>
-        </Grid>
-      </form>
+          </Box>
+        </Grid.Col>
+        <Grid.Col span={1}>
+          <Box bg={"white"} className={"borderRadiusAll"} pt={"16"}>
+            <Shortcut
+              form={form}
+              FormSubmit={"EntityFormSubmit"}
+              Name={"barcode_type_id"}
+              inputType="select"
+            />
+          </Box>
+        </Grid.Col>
+      </Grid>
     </>
   );
 }

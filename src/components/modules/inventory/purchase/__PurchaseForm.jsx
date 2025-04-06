@@ -510,7 +510,7 @@ function __PurchaseForm(props) {
                                         </Grid.Col>
                                         <Grid.Col span={6}>
                                             <Box ta="right" fz={'md'} mt={'4'} c={'red'}
-                                            fw={'800'}>{returnOrDueText} {currencySymbol} {purchaseDueAmount.toFixed(2)}</Box>
+                                            fw={'800'}>{returnOrDueText === 'Due' ? t('Due') : t('Return')} {currencySymbol} {purchaseDueAmount.toFixed(2)}</Box>
                                         </Grid.Col>
                                     </Grid>
                                     <Box mt={'xs'} h={1} bg={`red.3`}></Box>
@@ -525,7 +525,7 @@ function __PurchaseForm(props) {
                                                     discountType === 'Flat' ? <IconCurrencyTaka size={14} /> :
                                                         <IconPercentage size={14} />
                                                 } color="red.4">
-                                                {discountType}
+                                                 {discountType === 'Flat' ? t('Flat') : t('Percent')}
                                             </Button>
                                         </Grid.Col>
                                         <Grid.Col span={4} bg={'orange.8'}>

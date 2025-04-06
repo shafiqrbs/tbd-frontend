@@ -600,7 +600,7 @@ function _UpdateInvoice(props) {
                                     },
                                     {
                                         accessor: 'bonus_quantity',
-                                        title: t("BonusQty"),
+                                        title: t("BonusQuantityTable"),
                                         textAlign: "center",
                                     },
                                     {

@@ -5,15 +5,19 @@ import tableCss from "../../../../assets/css/Table.module.css";
 import { useState } from "react";
 import { DataTable } from "mantine-datatable";
 import KeywordSearch from "../../filter/KeywordSearch";
+import _ReconciliationViewDrawer from "./_ReconciliationViewDrawer";
 
 export default function ReconciliationTable() {
   const { t } = useTranslation();
   const { isOnline, mainAreaHeight } = useOutletContext();
   const height = mainAreaHeight - 98;
+
   const [indexData, setIndexData] = useState([]);
   const [fetching, setFetching] = useState(false);
   const [page, setPage] = useState(1);
   const perPage = 50;
+  const [viewDrawer, setViewDrawer] = useState(false);
+
   return (
     <>
       <Box
@@ -42,10 +46,12 @@ export default function ReconciliationTable() {
               textAlignment: "right",
               render: (item) => indexData.data.indexOf(item) + 1,
             },
-            { accessor: "product_name", title: t("Name"), width: 100 },
-            { accessor: "warehouse", title: t("Warehouse"), width: 200 },
-            { accessor: "mode_quantity", title: t("ModeQuantity"), width: 200 },
-            { accessor: "mode_bonus", title: t("ModeBonus") },
+            { accessor: "product_name", title: t("Name") },
+            { accessor: "warehouse", title: t("Warehouse") },
+            { accessor: "quantity_id", title: t("QuantityMode") },
+            { accessor: "quantity", title: t("Quantity") },
+            { accessor: "bonus_id", title: t("BonusMode") },
+            { accessor: "bonus_quantity", title: t("BonusQuantity") },
             {
               accessor: "action",
               title: t("Action"),
@@ -77,19 +83,7 @@ export default function ReconciliationTable() {
                     </Menu.Target>
                     <Menu.Dropdown>
                       <Menu.Item
-                        onClick={() => {
-                          setProvisionDrawer(true);
-                        }}
-                        target="_blank"
-                        component="a"
-                        w={"200"}
-                      >
-                        {t("AddProvision")}
-                      </Menu.Item>
-                      <Menu.Item
-                        onClick={() => {
-
-                        }}
+                        onClick={() => {}}
                         target="_blank"
                         component="a"
                         w={"200"}
@@ -98,7 +92,7 @@ export default function ReconciliationTable() {
                       </Menu.Item>
                       <Menu.Item
                         onClick={() => {
-                          
+                          setViewDrawer(true);
                         }}
                         target="_blank"
                         component="a"
@@ -132,7 +126,9 @@ export default function ReconciliationTable() {
                             onCancel: () => console.log("Cancel"),
                             onConfirm: () => {
                               dispatch(
-                                deleteEntityData("core/customer/" + data.id)
+                                deleteEntityData(
+                                  "inventory/stock-reconciliation/" + data.id
+                                )
                               );
                             },
                           });
@@ -165,6 +161,12 @@ export default function ReconciliationTable() {
           scrollAreaProps={{ type: "never" }}
         />
       </Box>
+      {viewDrawer && (
+        <_ReconciliationViewDrawer
+          viewDrawer={viewDrawer}
+          setViewDrawer={setViewDrawer}
+        />
+      )}
     </>
   );
 }

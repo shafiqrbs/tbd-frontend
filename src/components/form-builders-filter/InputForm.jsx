@@ -9,6 +9,7 @@ import { getHotkeyHandler } from "@mantine/hooks";
 import {
     setCategoryGroupFilterData,
     setCustomerFilterData,
+    setFileUploadFilterData,
     setUserFilterData,
     setVendorFilterData, setWarehouseFilterData
 } from "../../store/core/crudSlice.js";
@@ -37,6 +38,7 @@ function InputForm(props) {
     const productionSettingFilterData = useSelector((state) => state.productionCrudSlice.productionSettingFilterData)
     const productionBatchFilterData = useSelector((state) => state.productionCrudSlice.productionBatchFilterData);
     const recipeItemFilterData = useSelector((state) => state.productionCrudSlice.recipeItemFilterData)
+    const fileUploadFilterData = useSelector((state) => state.productionCrudSlice.recipeItemFilterData)
 
     return (
         <>
@@ -70,6 +72,7 @@ function InputForm(props) {
                 dispatch(setProductionBatchFilterData({ ...productionBatchFilterData, [name]: e.currentTarget.value })) }
             if (module === 'recipe-item') { dispatch(setRecipeItemFilterData({ ...recipeItemFilterData, [name]: e.currentTarget.value })) }
             if (module === 'warehouse') { dispatch(setWarehouseFilterData({ ...warehouseFilterData, [name]: e.currentTarget.value })) }
+            if (module === 'file-upload') { dispatch(setFileUploadFilterData({ ...fileUploadFilterData, [name]: e.currentTarget.value })) }
         }}
                     value={
                         module === 'category-group' ? categoryGroupFilterData[name] :
@@ -82,6 +85,7 @@ function InputForm(props) {
                                             module === 'production-batch' ? productionBatchFilterData[name] :
                                             module === 'recipe-item' ? recipeItemFilterData[name] :
                                             module === 'warehouse' ? warehouseFilterData[name] :
+                                            module === 'file-upload' ? fileUploadFilterData[name] :
                                                 ''
                     }
                     id={id}
@@ -94,7 +98,7 @@ function InputForm(props) {
                             (module === 'production-batch' && productionBatchFilterData[name]) ||
                             (module === 'recipe-item' && recipeItemFilterData[name]) ||
                             (module === 'warehouse' && warehouseFilterData[name]) ||
-                            (module === 'vendor' && vendorFilterData[name]) ? (
+                            (module === 'vendor' && vendorFilterData[name]) || (module === 'file-upload' && fileUploadFilterData[name]) ? (
                             <Tooltip label={t("Close")} withArrow bg={`red.5`}>
                                 <IconX color={`red`} size={16} opacity={0.5} onClick={() => {
                                     if (module === 'customer') {
@@ -142,11 +146,16 @@ function InputForm(props) {
                                             ...warehouseFilterData,
                                             [name]: ''
                                         }));
+                                    } else if (module === 'file-upload') {
+                                        dispatch(setFileUploadFilterData({
+                                            ...fileUploadFilterData,
+                                            [name]: ''
+                                        }));
                                     }
                                 }} />
                             </Tooltip>
                         ) : (
-                            <Tooltip label={placeholder} withArrow position={"bottom"} c={'indigo'} bg={`indigo.1`}>
+                            <Tooltip label={placeholder} withArrow position={"bottom"} bg={`red.4`}>
                                 <IconInfoCircle size={16} opacity={0.5} />
                             </Tooltip>
                         )

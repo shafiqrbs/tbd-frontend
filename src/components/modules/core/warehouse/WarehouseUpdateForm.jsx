@@ -167,7 +167,7 @@ function WarehouseUpdateForm() {
                                         <LoadingOverlay visible={formLoad} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />
                                         <Box mt={'xs'}>
                                             <InputForm
-                                                tooltip={labels.name}
+                                                tooltip={t('EnterName')}
                                                 label={labels.name}
                                                 placeholder={labels.name}
                                                 required={true}
@@ -179,7 +179,7 @@ function WarehouseUpdateForm() {
                                         </Box>
                                         <Box mt={'xs'}>
                                             <InputForm
-                                                tooltip={labels.location}
+                                                tooltip={t('EnterLocation')}
                                                 label={labels.location}
                                                 placeholder={labels.location}
                                                 required={true}
@@ -191,7 +191,7 @@ function WarehouseUpdateForm() {
                                         </Box>
                                         <Box mt={'xs'}>
                                             <InputForm
-                                                tooltip={labels.contract_person}
+                                                tooltip={t('EnterName')}
                                                 label={labels.contract_person}
                                                 placeholder={labels.contract_person}
                                                 required={true}
@@ -203,7 +203,7 @@ function WarehouseUpdateForm() {
                                         </Box>
                                         <Box mt={'xs'}>
                                             <PhoneNumber
-                                                tooltip={form.errors.mobile ? form.errors.mobile : labels.mobile}
+                                                tooltip={t('EnterMobile')}
                                                 label={labels.mobile}
                                                 placeholder={labels.mobile}
                                                 required={true}
@@ -215,7 +215,7 @@ function WarehouseUpdateForm() {
                                         </Box>
                                         <Box mt={'xs'}>
                                             <InputForm
-                                                tooltip={labels.email}
+                                                tooltip={t('EnterEmail')}
                                                 label={labels.email}
                                                 placeholder={labels.email}
                                                 required={false}
@@ -227,7 +227,7 @@ function WarehouseUpdateForm() {
                                         </Box>
                                         <Box mt={'xs'}>
                                             <InputForm
-                                                tooltip={labels.address}
+                                                tooltip={t('EnterAddress')}
                                                 label={labels.address}
                                                 placeholder={labels.address}
                                                 required={false}

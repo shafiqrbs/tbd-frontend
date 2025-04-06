@@ -11,6 +11,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import {
   setInsertType,
   editEntityData,
+  setFormLoading
 } from "../../../../store/inventory/crudSlice";
 import TransferUpdateForm from "./TransferUpdateForm";
 
@@ -19,9 +20,10 @@ export default function TransferIndex() {
   const progress = getLoadingProgress();
   const { configData } = getConfigData();
   const { id } = useParams();
-  const insertType = useSelector((state) => state.crudSlice.insertType);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const insertType = useSelector((state) => state.crudSlice.insertType);
 
   useEffect(() => {
     if (id) {

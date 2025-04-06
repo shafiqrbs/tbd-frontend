@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, {  useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import {
     Group,
@@ -6,19 +6,9 @@ import {
     ActionIcon, Text, Menu, rem, Anchor
 } from "@mantine/core";
 import { useTranslation } from "react-i18next";
-import { IconEye, IconEdit, IconTrash, IconInfoCircle, IconSettings, IconEyeEdit, IconTrashX, IconPencil, IconDotsVertical } from "@tabler/icons-react";
+import {  IconTrashX,  IconDotsVertical } from "@tabler/icons-react";
 import { DataTable } from 'mantine-datatable';
 import { useDispatch, useSelector } from "react-redux";
-import {
-    editEntityData,
-    getIndexEntityData,
-    setFetching, setFormLoading,
-    setInsertType,
-    showEntityData
-} from "../../../../store/core/crudSlice.js";
-import KeywordSearch from "../../filter/KeywordSearch.jsx";
-import { modals } from "@mantine/modals";
-import { deleteEntityData } from "../../../../store/core/crudSlice.js";
 import CustomerViewModel from "../../core/customer/CustomerViewModel.jsx";
 import tableCss from "../../../../assets/css/Table.module.css";
 import VoucherSearch from "./VoucherSearch.jsx";
@@ -38,24 +28,9 @@ function VoucherTableArchive() {
     const [page, setPage] = useState(1);
     const [customerViewModel, setCustomerViewModel] = useState(false)
 
-    const fetching = useSelector((state) => state.crudSlice.fetching)
-    const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword)
-    const indexData = useSelector((state) => state.crudSlice.indexEntityData)
+    const [fetching, setFetching] = useState(false)
     const customerFilterData = useSelector((state) => state.crudSlice.customerFilterData)
-
-    useEffect(() => {
-        const value = {
-            url: 'core/customer',
-            param: {
-                term: searchKeyword,
-                name: customerFilterData.name,
-                mobile: customerFilterData.mobile,
-                page: page,
-                offset: perPage
-            }
-        }
-        dispatch(getIndexEntityData(value))
-    }, [fetching]);
+    const [indexData, setIndexData] = useState(null)
 
     return (
         <>
@@ -131,7 +106,7 @@ function VoucherTableArchive() {
                             ]
                             }
                             fetching={fetching}
-                            totalRecords={indexData.total}
+                            totalRecords={indexData ? indexData.total : 0}
                             recordsPerPage={perPage}
                             page={page}
                             onPageChange={(p) => {

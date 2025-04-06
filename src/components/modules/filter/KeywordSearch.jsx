@@ -19,7 +19,7 @@ import {
     setCustomerFilterData,
     setFetching,
     setSearchKeyword, setUserFilterData,
-    setVendorFilterData, setWarehouseFilterData
+    setVendorFilterData, setWarehouseFilterData,setFileUploadFilterData
 } from "../../../store/core/crudSlice.js";
 import FilterModel from "./FilterModel.jsx";
 import { setProductFilterData, setCategoryFilterData } from "../../../store/inventory/crudSlice.js";
@@ -42,6 +42,7 @@ function KeywordSearch(props) {
     const categoryGroupFilterData = useSelector((state) => state.crudSlice.categoryGroupFilterData)
     const productFilterData = useSelector((state) => state.inventoryCrudSlice.productFilterData)
     const productionSettingFilterData = useSelector((state) => state.productionCrudSlice.productionSettingFilterData)
+    const fileUploadFilterData = useSelector((state) => state.crudSlice.fileUploadFilterData)
 
     useHotkeys(
         [['alt+F', () => {
@@ -223,7 +224,8 @@ function KeywordSearch(props) {
                                     } else if (props.module === 'production-setting') {
                                         dispatch(setProductionSettingFilterData({
                                             ...productionSettingFilterData,
-                                            name: ''
+                                            name: '',
+                                            setting_type_id: ''
                                         }));
                                     }else if (props.module === 'category') {
                                         dispatch(setCategoryFilterData({
@@ -238,6 +240,13 @@ function KeywordSearch(props) {
                                             email : '',
                                             location : '',
                                             mobile : '',
+                                        }));
+                                    }else if (props.module === 'file-upload') {
+                                        dispatch(setFileUploadFilterData({
+                                            ...fileUploadFilterData,
+                                            file_type: '',
+                                            original_name : '',
+                                            created: '',
                                         }));
                                     }
                                 }} />

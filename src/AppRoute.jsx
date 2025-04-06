@@ -121,8 +121,11 @@ function AppRoute() {
           <Route path="config" element={<InventoryConfigurationIndex />} />
           <Route path="stock" element={<StockIndex />} />
           <Route path="stock-reconciliation" element={<ReconciliationIndex />} />
+          <Route path="stock-reconciliation/:id" element={<ReconciliationIndex />} />
           <Route path="stock-transfer" element={<TransferIndex />} />
+          <Route path="stock-transfer/:id" element={<TransferIndex />} />
           <Route path="coupon-code" element={<CouponIndex />} />
+          <Route path="coupon-code/:id" element={<CouponIndex />} />
           <Route path="barcode-print" element={<BarcodePrintIndex />} />
         </Route>
 

@@ -4,9 +4,9 @@ import {
     Grid, Progress,
 } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
-import {setSearchKeyword} from "../../../../store/core/crudSlice.js";
+import {setFileUploadFilterData, setSearchKeyword} from "../../../../store/core/crudSlice.js";
 import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress.js";
 import CoreHeaderNavbar from "../CoreHeaderNavbar";
 import { useNavigate, useParams } from "react-router-dom";
@@ -20,8 +20,16 @@ function FileUploadIndex() {
     const navigate = useNavigate();
     const progress = getLoadingProgress()
 
+    const fileUploadFilterData = useSelector((state) => state.crudSlice.fileUploadFilterData)
+
     useEffect(() => {
         dispatch(setSearchKeyword(''))
+        dispatch(setFileUploadFilterData({
+            ...fileUploadFilterData,
+            ['file_type']: '',
+            ['original_name']: '',
+            ['created']: ''
+        }))
         navigate('/core/file-upload', { replace: true })
     }, [id, dispatch, navigate])
 

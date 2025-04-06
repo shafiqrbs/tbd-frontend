@@ -73,8 +73,10 @@ export default function Invoice(props) {
         tableSplitPaymentMap,
         invoiceMode,
         invoiceData,
-        reloadInvoiceData,
-        setReloadInvoiceData
+        setTables,
+        setReloadInvoiceData,
+        setTableId,
+        setInvoiceData
     } = props;
 
     const dispatch = useDispatch();
@@ -86,9 +88,8 @@ export default function Invoice(props) {
     const {configData} = getConfigData();
     const enableTable = !!(configData?.is_pos && invoiceMode === 'table');
     const [printPos, setPrintPos] = useState(false);
-    const [tempCartProducts, setTempCartProducts] = useState([]);
     // Sales by user state management
-    const [salesByUser, setSalesByUser] = useState(String(invoiceData?.sales_by_id));
+    const [salesByUser, setSalesByUser] = useState(String(invoiceData?.sales_by_id || ""));
     const [salesByUserName, setSalesByUserName] = useState(null);
     const [salesByDropdownData, setSalesByDropdownData] = useState([]);
     const [isDisabled, setIsDisabled] = useState(false);
@@ -105,8 +106,7 @@ export default function Invoice(props) {
     );
     const [checked, setChecked] = useState(false);
 
-    const [transactionModeId, setTransactionModeId] = useState(invoiceData?.transaction_mode_id);
-
+    const [transactionModeId, setTransactionModeId] = useState(invoiceData?.transaction_mode_id || "");
     const currentTableKey = tableId || "general";
     const currentTableSplitPayments = tableSplitPaymentMap[currentTableKey] || [];
     const isSplitPaymentActive = currentTableSplitPayments.length > 0;
@@ -118,18 +118,6 @@ export default function Invoice(props) {
     const [defaultCustomerId, setDefaultCustomerId] = useState(null);
 
     const [tableReceiveAmounts, setTableReceiveAmounts] = useState({});
-
-    useEffect(() => {
-        if (enableTable && tableId) {
-            const tableCartKey = `table-${tableId}-pos-products`;
-            const tempProducts = localStorage.getItem(tableCartKey);
-            setTempCartProducts(tempProducts ? JSON.parse(tempProducts) : []);
-        } else {
-            const tempProducts = localStorage.getItem("temp-pos-products");
-            setTempCartProducts(tempProducts ? JSON.parse(tempProducts) : []);
-        }
-        setLoadCartProducts(false);
-    }, [loadCartProducts, tableId, enableTable]);
     useEffect(() => {
         if (
             enableTable &&
@@ -257,10 +245,6 @@ export default function Invoice(props) {
         setReloadInvoiceData
     });
 
-    const subtotal = tempCartProducts.reduce(
-        (acc, item) => acc + item.sub_total,
-        0
-    );
 
     useEffect(() => {
         if (tableId && !additionalTableSelections[tableId]) {
@@ -315,7 +299,7 @@ export default function Invoice(props) {
     const getAdditionalItem = (value) => {
         setIndexData(value);
     };
-    const [customerId, setCustomerId] = useState(invoiceData?.customer_id);
+    const [customerId, setCustomerId] = useState(invoiceData?.customer_id || "");
     const [customerDrawer, setCustomerDrawer] = useState(false);
     const [customersDropdownData, setCustomersDropdownData] = useState([]);
     const [refreshCustomerDropdown, setRefreshCustomerDropdown] = useState(false);
@@ -427,17 +411,6 @@ export default function Invoice(props) {
                 setCustomerId(null);
                 setCustomerObject({});
             }
-
-            const tableCartKey = `table-${tableId}-pos-products`;
-            const tempProducts = localStorage.getItem(tableCartKey);
-            setTempCartProducts(tempProducts ? JSON.parse(tempProducts) : []);
-
-            if (!tempProducts || JSON.parse(tempProducts).length === 0) {
-                setSalesDiscountAmount(0);
-                setSalesTotalAmount(0);
-                setSalesDueAmount(0);
-                setReturnOrDueText("Due");
-            }
         }
     }, [tableId]);
 
@@ -452,6 +425,7 @@ export default function Invoice(props) {
             setSalesDueAmount((invoiceData.sub_total || 0) - ((invoiceData.payment || 0) + (invoiceData.discount || 0)));
             setReturnOrDueText((invoiceData.sub_total || 0) > (invoiceData.payment || 0) ? "Due" : "Return");
             setCurrentPaymentInput(invoiceData?.payment || "");
+            setTransactionModeId(invoiceData?.transaction_mode_id || "");
             if (invoiceData.discount_type === "Flat") {
                 setSalesDiscountAmount(invoiceData?.discount || 0);
             } else if (invoiceData.discount_type === "Percent") {
@@ -459,7 +433,22 @@ export default function Invoice(props) {
             }
         }
     }, [invoiceData, discountType]);
+    const updateTableStatus = async (newStatus) => {
+        if (!tableId) return;
+        
+        setTables(prevTables => 
+            prevTables.map(table => 
+                table.id === tableId 
+                    ? {...table, status: newStatus} 
+                    : table
+            )
+        );
+    };
     const handleSave = () => {
+        if(!invoiceData.invoice_items || invoiceData.invoice_items.length === 0) {
+            showNotificationComponent(t('NoProductAdded'), 'red', '', '', true, 1000, true)
+            return
+        }
         if (!salesByUser || salesByUser == 'undefined') {
             showNotificationComponent(t('ChooseUser'), 'red', '', '', true, 1000, true)
             return
@@ -481,6 +470,7 @@ export default function Invoice(props) {
         }
 
         const fetchData = async () => {
+            setIsDisabled(true);
             try {
                 const resultAction = await dispatch(getIndexEntityData({
                     url: "inventory/pos/sales-complete/" + invoiceData.id,
@@ -488,10 +478,24 @@ export default function Invoice(props) {
                 }));
                 if (getIndexEntityData.fulfilled.match(resultAction)) {
                     showNotificationComponent(t('SalesComplete'), 'blue', '', '', true, 1000, true)
-                    // Delay the page reload slightly to allow UI notification to be seen
-                    setTimeout(() => {
-                        window.location.reload();
-                    }, 500);  // Reload after 1 second
+                    clearTableCustomer(tableId);
+                    setSalesByUser(null);
+                    setCustomerId(null);
+                    setTransactionModeId(null);
+                    setCurrentPaymentInput("");
+                    setSalesDiscountAmount(0);
+                    setSalesTotalAmount(0);
+                    setSalesTotalWithoutDiscountAmount(0);
+                    setSalesDueAmount(0);
+                    setReturnOrDueText("Due");
+                    setDiscountType("Percent");
+                    setCustomerObject({});
+                    updateTableStatus('Free');
+                    setReloadInvoiceData(true);
+                    setTableId(null);
+                    setIndexData(null);
+                    setInvoiceData(null);
+                    form.reset()
                 } else {
                     console.error("Error fetching data:", resultAction);
                 }
@@ -501,8 +505,9 @@ export default function Invoice(props) {
                 setSalesByUser(null)
                 setCustomerId(null)
                 setCustomerObject(null)
-                // setTableId(null)
                 setReloadInvoiceData(true)
+
+                setIsDisabled(false);
             }
         };
         fetchData();
@@ -525,9 +530,8 @@ export default function Invoice(props) {
                     align="flex-start"
                     wrap="nowrap"
                 >
-                    <Box pt={8}>
                         <SelectForm
-                            pt={"xs"}
+                            pt={"8"}
                             label=""
                             tooltip={"SalesBy"}
                             placeholder={enableTable ? t("OrderTakenBy") : t("SalesBy")}
@@ -550,8 +554,6 @@ export default function Invoice(props) {
                                 },
                             }}
                         />
-                    </Box>
-
                     {enableTable && (
                         <Tooltip
                             disabled={!(invoiceData?.invoice_items?.length === 0 || !salesByUser)}
@@ -670,7 +672,7 @@ export default function Invoice(props) {
                             footer: tableCss.footer,
                             pagination: tableCss.pagination,
                         }}
-                        records={invoiceData.invoice_items}
+                        records={invoiceData ? invoiceData.invoice_items : []}
                         columns={[
                             {
                                 accessor: "id",
@@ -864,7 +866,7 @@ export default function Invoice(props) {
                                                     {t("Type")}
                                                 </Text>
                                                 <Text fz={"sm"} fw={800} c={"black"}>
-                                                    {discountType}
+                                                    {discountType === 'Flat' ? t('Flat') : t('Percent')}
                                                 </Text>
                                             </Group>
                                         </Stack>
@@ -891,7 +893,6 @@ export default function Invoice(props) {
                             </Grid.Col>
                             <Grid.Col span={3}>
                                 <Stack
-                                    grow
                                     gap={0}
                                     className={classes["box-border"]}
                                     align="center"
@@ -910,7 +911,6 @@ export default function Invoice(props) {
                             </Grid.Col>
                             <Grid.Col span={3}>
                                 <Stack
-                                    grow
                                     gap={0}
                                     className={classes["box-border"]}
                                     align="center"
@@ -924,7 +924,7 @@ export default function Invoice(props) {
                                         {configData?.currency?.symbol} {salesDueAmount.toFixed(2)}
                                     </Text>
                                     <Text fw={500} c={"white"} size={"md"}>
-                                        {returnOrDueText}
+                                    {returnOrDueText === 'Due' ? t('Due') : t('Return')}
                                     </Text>
                                 </Stack>
                             </Grid.Col>

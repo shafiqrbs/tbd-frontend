@@ -268,13 +268,15 @@ function _VatManagement(props) {
                                         {
                                             accessor: "field_label",
                                             title: t("Name"),
-                                            width: 100,
+                                            render: (item) => {
+                                                // console.log(item.field_label)
+                                                return t(item.field_label, item.field_label);
+                                            }
                                         },
                                         {
                                             accessor: "value",
-                                            title: t("Percent(%)"),
+                                            title: t("Percent") + " (%)",
                                             textAlign: "center",
-                                            width: 100,
                                             render: (item) => {
                                                 const fieldName = item.field_name; // Dynamic field name
                                                 const value = fieldName in editedValues ? editedValues[fieldName] : item.value; // Use local state if edited, otherwise fallback to item.value
@@ -300,8 +302,7 @@ function _VatManagement(props) {
                                         },
                                         {
                                             accessor: "nbr_vat",
-                                            title: "Nbr Vat (%)",
-                                            width: 50
+                                            title: t("NbrVat") + " (%)",
                                         },
                                     ]}
                                     loaderSize="xs"

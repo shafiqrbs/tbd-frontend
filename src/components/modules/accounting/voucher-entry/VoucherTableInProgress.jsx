@@ -1,24 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, {  useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import {
     Group,
     Box,
-    ActionIcon, Text, Menu, rem, Anchor
+    ActionIcon,  Menu, rem, 
 } from "@mantine/core";
 import { useTranslation } from "react-i18next";
-import { IconEye, IconEdit, IconTrash, IconInfoCircle, IconSettings, IconEyeEdit, IconTrashX, IconPencil, IconDotsVertical, IconProgress } from "@tabler/icons-react";
+import { IconTrashX, IconDotsVertical, IconProgress } from "@tabler/icons-react";
 import { DataTable } from 'mantine-datatable';
 import { useDispatch, useSelector } from "react-redux";
-import {
-    editEntityData,
-    getIndexEntityData,
-    setFetching, setFormLoading,
-    setInsertType,
-    showEntityData
-} from "../../../../store/core/crudSlice.js";
-import KeywordSearch from "../../filter/KeywordSearch.jsx";
-import { modals } from "@mantine/modals";
-import { deleteEntityData } from "../../../../store/core/crudSlice.js";
 import CustomerViewModel from "../../core/customer/CustomerViewModel.jsx";
 import tableCss from "../../../../assets/css/Table.module.css";
 import VoucherSearch from "./VoucherSearch.jsx";
@@ -32,30 +22,14 @@ function VoucherTableInProgress() {
 
     const perPage = 50;
     const [page, setPage] = useState(1);
+    const [fetching, setFetching] = useState(false)
     const [customerViewModel, setCustomerViewModel] = useState(false)
 
-    const fetching = useSelector((state) => state.crudSlice.fetching)
-    const searchKeyword = useSelector((state) => state.crudSlice.searchKeyword)
-    const indexData = useSelector((state) => state.crudSlice.indexEntityData)
-    const customerFilterData = useSelector((state) => state.crudSlice.customerFilterData)
+    const [indexData, setIndexData] = useState(null)
 
     const data = [
         { issue_date: '12/06/24', ref_voucher: 'rfiusdhf985644', voucher_type: 'voucher', amount: 50000, status: 'new', approved_by: 'foysal' }
     ]
-
-    useEffect(() => {
-        const value = {
-            url: 'core/customer',
-            param: {
-                term: searchKeyword,
-                name: customerFilterData.name,
-                mobile: customerFilterData.mobile,
-                page: page,
-                offset: perPage
-            }
-        }
-        dispatch(getIndexEntityData(value))
-    }, [fetching]);
 
     return (
         <>
@@ -143,7 +117,7 @@ function VoucherTableInProgress() {
                             ]
                             }
                             fetching={fetching}
-                            totalRecords={indexData.total}
+                            totalRecords={indexData ? indexData?.total : 0}
                             recordsPerPage={perPage}
                             page={page}
                             onPageChange={(p) => {

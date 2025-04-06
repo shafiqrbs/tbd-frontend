@@ -277,7 +277,7 @@ function _PurchaseTable() {
                                             textAlignment: "right",
                                             render: (item) => indexData.data.indexOf(item) + 1,
                                         },
-                                        {accessor: "created", title: "Created"},
+                                        {accessor: "created", title: t("Created")},
                                         {
                                             accessor: "invoice",
                                             title: t("Invoice"),
@@ -299,10 +299,10 @@ function _PurchaseTable() {
                                                 </Text>
                                             ),
                                         },
-                                        {accessor: "customerName", title: "Vendor"},
-                                        {accessor: "sub_total", title: "SubTotal"},
-                                        {accessor: "discount", title: "Dis."},
-                                        {accessor: "total", title: "Total"},
+                                        {accessor: "customerName", title: t("Vendor")},
+                                        {accessor: "sub_total", title: t("SubTotal")},
+                                        {accessor: "discount", title: t("Discount")},
+                                        {accessor: "total", title: t("Total")},
                                         {
                                             accessor: "action",
                                             title: "Action",
@@ -500,7 +500,7 @@ function _PurchaseTable() {
                                             <Grid columns={15} gutter={{base: 4}}>
                                                 <Grid.Col span={6}>
                                                     <Text fz="sm" lh="xs">
-                                                        Vendor
+                                                        {t("Vendor")}
                                                     </Text>
                                                 </Grid.Col>
                                                 <Grid.Col span={9}>
@@ -514,7 +514,7 @@ function _PurchaseTable() {
                                             <Grid columns={15} gutter={{base: 4}}>
                                                 <Grid.Col span={6}>
                                                     <Text fz="sm" lh="xs">
-                                                        Mobile
+                                                        {t("Mobile")}
                                                     </Text>
                                                 </Grid.Col>
                                                 <Grid.Col span={9}>
@@ -528,7 +528,7 @@ function _PurchaseTable() {
                                             <Grid columns={15} gutter={{base: 4}}>
                                                 <Grid.Col span={6}>
                                                     <Text fz="sm" lh="xs">
-                                                        Address
+                                                        {t("Address")}
                                                     </Text>
                                                 </Grid.Col>
                                                 <Grid.Col span={9}>
@@ -542,7 +542,7 @@ function _PurchaseTable() {
                                             <Grid columns={15} gutter={{base: 4}}>
                                                 <Grid.Col span={6}>
                                                     <Text fz="sm" lh="xs">
-                                                        Balance
+                                                        {t("Balance")}
                                                     </Text>
                                                 </Grid.Col>
                                                 <Grid.Col span={9}>
@@ -558,7 +558,7 @@ function _PurchaseTable() {
                                             <Grid columns={15} gutter={{base: 4}}>
                                                 <Grid.Col span={6}>
                                                     <Text fz="sm" lh="xs">
-                                                        Created
+                                                        {t("Created")}
                                                     </Text>
                                                 </Grid.Col>
                                                 <Grid.Col span={9}>
@@ -572,7 +572,7 @@ function _PurchaseTable() {
                                             <Grid columns={15} gutter={{base: 4}}>
                                                 <Grid.Col span={6}>
                                                     <Text fz="sm" lh="xs">
-                                                        Created By
+                                                        {t("CreatedBy")}
                                                     </Text>
                                                 </Grid.Col>
                                                 <Grid.Col span={9}>
@@ -587,7 +587,7 @@ function _PurchaseTable() {
                                             <Grid columns={15} gutter={{base: 4}}>
                                                 <Grid.Col span={6}>
                                                     <Text fz="sm" lh="xs">
-                                                        Mode
+                                                        {t("Mode")}
                                                     </Text>
                                                 </Grid.Col>
                                                 <Grid.Col span={9}>
@@ -620,7 +620,7 @@ function _PurchaseTable() {
                                                         </Table.Th>
                                                     }
                                                     <Table.Th fz="xs" ta="center" w={"60"}>
-                                                        {t("BonusQty")}
+                                                        {t("BonusQuantityTable")}
                                                     </Table.Th>
                                                     <Table.Th fz="xs" ta="center" w={"60"}>
                                                         {t("QTY")}

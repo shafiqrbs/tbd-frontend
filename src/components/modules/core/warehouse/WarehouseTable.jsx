@@ -29,7 +29,7 @@ import KeywordSearch from "../../filter/KeywordSearch";
 import { modals } from "@mantine/modals";
 import { notifications } from "@mantine/notifications";
 import tableCss from "../../../../assets/css/Table.module.css";
-import WarehouseViewModal from "./WarehouseViewModal.jsx";
+import _WarehouseViewDrawer from "./_WarehouseViewDrawer.jsx";
 
 function WarehouseTable() {
     const dispatch = useDispatch();
@@ -222,7 +222,7 @@ function WarehouseTable() {
             </Box>
 
             {viewDrawer && (
-                <WarehouseViewModal
+                <_WarehouseViewDrawer
                     viewDrawer={viewDrawer}
                     setViewDrawer={setViewDrawer}
                     warehouseObject={warehouseObject}

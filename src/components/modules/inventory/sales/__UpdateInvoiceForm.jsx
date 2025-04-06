@@ -558,8 +558,8 @@ function __UpdateInvoiceForm(props) {
                                                 color={'red.3'}
                                                 mt={'2'}
                                                 ml={'6'}
-                                                onLabel={t('Profit')}
-                                                offLabel={t('Hide')}
+                                                onLabel={t("Profit")}
+                                                offLabel={t("Hide")}
                                                 radius="xs"
                                                 onChange={(event) => setProfitShow(event.currentTarget.checked)}
                                             />
@@ -570,7 +570,7 @@ function __UpdateInvoiceForm(props) {
                                         </Grid.Col>
                                         <Grid.Col span={8}>
                                             <Box fz={'xl'} pr={'8'} mt={'4'} c={'red'} style={{ textAlign: 'right', float: 'right' }} fw={'800'}>
-                                                {returnOrDueText} {currencySymbol} {salesDueAmount.toFixed(2)}
+                                            {returnOrDueText === 'Due' ? t('Due') : t('Return')} {currencySymbol} {salesDueAmount.toFixed(2)}
                                             </Box>
                                         </Grid.Col>
                                     </Grid>
@@ -590,7 +590,7 @@ function __UpdateInvoiceForm(props) {
                                                         discountType === 'Flat' ? <IconCurrencyTaka size={14} /> :
                                                             <IconPercentage size={14} />
                                                     } color="red.4">
-                                                    {discountType}
+                                                    {discountType === 'Flat' ? t('Flat') : t('Percent')}
                                                 </Button>
                                             </Grid.Col>
                                             <Grid.Col span={4}>

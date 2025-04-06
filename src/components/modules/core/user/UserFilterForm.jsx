@@ -7,7 +7,7 @@ function UserFilterForm(props) {
     const {t, i18n} = useTranslation();
 
     useHotkeys([['alt+n', () => {
-        document.getElementById('NameFilter').focus()
+        document.getElementById('name').focus()
     }]], []);
 
 
@@ -16,8 +16,8 @@ function UserFilterForm(props) {
             <InputForm
                 label={t("Name")}
                 placeholder = {t("Name")}
-                nextField = {"MobileFilter"}
-                id={'NameFilter'}
+                nextField = {"mobile"}
+                id={'name'}
                 name={'name'}
                 module={props.module}
             />
@@ -25,8 +25,8 @@ function UserFilterForm(props) {
             <InputForm
                 label={t("Mobile")}
                 placeholder = {t("Mobile")}
-                nextField = {"EmailFilter"}
-                id={'MobileFilter'}
+                nextField = {"email"}
+                id={'mobile'}
                 name={'mobile'}
                 module={props.module}
             />
@@ -35,7 +35,7 @@ function UserFilterForm(props) {
                 label={t("Email")}
                 placeholder = {t("Email")}
                 nextField = {"submit"}
-                id={'EmailFilter'}
+                id={'email'}
                 name={'email'}
                 module={props.module}
             />
