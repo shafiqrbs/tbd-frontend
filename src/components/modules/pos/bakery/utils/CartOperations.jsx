@@ -53,12 +53,14 @@ export const useCartOperations = ({
 
   const handleIncrement = useCallback(
     async (productId) => {
+      let product; 
       if (!products) {
         const storedProducts = localStorage.getItem("core-products");
         const allProducts = storedProducts ? JSON.parse(storedProducts) : [];
         product = allProducts.find((p) => p.id === productId);
+      } else {
+        product = products?.find((p) => p.id === productId);
       }
-      const product = products?.find((p) => p.id === productId);
       const data = {
         url: "inventory/pos/inline-update",
         data: {
