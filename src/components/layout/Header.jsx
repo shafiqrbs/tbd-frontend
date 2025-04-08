@@ -74,6 +74,8 @@ export default function Header({ isOnline, configData }) {
   const [visible, setVisible] = useState(true);
 
   const [configDataSpot, setConfigData] = useState(null);
+  const loginUser = JSON.parse(localStorage.getItem("user"));
+
   useEffect(() => {
     const checkConfigData = () => {
       const storedConfigData = localStorage.getItem("config-data");
@@ -267,7 +269,8 @@ export default function Header({ isOnline, configData }) {
       <Box bg={"white"} mb={"2"} pos={`relative`}>
         <Grid columns={24} gutter={{ base: 2 }} justify="space-between">
           <Grid.Col span={3}>
-            {configData?.domain ? (
+            {configData?.domain && loginUser.user_group === 'domain' ? (
+                <>
                 <div
                   style={{
                     display: "flex",
@@ -315,25 +318,24 @@ export default function Header({ isOnline, configData }) {
                     ></Image>
                   </Anchor>
                   </Tooltip>
+                  <Text ml={4}>{configData.domain.company_name}</Text>
                 </div>
-               /*(
-                <NavLink
-                  href="/"
-                  c={"red"}
-                  fw={"800"}
-                  component="button"
-                  label={
-                    configData && configData.domain
-                      ? configData.domain.company_name
-                      : ""
-                  }
-                  onClick={(e) => {
-                    navigate("/");
-                  }}
-                />
-              )*/
+                </>
             ) : (
-              <></>
+                <NavLink
+                    href="/"
+                    c={"red"}
+                    fw={"800"}
+                    component="button"
+                    label={
+                      configData && configData.domain
+                          ? configData.domain.company_name
+                          : ""
+                    }
+                    onClick={(e) => {
+                      navigate("/");
+                    }}
+                />
             )}
           </Grid.Col>
           <Grid.Col span={3} justify="flex-end" align={"center"} mt={"xs"}>
@@ -380,7 +382,7 @@ export default function Header({ isOnline, configData }) {
                         Sitemap
                       </Text>
                       <Text size="xs" c="dimmed">
-                        Stiemap Details
+                        Sitemap Details
                       </Text>
                     </div>
                     <Button

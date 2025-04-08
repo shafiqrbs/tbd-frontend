@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useOutletContext } from "react-router-dom";
+import React, {useEffect, useState} from "react";
+import {useNavigate, useOutletContext} from "react-router-dom";
 import {
     Button,
     rem,
@@ -12,23 +12,26 @@ import {
 } from "@tabler/icons-react";
 import { useHotkeys } from "@mantine/hooks";
 import InputForm from "../../../form-builders/InputForm";
-import { useDispatch } from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import PasswordInputForm from "../../../form-builders/PasswordInputForm";
 import { hasLength, isEmail, isNotEmpty, useForm } from "@mantine/form";
 import { modals } from "@mantine/modals";
 import {
+    editEntityData,
+    getIndexEntityData,
     setEditEntityData,
-    setFetching, setInsertType,
+    setFetching, setFormLoading, setInsertType,
     storeEntityData, updateEntityData,
 } from "../../../../store/core/crudSlice.js";
 import { notifications } from "@mantine/notifications";
 import PhoneNumber from "../../../form-builders/PhoneNumberInput.jsx";
 import Shortcut from "../../shortcut/Shortcut.jsx";
 import SelectForm from "../../../form-builders/SelectForm";
-import getCoreSettingEmployeeGroupDropdownData
-    from "../../../global-hook/dropdown/core/getCoreSettingEmployeeGroupDropdownData.js";
 import CustomerGroupDrawer from "../customer/CustomerGroupDrawer.jsx";
 import userDataStoreIntoLocalStorage from "../../../global-hook/local-storage/userDataStoreIntoLocalStorage.js";
+import {coreSettingDropdown} from "../../../../store/core/utilitySlice.js";
+import getCoreSettingEmployeeGroupDropdownData
+    from "../../../global-hook/dropdown/core/getCoreSettingEmployeeGroupDropdownData.js";
 
 function _UserForm() {
     const { t, i18n } = useTranslation();
@@ -37,6 +40,8 @@ function _UserForm() {
     const height = mainAreaHeight - 100; //TabList height 104
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
     const [employeeGroupData, setEmployeeGroupData] = useState(null);
+    const navigate = useNavigate();
+
 
     const form = useForm({
         initialValues: {
@@ -95,6 +100,8 @@ function _UserForm() {
         !groupDrawer && document.getElementById('EntityFormSubmit').click()
     }]], []);
 
+    const employeeGroupDropdown = getCoreSettingEmployeeGroupDropdownData(groupDrawer);
+
 
     return (
 
@@ -143,7 +150,9 @@ function _UserForm() {
                             setTimeout(() => {
                                 userDataStoreIntoLocalStorage()
                                 form.reset()
-                                dispatch(setFetching(true))
+                                dispatch(setInsertType("update"));
+                                dispatch(editEntityData("core/user/" + resultAction?.payload?.data?.data?.id));
+                                navigate(`/core/user/${resultAction?.payload?.data?.data?.id}`);
                             }, 700)
                         }
                     },
@@ -196,7 +205,7 @@ function _UserForm() {
                                                                 nextField={'name'}
                                                                 name={'employee_group_id'}
                                                                 form={form}
-                                                                dropdownValue={getCoreSettingEmployeeGroupDropdownData()}
+                                                                dropdownValue={employeeGroupDropdown}
                                                                 mt={8}
                                                                 id={'employee_group_id'}
                                                                 searchable={false}

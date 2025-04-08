@@ -40,19 +40,18 @@ import SwitchForm from "../../../form-builders/SwitchForm.jsx";
 import SelectForm from "../../../form-builders/SelectForm.jsx";
 import {Dropzone, IMAGE_MIME_TYPE} from "@mantine/dropzone";
 import TextAreaForm from "../../../form-builders/TextAreaForm.jsx";
-import getCoreSettingEmployeeGroupDropdownData
-    from "../../../global-hook/dropdown/core/getCoreSettingEmployeeGroupDropdownData.js";
-
-import getCoreSettingLocationDropdownData
-    from "../../../global-hook/dropdown/core/getCoreSettingLocationDropdownData.js";
-import getCoreSettingDesignationDropdownData
-    from "../../../global-hook/dropdown/core/getCoreSettingDesignationDropdownData.js";
-import getCoreSettingDepartmentDropdownData
-    from "../../../global-hook/dropdown/core/getCoreSettingDepartmentDropdownData.js";
 
 import accessControlRoleStaticData from "../../../global-hook/static-json-file/accessControlRole.json"
 import androidControlRoleStaticData from "../../../global-hook/static-json-file/androidControlRole.json"
 import CustomerGroupDrawer from "../customer/CustomerGroupDrawer.jsx";
+import getCoreSettingEmployeeGroupDropdownData
+    from "../../../global-hook/dropdown/core/getCoreSettingEmployeeGroupDropdownData.js";
+import getCoreSettingDesignationDropdownData
+    from "../../../global-hook/dropdown/core/getCoreSettingDesignationDropdownData.js";
+import getCoreSettingDepartmentDropdownData
+    from "../../../global-hook/dropdown/core/getCoreSettingDepartmentDropdownData.js";
+import getCoreSettingLocationDropdownData
+    from "../../../global-hook/dropdown/core/getCoreSettingLocationDropdownData.js";
 
 function _UserUpdateForm() {
     const {t, i18n} = useTranslation();
@@ -414,6 +413,11 @@ function _UserUpdateForm() {
         );
     });
 
+    const employeeGroupDropdown = getCoreSettingEmployeeGroupDropdownData(groupDrawer);
+    const designationDropdown = getCoreSettingDesignationDropdownData(groupDrawer);
+    const departmentDropdown = getCoreSettingDepartmentDropdownData(groupDrawer);
+    const locationDropdown = getCoreSettingLocationDropdownData(groupDrawer);
+
     return (
         <Box>
             <form
@@ -520,7 +524,8 @@ function _UserUpdateForm() {
                                                                     nextField={'name'}
                                                                     name={'employee_group_id'}
                                                                     form={form}
-                                                                    dropdownValue={getCoreSettingEmployeeGroupDropdownData()}
+                                                                    // dropdownValue={getCoreSettingEmployeeGroupDropdownData()}
+                                                                    dropdownValue={employeeGroupDropdown}
                                                                     mt={8}
                                                                     id={'employee_group_id'}
                                                                     searchable={false}
@@ -1038,7 +1043,7 @@ function _UserUpdateForm() {
                                                                 nextField={'department_id'}
                                                                 name={'designation_id'}
                                                                 form={form}
-                                                                dropdownValue={getCoreSettingDesignationDropdownData()}
+                                                                dropdownValue={designationDropdown}
                                                                 mt={8}
                                                                 id={'designation_id'}
                                                                 searchable={false}
@@ -1084,7 +1089,7 @@ function _UserUpdateForm() {
                                                                 nextField={'location_id'}
                                                                 name={'department_id'}
                                                                 form={form}
-                                                                dropdownValue={getCoreSettingDepartmentDropdownData()}
+                                                                dropdownValue={departmentDropdown}
                                                                 mt={8}
                                                                 id={'department_id'}
                                                                 searchable={false}
@@ -1130,7 +1135,7 @@ function _UserUpdateForm() {
                                                                 nextField={'address'}
                                                                 name={'location_id'}
                                                                 form={form}
-                                                                dropdownValue={getCoreSettingLocationDropdownData()}
+                                                                dropdownValue={locationDropdown}
                                                                 mt={8}
                                                                 id={'location_id'}
                                                                 searchable={false}

@@ -2,9 +2,18 @@
     background-color: var(--mantine-color-blue-light);
 }
 
+/* Input.module.css */
 .input {
     border: 1px solid var(--mantine-color-violet-filled);
 }
+
+/* Style the placeholder */
+.input::placeholder {
+    color: #eb0f0f;
+    opacity: 1;
+}
+
+
 .input {
     transition: none;
 
