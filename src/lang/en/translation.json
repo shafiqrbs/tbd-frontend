@@ -896,5 +896,7 @@
   "PointOfSales" : "Point Of Sales",
   "DiscountPercent" : "Discount Percent",
   "DiscountPercentValidateMessage" : "Discount percent must be between 0-99",
-  "LogoutAltL" : "Logout (Alt + L)"
+  "LogoutAltL" : "Logout (Alt + L)",
+  "ClickRightButtonForPercentFlat" : "Click right button for percent/flat",
+  "SplitPaymentActive" : "Split Payment Active"
 }

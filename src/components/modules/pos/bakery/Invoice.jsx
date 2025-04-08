@@ -120,6 +120,8 @@ export default function Invoice(props) {
 
     const [disabledDiscountButton, setDisabledDiscountButton] = useState(false);
 
+    const [discountMode, setdiscountMode] = useToggle(['Discount', 'Coupon']);
+
     const [tableReceiveAmounts, setTableReceiveAmounts] = useState({});
     useEffect(() => {
         if (
@@ -824,8 +826,6 @@ export default function Invoice(props) {
                     </Group>
                 </Box>
                 <Box
-                    className={classes["box-border"]}
-                    pl={4}
                     pr={4}
                     pb={4}
                     pt={2}
@@ -837,7 +837,7 @@ export default function Invoice(props) {
                         mt={6}
                         gap={4}
                         pl={4}
-                        pr={4}
+                        pr={2}
                         mb={0}
                     >
                         <Grid
@@ -846,13 +846,11 @@ export default function Invoice(props) {
                             justify="center"
                             align="center"
                             className={classes["box-white"]}
-                            mr={4}
-                            ml={4}
-                            pt={8}
-                            pb={8}
+                            pb={4}
+                            bg={"gray.0"}
                         >
                             <Grid.Col span={6} pl={4} pr={4}>
-                                <Grid bg={"green.0"} pl={4} pr={4}>
+                                <Grid bg={"gray.0"} pl={4} pr={4}>
                                     <Grid.Col span={7}>
                                         <Stack gap={0}>
                                             <Group justify="space-between" gap={0}>
@@ -921,7 +919,6 @@ export default function Invoice(props) {
                                     bg={"red"}
                                     pt={4}
                                     pb={4}
-                                    mr={8}
                                 >
                                     <Text fw={800} c={"white"} size={"lg"}>
                                         {configData?.currency?.symbol} {salesDueAmount.toFixed(2)}
@@ -937,6 +934,8 @@ export default function Invoice(props) {
                             gutter={2}
                             align="center"
                             justify="center"
+                            className={classes["box-border"]}
+                            mb={4}
                             style={{
                                 borderRadius: 4,
                                 border:
@@ -945,10 +944,10 @@ export default function Invoice(props) {
                                         : "none",
                             }}
                         >
-                            <Grid.Col span={18}>
+                            <Grid.Col span={21} className={classes["box-border"]}>
                                 <Box
-                                    className={classes["box-white"]}
-                                    ml={4}
+
+                                   
                                     mr={4}
                                     style={{position: "relative"}}
                                 >
@@ -996,15 +995,11 @@ export default function Invoice(props) {
                                                         }}
                                                     >
                                                         <Flex
-                                                            bg={mode.id === transactionModeId ? "red.2" : "white"}
+                                                            bg={mode.id === transactionModeId ? "green.8" : "white"}
                                                             direction="column"
                                                             align="center"
                                                             justify="center"
-                                                            p={6}
-                                                            style={{
-                                                                width: "100px",
-                                                                borderRadius: "8px",
-                                                            }}
+                                                            p={2}
                                                         >
                                                             <Tooltip
                                                                 label={mode.name}
@@ -1017,9 +1012,11 @@ export default function Invoice(props) {
                                                                 color="red"
                                                             >
                                                                 <Image
-                                                                    mih={50}
-                                                                    mah={50}
-                                                                    fit="contain"
+                                                                    mih={48}
+                                                                    mah={48}
+                                                                    w={56}
+                                                                    h={48}
+                                                                    fit="fit"
                                                                     src={
                                                                         isOnline
                                                                             ? mode.path
@@ -1086,8 +1083,34 @@ export default function Invoice(props) {
                                     )}
                                 </Box>
                             </Grid.Col>
-                            <Grid.Col span={6}>
-                                <Button
+                            <Grid.Col span={3} style={{ 'textAlign':'right'}} pr={'8'} >
+                                <Tooltip
+                                    label={t("TransactionMode")}
+                                    px={16}
+                                    py={2}
+                                    bg={"gry.8"}
+                                    c={"white"}
+                                    withArrow
+                                    zIndex={999}
+                                    transitionProps={{
+                                        transition: "pop-bottom-left",
+                                        duration: 500,
+                                    }}
+                                >
+                                <ActionIcon size="xl" bg={isThisTableSplitPaymentActive ? "red.6" : "gray.8"} variant="filled" aria-label="Settings"
+                                            onClick={(e) => {
+                                                if (isThisTableSplitPaymentActive) {
+                                                    clearSplitPayment();
+                                                } else {
+                                                    handleClick(e);
+                                                }
+                                            }}
+                                >
+                                    { isThisTableSplitPaymentActive ? <IconX style={{ width: '70%', height: '70%' }} stroke={1.5} />  : <IconScissors style={{ width: '70%', height: '70%' }} stroke={1.5} /> }
+
+                                </ActionIcon>
+                                </Tooltip>
+                                {/*<Button
                                     bg={isThisTableSplitPaymentActive ? "red.6" : "gray.8"}
                                     c={"white"}
                                     size={"sm"}
@@ -1109,15 +1132,14 @@ export default function Invoice(props) {
                                     }}
                                 >
                                     {isThisTableSplitPaymentActive ? t("ClearSplit") : t("Split")}
-                                </Button>
+                                </Button>*/}
                             </Grid.Col>
                         </Grid>
-                        <Box m={0}>
+                        <Box m={0} mb={'12'}>
                             <Grid
                                 columns={24}
-                                gutter={{base: 4}}
-                                pl={"4"}
-                                pr={"4"}
+                                gutter={{base:8}}
+                                pr={"2"}
                                 align="center"
                                 justify="center"
                             >
@@ -1164,8 +1186,35 @@ export default function Invoice(props) {
                                         </Button>
                                     </Tooltip>
                                 </Grid.Col>
-                                <Grid.Col span={6} bg={"yellow"}>
-                                    <TextInput
+                                <Grid.Col span={6} >
+                                    <Tooltip
+                                        label={t("ClickRightButtonForPercentFlat")}
+                                        px={16}
+                                        py={2}
+                                        position="top"
+                                        bg={'red.4'}
+                                        c={"white"}
+                                        withArrow
+                                        offset={2}
+                                        zIndex={999}
+                                        transitionProps={{
+                                            transition: "pop-bottom-left",
+                                            duration: 500,
+                                        }}
+                                    >
+                                    <Button
+                                        fullWidth={true}
+                                        onClick={() => setDiscountMode()}
+                                        variant="filled"
+                                        fz={'xs'}
+                                        leftSection={
+                                            discountMode === 'Discount' ? <IconCurrencyTaka size={14} /> :
+                                                <IconPercentage size={14} />
+                                        } color="gray">
+                                        {discountMode === 'Discount' ? t('Discount') : t('Coupon')}
+                                    </Button>
+                                    </Tooltip>
+                                    {/*<TextInput
                                         type="text"
                                         placeholder={t("CouponCode")}
                                         value={form.values.coupon_code}
@@ -1194,9 +1243,9 @@ export default function Invoice(props) {
                                                 </Tooltip>
                                             </>
                                         }
-                                    />
+                                    />*/}
                                 </Grid.Col>
-                                <Grid.Col span={3}>
+                                {/*<Grid.Col span={3}>
                                     <Button
                                         p={0}
                                         disabled={disabledDiscountButton}
@@ -1205,7 +1254,6 @@ export default function Invoice(props) {
                                             setDisabledDiscountButton(true)
                                             const newDiscountType = discountType === "Percent" ? "Flat" : "Percent";
                                             setDiscountType(newDiscountType);
-
                                             const currentDiscountValue = salesDiscountAmount;
 
                                             const data = {
@@ -1258,13 +1306,10 @@ export default function Invoice(props) {
                                         <Group m={0} p={0} gap={0} align="center">
                                             {discountType === 'Flat' ? <IconCurrencyTaka size={16} /> :
                                                 <IconPercentage  size={14} />}
-                                                <Text pt={discountType === 'Flat' ? 4 : 1} ta={"center"} fz={'xs'} fw={"bold"} c={"white"} pl={4} pr={4}>
-                                                    {discountType === 'Flat' ? configData?.currency?.symbol : t('Per')}
-                                                </Text>
                                         </Group>
                                         
                                     </Button>
-                                    {/* <Switch
+                                     <Switch
                                         size="lg"
                                         w={"100%"}
                                         color={"red.3"}
@@ -1319,11 +1364,27 @@ export default function Invoice(props) {
                                                 setReloadInvoiceData(true)
                                             }
                                         }}
-                                    /> */}
-                                </Grid.Col>
-                                <Grid.Col span={3} bg={"red"}>
+                                    />
+                                </Grid.Col>*/}
+                                <Grid.Col span={6} bg={"red.3"}>
+                                    <Tooltip
+                                        label={t("ClickRightButtonForPercentFlat")}
+                                        px={16}
+                                        py={2}
+                                        position="top"
+                                        bg={'red.4'}
+                                        c={"white"}
+                                        withArrow
+                                        offset={2}
+                                        zIndex={999}
+                                        transitionProps={{
+                                            transition: "pop-bottom-left",
+                                            duration: 500,
+                                        }}
+                                    >
                                     <TextInput
                                         type="number"
+                                        style={{ 'textAlign': 'right' }}
                                         placeholder={t("Discount")}
                                         value={salesDiscountAmount}
                                         error={form.errors.discount}
@@ -1335,6 +1396,64 @@ export default function Invoice(props) {
                                             setSalesDiscountAmount(newValue);
                                             form.setFieldValue("discount", newValue);
                                         }}
+                                        rightSection={
+
+                                            <ActionIcon size={32} bg={'red.5'} variant="filled"
+                                                        onClick={async () => {
+                                                            setDisabledDiscountButton(true)
+                                                            const newDiscountType = discountType === "Percent" ? "Flat" : "Percent";
+                                                            setDiscountType(newDiscountType);
+                                                            const currentDiscountValue = salesDiscountAmount;
+
+                                                            const data = {
+                                                                url: "inventory/pos/inline-update",
+                                                                data: {
+                                                                    invoice_id: tableId,
+                                                                    field_name: "discount_type",
+                                                                    value: newDiscountType,
+                                                                    discount_amount: currentDiscountValue
+                                                                },
+                                                            };
+
+                                                            setSalesDiscountAmount(currentDiscountValue);
+
+                                                            try {
+                                                                const resultAction = await dispatch(
+                                                                    storeEntityData(data)
+                                                                );
+
+                                                                if (resultAction.payload?.status !== 200) {
+                                                                    showNotificationComponent(
+                                                                        resultAction.payload?.message ||
+                                                                        "Error updating invoice",
+                                                                        "red",
+                                                                        "",
+                                                                        "",
+                                                                        true
+                                                                    );
+                                                                }
+                                                            } catch (error) {
+                                                                showNotificationComponent(
+                                                                    "Request failed. Please try again.",
+                                                                    "red",
+                                                                    "",
+                                                                    "",
+                                                                    true
+                                                                );
+                                                                console.error("Error updating invoice:", error);
+                                                            } finally {
+                                                                setReloadInvoiceData(true)
+                                                                setTimeout(() => {
+                                                                    setDisabledDiscountButton(false);
+                                                                }, 500);
+                                                            }
+                                                        }}
+                                            >
+                                                {discountType === 'Flat' ? <IconCurrencyTaka size={16} /> :
+                                                    <IconPercentage  size={16} />}
+                                            </ActionIcon>
+
+                                        }
                                         onBlur={async (event) => {
                                             const data = {
                                                 url: "inventory/pos/inline-update",
@@ -1375,6 +1494,7 @@ export default function Invoice(props) {
                                             }
                                         }}
                                     />
+                                    </Tooltip>
                                 </Grid.Col>
                                 <Grid.Col span={6} bg={"green"}>
                                     <Tooltip
@@ -1515,7 +1635,7 @@ export default function Invoice(props) {
                                 </Grid.Col>
                             </Grid>
                         </Box>
-                        <Grid columns={12} gutter={{base: 2}} pl={"4"} pr={"4"}>
+                        <Grid columns={12} gutter={{base: 2}}>
                             <Grid.Col span={enableTable ? 3 : 4}>
                                 <Tooltip
                                     label={t("Hold")}
@@ -1531,13 +1651,14 @@ export default function Invoice(props) {
                                     }}
                                 >
                                     <Button
-                                        bg={"#f4a261"}
-                                        c={"white"}
-                                        size={"sm"}
+                                        bg={"white"}
+                                        variant="outline"
+                                        c={"black"}
+                                        color="gray"
+                                        size={"lg"}
                                         fullWidth={true}
-                                        leftSection={<IconHandStop/>}
                                     >
-                                        {t("Hold")}
+                                       <Text size="md">{t("Hold")}</Text>
                                     </Button>
                                 </Tooltip>
                             </Grid.Col>
@@ -1558,14 +1679,15 @@ export default function Invoice(props) {
                                     >
                                         <Button
                                             disabled={isDisabled}
-                                            bg={"#2a9d8f"}
-                                            size={"sm"}
-                                            c={"white"}
+                                            bg={"white"}
+                                            variant="outline"
+                                            c={"black"}
+                                            color="gray"
+                                            size={"lg"}
                                             fullWidth={true}
-                                            leftSection={<IconPrinter/>}
                                             // onClick={handlePrintAll}
                                         >
-                                            {t("AllPrint")}
+                                            <Text size="md">{t("AllPrint")}</Text>
                                         </Button>
                                     </Tooltip>
                                 </Grid.Col>
@@ -1575,7 +1697,7 @@ export default function Invoice(props) {
                                     disabled={isDisabled}
                                     bg={"#264653"}
                                     c={"white"}
-                                    size={"sm"}
+                                    size={"lg"}
                                     fullWidth={true}
                                     leftSection={<IconPrinter/>}
                                     // onClick={posPrint}
@@ -1586,7 +1708,7 @@ export default function Invoice(props) {
                             <Grid.Col span={enableTable ? 3 : 4}>
                                 <Button
                                     // disabled={isDisabled}
-                                    size={"sm"}
+                                    size={"lg"}
                                     c={"white"}
                                     bg={"#38b000"}
                                     fullWidth={true}

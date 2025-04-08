@@ -403,8 +403,7 @@ function _GenericInvoiceForm(props) {
               <Box>
                 <form
                   onSubmit={form.onSubmit((values) => {
-                    if (!values.barcode && !values.product_id) {
-                      form.setFieldError("barcode", true);
+                    if (!values.product_id) {
                       form.setFieldError("product_id", true);
                       isWarehouse && form.setFieldError('warehouse_id', true);
                       setTimeout(() => {}, 1000);
@@ -457,34 +456,14 @@ function _GenericInvoiceForm(props) {
                     mb={"xs"}
                     className={"boxBackground borderRadiusAll"}
                   >
-
                     <Grid columns={24} gutter={{ base: 6 }}>
-                      {
-                        isWarehouse==1 &&
-                        <Grid.Col span={6}>
-                          <SelectForm
-                              tooltip={t('Warehouse')}
-                              label=''
-                              placeholder={t('Warehouse')}
-                              required={false}
-                              nextField={'bonus_quantity'}
-                              name={'warehouse_id'}
-                              form={form}
-                              dropdownValue={warehouseDropdownData}
-                              id={'warehouse_id'}
-                              mt={1}
-                              searchable={true}
-                              value={warehouseData}
-                              changeValue={setWarehouseData}
-                          />
-                        </Grid.Col>
-                      }
+
                       <Grid.Col span={4}>
                         <InputNumberForm
                           tooltip={t("BarcodeValidateMessage")}
                           label=""
                           placeholder={t("Barcode")}
-                          required={true}
+                          required={false}
                           nextField={""}
                           form={form}
                           name={"barcode"}
@@ -493,7 +472,7 @@ function _GenericInvoiceForm(props) {
                         />
                       </Grid.Col>
 
-                      <Grid.Col span={isWarehouse?10:16}>
+                      <Grid.Col span={isWarehouse?12:16}>
                         <SelectServerSideForm
                           tooltip={t("ChooseStockProduct")}
                           label=""
@@ -511,8 +490,27 @@ function _GenericInvoiceForm(props) {
                           closeIcon={true}
                         />
                       </Grid.Col>
-
-                      <Grid.Col span={4}>
+                      {
+                        isWarehouse==1 &&
+                        <Grid.Col span={8}>
+                          <SelectForm
+                              tooltip={t('Warehouse')}
+                              label=''
+                              placeholder={t('Warehouse')}
+                              required={false}
+                              nextField={'bonus_quantity'}
+                              name={'warehouse_id'}
+                              form={form}
+                              dropdownValue={warehouseDropdownData}
+                              id={'warehouse_id'}
+                              mt={1}
+                              searchable={true}
+                              value={warehouseData}
+                              changeValue={setWarehouseData}
+                          />
+                        </Grid.Col>
+                      }
+                      {/*<Grid.Col span={4}>
                         <InputButtonForm
                             type="number"
                             tooltip=""
@@ -529,7 +527,7 @@ function _GenericInvoiceForm(props) {
                             rightSectionWidth={30}
                             disabled={true}
                         />
-                      </Grid.Col>
+                      </Grid.Col>*/}
 
                     </Grid>
                     <Box mt={"xs"} pb={"xs"}>
@@ -562,7 +560,7 @@ function _GenericInvoiceForm(props) {
                               type="number"
                               tooltip={t("BonusQuantity")}
                               label=""
-                              placeholder={t("BonusQuantity")}
+                              placeholder={t("BonusQTY")}
                               required={true}
                               nextField={"quantity"}
                               form={form}

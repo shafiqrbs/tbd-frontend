@@ -6,6 +6,8 @@ import {
 import {useTranslation} from "react-i18next";
 import {IconInfoCircle, IconUserCircle, IconX} from "@tabler/icons-react";
 import {getHotkeyHandler} from "@mantine/hooks";
+import inputCss from "../../assets/css/Table.module.css";
+
 
 function InputButtonForm(props) {
 
@@ -41,6 +43,7 @@ function InputButtonForm(props) {
                     <TextInput
                         type={props.type}
                         id={id}
+                        classNames={inputCss.input}
                         size="sm"
                         placeholder={placeholder}
                         mt={mt}

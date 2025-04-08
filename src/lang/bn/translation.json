@@ -682,5 +682,7 @@
   "DiscountPercent" : "ডিস্কাউন্ট পার্সেন্ট",
   "DiscountPercentValidateMessage" : "ডিস্কাউন্ট পার্সেন্ট ০ থেকে ৯৯ এর মধ্যে হতে হবে",
   "LogoutAltL" : "লগআউট (Alt + L)",
+  "ClickRightButtonForPercentFlat" : "Click right button for percent/flat",
+  "SplitPaymentActive" : "Split Payment Active",
   "" : ""
 }

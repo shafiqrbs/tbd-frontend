@@ -42,3 +42,15 @@ button {
  }
 }
 }
+
+.input {
+    border: 1px solid var(--mantine-color-violet-filled);
+}
+.input {
+    transition: none;
+
+&:focus-within {
+     outline: 2px solid var(--mantine-color-blue-filled);
+     border-color: transparent;
+ }
+}

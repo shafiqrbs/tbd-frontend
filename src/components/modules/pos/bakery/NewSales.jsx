@@ -377,7 +377,7 @@ export default function NewSales(props) {
                                         type="never"
                                         scrollbars="y"
                                     >
-                                        <Box pl={"8"} pr={"8"} pb={"8"}>
+                                        <Box pl={"8"} pr={"8"} pb={"4"}>
                                             {categoryDropdown.map((data) => (
                                                 <Box
                                                     style={{
@@ -394,7 +394,7 @@ export default function NewSales(props) {
                                                     bg={data.value === id ? "green.8" : "gray.8"}
                                                 >
                                                     <Text
-                                                        size={"md"}
+                                                        size={"sm"}
                                                         pl={14}
                                                         pt={8}
                                                         fw={500}

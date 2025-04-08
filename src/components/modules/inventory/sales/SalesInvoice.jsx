@@ -46,7 +46,7 @@ function SalesInvoice() {
                                     />
                                 }
                                 {
-                                    insertType === 'create' && configData?.business_model?.slug === 'Distribution' &&
+                                    insertType === 'create' && configData?.business_model?.slug === 'distribution' &&
                                     <_WholeSaleGenericInvoiceForm
                                         allowZeroPercentage={configData?.zero_stock}
                                         currencySymbol={configData?.currency?.symbol}
