@@ -56,9 +56,9 @@ export const useCartOperations = ({
       if (!products) {
         const storedProducts = localStorage.getItem("core-products");
         const allProducts = storedProducts ? JSON.parse(storedProducts) : [];
-        product = allProducts.find((p) => p.id === productId);
+        // let product = allProducts.find((p) => p.id === productId);
       }
-      const product = products?.find((p) => p.id === productId);
+      let product = products?.find((p) => p.id === productId);
       const data = {
         url: "inventory/pos/inline-update",
         data: {
