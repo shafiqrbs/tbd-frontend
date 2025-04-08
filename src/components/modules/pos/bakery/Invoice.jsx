@@ -122,6 +122,8 @@ export default function Invoice(props) {
 
     const [discountMode, setdiscountMode] = useToggle(['Discount', 'Coupon']);
 
+    const [enableCoupon, setEnableCoupon] = useState("Coupon");
+
     const [tableReceiveAmounts, setTableReceiveAmounts] = useState({});
     useEffect(() => {
         if (
@@ -368,6 +370,7 @@ export default function Invoice(props) {
     const [eventName, setEventName] = useState(null);
 
     const handleClick = (e) => {
+        console.log(e)
         if (e.currentTarget.name === "additionalProductAdd") {
             setEventName(e.currentTarget.name);
             setCommonDrawer(true);
@@ -1097,8 +1100,13 @@ export default function Invoice(props) {
                                         duration: 500,
                                     }}
                                 >
-                                <ActionIcon size="xl" bg={isThisTableSplitPaymentActive ? "red.6" : "gray.8"} variant="filled" aria-label="Settings"
+                                <ActionIcon name={
+                                        isThisTableSplitPaymentActive
+                                            ? "clearSplitPayment"
+                                            : "splitPayment"
+                                    } size="xl" bg={isThisTableSplitPaymentActive ? "red.6" : "gray.8"} variant="filled" aria-label="Settings"
                                             onClick={(e) => {
+                                                // console.log(e)
                                                 if (isThisTableSplitPaymentActive) {
                                                     clearSplitPayment();
                                                 } else {
@@ -1204,46 +1212,16 @@ export default function Invoice(props) {
                                     >
                                     <Button
                                         fullWidth={true}
-                                        onClick={() => setDiscountMode()}
+                                        onClick={() => enableCoupon === "Coupon" ? setEnableCoupon("Discount") : setEnableCoupon("Coupon")}
                                         variant="filled"
                                         fz={'xs'}
                                         leftSection={
-                                            discountMode === 'Discount' ? <IconCurrencyTaka size={14} /> :
+                                            enableCoupon === 'Coupon' ? <IconTicket size={14} /> :
                                                 <IconPercentage size={14} />
                                         } color="gray">
-                                        {discountMode === 'Discount' ? t('Discount') : t('Coupon')}
+                                        {enableCoupon === 'Coupon' ? t('Coupon') : t('Discount')}
                                     </Button>
                                     </Tooltip>
-                                    {/*<TextInput
-                                        type="text"
-                                        placeholder={t("CouponCode")}
-                                        value={form.values.coupon_code}
-                                        error={form.errors.coupon_code}
-                                        size={"sm"}
-                                        classNames={{input: classes.input}}
-                                        onChange={(event) => {
-                                            form.setFieldValue("coupon_code", event.target.value);
-                                        }}
-                                        rightSection={
-                                            <>
-                                                <Tooltip
-                                                    label={t("CouponCode")}
-                                                    px={16}
-                                                    py={2}
-                                                    withArrow
-                                                    position={"left"}
-                                                    c={"black"}
-                                                    bg={`gray.1`}
-                                                    transitionProps={{
-                                                        transition: "pop-bottom-left",
-                                                        duration: 500,
-                                                    }}
-                                                >
-                                                    <IconTicket size={16} opacity={0.5}/>
-                                                </Tooltip>
-                                            </>
-                                        }
-                                    />*/}
                                 </Grid.Col>
                                 {/*<Grid.Col span={3}>
                                     <Button
@@ -1367,7 +1345,38 @@ export default function Invoice(props) {
                                     />
                                 </Grid.Col>*/}
                                 <Grid.Col span={6} bg={"red.3"}>
-                                    <Tooltip
+                                    {enableCoupon === "Coupon" ? (
+                                        <TextInput
+                                        type="text"
+                                        placeholder={t("CouponCode")}
+                                        value={form.values.coupon_code}
+                                        error={form.errors.coupon_code}
+                                        size={"sm"}
+                                        classNames={{input: classes.input}}
+                                        onChange={(event) => {
+                                            form.setFieldValue("coupon_code", event.target.value);
+                                        }}
+                                        rightSection={
+                                            <>
+                                                <Tooltip
+                                                    label={t("CouponCode")}
+                                                    px={16}
+                                                    py={2}
+                                                    withArrow
+                                                    position={"left"}
+                                                    c={"black"}
+                                                    bg={`gray.1`}
+                                                    transitionProps={{
+                                                        transition: "pop-bottom-left",
+                                                        duration: 500,
+                                                    }}
+                                                >
+                                                    <IconTicket size={16} opacity={0.5}/>
+                                                </Tooltip>
+                                            </>
+                                        }
+                                    /> ) : (
+<Tooltip
                                         label={t("ClickRightButtonForPercentFlat")}
                                         px={16}
                                         py={2}
@@ -1495,6 +1504,8 @@ export default function Invoice(props) {
                                         }}
                                     />
                                     </Tooltip>
+                                    )}
+                                    
                                 </Grid.Col>
                                 <Grid.Col span={6} bg={"green"}>
                                     <Tooltip

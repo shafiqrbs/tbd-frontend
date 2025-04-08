@@ -49,11 +49,12 @@ export default function _CommonDrawer(props) {
               <ActionIcon
                 mr={"sm"}
                 radius="xl"
-                color="red.6"
+                color="grey.6"
                 size="md"
                 onClick={closeDrawer}
+                variant="outline"
               >
-                <IconX style={{ width: "100%", height: "100%" }} stroke={1.5} />
+                <IconX style={{ width: "80%", height: "80%" }} stroke={1.5} />
               </ActionIcon>
             </Flex>
           </Box>
