@@ -5,7 +5,7 @@
       { "id": "role_accounting", "label": "Accounting" },
       { "id": "role_accounting_voucher_entry", "label": "Voucher Entry" },
       { "id": "role_accounting_voucher_approve", "label": "Voucher Approve" },
-      { "id": "role_accounting_admin", "label": "Accounting Admin" }
+      { "id": "role_accounting_admin", "label": "AccountingAdmin" }
     ]
   },
 
@@ -24,35 +24,35 @@
   {
     "Group": "Procurement",
     "actions": [
-      { "id": "role_procurement_operator", "label": "Procurement Operator" },
-      { "id": "role_procurement_approval", "label": "Procurement Approval" },
-      { "id": "role_procurement_admin", "label": "Procurement Admin" }
+      { "id": "role_procurement_operator", "label": "ProcurementOperator" },
+      { "id": "role_procurement_approval", "label": "ProcurementApproval" },
+      { "id": "role_procurement_admin", "label": "ProcurementAdmin" }
     ]
   },
   {
     "Group": "Production",
     "actions": [
       { "id": "role_production", "label": "Production" },
-      { "id": "role_production_operator", "label": "Production Operator" },
-      { "id": "role_production_approval", "label": "Production Approval" },
-      { "id": "role_production_admin", "label": "Production Admin" }
+      { "id": "role_production_operator", "label": "ProductionOperator" },
+      { "id": "role_production_approval", "label": "ProductionApproval" },
+      { "id": "role_production_admin", "label": "ProductionAdmin" }
     ]
   },
   {
     "Group": "Inventory & Product",
     "actions": [
-      { "id": "role_inventory", "label": "Inventory & Product" },
-      { "id": "role_inventory_stock", "label": "Inventory Stock" },
-      { "id": "role_inventory_manager", "label": "Inventory Manager" },
-      { "id": "role_inventory_admin", "label": "Inventory Admin" }
+      { "id": "role_inventory", "label": "InventoryAndProduct" },
+      { "id": "role_inventory_stock", "label": "InventoryStock" },
+      { "id": "role_inventory_manager", "label": "InventoryManager" },
+      { "id": "role_inventory_admin", "label": "InventoryAdmin" }
     ]
   },
   {
     "Group": "Core & Master Data",
     "actions": [
-      { "id": "role_core", "label": "Core & Master Data" },
-      { "id": "role_core_manager", "label": "Core Manager" },
-      { "id": "role_core_admin", "label": "Core Admin" }
+      { "id": "role_core", "label": "CoreAndMasterData" },
+      { "id": "role_core_manager", "label": "CoreManager" },
+      { "id": "role_core_admin", "label": "CoreAdmin" }
     ]
   }
 ]

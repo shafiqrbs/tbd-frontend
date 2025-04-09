@@ -46,11 +46,22 @@ function MainDashboard(props) {
     /* start for user role check */
     const [userRole, setUserRole] = useState(() => {
         const userRoleData = localStorage.getItem("user");
-        return userRoleData && userRoleData?.access_control_role ? JSON.parse(JSON.parse(userRoleData)?.access_control_role) : [];
-    });
+        if (!userRoleData) return [];
+        
+        try {
+            const parsedUser = JSON.parse(userRoleData);
+            return parsedUser.access_control_role ? JSON.parse(parsedUser.access_control_role) : [];
+        } catch (error) {
+            console.error("Error parsing user role data:", error);
+            return [];
+        }
+    }); 
 
-    // check all field exists
+    console.log(userRole)
+
     const targetValues1 = ["payroll", "purchase"];
+
+
     const allExist = targetValues1.every((value) => userRole.includes(value));
 
     // check any field exists
@@ -74,6 +85,7 @@ function MainDashboard(props) {
 
         return () => clearTimeout(timeoutId); // Clear the timeout if the component unmounts
     }, [navigate]);  // Notice we're also adding `navigate` dependency here
+
     return (
         <>
             <Container fluid mt={"xs"}>
@@ -128,39 +140,50 @@ function MainDashboard(props) {
                         </Grid>
                     </Card>
                     
-                    <Card shadow="md" radius="md" className={classes.card} padding="lg">
-                        <Grid gutter={{base: 2}}>
-                            <Grid.Col span={2}>
-                                <IconMoneybag
-                                    style={{width: rem(42), height: rem(42)}}
-                                    stroke={2}
-                                    color={theme.colors.blue[6]}
-                                />
-                            </Grid.Col>
-                            <Grid.Col span={10}>
-                                <Text fz="md" fw={500} className={classes.cardTitle}>
-                                    {t("AccountingOverview")}
-                                </Text>
-                            </Grid.Col>
-                        </Grid>
-                    </Card>
-                    <Card shadow="md" radius="md" className={classes.card} padding="lg">
-                        <Grid gutter={{base: 2}}>
-                            <Grid.Col span={2}>
-                                <IconShoppingCart
-                                    style={{width: rem(42), height: rem(42)}}
-                                    stroke={2}
-                                    color={theme.colors.blue[6]}
-                                />
-                            </Grid.Col>
-                            <Grid.Col span={10}>
-                                <Text fz="md" fw={500} className={classes.cardTitle}>
-                                    {t("Procurement")}
-                                </Text>
-                            </Grid.Col>
-                        </Grid>
-                    </Card>
-                    <Card shadow="md" radius="md" className={classes.card} padding="lg">
+                    {
+                        userRole && userRole.length > 0 && userRole.includes("role_accounting") && (
+                            <Card shadow="md" radius="md" className={classes.card} padding="lg">
+                                <Grid gutter={{base: 2}}>
+                                    <Grid.Col span={2}>
+                                        <IconMoneybag
+                                            style={{width: rem(42), height: rem(42)}}
+                                            stroke={2}
+                                            color={theme.colors.blue[6]}
+                                        />
+                                    </Grid.Col>
+                                    <Grid.Col span={10}>
+                                        <Text fz="md" fw={500} className={classes.cardTitle}>
+                                            {t("AccountingOverview")}
+                                        </Text>
+                                    </Grid.Col>
+                                </Grid>
+                            </Card>
+                        )
+                    }
+                    {}
+                    {
+                        ["role_procurement_operator",].some((value) => userRole.includes(value)) &&
+                        (
+                            <Card shadow="md" radius="md" className={classes.card} padding="lg">
+                            <Grid gutter={{base: 2}}>
+                                <Grid.Col span={2}>
+                                    <IconShoppingCart
+                                        style={{width: rem(42), height: rem(42)}}
+                                        stroke={2}
+                                        color={theme.colors.blue[6]}
+                                    />
+                                </Grid.Col>
+                                <Grid.Col span={10}>
+                                    <Text fz="md" fw={500} className={classes.cardTitle}>
+                                        {t("Procurement")}
+                                    </Text>
+                                </Grid.Col>
+                            </Grid>
+                        </Card>
+                        )
+                    }
+                    {["role_inventory",].some((value) => userRole.includes(value)) && (
+                        <Card shadow="md" radius="md" className={classes.card} padding="lg">
                         <Grid gutter={{base: 2}}>
                             {/* demo role implement*/}
                             {/*{
@@ -182,7 +205,7 @@ function MainDashboard(props) {
                                     </>
                                 )
                             }*/}
-
+    
                             <Grid.Col span={2}>
                                 <IconMoneybag
                                     style={{width: rem(42), height: rem(42)}}
@@ -197,12 +220,14 @@ function MainDashboard(props) {
                             </Grid.Col>
                         </Grid>
                     </Card>
+                    )}
+                    
                 </SimpleGrid>
                 <ScrollArea h={height} scrollbarSize={2} type="never">
                     <SimpleGrid cols={{base: 1, md: 4}} spacing="xs">
                         
                         {
-                            configData?.domain?.modules?.includes("sales-purchase") && (
+                            configData?.domain?.modules?.includes("sales-purchase") && ["role_sales_purchase",].some((value) => userRole.includes(value)) && (
                                 <Card shadow="md" radius="md" className={classes.card} padding="lg">
                                     <Grid gutter={{base: 2}}>
                                         <Grid.Col span={2}>
@@ -249,36 +274,44 @@ function MainDashboard(props) {
                                                     }}
                                                 />
                                             </List.Item>
-                                            <List.Item
-                                                pl={"xs"}
-                                                icon={
-                                                    <ThemeIcon
-                                                        color="teal.6"
-                                                        size={20}
-                                                        radius="xl"
-                                                        variant="outline"
-                                                    >
-                                                        <IconShoppingBagSearch/>
-                                                    </ThemeIcon>
-                                                }
-                                            >
-                                                <NavLink
-                                                    pl={"md"}
-                                                    href="/inventory/sales-invoice"
-                                                    label={t("NewSales")}
-                                                    component="button"
-                                                    onClick={(e) => {
-                                                        navigate("inventory/sales-invoice");
-                                                    }}
-                                                    onAuxClick={(e) => {
-                                                        // Handle middle mouse button click for browsers that support it
-                                                        if (e.button === 1) {
-                                                            window.open("/inventory/sales-invoice", "_blank");
+                                            {
+            ["role_sales",].some((value) => userRole.includes(value)) &&
+            (
+                <List.Item
+                                                        pl={"xs"}
+                                                        icon={
+                                                            <ThemeIcon
+                                                                color="teal.6"
+                                                                size={20}
+                                                                radius="xl"
+                                                                variant="outline"
+                                                            >
+                                                                <IconShoppingBagSearch/>
+                                                            </ThemeIcon>
                                                         }
-                                                    }}
-                                                />
-                                            </List.Item>
-                                            <List.Item
+                                                    >
+                                                        <NavLink
+                                                            pl={"md"}
+                                                            href="/inventory/sales-invoice"
+                                                            label={t("NewSales")}
+                                                            component="button"
+                                                            onClick={(e) => {
+                                                                navigate("inventory/sales-invoice");
+                                                            }}
+                                                            onAuxClick={(e) => {
+                                                                // Handle middle mouse button click for browsers that support it
+                                                                if (e.button === 1) {
+                                                                    window.open("/inventory/sales-invoice", "_blank");
+                                                                }
+                                                            }}
+                                                        />
+                                                    </List.Item>
+            )
+        }
+                          {
+    ["role_purchase",].some((value) => userRole.includes(value)) &&
+    (
+        <List.Item
                                                 pl={"xs"}
                                                 icon={
                                                     <ThemeIcon
@@ -307,6 +340,8 @@ function MainDashboard(props) {
                                                     }}
                                                 />
                                             </List.Item>
+    )
+}                  
                                             <List.Item
                                                 pl={"xs"}
                                                 icon={
@@ -431,7 +466,7 @@ function MainDashboard(props) {
                         }
                         
                         {
-                            configData?.domain?.modules?.includes("accounting") && (
+                            configData?.domain?.modules?.includes("accounting") && ["role_accounting",].some((value) => userRole.includes(value)) && (
                                 <Card shadow="md" radius="md" className={classes.card} padding="lg">
                                     <Grid gutter={{base: 2}}>
                                         <Grid.Col span={2}>
@@ -449,7 +484,9 @@ function MainDashboard(props) {
                                     </Grid>
                                     <Box fz="sm" c="dimmed" mt="sm">
                                         <List spacing="ms" size="sm" center>
-                                            <List.Item
+                                            {
+                                                 ["role_accounting",].some((value) => userRole.includes(value)) && (
+                                                    <List.Item
                                                 pl={"xs"}
                                                 icon={
                                                     <ThemeIcon
@@ -478,6 +515,9 @@ function MainDashboard(props) {
                                                     }}
                                                 />
                                             </List.Item>
+                                                 )
+                                            }
+                                            
 
                                             {/*
                                 <List.Item pl={'xs'} icon={<ThemeIcon color="blue.6" size={20} radius="xl" variant="outline" ><IconShoppingBagSearch/></ThemeIcon>}>
@@ -616,7 +656,7 @@ function MainDashboard(props) {
                             )
                         }
                         {
-                            configData?.domain?.modules?.includes("procurement") && (
+                            configData?.domain?.modules?.includes("procurement") && ["role_procurement_operator",].some((value) => userRole.includes(value)) && (
                                 <Card shadow="md" radius="md" className={classes.card} padding="lg">
                                     <Grid gutter={{base: 2}}>
                                         <Grid.Col span={2}>
@@ -733,7 +773,7 @@ function MainDashboard(props) {
                             )
                         }
                         {
-                            configData?.domain?.modules?.includes("inventory") && (
+                            configData?.domain?.modules?.includes("inventory") && ["role_inventory",].some((value) => userRole.includes(value)) && (
                                 <Card shadow="md" radius="md" className={classes.card} padding="lg">
                                     <Grid gutter={{base: 2}}>
                                         <Grid.Col span={2}>
@@ -751,35 +791,40 @@ function MainDashboard(props) {
                                     </Grid>
                                     <Box fz="sm" c="dimmed" mt="sm">
                                         <List spacing="ms" size="sm" center>
-                                            <List.Item
-                                                pl={"xs"}
-                                                icon={
-                                                    <ThemeIcon
-                                                        color="yellow.6"
-                                                        size={20}
-                                                        radius="xl"
-                                                        variant="outline"
-                                                    >
-                                                        <IconListDetails/>
-                                                    </ThemeIcon>
-                                                }
-                                            >
-                                                <NavLink
-                                                    pl={"md"}
-                                                    href="/inventory/stock"
-                                                    label={t("ManageStock")}
-                                                    component="button"
-                                                    onClick={(e) => {
-                                                        navigate("inventory/stock");
-                                                    }}
-                                                    onAuxClick={(e) => {
-                                                        // Handle middle mouse button click for browsers that support it
-                                                        if (e.button === 1) {
-                                                            window.open("/inventory/stock", "_blank");
+                                            {
+                                                ["role_inventory_stock",].some((value) => userRole.includes(value)) && (
+                                                    <List.Item
+                                                        pl={"xs"}
+                                                        icon={
+                                                            <ThemeIcon
+                                                                color="yellow.6"
+                                                                size={20}
+                                                                radius="xl"
+                                                                variant="outline"
+                                                            >
+                                                                <IconListDetails/>
+                                                            </ThemeIcon>
                                                         }
-                                                    }}
-                                                />
-                                            </List.Item>
+                                                    >
+                                                        <NavLink
+                                                            pl={"md"}
+                                                            href="/inventory/stock"
+                                                            label={t("ManageStock")}
+                                                            component="button"
+                                                            onClick={(e) => {
+                                                                navigate("inventory/stock");
+                                                            }}
+                                                            onAuxClick={(e) => {
+                                                                // Handle middle mouse button click for browsers that support it
+                                                                if (e.button === 1) {
+                                                                    window.open("/inventory/stock", "_blank");
+                                                                }
+                                                            }}
+                                                        />
+                                                    </List.Item>
+                                                )
+                                            }
+                                            
                                             <List.Item
                                                 pl={"xs"}
                                                 icon={
@@ -1109,7 +1154,7 @@ function MainDashboard(props) {
                             )
                         }
                         {
-                            configData?.domain?.modules?.includes("core") && (
+                            configData?.domain?.modules?.includes("core") && ["role_core",].some((value) => userRole.includes(value)) && (
                                 <Card shadow="md" radius="md" className={classes.card} padding="lg">
                                     <Grid gutter={{base: 2}}>
                                         <Grid.Col span={2}>
@@ -1300,7 +1345,7 @@ function MainDashboard(props) {
                             )
                         }
                         {
-                            configData?.domain?.modules?.includes("production") && (
+                            configData?.domain?.modules?.includes("production") && ["role_production",].some((value) => userRole.includes(value)) && (
                                 <Card shadow="md" radius="md" className={classes.card} padding="lg">
                                     <Grid gutter={{base: 2}}>
                                         <Grid.Col span={2}>
