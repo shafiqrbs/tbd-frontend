@@ -13,7 +13,8 @@ td {
 
 th {
     border-bottom: 1px solid #ffc9c91a;
-    background-color: rgba(208, 191, 191, 0.17);
+    /*background-color: rgba(208, 191, 191, 0.17);*/
+    background-color:#e9ecef!important;
     font-size: 14px;
     color: #656565;
 }
@@ -41,16 +42,4 @@ button {
      background-color: rgba(208, 191, 191, 0.17);
  }
 }
-}
-
-.input {
-    border: 1px solid var(--mantine-color-violet-filled);
-}
-.input {
-    transition: none;
-
-&:focus-within {
-     outline: 2px solid var(--mantine-color-blue-filled);
-     border-color: transparent;
- }
 }

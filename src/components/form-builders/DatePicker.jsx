@@ -6,6 +6,7 @@ import {getHotkeyHandler} from "@mantine/hooks";
 import {IconInfoCircle, IconX} from "@tabler/icons-react";
 import React from "react";
 import {useTranslation} from "react-i18next";
+import inputCss from "../../assets/css/InputField.module.css";
 
 
 // dayjs.extend(customParseFormat);
@@ -48,6 +49,7 @@ function DatePickerForm(props) {
                     clearable
                     defaultValue={new Date()}
                     size="sm"
+                    classNames={inputCss}
                     minDate={disable && new Date()}
                     label={label}
                     placeholder={placeholder}

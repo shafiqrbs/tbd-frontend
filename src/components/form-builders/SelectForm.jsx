@@ -7,6 +7,7 @@ import {getHotkeyHandler} from "@mantine/hooks";
 import {showNotificationComponent} from "../core-component/showNotificationComponent.jsx";
 import {useDispatch} from "react-redux";
 import {storeEntityData} from "../../store/core/crudSlice.js";
+import inputCss from "../../assets/css/InputField.module.css";
 
 const SelectForm = forwardRef((props, ref) => {
     const {
@@ -78,6 +79,7 @@ const SelectForm = forwardRef((props, ref) => {
                 >
                     <Select
                         pt={pt}
+                        classNames={inputCss}
                         ref={ref}
                         id={id}
                         label={label}

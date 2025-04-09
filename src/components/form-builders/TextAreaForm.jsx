@@ -6,6 +6,7 @@ import {
 import { useTranslation } from "react-i18next";
 import { IconInfoCircle, IconX } from "@tabler/icons-react";
 import { getHotkeyHandler } from "@mantine/hooks";
+import inputCss from "../../assets/css/InputField.module.css";
 
 function TextAreaForm(props) {
     const { label, placeholder, required, nextField, name, form, tooltip, mt, id, minRows, autosize, maxRows, style } = props
@@ -31,6 +32,7 @@ function TextAreaForm(props) {
                     <Textarea
                     styles={style ? { input: { height: 20 } } : {}}
                         maxRows={maxRows}
+                        classNames={inputCss}
                         autosize={autosize}
                         minRows={minRows}
                         id={id}

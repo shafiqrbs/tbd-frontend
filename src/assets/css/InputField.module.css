@@ -1,24 +1,23 @@
 .label {
-    background-color: var(--mantine-color-blue-light);
+    margin-bottom: 0px;
 }
 
 /* Input.module.css */
 .input {
-    border: 1px solid var(--mantine-color-violet-filled);
+    border: 1px solid #adb5bd;
 }
 
 /* Style the placeholder */
+
 .input::placeholder {
-    color: #eb0f0f;
+    color: #868e96;
     opacity: 1;
 }
 
-
 .input {
     transition: none;
-
     &:focus-within {
-         outline: 2px solid var(--mantine-color-blue-filled);
-         border-color: transparent;
+         border: 1px solid #343a40;
+         border-color:#343a40;
      }
 }

@@ -5,6 +5,7 @@ import {
 } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import { getHotkeyHandler } from "@mantine/hooks";
+import inputCss from "../../assets/css/InputField.module.css";
 
 function PasswordInputForm(props) {
     const { label, placeholder, required, nextField, name, form, tooltip, mt, id, value } = props
@@ -27,6 +28,7 @@ function PasswordInputForm(props) {
                     transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
                 >
                     <PasswordInput
+                        classNames={inputCss}
                         id={id}
                         size="sm"
                         label={label}

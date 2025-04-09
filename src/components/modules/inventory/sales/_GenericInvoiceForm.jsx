@@ -532,8 +532,6 @@ function _GenericInvoiceForm(props) {
                     </Grid>
                     <Box mt={"xs"} pb={"xs"}>
                       <Grid columns={24} gutter={{ base: 6 }}>
-
-
                         <Grid.Col span={4}>
                           <InputButtonForm
                             type="number"

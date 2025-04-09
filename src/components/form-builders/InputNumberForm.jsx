@@ -6,6 +6,7 @@ import {
 import {useTranslation} from "react-i18next";
 import {IconInfoCircle, IconX} from "@tabler/icons-react";
 import {getHotkeyHandler} from "@mantine/hooks";
+import inputCss from "../../assets/css/InputField.module.css";
 
 function InputNumberForm(props) {
 
@@ -32,6 +33,7 @@ function InputNumberForm(props) {
                 >
                     <TextInput
                         type='number'
+                        classNames={inputCss}
                         id={id}
                         size="sm"
                         label={label}

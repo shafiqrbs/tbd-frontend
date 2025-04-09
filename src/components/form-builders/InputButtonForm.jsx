@@ -5,7 +5,6 @@ import {
 } from "@mantine/core";
 import {useTranslation} from "react-i18next";
 import {getHotkeyHandler} from "@mantine/hooks";
-
 import inputCss from "../../assets/css/InputField.module.css";
 
 function InputButtonForm(props) {

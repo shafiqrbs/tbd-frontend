@@ -1,6 +1,7 @@
 import React, { forwardRef } from "react";
 import { Tooltip, Select } from "@mantine/core";
 import { useTranslation } from "react-i18next";
+import inputCss from "../../assets/css/InputField.module.css";
 
 const SelectServerSideForm = forwardRef((props, ref) => {
     const {
@@ -51,6 +52,7 @@ const SelectServerSideForm = forwardRef((props, ref) => {
           >
             <Select
               ref={ref}
+              classNames={inputCss}
               id={id}
               label={label}
               placeholder={placeholder}

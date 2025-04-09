@@ -10,6 +10,7 @@ import getConfigData from "../../../global-hook/config-data/getConfigData.js";
 import _GenericInvoiceForm from "./_GenericInvoiceForm.jsx";
 import _WholeSaleGenericInvoiceForm from "./whole-sale/_GenericInvoiceForm.jsx";
 import _SalesPurchaseHeaderNavbar from "../../domain/configuraton/_SalesPurchaseHeaderNavbar.jsx";
+import _GenericPosForm from "./_GenericPosForm";
 
 function SalesInvoice() {
 
@@ -36,7 +37,7 @@ function SalesInvoice() {
                             <Box p={'8'}>
                                 {
                                     insertType === 'create' && configData?.business_model?.slug === 'general' &&
-                                    <_GenericInvoiceForm
+                                    <_GenericPosForm
                                         allowZeroPercentage={configData?.zero_stock}
                                         currencySymbol={configData?.currency?.symbol}
                                         domainId={configData?.domain_id}

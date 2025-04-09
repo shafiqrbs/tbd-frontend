@@ -4,6 +4,7 @@ import "react-phone-input-2/lib/style.css";
 import { Box, Tooltip, Text } from "@mantine/core";
 import { IconInfoCircle, IconX } from "@tabler/icons-react";
 import { useTranslation } from "react-i18next";
+import inputCss from "../../assets/css/InputField.module.css";
 
 const TooltipContent = forwardRef(
   ({ onClick, onMouseEnter, onMouseLeave, form, name }, ref) => {
@@ -88,6 +89,7 @@ export default function PhoneNumber(props) {
         <div style={{ position: "relative" }}>
           <PhoneInput
             country={"bd"}
+            classNames={inputCss}
             value={form.values[name] || `+880`}
             onChange={handleChange}
             inputProps={{

@@ -4,6 +4,7 @@ import {
     Select
 } from "@mantine/core";
 import { getHotkeyHandler } from "@mantine/hooks";
+import inputCss from "../../assets/css/InputField.module.css";
 
 function _SelectForm(props, ref) {
     const {
@@ -41,6 +42,7 @@ function _SelectForm(props, ref) {
                 >
                     <Select
                         ref={ref}
+                        classNames={inputCss}
                         id={id}
                         label={label}
                         placeholder={placeholder}
