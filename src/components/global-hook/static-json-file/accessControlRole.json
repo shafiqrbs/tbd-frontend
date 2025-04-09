@@ -2,22 +2,59 @@
   {
     "Group": "Accounting",
     "actions": [
-      { "id": "condition_account", "label": "Condition Account" },
-      { "id": "expenditure", "label": "Expenditure" },
-      { "id": "purchase", "label": "Purchase" },
-      { "id": "sales", "label": "Sales" },
-      { "id": "expenditure_purchase", "label": "Expenditure Purchase" },
-      { "id": "account_cash", "label": "Account Cash" },
-      { "id": "journal", "label": "Journal" }
+      { "id": "role_accounting", "label": "Accounting" },
+      { "id": "role_accounting_voucher_entry", "label": "Voucher Entry" },
+      { "id": "role_accounting_voucher_approve", "label": "Voucher Approve" },
+      { "id": "role_accounting_admin", "label": "Accounting Admin" }
+    ]
+  },
+
+  {
+    "Group": "Sales & Purchase",
+    "actions": [
+      { "id": "role_sales_purchase", "label": "Sales & Purchase" },
+      { "id": "role_sales", "label": "Manage Sales" },
+      { "id": "role_purchase", "label": "Manage Purchase" },
+      { "id": "role_sales_purchase_operator", "label": "Operator" },
+      { "id": "role_sales_purchase_manager", "label": "Manager" },
+      { "id": "role_sales_purchase_approval", "label": "Approval" },
+      { "id": "role_sales_purchase_admin", "label": "Admin" }
     ]
   },
   {
-    "Group": "HR & Payroll",
+    "Group": "Procurement",
     "actions": [
-      { "id": "human_resource", "label": "Human Resource" },
-      { "id": "hr_emplyment", "label": "HR Employment" },
-      { "id": "payroll", "label": "Payroll" },
-      { "id": "payroll_salary", "label": "Payroll Salary" }
+      { "id": "role_procurement_operator", "label": "Procurement Operator" },
+      { "id": "role_procurement_approval", "label": "Procurement Approval" },
+      { "id": "role_procurement_admin", "label": "Procurement Admin" }
+    ]
+  },
+  {
+    "Group": "Production",
+    "actions": [
+      { "id": "role_production", "label": "Production" },
+      { "id": "role_production_operator", "label": "Production Operator" },
+      { "id": "role_production_approval", "label": "Production Approval" },
+      { "id": "role_production_admin", "label": "Production Admin" }
+    ]
+  },
+  {
+    "Group": "Inventory & Product",
+    "actions": [
+      { "id": "role_inventory", "label": "Inventory & Product" },
+      { "id": "role_inventory_stock", "label": "Inventory Stock" },
+      { "id": "role_inventory_manager", "label": "Inventory Manager" },
+      { "id": "role_inventory_admin", "label": "Inventory Admin" }
+    ]
+  },
+  {
+    "Group": "Core & Master Data",
+    "actions": [
+      { "id": "role_core", "label": "Core & Master Data" },
+      { "id": "role_core_manager", "label": "Core Manager" },
+      { "id": "role_core_admin", "label": "Core Admin" }
     ]
   }
 ]
+
+
