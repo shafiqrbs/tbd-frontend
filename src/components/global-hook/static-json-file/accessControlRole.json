@@ -24,6 +24,7 @@
   {
     "Group": "Procurement",
     "actions": [
+      { "id": "role_procurement", "label": "Procurement" },
       { "id": "role_procurement_operator", "label": "ProcurementOperator" },
       { "id": "role_procurement_approval", "label": "ProcurementApproval" },
       { "id": "role_procurement_admin", "label": "ProcurementAdmin" }

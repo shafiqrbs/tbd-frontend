@@ -162,7 +162,7 @@ function MainDashboard(props) {
                     }
                     {}
                     {
-                        ["role_procurement_operator",].some((value) => userRole.includes(value)) &&
+                        ["role_procurement",].some((value) => userRole.includes(value)) &&
                         (
                             <Card shadow="md" radius="md" className={classes.card} padding="lg">
                             <Grid gutter={{base: 2}}>
@@ -656,7 +656,7 @@ function MainDashboard(props) {
                             )
                         }
                         {
-                            configData?.domain?.modules?.includes("procurement") && ["role_procurement_operator",].some((value) => userRole.includes(value)) && (
+                            configData?.domain?.modules?.includes("procurement") && ["role_procurement",].some((value) => userRole.includes(value)) && (
                                 <Card shadow="md" radius="md" className={classes.card} padding="lg">
                                     <Grid gutter={{base: 2}}>
                                         <Grid.Col span={2}>
