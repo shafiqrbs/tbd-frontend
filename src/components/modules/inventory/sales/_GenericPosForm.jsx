@@ -442,7 +442,7 @@ function _GenericPosForm(props) {
                     mb={"xs"}
                     className={"boxBackground borderRadiusAll"}
                 >
-                  <Box>
+                   <Box mt={"xs"} pb={"xs"}>
                     <InputNumberForm
                         tooltip={t("BarcodeValidateMessage")}
                         label=""
@@ -621,10 +621,6 @@ function _GenericPosForm(props) {
                   </Box>
                   <Box></Box>
                   <Box></Box>
-
-                  <Box mt={"xs"} pb={"xs"}>
-
-                  </Box>
                 </Box>
               </form>
             </Box>
@@ -632,7 +628,18 @@ function _GenericPosForm(props) {
         </Grid.Col>
         <Grid.Col span={24}>
             <Box bg={"white"} p={"xs"} className={"borderRadiusAll"}>
-
+              <Box
+                    pl={`xs`}
+                    pr={8}
+                    pt={"xs"}
+                    mb={"xs"}
+                    className={"boxBackground borderRadiusAll"}
+                  >
+                    <Grid columns={24} gutter={{ base: 6 }}>
+                      <Grid.Col span={4}>asdasd</Grid.Col>
+                      <Grid.Col span={4}>asdasd</Grid.Col>
+                      </Grid>
+                    </Box>
               <Box className={"borderRadiusAll"}>
                 <DataTable
                   classNames={{
@@ -969,7 +976,6 @@ function _GenericPosForm(props) {
               </Box>
             </Box>
             <Box bg={"white"} p={"xs"} className={"borderRadiusAll"}>
-
               <__GenericPosSalesForm
                   salesSubTotalAmount={salesSubTotalAmount}
                   tempCardProducts={tempCardProducts}

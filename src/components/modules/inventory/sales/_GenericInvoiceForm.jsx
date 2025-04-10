@@ -383,7 +383,7 @@ function _GenericInvoiceForm(props) {
     <Box>
       <Grid columns={24} gutter={{ base: 8 }}>
         {leftSide ? (
-          <Grid.Col span={8}>
+          <Grid.Col span={7}>
             <Box bg={"white"} p={"md"} className={"borderRadiusAll"}>
               <__SalesForm
                 salesSubTotalAmount={salesSubTotalAmount}
@@ -398,7 +398,7 @@ function _GenericInvoiceForm(props) {
             </Box>
           </Grid.Col>
         ) : (
-          <Grid.Col span={15}>
+          <Grid.Col span={16}>
             <Box bg={"white"} p={"xs"} className={"borderRadiusAll"}>
               <Box>
                 <form
@@ -1031,7 +1031,7 @@ function _GenericInvoiceForm(props) {
           </Grid.Col>
         )}
         {leftSide ? (
-          <Grid.Col span={15}>
+          <Grid.Col span={16}>
             <Box bg={"white"} p={"xs"} className={"borderRadiusAll"}>
               <Box>
                 <form
@@ -1609,7 +1609,7 @@ function _GenericInvoiceForm(props) {
             </Box>
           </Grid.Col>
         ) : (
-          <Grid.Col span={8}>
+          <Grid.Col span={7}>
             <Box bg={"white"} p={"md"} className={"borderRadiusAll"}>
               <__SalesForm
                 salesSubTotalAmount={salesSubTotalAmount}
