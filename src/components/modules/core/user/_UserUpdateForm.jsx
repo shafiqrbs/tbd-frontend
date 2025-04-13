@@ -740,7 +740,7 @@ function _UserUpdateForm() {
                                                             .map((group) => (
                                                                 <Box key={group.Group} p={"sm"}>
                                                                     <Text fz={"14"} fw={400} c={"dimmed"}>
-                                                                        {group.Group}
+                                                                        {t(group.Group)}
                                                                     </Text>
                                                                     {group.actions.map((action) => (
                                                                         <Box
@@ -762,7 +762,7 @@ function _UserUpdateForm() {
                                                                                 fz={"14"}
                                                                                 fw={400}
                                                                             >
-                                                                                {action.label}
+                                                                                {t(action.label)}
                                                                             </Text>
                                                                         </Box>
                                                                     ))}
@@ -802,7 +802,7 @@ function _UserUpdateForm() {
                                                             .map((group) => (
                                                                 <Box key={group.Group} p={"sm"}>
                                                                     <Text fz={"14"} fw={400} c={"dimmed"}>
-                                                                        {group.Group}
+                                                                        {t(group.Group)}
                                                                     </Text>
                                                                     {group.actions.map((action) => (
                                                                         <Box
@@ -824,7 +824,7 @@ function _UserUpdateForm() {
                                                                                 fz={"14"}
                                                                                 fw={400}
                                                                             >
-                                                                                {action.label}
+                                                                                {t(action.label)}
                                                                             </Text>
                                                                         </Box>
                                                                     ))}
@@ -858,7 +858,7 @@ function _UserUpdateForm() {
                                                             .map((group) => (
                                                                 <Box key={group.Group} p={"sm"}>
                                                                     <Text fz={"14"} fw={400} c={"dimmed"}>
-                                                                        {group.Group}
+                                                                        {t(group.Group)}
                                                                     </Text>
                                                                     {group.actions.map((action) => (
                                                                         <Box
@@ -880,7 +880,7 @@ function _UserUpdateForm() {
                                                                                 fz={"14"}
                                                                                 fw={400}
                                                                             >
-                                                                                {action.label}
+                                                                                {t(action.label)}
                                                                             </Text>
                                                                         </Box>
                                                                     ))}
@@ -920,7 +920,7 @@ function _UserUpdateForm() {
                                                             .map((group) => (
                                                                 <Box key={group.Group} p={"sm"}>
                                                                     <Text fz={"14"} fw={400} c={"dimmed"}>
-                                                                        {group.Group}
+                                                                        {t(group.Group)}
                                                                     </Text>
                                                                     {group.actions.map((action) => (
                                                                         <Box
@@ -942,7 +942,7 @@ function _UserUpdateForm() {
                                                                                 fz={"14"}
                                                                                 fw={400}
                                                                             >
-                                                                                {action.label}
+                                                                                {t(action.label)}
                                                                             </Text>
                                                                         </Box>
                                                                     ))}
