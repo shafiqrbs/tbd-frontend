@@ -76,26 +76,72 @@ export default function BranchManagementForm() {
         }
     }, [domainsData]);
 
-    const handleCheckboxChange = (branch_id, isChecked) => {
-        console.log(branch_id,isChecked)
-        // const previousState = checkedStates[branch_id];
+    const handleCheckboxChange = async (branch_id, isChecked) => {
+        const previousState = checkedStates[branch_id];
 
         // Set the checkbox to loading (disabled)
-        /*setCheckboxDisable((prevStates) => ({
+        setCheckboxDisable((prevStates) => ({
             ...prevStates,
             [branch_id]: true,
-        }));*/
+        }));
 
-        // if (!isChecked) {
+        if (!isChecked) {
             // Optimistically update the checked state
             setCheckedStates((prevStates) => ({
+                ...prevStates,
                 [branch_id]: isChecked,
             }));
             // return
-        // } // Exit early if unchecked
-    };
+        } // Exit early if unchecked
 
-    // console.log(checkedStates)
+        const payload = {
+            url: "domain/manage/branch/create",
+            data: {
+                child_domain_id: branch_id,
+                checked: isChecked,
+                parent_domain_id: configData?.domain?.id,
+            },
+        };
+
+        try {
+            const resultAction = await dispatch(storeEntityData(payload));
+
+            if (storeEntityData.rejected.match(resultAction)) {
+                console.log(resultAction.payload.errors);
+
+                // Revert the optimistic update if the API call fails
+                setCheckedStates((prevStates) => ({
+                    ...prevStates,
+                    [branch_id]: previousState,
+                }));
+            } else if (storeEntityData.fulfilled.match(resultAction)) {
+                setCustomer(resultAction.payload.data.data);
+                notifications.show({
+                    color: "teal",
+                    title: t("CreateSuccessfully"),
+                    icon: <IconCheck style={{width: "1em", height: "1em"}}/>,
+                    loading: false,
+                    autoClose: 700,
+                    style: {backgroundColor: "lightgray"},
+                });
+            }
+            // Force reload to ensure data is accurate
+            setReloadDomainData(true);
+        } catch (error) {
+            console.error("An error occurred:", error);
+            // Revert the change in case of unexpected errors
+            setCheckedStates((prevStates) => ({
+                ...prevStates,
+                [branch_id]: previousState,
+            }));
+        } finally {
+            // Clear the loading state regardless of success or failure
+            setCheckboxDisable((prevStates) => ({
+                ...prevStates,
+                [branch_id]: false,
+            }));
+        }
+    };
 
 
     const [amounts, setAmounts] = useState({}); // Dynamic state object for tracking all amounts
@@ -303,33 +349,12 @@ export default function BranchManagementForm() {
                                                     direction="row"
                                                     wrap="wrap"
                                                 >
-                                                    {/*<Checkbox
+                                                    <Checkbox
                                                         pr="xs"
-                                                        // checked={!!checkedStates[branch.id]}
                                                         checked={!!checkedStates[branch.id]}
                                                         color="red"
                                                         form={form}
-                                                        // disabled={!!checkboxDisable[branch.id]} // Disable if loading
-                                                        onChange={(event) =>
-                                                            handleCheckboxChange(
-                                                                branch.id,
-                                                                event.currentTarget.checked
-                                                            )
-                                                        }
-                                                        styles={(theme) => ({
-                                                            input: {
-                                                                borderColor: "red",
-                                                            },
-                                                        })}
-                                                    />*/}
-
-                                                    <Checkbox
-                                                        pr="xs"
-                                                        // checked={!!checkedStates[branch.id]}
-                                                        checked={checkedStates[branch.id]}
-                                                        color="red"
-                                                        form={form}
-                                                        // disabled={!!checkboxDisable[branch.id]} // Disable if loading
+                                                        disabled={!!checkboxDisable[branch.id]} // Disable if loading
                                                         onChange={(event) =>
                                                             handleCheckboxChange(
                                                                 branch.id,

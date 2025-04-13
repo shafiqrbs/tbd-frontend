@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useOutletContext } from "react-router-dom";
+import { useOutletContext, useParams } from "react-router-dom";
 import { Box, Grid, Progress } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
@@ -7,8 +7,10 @@ import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoa
 import getConfigData from "../../../global-hook/config-data/getConfigData.js";
 import _Shortcut from "../common/_Shortcut.jsx";
 import DomainHeaderNavbar from "../../domain/DomainHeaderNavbar.jsx";
-import DashBoardTable from "./DashboardTable.jsx";
-export default function DashboardIndex() {
+import CategoryTable from "../category/CategoryTable.jsx";
+import B2bDomainTable from "./B2bDomainTable.jsx";
+export default function B2bDomainIndex() {
+  const { id } = useParams();
   const { t } = useTranslation();
   const progress = getLoadingProgress();
 
@@ -20,7 +22,7 @@ export default function DashboardIndex() {
       {progress === 100 && (
         <>
           <DomainHeaderNavbar
-            pageTitle={t("Dashboard")}
+            pageTitle={t("B2BCategory")}
             roles={t("Roles")}
             allowZeroPercentage=""
             currencySymbol=""
@@ -28,10 +30,12 @@ export default function DashboardIndex() {
           <Box p={"8"}>
             <Grid columns={24} gutter={{ base: 8 }}>
               <Grid.Col span={1}>
-                <_Shortcut module={"b2b_dashboard"} />
+                <_Shortcut id={id} module={"b2b_dashboard"} />
               </Grid.Col>
               <Grid.Col span={23}>
-                <DashBoardTable />
+                <Box bg={"white"} p={"xs"} className={"borderRadiusAll"}>
+                  <B2bDomainTable id={id} />
+                </Box>
               </Grid.Col>
             </Grid>
           </Box>

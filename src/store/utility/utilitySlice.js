@@ -64,6 +64,7 @@ const utilitySlice = createSlice({
     posTableData: [],
     productLocationData: [],
     utilityProductTypeDropdownData: [],
+    utilityDomainTypeDropdownData: [],
     productModelDropdown: [],
     posInvoiceModeDropdownData: [],
     wearhouseDropdown: [],
@@ -84,6 +85,9 @@ const utilitySlice = createSlice({
       }
       if (action.payload.type === "product-unit") {
         state.productUnitDropdown = action.payload.data.data;
+      }
+      if (action.payload.type === "domain-type") {
+        state.utilityDomainTypeDropdownData = action.payload.data.data;
       }
       if (action.payload.type === "color") {
         state.productColorDropdown = action.payload.data.data;

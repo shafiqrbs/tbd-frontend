@@ -61,6 +61,7 @@ import DashboardIndexB2B from "./components/modules/b2b/dashboard/DashboardIndex
 import CategoryIndexB2B from "./components/modules/b2b/category/CategoryIndex.jsx";
 import ProductIndexB2B from "./components/modules/b2b/product/ProductIndex.jsx";
 import SettingIndexB2B from "./components/modules/b2b/setting/SettingIndex.jsx";
+import B2bDomainIndex from "./components/modules/b2b/domain/B2bDomainIndex.jsx";
 
 function AppRoute() {
   return (
@@ -189,6 +190,7 @@ function AppRoute() {
         </Route>
         <Route path="/b2b/">
           <Route path="dashboard" element={<DashboardIndexB2B />} />
+          <Route path="domain" element={<B2bDomainIndex />} />
           <Route path="sub-domain/category/:id" element={<CategoryIndexB2B />} />
           <Route path="sub-domain/product/:id" element={<ProductIndexB2B />} />
           <Route path="sub-domain/setting/:id" element={<SettingIndexB2B />} />
