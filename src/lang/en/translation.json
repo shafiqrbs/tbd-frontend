@@ -923,6 +923,7 @@
   "InventorySales" : "Inventory Sales",
   "AccountReceive" : "Account Receive",
   "AccountPayment" : "Account Payment",
-  "AccountExpense" : "Account Expense"
+  "AccountExpense" : "Account Expense",
+  "SalesPercent" : "Sales Percent"
   
 }

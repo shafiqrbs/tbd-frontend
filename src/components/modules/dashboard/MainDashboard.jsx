@@ -57,7 +57,7 @@ function MainDashboard(props) {
         }
     }); 
 
-    console.log(userRole)
+    // console.log(userRole)
 
     const targetValues1 = ["payroll", "purchase"];
 
@@ -1144,6 +1144,35 @@ function MainDashboard(props) {
                                                         // Handle middle mouse button click for browsers that support it
                                                         if (e.button === 1) {
                                                             window.open("/domain", "_blank");
+                                                        }
+                                                    }}
+                                                />
+                                            </List.Item>
+                                            <List.Item
+                                                pl={"xs"}
+                                                icon={
+                                                    <ThemeIcon
+                                                        color="blue.6"
+                                                        size={20}
+                                                        radius="xl"
+                                                        variant="outline"
+                                                    >
+                                                        <IconCurrencyMonero/>
+                                                    </ThemeIcon>
+                                                }
+                                            >
+                                                <NavLink
+                                                    pl={"md"}
+                                                    href="/b2b/dashboard"
+                                                    label={t("B2BManagement")}
+                                                    component="button"
+                                                    onClick={(e) => {
+                                                        navigate("/b2b/dashboard");
+                                                    }}
+                                                    onAuxClick={(e) => {
+                                                        // Handle middle mouse button click for browsers that support it
+                                                        if (e.button === 1) {
+                                                            window.open("/b2b/dashboard", "_blank");
                                                         }
                                                     }}
                                                 />

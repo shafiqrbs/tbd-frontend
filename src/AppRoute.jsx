@@ -57,6 +57,10 @@ import ReconciliationIndex from "./components/modules/inventory/stock-reconcilia
 import TransferIndex from "./components/modules/inventory/stock-transfer/TransferIndex.jsx";
 import CouponIndex from "./components/modules/inventory/coupon-code/CouponIndex.jsx";
 import BarcodePrintIndex from "./components/modules/inventory/barcode-print/BarcodePrintIndex.jsx";
+import DashboardIndexB2B from "./components/modules/b2b/dashboard/DashboardIndex.jsx";
+import CategoryIndexB2B from "./components/modules/b2b/category/CategoryIndex.jsx";
+import ProductIndexB2B from "./components/modules/b2b/product/ProductIndex.jsx";
+import SettingIndexB2B from "./components/modules/b2b/setting/SettingIndex.jsx";
 
 function AppRoute() {
   return (
@@ -120,8 +124,14 @@ function AppRoute() {
           />
           <Route path="config" element={<InventoryConfigurationIndex />} />
           <Route path="stock" element={<StockIndex />} />
-          <Route path="stock-reconciliation" element={<ReconciliationIndex />} />
-          <Route path="stock-reconciliation/:id" element={<ReconciliationIndex />} />
+          <Route
+            path="stock-reconciliation"
+            element={<ReconciliationIndex />}
+          />
+          <Route
+            path="stock-reconciliation/:id"
+            element={<ReconciliationIndex />}
+          />
           <Route path="stock-transfer" element={<TransferIndex />} />
           <Route path="stock-transfer/:id" element={<TransferIndex />} />
           <Route path="coupon-code" element={<CouponIndex />} />
@@ -176,6 +186,12 @@ function AppRoute() {
         <Route path="sitemap" element={<Sitemap />} />
         <Route path="/pos/">
           <Route path="bakery" element={<BakeryIndex />} />
+        </Route>
+        <Route path="/b2b/">
+          <Route path="dashboard" element={<DashboardIndexB2B />} />
+          <Route path="sub-domain/category/:id" element={<CategoryIndexB2B />} />
+          <Route path="sub-domain/product/:id" element={<ProductIndexB2B />} />
+          <Route path="sub-domain/setting/:id" element={<SettingIndexB2B />} />
         </Route>
         <Route path="sitemap" element={<Sitemap />} />
       </Route>
