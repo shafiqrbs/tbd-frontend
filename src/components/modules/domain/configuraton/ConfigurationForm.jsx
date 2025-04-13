@@ -83,8 +83,13 @@ function ConfigurationForm() {
             sku_warehouse: false,
             sku_category: false,
             vat_enable: false,
+            sd_enable: false,
+            hs_code_enable: false,
             zakat_enable: false,
             zakat_percent: 0,
+            sd_percent: 0,
+            ait_percent: 0,
+            ait_enable: false,
             production_type: '',
             invoice_comment: '',
             logo: '',
@@ -173,7 +178,7 @@ function ConfigurationForm() {
                 'stock_item', 'custom_invoice_print', 'is_stock_history', 'condition_sales',
                 'store_ledger', 'is_marketing_executive', 'tlo_commission', 'sales_return',
                 'sr_commission', 'due_sales_without_customer', 'is_zero_receive_allow',
-                'is_purchase_by_purchase_price','is_pos',
+                'is_purchase_by_purchase_price','is_pos','hs_code_enable','sd_enable','ait_enable',
                 'is_pay_first','is_sales_auto_approved','is_purchase_auto_approved','is_active_sms', 'is_kitchen'
             ];
 
@@ -299,9 +304,8 @@ function ConfigurationForm() {
                                                             id={'address'}
                                                         />
                                                     </Box>
-
-                                                    <Box mt={'xs'}>
-                                                        <Text fz="sm">{t("StockFormat")}</Text>
+                                                    <Box pt={'8'} pb={'12'} mt={'8'} ta="center" bg={'gray.2'}>
+                                                        <Title order={6} pt={'4'}>{t('StockFormat')}</Title>
                                                     </Box>
                                                     <Box mt={'xs'}>
                                                         <Grid gutter={{base: 1}}>
@@ -340,35 +344,144 @@ function ConfigurationForm() {
                                                             <Grid.Col span={6} fz={'sm'} pt={'1'}>{t('Category')}</Grid.Col>
                                                         </Grid>
                                                     </Box>
-
-                                                    <Box mt={'xs'}>
-                                                        <Text fz="sm">{t("Vat")}</Text>
+                                                    <Box pt={'8'} pb={'12'} mt={'8'} ta="center" bg={'gray.2'}>
+                                                        <Title order={6} pt={'4'}>{t('VatManagement')}</Title>
+                                                    </Box>
+                                                    <Box mt={'md'} mb={'md'}>
+                                                        <Grid gutter={{base: 6}}>
+                                                            <Grid.Col span={6}>&nbsp;</Grid.Col>
+                                                            <Grid.Col span={2}>
+                                                                <SwitchForm
+                                                                    tooltip={t('VatEnabled')}
+                                                                    label=''
+                                                                    nextField={'vat_percent'}
+                                                                    name={'hs_code_enable'}
+                                                                    form={form}
+                                                                    color="red"
+                                                                    id={'hs_code_enable'}
+                                                                    position={'left'}
+                                                                    defaultChecked={configData.hs_code_enable}
+                                                                />
+                                                            </Grid.Col>
+                                                            <Grid.Col span={4} fz={'sm'} pt={'1'}>{t('HSCodeEnabled')}
+                                                            </Grid.Col>
+                                                        </Grid>
                                                     </Box>
 
                                                     <Box mt={'md'} mb={'md'}>
                                                         <Grid gutter={{base: 6}}>
                                                             <Grid.Col span={6}>
-                                                                <Grid columns={6} gutter={{base: 1}}>
-                                                                    <Grid.Col span={2}>
-                                                                        <SwitchForm
-                                                                            tooltip={t('VatEnabled')}
-                                                                            label=''
-                                                                            nextField={'ait_percent'}
-                                                                            name={'vat_enable'}
-                                                                            form={form}
-                                                                            color="red"
-                                                                            id={'vat_enable'}
-                                                                            position={'left'}
-                                                                            defaultChecked={configData.vat_enable}
-                                                                        />
-                                                                    </Grid.Col>
-                                                                    <Grid.Col span={4} fz={'sm'} pt={'1'}>{t('VatEnabled')}
-                                                                    </Grid.Col>
-                                                                </Grid>
+                                                                <InputForm
+                                                                    tooltip={t('VatPercent')}
+                                                                    label={t('VatPercent')}
+                                                                    placeholder={t('VatPercent')}
+                                                                    required={false}
+                                                                    name={'vat_percent'}
+                                                                    form={form}
+                                                                    mt={0}
+                                                                    id={'vat_percent'}
+                                                                    nextField={'vat_enable'}
+                                                                />
+                                                            </Grid.Col>
+                                                            <Grid.Col span={6} mt={'lg'}>
+                                                                <Box mt={'xs'}>
+                                                                    <Grid columns={6} gutter={{base: 1}}>
+                                                                        <Grid.Col span={2}>
+                                                                            <SwitchForm
+                                                                                tooltip={t('VatEnabled')}
+                                                                                label=''
+                                                                                nextField={'sd_percent'}
+                                                                                name={'vat_enable'}
+                                                                                form={form}
+                                                                                color="red"
+                                                                                id={'vat_enable'}
+                                                                                position={'left'}
+                                                                                defaultChecked={configData.vat_enable}
+                                                                            />
+                                                                        </Grid.Col>
+                                                                        <Grid.Col span={4} fz={'sm'}
+                                                                                  pt={'1'}>{t('VatEnabled')}</Grid.Col>
+                                                                    </Grid>
+                                                                </Box>
                                                             </Grid.Col>
                                                         </Grid>
                                                     </Box>
-
+                                                    <Box mt={'md'} mb={'md'}>
+                                                        <Grid gutter={{base: 6}}>
+                                                            <Grid.Col span={6}>
+                                                                <InputForm
+                                                                    tooltip={t('SdPercent')}
+                                                                    label={t('SdPercent')}
+                                                                    placeholder={t('SdPercent')}
+                                                                    required={false}
+                                                                    name={'sd_percent'}
+                                                                    form={form}
+                                                                    mt={0}
+                                                                    id={'sd_percent'}
+                                                                    nextField={'sd_enable'}
+                                                                />
+                                                            </Grid.Col>
+                                                            <Grid.Col span={6} mt={'lg'}>
+                                                                <Box mt={'xs'}>
+                                                                    <Grid columns={6} gutter={{base: 1}}>
+                                                                        <Grid.Col span={2}>
+                                                                            <SwitchForm
+                                                                                tooltip={t('SdEnabled')}
+                                                                                label=''
+                                                                                nextField={'ait_percent'}
+                                                                                name={'sd_enable'}
+                                                                                form={form}
+                                                                                color="red"
+                                                                                id={'sd_enable'}
+                                                                                position={'left'}
+                                                                                defaultChecked={configData.sd_enable}
+                                                                            />
+                                                                        </Grid.Col>
+                                                                        <Grid.Col span={4} fz={'sm'}
+                                                                                  pt={'1'}>{t('SDEnabled')}</Grid.Col>
+                                                                    </Grid>
+                                                                </Box>
+                                                            </Grid.Col>
+                                                        </Grid>
+                                                    </Box>
+                                                    <Box mt={'md'} mb={'md'}>
+                                                        <Grid gutter={{base: 6}}>
+                                                            <Grid.Col span={6}>
+                                                                <InputForm
+                                                                    tooltip={t('AitPercent')}
+                                                                    label={t('AitPercent')}
+                                                                    placeholder={t('AitPercent')}
+                                                                    required={false}
+                                                                    name={'ait_percent'}
+                                                                    form={form}
+                                                                    mt={0}
+                                                                    id={'ait_percent'}
+                                                                    nextField={'ait_enable'}
+                                                                />
+                                                            </Grid.Col>
+                                                            <Grid.Col span={6} mt={'lg'}>
+                                                                <Box mt={'xs'}>
+                                                                    <Grid columns={6} gutter={{base: 1}}>
+                                                                        <Grid.Col span={2}>
+                                                                            <SwitchForm
+                                                                                tooltip={t('AitEnabled')}
+                                                                                label=''
+                                                                                nextField={'zakat_percent'}
+                                                                                name={'ait_enable'}
+                                                                                form={form}
+                                                                                color="red"
+                                                                                id={'ait_enable'}
+                                                                                position={'left'}
+                                                                                defaultChecked={configData.ait_enable}
+                                                                            />
+                                                                        </Grid.Col>
+                                                                        <Grid.Col span={4} fz={'sm'}
+                                                                                  pt={'1'}>{t('AITEnabled')}</Grid.Col>
+                                                                    </Grid>
+                                                                </Box>
+                                                            </Grid.Col>
+                                                        </Grid>
+                                                    </Box>
                                                     <Box mt={'md'} mb={'md'}>
                                                         <Grid gutter={{base: 6}}>
                                                             <Grid.Col span={6}>
@@ -407,20 +520,10 @@ function ConfigurationForm() {
                                                             </Grid.Col>
                                                         </Grid>
                                                     </Box>
-
-                                                    <Box mt={'xs'}>
-                                                        <TextAreaForm
-                                                            tooltip={t('InvoiceComment')}
-                                                            label={t('InvoiceComment')}
-                                                            placeholder={t('InvoiceComment')}
-                                                            required={false}
-                                                            nextField={'logo'}
-                                                            name={'invoice_comment'}
-                                                            form={form}
-                                                            mt={8}
-                                                            id={'invoice_comment'}
-                                                        />
+                                                    <Box pt={'8'} pb={'12'} mt={'8'} ta="center" bg={'gray.2'}>
+                                                        <Title order={6} pt={'4'}>{t('CompanyLogo')}</Title>
                                                     </Box>
+
                                                     <Box mt={'xs'}>
                                                         <ImageUploadDropzone
                                                             label={t('Logo')}
@@ -467,14 +570,145 @@ function ConfigurationForm() {
                                              className={'boxBackground borderRadiusAll'}>
                                             <Grid>
                                                 <Grid.Col>
-                                                    <Title order={6} pt={'4'}>{t('Print')}</Title>
+                                                    <Title order={6} pt={'4'}>{t('ManagePos&Print')}</Title>
                                                 </Grid.Col>
-
                                             </Grid>
                                         </Box>
                                         <Box pl={`xs`} pr={'xs'} className={'borderRadiusAll'}>
                                             <ScrollArea h={height} scrollbarSize={2} scrollbars="y" type="never">
                                                 <Box pl={'xs'} pt={'xs'}>
+                                                    <Box mt={'xs'}>
+                                                        <Box mt={'xs'}>
+                                                            <SelectForm
+                                                                tooltip={t('PosInvoiceMode')}
+                                                                label={t('PosInvoiceMode')}
+                                                                placeholder={t('ChoosePosInvoiceMode')}
+                                                                required={false}
+                                                                nextField={'print_footer_text'}
+                                                                name={'pos_invoice_mode_id'}
+                                                                form={form}
+                                                                dropdownValue={posInvoiceModeDropdown}
+                                                                mt={8}
+                                                                id={'pos_invoice_mode_id'}
+                                                                searchable={false}
+                                                                value={posInvoiceModeId}
+                                                                changeValue={setPosInvoiceModeId}
+                                                                clearable={true}
+                                                                allowDeselect={true}
+                                                            />
+                                                        </Box>
+                                                    </Box>
+                                                    <Box mt={'xs'}>
+                                                        <TextAreaForm
+                                                            tooltip={t('InvoiceComment')}
+                                                            label={t('InvoiceComment')}
+                                                            placeholder={t('InvoiceComment')}
+                                                            required={false}
+                                                            nextField={'logo'}
+                                                            name={'invoice_comment'}
+                                                            form={form}
+                                                            mt={8}
+                                                            id={'invoice_comment'}
+                                                        />
+                                                    </Box>
+                                                    <Box mt={'xs'}>
+                                                        <Grid gutter={{base: 1}}>
+                                                            <Grid.Col span={2}>
+                                                                <SwitchForm
+                                                                    tooltip={t('PosPrint')}
+                                                                    label=''
+                                                                    nextField={'is_print_header'}
+                                                                    name={'pos_print'}
+                                                                    form={form}
+                                                                    color="red"
+                                                                    id={'pos_print'}
+                                                                    position={'left'}
+                                                                    defaultChecked={configData.pos_print}
+                                                                />
+                                                            </Grid.Col>
+                                                            <Grid.Col span={6} fz={'sm'} pt={'1'}>{t('PosPrint')}</Grid.Col>
+                                                        </Grid>
+                                                    </Box>
+                                                    <Box mt={'xs'}>
+                                                        <Grid gutter={{base: 1}}>
+                                                            <Grid.Col span={2}>
+                                                                <SwitchForm
+                                                                    tooltip={t('PosPayFirst')}
+                                                                    label=''
+                                                                    id={'is_pay_first'}
+                                                                    name={'is_pay_first'}
+                                                                    nextField={'is_pos'}
+                                                                    form={form}
+                                                                    color="red"
+                                                                    position={'left'}
+                                                                    defaultChecked={configData.is_pay_first}
+                                                                />
+                                                            </Grid.Col>
+                                                            <Grid.Col span={6} fz={'sm'}
+                                                                      pt={'1'}>{t('PosPayFirst')}</Grid.Col>
+                                                        </Grid>
+                                                    </Box>
+                                                    <Box mt={'xs'}>
+                                                        <Grid gutter={{base: 1}}>
+                                                            <Grid.Col span={2}>
+                                                                <SwitchForm
+                                                                    tooltip={t('PosEnable')}
+                                                                    label=''
+                                                                    id={'is_pos'}
+                                                                    name={'is_pos'}
+                                                                    nextField={'is_kitchen'}
+                                                                    form={form}
+                                                                    color="red"
+                                                                    position={'left'}
+                                                                    defaultChecked={configData.is_pos}
+                                                                />
+                                                            </Grid.Col>
+                                                            <Grid.Col span={6} fz={'sm'}
+                                                                      pt={'1'}>{t('PosEnable')}</Grid.Col>
+                                                        </Grid>
+                                                    </Box>
+
+                                                    <Box mt={'xs'}>
+                                                        <Grid gutter={{base: 1}}>
+                                                            <Grid.Col span={2}>
+                                                                <SwitchForm
+                                                                    tooltip={t('KitchenEnable')}
+                                                                    label=''
+                                                                    id={'is_kitchen'}
+                                                                    name={'is_kitchen'}
+                                                                    nextField={'custom_invoice'}
+                                                                    form={form}
+                                                                    color="red"
+                                                                    position={'left'}
+                                                                    defaultChecked={configData.is_kitchen}
+                                                                />
+                                                            </Grid.Col>
+                                                            <Grid.Col span={6} fz={'sm'}
+                                                                      pt={'1'}>{t('KitchenEnable')}</Grid.Col>
+                                                        </Grid>
+                                                    </Box>
+                                                    <Box pt={'8'} pb={'12'} mt={'8'} ta="center" bg={'gray.2'}>
+                                                        <Title order={6} pt={'4'}>{t('PrintSetup')}</Title>
+                                                    </Box>
+                                                    <Box mt={'xs'}>
+                                                        <Grid gutter={{base: 1}}>
+                                                            <Grid.Col span={2}>
+                                                                <SwitchForm
+                                                                    tooltip={t('CustomInvoicePrint')}
+                                                                    label=''
+                                                                    nextField={'is_stock_history'}
+                                                                    name={'custom_invoice_print'}
+                                                                    form={form}
+                                                                    color="red"
+                                                                    id={'custom_invoice_print'}
+                                                                    position={'left'}
+                                                                    defaultChecked={configData.custom_invoice_print}
+                                                                />
+                                                            </Grid.Col>
+                                                            <Grid.Col span={6} fz={'sm'}
+                                                                      pt={'1'}>{t('CustomInvoicePrint')}</Grid.Col>
+                                                        </Grid>
+                                                    </Box>
                                                     <Box mt={'xs'}>
                                                         <Grid gutter={{base: 1}}>
                                                             <Grid.Col span={2}>
@@ -511,24 +745,6 @@ function ConfigurationForm() {
                                                             </Grid.Col>
                                                             <Grid.Col span={6} fz={'sm'}
                                                                       pt={'1'}>{t('PrintWithOutstanding')}</Grid.Col>
-                                                        </Grid>
-                                                    </Box>
-                                                    <Box mt={'xs'}>
-                                                        <Grid gutter={{base: 1}}>
-                                                            <Grid.Col span={2}>
-                                                                <SwitchForm
-                                                                    tooltip={t('PosPrint')}
-                                                                    label=''
-                                                                    nextField={'is_print_header'}
-                                                                    name={'pos_print'}
-                                                                    form={form}
-                                                                    color="red"
-                                                                    id={'pos_print'}
-                                                                    position={'left'}
-                                                                    defaultChecked={configData.pos_print}
-                                                                />
-                                                            </Grid.Col>
-                                                            <Grid.Col span={6} fz={'sm'} pt={'1'}>{t('PosPrint')}</Grid.Col>
                                                         </Grid>
                                                     </Box>
                                                     <Box mt={'xs'}>
@@ -607,29 +823,6 @@ function ConfigurationForm() {
                                                                       pt={'1'}>{t('PrintPowered')}</Grid.Col>
                                                         </Grid>
                                                     </Box>
-
-                                                    <Box mt={'xs'}>
-                                                        <Box mt={'xs'}>
-                                                            <SelectForm
-                                                                tooltip={t('PosInvoiceMode')}
-                                                                label={t('PosInvoiceMode')}
-                                                                placeholder={t('ChoosePosInvoiceMode')}
-                                                                required={false}
-                                                                nextField={'print_footer_text'}
-                                                                name={'pos_invoice_mode_id'}
-                                                                form={form}
-                                                                dropdownValue={posInvoiceModeDropdown}
-                                                                mt={8}
-                                                                id={'pos_invoice_mode_id'}
-                                                                searchable={false}
-                                                                value={posInvoiceModeId}
-                                                                changeValue={setPosInvoiceModeId}
-                                                                clearable={true}
-                                                                allowDeselect={true}
-                                                            />
-                                                        </Box>
-                                                    </Box>
-
                                                     <Box mt={'xs'}>
                                                         <TextAreaForm
                                                             tooltip={t('PrintFooterText')}
@@ -643,7 +836,6 @@ function ConfigurationForm() {
                                                             id={'print_footer_text'}
                                                         />
                                                     </Box>
-
                                                     <Grid columns={12} gutter={{base: 8}}>
                                                         <Grid.Col span={6}>
                                                             <Box mt={'xs'}>
@@ -757,7 +949,6 @@ function ConfigurationForm() {
                                                             </Box>
                                                         </Grid.Col>
                                                     </Grid>
-
                                                 </Box>
                                             </ScrollArea>
                                         </Box>
@@ -771,7 +962,7 @@ function ConfigurationForm() {
                                              className={'boxBackground borderRadiusAll'}>
                                             <Grid>
                                                 <Grid.Col span={6}>
-                                                    <Title order={6} pt={'6'}>{t('Configuration')}</Title>
+                                                    <Title order={6} pt={'6'}>{t('ManageConfiguration')}</Title>
                                                 </Grid.Col>
                                                 <Grid.Col span={6}>
                                                     <Stack right align="flex-end">
@@ -805,6 +996,25 @@ function ConfigurationForm() {
                                                         <Grid gutter={{base: 1}}>
                                                             <Grid.Col span={2}>
                                                                 <SwitchForm
+                                                                    tooltip={t('CustomInvoice')}
+                                                                    label=''
+                                                                    nextField={'bonus_from_stock'}
+                                                                    name={'custom_invoice'}
+                                                                    form={form}
+                                                                    color="red"
+                                                                    id={'custom_invoice'}
+                                                                    position={'left'}
+                                                                    defaultChecked={configData.custom_invoice}
+                                                                />
+                                                            </Grid.Col>
+                                                            <Grid.Col span={6} fz={'sm'}
+                                                                      pt={'1'}>{t('CustomInvoice')}</Grid.Col>
+                                                        </Grid>
+                                                    </Box>
+                                                    <Box mt={'xs'}>
+                                                        <Grid gutter={{base: 1}}>
+                                                            <Grid.Col span={2}>
+                                                                <SwitchForm
                                                                     tooltip={t('SalesAutoApproved')}
                                                                     label=''
                                                                     id={'is_sales_auto_approved'}
@@ -818,6 +1028,44 @@ function ConfigurationForm() {
                                                             </Grid.Col>
                                                             <Grid.Col span={6} fz={'sm'}
                                                                       pt={'1'}>{t('SalesAutoApproved')}</Grid.Col>
+                                                        </Grid>
+                                                    </Box>
+                                                    <Box mt={'xs'} mb={'xs'}>
+                                                        <Grid gutter={{base: 1}}>
+                                                            <Grid.Col span={2}>
+                                                                <SwitchForm
+                                                                    tooltip={t('DueSalesWithoutCustomer')}
+                                                                    label=''
+                                                                    nextField={'is_zero_receive_allow'}
+                                                                    name={'due_sales_without_customer'}
+                                                                    form={form}
+                                                                    color="red"
+                                                                    id={'due_sales_without_customer'}
+                                                                    position={'left'}
+                                                                    defaultChecked={configData.due_sales_without_customer}
+                                                                />
+                                                            </Grid.Col>
+                                                            <Grid.Col span={6} fz={'sm'}
+                                                                      pt={'1'}>{t('DueSalesWithoutCustomer')}</Grid.Col>
+                                                        </Grid>
+                                                    </Box>
+                                                    <Box mt={'xs'}>
+                                                        <Grid gutter={{base: 1}}>
+                                                            <Grid.Col span={2}>
+                                                                <SwitchForm
+                                                                    tooltip={t('SalesReturn')}
+                                                                    label=''
+                                                                    nextField={'sr_commission'}
+                                                                    name={'sales_return'}
+                                                                    form={form}
+                                                                    color="red"
+                                                                    id={'sales_return'}
+                                                                    position={'left'}
+                                                                    defaultChecked={configData.sales_return}
+                                                                />
+                                                            </Grid.Col>
+                                                            <Grid.Col span={6} fz={'sm'}
+                                                                      pt={'1'}>{t('SalesReturn')}</Grid.Col>
                                                         </Grid>
                                                     </Box>
                                                     <Box mt={'xs'}>
@@ -839,102 +1087,7 @@ function ConfigurationForm() {
                                                                       pt={'1'}>{t('PurchaseAutoApproved')}</Grid.Col>
                                                         </Grid>
                                                     </Box>
-                                                    <Box mt={'xs'}>
-                                                        <Grid gutter={{base: 1}}>
-                                                            <Grid.Col span={2}>
-                                                                <SwitchForm
-                                                                    tooltip={t('PosPayFirst')}
-                                                                    label=''
-                                                                    id={'is_pay_first'}
-                                                                    name={'is_pay_first'}
-                                                                    nextField={'is_pos'}
-                                                                    form={form}
-                                                                    color="red"
-                                                                    position={'left'}
-                                                                    defaultChecked={configData.is_pay_first}
-                                                                />
-                                                            </Grid.Col>
-                                                            <Grid.Col span={6} fz={'sm'}
-                                                                      pt={'1'}>{t('PosPayFirst')}</Grid.Col>
-                                                        </Grid>
-                                                    </Box>
-                                                    <Box mt={'xs'}>
-                                                        <Grid gutter={{base: 1}}>
-                                                            <Grid.Col span={2}>
-                                                                <SwitchForm
-                                                                    tooltip={t('PosEnable')}
-                                                                    label=''
-                                                                    id={'is_pos'}
-                                                                    name={'is_pos'}
-                                                                    nextField={'is_kitchen'}
-                                                                    form={form}
-                                                                    color="red"
-                                                                    position={'left'}
-                                                                    defaultChecked={configData.is_pos}
-                                                                />
-                                                            </Grid.Col>
-                                                            <Grid.Col span={6} fz={'sm'}
-                                                                      pt={'1'}>{t('PosEnable')}</Grid.Col>
-                                                        </Grid>
-                                                    </Box>
 
-                                                    <Box mt={'xs'}>
-                                                        <Grid gutter={{base: 1}}>
-                                                            <Grid.Col span={2}>
-                                                                <SwitchForm
-                                                                    tooltip={t('KitchenEnable')}
-                                                                    label=''
-                                                                    id={'is_kitchen'}
-                                                                    name={'is_kitchen'}
-                                                                    nextField={'custom_invoice'}
-                                                                    form={form}
-                                                                    color="red"
-                                                                    position={'left'}
-                                                                    defaultChecked={configData.is_kitchen}
-                                                                />
-                                                            </Grid.Col>
-                                                            <Grid.Col span={6} fz={'sm'}
-                                                                      pt={'1'}>{t('KitchenEnable')}</Grid.Col>
-                                                        </Grid>
-                                                    </Box>
-                                                    <Box mt={'xs'}>
-                                                        <Grid gutter={{base: 1}}>
-                                                            <Grid.Col span={2}>
-                                                                <SwitchForm
-                                                                    tooltip={t('CustomInvoice')}
-                                                                    label=''
-                                                                    nextField={'bonus_from_stock'}
-                                                                    name={'custom_invoice'}
-                                                                    form={form}
-                                                                    color="red"
-                                                                    id={'custom_invoice'}
-                                                                    position={'left'}
-                                                                    defaultChecked={configData.custom_invoice}
-                                                                />
-                                                            </Grid.Col>
-                                                            <Grid.Col span={6} fz={'sm'}
-                                                                      pt={'1'}>{t('CustomInvoice')}</Grid.Col>
-                                                        </Grid>
-                                                    </Box>
-                                                    <Box mt={'xs'}>
-                                                        <Grid gutter={{base: 1}}>
-                                                            <Grid.Col span={2}>
-                                                                <SwitchForm
-                                                                    tooltip={t('BonusFromStock')}
-                                                                    label=''
-                                                                    nextField={'is_unit_price'}
-                                                                    name={'bonus_from_stock'}
-                                                                    form={form}
-                                                                    color="red"
-                                                                    id={'bonus_from_stock'}
-                                                                    position={'left'}
-                                                                    defaultChecked={configData.bonus_from_stock}
-                                                                />
-                                                            </Grid.Col>
-                                                            <Grid.Col span={6} fz={'sm'}
-                                                                      pt={'1'}>{t('BonusFromStock')}</Grid.Col>
-                                                        </Grid>
-                                                    </Box>
                                                     <Box mt={'xs'}>
                                                         <Grid gutter={{base: 1}}>
                                                             <Grid.Col span={2}>
@@ -953,6 +1106,48 @@ function ConfigurationForm() {
                                                             <Grid.Col span={6} fz={'sm'}
                                                                       pt={'1'}>{t('IsUnitPrice')}</Grid.Col>
                                                         </Grid>
+                                                    </Box>
+
+                                                    <Box mt={'xs'} mb={'xs'}>
+                                                        <Grid gutter={{base: 1}}>
+                                                            <Grid.Col span={2}>
+                                                                <SwitchForm
+                                                                    tooltip={t('ZeroReceiveAllow')}
+                                                                    label=''
+                                                                    nextField={'is_purchase_by_purchase_price'}
+                                                                    name={'is_zero_receive_allow'}
+                                                                    form={form}
+                                                                    color="red"
+                                                                    id={'is_zero_receive_allow'}
+                                                                    position={'left'}
+                                                                    defaultChecked={configData.is_zero_receive_allow}
+                                                                />
+                                                            </Grid.Col>
+                                                            <Grid.Col span={6} fz={'sm'}
+                                                                      pt={'1'}>{t('ZeroReceiveAllow')}</Grid.Col>
+                                                        </Grid>
+                                                    </Box>
+                                                    <Box mt={'xs'} mb={'xs'}>
+                                                        <Grid gutter={{base: 1}}>
+                                                            <Grid.Col span={2}>
+                                                                <SwitchForm
+                                                                    tooltip={t('PurchaseByPurchasePrice')}
+                                                                    label=''
+                                                                    nextField={'is_active_sms'}
+                                                                    name={'is_purchase_by_purchase_price'}
+                                                                    form={form}
+                                                                    color="red"
+                                                                    id={'is_purchase_by_purchase_price'}
+                                                                    position={'left'}
+                                                                    defaultChecked={configData.is_purchase_by_purchase_price}
+                                                                />
+                                                            </Grid.Col>
+                                                            <Grid.Col span={6} fz={'sm'}
+                                                                      pt={'1'}>{t('PurchaseByPurchasePrice')}</Grid.Col>
+                                                        </Grid>
+                                                    </Box>
+                                                    <Box pt={'8'} pb={'12'} mt={'8'} ta="center" bg={'gray.2'}>
+                                                        <Title order={6} pt={'4'}>{t('ManageProduct')}</Title>
                                                     </Box>
                                                     <Box mt={'xs'}>
                                                         <Grid gutter={{base: 1}}>
@@ -1015,19 +1210,19 @@ function ConfigurationForm() {
                                                         <Grid gutter={{base: 1}}>
                                                             <Grid.Col span={2}>
                                                                 <SwitchForm
-                                                                    tooltip={t('CustomInvoicePrint')}
+                                                                    tooltip={t('BonusFromStock')}
                                                                     label=''
-                                                                    nextField={'is_stock_history'}
-                                                                    name={'custom_invoice_print'}
+                                                                    nextField={'is_unit_price'}
+                                                                    name={'bonus_from_stock'}
                                                                     form={form}
                                                                     color="red"
-                                                                    id={'custom_invoice_print'}
+                                                                    id={'bonus_from_stock'}
                                                                     position={'left'}
-                                                                    defaultChecked={configData.custom_invoice_print}
+                                                                    defaultChecked={configData.bonus_from_stock}
                                                                 />
                                                             </Grid.Col>
                                                             <Grid.Col span={6} fz={'sm'}
-                                                                      pt={'1'}>{t('CustomInvoicePrint')}</Grid.Col>
+                                                                      pt={'1'}>{t('BonusFromStock')}</Grid.Col>
                                                         </Grid>
                                                     </Box>
                                                     <Box mt={'xs'}>
@@ -1048,6 +1243,9 @@ function ConfigurationForm() {
                                                             <Grid.Col span={6} fz={'sm'}
                                                                       pt={'1'}>{t('StockHistory')}</Grid.Col>
                                                         </Grid>
+                                                    </Box>
+                                                    <Box pt={'8'} pb={'12'} mt={'8'} ta="center" bg={'gray.2'}>
+                                                        <Title order={6} pt={'4'}>{t('ManageOthers')}</Title>
                                                     </Box>
                                                     <Box mt={'xs'}>
                                                         <Grid gutter={{base: 1}}>
@@ -1126,25 +1324,7 @@ function ConfigurationForm() {
                                                                       pt={'1'}>{t('TloCommision')}</Grid.Col>
                                                         </Grid>
                                                     </Box>
-                                                    <Box mt={'xs'}>
-                                                        <Grid gutter={{base: 1}}>
-                                                            <Grid.Col span={2}>
-                                                                <SwitchForm
-                                                                    tooltip={t('SalesReturn')}
-                                                                    label=''
-                                                                    nextField={'sr_commission'}
-                                                                    name={'sales_return'}
-                                                                    form={form}
-                                                                    color="red"
-                                                                    id={'sales_return'}
-                                                                    position={'left'}
-                                                                    defaultChecked={configData.sales_return}
-                                                                />
-                                                            </Grid.Col>
-                                                            <Grid.Col span={6} fz={'sm'}
-                                                                      pt={'1'}>{t('SalesReturn')}</Grid.Col>
-                                                        </Grid>
-                                                    </Box>
+
                                                     <Box mt={'xs'}>
                                                         <Grid gutter={{base: 1}}>
                                                             <Grid.Col span={2}>
@@ -1162,63 +1342,6 @@ function ConfigurationForm() {
                                                             </Grid.Col>
                                                             <Grid.Col span={6} fz={'sm'}
                                                                       pt={'1'}>{t('SRCommision')}</Grid.Col>
-                                                        </Grid>
-                                                    </Box>
-                                                    <Box mt={'xs'} mb={'xs'}>
-                                                        <Grid gutter={{base: 1}}>
-                                                            <Grid.Col span={2}>
-                                                                <SwitchForm
-                                                                    tooltip={t('DueSalesWithoutCustomer')}
-                                                                    label=''
-                                                                    nextField={'is_zero_receive_allow'}
-                                                                    name={'due_sales_without_customer'}
-                                                                    form={form}
-                                                                    color="red"
-                                                                    id={'due_sales_without_customer'}
-                                                                    position={'left'}
-                                                                    defaultChecked={configData.due_sales_without_customer}
-                                                                />
-                                                            </Grid.Col>
-                                                            <Grid.Col span={6} fz={'sm'}
-                                                                      pt={'1'}>{t('DueSalesWithoutCustomer')}</Grid.Col>
-                                                        </Grid>
-                                                    </Box>
-                                                    <Box mt={'xs'} mb={'xs'}>
-                                                        <Grid gutter={{base: 1}}>
-                                                            <Grid.Col span={2}>
-                                                                <SwitchForm
-                                                                    tooltip={t('ZeroReceiveAllow')}
-                                                                    label=''
-                                                                    nextField={'is_purchase_by_purchase_price'}
-                                                                    name={'is_zero_receive_allow'}
-                                                                    form={form}
-                                                                    color="red"
-                                                                    id={'is_zero_receive_allow'}
-                                                                    position={'left'}
-                                                                    defaultChecked={configData.is_zero_receive_allow}
-                                                                />
-                                                            </Grid.Col>
-                                                            <Grid.Col span={6} fz={'sm'}
-                                                                      pt={'1'}>{t('ZeroReceiveAllow')}</Grid.Col>
-                                                        </Grid>
-                                                    </Box>
-                                                    <Box mt={'xs'} mb={'xs'}>
-                                                        <Grid gutter={{base: 1}}>
-                                                            <Grid.Col span={2}>
-                                                                <SwitchForm
-                                                                    tooltip={t('PurchaseByPurchasePrice')}
-                                                                    label=''
-                                                                    nextField={'is_active_sms'}
-                                                                    name={'is_purchase_by_purchase_price'}
-                                                                    form={form}
-                                                                    color="red"
-                                                                    id={'is_purchase_by_purchase_price'}
-                                                                    position={'left'}
-                                                                    defaultChecked={configData.is_purchase_by_purchase_price}
-                                                                />
-                                                            </Grid.Col>
-                                                            <Grid.Col span={6} fz={'sm'}
-                                                                      pt={'1'}>{t('PurchaseByPurchasePrice')}</Grid.Col>
                                                         </Grid>
                                                     </Box>
 

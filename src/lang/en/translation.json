@@ -898,7 +898,6 @@
   "DiscountPercentValidateMessage" : "Discount percent must be between 0-99",
   "LogoutAltL" : "Logout (Alt + L)",
   "ClickRightButtonForPercentFlat" : "Click right button for percent/flat",
-  "SplitPaymentActive" : "Split Payment Active",
   "Android Apps" : "Android Apps",
   "Inventory Stock" : "Inventory Stock",
   "AccountingAdmin" : "Accounting Admin",
@@ -924,6 +923,15 @@
   "AccountReceive" : "Account Receive",
   "AccountPayment" : "Account Payment",
   "AccountExpense" : "Account Expense",
-  "SalesPercent" : "Sales Percent"
-  
+  "SalesPercent" : "Sales Percent",
+  "ManagePos&Print" : "Manage POS & Print",
+  "CompanyLogo" : "Company Logo",
+  "ManageConfiguration" : "Manage Configuration",
+  "ManageOthers" : "Manage Others",
+  "HSCodeEnabled" : "HSCode Enabled",
+  "SDEnabled" : "SD Enabled",
+  "SdPercent" : "SD Enabled",
+  "AitPercent" : "AIT Percent",
+  "AitEnabled" : "SD Enabled",
+  "SplitPaymentActive" : "Split Payment Active"
 }
