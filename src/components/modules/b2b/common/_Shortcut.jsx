@@ -60,7 +60,40 @@ export default function _Shortcut(props) {
               {t("Dashboard")}
             </Flex>
           </Flex>
-          {module !== "dashboard" && (
+
+          <Flex direction={`column`} align={"center"} mt={"xs"} pt={5}>
+            <Tooltip
+              label={t("B2BDomain")}
+              px={16}
+              py={2}
+              withArrow
+              position={"left"}
+              c={"white"}
+              bg={`red.5`}
+              transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
+            >
+              <Button
+                bg={"#6f1225"}
+                size="md"
+                pl={"12"}
+                pr={"12"}
+                variant={"light"}
+                color={`black`}
+                radius="xl"
+                onClick={(e) => {
+                  navigate("/b2b/domain");
+                }}
+              >
+                <Flex direction={`column`} align={"center"}>
+                  <IconDashboard size={16} color={"white"} />
+                </Flex>
+              </Button>
+            </Tooltip>
+            <Flex direction={`column`} align={"center"} fz={"12"} c={"black"}>
+              {t("Domain")}
+            </Flex>
+          </Flex>
+          {module !== "b2b_dashboard" && (
             <>
               <Flex direction={`column`} align={"center"} mb={"8"}>
                 <Tooltip

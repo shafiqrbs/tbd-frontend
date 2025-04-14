@@ -933,5 +933,9 @@
   "SdPercent" : "SD Enabled",
   "AitPercent" : "AIT Percent",
   "AitEnabled" : "SD Enabled",
-  "SplitPaymentActive" : "Split Payment Active"
+  "SplitPaymentActive" : "Split Payment Active",
+  "B2BDomain": "B2B Domain",
+  "DomainType": "Domain type",
+  "ChooseDomainType": "Choose domain type",
+  "": ""
 }

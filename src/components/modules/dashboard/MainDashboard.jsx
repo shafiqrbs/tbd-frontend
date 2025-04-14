@@ -484,7 +484,8 @@ function MainDashboard(props) {
                         }
                         
                         {
-                            configData?.domain?.modules?.includes("accounting") && ["role_accounting",].some((value) => userRole.includes(value)) && (
+                            // configData?.domain?.modules?.includes("accounting") && ["role_accounting",].some((value) => userRole.includes(value)) && (
+                            configData?.domain?.modules?.includes("accounting") &&  (
                                 <Card shadow="md" radius="md" className={classes.card} padding="lg">
                                     <Grid gutter={{base: 2}}>
                                         <Grid.Col span={2}>
@@ -674,7 +675,8 @@ function MainDashboard(props) {
                             )
                         }
                         {
-                            configData?.domain?.modules?.includes("procurement") && ["role_procurement",].some((value) => userRole.includes(value)) && (
+                            // configData?.domain?.modules?.includes("procurement") && ["role_procurement",].some((value) => userRole.includes(value)) && (
+                            configData?.domain?.modules?.includes("procurement") && (
                                 <Card shadow="md" radius="md" className={classes.card} padding="lg">
                                     <Grid gutter={{base: 2}}>
                                         <Grid.Col span={2}>
@@ -1201,7 +1203,7 @@ function MainDashboard(props) {
                             )
                         }
                         {
-                            configData?.domain?.modules?.includes("core") && ["role_core",].some((value) => userRole.includes(value)) && (
+                            configData?.domain?.modules?.includes("core") && ["role_core",]?.some((value) => userRole.includes(value)) && (
                                 <Card shadow="md" radius="md" className={classes.card} padding="lg">
                                     <Grid gutter={{base: 2}}>
                                         <Grid.Col span={2}>
