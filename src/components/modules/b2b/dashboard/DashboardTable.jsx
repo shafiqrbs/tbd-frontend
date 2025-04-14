@@ -18,9 +18,7 @@ import tableCss from "../../../../assets/css/Table.module.css";
 import { DataTable } from "mantine-datatable";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
-import {
-  IconMoneybag,
-} from "@tabler/icons-react";
+import { IconMoneybag } from "@tabler/icons-react";
 import classes from "../../../../assets/css/FeaturesCards.module.css";
 
 export default function DashBoardTable() {
@@ -48,15 +46,30 @@ export default function DashBoardTable() {
 
     try {
       const parsedUser = JSON.parse(userRoleData);
-      return parsedUser.access_control_role
-        ? JSON.parse(parsedUser.access_control_role)
-        : [];
+
+      if (!parsedUser.access_control_role) return [];
+
+      if (Array.isArray(parsedUser.access_control_role)) {
+        return parsedUser.access_control_role;
+      }
+
+      if (typeof parsedUser.access_control_role === "string") {
+        try {
+          if (parsedUser.access_control_role.trim() === "") return [];
+          return JSON.parse(parsedUser.access_control_role);
+        } catch (parseError) {
+          console.error("Error parsing access_control_role:", parseError);
+          return [];
+        }
+      }
+
+      return [];
     } catch (error) {
-      console.error("Error parsing user role data:", error);
+      console.error("Error parsing user data from localStorage:", error);
       return [];
     }
   });
-  //   console.log("userRole", userRole);
+  console.log("userRole", userRole);
   return (
     <>
       <Box
@@ -141,7 +154,7 @@ export default function DashBoardTable() {
                 textAlign: "right",
                 render: (data) => (
                   <Group gap={4} justify="right" wrap="nowrap">
-                    {userRole.includes("role_accounting") && (
+                    {/* {userRole.includes("role_accounting") && (
                       <Button
                         component="a"
                         size="compact-xs"
@@ -157,7 +170,22 @@ export default function DashBoardTable() {
                       >
                         {t("Manage")}
                       </Button>
-                    )}
+                    )} */}
+                    <Button
+                      component="a"
+                      size="compact-xs"
+                      radius="xs"
+                      variant="filled"
+                      fw={"100"}
+                      fz={"12"}
+                      color="red.3"
+                      mr={"4"}
+                      onClick={() => {
+                        navigate(`/b2b/sub-domain/category/${1}`);
+                      }}
+                    >
+                      {t("Manage")}
+                    </Button>
                   </Group>
                 ),
               },
