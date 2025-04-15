@@ -32,9 +32,7 @@ export default function ProductIndex() {
                 <_Shortcut id={id} />
               </Grid.Col>
               <Grid.Col span={23}>
-                <Box bg={"white"} p={"xs"} className={"borderRadiusAll"}>
-                  <ProductTable id={id} />
-                </Box>
+                <ProductTable id={id} />
               </Grid.Col>
             </Grid>
           </Box>

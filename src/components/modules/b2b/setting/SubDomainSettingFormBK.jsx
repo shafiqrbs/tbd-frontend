@@ -1,0 +1,140 @@
+import React, { useState } from "react";
+import { useOutletContext } from "react-router-dom";
+import {
+    Button, rem, Flex, Grid, Box, ScrollArea, Group, Text, Title, Stack, useMantineTheme, Switch
+} from "@mantine/core";
+import { useTranslation } from 'react-i18next';
+import {
+    IconCheck,
+    IconDeviceFloppy, IconX
+} from "@tabler/icons-react";
+import { useHotkeys } from "@mantine/hooks";
+import { useDispatch } from "react-redux";
+import { hasLength, useForm } from "@mantine/form";
+import { modals } from "@mantine/modals";
+import { notifications } from "@mantine/notifications";
+
+import { setFetching, storeEntityData } from "../../../../store/inventory/crudSlice.js";
+
+import Shortcut from "../../shortcut/Shortcut";
+import InputForm from "../../../form-builders/InputForm";
+import SwitchForm from "../../../form-builders/SwitchForm";
+
+
+function SubDomainSettingForm() {
+    const { t, i18n } = useTranslation();
+    const dispatch = useDispatch();
+    const { isOnline, mainAreaHeight } = useOutletContext();
+    const height = mainAreaHeight - 100; //TabList height 104
+    const [saveCreateLoading, setSaveCreateLoading] = useState(false)
+
+
+    const form = useForm({
+        initialValues: {
+            name: '', status: true
+        },
+        validate: {
+            name: hasLength({ min: 2, max: 20 }),
+        }
+    });
+
+    useHotkeys([['alt+n', () => {
+        document.getElementById('name').focus()
+    }]], []);
+
+    useHotkeys([['alt+r', () => {
+        form.reset()
+    }]], []);
+
+    useHotkeys([['alt+s', () => {
+        document.getElementById('EntityFormSubmit').click()
+    }]], []);
+
+
+    return (
+        <>
+            <Box>
+                <form onSubmit={form.onSubmit((values) => {
+                    modals.openConfirmModal({
+                        title: (
+                            <Text size="md"> {t("FormConfirmationTitle")}</Text>
+                        ),
+                        children: (
+                            <Text size="sm"> {t("FormConfirmationMessage")}</Text>
+                        ),
+                        labels: { confirm: 'Submit', cancel: 'Cancel' }, confirmProps: { color: 'red' },
+                        onCancel: () => console.log('Cancel'),
+                        onConfirm: () => {
+                            setSaveCreateLoading(true)
+                            const value = {
+                                url: 'inventory/category-group',
+                                data: form.values
+                            }
+                            dispatch(storeEntityData(value))
+
+                            notifications.show({
+                                color: 'teal',
+                                title: t('CreateSuccessfully'),
+                                icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
+                                loading: false,
+                                autoClose: 700,
+                                style: { backgroundColor: 'lightgray' },
+                            });
+
+                            setTimeout(() => {
+                                form.reset()
+                                setSaveCreateLoading(false)
+                                dispatch(setFetching(true))
+                            }, 700)
+                        },
+                    });
+                })}>
+                    <Grid columns={9} gutter={{ base: 8 }}>
+                        <Grid.Col span={9} >
+                            <Box bg={"white"} >
+                                <Box pl={`xs`} mt={'md'} pr={'xs'} className={'borderRadiusAll'}>
+                                    <ScrollArea h={height} scrollbarSize={2} scrollbars="y" type="never">
+                                        <Box mt={'xs'}>
+                                            <InputForm
+                                                tooltip={t('CategoryGroupNameValidateMessage')}
+                                                label={t('CategoryGroupName')}
+                                                placeholder={t('CategoryGroupName')}
+                                                required={true}
+                                                nextField={'status'}
+                                                form={form}
+                                                name={'name'}
+                                                mt={8}
+                                                id={'name'}
+                                            />
+                                        </Box>
+                                        <Box mt={'xs'}>
+                                            <Grid gutter={{ base: 1 }}>
+                                                <Grid.Col span={2} >
+                                                    <SwitchForm
+                                                        tooltip={t('Status')}
+                                                        label=''
+                                                        nextField={'CategoryFormSubmit'}
+                                                        name={'status'}
+                                                        form={form}
+                                                        color="red"
+                                                        id={'status'}
+                                                        position={'left'}
+                                                        defaultChecked={1}
+                                                    />
+                                                </Grid.Col>
+                                                <Grid.Col span={6} fz={'sm'} pt={'1'}>{t('Status')}</Grid.Col>
+                                            </Grid>
+
+                                        </Box>
+                                    </ScrollArea>
+                                </Box>
+                            </Box>
+                        </Grid.Col>
+                    </Grid>
+                </form>
+            </Box>
+        </>
+    );
+}
+
+export default SubDomainSettingForm;

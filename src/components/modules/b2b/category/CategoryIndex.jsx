@@ -32,9 +32,7 @@ export default function CategoryIndex() {
                 <_Shortcut id={id} />
               </Grid.Col>
               <Grid.Col span={23}>
-                <Box bg={"white"} p={"xs"} className={"borderRadiusAll"}>
-                  <CategoryTable id={id} />
-                </Box>
+                <CategoryTable id={id} />
               </Grid.Col>
             </Grid>
           </Box>

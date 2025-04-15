@@ -937,5 +937,12 @@
   "B2BDomain": "B2B Domain",
   "DomainType": "Domain type",
   "ChooseDomainType": "Choose domain type",
+  "BonusPercent": "Bonus Percent",
+  "MonthlyTargetAmount": "Monthly Target Amount",
+  "MRPPercent" : "MRP Percent",
+  "ManageBranchAndFranchise" : "Manage Branch & Franchise",
+  "DiscountOverview" : "Discount Overview",
+  "CategoryOverview" : "Category Overview",
+  "ChooseMode" : "Choose Mode",
   "": ""
 }
