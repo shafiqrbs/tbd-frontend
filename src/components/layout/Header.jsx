@@ -75,7 +75,6 @@ export default function Header({ isOnline, configData }) {
 
   const [configDataSpot, setConfigData] = useState(null);
   const loginUser = JSON.parse(localStorage.getItem("user"));
-
   useEffect(() => {
     const checkConfigData = () => {
       const storedConfigData = localStorage.getItem("config-data");
@@ -137,7 +136,7 @@ export default function Header({ isOnline, configData }) {
     ],
     []
   );
-  
+
   const shortcuts = (
     <Stack spacing="xs">
       {list
@@ -269,8 +268,8 @@ export default function Header({ isOnline, configData }) {
       <Box bg={"white"} mb={"2"} pos={`relative`}>
         <Grid columns={24} gutter={{ base: 2 }} justify="space-between">
           <Grid.Col span={3}>
-            {configData?.domain && loginUser.user_group === 'domain' ? (
-                <>
+            {configData?.domain && loginUser.user_group === "domain" ? (
+              <>
                 <div
                   style={{
                     display: "flex",
@@ -280,123 +279,74 @@ export default function Header({ isOnline, configData }) {
                   }}
                 >
                   <Tooltip
-                      label={
-                        configData && configData.domain
-                            ? configData.domain.company_name
-                            : ""
-                      }
-                      bg={`green`}
-                      position="right"
-                      withArrow
+                    label={
+                      configData && configData.domain
+                        ? configData.domain.company_name
+                        : ""
+                    }
+                    bg={`green`}
+                    position="right"
+                    withArrow
                   >
-                  <Anchor
-                    target="_blank"
-                    underline="never"
-                    onClick={() => {
-                      if (!configData?.path) {
+                    <Anchor
+                      target="_blank"
+                      underline="never"
+                      onClick={() => {
+                        if (!configData?.path) {
                           navigate(`/domain/config/${configData?.domain?.id}`);
+                        } else {
+                          navigate("/");
                         }
-                      else{
-                        navigate("/");
-                      }
-                    }}
-                    onAuxClick={(e) => {
-                      if (!configData?.path) {
-                        window.open(`/domain/config/${configData?.domain?.id}`);
-                      }
-                      else{
-                        window.open("/");
-                      }
-                    }}
-                  >
-                    <Image
-                      mah={40}
-                      radius="md"
-                      src={import.meta.env.VITE_IMAGE_GATEWAY_URL + '/uploads/inventory/logo/' + configData.path}
-                      fallbackSrc={logo_default}
-                      pl={6}
-                    ></Image>
-                  </Anchor>
+                      }}
+                      onAuxClick={(e) => {
+                        if (!configData?.path) {
+                          window.open(
+                            `/domain/config/${configData?.domain?.id}`
+                          );
+                        } else {
+                          window.open("/");
+                        }
+                      }}
+                    >
+                      <Image
+                        mah={40}
+                        radius="md"
+                        src={
+                          import.meta.env.VITE_IMAGE_GATEWAY_URL +
+                          "/uploads/inventory/logo/" +
+                          configData.path
+                        }
+                        fallbackSrc={logo_default}
+                        pl={6}
+                      ></Image>
+                    </Anchor>
                   </Tooltip>
                   <Text ml={4}>{configData.domain.company_name}</Text>
                 </div>
-                </>
+              </>
             ) : (
-                <NavLink
-                    href="/"
-                    c={"red"}
-                    fw={"800"}
-                    component="button"
-                    label={
-                      configData && configData.domain
-                          ? configData.domain.company_name
-                          : ""
-                    }
-                    onClick={(e) => {
-                      navigate("/");
-                    }}
-                />
+              <NavLink
+                href="/"
+                c={"red"}
+                fw={"800"}
+                component="button"
+                label={
+                  configData && configData.domain
+                    ? configData.domain.company_name
+                    : ""
+                }
+                onClick={(e) => {
+                  navigate("/");
+                }}
+              />
             )}
           </Grid.Col>
-          <Grid.Col span={3} justify="flex-end" align={"center"} mt={"xs"}>
-            <HoverCard
-              width={400}
-              position="bottom"
-              radius="md"
-              shadow="md"
-              withinPortal
-              withArrow
-              arrowPosition="center"
-            >
-              <HoverCard.Target>
-                <a href="#" className={classes.link}>
-                  <Center inline>
-                    <Box component="span" mr={"xs"} c={"green.8"} fw={"800"}>
-                      {t("Shortcut")}
-                    </Box>
-                    <IconChevronDown
-                      style={{ width: rem(16), height: rem(16) }}
-                      color={"green"}
-                    />
-                  </Center>
-                </a>
-              </HoverCard.Target>
-
-              <HoverCard.Dropdown style={{ overflow: "hidden" }}>
-                <Group justify="space-between">
-                  <Text fw={500} fz={16} c={"red.6"}>
-                    {t("Shortcuts")}
-                  </Text>
-                </Group>
-
-                <Divider my="sm" />
-
-                <SimpleGrid cols={1} spacing={0}>
-                  {shortcuts}
-                </SimpleGrid>
-
-                <div className={classes.dropdownFooter}>
-                  <Group justify="space-between" mt={"xs"}>
-                    <div>
-                      <Text fw={500} fz="sm">
-                        Sitemap
-                      </Text>
-                      <Text size="xs" c="dimmed">
-                        Sitemap Details
-                      </Text>
-                    </div>
-                    <Button
-                      bg={"green.6"}
-                      size="xs"
-                      onClick={() => navigate("/")}
-                    >
-                      Sitemap
-                    </Button>
-                  </Group>
-                </div>
-              </HoverCard.Dropdown>
-            </HoverCard>
-          </Grid.Col>
+          <Grid.Col
+            span={3}
+            justify="flex-end"
+            align={"flex-start"}
+            mt={"xs"}
+          ></Grid.Col>
           <Grid.Col
             span={12}
             justify="flex-end"
@@ -404,47 +354,94 @@ export default function Header({ isOnline, configData }) {
             direction="row"
             wrap="wrap"
           >
-            <Group>
-              <Flex
-                justify="center"
-                align="center"
-                direction="row"
-                wrap="wrap"
-                mih={42}
-                w={"100%"}
-                border={"red"}
+            <Group gap={"md"} wrap="nowrap" mih={42}>
+              <Button
+                leftSection={
+                  <>
+                    <IconSearch size={16} c={"red.5"} />
+                    <Text fz={`xs`} pl={"xs"} c={"gray.8"}>
+                      {t("SearchMenu")}
+                    </Text>
+                  </>
+                }
+                fullWidth
+                variant="transparent"
+                rightSection={
+                  <>
+                    <Kbd h={"24"} c={"gray.8"} fz={"12"}>
+                      Alt{" "}
+                    </Kbd>{" "}
+                    +{" "}
+                    <Kbd c={"gray.8"} h={"24"} fz={"12"}>
+                      {" "}
+                      K
+                    </Kbd>
+                  </>
+                }
+                w={`100%`}
+                justify="space-between"
+                style={{ border: `2px solid var(--mantine-color-red-8)` }}
+                color={`gray`}
+                onClick={open}
+                className="no-focus-outline"
+              />
+              <HoverCard
+                width={400}
+                position="bottom"
+                radius="md"
+                shadow="md"
+                withinPortal
+                withArrow
+                arrowPosition="center"
               >
-                <Button
-                  leftSection={
-                    <>
-                      <IconSearch size={16} c={"red.5"} />
-                      <Text fz={`xs`} pl={"xs"} c={"gray.8"}>
-                        {t("SearchMenu")}
-                      </Text>
-                    </>
-                  }
-                  fullWidth
-                  variant="transparent"
-                  rightSection={
-                    <>
-                      <Kbd h={"24"} c={"gray.8"} fz={"12"}>
-                        Alt{" "}
-                      </Kbd>{" "}
-                      +{" "}
-                      <Kbd c={"gray.8"} h={"24"} fz={"12"}>
-                        {" "}
-                        K
-                      </Kbd>
-                    </>
-                  }
-                  w={`100%`}
-                  justify="space-between"
-                  style={{ border: `2px solid var(--mantine-color-red-8)` }}
-                  color={`gray`}
-                  onClick={open}
-                  className="no-focus-outline"
-                />
-              </Flex>
+                <HoverCard.Target>
+                  <a href="#" className={classes.link}>
+                    <Center inline>
+                      <Box component="span" mr={"xs"} c={"green.8"} fw={"800"}>
+                        {t("Shortcut")}
+                      </Box>
+                      <IconChevronDown
+                        style={{ width: rem(16), height: rem(16) }}
+                        color={"green"}
+                      />
+                    </Center>
+                  </a>
+                </HoverCard.Target>
+
+                <HoverCard.Dropdown style={{ overflow: "hidden" }}>
+                  <Group justify="space-between">
+                    <Text fw={500} fz={16} c={"red.6"}>
+                      {t("Shortcuts")}
+                    </Text>
+                  </Group>
+
+                  <Divider my="sm" />
+
+                  <SimpleGrid cols={1} spacing={0}>
+                    {shortcuts}
+                  </SimpleGrid>
+
+                  <div className={classes.dropdownFooter}>
+                    <Group justify="space-between" mt={"xs"}>
+                      <div>
+                        <Text fw={500} fz="sm">
+                          Sitemap
+                        </Text>
+                        <Text size="xs" c="dimmed">
+                          Sitemap Details
+                        </Text>
+                      </div>
+                      <Button
+                        bg={"green.6"}
+                        size="xs"
+                        onClick={() => navigate("/")}
+                      >
+                        Sitemap
+                      </Button>
+                    </Group>
+                  </div>
+                </HoverCard.Dropdown>
+              </HoverCard>
             </Group>
           </Grid.Col>
           <Grid.Col span={6}>
@@ -527,10 +524,20 @@ export default function Header({ isOnline, configData }) {
                 </ActionIcon>
               </Tooltip>
               <Tooltip
-                label={t("LogoutAltL")}
+                label={
+                  <>
+                    <Stack spacing={0} gap={0}>
+                      <Text align="center">
+                        {loginUser.name} ( {loginUser.username} )
+                      </Text>
+                      <Text align="center">{t("LogoutAltL")}</Text>
+                    </Stack>
+                  </>
+                }
                 bg={`red.5`}
                 withArrow
                 position={"left"}
+                multiline
               >
                 <ActionIcon
                   onClick={() => logout()}
