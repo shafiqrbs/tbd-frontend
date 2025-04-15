@@ -944,5 +944,8 @@
   "DiscountOverview" : "Discount Overview",
   "CategoryOverview" : "Category Overview",
   "ChooseMode" : "Choose Mode",
+  "pricePercent" : "Price percent",
+  "salesPricePercent" : "Sales price percent",
+  "PurchasePercent" : "Purchase percent",
   "": ""
 }
