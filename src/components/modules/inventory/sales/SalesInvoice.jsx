@@ -38,7 +38,7 @@ function SalesInvoice() {
                             <Box p={'8'}>
                                 {
                                     insertType === 'create' && configData?.business_model?.slug === 'general' &&
-                                    <__GenericPosSalesForm
+                                    <_GenericPosForm
                                         allowZeroPercentage={configData?.zero_stock}
                                         currencySymbol={configData?.currency?.symbol}
                                         domainId={configData?.domain_id}

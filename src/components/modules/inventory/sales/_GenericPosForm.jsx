@@ -636,10 +636,15 @@ function _GenericPosForm(props) {
                     className={"boxBackground borderRadiusAll"}
                   >
                     <Grid columns={24} gutter={{ base: 6 }}>
-                      <Grid.Col span={4}>asdasd</Grid.Col>
-                      <Grid.Col span={4}>asdasd</Grid.Col>
-                      </Grid>
-                    </Box>
+                      <Grid.Col span={8}>
+                        <Box className={"borderRadiusAll"}>
+
+                        Customer Search</Box>
+                      </Grid.Col>
+                      <Grid.Col span={8}>Customer Info</Grid.Col>
+                      <Grid.Col span={8}>Add customer</Grid.Col>
+                    </Grid>
+              </Box>
               <Box className={"borderRadiusAll"}>
                 <DataTable
                   classNames={{
@@ -975,18 +980,47 @@ function _GenericPosForm(props) {
                 />
               </Box>
             </Box>
-            <Box bg={"white"} p={"xs"} className={"borderRadiusAll"}>
-              <__GenericPosSalesForm
-                  salesSubTotalAmount={salesSubTotalAmount}
-                  tempCardProducts={tempCardProducts}
-                  totalPurchaseAmount={totalPurchaseAmount}
-                  currencySymbol={currencySymbol}
-                  setLoadCardProducts={setLoadCardProducts}
-                  domainId={domainId}
-                  isSMSActive={isSMSActive}
-                  isZeroReceiveAllow={isZeroReceiveAllow}
-              />
-            </Box>
+          <Box
+              pl={`xs`}
+              pr={8}
+              pt={"xs"}
+              mb={"xs"}
+              className={"boxBackground borderRadiusAll"}
+          >
+            <Grid columns={24} gutter={{ base: 6 }}>
+              <Grid.Col span={8}>
+                <Box className={"borderRadiusAll"}>
+                  <Box bg={"white"} p={"xs"} className={"borderRadiusAll"}>
+                    <__GenericPosSalesForm
+                        salesSubTotalAmount={salesSubTotalAmount}
+                        tempCardProducts={tempCardProducts}
+                        totalPurchaseAmount={totalPurchaseAmount}
+                        currencySymbol={currencySymbol}
+                        setLoadCardProducts={setLoadCardProducts}
+                        domainId={domainId}
+                        isSMSActive={isSMSActive}
+                        isZeroReceiveAllow={isZeroReceiveAllow}
+                    />
+                  </Box></Box>
+              </Grid.Col>
+              <Grid.Col span={8}>Customer Info</Grid.Col>
+              <Grid.Col span={8}>Add customer</Grid.Col>
+            </Grid>
+          </Box>
+          <Box
+              pl={`xs`}
+              pr={8}
+              pt={"xs"}
+              mb={"xs"}
+              className={"boxBackground borderRadiusAll"}
+          >
+            <Grid columns={24} gutter={{ base: 6 }}>
+              <Grid.Col span={8}>Customer Info</Grid.Col>
+              <Grid.Col span={8}>Customer Info</Grid.Col>
+              <Grid.Col span={8}>Add customer</Grid.Col>
+            </Grid>
+          </Box>
+
           </Grid.Col>
 
       </Grid>
