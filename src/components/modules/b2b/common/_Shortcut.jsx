@@ -61,7 +61,7 @@ export default function _Shortcut(props) {
             </Flex>
           </Flex>
 
-          <Flex direction={`column`} align={"center"} mt={"xs"} pt={5}>
+          <Flex direction={`column`} align={"center"} pt={5}>
             <Tooltip
               label={t("B2BDomain")}
               px={16}
