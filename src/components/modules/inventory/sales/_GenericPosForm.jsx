@@ -612,6 +612,7 @@ function _GenericPosForm(props) {
           <Box bg={"white"} p={"md"} pb="0" className={"borderRadiusAll"}>
             <Box>
               <form
+                id="productAddForm"
                 onSubmit={form.onSubmit((values) => {
                   if (!values.barcode && !values.product_id) {
                     form.setFieldError("barcode", true);
@@ -1195,13 +1196,14 @@ function _GenericPosForm(props) {
                 <Grid.Col span={6}>
                   <Box>
                     <Button
+                      id={"productAddFormSubmit"}
+                      form="productAddForm" 
                       size="sm"
                       color={`red.5`}
                       type="submit"
                       mt={0}
                       mr={"xs"}
                       w={"100%"}
-                      id="EntityFormSubmit"
                       leftSection={<IconDeviceFloppy size={16} />}
                     >
                       <Flex direction={`column`} gap={0}>
