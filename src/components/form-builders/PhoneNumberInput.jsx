@@ -73,7 +73,7 @@ export default function PhoneNumber(props) {
     <Box mt={mt}>
       <Text size="sm" fw={500} mb={3}>
         {label}
-        {required && <span style={{ color: "red" }}>*</span>}
+        {label && required && <span style={{ color: "red" }}>*</span>}
       </Text>
       <Tooltip
         label={tooltip}
