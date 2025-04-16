@@ -20,18 +20,18 @@
 }
 
 .bodyBackground {
-    background-color:rgba(226,194,194,0.39);
+    background-color:#daaa5e;
 }
 
 .boxBackground {
     /*background-color: rgba(208, 191, 191, 0.17) !important;*/
-    background-color:#e9ecef!important;
+    background-color: #fbf7ef !important;
 }
 
 .boxBorderBackground {
     /*background-color:rgba(226,194,194,0.39);*/
-    background-color:#e9ecef!important;
-    border: 1px solid rgba(226,194,194,0.39);;
+    background-color:#fbf7ef!important;
+    border: 1px solid #fbf7ef;
 }
 
 .borderTop,.borderBottom,.borderLeft,.borderRight{

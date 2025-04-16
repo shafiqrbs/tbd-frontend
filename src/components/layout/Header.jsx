@@ -265,7 +265,7 @@ export default function Header({ isOnline, configData }) {
           </Modal.Body>
         </Modal.Content>
       </Modal.Root>
-      <Box bg={"white"} mb={"2"} pos={`relative`}>
+      <Box bg={"#f8eedf"} mb={"2"} pos={`relative`}>
         <Grid columns={24} gutter={{ base: 2 }} justify="space-between">
           <Grid.Col span={3}>
             {configData?.domain && loginUser.user_group === "domain" ? (
@@ -358,7 +358,7 @@ export default function Header({ isOnline, configData }) {
               <Button
                 leftSection={
                   <>
-                    <IconSearch size={16} c={"red.5"} />
+                    <IconSearch size={16} c={"#905923"} />
                     <Text fz={`xs`} pl={"xs"} c={"gray.8"}>
                       {t("SearchMenu")}
                     </Text>
@@ -380,8 +380,9 @@ export default function Header({ isOnline, configData }) {
                 }
                 w={`100%`}
                 justify="space-between"
-                style={{ border: `2px solid var(--mantine-color-red-8)` }}
-                color={`gray`}
+                style={{ border: '1px solid #49362366' }}
+                color={'#905923'}
+                bg={'white'}
                 onClick={open}
                 className="no-focus-outline"
               />
@@ -397,7 +398,7 @@ export default function Header({ isOnline, configData }) {
                 <HoverCard.Target>
                   <a href="#" className={classes.link}>
                     <Center inline>
-                      <Box component="span" mr={"xs"} c={"green.8"} fw={"800"}>
+                      <Box component="span" mr={"xs"} c={"#3e260f"} fw={"500"}>
                         {t("Shortcut")}
                       </Box>
                       <IconChevronDown
