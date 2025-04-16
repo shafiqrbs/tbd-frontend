@@ -45,6 +45,7 @@ import {
   IconCurrencyTaka,
   IconDiscountOff,
   IconDotsVertical,
+  IconCheck
 } from "@tabler/icons-react";
 import { getHotkeyHandler, useHotkeys, useToggle } from "@mantine/hooks";
 import { hasLength, useForm } from "@mantine/form";
@@ -71,6 +72,8 @@ import TextAreaForm from "../../../form-builders/TextAreaForm.jsx";
 import DatePickerForm from "../../../form-builders/DatePicker.jsx";
 import __SettingDrawer from "./__SettingsDrawer.jsx";
 import __Navigation from "./__Navigation.jsx";
+import { useDispatch, useSelector } from "react-redux";
+import { getSalesDetails, storeEntityData, } from "../../../../store/inventory/crudSlice.js";
 
 function _GenericPosForm(props) {
   const {
@@ -101,8 +104,11 @@ function _GenericPosForm(props) {
   let warehouseDropdownData = getCoreWarehouseDropdownData();
   const [warehouseData, setWarehouseData] = useState(null);
 
-  let salesSubTotalAmount =
-    tempCardProducts?.reduce((total, item) => total + item.sub_total, 0) || 0;
+  const dispatch = useDispatch();
+  const entityNewData = useSelector(
+    (state) => state.inventoryCrudSlice.entityNewData
+  );
+
   let totalPurchaseAmount =
     tempCardProducts?.reduce(
       (total, item) => total + item.purchase_price * item.quantity,
@@ -567,10 +573,22 @@ function _GenericPosForm(props) {
     ? JSON.parse(localStorage.getItem("accounting-transaction-mode"))
     : [];
   const [hoveredModeId, setHoveredModeId] = useState(false);
+  const [lastClicked, setLastClicked] = useState(null);
   const handleClick = (event) => {
     setLastClicked(event.currentTarget.name);
   };
-  const [salesDueAmount, setSalesDueAmount] = useState(salesSubTotalAmount);
+  const [salesSubTotalAmount, setSalesSubTotalAmount] = useState(0);
+  const [salesDueAmount, setSalesDueAmount] = useState(0);
+
+  useEffect(() => {
+    const newSubTotal =
+      tempCardProducts?.reduce(
+        (total, item) => total + Number(item.sub_total),
+        0
+      ) || 0;
+    setSalesSubTotalAmount(newSubTotal);
+    setSalesDueAmount(newSubTotal - Number(form.values.receive_amount || 0));
+  }, [tempCardProducts, form.values.receive_amount, form.values.discount]);
   const isDisabled =
     isDefaultCustomer && (isZeroReceiveAllow ? false : salesDueAmount > 0);
   const [salesByDropdownData, setSalesByDropdownData] = useState([]);
@@ -602,6 +620,55 @@ function _GenericPosForm(props) {
 
   const [multiPrice, setMultiPrice] = useState(false);
   const [unitType, setUnitType] = useState(false);
+  useEffect(() => {
+    let discountAmount = 0;
+    if (form.values.discount && Number(form.values.discount) > 0) {
+      if (discountType === "Flat") {
+        discountAmount = Number(form.values.discount);
+      } else if (discountType === "Percent") {
+        discountAmount =
+          (salesSubTotalAmount * Number(form.values.discount)) / 100;
+      }
+    }
+    setSalesDiscountAmount(discountAmount);
+
+    // Calculate total amount after discount and VAT
+    const newTotalAmount =
+      salesSubTotalAmount - Number(discountAmount) + Number(salesVatAmount);
+    setSalesTotalAmount(newTotalAmount);
+
+    let returnOrDueAmount = 0;
+    let receiveAmount =
+      form.values.receive_amount == "" ? 0 : Number(form.values.receive_amount);
+    if (receiveAmount >= 0) {
+      const text = newTotalAmount < receiveAmount ? "Return" : "Due";
+      setReturnOrDueText(text);
+      returnOrDueAmount = newTotalAmount - receiveAmount;
+      setSalesDueAmount(returnOrDueAmount);
+    }
+  }, [
+    form.values.discount,
+    discountType,
+    form.values.receive_amount,
+    salesSubTotalAmount,
+    salesVatAmount,
+  ]);
+  useEffect(() => {
+    const totalAmount = salesSubTotalAmount - salesDiscountAmount;
+    setSalesTotalAmount(totalAmount);
+    setSalesDueAmount(totalAmount);
+    setSalesProfitAmount(totalAmount - totalPurchaseAmount);
+  }, [salesSubTotalAmount, salesDiscountAmount]);
+  useEffect(() => {
+    if (
+      entityNewData?.data?.id &&
+      (lastClicked === "print" || lastClicked === "pos")
+    ) {
+      setTimeout(() => {
+        setOpenInvoiceDrawerForPrint(true);
+      }, 400);
+    }
+  }, [entityNewData, dispatch, lastClicked]);
   return (
     <Box>
       <Grid columns={24} gutter={{ base: 8 }}>
@@ -1197,7 +1264,7 @@ function _GenericPosForm(props) {
                   <Box>
                     <Button
                       id={"productAddFormSubmit"}
-                      form="productAddForm" 
+                      form="productAddForm"
                       size="sm"
                       color={`red.5`}
                       type="submit"
@@ -1225,435 +1292,477 @@ function _GenericPosForm(props) {
           </Box>
         </Grid.Col>
         <Grid.Col span={16}>
-          <Box bg={"white"} p={"xs"} className={"borderRadiusAll"}>
-            <Box
-              pl={`xs`}
-              pr={8}
-              pt={"8"}
-              mb={"xs"}
-              className={"borderRadiusAll"}
-            >
-              <Grid columns={24} gutter={{ base: 6 }}>
-                <Grid.Col span={8}>
-                  <Box mt={"4"}>
-                    <SelectForm
-                      tooltip={t("CustomerValidateMessage")}
-                      label=""
-                      placeholder={t("Customer")}
-                      required={false}
-                      nextField={""}
-                      name={"customer_id"}
-                      form={form}
-                      dropdownValue={customersDropdownData}
-                      id={"customer_id"}
-                      mt={1}
-                      searchable={true}
-                      value={customerData}
-                      changeValue={setCustomerData}
-                    />
-                  </Box>
-                  <Box mt={"xs"}>
-                    <Grid
-                      gutter={{ base: 6 }}
-                      bg={"red.1"}
-                      mt={8}
-                      pt={"xs"}
-                      pb={"12"}
-                    >
-                      <Grid.Col span={6}>
-                        <Box pl={"md"}>
-                          <Text fz={"md"} order={1} fw={"800"}>
-                            {currencySymbol + " "}
-                            {customerData &&
-                            customerObject &&
-                            customerData != defaultCustomerId
-                              ? Number(customerObject.balance).toFixed(2)
-                              : "0.00"}
-                          </Text>
-                          <Text fz={"xs"} c="dimmed">
-                            {t("Outstanding")}
-                          </Text>
-                        </Box>
-                      </Grid.Col>
-                      <Grid.Col span={6}>
-                        <Box
-                          mt={"8"}
-                          mr={"12"}
-                          style={{ textAlign: "right", float: "right" }}
-                        >
-                          <Group>
-                            <Tooltip
-                              multiline
-                              bg={"orange.8"}
-                              position="top"
-                              ta={"center"}
-                              withArrow
-                              transitionProps={{ duration: 200 }}
-                              label={
-                                customerData &&
-                                customerData != defaultCustomerId
-                                  ? isSMSActive
-                                    ? t("SendSms")
-                                    : t("PleasePurchaseAsmsPackage")
-                                  : t("ChooseCustomer")
-                              }
-                            >
-                              <ActionIcon
-                                bg={"white"}
-                                variant="outline"
-                                color={"red"}
-                                disabled={
-                                  !customerData ||
-                                  customerData == defaultCustomerId
-                                }
-                                onClick={(e) => {
-                                  if (isSMSActive) {
-                                    notifications.show({
-                                      withCloseButton: true,
-                                      autoClose: 1000,
-                                      title: t("smsSendSuccessfully"),
-                                      message: t("smsSendSuccessfully"),
-                                      icon: <IconTallymark1 />,
-                                      className: "my-notification-class",
-                                      style: {},
-                                      loading: true,
-                                    });
-                                  } else {
-                                    setIsShowSMSPackageModel(true);
-                                  }
-                                }}
-                              >
-                                <IconMessage size={18} stroke={1.5} />
-                              </ActionIcon>
-                            </Tooltip>
-                            <Tooltip
-                              multiline
-                              bg={"orange.8"}
-                              position="top"
-                              withArrow
-                              offset={{ crossAxis: "-45", mainAxis: "5" }}
-                              ta={"center"}
-                              transitionProps={{ duration: 200 }}
-                              label={
-                                customerData &&
-                                customerData != defaultCustomerId
-                                  ? t("CustomerDetails")
-                                  : t("ChooseCustomer")
-                              }
-                            >
-                              <ActionIcon
-                                variant="filled"
-                                color={"red"}
-                                disabled={
-                                  !customerData ||
-                                  customerData == defaultCustomerId
-                                }
-                                onClick={() => {
-                                  setViewDrawer(true);
-                                }}
-                              >
-                                <IconEyeEdit size={18} stroke={1.5} />
-                              </ActionIcon>
-                            </Tooltip>
-                          </Group>
-                        </Box>
-                      </Grid.Col>
-                    </Grid>
-                  </Box>
-                </Grid.Col>
-                <Grid.Col span={8}></Grid.Col>
-                <Grid.Col span={8}>
-                  <form
-                    id="customerAddedForm"
-                    onSubmit={customerAddedForm.onSubmit((values) => {
-                      modals.openConfirmModal({
-                        title: (
-                          <Text size="md"> {t("FormConfirmationTitle")}</Text>
-                        ),
-                        children: (
-                          <Text size="sm"> {t("FormConfirmationMessage")}</Text>
-                        ),
-                        labels: {
-                          confirm: t("Submit"),
-                          cancel: t("Cancel"),
-                        },
-                        confirmProps: { color: "red" },
-                        onCancel: () => console.log("Cancel"),
-                        onConfirm: async () => {
-                          setSaveCreateLoading(true);
-                          const value = {
-                            url: "core/customer",
-                            data: values,
-                          };
-                          try {
-                            const response = await dispatch(
-                              storeEntityData(value)
-                            ).unwrap();
-                            console.log(
-                              "Customer creation response:",
-                              response
-                            );
+          <form
+            onSubmit={form.onSubmit((values) => {
+              const tempProducts = localStorage.getItem("temp-sales-products");
+              let items = tempProducts ? JSON.parse(tempProducts) : [];
+              let createdBy = JSON.parse(localStorage.getItem("user"));
 
-                            notifications.show({
-                              color: "teal",
-                              title: t("CreateSuccessfully"),
-                              icon: (
-                                <IconCheck
-                                  style={{
-                                    width: rem(18),
-                                    height: rem(18),
-                                  }}
-                                />
-                              ),
-                              loading: false,
-                              autoClose: 700,
-                              style: { backgroundColor: "lightgray" },
-                            });
-                            if (response && response?.data?.data) {
-                              const newCustomer = response?.data?.data;
-                              const coreCustomers = localStorage.getItem(
-                                "core-customers"
-                              )
-                                ? JSON.parse(
-                                    localStorage.getItem("core-customers")
-                                  )
-                                : [];
-                              const updatedCustomers = [
-                                ...coreCustomers,
-                                newCustomer,
-                              ];
-                              localStorage.setItem(
-                                "core-customers",
-                                JSON.stringify(updatedCustomers)
-                              );
+              let transformedArray = items.map((product) => {
+                return {
+                  product_id: product.product_id,
+                  item_name: product.display_name,
+                  sales_price: product.sales_price,
+                  price: product.price,
+                  percent: product.percent,
+                  quantity: product.quantity,
+                  uom: product.unit_name,
+                  unit_id: product.unit_id,
+                  purchase_price: product.purchase_price,
+                  sub_total: product.sub_total,
+                  warehouse_id: product.warehouse_id,
+                  bonus_quantity: product.bonus_quantity,
+                };
+              });
 
-                              setCustomerId(newCustomer.id);
-                              setCustomerObject(newCustomer);
-                            }
+              const options = {
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+              };
+              const formValue = {};
+              formValue["customer_id"] = form.values.customer_id
+                ? form.values.customer_id
+                : defaultCustomerId;
+              formValue["sub_total"] = salesSubTotalAmount;
+              formValue["transaction_mode_id"] =
+                form.values.transaction_mode_id;
+              formValue["discount_type"] = discountType;
+              formValue["discount"] = salesDiscountAmount;
+              formValue["discount_calculation"] =
+                discountType === "Percent" ? form.values.discount : 0;
+              formValue["vat"] = 0;
+              formValue["total"] = salesTotalAmount;
+              /*formValue['payment'] = form.values.receive_amount ? (customerData && customerData !=defaultCustomerId ? form.values.receive_amount:isZeroReceiveAllow ? salesTotalAmount:form.values.receive_amount) :(isZeroReceiveAllow && (!form.values.customer_id || form.values.customer_id == defaultCustomerId) ?salesTotalAmount:0);*/
+              formValue["sales_by_id"] = form.values.sales_by;
+              formValue["created_by_id"] = Number(createdBy["id"]);
+              formValue["process"] = form.values.order_process;
+              formValue["narration"] = form.values.narration;
+              formValue["invoice_date"] =
+                form.values.invoice_date &&
+                new Date(form.values.invoice_date).toLocaleDateString(
+                  "en-CA",
+                  options
+                );
+              formValue["items"] = transformedArray ? transformedArray : [];
 
-                            customerAddedForm.reset();
-                            setRefreshCustomerDropdown(true);
-                            // setValue("Existing");
-                            setCustomerDrawer(false);
-                            setSaveCreateLoading(false);
-                          } catch (error) {
-                            console.error("Error creating customer:", error);
-                            notifications.show({
-                              color: "red",
-                              title: t("CreateFailed"),
-                              message:
-                                error?.message || t("SomethingWentWrong"),
-                              icon: (
-                                <IconX
-                                  style={{
-                                    width: rem(18),
-                                    height: rem(18),
-                                  }}
-                                />
-                              ),
-                              loading: false,
-                              autoClose: 2000,
-                              style: { backgroundColor: "lightgray" },
-                            });
-                            setSaveCreateLoading(false);
-                          }
-                        },
-                      });
-                    })}
-                  >
+              const hasReceiveAmount = form.values.receive_amount;
+              const isDefaultCustomer =
+                !form.values.customer_id ||
+                form.values.customer_id == defaultCustomerId;
+
+              formValue["payment"] = hasReceiveAmount
+                ? customerData && customerData != defaultCustomerId
+                  ? form.values.receive_amount
+                  : isZeroReceiveAllow
+                  ? salesTotalAmount
+                  : form.values.receive_amount
+                : isZeroReceiveAllow && isDefaultCustomer
+                ? salesTotalAmount
+                : 0;
+
+              if (items && items.length > 0) {
+                const data = {
+                  url: "inventory/sales",
+                  data: formValue,
+                };
+                dispatch(storeEntityData(data));
+
+                notifications.show({
+                  color: "teal",
+                  title: t("CreateSuccessfully"),
+                  icon: (
+                    <IconCheck style={{ width: rem(18), height: rem(18) }} />
+                  ),
+                  loading: false,
+                  autoClose: 700,
+                  style: { backgroundColor: "lightgray" },
+                });
+
+                setTimeout(() => {
+                  localStorage.removeItem("temp-sales-products");
+                  form.reset();
+                  setCustomerData(null);
+                  setSalesByUser(null);
+                  setOrderProcess(null);
+                  setLoadCardProducts(true);
+                }, 500);
+              } else {
+                notifications.show({
+                  color: "red",
+                  title: t("PleaseChooseItems"),
+                  icon: (
+                    <IconCheck style={{ width: rem(18), height: rem(18) }} />
+                  ),
+                  loading: false,
+                  autoClose: 700,
+                  style: { backgroundColor: "lightgray" },
+                });
+              }
+            })}
+          >
+            <Box bg={"white"} p={"xs"} className={"borderRadiusAll"}>
+              <Box
+                pl={`xs`}
+                pr={8}
+                pt={"8"}
+                mb={"xs"}
+                className={"borderRadiusAll"}
+              >
+                <Grid columns={24} gutter={{ base: 6 }}>
+                  <Grid.Col span={8}>
                     <Box mt={"4"}>
-                      <InputForm
-                        tooltip={t("NameValidateMessage")}
-                        label={t("")}
-                        placeholder={t("CustomerName")}
-                        required={true}
-                        nextField={"mobile"}
-                        form={customerAddedForm}
-                        name={"name"}
-                        id={"name"}
-                        leftSection={<IconUserCircle size={16} opacity={0.5} />}
-                        rightIcon={""}
-                      />
-                    </Box>
-                    <Box mt={"4"}>
-                      <PhoneNumber
-                        tooltip={
-                          customerAddedForm.errors.mobile
-                            ? customerAddedForm.errors.mobile
-                            : t("MobileValidateMessage")
-                        }
-                        label={t("")}
-                        placeholder={t("Mobile")}
-                        required={true}
-                        nextField={"email"}
-                        form={customerAddedForm}
-                        name={"mobile"}
-                        id={"mobile"}
-                        rightIcon={""}
-                      />
-                    </Box>
-                    <Box mt={"4"} mb={4}>
-                      <InputForm
-                        tooltip={t("InvalidEmail")}
-                        label={t("")}
-                        placeholder={t("Email")}
+                      <SelectForm
+                        tooltip={t("CustomerValidateMessage")}
+                        label=""
+                        placeholder={t("Customer")}
                         required={false}
                         nextField={""}
-                        name={"email"}
-                        form={customerAddedForm}
-                        id={"email"}
+                        name={"customer_id"}
+                        form={form}
+                        dropdownValue={customersDropdownData}
+                        id={"customer_id"}
+                        mt={1}
+                        searchable={true}
+                        value={customerData}
+                        changeValue={setCustomerData}
                       />
                     </Box>
-                  </form>
-                </Grid.Col>
-              </Grid>
-            </Box>
-            <Box className={"borderRadiusAll"}>
-              <DataTable
-                classNames={{
-                  root: tableCss.root,
-                  table: tableCss.table,
-                  header: tableCss.header,
-                  footer: tableCss.footer,
-                  pagination: tableCss.pagination,
-                }}
-                records={tempCardProducts}
-                columns={[
-                  {
-                    accessor: "index",
-                    title: t("S/N"),
-                    textAlignment: "right",
-                    width: "50px",
-                    render: (item) => tempCardProducts.indexOf(item) + 1,
-                  },
-                  {
-                    accessor: "display_name",
-                    title: t("Name"),
-                    width: "200px",
-                    footer: (
-                      <Group spacing="xs">
-                        <IconSum size="1.25em" />
-                        <Text mb={-2}>
-                          {tempCardProducts.length} {t("Items")}
-                        </Text>
-                      </Group>
-                    ),
-                  },
-                  {
-                    accessor: "price",
-                    title: t("Price"),
-                    textAlign: "right",
-                    render: (item) => {
-                      return item.price && Number(item.price).toFixed(2);
-                    },
-                  },
-
-                  {
-                    accessor: "stock",
-                    title: t("Stock"),
-                    textAlign: "center",
-                  },
-                  {
-                    accessor: "quantity",
-                    title: t("Quantity"),
-                    textAlign: "center",
-                    width: "100px",
-                    render: (item) => {
-                      const [editedQuantity, setEditedQuantity] = useState(
-                        item.quantity
-                      );
-
-                      const handleQuantityChange = (e) => {
-                        const editedQuantity = e.currentTarget.value;
-                        setEditedQuantity(editedQuantity);
-
-                        const tempCardProducts = localStorage.getItem(
-                          "temp-sales-products"
-                        );
-                        const cardProducts = tempCardProducts
-                          ? JSON.parse(tempCardProducts)
-                          : [];
-
-                        const updatedProducts = cardProducts.map((product) => {
-                          if (product.product_id === item.product_id) {
-                            return {
-                              ...product,
-                              quantity: e.currentTarget.value,
-                              sub_total:
-                                e.currentTarget.value * item.sales_price,
+                    <Box mt={"xs"}>
+                      <Grid
+                        gutter={{ base: 6 }}
+                        bg={"red.1"}
+                        mt={8}
+                        pt={"xs"}
+                        pb={"12"}
+                      >
+                        <Grid.Col span={6}>
+                          <Box pl={"md"}>
+                            <Text fz={"md"} order={1} fw={"800"}>
+                              {currencySymbol + " "}
+                              {customerData &&
+                              customerObject &&
+                              customerData != defaultCustomerId
+                                ? Number(customerObject.balance).toFixed(2)
+                                : "0.00"}
+                            </Text>
+                            <Text fz={"xs"} c="dimmed">
+                              {t("Outstanding")}
+                            </Text>
+                          </Box>
+                        </Grid.Col>
+                        <Grid.Col span={6}>
+                          <Box
+                            mt={"8"}
+                            mr={"12"}
+                            style={{ textAlign: "right", float: "right" }}
+                          >
+                            <Group>
+                              <Tooltip
+                                multiline
+                                bg={"orange.8"}
+                                position="top"
+                                ta={"center"}
+                                withArrow
+                                transitionProps={{ duration: 200 }}
+                                label={
+                                  customerData &&
+                                  customerData != defaultCustomerId
+                                    ? isSMSActive
+                                      ? t("SendSms")
+                                      : t("PleasePurchaseAsmsPackage")
+                                    : t("ChooseCustomer")
+                                }
+                              >
+                                <ActionIcon
+                                  bg={"white"}
+                                  variant="outline"
+                                  color={"red"}
+                                  disabled={
+                                    !customerData ||
+                                    customerData == defaultCustomerId
+                                  }
+                                  onClick={(e) => {
+                                    if (isSMSActive) {
+                                      notifications.show({
+                                        withCloseButton: true,
+                                        autoClose: 1000,
+                                        title: t("smsSendSuccessfully"),
+                                        message: t("smsSendSuccessfully"),
+                                        icon: <IconTallymark1 />,
+                                        className: "my-notification-class",
+                                        style: {},
+                                        loading: true,
+                                      });
+                                    } else {
+                                      setIsShowSMSPackageModel(true);
+                                    }
+                                  }}
+                                >
+                                  <IconMessage size={18} stroke={1.5} />
+                                </ActionIcon>
+                              </Tooltip>
+                              <Tooltip
+                                multiline
+                                bg={"orange.8"}
+                                position="top"
+                                withArrow
+                                offset={{ crossAxis: "-45", mainAxis: "5" }}
+                                ta={"center"}
+                                transitionProps={{ duration: 200 }}
+                                label={
+                                  customerData &&
+                                  customerData != defaultCustomerId
+                                    ? t("CustomerDetails")
+                                    : t("ChooseCustomer")
+                                }
+                              >
+                                <ActionIcon
+                                  variant="filled"
+                                  color={"red"}
+                                  disabled={
+                                    !customerData ||
+                                    customerData == defaultCustomerId
+                                  }
+                                  onClick={() => {
+                                    setViewDrawer(true);
+                                  }}
+                                >
+                                  <IconEyeEdit size={18} stroke={1.5} />
+                                </ActionIcon>
+                              </Tooltip>
+                            </Group>
+                          </Box>
+                        </Grid.Col>
+                      </Grid>
+                    </Box>
+                  </Grid.Col>
+                  <Grid.Col span={8}></Grid.Col>
+                  <Grid.Col span={8}>
+                    <form
+                      id="customerAddedForm"
+                      onSubmit={customerAddedForm.onSubmit((values) => {
+                        modals.openConfirmModal({
+                          title: (
+                            <Text size="md"> {t("FormConfirmationTitle")}</Text>
+                          ),
+                          children: (
+                            <Text size="sm">
+                              {" "}
+                              {t("FormConfirmationMessage")}
+                            </Text>
+                          ),
+                          labels: {
+                            confirm: t("Submit"),
+                            cancel: t("Cancel"),
+                          },
+                          confirmProps: { color: "red" },
+                          onCancel: () => console.log("Cancel"),
+                          onConfirm: async () => {
+                            setSaveCreateLoading(true);
+                            const value = {
+                              url: "core/customer",
+                              data: values,
                             };
-                          }
-                          return product;
-                        });
+                            try {
+                              const response = await dispatch(
+                                storeEntityData(value)
+                              ).unwrap();
+                              console.log(
+                                "Customer creation response:",
+                                response
+                              );
 
-                        localStorage.setItem(
-                          "temp-sales-products",
-                          JSON.stringify(updatedProducts)
-                        );
-                        setLoadCardProducts(true);
-                      };
-
-                      return (
-                        <>
-                          <TextInput
-                            type="number"
-                            label=""
-                            size="xs"
-                            value={editedQuantity}
-                            onChange={handleQuantityChange}
-                            onKeyDown={getHotkeyHandler([
-                              [
-                                "Enter",
-                                (e) => {
-                                  document
-                                    .getElementById(
-                                      "inline-update-quantity-" +
-                                        item.product_id
+                              notifications.show({
+                                color: "teal",
+                                title: t("CreateSuccessfully"),
+                                icon: (
+                                  <IconCheck
+                                    style={{
+                                      width: rem(18),
+                                      height: rem(18),
+                                    }}
+                                  />
+                                ),
+                                loading: false,
+                                autoClose: 700,
+                                style: { backgroundColor: "lightgray" },
+                              });
+                              if (response && response?.data?.data) {
+                                const newCustomer = response?.data?.data;
+                                const coreCustomers = localStorage.getItem(
+                                  "core-customers"
+                                )
+                                  ? JSON.parse(
+                                      localStorage.getItem("core-customers")
                                     )
-                                    .focus();
-                                },
-                              ],
-                            ])}
-                          />
-                        </>
-                      );
+                                  : [];
+                                const updatedCustomers = [
+                                  ...coreCustomers,
+                                  newCustomer,
+                                ];
+                                localStorage.setItem(
+                                  "core-customers",
+                                  JSON.stringify(updatedCustomers)
+                                );
+
+                                setCustomerId(newCustomer.id);
+                                setCustomerObject(newCustomer);
+                              }
+
+                              customerAddedForm.reset();
+                              setRefreshCustomerDropdown(true);
+                              // setValue("Existing");
+                              setCustomerDrawer(false);
+                              setSaveCreateLoading(false);
+                            } catch (error) {
+                              console.error("Error creating customer:", error);
+                              notifications.show({
+                                color: "red",
+                                title: t("CreateFailed"),
+                                message:
+                                  error?.message || t("SomethingWentWrong"),
+                                icon: (
+                                  <IconX
+                                    style={{
+                                      width: rem(18),
+                                      height: rem(18),
+                                    }}
+                                  />
+                                ),
+                                loading: false,
+                                autoClose: 2000,
+                                style: { backgroundColor: "lightgray" },
+                              });
+                              setSaveCreateLoading(false);
+                            }
+                          },
+                        });
+                      })}
+                    >
+                      <Box mt={"4"}>
+                        <InputForm
+                          tooltip={t("NameValidateMessage")}
+                          label={t("")}
+                          placeholder={t("CustomerName")}
+                          required={true}
+                          nextField={"mobile"}
+                          form={customerAddedForm}
+                          name={"name"}
+                          id={"name"}
+                          leftSection={
+                            <IconUserCircle size={16} opacity={0.5} />
+                          }
+                          rightIcon={""}
+                        />
+                      </Box>
+                      <Box mt={"4"}>
+                        <PhoneNumber
+                          tooltip={
+                            customerAddedForm.errors.mobile
+                              ? customerAddedForm.errors.mobile
+                              : t("MobileValidateMessage")
+                          }
+                          label={t("")}
+                          placeholder={t("Mobile")}
+                          required={true}
+                          nextField={"email"}
+                          form={customerAddedForm}
+                          name={"mobile"}
+                          id={"mobile"}
+                          rightIcon={""}
+                        />
+                      </Box>
+                      <Box mt={"4"} mb={4}>
+                        <InputForm
+                          tooltip={t("InvalidEmail")}
+                          label={t("")}
+                          placeholder={t("Email")}
+                          required={false}
+                          nextField={""}
+                          name={"email"}
+                          form={customerAddedForm}
+                          id={"email"}
+                        />
+                      </Box>
+                    </form>
+                  </Grid.Col>
+                </Grid>
+              </Box>
+              <Box className={"borderRadiusAll"}>
+                <DataTable
+                  classNames={{
+                    root: tableCss.root,
+                    table: tableCss.table,
+                    header: tableCss.header,
+                    footer: tableCss.footer,
+                    pagination: tableCss.pagination,
+                  }}
+                  records={tempCardProducts}
+                  columns={[
+                    {
+                      accessor: "index",
+                      title: t("S/N"),
+                      textAlignment: "right",
+                      width: "50px",
+                      render: (item) => tempCardProducts.indexOf(item) + 1,
                     },
-                  },
-                  {
-                    accessor: "unit_name",
-                    title: t("UOM"),
-                    textAlign: "center",
-                  },
-                  {
-                    accessor: "sales_price",
-                    title: t("SalesPrice"),
-                    textAlign: "center",
-                    width: "100px",
-                    render: (item) => {
-                      const [editedSalesPrice, setEditedSalesPrice] = useState(
-                        item.sales_price
-                      );
+                    {
+                      accessor: "display_name",
+                      title: t("Name"),
+                      width: "200px",
+                      footer: (
+                        <Group spacing="xs">
+                          <IconSum size="1.25em" />
+                          <Text mb={-2}>
+                            {tempCardProducts.length} {t("Items")}
+                          </Text>
+                        </Group>
+                      ),
+                    },
+                    {
+                      accessor: "price",
+                      title: t("Price"),
+                      textAlign: "right",
+                      render: (item) => {
+                        return item.price && Number(item.price).toFixed(2);
+                      },
+                    },
 
-                      const handleSalesPriceChange = (e) => {
-                        const newSalesPrice = e.currentTarget.value;
-                        setEditedSalesPrice(newSalesPrice);
-                      };
+                    {
+                      accessor: "stock",
+                      title: t("Stock"),
+                      textAlign: "center",
+                    },
+                    {
+                      accessor: "quantity",
+                      title: t("Quantity"),
+                      textAlign: "center",
+                      width: "100px",
+                      render: (item) => {
+                        const [editedQuantity, setEditedQuantity] = useState(
+                          item.quantity
+                        );
 
-                      useEffect(() => {
-                        const timeoutId = setTimeout(() => {
+                        const handleQuantityChange = (e) => {
+                          const editedQuantity = e.currentTarget.value;
+                          setEditedQuantity(editedQuantity);
+
                           const tempCardProducts = localStorage.getItem(
                             "temp-sales-products"
                           );
                           const cardProducts = tempCardProducts
                             ? JSON.parse(tempCardProducts)
                             : [];
+
                           const updatedProducts = cardProducts.map(
                             (product) => {
                               if (product.product_id === item.product_id) {
                                 return {
                                   ...product,
-                                  sales_price: editedSalesPrice,
-                                  sub_total: editedSalesPrice * item.quantity,
+                                  quantity: e.currentTarget.value,
+                                  sub_total:
+                                    e.currentTarget.value * item.sales_price,
                                 };
                               }
                               return product;
@@ -1665,640 +1774,719 @@ function _GenericPosForm(props) {
                             JSON.stringify(updatedProducts)
                           );
                           setLoadCardProducts(true);
-                        }, 1000);
+                        };
 
-                        return () => clearTimeout(timeoutId);
-                      }, [editedSalesPrice, item.product_id, item.quantity]);
-
-                      return item.percent ? (
-                        Number(item.sales_price).toFixed(2)
-                      ) : (
-                        <>
-                          <TextInput
-                            type="number"
-                            label=""
-                            size="xs"
-                            id={"inline-update-quantity-" + item.product_id}
-                            value={editedSalesPrice}
-                            onChange={handleSalesPriceChange}
-                          />
-                        </>
-                      );
-                    },
-                  },
-                  {
-                    accessor: "percent",
-                    title: t("Discount"),
-                    textAlign: "center",
-                    width: "100px",
-                    render: (item) => {
-                      const [editedPercent, setEditedPercent] = useState(
-                        item.percent
-                      );
-                      const handlePercentChange = (e) => {
-                        const editedPercent = e.currentTarget.value;
-                        setEditedPercent(editedPercent);
-
-                        const tempCardProducts = localStorage.getItem(
-                          "temp-sales-products"
+                        return (
+                          <>
+                            <TextInput
+                              type="number"
+                              label=""
+                              size="xs"
+                              value={editedQuantity}
+                              onChange={handleQuantityChange}
+                              onKeyDown={getHotkeyHandler([
+                                [
+                                  "Enter",
+                                  (e) => {
+                                    document
+                                      .getElementById(
+                                        "inline-update-quantity-" +
+                                          item.product_id
+                                      )
+                                      .focus();
+                                  },
+                                ],
+                              ])}
+                            />
+                          </>
                         );
-                        const cardProducts = tempCardProducts
-                          ? JSON.parse(tempCardProducts)
-                          : [];
-
-                        if (
-                          e.currentTarget.value &&
-                          e.currentTarget.value >= 0
-                        ) {
-                          const updatedProducts = cardProducts.map(
-                            (product) => {
-                              if (product.product_id === item.product_id) {
-                                const discountAmount =
-                                  (item.price * editedPercent) / 100;
-                                const salesPrice = item.price - discountAmount;
-
-                                return {
-                                  ...product,
-                                  percent: editedPercent,
-                                  sales_price: salesPrice,
-                                  sub_total: salesPrice * item.quantity,
-                                };
-                              }
-                              return product;
-                            }
-                          );
-
-                          localStorage.setItem(
-                            "temp-sales-products",
-                            JSON.stringify(updatedProducts)
-                          );
-                          setLoadCardProducts(true);
-                        }
-                      };
-
-                      return item.percent ? (
-                        <>
-                          <TextInput
-                            type="number"
-                            label=""
-                            size="xs"
-                            value={editedPercent}
-                            onChange={handlePercentChange}
-                            rightSection={
-                              editedPercent === "" ? (
-                                <>
-                                  {item.percent}
-                                  <IconPercentage size={16} opacity={0.5} />
-                                </>
-                              ) : (
-                                <IconPercentage size={16} opacity={0.5} />
-                              )
-                            }
-                          />
-                        </>
-                      ) : (
-                        <Text size={"xs"} ta="right">
-                          {(
-                            Number(item.price) - Number(item.sales_price)
-                          ).toFixed(2)}
-                        </Text>
-                      );
+                      },
                     },
-                    footer: (
-                      <Group spacing="xs">
-                        <Text fz={"md"} fw={"600"}>
-                          {t("SubTotal")}
-                        </Text>
-                      </Group>
-                    ),
-                  },
-
-                  {
-                    accessor: "sub_total",
-                    title: t("SubTotal"),
-                    textAlign: "right",
-                    render: (item) => {
-                      return (
-                        item.sub_total && Number(item.sub_total).toFixed(2)
-                      );
+                    {
+                      accessor: "unit_name",
+                      title: t("UOM"),
+                      textAlign: "center",
                     },
-                    footer: (
-                      <Group spacing="xs">
-                        <Text fw={"600"} fz={"md"}>
-                          {salesSubTotalAmount.toFixed(2)}
-                        </Text>
-                      </Group>
-                    ),
-                  },
-                  {
-                    accessor: "action",
-                    title: t("Action"),
-                    textAlign: "right",
-                    render: (item) => (
-                      <Group gap={4} justify="right" wrap="nowrap">
-                        <ActionIcon
-                          size="sm"
-                          variant="subtle"
-                          color="red"
-                          onClick={() => {
-                            const dataString = localStorage.getItem(
+                    {
+                      accessor: "sales_price",
+                      title: t("SalesPrice"),
+                      textAlign: "center",
+                      width: "100px",
+                      render: (item) => {
+                        const [editedSalesPrice, setEditedSalesPrice] =
+                          useState(item.sales_price);
+
+                        const handleSalesPriceChange = (e) => {
+                          const newSalesPrice = e.currentTarget.value;
+                          setEditedSalesPrice(newSalesPrice);
+                        };
+
+                        useEffect(() => {
+                          const timeoutId = setTimeout(() => {
+                            const tempCardProducts = localStorage.getItem(
                               "temp-sales-products"
                             );
-                            let data = dataString ? JSON.parse(dataString) : [];
-
-                            data = data.filter(
-                              (d) => d.product_id !== item.product_id
+                            const cardProducts = tempCardProducts
+                              ? JSON.parse(tempCardProducts)
+                              : [];
+                            const updatedProducts = cardProducts.map(
+                              (product) => {
+                                if (product.product_id === item.product_id) {
+                                  return {
+                                    ...product,
+                                    sales_price: editedSalesPrice,
+                                    sub_total: editedSalesPrice * item.quantity,
+                                  };
+                                }
+                                return product;
+                              }
                             );
-
-                            const updatedDataString = JSON.stringify(data);
 
                             localStorage.setItem(
                               "temp-sales-products",
-                              updatedDataString
+                              JSON.stringify(updatedProducts)
                             );
                             setLoadCardProducts(true);
-                          }}
-                        >
-                          <IconX
-                            size={16}
-                            style={{ width: "70%", height: "70%" }}
-                            stroke={1.5}
-                          />
-                        </ActionIcon>
-                      </Group>
-                    ),
-                  },
-                ]}
-                fetching={fetching}
-                totalRecords={100}
-                recordsPerPage={10}
-                loaderSize="xs"
-                loaderColor="grape"
-                height={height - 85}
-                scrollAreaProps={{ type: "never" }}
-              />
-            </Box>
-          </Box>
-          <Box>
-            <Grid columns={24} gutter={{ base: 6 }} pt={"6"}>
-              <Grid.Col span={8}>
-                <Box className={"borderRadiusAll"}>
-                  <ScrollArea
-                    h={190}
-                    scrollbarSize={2}
-                    type="never"
-                    bg={"gray.1"}
-                  >
-                    <Box pl={"xs"} pt={"xs"} pr={"xs"} bg={"white"} pb={"10"}>
-                      <Grid columns={"16"} gutter="6">
-                        {transactionModeData &&
-                          transactionModeData.length > 0 &&
-                          transactionModeData.map((mode, index) => {
-                            return (
-                              <Grid.Col span={4} key={index}>
-                                <Box bg={"gray.1"} h={"82"}>
-                                  <input
-                                    type="radio"
-                                    name="transaction_mode_id"
-                                    id={"transaction_mode_id_" + mode.id}
-                                    className="input-hidden"
-                                    value={mode.id}
-                                    onChange={(e) => {
-                                      form.setFieldValue(
-                                        "transaction_mode_id",
-                                        e.currentTarget.value
-                                      );
-                                      form.setFieldError(
-                                        "transaction_mode_id",
-                                        null
-                                      );
-                                    }}
-                                    defaultChecked={
-                                      mode.is_selected ? true : false
-                                    }
-                                  />
-                                  <Tooltip
-                                    label={mode.name}
-                                    opened={hoveredModeId === mode.id}
-                                    position="top"
-                                    bg={"orange.8"}
-                                    offset={12}
-                                    withArrow
-                                    arrowSize={8}
-                                  >
-                                    <label
-                                      htmlFor={"transaction_mode_id_" + mode.id}
-                                      onMouseEnter={() => {
-                                        setHoveredModeId(mode.id);
-                                      }}
-                                      onMouseLeave={() => {
-                                        setHoveredModeId(null);
-                                      }}
-                                    >
-                                      <img
-                                        src={
-                                          isOnline
-                                            ? mode.path
-                                            : "/images/transaction-mode-offline.jpg"
-                                        }
-                                        alt={mode.method_name}
-                                      />
-                                      <Center fz={"xs"} className={"textColor"}>
-                                        {mode.authorized_name}
-                                      </Center>
-                                    </label>
-                                  </Tooltip>
-                                </Box>
-                              </Grid.Col>
+                          }, 1000);
+
+                          return () => clearTimeout(timeoutId);
+                        }, [editedSalesPrice, item.product_id, item.quantity]);
+
+                        return item.percent ? (
+                          Number(item.sales_price).toFixed(2)
+                        ) : (
+                          <>
+                            <TextInput
+                              type="number"
+                              label=""
+                              size="xs"
+                              id={"inline-update-quantity-" + item.product_id}
+                              value={editedSalesPrice}
+                              onChange={handleSalesPriceChange}
+                            />
+                          </>
+                        );
+                      },
+                    },
+                    {
+                      accessor: "percent",
+                      title: t("Discount"),
+                      textAlign: "center",
+                      width: "100px",
+                      render: (item) => {
+                        const [editedPercent, setEditedPercent] = useState(
+                          item.percent
+                        );
+                        const handlePercentChange = (e) => {
+                          const editedPercent = e.currentTarget.value;
+                          setEditedPercent(editedPercent);
+
+                          const tempCardProducts = localStorage.getItem(
+                            "temp-sales-products"
+                          );
+                          const cardProducts = tempCardProducts
+                            ? JSON.parse(tempCardProducts)
+                            : [];
+
+                          if (
+                            e.currentTarget.value &&
+                            e.currentTarget.value >= 0
+                          ) {
+                            const updatedProducts = cardProducts.map(
+                              (product) => {
+                                if (product.product_id === item.product_id) {
+                                  const discountAmount =
+                                    (item.price * editedPercent) / 100;
+                                  const salesPrice =
+                                    item.price - discountAmount;
+
+                                  return {
+                                    ...product,
+                                    percent: editedPercent,
+                                    sales_price: salesPrice,
+                                    sub_total: salesPrice * item.quantity,
+                                  };
+                                }
+                                return product;
+                              }
                             );
-                          })}
+
+                            localStorage.setItem(
+                              "temp-sales-products",
+                              JSON.stringify(updatedProducts)
+                            );
+                            setLoadCardProducts(true);
+                          }
+                        };
+
+                        return item.percent ? (
+                          <>
+                            <TextInput
+                              type="number"
+                              label=""
+                              size="xs"
+                              value={editedPercent}
+                              onChange={handlePercentChange}
+                              rightSection={
+                                editedPercent === "" ? (
+                                  <>
+                                    {item.percent}
+                                    <IconPercentage size={16} opacity={0.5} />
+                                  </>
+                                ) : (
+                                  <IconPercentage size={16} opacity={0.5} />
+                                )
+                              }
+                            />
+                          </>
+                        ) : (
+                          <Text size={"xs"} ta="right">
+                            {(
+                              Number(item.price) - Number(item.sales_price)
+                            ).toFixed(2)}
+                          </Text>
+                        );
+                      },
+                      footer: (
+                        <Group spacing="xs">
+                          <Text fz={"md"} fw={"600"}>
+                            {t("SubTotal")}
+                          </Text>
+                        </Group>
+                      ),
+                    },
+
+                    {
+                      accessor: "sub_total",
+                      title: t("SubTotal"),
+                      textAlign: "right",
+                      render: (item) => {
+                        return (
+                          item.sub_total && Number(item.sub_total).toFixed(2)
+                        );
+                      },
+                      footer: (
+                        <Group spacing="xs">
+                          <Text fw={"600"} fz={"md"}>
+                            {salesSubTotalAmount.toFixed(2)}
+                          </Text>
+                        </Group>
+                      ),
+                    },
+                    {
+                      accessor: "action",
+                      title: t("Action"),
+                      textAlign: "right",
+                      render: (item) => (
+                        <Group gap={4} justify="right" wrap="nowrap">
+                          <ActionIcon
+                            size="sm"
+                            variant="subtle"
+                            color="red"
+                            onClick={() => {
+                              const dataString = localStorage.getItem(
+                                "temp-sales-products"
+                              );
+                              let data = dataString
+                                ? JSON.parse(dataString)
+                                : [];
+
+                              data = data.filter(
+                                (d) => d.product_id !== item.product_id
+                              );
+
+                              const updatedDataString = JSON.stringify(data);
+
+                              localStorage.setItem(
+                                "temp-sales-products",
+                                updatedDataString
+                              );
+                              setLoadCardProducts(true);
+                            }}
+                          >
+                            <IconX
+                              size={16}
+                              style={{ width: "70%", height: "70%" }}
+                              stroke={1.5}
+                            />
+                          </ActionIcon>
+                        </Group>
+                      ),
+                    },
+                  ]}
+                  fetching={fetching}
+                  totalRecords={100}
+                  recordsPerPage={10}
+                  loaderSize="xs"
+                  loaderColor="grape"
+                  height={height - 85}
+                  scrollAreaProps={{ type: "never" }}
+                />
+              </Box>
+            </Box>
+            <Box>
+              <Grid columns={24} gutter={{ base: 6 }} pt={"6"}>
+                <Grid.Col span={8}>
+                  <Box className={"borderRadiusAll"}>
+                    <ScrollArea
+                      h={190}
+                      scrollbarSize={2}
+                      type="never"
+                      bg={"gray.1"}
+                    >
+                      <Box pl={"xs"} pt={"xs"} pr={"xs"} bg={"white"} pb={"10"}>
+                        <Grid columns={"16"} gutter="6">
+                          {transactionModeData &&
+                            transactionModeData.length > 0 &&
+                            transactionModeData.map((mode, index) => {
+                              return (
+                                <Grid.Col span={4} key={index}>
+                                  <Box bg={"gray.1"} h={"82"}>
+                                    <input
+                                      type="radio"
+                                      name="transaction_mode_id"
+                                      id={"transaction_mode_id_" + mode.id}
+                                      className="input-hidden"
+                                      value={mode.id}
+                                      onChange={(e) => {
+                                        form.setFieldValue(
+                                          "transaction_mode_id",
+                                          e.currentTarget.value
+                                        );
+                                        form.setFieldError(
+                                          "transaction_mode_id",
+                                          null
+                                        );
+                                      }}
+                                      defaultChecked={
+                                        mode.is_selected ? true : false
+                                      }
+                                    />
+                                    <Tooltip
+                                      label={mode.name}
+                                      opened={hoveredModeId === mode.id}
+                                      position="top"
+                                      bg={"orange.8"}
+                                      offset={12}
+                                      withArrow
+                                      arrowSize={8}
+                                    >
+                                      <label
+                                        htmlFor={
+                                          "transaction_mode_id_" + mode.id
+                                        }
+                                        onMouseEnter={() => {
+                                          setHoveredModeId(mode.id);
+                                        }}
+                                        onMouseLeave={() => {
+                                          setHoveredModeId(null);
+                                        }}
+                                      >
+                                        <img
+                                          src={
+                                            isOnline
+                                              ? mode.path
+                                              : "/images/transaction-mode-offline.jpg"
+                                          }
+                                          alt={mode.method_name}
+                                        />
+                                        <Center
+                                          fz={"xs"}
+                                          className={"textColor"}
+                                        >
+                                          {mode.authorized_name}
+                                        </Center>
+                                      </label>
+                                    </Tooltip>
+                                  </Box>
+                                </Grid.Col>
+                              );
+                            })}
+                        </Grid>
+                      </Box>
+                    </ScrollArea>
+                  </Box>
+                </Grid.Col>
+                <Grid.Col span={8}>
+                  <Box
+                    className="borderRadiusAll"
+                    bg={"white"}
+                    p={"xs"}
+                    h={192}
+                  >
+                    <Box>
+                      <DatePickerForm
+                        tooltip={t("InvoiceDateValidateMessage")}
+                        label=""
+                        placeholder={t("InvoiceDate")}
+                        required={false}
+                        nextField={"discount"}
+                        form={form}
+                        name={"invoice_date"}
+                        id={"invoice_date"}
+                        leftSection={<IconCalendar size={16} opacity={0.5} />}
+                        rightSectionWidth={30}
+                        closeIcon={true}
+                      />
+                    </Box>
+                    <Box mt={4}>
+                      <SelectForm
+                        tooltip={t("ChooseSalesBy")}
+                        label=""
+                        placeholder={t("SalesBy")}
+                        required={false}
+                        name={"sales_by"}
+                        form={form}
+                        dropdownValue={salesByDropdownData}
+                        id={"sales_by"}
+                        nextField={"order_process"}
+                        searchable={false}
+                        value={salesByUser}
+                        changeValue={setSalesByUser}
+                      />
+                    </Box>
+                    <Box pt={4}>
+                      <SelectForm
+                        tooltip={t("ChooseOrderProcess")}
+                        label=""
+                        placeholder={t("OrderProcess")}
+                        required={false}
+                        name={"order_process"}
+                        form={form}
+                        dropdownValue={
+                          localStorage.getItem("order-process")
+                            ? JSON.parse(localStorage.getItem("order-process"))
+                            : []
+                        }
+                        id={"order_process"}
+                        nextField={"narration"}
+                        searchable={false}
+                        value={orderProcess}
+                        changeValue={setOrderProcess}
+                      />
+                    </Box>
+                    <Box pt={4}>
+                      <TextAreaForm
+                        size="xs"
+                        tooltip={t("NarrationValidateMessage")}
+                        label=""
+                        placeholder={t("Narration")}
+                        required={false}
+                        nextField={"Status"}
+                        name={"narration"}
+                        form={form}
+                        id={"narration"}
+                      />
+                    </Box>
+                  </Box>
+                </Grid.Col>
+                <Grid.Col span={8}>
+                  {/* outstading section */}
+                  <Box
+                    p={"xs"}
+                    className="borderRadiusAll"
+                    bg={"white"}
+                    h={192}
+                  >
+                    <Box>
+                      <Grid gutter={{ base: 4 }}>
+                        <Grid.Col span={3}>
+                          <Center fz={"md"} fw={"800"}>
+                            {currencySymbol} {salesSubTotalAmount.toFixed(2)}
+                          </Center>
+                        </Grid.Col>
+                        <Grid.Col span={3}>
+                          <Center fz={"md"} fw={"800"}>
+                            {" "}
+                            {currencySymbol}{" "}
+                            {salesDiscountAmount &&
+                              Number(salesDiscountAmount).toFixed(2)}
+                          </Center>
+                        </Grid.Col>
+                        <Grid.Col span={3}>
+                          <Center fz={"md"} fw={"800"}>
+                            {" "}
+                            {currencySymbol} {salesVatAmount.toFixed(2)}
+                          </Center>
+                        </Grid.Col>
+                        <Grid.Col span={3}>
+                          <Center fz={"md"} fw={"800"}>
+                            {currencySymbol} {salesTotalAmount.toFixed(2)}
+                          </Center>
+                        </Grid.Col>
+                      </Grid>
+                      <Grid gutter={{ base: 4 }}>
+                        <Grid.Col span={3}>
+                          <Box h={1} ml={"xl"} mr={"xl"} bg={`red.3`}></Box>
+                        </Grid.Col>
+                        <Grid.Col span={3}>
+                          <Box h={1} ml={"xl"} mr={"xl"} bg={`red.3`}></Box>
+                        </Grid.Col>
+                        <Grid.Col span={3}>
+                          <Box h={1} ml={"xl"} mr={"xl"} bg={`red.3`}></Box>
+                        </Grid.Col>
+                        <Grid.Col span={3}>
+                          <Box h={1} ml={"xl"} mr={"xl"} bg={`red.3`}></Box>
+                        </Grid.Col>
+                      </Grid>
+                      <Grid gutter={{ base: 4 }}>
+                        <Grid.Col span={3}>
+                          <Center fz={"xs"} c="dimmed">
+                            {t("SubTotal")}
+                          </Center>
+                        </Grid.Col>
+                        <Grid.Col span={3}>
+                          <Center fz={"xs"} c="dimmed">
+                            {t("Discount")}
+                          </Center>
+                        </Grid.Col>
+                        <Grid.Col span={3}>
+                          <Center fz={"xs"} c="dimmed">
+                            {t("Vat")}
+                          </Center>
+                        </Grid.Col>
+                        <Grid.Col span={3}>
+                          <Center fz={"xs"} c="dimmed">
+                            {t("Total")}
+                          </Center>
+                        </Grid.Col>
                       </Grid>
                     </Box>
-                  </ScrollArea>
-                </Box>
-              </Grid.Col>
-              <Grid.Col span={8}>
-                <Box className="borderRadiusAll" bg={"white"} p={"xs"} h={192}>
-                  <Box>
-                    <DatePickerForm
-                      tooltip={t("InvoiceDateValidateMessage")}
-                      label=""
-                      placeholder={t("InvoiceDate")}
-                      required={false}
-                      nextField={"discount"}
-                      form={form}
-                      name={"invoice_date"}
-                      id={"invoice_date"}
-                      leftSection={<IconCalendar size={16} opacity={0.5} />}
-                      rightSectionWidth={30}
-                      closeIcon={true}
-                    />
-                  </Box>
-                  <Box mt={4}>
-                    <SelectForm
-                      tooltip={t("ChooseSalesBy")}
-                      label=""
-                      placeholder={t("SalesBy")}
-                      required={false}
-                      name={"sales_by"}
-                      form={form}
-                      dropdownValue={salesByDropdownData}
-                      id={"sales_by"}
-                      nextField={"order_process"}
-                      searchable={false}
-                      value={salesByUser}
-                      changeValue={setSalesByUser}
-                    />
-                  </Box>
-                  <Box pt={4}>
-                    <SelectForm
-                      tooltip={t("ChooseOrderProcess")}
-                      label=""
-                      placeholder={t("OrderProcess")}
-                      required={false}
-                      name={"order_process"}
-                      form={form}
-                      dropdownValue={
-                        localStorage.getItem("order-process")
-                          ? JSON.parse(localStorage.getItem("order-process"))
-                          : []
-                      }
-                      id={"order_process"}
-                      nextField={"narration"}
-                      searchable={false}
-                      value={orderProcess}
-                      changeValue={setOrderProcess}
-                    />
-                  </Box>
-                  <Box pt={4}>
-                    <TextAreaForm
-                      size="xs"
-                      tooltip={t("NarrationValidateMessage")}
-                      label=""
-                      placeholder={t("Narration")}
-                      required={false}
-                      nextField={"Status"}
-                      name={"narration"}
-                      form={form}
-                      id={"narration"}
-                    />
-                  </Box>
-                </Box>
-              </Grid.Col>
-              <Grid.Col span={8}>
-                {/* outstading section */}
-                <Box p={"xs"} className="borderRadiusAll" bg={"white"} h={192}>
-                  <Box>
-                    <Grid gutter={{ base: 4 }}>
-                      <Grid.Col span={3}>
-                        <Center fz={"md"} fw={"800"}>
-                          {currencySymbol} {salesSubTotalAmount.toFixed(2)}
-                        </Center>
-                      </Grid.Col>
-                      <Grid.Col span={3}>
-                        <Center fz={"md"} fw={"800"}>
-                          {" "}
-                          {currencySymbol}{" "}
-                          {salesDiscountAmount &&
-                            Number(salesDiscountAmount).toFixed(2)}
-                        </Center>
-                      </Grid.Col>
-                      <Grid.Col span={3}>
-                        <Center fz={"md"} fw={"800"}>
-                          {" "}
-                          {currencySymbol} {salesVatAmount.toFixed(2)}
-                        </Center>
-                      </Grid.Col>
-                      <Grid.Col span={3}>
-                        <Center fz={"md"} fw={"800"}>
-                          {currencySymbol} {salesTotalAmount.toFixed(2)}
-                        </Center>
-                      </Grid.Col>
-                    </Grid>
-                    <Grid gutter={{ base: 4 }}>
-                      <Grid.Col span={3}>
-                        <Box h={1} ml={"xl"} mr={"xl"} bg={`red.3`}></Box>
-                      </Grid.Col>
-                      <Grid.Col span={3}>
-                        <Box h={1} ml={"xl"} mr={"xl"} bg={`red.3`}></Box>
-                      </Grid.Col>
-                      <Grid.Col span={3}>
-                        <Box h={1} ml={"xl"} mr={"xl"} bg={`red.3`}></Box>
-                      </Grid.Col>
-                      <Grid.Col span={3}>
-                        <Box h={1} ml={"xl"} mr={"xl"} bg={`red.3`}></Box>
-                      </Grid.Col>
-                    </Grid>
-                    <Grid gutter={{ base: 4 }}>
-                      <Grid.Col span={3}>
-                        <Center fz={"xs"} c="dimmed">
-                          {t("SubTotal")}
-                        </Center>
-                      </Grid.Col>
-                      <Grid.Col span={3}>
-                        <Center fz={"xs"} c="dimmed">
-                          {t("Discount")}
-                        </Center>
-                      </Grid.Col>
-                      <Grid.Col span={3}>
-                        <Center fz={"xs"} c="dimmed">
-                          {t("Vat")}
-                        </Center>
-                      </Grid.Col>
-                      <Grid.Col span={3}>
-                        <Center fz={"xs"} c="dimmed">
-                          {t("Total")}
-                        </Center>
-                      </Grid.Col>
-                    </Grid>
-                  </Box>
-                  {/* Due Section */}
-                  <Box className={""} pt={"xs"} mb={"xs"} pb={"xs"}>
-                    <Stack h={110} justify="space-between">
-                      <Grid columns={18} gutter={{ base: 2 }} pt={"md"}>
-                        <Grid.Col span={10} align="flex-start">
-                          <Group justify="flex-start" align="center">
-                            <Box>
-                              <Switch
-                                size="lg"
-                                w={"100%"}
-                                color={"red.3"}
-                                ml={"6"}
-                                onLabel={t("Profit")}
-                                offLabel={t("Hide")}
-                                radius="xs"
-                                onChange={(event) =>
-                                  setProfitShow(event.currentTarget.checked)
-                                }
-                              />
-                            </Box>
-                            <Box>
-                              <Center fz={"md"} mt={"4"} c={"black.5"}>
-                                {currencySymbol}{" "}
-                                {profitShow && salesProfitAmount}
-                              </Center>
-                            </Box>
-                          </Group>
-                        </Grid.Col>
-                        <Grid.Col span={8} align="center" justify="center">
-                          <Box
-                            fz={"xl"}
-                            pr={"xs"}
-                            c={"red"}
-                            style={{ textAlign: "right", float: "right" }}
-                            fw={"800"}
-                          >
-                            {returnOrDueText === "Due" ? t("Due") : t("Return")}{" "}
-                            {currencySymbol} {salesDueAmount.toFixed(2)}
-                          </Box>
-                        </Grid.Col>
-                      </Grid>
-                      <Box>
-                        <Box mt={"4"} h={1} bg={`red.3`}></Box>
-                        <Tooltip
-                          label={t("MustBeNeedReceiveAmountWithoutCustomer")}
-                          opened={isDisabled}
-                          position="bottom-end"
-                          withArrow
-                        >
-                          <Grid gutter={{ base: 2 }} mt={"4"}>
-                            <Grid.Col span={4} bg={"red.3"} p={2}>
-                              <Tooltip
-                                label={t("ClickRightButtonForPercentFlat")}
-                                px={16}
-                                py={2}
-                                position="top"
-                                bg={"red.4"}
-                                c={"white"}
-                                withArrow
-                                offset={2}
-                                zIndex={999}
-                                transitionProps={{
-                                  transition: "pop-bottom-left",
-                                  duration: 500,
-                                }}
-                              >
-                                <TextInput
-                                  type="number"
-                                  style={{ textAlign: "right" }}
-                                  placeholder={t("Discount")}
-                                  value={salesDiscountAmount}
-                                  size={"sm"}
-                                  classNames={{ input: classes.input }}
-                                  onChange={(event) => {
-                                    form.setFieldValue(
-                                      "discount",
-                                      event.target.value
-                                    );
-                                    const newValue = event.target.value;
-                                    setSalesDiscountAmount(newValue);
-                                    form.setFieldValue("discount", newValue);
-                                  }}
-                                  rightSection={
-                                    <ActionIcon
-                                      size={32}
-                                      bg={"red.5"}
-                                      variant="filled"
-                                      onClick={() => setDiscountType()}
-                                    >
-                                      {discountType === "Flat" ? (
-                                        <IconCurrencyTaka size={16} />
-                                      ) : (
-                                        <IconPercentage size={16} />
-                                      )}
-                                    </ActionIcon>
+                    {/* Due Section */}
+                    <Box className={""} pt={"xs"} mb={"xs"} pb={"xs"}>
+                      <Stack h={110} justify="space-between">
+                        <Grid columns={18} gutter={{ base: 2 }} pt={"md"}>
+                          <Grid.Col span={8} align="flex-start">
+                            <Group justify="flex-start" align="center">
+                              <Box>
+                                <Switch
+                                  size="lg"
+                                  w={"100%"}
+                                  color={"red.3"}
+                                  ml={"6"}
+                                  onLabel={t("Profit")}
+                                  offLabel={t("Hide")}
+                                  radius="xs"
+                                  onChange={(event) =>
+                                    setProfitShow(event.currentTarget.checked)
                                   }
-                                  onBlur={async (event) => {
-                                    const data = {
-                                      url: "inventory/pos/inline-update",
-                                      data: {
-                                        invoice_id: tableId,
-                                        field_name: "discount",
-                                        value: event.target.value,
-                                        discount_type: discountType,
-                                      },
-                                    };
-                                    // Dispatch and handle response
-                                    try {
-                                      const resultAction = await dispatch(
-                                        storeEntityData(data)
+                                />
+                              </Box>
+                              <Box>
+                                <Center fz={"md"} mt={"4"} c={"black.5"}>
+                                  {currencySymbol}{" "}
+                                  {profitShow && salesProfitAmount}
+                                </Center>
+                              </Box>
+                            </Group>
+                          </Grid.Col>
+                          <Grid.Col span={10} align="center" justify="center">
+                            <Box
+                              fz={"xl"}
+                              pr={"xs"}
+                              c={"red"}
+                              style={{ textAlign: "right", float: "right" }}
+                              fw={"800"}
+                            >
+                              {returnOrDueText === "Due"
+                                ? t("Due")
+                                : t("Return")}{" "}
+                              {currencySymbol} {salesTotalAmount.toFixed(2)}
+                            </Box>
+                          </Grid.Col>
+                        </Grid>
+                        <Box>
+                          <Box mt={"4"} h={1} bg={`red.3`}></Box>
+                          <Tooltip
+                            label={t("MustBeNeedReceiveAmountWithoutCustomer")}
+                            opened={isDisabled}
+                            position="bottom-end"
+                            withArrow
+                          >
+                            <Grid gutter={{ base: 2 }} mt={"4"}>
+                              <Grid.Col span={4} bg={"red.3"} p={2}>
+                                <Tooltip
+                                  label={t("ClickRightButtonForPercentFlat")}
+                                  px={16}
+                                  py={2}
+                                  position="top"
+                                  bg={"red.4"}
+                                  c={"white"}
+                                  withArrow
+                                  offset={2}
+                                  zIndex={999}
+                                  transitionProps={{
+                                    transition: "pop-bottom-left",
+                                    duration: 500,
+                                  }}
+                                >
+                                  <TextInput
+                                    type="number"
+                                    style={{ textAlign: "right" }}
+                                    placeholder={t("Discount")}
+                                    value={salesDiscountAmount}
+                                    size={"sm"}
+                                    classNames={{ input: classes.input }}
+                                    onChange={(event) => {
+                                      form.setFieldValue(
+                                        "discount",
+                                        event.target.value
                                       );
+                                      const newValue = event.target.value;
+                                      setSalesDiscountAmount(newValue);
+                                      form.setFieldValue("discount", newValue);
+                                    }}
+                                    rightSection={
+                                      <ActionIcon
+                                        size={32}
+                                        bg={"red.5"}
+                                        variant="filled"
+                                        onClick={() => setDiscountType()}
+                                      >
+                                        {discountType === "Flat" ? (
+                                          <IconCurrencyTaka size={16} />
+                                        ) : (
+                                          <IconPercentage size={16} />
+                                        )}
+                                      </ActionIcon>
+                                    }
+                                    onBlur={async (event) => {
+                                      const data = {
+                                        url: "inventory/pos/inline-update",
+                                        data: {
+                                          invoice_id: tableId,
+                                          field_name: "discount",
+                                          value: event.target.value,
+                                          discount_type: discountType,
+                                        },
+                                      };
+                                      // Dispatch and handle response
+                                      try {
+                                        const resultAction = await dispatch(
+                                          storeEntityData(data)
+                                        );
 
-                                      if (
-                                        resultAction.payload?.status !== 200
-                                      ) {
+                                        if (
+                                          resultAction.payload?.status !== 200
+                                        ) {
+                                          showNotificationComponent(
+                                            resultAction.payload?.message ||
+                                              "Error updating invoice",
+                                            "red",
+                                            "",
+                                            "",
+                                            true
+                                          );
+                                        }
+                                      } catch (error) {
                                         showNotificationComponent(
-                                          resultAction.payload?.message ||
-                                            "Error updating invoice",
+                                          "Request failed. Please try again.",
                                           "red",
                                           "",
                                           "",
                                           true
                                         );
+                                        console.error(
+                                          "Error updating invoice:",
+                                          error
+                                        );
+                                      } finally {
+                                        setReloadInvoiceData(true);
                                       }
-                                    } catch (error) {
-                                      showNotificationComponent(
-                                        "Request failed. Please try again.",
-                                        "red",
-                                        "",
-                                        "",
-                                        true
-                                      );
-                                      console.error(
-                                        "Error updating invoice:",
-                                        error
-                                      );
-                                    } finally {
-                                      setReloadInvoiceData(true);
-                                    }
-                                  }}
+                                    }}
+                                  />
+                                </Tooltip>
+                              </Grid.Col>
+                              <Grid.Col span={8} bg={"green"} p={2}>
+                                <InputNumberForm
+                                  type="number"
+                                  tooltip={t("ReceiveAmountValidateMessage")}
+                                  label=""
+                                  placeholder={t("Amount")}
+                                  required={false}
+                                  nextField={"sales_by"}
+                                  form={form}
+                                  name={"receive_amount"}
+                                  id={"receive_amount"}
+                                  rightIcon={
+                                    <IconCurrency size={16} opacity={0.5} />
+                                  }
+                                  leftSection={
+                                    <IconPlusMinus size={16} opacity={0.5} />
+                                  }
+                                  closeIcon={true}
                                 />
-                              </Tooltip>
-                              {/* <InputButtonForm
-                            tooltip={t("DiscountValidateMessage")}
-                            label=""
-                            placeholder={t("Discount")}
-                            required={false}
-                            nextField={"receive_amount"}
-                            form={form}
-                            name={"discount"}
-                            id={"discount"}
-                            leftSection={
-                              <IconDiscountOff size={16} opacity={0.5} />
-                            }
-                            rightSection={inputGroupCurrency}
-                            rightSectionWidth={30}
-                          /> */}
-                            </Grid.Col>
-                            <Grid.Col span={8} bg={"green"} p={2}>
-                              <InputNumberForm
-                                type="number"
-                                tooltip={t("ReceiveAmountValidateMessage")}
-                                label=""
-                                placeholder={t("Amount")}
-                                required={false}
-                                nextField={"sales_by"}
-                                form={form}
-                                name={"receive_amount"}
-                                id={"receive_amount"}
-                                rightIcon={
-                                  <IconCurrency size={16} opacity={0.5} />
-                                }
-                                leftSection={
-                                  <IconPlusMinus size={16} opacity={0.5} />
-                                }
-                                closeIcon={true}
-                              />
-                            </Grid.Col>
-                          </Grid>
-                        </Tooltip>
-                      </Box>
-                    </Stack>
+                              </Grid.Col>
+                            </Grid>
+                          </Tooltip>
+                        </Box>
+                      </Stack>
+                    </Box>
                   </Box>
-                </Box>
-              </Grid.Col>
-            </Grid>
-            <Box mt={"8"} pb={"xs"}>
-              <Button.Group>
-                <Button
-                  fullWidth={true}
-                  variant="filled"
-                  leftSection={<IconStackPush size={14} />}
-                  color="orange.5"
-                >
-                  {t("Hold")}
-                </Button>
-                <Button
-                  fullWidth={true}
-                  variant="filled"
-                  type={"submit"}
-                  onClick={handleClick}
-                  name="print"
-                  leftSection={<IconPrinter size={14} />}
-                  color="green.5"
-                  disabled={isDisabled}
-                  style={{
-                    transition: "all 0.3s ease",
-                    backgroundColor: isDisabled ? "#f1f3f500" : "",
-                  }}
-                >
-                  {t("Print")}
-                </Button>
-                <Button
-                  fullWidth={true}
-                  type={"submit"}
-                  onClick={handleClick}
-                  name="pos"
-                  variant="filled"
-                  leftSection={<IconReceipt size={14} />}
-                  color="red.5"
-                  disabled={isDisabled}
-                  style={{
-                    transition: "all 0.3s ease",
-                    backgroundColor: isDisabled ? "#f1f3f500" : "",
-                  }}
-                >
-                  {t("Pos")}
-                </Button>
-                <Button
-                  fullWidth={true}
-                  type={"submit"}
-                  onClick={handleClick}
-                  name="save"
-                  variant="filled"
-                  leftSection={<IconDeviceFloppy size={14} />}
-                  color="cyan.5"
-                  disabled={isDisabled}
-                  style={{
-                    transition: "all 0.3s ease",
-                    backgroundColor: isDisabled ? "#f1f3f500" : "",
-                  }}
-                >
-                  {t("Save")}
-                </Button>
-              </Button.Group>
+                </Grid.Col>
+              </Grid>
+              <Box mt={"8"} pb={"xs"}>
+                <Button.Group>
+                  <Button
+                    fullWidth={true}
+                    variant="filled"
+                    leftSection={<IconStackPush size={14} />}
+                    color="orange.5"
+                  >
+                    {t("Hold")}
+                  </Button>
+                  <Button
+                    fullWidth={true}
+                    variant="filled"
+                    type={"submit"}
+                    onClick={handleClick}
+                    name="print"
+                    leftSection={<IconPrinter size={14} />}
+                    color="green.5"
+                    disabled={isDisabled}
+                    style={{
+                      transition: "all 0.3s ease",
+                      backgroundColor: isDisabled ? "#f1f3f500" : "",
+                    }}
+                  >
+                    {t("Print")}
+                  </Button>
+                  <Button
+                    fullWidth={true}
+                    type={"submit"}
+                    onClick={handleClick}
+                    name="pos"
+                    variant="filled"
+                    leftSection={<IconReceipt size={14} />}
+                    color="red.5"
+                    disabled={isDisabled}
+                    style={{
+                      transition: "all 0.3s ease",
+                      backgroundColor: isDisabled ? "#f1f3f500" : "",
+                    }}
+                  >
+                    {t("Pos")}
+                  </Button>
+                  <Button
+                    fullWidth={true}
+                    type={"submit"}
+                    onClick={handleClick}
+                    name="save"
+                    variant="filled"
+                    leftSection={<IconDeviceFloppy size={14} />}
+                    color="cyan.5"
+                    disabled={isDisabled}
+                    style={{
+                      transition: "all 0.3s ease",
+                      backgroundColor: isDisabled ? "#f1f3f500" : "",
+                    }}
+                  >
+                    {t("Save")}
+                  </Button>
+                </Button.Group>
+              </Box>
             </Box>
-          </Box>
+          </form>
         </Grid.Col>
       </Grid>
       {settingDrawer && (
