@@ -4,31 +4,23 @@ import { ActionIcon, Box, ScrollArea, Drawer, Text, Flex } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 
 import { IconX } from "@tabler/icons-react";
-import AddProductDrawerForm from "./AddProductDrawerForm";
+import __SettingsForm from "./__SettingsForm";
 
-function AddProductDrawer(props) {
-  // const configData = localStorage.getItem('config-data');
-
-  const {
-    productDrawer,
-    setProductDrawer,
-    setStockProductRestore,
-    focusField,
-    fieldPrefix,
-  } = props;
+function __SettingsDrawer(props) {
+  const { settingDrawer, setSettingDrawer, module } = props;
   const { isOnline, mainAreaHeight } = useOutletContext();
   const { t, i18n } = useTranslation();
   const height = mainAreaHeight; //TabList height 104
-  const closeModel = () => {
-    setProductDrawer(false);
+  const closeDrawer = () => {
+    setSettingDrawer(false);
   };
 
   return (
     <>
       <Drawer.Root
-        opened={productDrawer}
+        opened={settingDrawer}
         position="right"
-        onClose={closeModel}
+        onClose={closeDrawer}
         size={"30%"}
       >
         <Drawer.Overlay />
@@ -53,17 +45,15 @@ function AddProductDrawer(props) {
                 color="grey.6"
                 size="md"
                 variant="outline"
-                onClick={closeModel}
+                onClick={closeDrawer}
               >
-                <IconX style={{ width: "100%", height: "100%" }} stroke={1.5} />
+                <IconX style={{ width: "80%", height: "80%" }} stroke={1.5} />
               </ActionIcon>
             </Flex>
             <Box ml={2} mr={2} mb={0}>
-              <AddProductDrawerForm
-                setProductDrawer={setProductDrawer}
-                setStockProductRestore={setStockProductRestore}
-                focusField={focusField}
-                fieldPrefix={fieldPrefix}
+              <__SettingsForm
+                module={module}
+                setSettingDrawer={setSettingDrawer}
               />
             </Box>
           </ScrollArea>
@@ -73,4 +63,4 @@ function AddProductDrawer(props) {
   );
 }
 
-export default AddProductDrawer;
+export default __SettingsDrawer;
