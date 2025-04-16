@@ -946,6 +946,8 @@
   "ChooseMode" : "Choose Mode",
   "pricePercent" : "Price percent",
   "salesPricePercent" : "Sales price percent",
+  "PercentMode" : "Percent mode",
   "PurchasePercent" : "Purchase percent",
+  "SalesPrice" : "Sales Price",
   "": ""
 }

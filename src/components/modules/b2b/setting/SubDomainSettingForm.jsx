@@ -23,7 +23,7 @@ import {
 } from "@tabler/icons-react";
 import {useHotkeys} from "@mantine/hooks";
 import {useDispatch, useSelector} from "react-redux";
-import { useForm} from "@mantine/form";
+import {useForm} from "@mantine/form";
 import {modals} from "@mantine/modals";
 import {notifications} from "@mantine/notifications";
 import classes from "../../../../assets/css/FeaturesCards.module.css";
@@ -33,7 +33,8 @@ import {
 } from "../../../../store/core/crudSlice.js";
 
 import {
-    setDropdownLoad} from "../../../../store/inventory/crudSlice.js";
+    setDropdownLoad
+} from "../../../../store/inventory/crudSlice.js";
 
 import InputForm from "../../../form-builders/InputForm";
 import SelectForm from "../../../form-builders/SelectForm.jsx";
@@ -118,17 +119,17 @@ function SubDomainSettingForm(props) {
             const ids = subDomainCategoryData.sub_domain_category.map(item => item.domain_category_id);
 
             form.setValues({
-                percent_mode: subDomainCategoryData.percent_mode || '',
-                mrp_percent: subDomainCategoryData.mrp_percent || '',
-                purchase_percent: subDomainCategoryData.purchase_percent || '',
-                bonus_percent: subDomainCategoryData.bonus_percent || '',
-                sales_target_amount: subDomainCategoryData.sales_target_amount || '',
+                percent_mode: subDomainCategoryData.percent_mode || 'Increase',
+                mrp_percent: subDomainCategoryData?.mrp_percent || '',
+                purchase_percent: subDomainCategoryData?.purchase_percent || '',
+                bonus_percent: subDomainCategoryData?.bonus_percent || '',
+                sales_target_amount: subDomainCategoryData?.sales_target_amount || '',
                 categories: ids,
             });
 
             setSelectedCategories(ids);
         }
-    }, [subDomainCategoryData]);
+    }, [subDomainCategoryData, reloadList]);
 
 
     useEffect(() => {
@@ -144,7 +145,7 @@ function SubDomainSettingForm(props) {
 
     const form = useForm({
         initialValues: {
-            percent_mode: subDomainCategoryData?.percent_mode,
+            percent_mode: subDomainCategoryData?.percent_mode || 'Increase',
             mrp_percent: subDomainCategoryData?.mrp_percent,
             purchase_percent: subDomainCategoryData?.purchase_percent,
             bonus_percent: subDomainCategoryData?.bonus_percent,
@@ -153,31 +154,28 @@ function SubDomainSettingForm(props) {
         },
         validate: {
             purchase_percent: (value) => {
-                if (value) {
-                    const validFormat = /^(?:[0-9]|[1-9][0-9])(\.\d{1,2})?$/.test(value);
-                    if (!validFormat) {
+                if (value !== undefined && value !== null && value !== '') {
+                    const isNumber = !isNaN(value);
+                    const validFormat = /^(?:[0-9]|[1-9][0-9]?)(\.\d{1,2})?$/.test(value);
+                    if (!isNumber || !validFormat) {
                         return true;
                     }
+                } else {
+                    return true; // value is empty → fail validation
                 }
-                return null;
+                return null; // passes validation
             },
             mrp_percent: (value) => {
-                if (value) {
-                    const validFormat = /^(?:[0-9]|[1-9][0-9])(\.\d{1,2})?$/.test(value);
-                    if (!validFormat) {
+                if (value !== undefined && value !== null && value !== '') {
+                    const isNumber = !isNaN(value);
+                    const validFormat = /^(?:[0-9]|[1-9][0-9]?)(\.\d{1,2})?$/.test(value);
+                    if (!isNumber || !validFormat) {
                         return true;
                     }
+                } else {
+                    return true; // value is empty → fail validation
                 }
-                return null;
-            },
-            bonus_percent: (value) => {
-                if (value) {
-                    const validFormat = /^(?:[0-9]|[1-9][0-9])(\.\d{1,2})?$/.test(value);
-                    if (!validFormat) {
-                        return true;
-                    }
-                }
-                return null;
+                return null; // passes validation
             },
         },
     });
@@ -193,7 +191,6 @@ function SubDomainSettingForm(props) {
         });
     };
 
-    console.log(selectedCategories)
     useHotkeys(
         [
             [
@@ -237,7 +234,7 @@ function SubDomainSettingForm(props) {
             <Container fluid p={0}>
                 <form
                     onSubmit={form.onSubmit((values) => {
-                        if (values.categories.length === 0) {
+                        if (selectedCategories.length == 0) {
                             notifications.show({
                                 color: "red",
                                 title: t("Error"),
@@ -255,6 +252,7 @@ function SubDomainSettingForm(props) {
                             onCancel: () => console.log("Cancel"),
                             onConfirm: async () => {
                                 setSaveCreateLoading(true);
+                                setReloadList(true)
 
                                 const value = {
                                     url: 'domain/b2b/sub-domain/category',
@@ -286,8 +284,7 @@ function SubDomainSettingForm(props) {
                                     });
                                 }
                                 setTimeout(() => {
-                                    form.reset();
-                                    setReloadList(true)
+                                    setSaveCreateLoading(false)
                                 }, 700);
                             },
                         });
@@ -549,8 +546,7 @@ function SubDomainSettingForm(props) {
                                                                         <Box mt={"xs"}>
                                                                             <Checkbox
                                                                                 pr="xs"
-                                                                                // checked={selectedCategories.includes(data.id)}
-                                                                                checked={selectedCategories.includes(Number(data.id))} // or String(data.id)
+                                                                                checked={selectedCategories.includes(Number(data.id))}
 
                                                                                 color="red"
                                                                                 form={form}

@@ -90,7 +90,7 @@ export default function DashBoardTable() {
             return [];
         }
     });
-    // console.log("userRole", userRole);
+
     return (
         <>
             <Box
@@ -173,8 +173,9 @@ export default function DashBoardTable() {
                             {accessor: "name", title: t("Name")},
                             {accessor: "email", title: t("Email")},
                             {accessor: "mobile", title: t("Mobile")},
-                            {accessor: "price_percent", title: t("pricePercent")},
-                            {accessor: "sales_price_percent", title: t("salesPricePercent")},
+                            {accessor: "percent_mode", title: t("Mode")},
+                            {accessor: "mrp_percent", title: t("MRPPercent"),textAlign:'center'},
+                            {accessor: "purchase_percent", title: t("PurchasePercent"),textAlign:'center'},
                             {
                                 accessor: "action",
                                 title: t("Action"),
@@ -191,7 +192,7 @@ export default function DashBoardTable() {
                                             color="red.3"
                                             mr={"4"}
                                             onClick={() => {
-                                                navigate(`/b2b/sub-domain/category/${data.id}`);
+                                                navigate(`/b2b/sub-domain/setting/${data.id}`);
                                             }}
                                         >
                                             {t("Manage")}
