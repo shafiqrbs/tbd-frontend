@@ -608,7 +608,7 @@ function _GenericPosForm(props) {
         <Grid.Col span={1}>
           <__Navigation />
         </Grid.Col>
-        <Grid.Col span={8}>
+        <Grid.Col span={7}>
           <Box bg={"white"} p={"md"} pb="0" className={"borderRadiusAll"}>
             <Box>
               <form
@@ -863,7 +863,7 @@ function _GenericPosForm(props) {
                         },
                         {
                           accessor: "qty",
-                          width: 160,
+                          width: 200,
                           title: (
                             <Group
                               justify={"flex-end"}
@@ -897,7 +897,9 @@ function _GenericPosForm(props) {
                               align="center"
                               mx="auto"
                             >
-                              <Box></Box>
+                              <Text fz={11} fw={400} pr={"xs"} w={50}>
+                                {currencySymbol} {data.sales_price}
+                              </Text>
                               <Input
                                 styles={{
                                   input: {
@@ -912,16 +914,13 @@ function _GenericPosForm(props) {
                                     borderBottomLeftRadius:
                                       "var(--mantine-radius-sm)",
                                   },
-                                  wrapper: {
-                                    width: "60%",
-                                  },
                                   placeholder: {
                                     fontSize: "var(--mantine-font-size-xs)",
                                     fontWeight: 300,
                                   },
                                 }}
                                 size="xxs"
-                                w="30%"
+                                w="50"
                                 type={"number"}
                                 tooltip={""}
                                 label={""}
@@ -934,9 +933,26 @@ function _GenericPosForm(props) {
                               />
                               <Button
                                 size="compact-xs"
+                                color={`gray.4`}
+                                radius={0}
+                                w="50"
+                                styles={{
+                                  root: {
+                                    height: "22px",
+                                    borderRadius: 0,
+                                  },
+                                }}
+                                onClick={() => {}}
+                              >
+                                <Text fz={9} fw={400} c={"black"}>
+                                  {data.unit_name}
+                                </Text>
+                              </Button>
+                              <Button
+                                size="compact-xs"
                                 color={`green.8`}
                                 radius={0}
-                                w="30%"
+                                w="30"
                                 styles={{
                                   root: {
                                     height: "22px",
@@ -1206,7 +1222,7 @@ function _GenericPosForm(props) {
             </Box>
           </Box>
         </Grid.Col>
-        <Grid.Col span={15}>
+        <Grid.Col span={16}>
           <Box bg={"white"} p={"xs"} className={"borderRadiusAll"}>
             <Box
               pl={`xs`}
