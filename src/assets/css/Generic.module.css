@@ -3,22 +3,28 @@
 }
 
 .bodyBackground {
-    background-color:rgba(226,194,194,0.39);
+    background-color:#fffbf459;
 }
 
 .boxBackground {
-    background-color:rgba(226,194,194,0.39)!important;
+    background-color:#fffbf459!important;
 }
 
 .boxBorderBackground {
-    background-color:rgba(226,194,194,0.39);
-    border: 1px solid rgba(226,194,194,0.39);;
+    background-color:#fffbf459;
+    border: 1px solid #fffbf459;
+}
+
+.genericBackground{
+    background-color:#e5c48e;
+}
+.genericSeconderyBg{
+    background-color:#fbf7efd1;
 }
 
 
-
 .borderTop,.borderBottom,.borderLeft,.borderRight{
-    border: 1px solid rgba(226, 194, 194, 0.39);
+    border: 1px solid #fffbf459;
 }
 
 .border-radius{

@@ -45,7 +45,7 @@ import {
   IconCurrencyTaka,
   IconDiscountOff,
   IconDotsVertical,
-  IconCheck
+  IconCheck, IconCategory
 } from "@tabler/icons-react";
 import { getHotkeyHandler, useHotkeys, useToggle } from "@mantine/hooks";
 import { hasLength, useForm } from "@mantine/form";
@@ -65,6 +65,7 @@ import __GenericPosSalesForm from "./__GenericPosSalesForm";
 import vendorDataStoreIntoLocalStorage from "../../../global-hook/local-storage/vendorDataStoreIntoLocalStorage.js";
 import getSettingCategoryDropdownData from "../../../global-hook/dropdown/getSettingCategoryDropdownData.js";
 import classes from "../../../../assets/css/FeaturesCards.module.css";
+import genericClass from "../../../../assets/css/Generic.module.css";
 import InputForm from "../../../form-builders/InputForm.jsx";
 import customerDataStoreIntoLocalStorage from "../../../global-hook/local-storage/customerDataStoreIntoLocalStorage.js";
 import PhoneNumber from "../../../form-builders/PhoneNumberInput.jsx";
@@ -729,36 +730,29 @@ function _GenericPosForm(props) {
               >
                 <Box mb={"xs"}>
                   <Grid columns={12} gutter={{ base: 2 }}>
-                    <Grid.Col span={2}>
-                      <IconMoneybag
-                        style={{ width: rem(42), height: rem(42) }}
-                        stroke={2}
-                        color={theme.colors.blue[6]}
-                      />
-                    </Grid.Col>
-                    <Grid.Col span={6}>
+                    <Grid.Col span={7}>
                       <Text fz="md" fw={500} className={classes.cardTitle}>
-                        {t("Sales")}
+                        {t("Customer Sales Invoice")}
                       </Text>
                     </Grid.Col>
-                    <Grid.Col span={4} align="center">
+                    <Grid.Col span={5} align="center">
                       <Group justify="flex-end" align="center" gap={4}>
                         {salesByBarcode && (
                           <SegmentedControl
                             size="xs"
                             styles={{
-                              label: { color: "white" },
+                              label: { color: "#140d05" },
                             }}
-                            bg={"green.6"}
+                            className={genericClass.genericBackground}
                             withItemsBorders={false}
                             fullWidth
-                            color="green.4"
+                            color={"#f8eedf"}
                             value={switchValue}
                             onChange={setSwitchValue}
                             data={[
                               {
-                                label: (
-                                  <Center style={{ gap: 10 }}>
+                                label:(
+                                  <Center pl={'8'} pr={'8'} style={{ gap: 10 }}>
                                     <IconCoinMonero
                                       height={"18"}
                                       width={"18"}
@@ -770,7 +764,7 @@ function _GenericPosForm(props) {
                               },
                               {
                                 label: (
-                                  <Center style={{ gap: 10 }}>
+                                  <Center pl={'8'} pr={'8'} style={{ gap: 10 }}>
                                     <IconBarcode
                                       height={"18"}
                                       width={"18"}
@@ -785,7 +779,7 @@ function _GenericPosForm(props) {
                         )}
                         <Tooltip
                           multiline
-                          bg={"orange.8"}
+                          bg={"#905923"}
                           position="top"
                           withArrow
                           ta={"center"}
@@ -814,27 +808,149 @@ function _GenericPosForm(props) {
                   </Grid>
                 </Box>
                 <Box
-                  pl={`xs`}
+                  pl={`8`}
                   pr={8}
                   mb={"xs"}
                   className={"boxBackground borderRadiusAll"}
                 >
-                  {switchValue === "barcode" && (
-                    <Box mt={"xs"}>
-                      <InputNumberForm
-                        tooltip={t("BarcodeValidateMessage")}
-                        label=""
-                        placeholder={t("Barcode")}
-                        required={true}
-                        nextField={""}
-                        form={form}
-                        name={"barcode"}
-                        id={"barcode"}
-                        leftSection={<IconBarcode size={16} opacity={0.5} />}
-                      />
-                    </Box>
-                  )}
-                  <Box mt={"xs"}>
+                  <Box mt={switchValue === "product" ? "xs" : "xs"}>
+                    <DataTable
+                        classNames={{
+                          root: tableCss.root,
+                          table: tableCss.table,
+                          header: tableCss.header,
+                          footer: tableCss.footer,
+                          pagination: tableCss.pagination,
+                        }}
+                        records={products}
+                        columns={[
+                          {
+                            accessor: "display_name",
+                            title: t("Product"),
+                            render: (data, index) => (
+                                <Text fz={11} fw={400}>
+                                  {index + 1}. {data.display_name}
+                                </Text>
+                            ),
+                          },
+                          {
+                            accessor: "qty",
+                            width: 200,
+                            title: (
+                                <Group
+                                    justify={"flex-end"}
+                                    spacing="xs"
+                                    noWrap
+                                    pl={"sm"}
+                                    ml={"sm"}
+                                >
+                                  <Box pl={"4"}>{t("")}</Box>
+                                  <ActionIcon
+                                      mr={"sm"}
+                                      radius="xl"
+                                      variant="transparent"
+                                      color="grey"
+                                      size="xs"
+                                  >
+                                    <IconRefresh
+                                        style={{ width: "100%", height: "100%" }}
+                                        stroke={1.5}
+                                    />
+                                  </ActionIcon>
+                                </Group>
+                            ),
+                            textAlign: "right",
+                            render: (data) => (
+                                <Group
+                                    wrap="nowrap"
+                                    w="100%"
+                                    gap={0}
+                                    justify="flex-end"
+                                    align="center"
+                                    mx="auto"
+                                >
+                                  <Text fz={11} fw={400} pr={"xs"} w={50}>
+                                    {currencySymbol} {data.sales_price}
+                                  </Text>
+                                  <Input
+                                      styles={{
+                                        input: {
+                                          fontSize: "var(--mantine-font-size-xs)",
+                                          fontWeight: 300,
+                                          lineHeight: 1.6,
+                                          textAlign: "center",
+                                          borderRadius: 0,
+                                          borderColor: '#905923',
+                                          borderTopLeftRadius:
+                                              "var(--mantine-radius-sm)",
+                                          borderBottomLeftRadius:
+                                              "var(--mantine-radius-sm)",
+                                        },
+                                        placeholder: {
+                                          fontSize: "var(--mantine-font-size-xs)",
+                                          fontWeight: 300,
+                                        },
+                                      }}
+                                      size="xxs"
+                                      w="50"
+                                      type={"number"}
+                                      tooltip={""}
+                                      label={""}
+                                      placeholder={t("0")}
+                                      required={false}
+                                      nextField={"credit_limit"}
+                                      name={"quantity"}
+                                      form={form}
+                                      id={"quantity"}
+                                  />
+                                  <Button
+                                      size="compact-xs"
+                                      color={'#f8eedf'}
+                                      radius={0}
+                                      w="50"
+                                      styles={{
+                                        root: {
+                                          height: "22px",
+                                          borderRadius: 0,
+                                        },
+                                      }}
+                                      onClick={() => {}}
+                                  >
+                                    <Text fz={9} fw={400} c={"black"}>
+                                      {data.unit_name}
+                                    </Text>
+                                  </Button>
+                                  <Button
+                                      size="compact-xs"
+                                      bg={"#905923"}
+                                      radius={0}
+                                      w="30"
+                                      styles={{
+                                        root: {
+                                          height: "22px",
+                                          borderRadius: 0,
+                                          borderTopRightRadius:
+                                              "var(--mantine-radius-sm)",
+                                          borderBottomRightRadius:
+                                              "var(--mantine-radius-sm)",
+                                        },
+                                      }}
+                                      onClick={() => {}}
+                                  >
+                                    <Flex direction={`column`} gap={0}>
+                                      <IconShoppingBag size={12} />
+                                    </Flex>
+                                  </Button>
+                                </Group>
+                            ),
+                          },
+                        ]}
+                        loaderSize="xs"
+                        loaderColor="grape"
+                        height={height - 130}
+                    />
+                  </Box>
+                  <Box mt={"8"}>
                     <SelectForm
                       tooltip={t("PurchaseValidateMessage")}
                       label=""
@@ -852,7 +968,7 @@ function _GenericPosForm(props) {
                     />
                   </Box>
                   {isWarehouse == 1 && (
-                    <Box mt={"xs"}>
+                      <Box mt={"4"}>
                       <SelectForm
                         tooltip={t("Warehouse")}
                         label=""
@@ -870,8 +986,7 @@ function _GenericPosForm(props) {
                       />
                     </Box>
                   )}
-
-                  <Box mt={"xs"}>
+                  <Box mt={"4"}>
                     <SelectForm
                       tooltip={t("ChooseCategory")}
                       label={""}
@@ -889,163 +1004,80 @@ function _GenericPosForm(props) {
                     />
                   </Box>
                   {switchValue === "product" && (
-                    <Box p={"xs"} bg={"#d7e8cd"} ml={"-xs"} mr={-8}>
-                      <SelectForm
-                        tooltip={t("ChooseProduct")}
-                        label={""}
-                        placeholder={t("ChooseProduct")}
-                        required={true}
-                        nextField={"quantity"}
-                        name={"product_id"}
-                        form={form}
-                        dropdownValue={productDropdown}
-                        id={"product_id"}
-                        searchable={true}
-                        value={product}
-                        changeValue={(val) => {
-                          setProduct(val);
-                        }}
-                        comboboxProps={{ withinPortal: false }}
-                      />
-                    </Box>
-                  )}
-                  <Box mt={switchValue === "product" ? "0" : "xs"}>
-                    <DataTable
-                      classNames={{
-                        root: tableCss.root,
-                        table: tableCss.table,
-                        header: tableCss.header,
-                        footer: tableCss.footer,
-                        pagination: tableCss.pagination,
-                      }}
-                      records={products}
-                      columns={[
-                        {
-                          accessor: "display_name",
-                          title: t("Product"),
-                          render: (data, index) => (
-                            <Text fz={11} fw={400}>
-                              {index + 1}. {data.display_name}
-                            </Text>
-                          ),
-                        },
-                        {
-                          accessor: "qty",
-                          width: 200,
-                          title: (
-                            <Group
-                              justify={"flex-end"}
-                              spacing="xs"
-                              noWrap
-                              pl={"sm"}
-                              ml={"sm"}
+                    <Box p={"xs"} mt={'8'} bg={"#e1bb7e"} ml={"-xs"} mr={-8}>
+                      <Grid gutter={{ base: 6 }}>
+                        <Grid.Col span={11} >
+                          <Box>
+                            <SelectForm
+                                tooltip={t("ChooseProduct")}
+                                label={""}
+                                placeholder={t("ChooseProduct")}
+                                required={true}
+                                nextField={"quantity"}
+                                name={"product_id"}
+                                form={form}
+                                dropdownValue={productDropdown}
+                                id={"product_id"}
+                                searchable={true}
+                                value={product}
+                                changeValue={(val) => {
+                                  setProduct(val);
+                                }}
+                                comboboxProps={{ withinPortal: false }}
+                            />
+                          </Box>
+                        </Grid.Col>
+                        <Grid.Col span={1}>
+                          <Box>
+                            <Tooltip
+                                multiline
+                                bg={"#905923"}
+                                position="top"
+                                withArrow
+                                ta={"center"}
+                                offset={{ crossAxis: "-50", mainAxis: "5" }}
+                                transitionProps={{ duration: 200 }}
+                                label={t("InstantProductCreate")}
                             >
-                              <Box pl={"4"}>{t("")}</Box>
                               <ActionIcon
-                                mr={"sm"}
-                                radius="xl"
-                                variant="transparent"
-                                color="grey"
-                                size="xs"
+                                  variant="outline"
+                                  radius="xl"
+                                  size={"sm"}
+                                  mt={"8"}
+                                  ml={'8'}
+                                  color="white"
+                                  aria-label="Settings"
+                                  onClick={() => setProductDrawer(true)}
                               >
-                                <IconRefresh
-                                  style={{ width: "100%", height: "100%" }}
-                                  stroke={1.5}
+                                <IconPlus
+
+                                    stroke={1}
                                 />
                               </ActionIcon>
-                            </Group>
-                          ),
-                          textAlign: "right",
-                          render: (data) => (
-                            <Group
-                              wrap="nowrap"
-                              w="100%"
-                              gap={0}
-                              justify="flex-end"
-                              align="center"
-                              mx="auto"
-                            >
-                              <Text fz={11} fw={400} pr={"xs"} w={50}>
-                                {currencySymbol} {data.sales_price}
-                              </Text>
-                              <Input
-                                styles={{
-                                  input: {
-                                    fontSize: "var(--mantine-font-size-xs)",
-                                    fontWeight: 300,
-                                    lineHeight: 1.6,
-                                    textAlign: "center",
-                                    borderRadius: 0,
-                                    borderColor: "green",
-                                    borderTopLeftRadius:
-                                      "var(--mantine-radius-sm)",
-                                    borderBottomLeftRadius:
-                                      "var(--mantine-radius-sm)",
-                                  },
-                                  placeholder: {
-                                    fontSize: "var(--mantine-font-size-xs)",
-                                    fontWeight: 300,
-                                  },
-                                }}
-                                size="xxs"
-                                w="50"
-                                type={"number"}
-                                tooltip={""}
-                                label={""}
-                                placeholder={t("0")}
-                                required={false}
-                                nextField={"credit_limit"}
-                                name={"quantity"}
-                                form={form}
-                                id={"quantity"}
-                              />
-                              <Button
-                                size="compact-xs"
-                                color={`gray.4`}
-                                radius={0}
-                                w="50"
-                                styles={{
-                                  root: {
-                                    height: "22px",
-                                    borderRadius: 0,
-                                  },
-                                }}
-                                onClick={() => {}}
-                              >
-                                <Text fz={9} fw={400} c={"black"}>
-                                  {data.unit_name}
-                                </Text>
-                              </Button>
-                              <Button
-                                size="compact-xs"
-                                color={`green.8`}
-                                radius={0}
-                                w="30"
-                                styles={{
-                                  root: {
-                                    height: "22px",
-                                    borderRadius: 0,
-                                    borderTopRightRadius:
-                                      "var(--mantine-radius-sm)",
-                                    borderBottomRightRadius:
-                                      "var(--mantine-radius-sm)",
-                                  },
-                                }}
-                                onClick={() => {}}
-                              >
-                                <Flex direction={`column`} gap={0}>
-                                  <IconShoppingBag size={12} />
-                                </Flex>
-                              </Button>
-                            </Group>
-                          ),
-                        },
-                      ]}
-                      loaderSize="xs"
-                      loaderColor="grape"
-                      height={height - 132}
-                    />
-                  </Box>
+                            </Tooltip>
+                          </Box>
+                        </Grid.Col>
+
+                      </Grid>
+                    </Box>
+                  )}
+                  {switchValue === "barcode" && (
+                      <Box p={"xs"} mt={'8'} bg={"#e1bb7e"} ml={"-xs"} mr={-8}>
+                        <InputNumberForm
+                            tooltip={t("BarcodeValidateMessage")}
+                            label=""
+                            placeholder={t("Barcode")}
+                            required={true}
+                            nextField={""}
+                            form={form}
+                            name={"barcode"}
+                            id={"barcode"}
+                            leftSection={<IconBarcode size={16} opacity={0.5} />}
+                        />
+                      </Box>
+                  )}
+                  {switchValue === "product" && (
+                  <Box ml={"-xs"} p={"xs"} mr={-8} bg={"#f8eedf"}>
                   <Box mt={"4"}>
                     <Grid columns={12} gutter={{ base: 8 }}>
                       <Grid.Col span={4}>
@@ -1102,7 +1134,7 @@ function _GenericPosForm(props) {
                       </Grid.Col>
                     </Grid>
                   </Box>
-                  <Box mt={"4"}>
+                  <Box>
                     <Grid columns={12} gutter={{ base: 8 }}>
                       <Grid.Col span={4}>
                         <SelectForm
@@ -1159,9 +1191,28 @@ function _GenericPosForm(props) {
                       </Grid.Col>
                     </Grid>
                   </Box>
-                  <Box mt="4" mb="8">
+                  <Box>
                     <Grid columns={12} gutter={{ base: 8 }}>
-                      <Grid.Col span={6}>
+                      <Grid.Col span={4}>
+                        {/*<InputButtonForm
+                            tooltip=""
+                            label=""
+                            placeholder={t("SubTotal")}
+                            required={true}
+                            nextField={"EntityFormSubmit"}
+                            form={form}
+                            name={"sub_total"}
+                            id={"sub_total"}
+                            leftSection={<IconSum size={16} opacity={0.5} />}
+                            rightSection={inputGroupCurrency}
+                            disabled={
+                              selectProductDetails &&
+                              selectProductDetails.sub_total
+                            }
+                            closeIcon={false}
+                        />*/}
+                      </Grid.Col>
+                      <Grid.Col span={4}>
                         <InputNumberForm
                           tooltip={t("PercentValidateMessage")}
                           label=""
@@ -1182,27 +1233,14 @@ function _GenericPosForm(props) {
                           closeIcon={true}
                         />
                       </Grid.Col>
-                      <Grid.Col span={6}>
-                        <InputButtonForm
-                          tooltip=""
-                          label=""
-                          placeholder={t("SubTotal")}
-                          required={true}
-                          nextField={"EntityFormSubmit"}
-                          form={form}
-                          name={"sub_total"}
-                          id={"sub_total"}
-                          leftSection={<IconSum size={16} opacity={0.5} />}
-                          rightSection={inputGroupCurrency}
-                          disabled={
-                            selectProductDetails &&
-                            selectProductDetails.sub_total
-                          }
-                          closeIcon={false}
-                        />
+                      <Grid.Col span={4}>
+                        <Text ta="right" mt={'8'}>{t("SubTotal")}</Text>
                       </Grid.Col>
                     </Grid>
                   </Box>
+                  </Box>
+                    )}
+
                 </Box>
               </form>
             </Box>
@@ -1210,16 +1248,7 @@ function _GenericPosForm(props) {
               <Grid columns={12} justify="space-between" align="center">
                 <Grid.Col span={6}>
                   <Box>
-                    <Tooltip
-                      multiline
-                      bg={"orange.8"}
-                      position="top"
-                      withArrow
-                      ta={"center"}
-                      offset={{ crossAxis: "-50", mainAxis: "5" }}
-                      transitionProps={{ duration: 200 }}
-                      label={t("Refresh")}
-                    >
+
                       <ActionIcon
                         variant="transparent"
                         size={"lg"}
@@ -1233,40 +1262,17 @@ function _GenericPosForm(props) {
                           stroke={1.5}
                         />
                       </ActionIcon>
-                    </Tooltip>
-                    <Tooltip
-                      multiline
-                      bg={"orange.8"}
-                      position="top"
-                      withArrow
-                      ta={"center"}
-                      offset={{ crossAxis: "-50", mainAxis: "5" }}
-                      transitionProps={{ duration: 200 }}
-                      label={t("InstantProductCreate")}
-                    >
-                      <ActionIcon
-                        variant="transparent"
-                        size={"lg"}
-                        color="grey.6"
-                        mt={"1"}
-                        aria-label="Settings"
-                        onClick={() => setProductDrawer(true)}
-                      >
-                        <IconPlus
-                          style={{ width: "100%", height: "70%" }}
-                          stroke={1.5}
-                        />
-                      </ActionIcon>
-                    </Tooltip>
+
+
                   </Box>
                 </Grid.Col>
-                <Grid.Col span={6}>
+                <Grid.Col span={4}>
                   <Box>
                     <Button
                       id={"productAddFormSubmit"}
                       form="productAddForm"
                       size="sm"
-                      color={`red.5`}
+                      color={'#905923'}
                       type="submit"
                       mt={0}
                       mr={"xs"}
@@ -1407,7 +1413,7 @@ function _GenericPosForm(props) {
                 pr={8}
                 pt={"8"}
                 mb={"xs"}
-                className={"borderRadiusAll"}
+                className={genericClass.bodyBackground}
               >
                 <Grid columns={24} gutter={{ base: 6 }}>
                   <Grid.Col span={8}>
@@ -1431,7 +1437,7 @@ function _GenericPosForm(props) {
                     <Box mt={"xs"}>
                       <Grid
                         gutter={{ base: 6 }}
-                        bg={"red.1"}
+                        className={genericClass.genericSeconderyBg}
                         mt={8}
                         pt={"xs"}
                         pb={"12"}
@@ -1537,7 +1543,32 @@ function _GenericPosForm(props) {
                       </Grid>
                     </Box>
                   </Grid.Col>
-                  <Grid.Col span={8}></Grid.Col>
+                  <Grid.Col span={8}>
+                    <Grid columns={18}
+                        gutter={{ base: 6 }}
+                    >
+                      <Grid.Col span={6}><Text ta="left" pl={'md'}>Total Sales</Text></Grid.Col>
+                      <Grid.Col span={12}><Text ta="left">43000.o0</Text></Grid.Col>
+                    </Grid>
+                    <Grid columns={18}
+                        gutter={{ base: 6 }}
+                    >
+                      <Grid.Col span={6}><Text ta="left" pl={'md'}>Receive</Text></Grid.Col>
+                      <Grid.Col span={12}><Text ta="left">000.00</Text></Grid.Col>
+                    </Grid>
+                    <Grid columns={18}
+                          gutter={{ base: 6 }}
+                    >
+                      <Grid.Col span={6}><Text ta="left" pl={'md'}>Point</Text></Grid.Col>
+                      <Grid.Col span={12}><Text ta="left">000.00</Text></Grid.Col>
+                    </Grid>
+                    <Grid columns={18}
+                          gutter={{ base: 6 }}
+                    >
+                      <Grid.Col span={6}><Text ta="left" pl={'md'}>Credit Limit</Text></Grid.Col>
+                      <Grid.Col span={12}><Text ta="left">000.00</Text></Grid.Col>
+                    </Grid>
+                  </Grid.Col>
                   <Grid.Col span={8}>
                     <form
                       id="customerAddedForm"

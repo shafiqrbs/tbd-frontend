@@ -3,7 +3,7 @@
     border-bottom:none;
     padding-left: var(--mantine-spacing-md);
     padding-right: var(--mantine-spacing-md);
-    background-color: #d7e8cd;
+    background-color:#fbf7ef;
    /* background-color: rgba(226, 194, 194, 0.39);*/
     /*background-color: #ffc9c91a;*/
 }
@@ -24,7 +24,7 @@
     color: light-dark(var(--mantine-color-gray-7), var(--mantine-color-dark-0));
     font-size: var(--mantine-font-size-sm);
     font-weight: 500;
-    background-color: light-dark(var(--mantine-color-green-9), var(--mantine-color-dark-6));
+    background-color:#905923;
     color: #ffffff;
 }
 

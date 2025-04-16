@@ -12,9 +12,8 @@ td {
 .header {
 
 th {
-    border-bottom: 1px solid #ffc9c91a;
-    /*background-color: rgba(208, 191, 191, 0.17);*/
-    background-color:#e9ecef!important;
+    border-bottom: 1px solid #f8eedf;
+    background-color:#f8eedf!important;
     font-size: 14px;
     color: #656565;
 }
