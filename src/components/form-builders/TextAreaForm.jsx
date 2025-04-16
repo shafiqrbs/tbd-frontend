@@ -9,7 +9,7 @@ import { getHotkeyHandler } from "@mantine/hooks";
 import inputCss from "../../assets/css/InputField.module.css";
 
 function TextAreaForm(props) {
-    const { label, placeholder, required, nextField, name, form, tooltip, mt, id, minRows, autosize, maxRows, style } = props
+    const { label, placeholder, required, nextField, name, form, tooltip, mt, id, minRows, autosize, maxRows, style, size } = props
     const { t, i18n } = useTranslation();
     return (
         <>
@@ -30,13 +30,13 @@ function TextAreaForm(props) {
                     transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
                 >
                     <Textarea
-                    styles={style ? { input: { height: 20 } } : {}}
+                        styles={style ? { input: { height: 20 } } : {}}
                         maxRows={maxRows}
                         classNames={inputCss}
                         autosize={autosize}
                         minRows={minRows}
                         id={id}
-                        size="sm"
+                        size={size ? size : "sm"}
                         label={label}
                         placeholder={placeholder}
                         mt={mt}
