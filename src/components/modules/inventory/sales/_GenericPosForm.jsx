@@ -15,6 +15,9 @@ import {
   SegmentedControl,
   Center,
   Input,
+  ScrollArea,
+  Switch,
+  Stack,
 } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import {
@@ -32,9 +35,19 @@ import {
   IconListDetails,
   IconShoppingBag,
   IconRefresh,
+  IconUserCircle,
+  IconStackPush,
+  IconPrinter,
+  IconReceipt,
+  IconMessage,
+  IconEyeEdit,
+  IconCalendar,
+  IconCurrencyTaka,
+  IconDiscountOff,
+  IconDotsVertical,
 } from "@tabler/icons-react";
-import { getHotkeyHandler, useHotkeys } from "@mantine/hooks";
-import { useForm } from "@mantine/form";
+import { getHotkeyHandler, useHotkeys, useToggle } from "@mantine/hooks";
+import { hasLength, useForm } from "@mantine/form";
 import { notifications, showNotification } from "@mantine/notifications";
 import SelectServerSideForm from "../../../form-builders/SelectServerSideForm.jsx";
 import InputButtonForm from "../../../form-builders/InputButtonForm";
@@ -52,6 +65,12 @@ import vendorDataStoreIntoLocalStorage from "../../../global-hook/local-storage/
 import getSettingCategoryDropdownData from "../../../global-hook/dropdown/getSettingCategoryDropdownData.js";
 import classes from "../../../../assets/css/FeaturesCards.module.css";
 import InputForm from "../../../form-builders/InputForm.jsx";
+import customerDataStoreIntoLocalStorage from "../../../global-hook/local-storage/customerDataStoreIntoLocalStorage.js";
+import PhoneNumber from "../../../form-builders/PhoneNumberInput.jsx";
+import TextAreaForm from "../../../form-builders/TextAreaForm.jsx";
+import DatePickerForm from "../../../form-builders/DatePicker.jsx";
+import __SettingDrawer from "./__SettingsDrawer.jsx";
+import __Navigation from "./__Navigation.jsx";
 
 function _GenericPosForm(props) {
   const {
@@ -68,6 +87,7 @@ function _GenericPosForm(props) {
   const height = mainAreaHeight - 360; //TabList height 104
   const heightTransaction = mainAreaHeight - 320; //TabList height 104
   const [fetching, setFetching] = useState(false);
+  const formHeight = mainAreaHeight - 638;
 
   const [searchValue, setSearchValue] = useState("");
   const [productDropdown, setProductDropdown] = useState([]);
@@ -487,11 +507,109 @@ function _GenericPosForm(props) {
 
   const [switchValue, setSwitchValue] = useState("product");
 
+  //Customer
+
+  const [customerData, setCustomerData] = useState(null);
+
+  const [refreshCustomerDropdown, setRefreshCustomerDropdown] = useState(false);
+  const [customersDropdownData, setCustomersDropdownData] = useState([]);
+  const [defaultCustomerId, setDefaultCustomerId] = useState(null);
+  const isDefaultCustomer = !customerData || customerData == defaultCustomerId;
+  useEffect(() => {
+    const fetchCustomers = async () => {
+      await customerDataStoreIntoLocalStorage();
+      let coreCustomers = localStorage.getItem("core-customers");
+      coreCustomers = coreCustomers ? JSON.parse(coreCustomers) : [];
+      let defaultId = defaultCustomerId;
+      if (coreCustomers && coreCustomers.length > 0) {
+        const transformedData = coreCustomers.map((type) => {
+          if (type.name === "Default") {
+            defaultId = type.id;
+          }
+          return {
+            label: type.mobile + " -- " + type.name,
+            value: String(type.id),
+          };
+        });
+
+        setCustomersDropdownData(transformedData);
+        setDefaultCustomerId(defaultId);
+      }
+      setRefreshCustomerDropdown(false);
+    };
+
+    fetchCustomers();
+  }, [refreshCustomerDropdown]);
+  const customerAddedForm = useForm({
+    initialValues: {
+      name: "",
+      mobile: "",
+      customer_group_id: "",
+      email: "",
+    },
+    validate: {
+      name: hasLength({ min: 2, max: 20 }),
+      mobile: (value) => {
+        if (!value) return t("MobileValidationRequired");
+        return null;
+      },
+      email: (value) => {
+        if (value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+          return true;
+        }
+        return null;
+      },
+    },
+  });
+  const transactionModeData = JSON.parse(
+    localStorage.getItem("accounting-transaction-mode")
+  )
+    ? JSON.parse(localStorage.getItem("accounting-transaction-mode"))
+    : [];
+  const [hoveredModeId, setHoveredModeId] = useState(false);
+  const handleClick = (event) => {
+    setLastClicked(event.currentTarget.name);
+  };
+  const [salesDueAmount, setSalesDueAmount] = useState(salesSubTotalAmount);
+  const isDisabled =
+    isDefaultCustomer && (isZeroReceiveAllow ? false : salesDueAmount > 0);
+  const [salesByDropdownData, setSalesByDropdownData] = useState([]);
+  useEffect(() => {
+    let coreUsers = localStorage.getItem("core-users")
+      ? JSON.parse(localStorage.getItem("core-users"))
+      : [];
+    if (coreUsers && coreUsers.length > 0) {
+      const transformedData = coreUsers.map((type) => {
+        return {
+          label: type.username + " - " + type.email,
+          value: String(type.id),
+        };
+      });
+      setSalesByDropdownData(transformedData);
+    }
+  }, []);
+  const [salesByUser, setSalesByUser] = useState(null);
+  const [orderProcess, setOrderProcess] = useState(null);
+  const [salesProfitAmount, setSalesProfitAmount] = useState(0);
+  const [salesVatAmount, setSalesVatAmount] = useState(0);
+  const [salesDiscountAmount, setSalesDiscountAmount] = useState(0);
+  const [salesTotalAmount, setSalesTotalAmount] = useState(0);
+  const [isShowSMSPackageModel, setIsShowSMSPackageModel] = useState(false);
+  const [profitShow, setProfitShow] = useState(false);
+  const [returnOrDueText, setReturnOrDueText] = useState("Due");
+  const [discountType, setDiscountType] = useToggle(["Flat", "Percent"]);
+  const [settingDrawer, setSettingDrawer] = useState(false);
+
+  const [multiPrice, setMultiPrice] = useState(false);
+  const [unitType, setUnitType] = useState(false);
   return (
     <Box>
-      <Grid columns={32} gutter={{ base: 8 }}>
+      <Grid columns={24} gutter={{ base: 8 }}>
+        <Grid.Col span={1}>
+          <__Navigation />
+        </Grid.Col>
         <Grid.Col span={8}>
-          <Box bg={"white"} p={"md"} pb='0' className={"borderRadiusAll"}>
+          <Box bg={"white"} p={"md"} pb="0" className={"borderRadiusAll"}>
             <Box>
               <form
                 onSubmit={form.onSubmit((values) => {
@@ -550,52 +668,80 @@ function _GenericPosForm(props) {
                         color={theme.colors.blue[6]}
                       />
                     </Grid.Col>
-                    <Grid.Col span={7}>
+                    <Grid.Col span={6}>
                       <Text fz="md" fw={500} className={classes.cardTitle}>
                         {t("Sales")}
                       </Text>
                     </Grid.Col>
-                    <Grid.Col span={3} align="center" justify="center">
-                      {salesByBarcode && (
-                        <SegmentedControl
-                          size="xs"
-                          styles={{
-                            label: { color: "white" },
-                          }}
-                          bg={"green.6"}
-                          withItemsBorders={false}
-                          fullWidth
-                          color="green.4"
-                          value={switchValue}
-                          onChange={setSwitchValue}
-                          data={[
-                            {
-                              label: (
-                                <Center style={{ gap: 10 }}>
-                                  <IconCoinMonero
-                                    height={"18"}
-                                    width={"18"}
-                                    stroke={1.5}
-                                  />
-                                </Center>
-                              ),
-                              value: "product",
-                            },
-                            {
-                              label: (
-                                <Center style={{ gap: 10 }}>
-                                  <IconBarcode
-                                    height={"18"}
-                                    width={"18"}
-                                    stroke={1.5}
-                                  />
-                                </Center>
-                              ),
-                              value: "barcode",
-                            },
-                          ]}
-                        />
-                      )}
+                    <Grid.Col span={4} align="center">
+                      <Group justify="flex-end" align="center" gap={4}>
+                        {salesByBarcode && (
+                          <SegmentedControl
+                            size="xs"
+                            styles={{
+                              label: { color: "white" },
+                            }}
+                            bg={"green.6"}
+                            withItemsBorders={false}
+                            fullWidth
+                            color="green.4"
+                            value={switchValue}
+                            onChange={setSwitchValue}
+                            data={[
+                              {
+                                label: (
+                                  <Center style={{ gap: 10 }}>
+                                    <IconCoinMonero
+                                      height={"18"}
+                                      width={"18"}
+                                      stroke={1.5}
+                                    />
+                                  </Center>
+                                ),
+                                value: "product",
+                              },
+                              {
+                                label: (
+                                  <Center style={{ gap: 10 }}>
+                                    <IconBarcode
+                                      height={"18"}
+                                      width={"18"}
+                                      stroke={1.5}
+                                    />
+                                  </Center>
+                                ),
+                                value: "barcode",
+                              },
+                            ]}
+                          />
+                        )}
+                        <Tooltip
+                          multiline
+                          bg={"orange.8"}
+                          position="top"
+                          withArrow
+                          ta={"center"}
+                          transitionProps={{ duration: 200 }}
+                          label={t("Settings")}
+                        >
+                          <ActionIcon
+                            radius={"xl"}
+                            variant="transparent"
+                            size={"md"}
+                            color="gray"
+                            mt={"1"}
+                            aria-label="Settings"
+                            onClick={() => {
+                              setSettingDrawer(true);
+                            }}
+                          >
+                            <IconDotsVertical
+                              style={{ width: "100%", height: "70%" }}
+                              stroke={1.5}
+                            />
+                          </ActionIcon>
+                        </Tooltip>
+                      </Group>
                     </Grid.Col>
                   </Grid>
                 </Box>
@@ -626,7 +772,7 @@ function _GenericPosForm(props) {
                       label=""
                       placeholder={t("Vendor")}
                       required={false}
-                      nextField={"receive_amount"}
+                      nextField={"warehouse_id"}
                       name={"vendor_id"}
                       form={form}
                       dropdownValue={vendorsDropdownData}
@@ -644,7 +790,7 @@ function _GenericPosForm(props) {
                         label=""
                         placeholder={t("Warehouse")}
                         required={false}
-                        nextField={"product_id"}
+                        nextField={"category_id"}
                         name={"warehouse_id"}
                         form={form}
                         dropdownValue={warehouseDropdownData}
@@ -663,7 +809,7 @@ function _GenericPosForm(props) {
                       label={""}
                       placeholder={t("ChooseCategory")}
                       required={true}
-                      nextField={""}
+                      nextField={"product_id"}
                       name={"category_id"}
                       form={form}
                       dropdownValue={getSettingCategoryDropdownData()}
@@ -695,7 +841,7 @@ function _GenericPosForm(props) {
                       />
                     </Box>
                   )}
-                  <Box>
+                  <Box mt={switchValue === "product" ? "0" : "xs"}>
                     <DataTable
                       classNames={{
                         root: tableCss.root,
@@ -818,7 +964,24 @@ function _GenericPosForm(props) {
                   </Box>
                   <Box mt={"4"}>
                     <Grid columns={12} gutter={{ base: 8 }}>
-                      <Grid.Col span={6}>
+                      <Grid.Col span={4}>
+                        <SelectForm
+                          tooltip={t("MultiPriceValidateMessage")}
+                          label=""
+                          placeholder={t("Price")}
+                          required={false}
+                          nextField={""}
+                          name={"multi_price"}
+                          form={form}
+                          dropdownValue={["1", "2", "3", "4", "5"]}
+                          id={"multi_price"}
+                          mt={1}
+                          searchable={true}
+                          value={multiPrice}
+                          changeValue={setMultiPrice}
+                        />
+                      </Grid.Col>
+                      <Grid.Col span={4}>
                         <InputButtonForm
                           type="number"
                           tooltip=""
@@ -836,7 +999,7 @@ function _GenericPosForm(props) {
                           disabled={true}
                         />
                       </Grid.Col>
-                      <Grid.Col span={6}>
+                      <Grid.Col span={4}>
                         <InputNumberForm
                           tooltip={t("SalesPriceValidateMessage")}
                           label=""
@@ -857,7 +1020,24 @@ function _GenericPosForm(props) {
                   </Box>
                   <Box mt={"4"}>
                     <Grid columns={12} gutter={{ base: 8 }}>
-                      <Grid.Col span={6}>
+                      <Grid.Col span={4}>
+                        <SelectForm
+                          tooltip={t("UnitValidateMessage")}
+                          label=""
+                          placeholder={t("Unit")}
+                          required={false}
+                          nextField={""}
+                          name={"unit_id"}
+                          form={form}
+                          dropdownValue={["pcs", "kg"]}
+                          id={"unit_id"}
+                          mt={1}
+                          searchable={true}
+                          value={unitType}
+                          changeValue={setUnitType}
+                        />
+                      </Grid.Col>
+                      <Grid.Col span={4}>
                         <InputButtonForm
                           type="number"
                           tooltip={t("PercentValidateMessage")}
@@ -875,7 +1055,7 @@ function _GenericPosForm(props) {
                           rightSectionWidth={50}
                         />
                       </Grid.Col>
-                      <Grid.Col span={6}>
+                      <Grid.Col span={4}>
                         <InputButtonForm
                           type="number"
                           tooltip={t("PercentValidateMessage")}
@@ -939,78 +1119,375 @@ function _GenericPosForm(props) {
                       </Grid.Col>
                     </Grid>
                   </Box>
-                
-                
                 </Box>
               </form>
             </Box>
-            <Box mb='xs'>
-                    <Grid columns={24} gutter={{ base: 6 }}>
-                      <Grid.Col span={16}>
-                        <>
-                          <Button
-                            size="sm"
-                            color={`red.5`}
-                            type="submit"
-                            mt={0}
-                            mr={"xs"}
-                            w={"100%"}
-                            id="EntityFormSubmit"
-                            leftSection={<IconDeviceFloppy size={16} />}
-                          >
-                            <Flex direction={`column`} gap={0}>
-                              <Text fz={12} fw={400}>
-                                {t("Add")}
-                              </Text>
-                            </Flex>
-                          </Button>
-                        </>
-                      </Grid.Col>
-                      <Grid.Col span={8} bg={"white"}>
-                        <Tooltip
-                          multiline
-                          bg={"orange.8"}
-                          position="top"
-                          withArrow
-                          ta={"center"}
-                          offset={{ crossAxis: "-50", mainAxis: "5" }}
-                          transitionProps={{ duration: 200 }}
-                          label={t("InstantProductCreate")}
-                        >
-                          <ActionIcon
-                            variant="outline"
-                            size={"lg"}
-                            color="red.5"
-                            mt={"1"}
-                            aria-label="Settings"
-                            onClick={() => setProductDrawer(true)}
-                          >
-                            <IconPlus
-                              style={{ width: "100%", height: "70%" }}
-                              stroke={1.5}
-                            />
-                          </ActionIcon>
-                        </Tooltip>
-                      </Grid.Col>
-                    </Grid>
+            <Box mb="xs">
+              <Grid columns={12} justify="space-between" align="center">
+                <Grid.Col span={6}>
+                  <Box>
+                    <Tooltip
+                      multiline
+                      bg={"orange.8"}
+                      position="top"
+                      withArrow
+                      ta={"center"}
+                      offset={{ crossAxis: "-50", mainAxis: "5" }}
+                      transitionProps={{ duration: 200 }}
+                      label={t("Refresh")}
+                    >
+                      <ActionIcon
+                        variant="transparent"
+                        size={"lg"}
+                        color="grey.6"
+                        mt={"1"}
+                        aria-label="Settings"
+                        onClick={() => {}}
+                      >
+                        <IconRefresh
+                          style={{ width: "100%", height: "70%" }}
+                          stroke={1.5}
+                        />
+                      </ActionIcon>
+                    </Tooltip>
+                    <Tooltip
+                      multiline
+                      bg={"orange.8"}
+                      position="top"
+                      withArrow
+                      ta={"center"}
+                      offset={{ crossAxis: "-50", mainAxis: "5" }}
+                      transitionProps={{ duration: 200 }}
+                      label={t("InstantProductCreate")}
+                    >
+                      <ActionIcon
+                        variant="transparent"
+                        size={"lg"}
+                        color="grey.6"
+                        mt={"1"}
+                        aria-label="Settings"
+                        onClick={() => setProductDrawer(true)}
+                      >
+                        <IconPlus
+                          style={{ width: "100%", height: "70%" }}
+                          stroke={1.5}
+                        />
+                      </ActionIcon>
+                    </Tooltip>
                   </Box>
+                </Grid.Col>
+                <Grid.Col span={6}>
+                  <Box>
+                    <Button
+                      size="sm"
+                      color={`red.5`}
+                      type="submit"
+                      mt={0}
+                      mr={"xs"}
+                      w={"100%"}
+                      id="EntityFormSubmit"
+                      leftSection={<IconDeviceFloppy size={16} />}
+                    >
+                      <Flex direction={`column`} gap={0}>
+                        <Text fz={12} fw={400}>
+                          {t("Add")}
+                        </Text>
+                      </Flex>
+                    </Button>
+                  </Box>
+                </Grid.Col>
+              </Grid>
+              <Grid columns={24} gutter={{ base: 6 }}>
+                <Grid.Col span={16}>
+                  <></>
+                </Grid.Col>
+                <Grid.Col span={8} bg={"white"}></Grid.Col>
+              </Grid>
+            </Box>
           </Box>
         </Grid.Col>
-        <Grid.Col span={24}>
+        <Grid.Col span={15}>
           <Box bg={"white"} p={"xs"} className={"borderRadiusAll"}>
             <Box
               pl={`xs`}
               pr={8}
-              pt={"xs"}
+              pt={"8"}
               mb={"xs"}
-              className={"boxBackground borderRadiusAll"}
+              className={"borderRadiusAll"}
             >
               <Grid columns={24} gutter={{ base: 6 }}>
                 <Grid.Col span={8}>
-                  <Box className={"borderRadiusAll"}>Customer Search</Box>
+                  <Box mt={"4"}>
+                    <SelectForm
+                      tooltip={t("CustomerValidateMessage")}
+                      label=""
+                      placeholder={t("Customer")}
+                      required={false}
+                      nextField={""}
+                      name={"customer_id"}
+                      form={form}
+                      dropdownValue={customersDropdownData}
+                      id={"customer_id"}
+                      mt={1}
+                      searchable={true}
+                      value={customerData}
+                      changeValue={setCustomerData}
+                    />
+                  </Box>
+                  <Box mt={"xs"}>
+                    <Grid
+                      gutter={{ base: 6 }}
+                      bg={"red.1"}
+                      mt={8}
+                      pt={"xs"}
+                      pb={"12"}
+                    >
+                      <Grid.Col span={6}>
+                        <Box pl={"md"}>
+                          <Text fz={"md"} order={1} fw={"800"}>
+                            {currencySymbol + " "}
+                            {customerData &&
+                            customerObject &&
+                            customerData != defaultCustomerId
+                              ? Number(customerObject.balance).toFixed(2)
+                              : "0.00"}
+                          </Text>
+                          <Text fz={"xs"} c="dimmed">
+                            {t("Outstanding")}
+                          </Text>
+                        </Box>
+                      </Grid.Col>
+                      <Grid.Col span={6}>
+                        <Box
+                          mt={"8"}
+                          mr={"12"}
+                          style={{ textAlign: "right", float: "right" }}
+                        >
+                          <Group>
+                            <Tooltip
+                              multiline
+                              bg={"orange.8"}
+                              position="top"
+                              ta={"center"}
+                              withArrow
+                              transitionProps={{ duration: 200 }}
+                              label={
+                                customerData &&
+                                customerData != defaultCustomerId
+                                  ? isSMSActive
+                                    ? t("SendSms")
+                                    : t("PleasePurchaseAsmsPackage")
+                                  : t("ChooseCustomer")
+                              }
+                            >
+                              <ActionIcon
+                                bg={"white"}
+                                variant="outline"
+                                color={"red"}
+                                disabled={
+                                  !customerData ||
+                                  customerData == defaultCustomerId
+                                }
+                                onClick={(e) => {
+                                  if (isSMSActive) {
+                                    notifications.show({
+                                      withCloseButton: true,
+                                      autoClose: 1000,
+                                      title: t("smsSendSuccessfully"),
+                                      message: t("smsSendSuccessfully"),
+                                      icon: <IconTallymark1 />,
+                                      className: "my-notification-class",
+                                      style: {},
+                                      loading: true,
+                                    });
+                                  } else {
+                                    setIsShowSMSPackageModel(true);
+                                  }
+                                }}
+                              >
+                                <IconMessage size={18} stroke={1.5} />
+                              </ActionIcon>
+                            </Tooltip>
+                            <Tooltip
+                              multiline
+                              bg={"orange.8"}
+                              position="top"
+                              withArrow
+                              offset={{ crossAxis: "-45", mainAxis: "5" }}
+                              ta={"center"}
+                              transitionProps={{ duration: 200 }}
+                              label={
+                                customerData &&
+                                customerData != defaultCustomerId
+                                  ? t("CustomerDetails")
+                                  : t("ChooseCustomer")
+                              }
+                            >
+                              <ActionIcon
+                                variant="filled"
+                                color={"red"}
+                                disabled={
+                                  !customerData ||
+                                  customerData == defaultCustomerId
+                                }
+                                onClick={() => {
+                                  setViewDrawer(true);
+                                }}
+                              >
+                                <IconEyeEdit size={18} stroke={1.5} />
+                              </ActionIcon>
+                            </Tooltip>
+                          </Group>
+                        </Box>
+                      </Grid.Col>
+                    </Grid>
+                  </Box>
                 </Grid.Col>
-                <Grid.Col span={8}>Customer Info</Grid.Col>
-                <Grid.Col span={8}>Add customer</Grid.Col>
+                <Grid.Col span={8}></Grid.Col>
+                <Grid.Col span={8}>
+                  <form
+                    id="customerAddedForm"
+                    onSubmit={customerAddedForm.onSubmit((values) => {
+                      modals.openConfirmModal({
+                        title: (
+                          <Text size="md"> {t("FormConfirmationTitle")}</Text>
+                        ),
+                        children: (
+                          <Text size="sm"> {t("FormConfirmationMessage")}</Text>
+                        ),
+                        labels: {
+                          confirm: t("Submit"),
+                          cancel: t("Cancel"),
+                        },
+                        confirmProps: { color: "red" },
+                        onCancel: () => console.log("Cancel"),
+                        onConfirm: async () => {
+                          setSaveCreateLoading(true);
+                          const value = {
+                            url: "core/customer",
+                            data: values,
+                          };
+                          try {
+                            const response = await dispatch(
+                              storeEntityData(value)
+                            ).unwrap();
+                            console.log(
+                              "Customer creation response:",
+                              response
+                            );
+
+                            notifications.show({
+                              color: "teal",
+                              title: t("CreateSuccessfully"),
+                              icon: (
+                                <IconCheck
+                                  style={{
+                                    width: rem(18),
+                                    height: rem(18),
+                                  }}
+                                />
+                              ),
+                              loading: false,
+                              autoClose: 700,
+                              style: { backgroundColor: "lightgray" },
+                            });
+                            if (response && response?.data?.data) {
+                              const newCustomer = response?.data?.data;
+                              const coreCustomers = localStorage.getItem(
+                                "core-customers"
+                              )
+                                ? JSON.parse(
+                                    localStorage.getItem("core-customers")
+                                  )
+                                : [];
+                              const updatedCustomers = [
+                                ...coreCustomers,
+                                newCustomer,
+                              ];
+                              localStorage.setItem(
+                                "core-customers",
+                                JSON.stringify(updatedCustomers)
+                              );
+
+                              setCustomerId(newCustomer.id);
+                              setCustomerObject(newCustomer);
+                            }
+
+                            customerAddedForm.reset();
+                            setRefreshCustomerDropdown(true);
+                            // setValue("Existing");
+                            setCustomerDrawer(false);
+                            setSaveCreateLoading(false);
+                          } catch (error) {
+                            console.error("Error creating customer:", error);
+                            notifications.show({
+                              color: "red",
+                              title: t("CreateFailed"),
+                              message:
+                                error?.message || t("SomethingWentWrong"),
+                              icon: (
+                                <IconX
+                                  style={{
+                                    width: rem(18),
+                                    height: rem(18),
+                                  }}
+                                />
+                              ),
+                              loading: false,
+                              autoClose: 2000,
+                              style: { backgroundColor: "lightgray" },
+                            });
+                            setSaveCreateLoading(false);
+                          }
+                        },
+                      });
+                    })}
+                  >
+                    <Box mt={"4"}>
+                      <InputForm
+                        tooltip={t("NameValidateMessage")}
+                        label={t("")}
+                        placeholder={t("CustomerName")}
+                        required={true}
+                        nextField={"mobile"}
+                        form={customerAddedForm}
+                        name={"name"}
+                        id={"name"}
+                        leftSection={<IconUserCircle size={16} opacity={0.5} />}
+                        rightIcon={""}
+                      />
+                    </Box>
+                    <Box mt={"4"}>
+                      <PhoneNumber
+                        tooltip={
+                          customerAddedForm.errors.mobile
+                            ? customerAddedForm.errors.mobile
+                            : t("MobileValidateMessage")
+                        }
+                        label={t("")}
+                        placeholder={t("Mobile")}
+                        required={true}
+                        nextField={"email"}
+                        form={customerAddedForm}
+                        name={"mobile"}
+                        id={"mobile"}
+                        rightIcon={""}
+                      />
+                    </Box>
+                    <Box mt={"4"} mb={4}>
+                      <InputForm
+                        tooltip={t("InvalidEmail")}
+                        label={t("")}
+                        placeholder={t("Email")}
+                        required={false}
+                        nextField={""}
+                        name={"email"}
+                        form={customerAddedForm}
+                        id={"email"}
+                      />
+                    </Box>
+                  </form>
+                </Grid.Col>
               </Grid>
             </Box>
             <Box className={"borderRadiusAll"}>
@@ -1339,54 +1816,480 @@ function _GenericPosForm(props) {
                 recordsPerPage={10}
                 loaderSize="xs"
                 loaderColor="grape"
-                height={height}
+                height={height - 85}
                 scrollAreaProps={{ type: "never" }}
               />
             </Box>
           </Box>
-          <Box
-            pl={`xs`}
-            pr={8}
-            pt={"xs"}
-            mb={"xs"}
-            className={"boxBackground borderRadiusAll"}
-          >
-            <Grid columns={24} gutter={{ base: 6 }}>
+          <Box>
+            <Grid columns={24} gutter={{ base: 6 }} pt={"6"}>
               <Grid.Col span={8}>
                 <Box className={"borderRadiusAll"}>
-                  <Box bg={"white"} p={"xs"} className={"borderRadiusAll"}>
-                    <__GenericPosSalesForm
-                      salesSubTotalAmount={salesSubTotalAmount}
-                      tempCardProducts={tempCardProducts}
-                      totalPurchaseAmount={totalPurchaseAmount}
-                      currencySymbol={currencySymbol}
-                      setLoadCardProducts={setLoadCardProducts}
-                      domainId={domainId}
-                      isSMSActive={isSMSActive}
-                      isZeroReceiveAllow={isZeroReceiveAllow}
+                  <ScrollArea
+                    h={190}
+                    scrollbarSize={2}
+                    type="never"
+                    bg={"gray.1"}
+                  >
+                    <Box pl={"xs"} pt={"xs"} pr={"xs"} bg={"white"} pb={"10"}>
+                      <Grid columns={"16"} gutter="6">
+                        {transactionModeData &&
+                          transactionModeData.length > 0 &&
+                          transactionModeData.map((mode, index) => {
+                            return (
+                              <Grid.Col span={4} key={index}>
+                                <Box bg={"gray.1"} h={"82"}>
+                                  <input
+                                    type="radio"
+                                    name="transaction_mode_id"
+                                    id={"transaction_mode_id_" + mode.id}
+                                    className="input-hidden"
+                                    value={mode.id}
+                                    onChange={(e) => {
+                                      form.setFieldValue(
+                                        "transaction_mode_id",
+                                        e.currentTarget.value
+                                      );
+                                      form.setFieldError(
+                                        "transaction_mode_id",
+                                        null
+                                      );
+                                    }}
+                                    defaultChecked={
+                                      mode.is_selected ? true : false
+                                    }
+                                  />
+                                  <Tooltip
+                                    label={mode.name}
+                                    opened={hoveredModeId === mode.id}
+                                    position="top"
+                                    bg={"orange.8"}
+                                    offset={12}
+                                    withArrow
+                                    arrowSize={8}
+                                  >
+                                    <label
+                                      htmlFor={"transaction_mode_id_" + mode.id}
+                                      onMouseEnter={() => {
+                                        setHoveredModeId(mode.id);
+                                      }}
+                                      onMouseLeave={() => {
+                                        setHoveredModeId(null);
+                                      }}
+                                    >
+                                      <img
+                                        src={
+                                          isOnline
+                                            ? mode.path
+                                            : "/images/transaction-mode-offline.jpg"
+                                        }
+                                        alt={mode.method_name}
+                                      />
+                                      <Center fz={"xs"} className={"textColor"}>
+                                        {mode.authorized_name}
+                                      </Center>
+                                    </label>
+                                  </Tooltip>
+                                </Box>
+                              </Grid.Col>
+                            );
+                          })}
+                      </Grid>
+                    </Box>
+                  </ScrollArea>
+                </Box>
+              </Grid.Col>
+              <Grid.Col span={8}>
+                <Box className="borderRadiusAll" bg={"white"} p={"xs"} h={192}>
+                  <Box>
+                    <DatePickerForm
+                      tooltip={t("InvoiceDateValidateMessage")}
+                      label=""
+                      placeholder={t("InvoiceDate")}
+                      required={false}
+                      nextField={"discount"}
+                      form={form}
+                      name={"invoice_date"}
+                      id={"invoice_date"}
+                      leftSection={<IconCalendar size={16} opacity={0.5} />}
+                      rightSectionWidth={30}
+                      closeIcon={true}
+                    />
+                  </Box>
+                  <Box mt={4}>
+                    <SelectForm
+                      tooltip={t("ChooseSalesBy")}
+                      label=""
+                      placeholder={t("SalesBy")}
+                      required={false}
+                      name={"sales_by"}
+                      form={form}
+                      dropdownValue={salesByDropdownData}
+                      id={"sales_by"}
+                      nextField={"order_process"}
+                      searchable={false}
+                      value={salesByUser}
+                      changeValue={setSalesByUser}
+                    />
+                  </Box>
+                  <Box pt={4}>
+                    <SelectForm
+                      tooltip={t("ChooseOrderProcess")}
+                      label=""
+                      placeholder={t("OrderProcess")}
+                      required={false}
+                      name={"order_process"}
+                      form={form}
+                      dropdownValue={
+                        localStorage.getItem("order-process")
+                          ? JSON.parse(localStorage.getItem("order-process"))
+                          : []
+                      }
+                      id={"order_process"}
+                      nextField={"narration"}
+                      searchable={false}
+                      value={orderProcess}
+                      changeValue={setOrderProcess}
+                    />
+                  </Box>
+                  <Box pt={4}>
+                    <TextAreaForm
+                      size="xs"
+                      tooltip={t("NarrationValidateMessage")}
+                      label=""
+                      placeholder={t("Narration")}
+                      required={false}
+                      nextField={"Status"}
+                      name={"narration"}
+                      form={form}
+                      id={"narration"}
                     />
                   </Box>
                 </Box>
               </Grid.Col>
-              <Grid.Col span={8}>Customer Info</Grid.Col>
-              <Grid.Col span={8}>Add customer</Grid.Col>
+              <Grid.Col span={8}>
+                {/* outstading section */}
+                <Box p={"xs"} className="borderRadiusAll" bg={"white"} h={192}>
+                  <Box>
+                    <Grid gutter={{ base: 4 }}>
+                      <Grid.Col span={3}>
+                        <Center fz={"md"} fw={"800"}>
+                          {currencySymbol} {salesSubTotalAmount.toFixed(2)}
+                        </Center>
+                      </Grid.Col>
+                      <Grid.Col span={3}>
+                        <Center fz={"md"} fw={"800"}>
+                          {" "}
+                          {currencySymbol}{" "}
+                          {salesDiscountAmount &&
+                            Number(salesDiscountAmount).toFixed(2)}
+                        </Center>
+                      </Grid.Col>
+                      <Grid.Col span={3}>
+                        <Center fz={"md"} fw={"800"}>
+                          {" "}
+                          {currencySymbol} {salesVatAmount.toFixed(2)}
+                        </Center>
+                      </Grid.Col>
+                      <Grid.Col span={3}>
+                        <Center fz={"md"} fw={"800"}>
+                          {currencySymbol} {salesTotalAmount.toFixed(2)}
+                        </Center>
+                      </Grid.Col>
+                    </Grid>
+                    <Grid gutter={{ base: 4 }}>
+                      <Grid.Col span={3}>
+                        <Box h={1} ml={"xl"} mr={"xl"} bg={`red.3`}></Box>
+                      </Grid.Col>
+                      <Grid.Col span={3}>
+                        <Box h={1} ml={"xl"} mr={"xl"} bg={`red.3`}></Box>
+                      </Grid.Col>
+                      <Grid.Col span={3}>
+                        <Box h={1} ml={"xl"} mr={"xl"} bg={`red.3`}></Box>
+                      </Grid.Col>
+                      <Grid.Col span={3}>
+                        <Box h={1} ml={"xl"} mr={"xl"} bg={`red.3`}></Box>
+                      </Grid.Col>
+                    </Grid>
+                    <Grid gutter={{ base: 4 }}>
+                      <Grid.Col span={3}>
+                        <Center fz={"xs"} c="dimmed">
+                          {t("SubTotal")}
+                        </Center>
+                      </Grid.Col>
+                      <Grid.Col span={3}>
+                        <Center fz={"xs"} c="dimmed">
+                          {t("Discount")}
+                        </Center>
+                      </Grid.Col>
+                      <Grid.Col span={3}>
+                        <Center fz={"xs"} c="dimmed">
+                          {t("Vat")}
+                        </Center>
+                      </Grid.Col>
+                      <Grid.Col span={3}>
+                        <Center fz={"xs"} c="dimmed">
+                          {t("Total")}
+                        </Center>
+                      </Grid.Col>
+                    </Grid>
+                  </Box>
+                  {/* Due Section */}
+                  <Box className={""} pt={"xs"} mb={"xs"} pb={"xs"}>
+                    <Stack h={110} justify="space-between">
+                      <Grid columns={18} gutter={{ base: 2 }} pt={"md"}>
+                        <Grid.Col span={10} align="flex-start">
+                          <Group justify="flex-start" align="center">
+                            <Box>
+                              <Switch
+                                size="lg"
+                                w={"100%"}
+                                color={"red.3"}
+                                ml={"6"}
+                                onLabel={t("Profit")}
+                                offLabel={t("Hide")}
+                                radius="xs"
+                                onChange={(event) =>
+                                  setProfitShow(event.currentTarget.checked)
+                                }
+                              />
+                            </Box>
+                            <Box>
+                              <Center fz={"md"} mt={"4"} c={"black.5"}>
+                                {currencySymbol}{" "}
+                                {profitShow && salesProfitAmount}
+                              </Center>
+                            </Box>
+                          </Group>
+                        </Grid.Col>
+                        <Grid.Col span={8} align="center" justify="center">
+                          <Box
+                            fz={"xl"}
+                            pr={"xs"}
+                            c={"red"}
+                            style={{ textAlign: "right", float: "right" }}
+                            fw={"800"}
+                          >
+                            {returnOrDueText === "Due" ? t("Due") : t("Return")}{" "}
+                            {currencySymbol} {salesDueAmount.toFixed(2)}
+                          </Box>
+                        </Grid.Col>
+                      </Grid>
+                      <Box>
+                        <Box mt={"4"} h={1} bg={`red.3`}></Box>
+                        <Tooltip
+                          label={t("MustBeNeedReceiveAmountWithoutCustomer")}
+                          opened={isDisabled}
+                          position="bottom-end"
+                          withArrow
+                        >
+                          <Grid gutter={{ base: 2 }} mt={"4"}>
+                            <Grid.Col span={4} bg={"red.3"} p={2}>
+                              <Tooltip
+                                label={t("ClickRightButtonForPercentFlat")}
+                                px={16}
+                                py={2}
+                                position="top"
+                                bg={"red.4"}
+                                c={"white"}
+                                withArrow
+                                offset={2}
+                                zIndex={999}
+                                transitionProps={{
+                                  transition: "pop-bottom-left",
+                                  duration: 500,
+                                }}
+                              >
+                                <TextInput
+                                  type="number"
+                                  style={{ textAlign: "right" }}
+                                  placeholder={t("Discount")}
+                                  value={salesDiscountAmount}
+                                  size={"sm"}
+                                  classNames={{ input: classes.input }}
+                                  onChange={(event) => {
+                                    form.setFieldValue(
+                                      "discount",
+                                      event.target.value
+                                    );
+                                    const newValue = event.target.value;
+                                    setSalesDiscountAmount(newValue);
+                                    form.setFieldValue("discount", newValue);
+                                  }}
+                                  rightSection={
+                                    <ActionIcon
+                                      size={32}
+                                      bg={"red.5"}
+                                      variant="filled"
+                                      onClick={() => setDiscountType()}
+                                    >
+                                      {discountType === "Flat" ? (
+                                        <IconCurrencyTaka size={16} />
+                                      ) : (
+                                        <IconPercentage size={16} />
+                                      )}
+                                    </ActionIcon>
+                                  }
+                                  onBlur={async (event) => {
+                                    const data = {
+                                      url: "inventory/pos/inline-update",
+                                      data: {
+                                        invoice_id: tableId,
+                                        field_name: "discount",
+                                        value: event.target.value,
+                                        discount_type: discountType,
+                                      },
+                                    };
+                                    // Dispatch and handle response
+                                    try {
+                                      const resultAction = await dispatch(
+                                        storeEntityData(data)
+                                      );
+
+                                      if (
+                                        resultAction.payload?.status !== 200
+                                      ) {
+                                        showNotificationComponent(
+                                          resultAction.payload?.message ||
+                                            "Error updating invoice",
+                                          "red",
+                                          "",
+                                          "",
+                                          true
+                                        );
+                                      }
+                                    } catch (error) {
+                                      showNotificationComponent(
+                                        "Request failed. Please try again.",
+                                        "red",
+                                        "",
+                                        "",
+                                        true
+                                      );
+                                      console.error(
+                                        "Error updating invoice:",
+                                        error
+                                      );
+                                    } finally {
+                                      setReloadInvoiceData(true);
+                                    }
+                                  }}
+                                />
+                              </Tooltip>
+                              {/* <InputButtonForm
+                            tooltip={t("DiscountValidateMessage")}
+                            label=""
+                            placeholder={t("Discount")}
+                            required={false}
+                            nextField={"receive_amount"}
+                            form={form}
+                            name={"discount"}
+                            id={"discount"}
+                            leftSection={
+                              <IconDiscountOff size={16} opacity={0.5} />
+                            }
+                            rightSection={inputGroupCurrency}
+                            rightSectionWidth={30}
+                          /> */}
+                            </Grid.Col>
+                            <Grid.Col span={8} bg={"green"} p={2}>
+                              <InputNumberForm
+                                type="number"
+                                tooltip={t("ReceiveAmountValidateMessage")}
+                                label=""
+                                placeholder={t("Amount")}
+                                required={false}
+                                nextField={"sales_by"}
+                                form={form}
+                                name={"receive_amount"}
+                                id={"receive_amount"}
+                                rightIcon={
+                                  <IconCurrency size={16} opacity={0.5} />
+                                }
+                                leftSection={
+                                  <IconPlusMinus size={16} opacity={0.5} />
+                                }
+                                closeIcon={true}
+                              />
+                            </Grid.Col>
+                          </Grid>
+                        </Tooltip>
+                      </Box>
+                    </Stack>
+                  </Box>
+                </Box>
+              </Grid.Col>
             </Grid>
-          </Box>
-          <Box
-            pl={`xs`}
-            pr={8}
-            pt={"xs"}
-            mb={"xs"}
-            className={"boxBackground borderRadiusAll"}
-          >
-            <Grid columns={24} gutter={{ base: 6 }}>
-              <Grid.Col span={8}>Customer Info</Grid.Col>
-              <Grid.Col span={8}>Customer Info</Grid.Col>
-              <Grid.Col span={8}>Add customer</Grid.Col>
-            </Grid>
+            <Box mt={"8"} pb={"xs"}>
+              <Button.Group>
+                <Button
+                  fullWidth={true}
+                  variant="filled"
+                  leftSection={<IconStackPush size={14} />}
+                  color="orange.5"
+                >
+                  {t("Hold")}
+                </Button>
+                <Button
+                  fullWidth={true}
+                  variant="filled"
+                  type={"submit"}
+                  onClick={handleClick}
+                  name="print"
+                  leftSection={<IconPrinter size={14} />}
+                  color="green.5"
+                  disabled={isDisabled}
+                  style={{
+                    transition: "all 0.3s ease",
+                    backgroundColor: isDisabled ? "#f1f3f500" : "",
+                  }}
+                >
+                  {t("Print")}
+                </Button>
+                <Button
+                  fullWidth={true}
+                  type={"submit"}
+                  onClick={handleClick}
+                  name="pos"
+                  variant="filled"
+                  leftSection={<IconReceipt size={14} />}
+                  color="red.5"
+                  disabled={isDisabled}
+                  style={{
+                    transition: "all 0.3s ease",
+                    backgroundColor: isDisabled ? "#f1f3f500" : "",
+                  }}
+                >
+                  {t("Pos")}
+                </Button>
+                <Button
+                  fullWidth={true}
+                  type={"submit"}
+                  onClick={handleClick}
+                  name="save"
+                  variant="filled"
+                  leftSection={<IconDeviceFloppy size={14} />}
+                  color="cyan.5"
+                  disabled={isDisabled}
+                  style={{
+                    transition: "all 0.3s ease",
+                    backgroundColor: isDisabled ? "#f1f3f500" : "",
+                  }}
+                >
+                  {t("Save")}
+                </Button>
+              </Button.Group>
+            </Box>
           </Box>
         </Grid.Col>
       </Grid>
+      {settingDrawer && (
+        <__SettingDrawer
+          settingDrawer={settingDrawer}
+          setSettingDrawer={setSettingDrawer}
+          module={"sales"}
+        />
+      )}
       {productDrawer && (
         <AddProductDrawer
           productDrawer={productDrawer}
