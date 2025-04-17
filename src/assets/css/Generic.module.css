@@ -77,3 +77,56 @@ input:checked + * > & {
 }
 }
 
+.invoiceAdd{
+    background-color:#905a23;
+    @mixin hover {
+        background-color: rgba(144, 90, 35, 0.88);
+    }
+}
+
+.invoiceSave{
+    background-color:#4c3a02;
+    @mixin hover {
+        background-color: rgba(76, 58, 2, 0.85);
+    }
+}
+.invoicePos{
+    background-color:#977304;
+    @mixin hover {
+        background-color: rgba(151, 115, 4, 0.88);
+    }
+
+}
+
+.invoicePrint{
+    background-color:#7b4c1e;
+    @mixin hover {
+        background-color: rgba(123, 76, 30, 0.87);
+    }
+
+}
+
+.invoiceHold{
+    background-color:#e3ad05;
+    @mixin hover {
+        background-color: rgba(227, 173, 5, 0.85);
+    }
+
+}
+
+.invoiceReset{
+    background-color:#e1bb7e;
+    @mixin hover {
+        background-color: rgba(225, 187, 126, 0.84);
+    }
+
+}
+
+.invoiceEdit{
+    background-color: #dbcdb7;
+    @mixin hover {
+        background-color: rgba(219, 205, 183, 0.87);
+    }
+
+}
+

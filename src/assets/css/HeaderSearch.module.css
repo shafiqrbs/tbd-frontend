@@ -20,11 +20,11 @@
     line-height: 1;
     padding: rem(8px) rem(12px);
     border-radius: var(--mantine-radius-sm);
-    text-decoration: none;
     font-size: var(--mantine-font-size-sm);
     font-weight: 500;
-    background-color:#e1bb7e;
-    color: #ffffff;
+    background-color:transparent;
+    color: #29190a;
+    text-decoration: underline;
 }
 
 .link {
@@ -38,8 +38,9 @@
     font-weight: 500;
 
 @mixin hover {
-    background-color:#e5c48e;
-    color: #ffffff;
+    background-color:transparent;
+    color: #29190a;
+    text-decoration: underline;
 }
 }
 

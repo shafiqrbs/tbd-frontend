@@ -869,7 +869,7 @@ function _GenericPosForm(props) {
                                     align="center"
                                     mx="auto"
                                 >
-                                  <Text fz={11} fw={400} pr={"xs"} w={50}>
+                                  <Text fz={11} fw={400} pr={"xs"} w={70}>
                                     {currencySymbol} {data.sales_price}
                                   </Text>
                                   <Input
@@ -877,7 +877,7 @@ function _GenericPosForm(props) {
                                         input: {
                                           fontSize: "var(--mantine-font-size-xs)",
                                           fontWeight: 300,
-                                          lineHeight: 1.6,
+                                          lineHeight: 2,
                                           textAlign: "center",
                                           borderRadius: 0,
                                           borderColor: '#905923',
@@ -910,7 +910,7 @@ function _GenericPosForm(props) {
                                       w="50"
                                       styles={{
                                         root: {
-                                          height: "21px",
+                                          height: "26px",
                                           borderRadius: 0,
                                           borderTopColor: '#905923',
                                           borderBottomColor: '#905923',
@@ -924,12 +924,12 @@ function _GenericPosForm(props) {
                                   </Button>
                                   <Button
                                       size="compact-xs"
-                                      bg={"#905923"}
+                                      className={genericClass.invoiceAdd}
                                       radius={0}
                                       w="30"
                                       styles={{
                                         root: {
-                                          height: "22px",
+                                          height: "26px",
                                           borderRadius: 0,
                                           borderTopRightRadius:
                                               "var(--mantine-radius-sm)",
@@ -1247,16 +1247,14 @@ function _GenericPosForm(props) {
               </form>
             </Box>
             <Box mb="xs">
-              <Grid columns={12} justify="space-between" align="center">
+              <Grid  className={genericClass.genericHighlightedBox} columns={12} justify="space-between" align="center">
                 <Grid.Col span={6}>
-                  <Box>
-
+                  <Box pl={'xs'}>
                       <ActionIcon
                         variant="transparent"
                         size={"lg"}
                         color="grey.6"
                         mt={"1"}
-                        aria-label="Settings"
                         onClick={() => {}}
                       >
                         <IconRefresh
@@ -1264,17 +1262,15 @@ function _GenericPosForm(props) {
                           stroke={1.5}
                         />
                       </ActionIcon>
-
-
                   </Box>
                 </Grid.Col>
                 <Grid.Col span={4}>
-                  <Box>
+                  <Box pr={'xs'}>
                     <Button
                       id={"productAddFormSubmit"}
                       form="productAddForm"
                       size="sm"
-                      color={'#905923'}
+                      className={genericClass.invoiceAdd}
                       type="submit"
                       mt={0}
                       mr={"xs"}
@@ -1290,12 +1286,7 @@ function _GenericPosForm(props) {
                   </Box>
                 </Grid.Col>
               </Grid>
-              <Grid columns={24} gutter={{ base: 6 }}>
-                <Grid.Col span={16}>
-                  <></>
-                </Grid.Col>
-                <Grid.Col span={8} bg={"white"}></Grid.Col>
-              </Grid>
+
             </Box>
           </Box>
         </Grid.Col>
@@ -1417,12 +1408,12 @@ function _GenericPosForm(props) {
                 className={genericClass.bodyBackground}
               >
                 <Grid columns={24} gutter={{ base: 6 }}>
-                  <Grid.Col span={16}  className={genericClass.genericHighlightedBox}>
+                  <Grid.Col span={16} className={genericClass.genericHighlightedBox}>
                       <Box pl={'4'} pr={'4'} >
                     <Box >
                         <Grid
                             gutter={{ base: 6 }}
-                            className={genericClass.genericPrimaryBg}
+                            bg={'#bc924f'}
                             mt={4}
                             pt={"4"}
                         >
@@ -2009,7 +2000,8 @@ function _GenericPosForm(props) {
                         <Group gap={4} justify="right" wrap="nowrap">
                           <ActionIcon
                             size="sm"
-                            variant="subtle"
+                            variant="outline"
+                            radius="xl"
                             color="red"
                             onClick={() => {
                               const dataString = localStorage.getItem(
@@ -2387,7 +2379,7 @@ function _GenericPosForm(props) {
                               withArrow
                           >
                               <Grid gutter={{ base: 1 }}>
-                                  <Grid.Col span={10} className={genericClass.genericPrimaryBg} p={'18'} pr={'0'}>
+                                  <Grid.Col span={10}  bg={'#bc924f'} p={'18'} pr={'0'}>
                                       <InputNumberForm
                                           type="number"
                                           tooltip={t("ReceiveAmountValidateMessage")}
@@ -2407,7 +2399,7 @@ function _GenericPosForm(props) {
                                           closeIcon={true}
                                       />
                                   </Grid.Col>
-                                  <Grid.Col span={2} className={genericClass.genericPrimaryBg} p={'18'} pl={'8'}>
+                                  <Grid.Col span={2} bg={'#bc924f'} p={'18'} pl={'8'}>
                                       <Tooltip
                                           multiline
                                           bg={"#905923"}
@@ -2438,13 +2430,21 @@ function _GenericPosForm(props) {
                   </Box>
                 </Grid.Col>
               </Grid>
-              <Box mt={"8"} pb={"xs"}>
+              <Box mt={"8"} pb={"xs"} pr={'xs'}>
                 <Button.Group>
                   <Button
                     fullWidth={true}
                     variant="filled"
+                    leftSection={<IconRefresh size={14} />}
+                    className={genericClass.invoiceReset}
+                  >
+                    {t("Reset")}
+                  </Button>
+                   <Button
+                    fullWidth={true}
+                    variant="filled"
                     leftSection={<IconStackPush size={14} />}
-                    color="orange.5"
+                    className={genericClass.invoiceHold}
                   >
                     {t("Hold")}
                   </Button>
@@ -2455,11 +2455,11 @@ function _GenericPosForm(props) {
                     onClick={handleClick}
                     name="print"
                     leftSection={<IconPrinter size={14} />}
-                    color="green.5"
-                    disabled={isDisabled}
+                    className={genericClass.invoicePrint}
+                   // disabled={isDisabled}
                     style={{
                       transition: "all 0.3s ease",
-                      backgroundColor: isDisabled ? "#f1f3f500" : "",
+                    //  backgroundColor: isDisabled ? "#f1f3f500" : "#f1f3f500",
                     }}
                   >
                     {t("Print")}
@@ -2471,27 +2471,27 @@ function _GenericPosForm(props) {
                     name="pos"
                     variant="filled"
                     leftSection={<IconReceipt size={14} />}
-                    color="red.5"
-                    disabled={isDisabled}
+                    className={genericClass.invoicePos}
+                   // disabled={isDisabled}
                     style={{
                       transition: "all 0.3s ease",
-                      backgroundColor: isDisabled ? "#f1f3f500" : "",
+                    //  backgroundColor: isDisabled ? "#f1f3f500" : "#f1f3f500",
                     }}
                   >
                     {t("Pos")}
                   </Button>
                   <Button
                     fullWidth={true}
+                    className={genericClass.invoiceSave}
                     type={"submit"}
                     onClick={handleClick}
                     name="save"
                     variant="filled"
                     leftSection={<IconDeviceFloppy size={14} />}
-                    color="cyan.5"
-                    disabled={isDisabled}
+                   // disabled={isDisabled}
                     style={{
                       transition: "all 0.3s ease",
-                      backgroundColor: isDisabled ? "#f1f3f500" : "",
+                     // backgroundColor: isDisabled ? "#f1f3f500" : "#f1f3f500",
                     }}
                   >
                     {t("Save")}
