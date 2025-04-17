@@ -30,9 +30,13 @@
 &::after {
      content: '';
      display: block;
-     background-color: var(--mantine-color-blue-filled);
-     width: rem(45px);
+     background-color: #905a23;
+     width: rem(56px);
      height: rem(2px);
      margin-top: var(--mantine-spacing-sm);
  }
+}
+
+.btnPrimaryBg {
+    background-color: #905a23;
 }

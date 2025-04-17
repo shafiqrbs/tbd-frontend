@@ -108,7 +108,7 @@ function SitemapForm(props) {
                                                         !saveCreateLoading && isOnline &&
                                                         <Button
                                                             size="xs"
-                                                            color={`green.8`}
+                                                            className={'btnPrimaryBg'}
                                                             type="submit"
                                                             id="EntityFormSubmit"
                                                             leftSection={<TablerIcons.IconDeviceFloppy size={16} />}

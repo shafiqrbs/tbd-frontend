@@ -826,7 +826,7 @@ function _AddCustomerFormPos(props) {
                                         {!saveCreateLoading && isOnline && (
                                             <Button
                                                 size="xs"
-                                                color={`green.8`}
+                                                className={'btnPrimaryBg'}
                                                 type="submit"
                                                 form={
                                                     value === "New"

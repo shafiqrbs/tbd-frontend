@@ -16,10 +16,30 @@
 }
 
 .genericBackground{
-    background-color:#e5c48e;
+    background-color:#fffbf459;
 }
-.genericSeconderyBg{
-    background-color:#fbf7efd1;
+.genericHighlightedBox{
+    background-color:#e1bb7e;
+}
+
+.genericSecondaryBg{
+    background-color:#fbf7ef;
+}
+
+.genericPrimaryBg{
+    background-color: #905a23;
+}
+.genericPrimaryFontColor{
+    color: #29190a;
+}
+
+._cardTitle_sz11i_29::after {
+    content: '';
+    display: block;
+    background-color: #905a23;
+    width: calc(2.8125rem * var(--mantine-scale));
+    height: calc(0.125rem * var(--mantine-scale));
+    margin-top: var(--mantine-spacing-sm);
 }
 
 

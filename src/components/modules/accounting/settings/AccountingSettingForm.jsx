@@ -111,7 +111,7 @@ function AccountingSettingForm(props) {
                                                                 !saveCreateLoading && isOnline &&
                                                                 <Button
                                                                     size="xs"
-                                                                    color={`green.8`}
+                                                                    className={'btnPrimaryBg'}
                                                                     type="submit"
                                                                     id={formSubmitId}
                                                                     leftSection={<IconDeviceFloppy size={16}/>}

@@ -743,7 +743,7 @@ function _GenericPosForm(props) {
                             styles={{
                               label: { color: "#140d05" },
                             }}
-                            className={genericClass.genericBackground}
+                            className={genericClass.genericHighlightedBox}
                             withItemsBorders={false}
                             fullWidth
                             color={"#f8eedf"}
@@ -910,8 +910,10 @@ function _GenericPosForm(props) {
                                       w="50"
                                       styles={{
                                         root: {
-                                          height: "22px",
+                                          height: "21px",
                                           borderRadius: 0,
+                                          borderTopColor: '#905923',
+                                          borderBottomColor: '#905923',
                                         },
                                       }}
                                       onClick={() => {}}
@@ -1004,7 +1006,7 @@ function _GenericPosForm(props) {
                     />
                   </Box>
                   {switchValue === "product" && (
-                    <Box p={"xs"} mt={'8'} bg={"#e1bb7e"} ml={"-xs"} mr={-8}>
+                    <Box p={"xs"} mt={'8'} className={genericClass.genericHighlightedBox} ml={"-xs"} mr={-8}>
                       <Grid gutter={{ base: 6 }}>
                         <Grid.Col span={11} >
                           <Box>
@@ -1062,7 +1064,7 @@ function _GenericPosForm(props) {
                     </Box>
                   )}
                   {switchValue === "barcode" && (
-                      <Box p={"xs"} mt={'8'} bg={"#e1bb7e"} ml={"-xs"} mr={-8}>
+                      <Box p={"xs"} mt={'8'} className={genericClass.genericHighlightedBox} ml={"-xs"} mr={-8}>
                         <InputNumberForm
                             tooltip={t("BarcodeValidateMessage")}
                             label=""
@@ -1077,7 +1079,7 @@ function _GenericPosForm(props) {
                       </Box>
                   )}
                   {switchValue === "product" && (
-                  <Box ml={"-xs"} p={"xs"} mr={-8} bg={"#f8eedf"}>
+                  <Box ml={"-xs"} p={"xs"} mr={-8} className={genericClass.genericBackground}>
                   <Box mt={"4"}>
                     <Grid columns={12} gutter={{ base: 8 }}>
                       <Grid.Col span={4}>
@@ -1409,62 +1411,45 @@ function _GenericPosForm(props) {
           >
             <Box bg={"white"} p={"xs"} className={"borderRadiusAll"}>
               <Box
-                pl={`xs`}
-                pr={8}
-                pt={"8"}
+                pl={`4`}
+                pr={4}
                 mb={"xs"}
                 className={genericClass.bodyBackground}
               >
                 <Grid columns={24} gutter={{ base: 6 }}>
-                  <Grid.Col span={8}>
-                    <Box mt={"4"}>
+                  <Grid.Col span={16}  className={genericClass.genericHighlightedBox}>
+                      <Box pl={'4'} pr={'4'} >
+                    <Box >
+                        <Grid
+                            gutter={{ base: 6 }}
+                            className={genericClass.genericPrimaryBg}
+                            mt={4}
+                            pt={"4"}
+                        >
+                            <Grid.Col span={10} pl={'8'}>
                       <SelectForm
                         tooltip={t("CustomerValidateMessage")}
                         label=""
-                        placeholder={t("Customer")}
+                        placeholder={t("Jhon Dee")}
                         required={false}
                         nextField={""}
                         name={"customer_id"}
                         form={form}
                         dropdownValue={customersDropdownData}
                         id={"customer_id"}
-                        mt={1}
                         searchable={true}
                         value={customerData}
                         changeValue={setCustomerData}
                       />
-                    </Box>
-                    <Box mt={"xs"}>
-                      <Grid
-                        gutter={{ base: 6 }}
-                        className={genericClass.genericSeconderyBg}
-                        mt={8}
-                        pt={"xs"}
-                        pb={"12"}
-                      >
-                        <Grid.Col span={6}>
-                          <Box pl={"md"}>
-                            <Text fz={"md"} order={1} fw={"800"}>
-                              {currencySymbol + " "}
-                              {customerData &&
-                              customerObject &&
-                              customerData != defaultCustomerId
-                                ? Number(customerObject.balance).toFixed(2)
-                                : "0.00"}
-                            </Text>
-                            <Text fz={"xs"} c="dimmed">
-                              {t("Outstanding")}
-                            </Text>
-                          </Box>
-                        </Grid.Col>
-                        <Grid.Col span={6}>
-                          <Box
-                            mt={"8"}
-                            mr={"12"}
-                            style={{ textAlign: "right", float: "right" }}
-                          >
-                            <Group>
-                              <Tooltip
+                            </Grid.Col>
+                            <Grid.Col span={2}>
+                                <Box
+                                    mr={"12"}
+                                    mt={'4'}
+                                    style={{ textAlign: "right", float: "right" }}
+                                >
+                                <Group>
+                            <Tooltip
                                 multiline
                                 bg={"orange.8"}
                                 position="top"
@@ -1472,43 +1457,43 @@ function _GenericPosForm(props) {
                                 withArrow
                                 transitionProps={{ duration: 200 }}
                                 label={
-                                  customerData &&
-                                  customerData != defaultCustomerId
-                                    ? isSMSActive
-                                      ? t("SendSms")
-                                      : t("PleasePurchaseAsmsPackage")
-                                    : t("ChooseCustomer")
+                                    customerData &&
+                                    customerData != defaultCustomerId
+                                        ? isSMSActive
+                                        ? t("SendSms")
+                                        : t("PleasePurchaseAsmsPackage")
+                                        : t("ChooseCustomer")
                                 }
-                              >
+                            >
                                 <ActionIcon
-                                  bg={"white"}
-                                  variant="outline"
-                                  color={"red"}
-                                  disabled={
-                                    !customerData ||
-                                    customerData == defaultCustomerId
-                                  }
-                                  onClick={(e) => {
-                                    if (isSMSActive) {
-                                      notifications.show({
-                                        withCloseButton: true,
-                                        autoClose: 1000,
-                                        title: t("smsSendSuccessfully"),
-                                        message: t("smsSendSuccessfully"),
-                                        icon: <IconTallymark1 />,
-                                        className: "my-notification-class",
-                                        style: {},
-                                        loading: true,
-                                      });
-                                    } else {
-                                      setIsShowSMSPackageModel(true);
+                                    bg={"white"}
+                                    variant="outline"
+                                    color={"red"}
+                                    disabled={
+                                        !customerData ||
+                                        customerData == defaultCustomerId
                                     }
-                                  }}
+                                    onClick={(e) => {
+                                        if (isSMSActive) {
+                                            notifications.show({
+                                                withCloseButton: true,
+                                                autoClose: 1000,
+                                                title: t("smsSendSuccessfully"),
+                                                message: t("smsSendSuccessfully"),
+                                                icon: <IconTallymark1 />,
+                                                className: "my-notification-class",
+                                                style: {},
+                                                loading: true,
+                                            });
+                                        } else {
+                                            setIsShowSMSPackageModel(true);
+                                        }
+                                    }}
                                 >
-                                  <IconMessage size={18} stroke={1.5} />
+                                    <IconMessage size={18} stroke={1.5} />
                                 </ActionIcon>
-                              </Tooltip>
-                              <Tooltip
+                            </Tooltip>
+                            <Tooltip
                                 multiline
                                 bg={"orange.8"}
                                 position="top"
@@ -1517,59 +1502,70 @@ function _GenericPosForm(props) {
                                 ta={"center"}
                                 transitionProps={{ duration: 200 }}
                                 label={
-                                  customerData &&
-                                  customerData != defaultCustomerId
-                                    ? t("CustomerDetails")
-                                    : t("ChooseCustomer")
+                                    customerData &&
+                                    customerData != defaultCustomerId
+                                        ? t("CustomerDetails")
+                                        : t("ChooseCustomer")
                                 }
-                              >
+                            >
                                 <ActionIcon
-                                  variant="filled"
-                                  color={"red"}
-                                  disabled={
-                                    !customerData ||
-                                    customerData == defaultCustomerId
-                                  }
-                                  onClick={() => {
-                                    setViewDrawer(true);
-                                  }}
+                                    variant="filled"
+                                    color={"red"}
+                                    disabled={
+                                        !customerData ||
+                                        customerData == defaultCustomerId
+                                    }
+                                    onClick={() => {
+                                        setViewDrawer(true);
+                                    }}
                                 >
-                                  <IconEyeEdit size={18} stroke={1.5} />
+                                    <IconEyeEdit size={18} stroke={1.5} />
                                 </ActionIcon>
-                              </Tooltip>
-                            </Group>
-                          </Box>
-                        </Grid.Col>
-                      </Grid>
+                            </Tooltip>
+                        </Group>
+                                </Box>
+                            </Grid.Col>
+                        </Grid>
+
                     </Box>
+                          <Box pl={'4'} pr={'4'}  mt={"4"} pt={'8'} className={genericClass.genericSecondaryBg}>
+                              <Grid columns={18} gutter={{ base: 2 }} >
+                                  <Grid.Col span={3}>
+                                      <Text pl={'md'} className={genericClass.genericPrimaryFontColor} fz={"xs"} >
+                                          {t("Outstanding")}
+                                      </Text>
+                                  </Grid.Col>
+                                  <Grid.Col span={6}>
+                                      <Text fz={"sm"} order={1} fw={"800"}>
+                                          {currencySymbol + " "}
+                                          {customerData &&
+                                          customerObject &&
+                                          customerData != defaultCustomerId
+                                              ? Number(customerObject.balance).toFixed(2)
+                                              : "0.00"}
+                                      </Text>
+                                  </Grid.Col>
+                                  <Grid.Col span={3}><Text ta="left" size="xs" pl={'md'}>Sales</Text></Grid.Col>
+                                  <Grid.Col span={6}><Text  ta="left" size="sm"> {currencySymbol} 43000.00</Text></Grid.Col>
+
+                              </Grid>
+                              <Grid columns={18} gutter={{ base: 2 }} >
+                                  <Grid.Col span={3}><Text ta="left" size="xs" pl={'md'}>Discount</Text></Grid.Col>
+                                  <Grid.Col span={6}><Text  ta="left" size="sm"> {currencySymbol} 43000.00</Text></Grid.Col>
+                                  <Grid.Col span={3}><Text ta="left" size="xs" pl={'md'}>Receive</Text></Grid.Col>
+                                  <Grid.Col span={6}><Text  ta="left" size="sm"> {currencySymbol} 43000.00</Text></Grid.Col>
+                              </Grid>
+                              <Grid columns={18} gutter={{ base: 2 }} >
+                                  <Grid.Col span={3}><Text ta="left" size="xs" pl={'md'}>Credit Limit</Text></Grid.Col>
+                                  <Grid.Col span={6}><Text  ta="left" size="sm"> {currencySymbol} 43000.00</Text></Grid.Col>
+                                  <Grid.Col span={3}><Text ta="left" size="xs" pl={'md'}>Earn Point</Text></Grid.Col>
+                                  <Grid.Col span={6}><Text  ta="left" size="sm"> {currencySymbol} 43000.00</Text></Grid.Col>
+                              </Grid>
+                          </Box>
+                      </Box>
                   </Grid.Col>
-                  <Grid.Col span={8}>
-                    <Grid columns={18}
-                        gutter={{ base: 6 }}
-                    >
-                      <Grid.Col span={6}><Text ta="left" pl={'md'}>Total Sales</Text></Grid.Col>
-                      <Grid.Col span={12}><Text ta="left">43000.o0</Text></Grid.Col>
-                    </Grid>
-                    <Grid columns={18}
-                        gutter={{ base: 6 }}
-                    >
-                      <Grid.Col span={6}><Text ta="left" pl={'md'}>Receive</Text></Grid.Col>
-                      <Grid.Col span={12}><Text ta="left">000.00</Text></Grid.Col>
-                    </Grid>
-                    <Grid columns={18}
-                          gutter={{ base: 6 }}
-                    >
-                      <Grid.Col span={6}><Text ta="left" pl={'md'}>Point</Text></Grid.Col>
-                      <Grid.Col span={12}><Text ta="left">000.00</Text></Grid.Col>
-                    </Grid>
-                    <Grid columns={18}
-                          gutter={{ base: 6 }}
-                    >
-                      <Grid.Col span={6}><Text ta="left" pl={'md'}>Credit Limit</Text></Grid.Col>
-                      <Grid.Col span={12}><Text ta="left">000.00</Text></Grid.Col>
-                    </Grid>
-                  </Grid.Col>
-                  <Grid.Col span={8}>
+                  <Grid.Col span={8} className={genericClass.genericHighlightedBox}>
+                      <Box pl={'4'} pr={'4'}>
                     <form
                       id="customerAddedForm"
                       onSubmit={customerAddedForm.onSubmit((values) => {
@@ -1717,6 +1713,7 @@ function _GenericPosForm(props) {
                         />
                       </Box>
                     </form>
+                      </Box>
                   </Grid.Col>
                 </Grid>
               </Box>
@@ -2050,8 +2047,7 @@ function _GenericPosForm(props) {
                   recordsPerPage={10}
                   loaderSize="xs"
                   loaderColor="grape"
-                  height={height - 85}
-                  scrollAreaProps={{ type: "never" }}
+                  height={height-75}
                 />
               </Box>
             </Box>
@@ -2139,9 +2135,7 @@ function _GenericPosForm(props) {
                   </Box>
                 </Grid.Col>
                 <Grid.Col span={8}>
-                  <Box
-                    className="borderRadiusAll"
-                    bg={"white"}
+                  <Box className={genericClass.genericSecondaryBg}
                     p={"xs"}
                     h={192}
                   >
@@ -2215,68 +2209,54 @@ function _GenericPosForm(props) {
                   {/* outstading section */}
                   <Box
                     p={"xs"}
-                    className="borderRadiusAll"
-                    bg={"white"}
+                    className={genericClass.genericSecondaryBg}
                     h={192}
                   >
-                    <Box>
+                    <Box pb={'xs'} className={genericClass.genericSecondaryBg}>
                       <Grid gutter={{ base: 4 }}>
-                        <Grid.Col span={3}>
-                          <Center fz={"md"} fw={"800"}>
-                            {currencySymbol} {salesSubTotalAmount.toFixed(2)}
-                          </Center>
-                        </Grid.Col>
-                        <Grid.Col span={3}>
-                          <Center fz={"md"} fw={"800"}>
+                        <Grid.Col span={4}>
+                          <Center fz={"md"} ta="center" fw={"800"}>
                             {" "}
                             {currencySymbol}{" "}
                             {salesDiscountAmount &&
                               Number(salesDiscountAmount).toFixed(2)}
                           </Center>
                         </Grid.Col>
-                        <Grid.Col span={3}>
-                          <Center fz={"md"} fw={"800"}>
+                        <Grid.Col span={4}>
+                          <Center fz={"md"} ta="center" fw={"800"}>
                             {" "}
                             {currencySymbol} {salesVatAmount.toFixed(2)}
                           </Center>
                         </Grid.Col>
-                        <Grid.Col span={3}>
-                          <Center fz={"md"} fw={"800"}>
+                        <Grid.Col span={4}>
+                          <Center fz={"md"} ta="center" fw={"800"}>
                             {currencySymbol} {salesTotalAmount.toFixed(2)}
                           </Center>
                         </Grid.Col>
                       </Grid>
                       <Grid gutter={{ base: 4 }}>
-                        <Grid.Col span={3}>
-                          <Box h={1} ml={"xl"} mr={"xl"} bg={`red.3`}></Box>
+                        <Grid.Col span={4}>
+                          <Box h={1} ml={"xl"} mr={"xl"} bg={'#905a23'}></Box>
                         </Grid.Col>
-                        <Grid.Col span={3}>
-                          <Box h={1} ml={"xl"} mr={"xl"} bg={`red.3`}></Box>
+                        <Grid.Col span={4}>
+                          <Box h={1} ml={"xl"} mr={"xl"} bg={'#905a23'}></Box>
                         </Grid.Col>
-                        <Grid.Col span={3}>
-                          <Box h={1} ml={"xl"} mr={"xl"} bg={`red.3`}></Box>
-                        </Grid.Col>
-                        <Grid.Col span={3}>
-                          <Box h={1} ml={"xl"} mr={"xl"} bg={`red.3`}></Box>
+                        <Grid.Col span={4}>
+                          <Box h={1} ml={"xl"} mr={"xl"} bg={'#905a23'}></Box>
                         </Grid.Col>
                       </Grid>
                       <Grid gutter={{ base: 4 }}>
-                        <Grid.Col span={3}>
-                          <Center fz={"xs"} c="dimmed">
-                            {t("SubTotal")}
-                          </Center>
-                        </Grid.Col>
-                        <Grid.Col span={3}>
+                        <Grid.Col span={4}>
                           <Center fz={"xs"} c="dimmed">
                             {t("Discount")}
                           </Center>
                         </Grid.Col>
-                        <Grid.Col span={3}>
+                        <Grid.Col span={4}>
                           <Center fz={"xs"} c="dimmed">
                             {t("Vat")}
                           </Center>
                         </Grid.Col>
-                        <Grid.Col span={3}>
+                        <Grid.Col span={4}>
                           <Center fz={"xs"} c="dimmed">
                             {t("Total")}
                           </Center>
@@ -2284,175 +2264,177 @@ function _GenericPosForm(props) {
                       </Grid>
                     </Box>
                     {/* Due Section */}
-                    <Box className={""} pt={"xs"} mb={"xs"} pb={"xs"}>
-                      <Stack h={110} justify="space-between">
-                        <Grid columns={18} gutter={{ base: 2 }} pt={"md"}>
-                          <Grid.Col span={8} align="flex-start">
-                            <Group justify="flex-start" align="center">
-                              <Box>
-                                <Switch
-                                  size="lg"
-                                  w={"100%"}
-                                  color={"red.3"}
-                                  ml={"6"}
-                                  onLabel={t("Profit")}
-                                  offLabel={t("Hide")}
-                                  radius="xs"
-                                  onChange={(event) =>
-                                    setProfitShow(event.currentTarget.checked)
-                                  }
-                                />
-                              </Box>
-                              <Box>
-                                <Center fz={"md"} mt={"4"} c={"black.5"}>
-                                  {currencySymbol}{" "}
-                                  {profitShow && salesProfitAmount}
-                                </Center>
-                              </Box>
-                            </Group>
-                          </Grid.Col>
-                          <Grid.Col span={10} align="center" justify="center">
-                            <Box
-                              fz={"xl"}
-                              pr={"xs"}
-                              c={"red"}
-                              style={{ textAlign: "right", float: "right" }}
-                              fw={"800"}
-                            >
-                              {returnOrDueText === "Due"
-                                ? t("Due")
-                                : t("Return")}{" "}
-                              {currencySymbol} {salesTotalAmount.toFixed(2)}
-                            </Box>
-                          </Grid.Col>
-                        </Grid>
-                        <Box>
-                          <Box mt={"4"} h={1} bg={`red.3`}></Box>
-                          <Tooltip
-                            label={t("MustBeNeedReceiveAmountWithoutCustomer")}
-                            opened={isDisabled}
-                            position="bottom-end"
-                            withArrow
-                          >
-                            <Grid gutter={{ base: 2 }} mt={"4"}>
-                              <Grid.Col span={4} bg={"red.3"} p={2}>
-                                <Tooltip
-                                  label={t("ClickRightButtonForPercentFlat")}
-                                  px={16}
-                                  py={2}
-                                  position="top"
-                                  bg={"red.4"}
-                                  c={"white"}
-                                  withArrow
-                                  offset={2}
-                                  zIndex={999}
-                                  transitionProps={{
-                                    transition: "pop-bottom-left",
-                                    duration: 500,
-                                  }}
-                                >
-                                  <TextInput
-                                    type="number"
-                                    style={{ textAlign: "right" }}
-                                    placeholder={t("Discount")}
-                                    value={salesDiscountAmount}
-                                    size={"sm"}
-                                    classNames={{ input: classes.input }}
-                                    onChange={(event) => {
-                                      form.setFieldValue(
-                                        "discount",
-                                        event.target.value
-                                      );
-                                      const newValue = event.target.value;
-                                      setSalesDiscountAmount(newValue);
-                                      form.setFieldValue("discount", newValue);
-                                    }}
-                                    rightSection={
-                                      <ActionIcon
-                                        size={32}
-                                        bg={"red.5"}
-                                        variant="filled"
-                                        onClick={() => setDiscountType()}
-                                      >
-                                        {discountType === "Flat" ? (
-                                          <IconCurrencyTaka size={16} />
-                                        ) : (
-                                          <IconPercentage size={16} />
-                                        )}
-                                      </ActionIcon>
-                                    }
-                                    onBlur={async (event) => {
-                                      const data = {
-                                        url: "inventory/pos/inline-update",
-                                        data: {
-                                          invoice_id: tableId,
-                                          field_name: "discount",
-                                          value: event.target.value,
-                                          discount_type: discountType,
-                                        },
-                                      };
-                                      // Dispatch and handle response
-                                      try {
-                                        const resultAction = await dispatch(
-                                          storeEntityData(data)
-                                        );
+                    <Box>
+                      <Stack justify="space-between">
+                          <Box className={genericClass.genericHighlightedBox}>
+                                <Grid columns={18} gutter={{ base: 2 }}>
+                                  <Grid.Col span={8} mt={'4'} pl={'6'}>
+                                          <Tooltip
+                                              label={t("ClickRightButtonForPercentFlat")}
+                                              px={16}
+                                              py={2}
+                                              position="top"
+                                              bg={"red.4"}
+                                              c={"white"}
+                                              withArrow
+                                              offset={2}
+                                              zIndex={999}
+                                              transitionProps={{
+                                                  transition: "pop-bottom-left",
+                                                  duration: 500,
+                                              }}
+                                          >
+                                              <TextInput
+                                                  type="number"
+                                                  style={{ textAlign: "right" }}
+                                                  placeholder={t("Discount")}
+                                                  value={salesDiscountAmount}
+                                                  size={"sm"}
+                                                  classNames={{ input: classes.input }}
+                                                  onChange={(event) => {
+                                                      form.setFieldValue(
+                                                          "discount",
+                                                          event.target.value
+                                                      );
+                                                      const newValue = event.target.value;
+                                                      setSalesDiscountAmount(newValue);
+                                                      form.setFieldValue("discount", newValue);
+                                                  }}
+                                                  rightSection={
+                                                      <ActionIcon
+                                                          size={32}
+                                                          bg={"red.5"}
+                                                          variant="filled"
+                                                          onClick={() => setDiscountType()}
+                                                      >
+                                                          {discountType === "Flat" ? (
+                                                              <IconCurrencyTaka size={16} />
+                                                          ) : (
+                                                              <IconPercentage size={16} />
+                                                          )}
+                                                      </ActionIcon>
+                                                  }
+                                                  onBlur={async (event) => {
+                                                      const data = {
+                                                          url: "inventory/pos/inline-update",
+                                                          data: {
+                                                              invoice_id: tableId,
+                                                              field_name: "discount",
+                                                              value: event.target.value,
+                                                              discount_type: discountType,
+                                                          },
+                                                      };
+                                                      // Dispatch and handle response
+                                                      try {
+                                                          const resultAction = await dispatch(
+                                                              storeEntityData(data)
+                                                          );
 
-                                        if (
-                                          resultAction.payload?.status !== 200
-                                        ) {
-                                          showNotificationComponent(
-                                            resultAction.payload?.message ||
-                                              "Error updating invoice",
-                                            "red",
-                                            "",
-                                            "",
-                                            true
-                                          );
-                                        }
-                                      } catch (error) {
-                                        showNotificationComponent(
-                                          "Request failed. Please try again.",
-                                          "red",
-                                          "",
-                                          "",
-                                          true
-                                        );
-                                        console.error(
-                                          "Error updating invoice:",
-                                          error
-                                        );
-                                      } finally {
-                                        setReloadInvoiceData(true);
-                                      }
-                                    }}
-                                  />
-                                </Tooltip>
-                              </Grid.Col>
-                              <Grid.Col span={8} bg={"green"} p={2}>
-                                <InputNumberForm
-                                  type="number"
-                                  tooltip={t("ReceiveAmountValidateMessage")}
-                                  label=""
-                                  placeholder={t("Amount")}
-                                  required={false}
-                                  nextField={"sales_by"}
-                                  form={form}
-                                  name={"receive_amount"}
-                                  id={"receive_amount"}
-                                  rightIcon={
-                                    <IconCurrency size={16} opacity={0.5} />
-                                  }
-                                  leftSection={
-                                    <IconPlusMinus size={16} opacity={0.5} />
-                                  }
-                                  closeIcon={true}
-                                />
-                              </Grid.Col>
-                            </Grid>
-                          </Tooltip>
-                        </Box>
+                                                          if (
+                                                              resultAction.payload?.status !== 200
+                                                          ) {
+                                                              showNotificationComponent(
+                                                                  resultAction.payload?.message ||
+                                                                  "Error updating invoice",
+                                                                  "red",
+                                                                  "",
+                                                                  "",
+                                                                  true
+                                                              );
+                                                          }
+                                                      } catch (error) {
+                                                          showNotificationComponent(
+                                                              "Request failed. Please try again.",
+                                                              "red",
+                                                              "",
+                                                              "",
+                                                              true
+                                                          );
+                                                          console.error(
+                                                              "Error updating invoice:",
+                                                              error
+                                                          );
+                                                      } finally {
+                                                          setReloadInvoiceData(true);
+                                                      }
+                                                  }}
+                                              />
+                                          </Tooltip>
+                                      </Grid.Col>
+                                  <Grid.Col span={10} align="center" justify="center">
+                                    <Box
+                                      fz={"md"}
+                                      p={"xs"}
+                                      style={{ textAlign: "right", float: "right" }}
+                                      fw={"800"}
+                                    >
+                                      {returnOrDueText === "Due"
+                                        ? t("Due")
+                                        : t("Return")}{" "}
+                                      {currencySymbol} {salesTotalAmount.toFixed(2)}
+                                    </Box>
+                                  </Grid.Col>
+                                </Grid>
+                          </Box>
                       </Stack>
                     </Box>
+                    <Box >
+                          <Tooltip
+                              label={t("MustBeNeedReceiveAmountWithoutCustomer")}
+                              opened={isDisabled}
+                              position="top-center"
+                              bg={"#905923"}
+                              withArrow
+                          >
+                              <Grid gutter={{ base: 1 }}>
+                                  <Grid.Col span={10} className={genericClass.genericPrimaryBg} p={'18'} pr={'0'}>
+                                      <InputNumberForm
+                                          type="number"
+                                          tooltip={t("ReceiveAmountValidateMessage")}
+                                          label=""
+                                          placeholder={t("Amount")}
+                                          required={false}
+                                          nextField={"sales_by"}
+                                          form={form}
+                                          name={"receive_amount"}
+                                          id={"receive_amount"}
+                                          rightIcon={
+                                              <IconCurrency size={16} opacity={0.5} />
+                                          }
+                                          leftSection={
+                                              <IconPlusMinus size={16} opacity={0.5} />
+                                          }
+                                          closeIcon={true}
+                                      />
+                                  </Grid.Col>
+                                  <Grid.Col span={2} className={genericClass.genericPrimaryBg} p={'18'} pl={'8'}>
+                                      <Tooltip
+                                          multiline
+                                          bg={"#905923"}
+                                          position="top"
+                                          withArrow
+                                          ta={"center"}
+                                          transitionProps={{ duration: 200 }}
+                                          label={salesProfitAmount}
+                                      >
+                                          <ActionIcon
+                                              radius={"xl"}
+                                              variant="transparent"
+                                              size={"md"}
+                                              color="white"
+                                              mt={"2"}
+                                              aria-label="Settings"
+                                              onClick={() => {
+                                                  setSettingDrawer(true);
+                                              }}
+                                          >
+                                              {currencySymbol}
+                                          </ActionIcon>
+                                      </Tooltip>
+                                  </Grid.Col>
+                              </Grid>
+                          </Tooltip>
+                      </Box>
                   </Box>
                 </Grid.Col>
               </Grid>

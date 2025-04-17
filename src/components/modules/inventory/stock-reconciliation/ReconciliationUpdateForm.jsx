@@ -21,7 +21,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useOutletContext } from "react-router-dom";
 import { isNotEmpty, useForm } from "@mantine/form";
 import { modals } from "@mantine/modals";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useHotkeys } from "@mantine/hooks";
 import Shortcut from "../../shortcut/Shortcut";
 import InputForm from "../../../form-builders/InputForm";
@@ -148,7 +148,7 @@ export default function ReconciliationUpdateForm() {
                           {!saveCreateLoading && isOnline && (
                             <Button
                               size="xs"
-                              color={`green.8`}
+                              className={'btnPrimaryBg'}
                               type="submit"
                               id="EntityFormSubmit"
                               leftSection={<IconDeviceFloppy size={16} />}

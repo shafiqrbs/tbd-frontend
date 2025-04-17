@@ -21,7 +21,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useOutletContext } from "react-router-dom";
 import { isNotEmpty, useForm } from "@mantine/form";
 import { modals } from "@mantine/modals";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useHotkeys } from "@mantine/hooks";
 import Shortcut from "../../shortcut/Shortcut";
 import InputForm from "../../../form-builders/InputForm";
@@ -182,7 +182,7 @@ export default function TransferUpdateForm() {
                           {!saveCreateLoading && isOnline && (
                             <Button
                               size="xs"
-                              color={`green.8`}
+                              className={'btnPrimaryBg'}
                               type="submit"
                               id="EntityFormSubmit"
                               leftSection={<IconDeviceFloppy size={16} />}

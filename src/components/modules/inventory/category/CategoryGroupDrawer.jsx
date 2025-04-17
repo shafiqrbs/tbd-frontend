@@ -188,7 +188,7 @@ function CategoryGroupDrawer(props) {
                                                                             !saveCreateLoading && isOnline &&
                                                                             <Button
                                                                                 size="xs"
-                                                                                color={`green.8`}
+                                                                                className={'btnPrimaryBg'}
                                                                                 type="submit"
                                                                                 id={saveId}
                                                                                 leftSection={<IconDeviceFloppy size={16} />}

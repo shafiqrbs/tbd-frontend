@@ -101,7 +101,7 @@ function WarehouseForm({ adjustment }) {
                                                 {!saveCreateLoading && isOnline && (
                                                     <Button
                                                         size="xs"
-                                                        color={`green.8`}
+                                                        className={'btnPrimaryBg'}
                                                         type="submit"
                                                         id="WarehouseFormSubmit"
                                                         leftSection={<IconDeviceFloppy size={16} />}

@@ -146,7 +146,7 @@ function ConfigForm(props) {
                                                         !saveCreateLoading && isOnline &&
                                                         <Button
                                                             size="xs"
-                                                            color={`red.6`}
+                                                            className={'btnPrimaryBg'}
                                                             type="submit"
                                                             mt={4}
                                                             id="EntityFormSubmit"

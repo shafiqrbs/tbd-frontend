@@ -277,7 +277,7 @@ function AddProductDrawerForm(props) {
                                                                 !saveCreateLoading && isOnline &&
                                                                 <Button
                                                                     size="xs"
-                                                                    color={`green.8`}
+                                                                    className={'btnPrimaryBg'}
                                                                     type="submit"
                                                                     id={fieldPrefix + "EntityProductFormSubmit"}
                                                                     leftSection={<IconDeviceFloppy size={16} />}

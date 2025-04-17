@@ -35,7 +35,7 @@
 }
 
 .borderTop,.borderBottom,.borderLeft,.borderRight{
-    border: 1px solid rgba(226, 194, 194, 0.39);
+    border: 1px solid rgba(182, 138, 61, 0.35);
 }
 
 .m-5a3e5f7b::before {
@@ -82,18 +82,18 @@ textarea:focus {
     padding: 16px;
 }
 .borderRadiusAll{
-    border: 1px solid rgba(226, 194, 194, 0.39);
+    border: 1px solid #fbf7ef;
     border-radius:4px;
 }
 
 .borderRadiusAllVoucherNew{
-  border-top: 1px solid rgba(226, 194, 194, 0.39);  
-  border-left: 1px solid rgba(226, 194, 194, 0.39);
-  border-right: 1px solid rgba(226, 194, 194, 0.39);
+  border-top: 1px solid #fffbf459;  
+  border-left: 1px solid #fffbf459;
+  border-right: 1px solid #fffbf459;
 }
 .borderRadiusAllVoucher{
-    border-top: 1px solid rgba(226, 194, 194, 0.39);
-    border-bottom: 1px solid rgba(226, 194, 194, 0.39);;
+    border-top: 1px solid #fffbf459;
+    border-bottom: 1px solid #fffbf459;;
     border-radius:4px;
 }
 
@@ -152,7 +152,7 @@ input[type=radio]:checked + label>img {
 
 
 input[type=radio] + label>img {
-    border: 1px solid rgba(226, 194, 194, 0.39);
+    border: 1px solid #fffbf459;
     width: 100%;
     height:52px;
     padding: 4px;
@@ -225,5 +225,8 @@ input[type=radio]:checked + label>img {
     position: absolute;
     right: 8px;
     z-index: 1000;
-}   
+}
 
+.btnPrimaryBg {
+    background-color: #905a23!important;
+}
