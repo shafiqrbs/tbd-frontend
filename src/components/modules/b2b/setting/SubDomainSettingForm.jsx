@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {useNavigate, useOutletContext} from "react-router-dom";
+import {useOutletContext} from "react-router-dom";
 import {
     Button,
     rem,
@@ -39,6 +39,7 @@ import {
 import InputForm from "../../../form-builders/InputForm";
 import SelectForm from "../../../form-builders/SelectForm.jsx";
 import {getCategoryDropdown} from "../../../../store/inventory/utilitySlice.js";
+import _ManageBranchAndFranchise from "../common/_ManageBranchAndFranchise.jsx";
 
 function SubDomainSettingForm(props) {
     const {id} = props;
@@ -49,7 +50,6 @@ function SubDomainSettingForm(props) {
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
 
     const [selectedCategories, setSelectedCategories] = useState([]);
-    const navigate = useNavigate();
 
     const dropdownLoad = useSelector(
         (state) => state.inventoryCrudSlice.dropdownLoad
@@ -58,35 +58,10 @@ function SubDomainSettingForm(props) {
         (state) => state.inventoryUtilitySlice.categoryDropdownData
     );
     const [selectedDomainId, setSelectedDomainId] = useState(id);
-
-
-    const [subDomainData, setSubDomainData] = useState([])
     const [reloadList, setReloadList] = useState(true)
     const [fetching, setFetching] = useState(false);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            const value = {
-                url: 'domain/b2b/sub-domain', param: {}
-            }
-
-            try {
-                const resultAction = await dispatch(getIndexEntityData(value));
-
-                if (getIndexEntityData.rejected.match(resultAction)) {
-                    console.error('Error:', resultAction);
-                } else if (getIndexEntityData.fulfilled.match(resultAction)) {
-                    setSubDomainData(resultAction.payload);
-                }
-            } catch (err) {
-                console.error('Unexpected error:', err);
-            } finally {
-                setReloadList(false)
-            }
-        };
-
-        fetchData();
-    }, [dispatch, fetching]);
+    const [percentMode, setPercentMode] = useState("Increase");
 
     const [subDomainCategoryData, setSubDomainCategoryData] = useState(null)
     useEffect(() => {
@@ -117,7 +92,7 @@ function SubDomainSettingForm(props) {
     useEffect(() => {
         if (subDomainCategoryData?.sub_domain_category) {
             const ids = subDomainCategoryData.sub_domain_category.map(item => item.domain_category_id);
-
+            subDomainCategoryData.percent_mode && setPercentMode(String(subDomainCategoryData?.percent_mode))
             form.setValues({
                 percent_mode: subDomainCategoryData.percent_mode || 'Increase',
                 mrp_percent: subDomainCategoryData?.mrp_percent || '',
@@ -226,10 +201,10 @@ function SubDomainSettingForm(props) {
         ],
         []
     );
-    const [percentMode, setPercentMode] = useState("Increase");
+
     return (
         <>
-            <LoadingOverlay visible={reloadList} zIndex={1000} overlayProps={{radius: "sm", blur: 2}}/>
+            <LoadingOverlay visible={reloadList || saveCreateLoading} zIndex={1000} overlayProps={{radius: "sm", blur: 2}}/>
 
             <Container fluid p={0}>
                 <form
@@ -251,113 +226,59 @@ function SubDomainSettingForm(props) {
                             confirmProps: {color: "red"},
                             onCancel: () => console.log("Cancel"),
                             onConfirm: async () => {
-                                setSaveCreateLoading(true);
-                                setReloadList(true)
+                                try {
+                                    setSaveCreateLoading(true);
+                                    setReloadList(true)
 
-                                const value = {
-                                    url: 'domain/b2b/sub-domain/category',
-                                    data: values
-                                }
-
-                                const resultAction = await dispatch(storeEntityData(value));
-
-                                if (storeEntityData.rejected.match(resultAction)) {
-                                    const fieldErrors = resultAction.payload.errors;
-
-                                    // Check if there are field validation errors and dynamically set them
-                                    if (fieldErrors) {
-                                        const errorObject = {};
-                                        Object.keys(fieldErrors).forEach(key => {
-                                            errorObject[key] = fieldErrors[key][0]; // Assign the first error message for each field
-                                        });
-                                        // Display the errors using your form's `setErrors` function dynamically
-                                        form.setErrors(errorObject);
+                                    const value = {
+                                        url: 'domain/b2b/sub-domain/category',
+                                        data: values
                                     }
-                                } else if (storeEntityData.fulfilled.match(resultAction)) {
-                                    notifications.show({
-                                        color: 'teal',
-                                        title: t('CreateSuccessfully'),
-                                        icon: <IconCheck style={{width: rem(18), height: rem(18)}}/>,
-                                        loading: false,
-                                        autoClose: 700,
-                                        style: {backgroundColor: 'lightgray'},
-                                    });
-                                }
-                                setTimeout(() => {
+
+                                    const resultAction = await dispatch(storeEntityData(value));
+
+                                    if (storeEntityData.rejected.match(resultAction)) {
+                                        const fieldErrors = resultAction.payload.errors;
+
+                                        // Check if there are field validation errors and dynamically set them
+                                        if (fieldErrors) {
+                                            const errorObject = {};
+                                            Object.keys(fieldErrors).forEach(key => {
+                                                errorObject[key] = fieldErrors[key][0]; // Assign the first error message for each field
+                                            });
+                                            // Display the errors using your form's `setErrors` function dynamically
+                                            form.setErrors(errorObject);
+                                        }
+                                    } else if (storeEntityData.fulfilled.match(resultAction)) {
+                                        notifications.show({
+                                            color: 'teal',
+                                            title: t('CreateSuccessfully'),
+                                            icon: <IconCheck style={{width: rem(18), height: rem(18)}}/>,
+                                            loading: false,
+                                            autoClose: 700,
+                                            style: {backgroundColor: 'lightgray'},
+                                        });
+                                    }
+                                } catch (err) {
+                                    console.error('Unexpected error:', err);
+                                } finally {
+                                    setReloadList(false)
                                     setSaveCreateLoading(false)
-                                }, 700);
+                                }
                             },
                         });
                     })}
                 >
                     <Grid columns={12} gutter={{base: 8}} mb={"xs"}>
                         <Grid.Col span={2}>
-                            <Card
-                                shadow="md"
-                                radius="md"
-                                className={classes.card}
-                                padding="lg"
-                            >
-                                <Grid gutter={{base: 2}}>
-                                    <Grid.Col span={10}>
-                                        <Text fz="md" fw={500} className={classes.cardTitle}>
-                                            {t("ManageDomain")}
-                                        </Text>
-                                    </Grid.Col>
-                                </Grid>
-                                <Grid columns={9} gutter={{base: 8}}>
-                                    <Grid.Col span={9}>
-                                        <Box bg={"white"}>
-                                            <Box mt={8} pt={"8"}>
-                                                <ScrollArea
-                                                    h={height - 24}
-                                                    scrollbarSize={2}
-                                                    scrollbars="y"
-                                                    type="never"
-                                                >
-                                                    {subDomainData && subDomainData?.data && subDomainData.data.map((data) => (
-                                                        <Box
-                                                            style={{
-                                                                borderRadius: 4,
-                                                                cursor: "pointer",
-                                                            }}
-                                                            className={`${classes["pressable-card"]} border-radius`}
-                                                            mih={36}
-                                                            mt={"4"}
-                                                            variant="default"
-                                                            key={data.id}
-                                                            onClick={() => {
-                                                                setSelectedDomainId(data.id);
-                                                                navigate(`/b2b/sub-domain/setting/${data.id}`);
-                                                                setReloadList(true)
-                                                            }}
-                                                            bg={
-                                                                data.id == selectedDomainId
-                                                                    ? "#fbf7ef"
-                                                                    : "#fbf7ef73"
-                                                            }
-                                                        >
-                                                            <Text
-                                                                size={"sm"}
-                                                                pl={8}
-                                                                pt={8}
-                                                                fw={500}
-                                                                c={
-                                                                    data.id === selectedDomainId
-                                                                        ? "black"
-                                                                        : "black"
-                                                                }
-                                                            >
-                                                                {data.name}
-                                                            </Text>
-                                                        </Box>
-                                                    ))}
-                                                </ScrollArea>
-                                            </Box>
-                                        </Box>
-                                    </Grid.Col>
-                                </Grid>
-                            </Card>
+                            <_ManageBranchAndFranchise
+                                classes={classes}
+                                setSelectedDomainId={setSelectedDomainId}
+                                selectedDomainId={selectedDomainId}
+                                setReloadList={setReloadList}
+                                id={id}
+                                module={'setting'}
+                            />
                         </Grid.Col>
                         <Grid.Col span={4}>
                             <Card

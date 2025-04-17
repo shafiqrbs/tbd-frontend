@@ -1,14 +1,11 @@
 import React, {useEffect, useState} from "react";
-import {useNavigate, useOutletContext} from "react-router-dom";
+import {useOutletContext} from "react-router-dom";
 import {
     Group,
     Box,
     Button,
-    Text,
     TextInput,
-    Grid,
-    Card,
-    ScrollArea, LoadingOverlay, Tooltip,
+    Grid, LoadingOverlay, Tooltip,
 } from "@mantine/core";
 
 import {DataTable} from "mantine-datatable";
@@ -24,7 +21,7 @@ import {getCategoryDropdown} from "../../../../store/inventory/utilitySlice.js";
 import {setDropdownLoad} from "../../../../store/inventory/crudSlice.js";
 import {getIndexEntityData, storeEntityData} from "../../../../store/core/crudSlice.js";
 import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
-
+import _ManageBranchAndFranchise from "../common/_ManageBranchAndFranchise.jsx";
 
 export default function CategoryTable(props) {
     const {id} = props;
@@ -33,39 +30,11 @@ export default function CategoryTable(props) {
     const {isOnline, mainAreaHeight} = useOutletContext();
     const height = mainAreaHeight - 120;
 
-    const navigate = useNavigate();
     const perPage = 50;
     const [page, setPage] = useState(1);
 
     const [fetching, setFetching] = useState(false);
-    const [indexData, setIndexData] = useState([]);
-
-    const [subDomainData, setSubDomainData] = useState([])
     const [reloadList, setReloadList] = useState(true)
-
-    useEffect(() => {
-        const fetchData = async () => {
-            const value = {
-                url: 'domain/b2b/sub-domain', param: {}
-            }
-
-            try {
-                const resultAction = await dispatch(getIndexEntityData(value));
-
-                if (getIndexEntityData.rejected.match(resultAction)) {
-                    console.error('Error:', resultAction);
-                } else if (getIndexEntityData.fulfilled.match(resultAction)) {
-                    setSubDomainData(resultAction.payload);
-                }
-            } catch (err) {
-                console.error('Unexpected error:', err);
-            } finally {
-                setReloadList(false)
-            }
-        };
-
-        fetchData();
-    }, [dispatch, fetching]);
 
     const form = useForm({
         initialValues: {
@@ -113,7 +82,7 @@ export default function CategoryTable(props) {
         };
 
         fetchData();
-    }, [dispatch, fetching, reloadList,onlyReloadSetting]);
+    }, [dispatch, fetching, reloadList, onlyReloadSetting]);
 
     const [modeMap, setModeMap] = useState({});
 
@@ -127,68 +96,20 @@ export default function CategoryTable(props) {
         }
     }, [subDomainCategoryData?.sub_domain_category]);
 
-
     return (
         <>
             <LoadingOverlay visible={reloadList} zIndex={1000} overlayProps={{radius: "sm", blur: 2}}/>
 
             <Grid columns={24} gutter={{base: 8}}>
                 <Grid.Col span={4}>
-                    <Card shadow="md" radius="md" className={classes.card} padding="lg">
-                        <Grid gutter={{base: 2}}>
-                            <Grid.Col span={10}>
-                                <Text fz="md" fw={500} className={classes.cardTitle}>
-                                    {t("ManageBranchAndFranchise")}
-                                </Text>
-                            </Grid.Col>
-                        </Grid>
-                        <Grid columns={9} gutter={{base: 8}}>
-                            <Grid.Col span={9}>
-                                <Box bg={"white"}>
-                                    <Box mt={8} pt={"8"}>
-                                        <ScrollArea
-                                            h={height}
-                                            scrollbarSize={2}
-                                            scrollbars="y"
-                                            type="never"
-                                        >
-                                            {subDomainData && subDomainData?.data && subDomainData.data.map((data) => (
-                                                <Box
-                                                    style={{
-                                                        borderRadius: 4,
-                                                        cursor: "pointer",
-                                                    }}
-                                                    className={`${classes["pressable-card"]} border-radius`}
-                                                    mih={40}
-                                                    mt={"4"}
-                                                    variant="default"
-                                                    key={data.id}
-                                                    onClick={() => {
-                                                        setSelectedDomainId(data.id);
-                                                        navigate(`/b2b/sub-domain/category/${data.id}`);
-                                                        setReloadList(true)
-                                                    }}
-                                                    bg={
-                                                        data.id == selectedDomainId ? "gray.6" : "gray.1"
-                                                    }
-                                                >
-                                                    <Text
-                                                        size={"sm"}
-                                                        pl={14}
-                                                        pt={8}
-                                                        fw={500}
-                                                        c={data.id === selectedDomainId ? "white" : "black"}
-                                                    >
-                                                        {data.name}
-                                                    </Text>
-                                                </Box>
-                                            ))}
-                                        </ScrollArea>
-                                    </Box>
-                                </Box>
-                            </Grid.Col>
-                        </Grid>
-                    </Card>
+                    <_ManageBranchAndFranchise
+                        classes={classes}
+                        setSelectedDomainId={setSelectedDomainId}
+                        selectedDomainId={selectedDomainId}
+                        setReloadList={setReloadList}
+                        id={id}
+                        module={'category'}
+                    />
                 </Grid.Col>
                 <Grid.Col span={20}>
                     <Box p={"xs"} bg={"white"} className={"borderRadiusAll"}>
@@ -460,7 +381,7 @@ export default function CategoryTable(props) {
                                     },
                                 ]}
                                 fetching={fetching}
-                                totalRecords={indexData.total}
+                                totalRecords={subDomainCategoryData?.sub_domain_category?.length || 0}
                                 recordsPerPage={perPage}
                                 page={page}
                                 onPageChange={(p) => {
