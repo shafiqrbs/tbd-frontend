@@ -301,7 +301,7 @@ function SubDomainSettingForm(props) {
                                 <Grid gutter={{base: 2}}>
                                     <Grid.Col span={10}>
                                         <Text fz="md" fw={500} className={classes.cardTitle}>
-                                            {t("ManageBranchAndFranchise")}
+                                            {t("ManageDomain")}
                                         </Text>
                                     </Grid.Col>
                                 </Grid>
@@ -310,7 +310,7 @@ function SubDomainSettingForm(props) {
                                         <Box bg={"white"}>
                                             <Box mt={8} pt={"8"}>
                                                 <ScrollArea
-                                                    h={height - 20}
+                                                    h={height - 24}
                                                     scrollbarSize={2}
                                                     scrollbars="y"
                                                     type="never"
@@ -322,7 +322,7 @@ function SubDomainSettingForm(props) {
                                                                 cursor: "pointer",
                                                             }}
                                                             className={`${classes["pressable-card"]} border-radius`}
-                                                            mih={40}
+                                                            mih={36}
                                                             mt={"4"}
                                                             variant="default"
                                                             key={data.id}
@@ -333,18 +333,18 @@ function SubDomainSettingForm(props) {
                                                             }}
                                                             bg={
                                                                 data.id == selectedDomainId
-                                                                    ? "gray.6"
-                                                                    : "gray.1"
+                                                                    ? "#fbf7ef"
+                                                                    : "#fbf7ef73"
                                                             }
                                                         >
                                                             <Text
                                                                 size={"sm"}
-                                                                pl={14}
+                                                                pl={8}
                                                                 pt={8}
                                                                 fw={500}
                                                                 c={
                                                                     data.id === selectedDomainId
-                                                                        ? "white"
+                                                                        ? "black"
                                                                         : "black"
                                                                 }
                                                             >
@@ -383,7 +383,7 @@ function SubDomainSettingForm(props) {
                                                 className={"borderRadiusAll"}
                                             >
                                                 <ScrollArea
-                                                    h={height - 20}
+                                                    h={height - 27}
                                                     scrollbarSize={2}
                                                     scrollbars="y"
                                                     type="never"
@@ -525,7 +525,7 @@ function SubDomainSettingForm(props) {
                                                 className={"borderRadiusAll"}
                                             >
                                                 <ScrollArea
-                                                    h={height - 20}
+                                                    h={height - 28}
                                                     scrollbarSize={2}
                                                     scrollbars="y"
                                                     type="never"
