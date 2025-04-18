@@ -9,7 +9,7 @@ export default function _ManageBranchAndFranchise(props) {
     const {id, classes, selectedDomainId, setSelectedDomainId, setReloadList, module} = props;
     const {t, i18n} = useTranslation();
     const {isOnline, mainAreaHeight} = useOutletContext();
-    const height = mainAreaHeight - 120;
+    const height = mainAreaHeight - 106;
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -41,15 +41,15 @@ export default function _ManageBranchAndFranchise(props) {
 
     return (
         <>
-            <Card shadow="md" radius="md" className={classes.card} padding="lg">
+            <Card shadow="md" radius="4"  className={classes.card} padding="xs">
                 <Grid gutter={{base: 2}}>
                     <Grid.Col span={10}>
                         <Text fz="md" fw={500} className={classes.cardTitle}>
-                            {t("ManageBranchAndFranchise")}
+                            {t("ManageDomain")}
                         </Text>
                     </Grid.Col>
                 </Grid>
-                <Grid columns={9} gutter={{base: 8}}>
+                <Grid columns={9} gutter={{base:1}}>
                     <Grid.Col span={9}>
                         <Box bg={"white"}>
                             <Box mt={8} pt={"8"}>
@@ -76,15 +76,15 @@ export default function _ManageBranchAndFranchise(props) {
                                                 setReloadList(true)
                                             }}
                                             bg={
-                                                data.id == selectedDomainId ? "gray.6" : "gray.1"
+                                                data.id == selectedDomainId ? "#f8eedf" : "gray.1"
                                             }
                                         >
                                             <Text
                                                 size={"sm"}
-                                                pl={14}
                                                 pt={8}
+                                                pl={8}
                                                 fw={500}
-                                                c={data.id === selectedDomainId ? "white" : "black"}
+                                                c={data.id === selectedDomainId ? "black" : "black"}
                                             >
                                                 {data.name}
                                             </Text>

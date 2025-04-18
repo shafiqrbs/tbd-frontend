@@ -25,16 +25,16 @@ import _ManageBranchAndFranchise from "../common/_ManageBranchAndFranchise.jsx";
 const PercentColumn = React.memo(({item}) => (
     <Group justify="center" gap={4} noWrap mt={10}>
         <Text w={80} ta="center">{item.percent_mode || "0"}</Text>
-        <Text w={80} ta="center">{item.mrp_percent || "0"}</Text>
         <Text w={80} ta="center">{item.purchase_percent || "0"}</Text>
+        <Text w={80} ta="center">{item.mrp_percent || "0"}</Text>
     </Group>
 ));
 
 const CentralInfoColumn = React.memo(({item}) => (
     <Group justify="center" gap={4} noWrap mt={10}>
         <Text w={50} ta="center">{item.center_stock || "0"}</Text>
-        <Text w={80} ta="center">{item.center_sales_price || "0"}</Text>
         <Text w={50} ta="center">{item.center_purchase_price || "0"}</Text>
+        <Text w={80} ta="center">{item.center_sales_price || "0"}</Text>
     </Group>
 ));
 
@@ -160,17 +160,17 @@ export default function ProductTable({id}) {
             title: (
                 <Box>
                     <Text fw={500} ta={"center"} mb={5}>
-                        {t("Percent")}
+                        {t("Percent(%)")}
                     </Text>
                     <Group justify="center" gap={4} noWrap>
                         <Text fz="xs" c="dimmed" w={80} ta="center">
-                            {t("PercentMode")}
+                            {t("Mode")}
                         </Text>
                         <Text fz="xs" c="dimmed" w={80} ta="center">
-                            {t("MRPPercent")}
+                            {t("MRP")}
                         </Text>
                         <Text fz="xs" c="dimmed" w={80} ta="center">
-                            {t("PurchasePercent")}
+                            {t("Purchase")}
                         </Text>
                     </Group>
                 </Box>
@@ -189,11 +189,11 @@ export default function ProductTable({id}) {
                         <Text fz="xs" c="dimmed" w={50} ta="center">
                             {t("Stock")}
                         </Text>
-                        <Text fz="xs" c="dimmed" w={80} ta="center">
-                            {t("SalesPrice")}
-                        </Text>
                         <Text fz="xs" c="dimmed" w={50} ta="center">
-                            {t("PurchasePrice")}
+                            {t("Purchase")}
+                        </Text>
+                        <Text fz="xs" c="dimmed" w={80} ta="center">
+                            {t("Sales")}
                         </Text>
                     </Group>
                 </Box>
@@ -206,14 +206,14 @@ export default function ProductTable({id}) {
             title: (
                 <Box>
                     <Text fw={500} mb={5}>
-                        {t("Branch")}
+                        {t("Domain")}
                     </Text>
                     <Group justify="center" gap={4} noWrap>
                         <Text fz="xs" c="dimmed" w={100} ta="center">
-                            {t("PurchasePrice")}
+                            {t("Purchase")}
                         </Text>
                         <Text fz="xs" c="dimmed" w={100} ta="center">
-                            {t("SalesPrice")}
+                            {t("Sales")}
                         </Text>
                     </Group>
                 </Box>

@@ -265,7 +265,7 @@ export default function Header({ isOnline, configData }) {
           </Modal.Body>
         </Modal.Content>
       </Modal.Root>
-      <Box bg={"#f8eedf"} mb={"2"} pos={`relative`}>
+      <Box bg={"#905a23"} mb={"2"} pos={`relative`}>
         <Grid columns={24} gutter={{ base: 2 }} justify="space-between">
           <Grid.Col span={3}>
             {configData?.domain && loginUser.user_group === "domain" ? (
@@ -327,7 +327,7 @@ export default function Header({ isOnline, configData }) {
             ) : (
               <NavLink
                 href="/"
-                c={"red"}
+                c={"white"}
                 fw={"800"}
                 component="button"
                 label={
@@ -358,7 +358,7 @@ export default function Header({ isOnline, configData }) {
               <Button
                 leftSection={
                   <>
-                    <IconSearch size={16} c={"#905923"} />
+                    <IconSearch size={16} c={"white"} />
                     <Text fz={`xs`} pl={"xs"} c={"gray.8"}>
                       {t("SearchMenu")}
                     </Text>
@@ -381,7 +381,7 @@ export default function Header({ isOnline, configData }) {
                 w={`100%`}
                 justify="space-between"
                 style={{ border: '1px solid #49362366' }}
-                color={'#905923'}
+                color={'black'}
                 bg={'white'}
                 onClick={open}
                 className="no-focus-outline"
@@ -398,12 +398,12 @@ export default function Header({ isOnline, configData }) {
                 <HoverCard.Target>
                   <a href="#" className={classes.link}>
                     <Center inline>
-                      <Box component="span" mr={"xs"} c={"#3e260f"} fw={"500"}>
+                      <Box component="span" mr={"xs"} c={"white"} fw={"500"}>
                         {t("Shortcut")}
                       </Box>
                       <IconChevronDown
                         style={{ width: rem(16), height: rem(16) }}
-                        color={"green"}
+                        color={"white"}
                       />
                     </Center>
                   </a>
@@ -411,13 +411,15 @@ export default function Header({ isOnline, configData }) {
 
                 <HoverCard.Dropdown style={{ overflow: "hidden" }}>
                   <Group justify="space-between">
-                    <Text fw={500} fz={16} c={"red.6"}>
-                      {t("Shortcuts")}
+                    <Text fw={500} fz={16}>
+                      {
+                        configData && configData.domain
+                            ? configData.domain.company_name
+                            : ""
+                      }
                     </Text>
                   </Group>
-
                   <Divider my="sm" />
-
                   <SimpleGrid cols={1} spacing={0}>
                     {shortcuts}
                   </SimpleGrid>
@@ -433,7 +435,7 @@ export default function Header({ isOnline, configData }) {
                         </Text>
                       </div>
                       <Button
-                        bg={"green.6"}
+                        className={'btnPrimaryBg'}
                         size="xs"
                         onClick={() => navigate("/")}
                       >
@@ -453,7 +455,7 @@ export default function Header({ isOnline, configData }) {
               wrap="wrap"
               mih={42}
               align={"right"}
-              px={`xs`}
+              px={'xs'}
               pr={"24"}
             >
               <Menu
@@ -468,6 +470,7 @@ export default function Header({ isOnline, configData }) {
                 <Menu.Target>
                   <UnstyledButton
                     p={2}
+                    bg={'red'}
                     className={LanguagePickerStyle.control}
                     data-expanded={languageOpened || undefined}
                   >
@@ -508,14 +511,14 @@ export default function Header({ isOnline, configData }) {
               </Menu>
               <Tooltip
                 label={fullscreen ? t("NormalScreen") : t("Fullscreen")}
-                bg={`red.5`}
+                bg={'#635031'}
                 withArrow
               >
                 <ActionIcon
                   mt={"6"}
                   onClick={toggle}
                   variant="subtle"
-                  color={`red.4`}
+                  color={'white'}
                 >
                   {fullscreen ? (
                     <IconWindowMinimize size={24} />
@@ -535,7 +538,7 @@ export default function Header({ isOnline, configData }) {
                     </Stack>
                   </>
                 }
-                bg={`red.5`}
+                bg={'#635031'}
                 withArrow
                 position={"left"}
                 multiline
@@ -544,7 +547,7 @@ export default function Header({ isOnline, configData }) {
                   onClick={() => logout()}
                   variant="subtle"
                   mt={"6"}
-                  color={`gray.6`}
+                  color={'white'}
                 >
                   <IconLogout size={24} />
                 </ActionIcon>

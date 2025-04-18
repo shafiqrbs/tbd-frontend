@@ -4,7 +4,7 @@ import {
     Group,
     Box,
     Button,
-    LoadingOverlay,
+    LoadingOverlay, Tooltip, Flex,
 } from "@mantine/core";
 
 import {DataTable} from "mantine-datatable";
@@ -160,6 +160,16 @@ export default function B2bDomainTable(props) {
 
                                 return (
                                     <Group gap={4} justify="right" wrap="nowrap">
+                                        <Tooltip
+                                            label={t("DomainGenerateCategoryProduct")}
+                                            px={16}
+                                            py={2}
+                                            withArrow
+                                            position={"left"}
+                                            c={"white"}
+                                            className={'btnPrimaryBg'}
+                                            transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
+                                        >
                                         <Button
                                             component="a"
                                             size="compact-xs"
@@ -167,7 +177,7 @@ export default function B2bDomainTable(props) {
                                             variant="filled"
                                             fw={100}
                                             fz={12}
-                                            color="red.3"
+                                            className={'btnPrimaryBg'}
                                             mr={4}
                                             onClick={async () => {
                                                 setReloadList(true)
@@ -197,6 +207,7 @@ export default function B2bDomainTable(props) {
                                         >
                                             {t('Process')}
                                         </Button>
+                                        </Tooltip>
                                     </Group>
                                 );
                             },

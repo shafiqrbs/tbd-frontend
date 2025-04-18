@@ -311,7 +311,8 @@ function __SalesForm(props) {
                         url: 'inventory/sales',
                         data: formValue
                     }
-                    dispatch(storeEntityData(data))
+                    console.log(formValue);
+                  //  dispatch(storeEntityData(data))
 
                     notifications.show({
                         color: 'teal',

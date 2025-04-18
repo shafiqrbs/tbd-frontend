@@ -4,8 +4,8 @@ import {Box, Grid, Progress} from "@mantine/core";
 import {useTranslation} from "react-i18next";
 import {getLoadingProgress} from "../../../global-hook/loading-progress/getLoadingProgress.js";
 import _Shortcut from "../common/_Shortcut.jsx";
-import DomainHeaderNavbar from "../../domain/DomainHeaderNavbar.jsx";
 import SubDomainSettingForm from "./SubDomainSettingForm.jsx";
+import B2BHeaderNavbar from "../B2BHeaderNavbar";
 
 export default function SettingIndex() {
     const {id} = useParams();
@@ -17,8 +17,9 @@ export default function SettingIndex() {
     }
     return (
         <>
-            <DomainHeaderNavbar
-                pageTitle={t("Setting")}
+            <B2BHeaderNavbar
+                pageTitle={t("B2BSetting")}
+                pageDescription={t("B2BSettingDescription")}
                 roles={t("Roles")}
                 allowZeroPercentage=""
                 currencySymbol=""

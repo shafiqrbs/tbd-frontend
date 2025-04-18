@@ -948,6 +948,17 @@
   "salesPricePercent" : "Sales price percent",
   "PercentMode" : "Percent mode",
   "PurchasePercent" : "Purchase percent",
+  "B2BDomainDashboard" : "B2B Domain Dashboard",
+  "B2BCategory" : "B2B Category Manage",
+  "B2BProduct" : "B2B Product Manage",
+  "B2BSetting" : "B2B Setting Manage",
+  "UpdateCategoryData" : "B2B update category data",
+  "DomainGenerateCategoryProduct" : "Domain Generate Category & Product",
+  "B2BDashboardDescription" : "The B2B Dashboard is your centralized control hub—designed to give you instant visibility into the metrics that matter. From sales performance and order status to inventory levels and customer interactions, our intuitive dashboard provides real-time insights to help you make informed decisions faster.",
+  "B2BDomainDescription" : "Our ERP solution is purpose-built for the B2B domain, addressing the unique challenges and complexities of business-to-business operations. From managing bulk orders and tiered pricing to handling multi-level approvals and long-term contracts, our system is designed to support every facet of your B2B workflow.",
+  "B2BProductDescription" : "Our ERP’s B2B Product Management module is built to handle the depth and complexity of business-to-business product lines. Easily manage bulk inventory, configure custom pricing per client, and streamline product lifecycle management—all in one centralized system.",
+  "B2BCategoryDescription" : "Take control of complex product structures with powerful B2B Category Management. Our ERP solution helps you streamline product classification, improve searchability, and deliver a tailored buying experience for your clients.",
+  "B2BSettingDescription" : "Our B2B ERP solution is designed to transform complex business processes into seamless, automated workflows. Whether you're managing supply chains, customer relationships, finance, or inventory, our ERP system provides real-time insights and powerful tools tailored for B2B environments",
   "SalesPrice" : "Sales Price",
   "": ""
 }

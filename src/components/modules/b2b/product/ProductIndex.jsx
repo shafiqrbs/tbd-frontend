@@ -4,8 +4,8 @@ import {Box, Grid, Progress} from "@mantine/core";
 import {useTranslation} from "react-i18next";
 import {getLoadingProgress} from "../../../global-hook/loading-progress/getLoadingProgress.js";
 import _Shortcut from "../common/_Shortcut.jsx";
-import DomainHeaderNavbar from "../../domain/DomainHeaderNavbar.jsx";
 import ProductTable from "./ProductTable.jsx";
+import B2BHeaderNavbar from "../B2BHeaderNavbar";
 
 export default function ProductIndex() {
     const {id} = useParams();
@@ -18,8 +18,9 @@ export default function ProductIndex() {
             )}
             {progress === 100 && (
                 <>
-                    <DomainHeaderNavbar
+                    <B2BHeaderNavbar
                         pageTitle={t("B2BProduct")}
+                        pageDescription={t("B2BProductDescription")}
                         roles={t("Roles")}
                         allowZeroPercentage=""
                         currencySymbol=""

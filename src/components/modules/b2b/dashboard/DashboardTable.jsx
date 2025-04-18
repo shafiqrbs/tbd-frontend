@@ -189,7 +189,7 @@ export default function DashBoardTable() {
                                             variant="filled"
                                             fw={"100"}
                                             fz={"12"}
-                                            color="red.3"
+                                            className={'btnPrimaryBg'}
                                             mr={"4"}
                                             onClick={() => {
                                                 navigate(`/b2b/sub-domain/setting/${data.id}`);

@@ -4,8 +4,8 @@ import {Box, Grid, Progress} from "@mantine/core";
 import {useTranslation} from "react-i18next";
 import {getLoadingProgress} from "../../../global-hook/loading-progress/getLoadingProgress.js";
 import _Shortcut from "../common/_Shortcut.jsx";
-import DomainHeaderNavbar from "../../domain/DomainHeaderNavbar.jsx";
 import B2bDomainTable from "./B2bDomainTable.jsx";
+import B2BHeaderNavbar from "../B2BHeaderNavbar";
 
 export default function B2bDomainIndex() {
     const {id} = useParams();
@@ -19,8 +19,9 @@ export default function B2bDomainIndex() {
             )}
             {progress === 100 && (
                 <>
-                    <DomainHeaderNavbar
-                        pageTitle={t("B2BCategory")}
+                    <B2BHeaderNavbar
+                        pageTitle={t("B2BDomain")}
+                        pageDescription={t("B2BDomainDescription")}
                         roles={t("Roles")}
                         allowZeroPercentage=""
                         currencySymbol=""

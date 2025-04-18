@@ -1,13 +1,10 @@
 import React, { useState } from "react";
-import { useOutletContext } from "react-router-dom";
 import { Box, Grid, Progress } from "@mantine/core";
 import { useTranslation } from "react-i18next";
-import { useDispatch, useSelector } from "react-redux";
 import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress.js";
-import getConfigData from "../../../global-hook/config-data/getConfigData.js";
 import _Shortcut from "../common/_Shortcut.jsx";
-import DomainHeaderNavbar from "../../domain/DomainHeaderNavbar.jsx";
 import DashBoardTable from "./DashboardTable.jsx";
+import B2BHeaderNavbar from "../B2BHeaderNavbar";
 export default function DashboardIndex() {
   const { t } = useTranslation();
   const progress = getLoadingProgress();
@@ -19,8 +16,9 @@ export default function DashboardIndex() {
       )}
       {progress === 100 && (
         <>
-          <DomainHeaderNavbar
+          <B2BHeaderNavbar
             pageTitle={t("Dashboard")}
+            pageDescription={t("Dashboard")}
             roles={t("Roles")}
             allowZeroPercentage=""
             currencySymbol=""

@@ -185,7 +185,7 @@ export default function CategoryTable(props) {
                                     {
                                         accessor: "mrp_percent",
                                         textAlign: "center",
-                                        title: t("MRPPercent"),
+                                        title: t("MRP(%)"),
                                         width: "220px",
                                         render: (item) => {
                                             const [editedMrpPercent, setEditedMrpPercent] = useState(item.mrp_percent);
@@ -235,7 +235,7 @@ export default function CategoryTable(props) {
                                     {
                                         accessor: "purchase_percent",
                                         textAlign: "center",
-                                        title: t("PurchasePercent"),
+                                        title: t("Purchase(%)"),
                                         width: "220px",
                                         render: (item) => {
                                             const [editedPurchasePercent, setEditedPurchasePercent] = useState(item.purchase_percent);
@@ -285,7 +285,7 @@ export default function CategoryTable(props) {
                                     {
                                         accessor: "bonus_percent",
                                         textAlign: "center",
-                                        title: t("BonusPercent"),
+                                        title: t("Bonus(%)"),
                                         width: "220px",
                                         render: (item) => {
                                             const [editedBonusPercent, setEditedBonusPercent] = useState(item.bonus_percent);
@@ -339,8 +339,8 @@ export default function CategoryTable(props) {
                                         render: (item) => (
                                             <Group gap={4} justify="right" wrap="nowrap">
                                                 <Tooltip arrowPosition="side" arrowOffset={50} arrowSize={7}
-                                                         position="left" label={item.not_process == 1 && "Process data"}
-                                                         withArrow opened={item.not_process == 1} color="red">
+                                                         position="left" label={item.not_process == 1 &&  t("UpdateCategoryData")}
+                                                         withArrow opened={item.not_process == 1} color="#905a23">
                                                     <Button
                                                         disabled={item.not_process == 0}
                                                         component="a"
@@ -349,7 +349,7 @@ export default function CategoryTable(props) {
                                                         variant="filled"
                                                         fw={"100"}
                                                         fz={"12"}
-                                                        color={item.not_process == 1 ? "blue" : "red.3"}
+                                                        color={item.not_process == 1 ? "#905a23" : "red.3"}
                                                         mr={"4"}
                                                         onClick={async () => {
                                                             setReloadList(true)
