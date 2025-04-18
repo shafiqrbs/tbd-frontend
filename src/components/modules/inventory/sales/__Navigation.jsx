@@ -11,6 +11,9 @@ import {
   IconSettings,
   IconIcons,
   IconCategory,
+  IconCopyCheck,
+  IconShoppingBag,
+  IconShoppingCart
 } from "@tabler/icons-react";
 import { Button, Flex, Text, Tooltip, ScrollArea } from "@mantine/core";
 import { useTranslation } from "react-i18next";
@@ -30,13 +33,13 @@ export default function __Navigation(props) {
         <Flex direction={`column`} align={"center"} gap={"16"}>
           <Flex direction={`column`} align={"center"} mt={"xs"} pt={5}>
             <Tooltip
-              label={t("AltTextNew")}
+              label= {t("InvoiceBatch")}
               px={16}
               py={2}
               withArrow
               position={"left"}
               c={"white"}
-              bg={`red.5`}
+              bg={"#4CAF50"}
               transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
             >
               <Button
@@ -73,13 +76,13 @@ export default function __Navigation(props) {
           </Flex>
           <Flex direction={`column`} align={"center"}>
             <Tooltip
-              label={t("B2BDomain")}
+              label= {t("Sales")}
               px={16}
               py={2}
               withArrow
               position={"left"}
               c={"white"}
-              bg={`red.5`}
+              bg={"#6f1225"}
               transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
             >
               <Button
@@ -116,13 +119,13 @@ export default function __Navigation(props) {
           </Flex>
           <Flex direction={`column`} align={"center"}>
             <Tooltip
-              label={t("AltTextNew")}
+              label=  {t("NewSales")}
               px={16}
               py={2}
               withArrow
               position={"left"}
               c={"white"}
-              bg={`red.5`}
+              bg={"#E53935"}
               transitionProps={{
                 transition: "pop-bottom-left",
                 duration: 500,
@@ -162,13 +165,13 @@ export default function __Navigation(props) {
           </Flex>
           <Flex direction={`column`} align={"center"}>
             <Tooltip
-              label={t("AltTextNew")}
+              label= {t("Purchase")}
               px={16}
               py={2}
               withArrow
               position={"left"}
               c={"white"}
-              bg={`red.5`}
+              bg={"#3F51B5"}
               transitionProps={{
                 transition: "pop-bottom-left",
                 duration: 500,
@@ -208,20 +211,20 @@ export default function __Navigation(props) {
           </Flex>
           <Flex direction={`column`} align={"center"}>
             <Tooltip
-              label={t("AltTextNew")}
+              label= {t("NewPurchase")}
               px={16}
               py={2}
               withArrow
               position={"left"}
               c={"white"}
-              bg={`red.5`}
+              bg={'#F59E0B'}
               transitionProps={{
                 transition: "pop-bottom-left",
                 duration: 500,
               }}
             >
               <Button
-                bg={"#FFC107"}
+                bg={"#F59E0B"}
                 size="md"
                 pl={"12"}
                 pr={"12"}
@@ -233,7 +236,7 @@ export default function __Navigation(props) {
                 }}
               >
                 <Flex direction={`column`} align={"center"}>
-                  <IconSettings size={16} color={"white"} />
+                  <IconShoppingBag size={16} color={"white"} />
                 </Flex>
               </Button>
             </Tooltip>
@@ -254,32 +257,32 @@ export default function __Navigation(props) {
           </Flex>
           <Flex direction={`column`} align={"center"}>
             <Tooltip
-              label={t("AltTextNew")}
+              label= {t("OpeningStock")}
               px={16}
               py={2}
               withArrow
               position={"left"}
               c={"white"}
-              bg={`red.5`}
+              bg={'#06B6D4'}
               transitionProps={{
                 transition: "pop-bottom-left",
                 duration: 500,
               }}
             >
               <Button
-                bg={"gray.6"}
+                bg={"#06B6D4"}
                 size="md"
                 pl={"12"}
                 pr={"12"}
                 variant={"light"}
-                color={`black`}
+                color={'black'}
                 radius="xl"
                 onClick={(e) => {
                   navigate("/inventory/opening-stock");
                 }}
               >
                 <Flex direction={`column`} align={"center"}>
-                  <IconSettings size={16} color={"white"} />
+                  <IconShoppingCart size={16} color={"white"} />
                 </Flex>
               </Button>
             </Tooltip>
@@ -300,20 +303,20 @@ export default function __Navigation(props) {
           </Flex>
           <Flex direction={`column`} align={"center"}>
             <Tooltip
-              label={t("AltTextNew")}
+              label={t("ApproveStock")}
               px={16}
               py={2}
               withArrow
               position={"left"}
               c={"white"}
-              bg={`red.5`}
+              bg={'#10B981'}
               transitionProps={{
                 transition: "pop-bottom-left",
                 duration: 500,
               }}
             >
               <Button
-                bg={"gray.6"}
+                bg={'#10B981'}
                 size="md"
                 pl={"12"}
                 pr={"12"}
@@ -325,7 +328,7 @@ export default function __Navigation(props) {
                 }}
               >
                 <Flex direction={`column`} align={"center"}>
-                  <IconSettings size={16} color={"white"} />
+                  <IconCopyCheck size={16} color={"white"} />
                 </Flex>
               </Button>
             </Tooltip>
@@ -346,20 +349,20 @@ export default function __Navigation(props) {
           </Flex>
           <Flex direction={`column`} align={"center"}>
             <Tooltip
-              label={t("AltTextNew")}
+              label= {t("Setting")}
               px={16}
               py={2}
               withArrow
               position={"left"}
               c={"white"}
-              bg={`red.5`}
+              bg={'#F59E0B'}
               transitionProps={{
                 transition: "pop-bottom-left",
                 duration: 500,
               }}
             >
               <Button
-                bg={"gray.6"}
+                bg={"#F59E0B"}
                 size="md"
                 pl={"12"}
                 pr={"12"}
