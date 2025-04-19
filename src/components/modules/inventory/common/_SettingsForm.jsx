@@ -21,7 +21,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "@mantine/form";
 import { modals } from "@mantine/modals";
 import { notifications } from "@mantine/notifications";
-import Shortcut from "../../shortcut/Shortcut";
+import Shortcut from "../../shortcut/Shortcut.jsx";
 import {
   setValidationData,
   showInstantEntityData,
@@ -29,7 +29,7 @@ import {
 } from "../../../../store/inventory/crudSlice.js";
 import SwitchForm from "../../../form-builders/SwitchForm.jsx";
 
-function __SettingsForm(props) {
+function _SettingsForm(props) {
   const { module, setSettingDrawer } = props;
   const { t, i18n } = useTranslation();
   const dispatch = useDispatch();
@@ -537,4 +537,4 @@ function __SettingsForm(props) {
   );
 }
 
-export default __SettingsForm;
+export default _SettingsForm;

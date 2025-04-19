@@ -45,8 +45,8 @@ import vendorDataStoreIntoLocalStorage from "../../../global-hook/local-storage/
 import getSettingCategoryDropdownData from "../../../global-hook/dropdown/getSettingCategoryDropdownData.js";
 import classes from "../../../../assets/css/FeaturesCards.module.css";
 import genericClass from "../../../../assets/css/Generic.module.css";
-import __SettingDrawer from "./__SettingsDrawer.jsx";
-import __Navigation from "./__Navigation.jsx";
+import SettingsDrawer from "../common/SettingDrawer.jsx";
+import Navigation from "../common/Navigation.jsx";
 import __PosSalesForm from "./__PosSalesForm.jsx";
 
 function _GenericPosForm(props) {
@@ -427,7 +427,7 @@ function _GenericPosForm(props) {
     <Box>
       <Grid columns={24} gutter={{ base: 8 }}>
         <Grid.Col span={1}>
-          <__Navigation />
+          <Navigation />
         </Grid.Col>
         <Grid.Col span={7}>
           <form
@@ -1155,7 +1155,7 @@ function _GenericPosForm(props) {
         </Grid.Col>
       </Grid>
       {settingDrawer && (
-        <__SettingDrawer
+        <SettingsDrawer
           settingDrawer={settingDrawer}
           setSettingDrawer={setSettingDrawer}
           module={"sales"}
