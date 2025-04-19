@@ -71,8 +71,8 @@ import customerDataStoreIntoLocalStorage from "../../../global-hook/local-storag
 import PhoneNumber from "../../../form-builders/PhoneNumberInput.jsx";
 import TextAreaForm from "../../../form-builders/TextAreaForm.jsx";
 import DatePickerForm from "../../../form-builders/DatePicker.jsx";
-import __SettingDrawer from "./__SettingsDrawer.jsx";
-import __Navigation from "./__Navigation.jsx";
+import __SettingDrawer from "../common/SettingsDrawer.jsx";
+import Navigation from "../common/Navigation.jsx";
 import { useDispatch, useSelector } from "react-redux";
 import { getSalesDetails, storeEntityData, } from "../../../../store/inventory/crudSlice.js";
 
@@ -674,7 +674,7 @@ function _GenericPosForm(props) {
     <Box>
       <Grid columns={24} gutter={{ base: 8 }}>
         <Grid.Col span={1}>
-          <__Navigation />
+          <Navigation />
         </Grid.Col>
         <Grid.Col span={7}>
           <Box bg={"white"} p={"md"} pb="0" className={"borderRadiusAll"}>

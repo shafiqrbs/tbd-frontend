@@ -43,6 +43,9 @@ export default function __PosSalesForm(props) {
       narration: "",
       discount: "",
       receive_amount: "",
+      name: "",
+      mobile: "",
+      email: "",
     },
     validate: {
       transaction_mode_id: isNotEmpty(),
@@ -647,8 +650,8 @@ export default function __PosSalesForm(props) {
         </Box>
         <Box>
           <__PosInvoiceSection
-          setCustomersDropdownData={setCustomersDropdownData}
-          customersDropdownData={customersDropdownData}
+            setCustomersDropdownData={setCustomersDropdownData}
+            customersDropdownData={customersDropdownData}
             form={form}
             currencySymbol={currencySymbol}
             salesDiscountAmount={salesDiscountAmount}

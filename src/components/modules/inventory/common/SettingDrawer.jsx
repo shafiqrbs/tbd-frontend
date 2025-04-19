@@ -4,9 +4,9 @@ import { ActionIcon, Box, ScrollArea, Drawer, Text, Flex } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 
 import { IconX } from "@tabler/icons-react";
-import __SettingsForm from "./__SettingsForm";
+import _SettingsForm from "./_SettingsForm.jsx";
 
-function __SettingsDrawer(props) {
+function SettingDrawer(props) {
   const { settingDrawer, setSettingDrawer, module } = props;
   const { isOnline, mainAreaHeight } = useOutletContext();
   const { t, i18n } = useTranslation();
@@ -51,7 +51,7 @@ function __SettingsDrawer(props) {
               </ActionIcon>
             </Flex>
             <Box ml={2} mr={2} mb={0}>
-              <__SettingsForm
+              <settingsForm
                 module={module}
                 setSettingDrawer={setSettingDrawer}
               />
@@ -63,4 +63,4 @@ function __SettingsDrawer(props) {
   );
 }
 
-export default __SettingsDrawer;
+export default SettingDrawer;
