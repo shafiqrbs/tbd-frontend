@@ -18,9 +18,9 @@ import {
 import { Button, Flex, Text, Tooltip, ScrollArea } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useOutletContext } from "react-router-dom";
-import getConfigData from "../../../global-hook/config-data/getConfigData";
+import getConfigData from "../../../global-hook/config-data/getConfigData.js";
 
-export default function __Navigation(props) {
+export default function Navigation(props) {
   const { module, id } = props;
   const { t, i18n } = useTranslation();
   const { isOnline, mainAreaHeight } = useOutletContext();
