@@ -51,7 +51,7 @@ function SettingDrawer(props) {
               </ActionIcon>
             </Flex>
             <Box ml={2} mr={2} mb={0}>
-              <settingsForm
+              <_SettingsForm
                 module={module}
                 setSettingDrawer={setSettingDrawer}
               />
