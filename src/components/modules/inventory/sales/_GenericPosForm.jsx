@@ -902,7 +902,7 @@ function _GenericPosForm(props) {
                           <Box>
                             <Tooltip
                               multiline
-                              bg={"#905923"}
+                              className={genericClass.genericPrimaryBg}
                               position="top"
                               withArrow
                               ta={"center"}
@@ -918,6 +918,7 @@ function _GenericPosForm(props) {
                                 ml={"8"}
                                 color="white"
                                 aria-label="Settings"
+                                bg={"#905923"}
                                 onClick={() => setProductDrawer(true)}
                               >
                                 <IconPlus stroke={1} />

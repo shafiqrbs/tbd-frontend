@@ -70,12 +70,12 @@ export default function __PosCustomerSection(props) {
 
   return (
     <>
-      <Box pl={`4`} pr={4} mb={"xs"} className={genericClass.bodyBackground}>
-        <Grid columns={24} gutter={{ base: 6 }}>
-          <Grid.Col span={16} className={genericClass.genericHighlightedBox}>
+      <Box pl={`4`} pr={4} mb={"xs"} style={{ borderRadius:4}} className={genericClass.bodyBackground}>
+        <Grid columns={24} gutter={{ base: 4 }}>
+          <Grid.Col span={16} className={genericClass.genericSecondaryBg}>
             <Box pl={"4"} pr={"4"}>
-              <Box>
-                <Grid gutter={{ base: 6 }} bg={"#bc924f"} mt={4} pt={"4"}>
+              <Box style={{ borderRadius:4}} className={genericClass.genericHighlightedBox} >
+                <Grid r={'4'} gutter={{ base: 6 }} mt={8} >
                   <Grid.Col span={10} pl={"8"}>
                     <SelectForm
                       tooltip={t("CustomerValidateMessage")}
@@ -178,7 +178,8 @@ export default function __PosCustomerSection(props) {
                 pr={"4"}
                 mt={"4"}
                 pt={"8"}
-                className={genericClass.genericSecondaryBg}
+                pb={"4"}
+                style={{ borderRadius:4}}
               >
                 <Grid columns={18} gutter={{ base: 2 }}>
                   <Grid.Col span={3}>
@@ -263,8 +264,8 @@ export default function __PosCustomerSection(props) {
               </Box>
             </Box>
           </Grid.Col>
-          <Grid.Col span={8} className={genericClass.genericHighlightedBox}>
-            <Box pl={"4"} pr={"4"}>
+          <Grid.Col span={8} style={{ borderRadius:4}} className={genericClass.genericSecondaryBg} >
+            <Box pl={"4"} pr={"4"} >
               <Box mt={"4"}>
                 <InputForm
                   tooltip={t("NameValidateMessage")}
