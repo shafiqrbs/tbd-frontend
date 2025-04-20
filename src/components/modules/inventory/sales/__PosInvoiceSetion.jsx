@@ -54,7 +54,9 @@ export default function __PosInvoiceSection(props) {
     salesDueAmount,
     setLoadCardProducts,
     setCustomersDropdownData,
-    customersDropdownData
+    customersDropdownData,
+    lastClicked,
+    handleClick,entityEditData
   } = props;
 
   //common hooks
@@ -67,7 +69,21 @@ export default function __PosInvoiceSection(props) {
   )
     ? JSON.parse(localStorage.getItem("accounting-transaction-mode"))
     : [];
-
+  useEffect(() => {
+    if (transactionModeData && transactionModeData.length > 0) {
+      for (let mode of transactionModeData) {
+        if (mode.is_selected) {
+          form.setFieldValue(
+            "transaction_mode_id",
+            form.values.transaction_mode_id
+              ? form.values.transaction_mode_id
+              : mode.id
+          );
+          break;
+        }
+      }
+    }
+  }, [transactionModeData, form]);
   // transaction modes hover hook
   const [hoveredModeId, setHoveredModeId] = useState(false);
 
@@ -89,14 +105,6 @@ export default function __PosInvoiceSection(props) {
       setSalesByDropdownData(transformedData);
     }
   }, []);
-
-  //invoice button hooks for tracking last clicked
-  const [lastClicked, setLastClicked] = useState(null);
-
-  //function to handling button clicks
-  const handleClick = (event) => {
-    setLastClicked(event.currentTarget.name);
-  };
 
   //default customer id hook
   const [defaultCustomerId, setDefaultCustomerId] = useState(null);
@@ -171,7 +179,14 @@ export default function __PosInvoiceSection(props) {
                                     null
                                   );
                                 }}
-                                defaultChecked={mode.is_selected ? true : false}
+                                defaultChecked={
+                                  entityEditData?.transaction_mode_id
+                                    ? entityEditData?.transaction_mode_id ==
+                                      mode.id
+                                    : mode.is_selected
+                                    ? true
+                                    : false
+                                }
                               />
                               <Tooltip
                                 label={mode.name}
