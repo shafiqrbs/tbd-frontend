@@ -1134,7 +1134,7 @@ function _GenericPosForm(props) {
               </Box>
               <Box mb="xs">
                 <Grid
-                  className={genericClass.genericHighlightedBox}
+                  className={genericClass.genericBackground}
                   columns={12}
                   justify="space-between"
                   align="center"
