@@ -121,6 +121,9 @@ const utilitySlice = createSlice({
         coreDesignationDropdownData : [],
         coreDepartmentDropdownData : [],
         coreWarehouseDropdownData : [],
+        accountHeadDropdownData : [],
+        accountSubHeadDropdownData : [],
+        accountLedgerDropdownData : [],
     },
     reducers : {
         setFetching : (state,action) => {
@@ -181,6 +184,15 @@ const utilitySlice = createSlice({
             }
             if (action.payload.type == 'warehouse'){
                 state.coreWarehouseDropdownData = action.payload.data.data
+            }
+            if (action.payload.type == 'sub-head'){
+                state.accountSubHeadDropdownData = action.payload.data.data
+            }
+            if (action.payload.type == 'ledger'){
+                state.accountLedgerDropdownData = action.payload.data.data
+            }
+            if (action.payload.type == 'account-head'){
+                state.accountHeadDropdownData = action.payload.data.data
             }
         })
 

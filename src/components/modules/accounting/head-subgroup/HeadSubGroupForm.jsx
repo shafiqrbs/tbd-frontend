@@ -28,6 +28,8 @@ import InputForm from "../../../form-builders/InputForm";
 import SelectForm from "../../../form-builders/SelectForm.jsx";
 import SwitchForm from "../../../form-builders/SwitchForm";
 import getSettingMotherAccountDropdownData from "../../../global-hook/dropdown/getSettingMotherAccountDropdownData";
+import useAccountHeadDropdownData from "../../../global-hook/dropdown/account/getAccountHeadAllDropdownData.js";
+import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
 
 function HeadSubGroupForm(props) {
     const { t, i18n } = useTranslation();
@@ -39,22 +41,24 @@ function HeadSubGroupForm(props) {
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
     const [motherData, setMotherData] = useState(null);
 
-    const accountDropdown = getSettingMotherAccountDropdownData()
+    // const accountDropdown = getSettingMotherAccountDropdownData()
+    const [reloadTrigger, setReloadTrigger] = useState(false);
+    const accountDropdown = useAccountHeadDropdownData(reloadTrigger, 'account-head');
 
 
     const form = useForm({
         initialValues: {
-            mother_account_id: '', name: '', code: '', status: true, head_group : 'sub-head'
+            parent_id: '', name: '', code: '', status: true, head_group : 'sub-head'
         },
         validate: {
-            mother_account_id: isNotEmpty(),
+            parent_id: isNotEmpty(),
             name: isNotEmpty(),
             code : isNotEmpty()
         }
     });
 
     useHotkeys([['alt+n', () => {
-        document.getElementById('mother_account_id').click()
+        document.getElementById('parent_id').click()
     }]], []);
 
     useHotkeys([['alt+r', () => {
@@ -79,28 +83,32 @@ function HeadSubGroupForm(props) {
                     ),
                     labels: { confirm: 'Confirm', cancel: 'Cancel' }, confirmProps: { color: 'red' },
                     onCancel: () => console.log('Cancel'),
-                    onConfirm: () => {
+                    onConfirm: async () => {
                         setSaveCreateLoading(true)
-                        const value = {
-                            url: 'accounting/account-head',
+
+                        const data = {
+                            url: "accounting/account-head",
                             data: form.values
-                        }
-                        dispatch(storeEntityData(value))
+                        };
 
-                        notifications.show({
-                            color: 'red',
-                            title: t('CreateSuccessfully'),
-                            icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
-                            loading: false,
-                            autoClose: 700,
-                            style: { backgroundColor: 'lightgray' },
-                        });
+                        try {
+                            const action = await dispatch(storeEntityData(data));
+                            const payload = action.payload;
 
-                        setTimeout(() => {
+                            if (payload?.status === 200 && payload?.data?.data?.id) {
+                                showNotificationComponent(t("Account head created successfully"), "green");
+                            } else {
+                                showNotificationComponent(t("Something went wrong"), "red");
+                            }
+                        } catch (error) {
+                            console.error("Error updating domain status", error);
+                            showNotificationComponent(t("Request failed"), "red");
+                        } finally {
                             form.reset()
-                            setMotherData(null)
                             dispatch(setFetching(true))
-                        }, 700)
+                            setMotherData(null)
+                            setSaveCreateLoading(false)
+                        }
                     },
                 });
             })}>
@@ -147,10 +155,10 @@ function HeadSubGroupForm(props) {
                                                             placeholder={t('ChooseMotherAccount')}
                                                             required={true}
                                                             nextField={'name'}
-                                                            name={'mother_account_id'}
+                                                            name={'parent_id'}
                                                             form={form}
                                                             dropdownValue={accountDropdown}
-                                                            id={'mother_account_id'}
+                                                            id={'parent_id'}
                                                             searchable={false}
                                                             value={motherData}
                                                             changeValue={setMotherData}

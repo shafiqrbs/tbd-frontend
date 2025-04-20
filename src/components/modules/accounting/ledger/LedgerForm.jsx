@@ -24,6 +24,8 @@ import Shortcut from "../../shortcut/Shortcut";
 import InputForm from "../../../form-builders/InputForm";
 import SelectForm from "../../../form-builders/SelectForm.jsx";
 import SwitchForm from "../../../form-builders/SwitchForm";
+import useAccountHeadDropdownData from "../../../global-hook/dropdown/account/getAccountHeadAllDropdownData.js";
+import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
 
 function LedgerForm(props) {
     const {accountDropdown} = props;
@@ -35,20 +37,23 @@ function LedgerForm(props) {
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
     const [motherData, setMotherData] = useState(null);
 
+    const [reloadTrigger, setReloadTrigger] = useState(false);
+    const accountHeadDropdownData = useAccountHeadDropdownData(reloadTrigger, 'sub-head');
+
 
     const form = useForm({
         initialValues: {    
-            mother_account_id: '', name: '', code: '', status: true, head_group : 'ledger'
+            parent_id: '', name: '', code: '', status: true, head_group : 'ledger'
         },
         validate: {
-            mother_account_id: isNotEmpty(),
+            parent_id: isNotEmpty(),
             name: hasLength({ min: 2, max: 20 }),
             code : isNotEmpty()
         }
     });
 
     useHotkeys([['alt+n', () => {
-        document.getElementById('mother_account_id').click()
+        document.getElementById('parent_id').click()
     }]], []);
 
     useHotkeys([['alt+r', () => {
@@ -72,29 +77,31 @@ function LedgerForm(props) {
                     ),
                     labels: { confirm: 'Confirm', cancel: 'Cancel' }, confirmProps: { color: 'red' },
                     onCancel: () => console.log('Cancel'),
-                    onConfirm: () => {
+                    onConfirm: async () => {
                         setSaveCreateLoading(true)
-                        const value = {
-                            url: 'accounting/account-head',
+                        const data = {
+                            url: "accounting/account-head",
                             data: form.values
-                        }
-                        dispatch(storeEntityData(value))
+                        };
 
-                        notifications.show({
-                            color: 'teal',
-                            title: t('CreateSuccessfully'),
-                            icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
-                            loading: false,
-                            autoClose: 700,
-                            style: { backgroundColor: 'lightgray' },
-                        });
+                        try {
+                            const action = await dispatch(storeEntityData(data));
+                            const payload = action.payload;
 
-                        setTimeout(() => {
+                            if (payload?.status === 200 && payload?.data?.data?.id) {
+                                showNotificationComponent(t("Account head created successfully"), "green");
+                            } else {
+                                showNotificationComponent(t("Something went wrong"), "red");
+                            }
+                        } catch (error) {
+                            console.error("Error updating domain status", error);
+                            showNotificationComponent(t("Request failed"), "red");
+                        } finally {
                             form.reset()
-                            setFiles([])
-                            setMotherData(null)
                             dispatch(setFetching(true))
-                        }, 700)
+                            setMotherData(null)
+                            setSaveCreateLoading(false)
+                        }
                     },
                 });
             })}>
@@ -141,11 +148,11 @@ function LedgerForm(props) {
                                                             placeholder={t('ChooseHeadGroup')}
                                                             required={true}
                                                             nextField={'name'}
-                                                            name={'mother_account_id'}
+                                                            name={'parent_id'}
                                                             form={form}
-                                                            dropdownValue={accountDropdown}
+                                                            dropdownValue={accountHeadDropdownData}
                                                             mt={8}
-                                                            id={'mother_account_id'}
+                                                            id={'parent_id'}
                                                             searchable={false}
                                                             value={motherData}
                                                             changeValue={setMotherData}
