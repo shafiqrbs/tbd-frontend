@@ -1180,6 +1180,7 @@ function _GenericPosForm(props) {
           </form>
         </Grid.Col>
         <Grid.Col span={16}>
+          <box>Tewst</box>
           <__PosSalesForm
             currencySymbol={currencySymbol}
             domainId={domainId}
