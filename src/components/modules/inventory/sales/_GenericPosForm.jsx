@@ -1105,26 +1105,34 @@ function _GenericPosForm(props) {
                             />
                           </Grid.Col>
                           <Grid.Col span={4}>
-                            <InputButtonForm
-                              tooltip=""
-                              label=""
-                              placeholder={t("SubTotal")}
-                              required={true}
-                              nextField={"EntityFormSubmit"}
-                              form={form}
-                              name={"sub_total"}
-                              id={"sub_total"}
-                              leftSection={<IconSum size={16} opacity={0.5} />}
-                              rightSection={inputGroupCurrency}
-                              disabled={
-                                selectProductDetails &&
-                                selectProductDetails.sub_total
-                              }
-                              closeIcon={false}
-                            />
-                            {/* <Text ta="right" mt={"8"}>
-                              {selectProductDetails ? selectProductDetails.sub_total : 0} {t("SubTotal")}
-                            </Text> */}
+                            <Box style={{ display: "none" }}>
+                              <InputButtonForm
+                                tooltip=""
+                                label=""
+                                type=""
+                                placeholder={t("SubTotal")}
+                                required={true}
+                                nextField={"EntityFormSubmit"}
+                                form={form}
+                                name={"sub_total"}
+                                id={"sub_total"}
+                                leftSection={
+                                  <IconSum size={16} opacity={0.5} />
+                                }
+                                rightSection={inputGroupCurrency}
+                                disabled={
+                                  selectProductDetails &&
+                                  selectProductDetails.sub_total
+                                }
+                                closeIcon={false}
+                              />
+                            </Box>
+                            <Text ta="right" mt={"8"}>
+                              {currencySymbol}{" "}
+                              {selectProductDetails
+                                ? selectProductDetails.sub_total
+                                : 0}
+                            </Text>
                           </Grid.Col>
                         </Grid>
                       </Box>
@@ -1180,7 +1188,6 @@ function _GenericPosForm(props) {
           </form>
         </Grid.Col>
         <Grid.Col span={16}>
-          <box>Tewst</box>
           <__PosSalesForm
             currencySymbol={currencySymbol}
             domainId={domainId}
@@ -1188,6 +1195,7 @@ function _GenericPosForm(props) {
             isZeroReceiveAllow={isZeroReceiveAllow}
             tempCardProducts={tempCardProducts}
             setLoadCardProducts={setLoadCardProducts}
+            setTempCardProducts={setTempCardProducts}
           />
         </Grid.Col>
       </Grid>

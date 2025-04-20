@@ -199,7 +199,7 @@ function __UpdateInvoiceForm(props) {
     /*END GET CUSTOMER DATA FROM LOCAL STORAGE*/
 
     useHotkeys([['alt+n', () => {
-        // document.getElementById('customer_id').focus()
+        document.getElementById('product_id').focus()
     }]], []);
 
     useHotkeys([['alt+r', () => {
