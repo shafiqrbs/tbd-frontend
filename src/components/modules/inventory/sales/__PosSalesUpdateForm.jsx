@@ -202,7 +202,6 @@ export default function __PosSalesUpdateForm(props) {
               bonus_quantity: product.bonus_quantity,
             };
           });
-          console.log(transformedArray)
           const options = {
             year: "numeric",
             month: "2-digit",

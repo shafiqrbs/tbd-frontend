@@ -334,7 +334,7 @@ function _PurchaseTable() {
                                                         </Menu.Target>
                                                         <Menu.Dropdown>
                                                             {
-                                                                !data.approved_by_id &&
+                                                                1 &&
                                                                 <>
                                                                     <Menu.Item
                                                                         onClick={(e) => {

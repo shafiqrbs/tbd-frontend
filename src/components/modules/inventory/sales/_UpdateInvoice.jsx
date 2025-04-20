@@ -807,7 +807,7 @@ function _UpdateInvoice(props) {
                                       "temp-sales-products",
                                       JSON.stringify(myCardProducts)
                                     );
-
+                                    
                                     // Show success notification
                                     notifications.show({
                                       color: "green",

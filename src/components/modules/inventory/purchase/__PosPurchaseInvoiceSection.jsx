@@ -1,4 +1,3 @@
-
 import {
   Box,
   Grid,
@@ -34,7 +33,7 @@ import classes from "../../../../assets/css/FeaturesCards.module.css";
 import InputNumberForm from "../../../form-builders/InputNumberForm";
 import vendorDataStoreIntoLocalStorage from "../../../global-hook/local-storage/vendorDataStoreIntoLocalStorage";
 
-export default function __PosInvoiceSection(props) {
+export default function __PosPurchaseInvoiceSection(props) {
   const {
     form,
     currencySymbol,
@@ -48,11 +47,14 @@ export default function __PosInvoiceSection(props) {
     setDiscountType,
     returnOrDueText,
     vendorData,
-    isZeroReceiveAllow,
     purchaseDueAmount,
     setLoadCardProducts,
     setVendorsDropdownData,
-    vendorsDropdownData
+    vendorsDropdownData,
+    editedData,
+    lastClicked,
+    setLastClicked,
+    handleClick,
   } = props;
 
   //common hooks
@@ -66,16 +68,23 @@ export default function __PosInvoiceSection(props) {
     ? JSON.parse(localStorage.getItem("accounting-transaction-mode"))
     : [];
 
+  useEffect(() => {
+    if (transactionModeData && transactionModeData.length > 0) {
+      for (let mode of transactionModeData) {
+        if (mode.is_selected) {
+          form.setFieldValue(
+            "transaction_mode_id",
+            form.values.transaction_mode_id
+              ? form.values.transaction_mode_id
+              : mode.id
+          );
+          break;
+        }
+      }
+    }
+  }, [transactionModeData, form]);
   // transaction modes hover hook
   const [hoveredModeId, setHoveredModeId] = useState(false);
-
-  //invoice button hooks for tracking last clicked
-  const [lastClicked, setLastClicked] = useState(null);
-
-  //function to handling button clicks
-  const handleClick = (event) => {
-    setLastClicked(event.currentTarget.name);
-  };
 
   //default customer id hook
   const [defaultVendorId, setDefaultVendorId] = useState(null);
@@ -83,25 +92,27 @@ export default function __PosInvoiceSection(props) {
   // get default customer id
   useEffect(() => {
     const fetchVendors = async () => {
-        await vendorDataStoreIntoLocalStorage()
-        let coreVendors = localStorage.getItem('core-vendors');
-        coreVendors = coreVendors ? JSON.parse(coreVendors) : []
+      await vendorDataStoreIntoLocalStorage();
+      let coreVendors = localStorage.getItem("core-vendors");
+      coreVendors = coreVendors ? JSON.parse(coreVendors) : [];
 
-        if (coreVendors && coreVendors.length > 0) {
-            const transformedData = coreVendors.map(type => {
-                return ({ 'label': type.mobile + ' -- ' + type.name, 'value': String(type.id) })
-            });
-            setVendorsDropdownData(transformedData);
-        }
-    }
-    fetchVendors()
-}, [])
+      if (coreVendors && coreVendors.length > 0) {
+        const transformedData = coreVendors.map((type) => {
+          return {
+            label: type.mobile + " -- " + type.name,
+            value: String(type.id),
+          };
+        });
+        setVendorsDropdownData(transformedData);
+      }
+    };
+    fetchVendors();
+  }, []);
 
   //submit disabled based on default customer check and zeroreceive
   const isDefaultVendor = !vendorData || vendorData == defaultVendorId;
-  const isDisabled =
-    isDefaultVendor && (isZeroReceiveAllow ? false : purchaseDueAmount > 0);
 
+  const isDisabled = isDefaultVendor;
   // Calculate remaining amount dynamically based on receive_amount
   const receiveAmount = form.values.receive_amount
     ? Number(form.values.receive_amount)
@@ -141,7 +152,13 @@ export default function __PosInvoiceSection(props) {
                                     null
                                   );
                                 }}
-                                defaultChecked={mode.is_selected ? true : false}
+                                defaultChecked={
+                                  editedData?.transaction_mode_id
+                                    ? editedData?.transaction_mode_id == mode.id
+                                    : mode.is_selected
+                                    ? true
+                                    : false
+                                }
                               />
                               <Tooltip
                                 label={mode.name}
@@ -421,7 +438,7 @@ export default function __PosInvoiceSection(props) {
                         tooltip={t("ReceiveAmountValidateMessage")}
                         label=""
                         placeholder={t("Amount")}
-                        required={isDefaultVendor && !isZeroReceiveAllow}
+                        required={isDefaultVendor}
                         nextField={"sales_by"}
                         form={form}
                         name={"receive_amount"}
@@ -435,8 +452,12 @@ export default function __PosInvoiceSection(props) {
                         }}
                       />
                     </Grid.Col>
-                    <Grid.Col span={2} bg={"#bc924f"} p={"18"} pl={"8"}>
-                    </Grid.Col>
+                    <Grid.Col
+                      span={2}
+                      bg={"#bc924f"}
+                      p={"18"}
+                      pl={"8"}
+                    ></Grid.Col>
                   </Grid>
                 </Tooltip>
               </Box>
