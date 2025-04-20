@@ -48,6 +48,7 @@ import genericClass from "../../../../assets/css/Generic.module.css";
 import SettingsDrawer from "../common/SettingDrawer.jsx";
 import Navigation from "../common/Navigation.jsx";
 import __PosSalesForm from "./__PosSalesForm.jsx";
+import { useHotkeys } from "@mantine/hooks";
 
 function _GenericPosForm(props) {
   const {
@@ -422,7 +423,41 @@ function _GenericPosForm(props) {
     setTempCardProducts(tempProducts ? JSON.parse(tempProducts) : []);
     setLoadCardProducts(false);
   }, [loadCardProducts]);
+  useHotkeys(
+    [
+      [
+        "alt+n",
+        () => {
+          document.getElementById("product_id").focus();
+        },
+      ],
+    ],
+    []
+  );
 
+  useHotkeys(
+    [
+      [
+        "alt+r",
+        () => {
+          form.reset();
+        },
+      ],
+    ],
+    []
+  );
+
+  useHotkeys(
+    [
+      [
+        "alt+s",
+        () => {
+          document.getElementById("EntityFormSubmit").click();
+        },
+      ],
+    ],
+    []
+  );
   return (
     <Box>
       <Grid columns={24} gutter={{ base: 8 }}>

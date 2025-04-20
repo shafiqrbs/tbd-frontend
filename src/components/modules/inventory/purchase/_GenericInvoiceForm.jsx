@@ -46,6 +46,7 @@ import genericClass from "../../../../assets/css/Generic.module.css";
 import Navigation from "../common/Navigation.jsx";
 import __PosPurchaseForm from "./__PosPurchaseForm.jsx";
 import SettingDrawer from "../common/SettingDrawer.jsx";
+import { useHotkeys } from "@mantine/hooks";
 
 function _GenericInvoiceForm(props) {
   const {
@@ -419,6 +420,41 @@ function _GenericInvoiceForm(props) {
     setTempCardProducts(tempProducts ? JSON.parse(tempProducts) : []);
     setLoadCardProducts(false);
   }, [loadCardProducts]);
+  useHotkeys(
+    [
+      [
+        "alt+n",
+        () => {
+          document.getElementById("product_id").focus();
+        },
+      ],
+    ],
+    []
+  );
+
+  useHotkeys(
+    [
+      [
+        "alt+r",
+        () => {
+          form.reset();
+        },
+      ],
+    ],
+    []
+  );
+
+  useHotkeys(
+    [
+      [
+        "alt+s",
+        () => {
+          document.getElementById("EntityFormSubmit").click();
+        },
+      ],
+    ],
+    []
+  );
   return (
     <Box>
       <Grid columns={24} gutter={{ base: 8 }}>
@@ -708,10 +744,11 @@ function _GenericInvoiceForm(props) {
                                         ? warehouseDropdownData.find(
                                             (warehouse) =>
                                               warehouse.value ===
-                                            form.values.warehouse_id
+                                              form.values.warehouse_id
                                           ).label
                                         : null,
-                                      bonus_quantity: form.values.bonus_quantity,
+                                      bonus_quantity:
+                                        form.values.bonus_quantity,
                                     };
 
                                     myCardProducts.push(productToAdd);
