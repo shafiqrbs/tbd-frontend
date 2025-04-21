@@ -36,6 +36,7 @@ import LegderModal from "./modal/LedgerModal.jsx";
 import ReactToPrint from "react-to-print";
 import { InvoiceBatchPrintA4 } from "./invoice-batch-print/InvoiceBatchPrintA4.jsx";
 import { InvoiceBatchPrintPos } from "./invoice-batch-print/InvoiceBatchPrintPos.jsx";
+import Navigation from "../common/Navigation.jsx";
 
 function InvoiceBatchTable() {
     const navigate = useNavigate();
@@ -158,7 +159,10 @@ function InvoiceBatchTable() {
             
             <Box>
                 <Grid columns={24} gutter={{ base: 8 }}>
-                    <Grid.Col span={15} >
+                <Grid.Col span={1} >
+                    <Navigation module="invoice-batch" />
+                </Grid.Col>
+                    <Grid.Col span={14} >
                         <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
                             <Box className={'borderRadiusAll'}>
                                 <DataTable
@@ -495,7 +499,7 @@ function InvoiceBatchTable() {
                     <Grid.Col span={1} >
                         <Box bg={'white'} className={'borderRadiusAll'} pt={'16'}>
                             <_ShortcutTable
-                                heightOffset={28}
+                                heightOffset={1}
                                 form=''
                                 FormSubmit={'EntityFormSubmit'}
                                 Name={'CompanyName'}

@@ -35,6 +35,7 @@ import {modals} from "@mantine/modals";
 import FileUploadModel from "../../../core-component/FileUploadModel.jsx";
 import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
 import InputForm from "../../../form-builders/InputForm.jsx";
+import Navigation from "../common/Navigation.jsx";
 
 function _CreateOpeningForm(props) {
     const { currencySymbol } = props
@@ -324,7 +325,10 @@ function _CreateOpeningForm(props) {
     return (
         <Box>
             <Grid columns={24} gutter={{ base: 8 }}>
-                <Grid.Col span={23} >
+                <Grid.Col span={1} >
+                    <Navigation module = "opening-stock" />
+                </Grid.Col>
+                <Grid.Col span={22} >
                     <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
                         <Box>
                             <form onSubmit={form.onSubmit((values) => {

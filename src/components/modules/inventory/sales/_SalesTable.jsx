@@ -43,6 +43,7 @@ import { SalesPrintPos } from "./print-component/SalesPrintPos.jsx";
 import { modals } from "@mantine/modals";
 import { notifications } from "@mantine/notifications";
 import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
+import Navigation from "../common/Navigation.jsx";
 
 function _SalesTable(props) {
     const {isWarehouse} = props
@@ -227,7 +228,8 @@ function _SalesTable(props) {
             </Box>
             <Box>
                 <Grid columns={24} gutter={{ base: 8 }}>
-                    <Grid.Col span={15} >
+                    <Grid.Col span={1} ><Navigation module="sales"/></Grid.Col>
+                    <Grid.Col span={14} >
                         <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
                             <Box className={'borderRadiusAll'}>
                                 <DataTable

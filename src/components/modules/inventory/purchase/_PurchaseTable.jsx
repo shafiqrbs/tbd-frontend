@@ -43,6 +43,7 @@ import {PurchasePrintPos} from "./print-component/PurchasePrintPos.jsx";
 import {notifications} from "@mantine/notifications";
 import getConfigData from "../../../global-hook/config-data/getConfigData.js";
 import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
+import Navigation from "../common/Navigation.jsx";
 
 function _PurchaseTable() {
     const {configData} = getConfigData()
@@ -257,7 +258,10 @@ function _PurchaseTable() {
             </Box>
             <Box>
                 <Grid columns={24} gutter={{base: 8}}>
-                    <Grid.Col span={15}>
+                    <Grid.Col span={1}>
+                        <Navigation module = "sales" />
+                    </Grid.Col>
+                    <Grid.Col span={14}>
                         <Box bg={"white"} p={"xs"} className={"borderRadiusAll"}>
                             <Box className={"borderRadiusAll"}>
                                 <DataTable

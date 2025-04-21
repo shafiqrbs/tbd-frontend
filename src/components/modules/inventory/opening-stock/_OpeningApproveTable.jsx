@@ -11,6 +11,7 @@ import ShortcutInvoice from "../../shortcut/ShortcutInvoice";
 import tableCss from "../../../../assets/css/Table.module.css";
 import _OpeningSearch from "./_OpeningSearch";
 import {getIndexEntityData} from "../../../../store/inventory/crudSlice";
+import Navigation from "../common/Navigation";
 
 function _OpeningApproveTable(props) {
     const { t, i18n } = useTranslation();
@@ -97,7 +98,10 @@ function _OpeningApproveTable(props) {
         <>
             <Box>
                 <Grid columns={24} gutter={{ base: 8 }}>
-                    <Grid.Col span={23} >
+                    <Grid.Col span={1} >
+                        <Navigation module = "opening-approve-stock" />
+                    </Grid.Col>
+                    <Grid.Col span={22} >
                         <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
                             <Box>
                                 <Box pl={`xs`} pr={8} pt={'xs'} mb={'xs'} className={'boxBackground borderRadiusAll'}>
@@ -192,7 +196,7 @@ function _OpeningApproveTable(props) {
                                     }}
                                     loaderSize="xs"
                                     loaderColor="grape"
-                                    height={height}
+                                    height={height + 10}
                                     scrollAreaProps={{ type: 'never' }}
                                 />
                             </Box>
