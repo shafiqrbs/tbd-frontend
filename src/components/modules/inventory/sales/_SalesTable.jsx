@@ -61,7 +61,7 @@ function _SalesTable(props) {
     const [printPos, setPrintPos] = useState(false);
     const [checked, setChecked] = useState(false);
     const [indexData,setIndexData] = useState([])
-    const [fetching,setFetching] = useState(true)
+    const fetching = useSelector((state) => state.inventoryCrudSlice.fetching)
 
 
 
@@ -157,7 +157,7 @@ function _SalesTable(props) {
 
     useEffect(() => {
         fetchData();
-    }, [salesFilterData,page]);
+    }, [salesFilterData,page, fetching]);
 
     const [checkList, setCheckList] = useState({});
     const CheckItemsHandel = (e, item) => {
