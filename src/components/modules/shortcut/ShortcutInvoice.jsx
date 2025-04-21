@@ -12,7 +12,7 @@ function ShortcutInvoice(props) {
     return (
         <>
             <Stack
-                h={formHeight}
+                h={formHeight + 2}
                 bg="var(--mantine-color-body)"
                 align="center"
             >

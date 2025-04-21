@@ -1,124 +1,115 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import {
   Button,
-  Flex,
   ActionIcon,
+  TextInput,
   Grid,
   Box,
   Group,
   Text,
-  Tooltip,
   SegmentedControl,
   Center,
+  Tooltip,
+  Flex,
   Input,
 } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import {
   IconDeviceFloppy,
-  IconPercentage,
   IconSum,
-  IconCurrency,
+  IconX,
   IconBarcode,
-  IconCoinMonero,
   IconSortAscendingNumbers,
-  IconPlusMinus,
-  IconPlus,
-  IconShoppingBag,
-  IconRefresh,
+  IconCoinMonero,
   IconDotsVertical,
+  IconRefresh,
+  IconPlus,
+  IconPlusMinus,
+  IconCurrency,
+  IconPercentage,
+  IconShoppingBag,
 } from "@tabler/icons-react";
-import { hasLength, useForm } from "@mantine/form";
-import { notifications, showNotification } from "@mantine/notifications";
-import InputButtonForm from "../../../form-builders/InputButtonForm";
-import InputNumberForm from "../../../form-builders/InputNumberForm";
-import __SalesForm from "./__SalesForm.jsx";
-import { DataTable } from "mantine-datatable";
-import _ShortcutInvoice from "../../shortcut/_ShortcutInvoice";
-import tableCss from "../../../../assets/css/Table.module.css";
-import productsDataStoreIntoLocalStorage from "../../../global-hook/local-storage/productsDataStoreIntoLocalStorage.js";
-import AddProductDrawer from "./drawer-form/AddProductDrawer.jsx";
-import SelectForm from "../../../form-builders/SelectForm.jsx";
-import getCoreWarehouseDropdownData from "../../../global-hook/dropdown/core/getCoreWarehouseDropdownData.js";
-import __GenericPosSalesForm from "./__GenericPosSalesForm";
-import vendorDataStoreIntoLocalStorage from "../../../global-hook/local-storage/vendorDataStoreIntoLocalStorage.js";
-import getSettingCategoryDropdownData from "../../../global-hook/dropdown/getSettingCategoryDropdownData.js";
+import { getHotkeyHandler, useHotkeys } from "@mantine/hooks";
+import { isNotEmpty, useForm } from "@mantine/form";
+import { notifications } from "@mantine/notifications";
+import SelectServerSideForm from "../../../form-builders/SelectServerSideForm.jsx";
+import InputButtonForm from "../../../form-builders/InputButtonForm.jsx";
+import InputNumberForm from "../../../form-builders/InputNumberForm.jsx";
 import classes from "../../../../assets/css/FeaturesCards.module.css";
 import genericClass from "../../../../assets/css/Generic.module.css";
-import SettingsDrawer from "../common/SettingDrawer.jsx";
 import Navigation from "../common/Navigation.jsx";
-import __PosSalesUpdateForm from "./__PosSalesUpdateForm.jsx";
-import { useHotkeys } from "@mantine/hooks";
 
-function _UpdateInvoice(props) {
+import { DataTable } from "mantine-datatable";
+import ShortcutInvoice from "../../shortcut/ShortcutInvoice.jsx";
+import tableCss from "../../../../assets/css/Table.module.css";
+import productsDataStoreIntoLocalStorage from "../../../global-hook/local-storage/productsDataStoreIntoLocalStorage.js";
+import SelectForm from "../../../form-builders/SelectForm.jsx";
+import getCoreWarehouseDropdownData from "../../../global-hook/dropdown/core/getCoreWarehouseDropdownData.js";
+import getSettingCategoryDropdownData from "../../../global-hook/dropdown/getSettingCategoryDropdownData.js";
+import SettingDrawer from "../common/SettingDrawer.jsx";
+import AddProductDrawer from "../sales/drawer-form/AddProductDrawer.jsx";
+import __PosPurchaseUpdateForm from "./__PosPurchaseUpdateForm.jsx";
+import vendorDataStoreIntoLocalStorage from "../../../global-hook/local-storage/vendorDataStoreIntoLocalStorage.js";
+
+function _UpdatePurchaseInvoice(props) {
   const {
     currencySymbol,
-    allowZeroPercentage,
+    isPurchaseByPurchasePrice,
+    editedData,
+    isWarehouse,
     domainId,
     isSMSActive,
-    isZeroReceiveAllow,
-    focusFrom,
-    isWarehouse,
-    entityEditData,
   } = props;
-
-  //common hooks and variables
   const { t, i18n } = useTranslation();
   const { isOnline, mainAreaHeight } = useOutletContext();
-  const height = mainAreaHeight - 360;
+  const height = mainAreaHeight - 360; //TabList height 104
+  const [fetching, setFetching] = useState(false);
 
-  //segmented control
-  const [switchValue, setSwitchValue] = useState("product");
+  const [searchValue, setSearchValue] = useState("");
+  const [productDropdown, setProductDropdown] = useState([]);
 
-  //setting drawer control
-  const [settingDrawer, setSettingDrawer] = useState(false);
+  const [tempCardProducts, setTempCardProducts] = useState([]);
+  const [loadCardProducts, setLoadCardProducts] = useState(false);
 
-  //product drawer control
-  const [productDrawer, setProductDrawer] = useState(false);
-
-  //sales by barcode comes from backend now static value
-  const [salesByBarcode, setSalesByBarcode] = useState(true);
-
-  //warehosue dropdown data
+  /*get warehouse dropdown data*/
   let warehouseDropdownData = getCoreWarehouseDropdownData();
-
-  //warehouse hook
   const [warehouseData, setWarehouseData] = useState(null);
 
-  //vendor hook
-  const [vendorData, setVendorData] = useState(null);
+  const [stockProductRestore, setStockProductRestore] = useState(false);
+  useEffect(() => {
+    if (stockProductRestore) {
+      const local = productsDataStoreIntoLocalStorage();
+    }
+  }, [stockProductRestore]);
 
-  //unit type hook
-  const [unitType, setUnitType] = useState(null);
+  useEffect(() => {
+    localStorage.removeItem("temp-purchase-products");
+    localStorage.setItem(
+      "temp-purchase-products",
+      JSON.stringify(editedData?.purchase_items || [])
+    );
+    setTempCardProducts(
+      editedData?.purchase_items ? editedData.purchase_items : []
+    );
+    setLoadCardProducts(false);
+  }, []);
+  useEffect(() => {
+      if (loadCardProducts) {
+        const cardProducts = localStorage.getItem("temp-purchase-products");
+        setTempCardProducts(cardProducts ? JSON.parse(cardProducts) : []);
+        setLoadCardProducts(false);
+      }
+    }, [loadCardProducts]);
 
-  //product hook
-  const [product, setProduct] = useState(null);
-
-  //product multi price hook
-  const [multiPrice, setMultiPrice] = useState(null);
-
-  //product search hook
-  const [searchValue, setSearchValue] = useState("");
-
-  //product dropdown hook
-  const [productDropdown, setProductDropdown] = useState([]);
-  //invoice button hooks for tracking last clicked
-  const [lastClicked, setLastClicked] = useState(null);
-
-  //function to handling button clicks
-  const handleClick = (event) => {
-    setLastClicked(event.currentTarget.name);
-  };
-
-  //product dropdown update based on searchValue
   useEffect(() => {
     if (searchValue.length > 0) {
       const storedProducts = localStorage.getItem("core-products");
       const localProducts = storedProducts ? JSON.parse(storedProducts) : [];
 
-      // Filter products where product_nature is not 'raw-materials'
+      // Filter products where product_nature is not 'post-production'
       const filteredProducts = localProducts.filter(
-        (product) => product.product_nature !== "raw-materials"
+        (product) => product.product_nature !== "post-production"
       );
 
       const lowerCaseSearchTerm = searchValue.toLowerCase();
@@ -141,62 +132,113 @@ function _UpdateInvoice(props) {
     }
   }, [searchValue]);
 
-  //input group currency to show in input right section
-  const inputGroupCurrency = (
-    <Text
-      style={{ textAlign: "right", width: "100%", paddingRight: 16 }}
-      color={"gray"}
-    >
-      {currencySymbol}
-    </Text>
-  );
-
-  //vendor dropdowndata
-  const [vendorsDropdownData, setVendorsDropdownData] = useState([]);
-  useEffect(() => {
-    const fetchVendors = async () => {
-      await vendorDataStoreIntoLocalStorage();
-      let coreVendors = localStorage.getItem("core-vendors");
-      coreVendors = coreVendors ? JSON.parse(coreVendors) : [];
-
-      if (coreVendors && coreVendors.length > 0) {
-        const transformedData = coreVendors.map((type) => {
-          return {
-            label: type.mobile + " -- " + type.name,
-            value: String(type.id),
-          };
+  /**
+   * Adds a product to a collection based on ID, updates the local storage and resets the form
+   */
+  function handleAddProductByProductId(values, myCardProducts, localProducts) {
+    const addProducts = localProducts.reduce((acc, product) => {
+      if (product.id === Number(values.product_id)) {
+        acc.push({
+          product_id: product.id,
+          display_name: product.display_name,
+          quantity: Number(values.quantity),
+          unit_name: product.unit_name,
+          purchase_price: Number(values.purchase_price),
+          sub_total: Number(values.sub_total),
+          sales_price: Number(product.sales_price),
+          warehouse_id: values.warehouse_id
+            ? Number(values.warehouse_id)
+            : null,
+          warehouse_name: values.warehouse_id
+            ? warehouseDropdownData.find(
+                (warehouse) => warehouse.value === values.warehouse_id
+              ).label
+            : null,
+          bonus_quantity: values.bonus_quantity,
         });
-        setVendorsDropdownData(transformedData);
       }
-    };
-    fetchVendors();
-  }, []);
+      return acc;
+    }, myCardProducts);
+    setLoadCardProducts(true);
+    updateLocalStorageAndResetForm(addProducts, "productId");
+  }
 
-  //no use code
-  const [stockProductRestore, setStockProductRestore] = useState(false);
-  useEffect(() => {
-    if (stockProductRestore) {
-      const local = productsDataStoreIntoLocalStorage();
-      console.log(local);
+  /**
+   * Adds a product to a collection based on BARCODE, updates the local storage and resets the form
+   */
+  function handleAddProductByBarcode(values, myCardProducts, localProducts) {
+    const barcodeExists = localProducts.some(
+      (product) => product.barcode === values.barcode
+    );
+
+    if (barcodeExists) {
+      const addProducts = localProducts.reduce(
+        (acc, product) => {
+          if (String(product.barcode) === String(values.barcode)) {
+            acc = [...acc, createProductFromValues(product, values)];
+          }
+          return acc;
+        },
+        [...myCardProducts]
+      );
+
+      updateLocalStorageAndResetForm(addProducts, "barcode");
+    } else {
+      notifications.show({
+        loading: true,
+        color: "red",
+        title: "Product not found with this barcode",
+        message: "Data will be loaded in 3 seconds, you cannot close this yet",
+        autoClose: 1000,
+        withCloseButton: true,
+      });
     }
-  }, [stockProductRestore]);
+  }
 
-  //product add form
+  /**
+   * Updates local storage with new products, resets form, and sets focus on the product search.
+   */
+  function updateLocalStorageAndResetForm(addProducts, type) {
+    setTempCardProducts(addProducts);
+    setSearchValue("");
+    form.reset();
+    setLoadCardProducts(true);
+    if (type == "productId") {
+      document.getElementById("product_id").focus();
+    } else {
+      document.getElementById("barcode").focus();
+    }
+  }
+
+  function createProductFromValues(product, values) {
+    return {
+      product_id: product.id,
+      display_name: product.display_name,
+      quantity: 1,
+      unit_name: product.unit_name,
+      purchase_price: product.purchase_price,
+      sub_total: Number(product.purchase_price),
+      sales_price: Number(product.sales_price),
+      warehouse_id: values.warehouse_id ? Number(values.warehouse_id) : null,
+      warehouse_name: values.warehouse_id
+        ? warehouseDropdownData.find(
+            (warehouse) => warehouse.value === values.warehouse_id
+          ).label
+        : null,
+      bonus_quantity: values.bonus_quantity,
+    };
+  }
 
   const form = useForm({
     initialValues: {
-      multi_price: "",
-      price: "",
-      sales_price: "",
-      unit_id: "",
-      quantity: "",
-      bonus_quantity: "",
-      percent: "",
       product_id: "",
+      price: "",
+      purchase_price: "",
       barcode: "",
       sub_total: "",
+      quantity: "",
       warehouse_id: "",
-      category_id: "",
+      bonus_quantity: "",
     },
     validate: {
       product_id: (value, values) => {
@@ -215,16 +257,7 @@ function _UpdateInvoice(props) {
         }
         return null;
       },
-      percent: (value, values) => {
-        if (value && values.product_id) {
-          const isNumberOrFractional = /^-?\d+(\.\d+)?$/.test(value);
-          if (!isNumberOrFractional) {
-            return true;
-          }
-        }
-        return null;
-      },
-      sales_price: (value, values) => {
+      purchase_price: (value, values) => {
         if (values.product_id) {
           const isNumberOrFractional = /^-?\d+(\.\d+)?$/.test(value);
           if (!isNumberOrFractional) {
@@ -236,7 +269,7 @@ function _UpdateInvoice(props) {
     },
   });
 
-  //actions when product is selected from table or form
+  /*START PRODUCT SELECTED BY PRODUCT ID*/
   const [selectProductDetails, setSelectProductDetails] = useState("");
   useEffect(() => {
     const storedProducts = localStorage.getItem("core-products");
@@ -245,229 +278,58 @@ function _UpdateInvoice(props) {
     const filteredProducts = localProducts.filter(
       (product) => product.id === Number(form.values.product_id)
     );
-
     if (filteredProducts.length > 0) {
       const selectedProduct = filteredProducts[0];
-
       setSelectProductDetails(selectedProduct);
 
       form.setFieldValue("price", selectedProduct.sales_price);
       form.setFieldValue("sales_price", selectedProduct.sales_price);
+      form.setFieldValue("purchase_price", selectedProduct.purchase_price);
       document.getElementById("quantity").focus();
     } else {
       setSelectProductDetails(null);
       form.setFieldValue("price", "");
       form.setFieldValue("sales_price", "");
+      form.setFieldValue("purchase_price", "");
     }
   }, [form.values.product_id]);
+  /*END PRODUCT SELECTED BY PRODUCT ID*/
 
-  //selected product group text to show in input
-  const inputGroupText = (
-    <Text
-      style={{ textAlign: "right", width: "100%", paddingRight: 16 }}
-      color={"gray"}
-    >
-      {selectProductDetails && selectProductDetails.unit_name}
-    </Text>
-  );
-
-  //action when quantity or sales price is changed
+  /*START QUANTITY AND PURCHASE PRICE WISE SUB TOTAL*/
   useEffect(() => {
     const quantity = Number(form.values.quantity);
-    const salesPrice = Number(form.values.sales_price);
+    const purchase_price = Number(form.values.purchase_price);
 
     if (
       !isNaN(quantity) &&
-      !isNaN(salesPrice) &&
+      !isNaN(purchase_price) &&
       quantity > 0 &&
-      salesPrice >= 0
+      purchase_price >= 0
     ) {
-      if (!allowZeroPercentage) {
-        showNotification({
-          color: "pink",
-          title: t("WeNotifyYouThat"),
-          message: t("ZeroQuantityNotAllow"),
-          autoClose: 1500,
-          loading: true,
-          withCloseButton: true,
-          position: "top-center",
-          style: { backgroundColor: "mistyrose" },
-        });
-      } else {
-        setSelectProductDetails((prevDetails) => ({
-          ...prevDetails,
-          sub_total: quantity * salesPrice,
-          sales_price: salesPrice,
-        }));
-        form.setFieldValue("sub_total", quantity * salesPrice);
-      }
+      setSelectProductDetails((prevDetails) => ({
+        ...prevDetails,
+        sub_total: quantity * purchase_price,
+      }));
+      form.setFieldValue("sub_total", quantity * purchase_price);
     }
-  }, [form.values.quantity, form.values.sales_price]);
+  }, [form.values.quantity, form.values.purchase_price]);
+  /*END QUANTITY AND PURCHASE PRICE WISE SUB TOTAL*/
 
-  //action when sales percent is changed
+  /*START SUBTOTAL WISE PURCHASE PRICE*/
   useEffect(() => {
-    if (form.values.quantity && form.values.price) {
-      const discountAmount = (form.values.price * form.values.percent) / 100;
-      const salesPrice = form.values.price - discountAmount;
+    const quantity = Number(form.values.quantity);
+    const subTotal = Number(form.values.sub_total);
 
-      form.setFieldValue("sales_price", salesPrice);
-      form.setFieldValue("sub_total", salesPrice);
+    if (!isNaN(quantity) && !isNaN(subTotal) && quantity > 0 && subTotal >= 0) {
+      setSelectProductDetails((prevDetails) => ({
+        ...prevDetails,
+        purchase_price: subTotal / quantity,
+      }));
+      form.setFieldValue("purchase_price", subTotal / quantity);
     }
-  }, [form.values.percent]);
+  }, [form.values.sub_total]);
+  /*END SUBTOTAL WISE PURCHASE PRICE*/
 
-  // adding product from table
-  const [productQuantities, setProductQuantities] = useState({});
-
-  //handle add product by product Id
-  function handleAddProductByProductId(values, myCardProducts, localProducts) {
-    const addProducts = [
-      ...myCardProducts,
-      ...localProducts.reduce((acc, product) => {
-        if (product.id === Number(values.product_id)) {
-          acc.push({
-            product_id: product.id,
-            item_name: product.display_name,
-            sales_price: values.sales_price,
-            price: values.price,
-            percent: values.percent,
-            unit_id: product.unit_id,
-            stock: product.quantity,
-            quantity: values.quantity,
-            uom: product.uom,
-            purchase_price: product.purchase_price,
-            sub_total: selectProductDetails.sub_total,
-            warehouse_id: values.warehouse_id
-              ? Number(values.warehouse_id)
-              : null,
-            warehouse_name: values.warehouse_id
-              ? warehouseDropdownData.find(
-                  (warehouse) => warehouse.value === values.warehouse_id
-                ).label
-              : null,
-            bonus_quantity: values.bonus_quantity,
-          });
-        }
-        return acc;
-      }, []),
-    ];
-    setLoadCardProducts(true);
-    updateLocalStorageAndResetForm(addProducts, "product");
-  }
-
-  // handle prodcut by barcode id
-  function handleAddProductByBarcode(values, myCardProducts, localProducts) {
-    const barcodeExists = localProducts.some(
-      (product) => product.barcode === values.barcode
-    );
-
-    if (barcodeExists) {
-      const addProducts = localProducts.reduce((acc, product) => {
-        if (String(product.barcode) === String(values.barcode)) {
-          acc.push(createProductFromValues(product, values));
-        }
-        return acc;
-      }, myCardProducts);
-
-      updateLocalStorageAndResetForm(addProducts);
-    } else {
-      notifications.show({
-        loading: true,
-        color: "red",
-        title: "Product not found with this barcode",
-        message: "Data will be loaded in 3 seconds, you cannot close this yet",
-        autoClose: 1000,
-        withCloseButton: true,
-      });
-    }
-  }
-  function createProductFromValues(product, values) {
-    return {
-      product_id: product.id,
-      item_name: product.display_name,
-      sales_price: product.sales_price,
-      price: product.sales_price,
-      percent: "",
-      stock: product.quantity,
-      quantity: 1,
-      uom: product.uom,
-      purchase_price: product.purchase_price,
-      sub_total: product.sales_price,
-      unit_id: product.unit_id,
-      warehouse_id: values.warehouse_id ? Number(values.warehouse_id) : null,
-      warehouse_name: values.warehouse_id
-        ? warehouseDropdownData.find(
-            (warehouse) => warehouse.value === values.warehouse_id
-          ).label
-        : null,
-      bonus_quantity: values.bonus_quantity,
-    };
-  }
-  //category hook
-  const [categoryData, setCategoryData] = useState(null);
-
-  //products hook
-  const [products, setProducts] = useState([]);
-
-  //product filter based on category id and set the dropdown value for product dropdown
-  useEffect(() => {
-    const storedProducts = localStorage.getItem("core-products");
-    const localProducts = storedProducts ? JSON.parse(storedProducts) : [];
-    const filteredProducts = localProducts.filter((product) => {
-      if (categoryData) {
-        return (
-          product.product_nature !== "raw-materials" &&
-          product.category_id === Number(categoryData) &&
-          product.sales_price !== 0
-        );
-      }
-      return product.product_nature !== "raw-materials";
-    });
-
-    setProducts(filteredProducts);
-
-    // Transform product for dropdown
-    const transformedProducts = filteredProducts.map((product) => ({
-      label: `${product.display_name} [${product.quantity}] ${product.unit_name} - ${currencySymbol}${product.sales_price}`,
-      value: String(product.id),
-    }));
-    setProductDropdown(transformedProducts);
-  }, [categoryData]);
-
-  //update local storage and reset form values
-  function updateLocalStorageAndResetForm(addProducts) {
-    localStorage.setItem("temp-sales-products", JSON.stringify(addProducts));
-    setSearchValue("");
-    setWarehouseData(null);
-    setProduct(null);
-    form.reset();
-    document.getElementById("product_id").focus();
-  }
-
-  //load cart product hook
-  const [loadCardProducts, setLoadCardProducts] = useState(false);
-
-  // temp cart product hook
-  const [tempCardProducts, setTempCardProducts] = useState([]);
-
-  //load cart products from local storage
-  useEffect(() => {
-    localStorage.removeItem("temp-sales-products");
-    localStorage.setItem(
-      "temp-sales-products",
-      JSON.stringify(entityEditData?.sales_items || [])
-    );
-    setTempCardProducts(
-      entityEditData?.sales_items ? entityEditData.sales_items : []
-    );
-    setLoadCardProducts(false);
-  }, []);
-  useEffect(() => {
-    if (loadCardProducts) {
-      const cardProducts = localStorage.getItem("temp-sales-products");
-      setTempCardProducts(cardProducts ? JSON.parse(cardProducts) : []);
-      setLoadCardProducts(false);
-    }
-  }, [loadCardProducts]);
   useHotkeys(
     [
       [
@@ -503,6 +365,99 @@ function _UpdateInvoice(props) {
     ],
     []
   );
+
+  const inputGroupText = (
+    <Text
+      style={{ textAlign: "right", width: "100%", paddingRight: 16 }}
+      color={"gray"}
+    >
+      {selectProductDetails && selectProductDetails.unit_name}
+    </Text>
+  );
+
+  const inputGroupCurrency = (
+    <Text
+      style={{ textAlign: "right", width: "100%", paddingRight: 16 }}
+      color={"gray"}
+    >
+      {currencySymbol}
+    </Text>
+  );
+  //unit type hook
+  const [unitType, setUnitType] = useState(null);
+
+  //product hook
+  const [product, setProduct] = useState(null);
+
+  //product multi price hook
+  const [multiPrice, setMultiPrice] = useState(null);
+  //segmented control
+  const [switchValue, setSwitchValue] = useState("product");
+
+  //setting drawer control
+  const [settingDrawer, setSettingDrawer] = useState(false);
+
+  //product drawer control
+  const [productDrawer, setProductDrawer] = useState(false);
+
+  //sales by barcode comes from backend now static value
+  const [salesByBarcode, setSalesByBarcode] = useState(true);
+
+  //category hook
+  const [categoryData, setCategoryData] = useState(null);
+
+  //products hook
+  const [products, setProducts] = useState([]);
+  // adding product from table
+  const [productQuantities, setProductQuantities] = useState({});
+
+  //product filter based on category id and set the dropdown value for product dropdown
+  useEffect(() => {
+    const storedProducts = localStorage.getItem("core-products");
+    const localProducts = storedProducts ? JSON.parse(storedProducts) : [];
+    const filteredProducts = localProducts.filter((product) => {
+      if (categoryData) {
+        return (
+          product.product_nature !== "raw-materials" &&
+          product.category_id === Number(categoryData) &&
+          product.purchase_price !== 0
+        );
+      }
+      return product.product_nature !== "raw-materials";
+    });
+
+    setProducts(filteredProducts);
+
+    // Transform product for dropdown
+    const transformedProducts = filteredProducts.map((product) => ({
+      label: `${product.display_name} [${product.quantity}] ${product.unit_name} - ${currencySymbol}${product.purchase_price}`,
+      value: String(product.id),
+    }));
+    setProductDropdown(transformedProducts);
+  }, [categoryData]);
+  //vendor hook
+  const [vendorData, setVendorData] = useState(null);
+  //vendor dropdowndata
+  const [vendorsDropdownData, setVendorsDropdownData] = useState([]);
+  useEffect(() => {
+    const fetchVendors = async () => {
+      await vendorDataStoreIntoLocalStorage();
+      let coreVendors = localStorage.getItem("core-vendors");
+      coreVendors = coreVendors ? JSON.parse(coreVendors) : [];
+
+      if (coreVendors && coreVendors.length > 0) {
+        const transformedData = coreVendors.map((type) => {
+          return {
+            label: type.mobile + " -- " + type.name,
+            value: String(type.id),
+          };
+        });
+        setVendorsDropdownData(transformedData);
+      }
+    };
+    fetchVendors();
+  }, []);
+
   return (
     <Box>
       <Grid columns={24} gutter={{ base: 8 }}>
@@ -515,10 +470,11 @@ function _UpdateInvoice(props) {
               if (!values.barcode && !values.product_id) {
                 form.setFieldError("barcode", true);
                 form.setFieldError("product_id", true);
+                isWarehouse && form.setFieldError("warehouse_id", true);
                 setTimeout(() => {}, 1000);
               } else {
                 const cardProducts = localStorage.getItem(
-                  "temp-sales-products"
+                  "temp-purchase-products"
                 );
                 const myCardProducts = cardProducts
                   ? JSON.parse(cardProducts)
@@ -529,24 +485,11 @@ function _UpdateInvoice(props) {
                   : [];
 
                 if (values.product_id && !values.barcode) {
-                  if (!allowZeroPercentage) {
-                    showNotification({
-                      color: "pink",
-                      title: t("WeNotifyYouThat"),
-                      message: t("ZeroQuantityNotAllow"),
-                      autoClose: 1500,
-                      loading: true,
-                      withCloseButton: true,
-                      position: "top-center",
-                      style: { backgroundColor: "mistyrose" },
-                    });
-                  } else {
-                    handleAddProductByProductId(
-                      values,
-                      myCardProducts,
-                      localProducts
-                    );
-                  }
+                  handleAddProductByProductId(
+                    values,
+                    myCardProducts,
+                    localProducts
+                  );
                 } else if (!values.product_id && values.barcode) {
                   handleAddProductByBarcode(
                     values,
@@ -563,7 +506,7 @@ function _UpdateInvoice(props) {
                   <Grid columns={12} gutter={{ base: 2 }}>
                     <Grid.Col span={7}>
                       <Text fz="md" fw={500} className={classes.cardTitle}>
-                        {t("Customer Sales Invoice")}
+                        {t("Customer Purchase Invoice")}
                       </Text>
                     </Grid.Col>
                     <Grid.Col span={5} align="center">
@@ -702,7 +645,7 @@ function _UpdateInvoice(props) {
                               mx="auto"
                             >
                               <Text fz={11} fw={400} pr={"xs"} w={70}>
-                                {currencySymbol} {data.sales_price}
+                                {currencySymbol} {data.purchase_price}
                               </Text>
                               <Input
                                 styles={{
@@ -779,26 +722,24 @@ function _UpdateInvoice(props) {
                                   const quantity = productQuantities[data.id];
                                   if (quantity && Number(quantity) > 0) {
                                     const cardProducts = localStorage.getItem(
-                                      "temp-sales-products"
+                                      "temp-purchase-products"
                                     );
                                     const myCardProducts = cardProducts
                                       ? JSON.parse(cardProducts)
                                       : [];
-                                    console.log(data)
+
                                     const productToAdd = {
                                       product_id: data.id,
-                                      item_name: data.display_name,
-                                      sales_price: data.sales_price,
-                                      price: data.sales_price,
-                                      percent: "",
-                                      stock: data.quantity,
+                                      display_name: data.display_name,
                                       quantity: quantity,
-                                      uom: data.unit_name,
-                                      purchase_price: data.purchase_price,
+                                      unit_name: data.unit_name,
+                                      purchase_price: Number(
+                                        data.purchase_price
+                                      ),
                                       sub_total:
                                         Number(quantity) *
-                                        Number(data.sales_price),
-                                      unit_id: data.unit_id,
+                                        Number(data.purchase_price),
+                                      sales_price: Number(data.sales_price),
                                       warehouse_id: form.values.warehouse_id
                                         ? Number(form.values.warehouse_id)
                                         : null,
@@ -807,29 +748,25 @@ function _UpdateInvoice(props) {
                                             (warehouse) =>
                                               warehouse.value ===
                                               form.values.warehouse_id
-                                          )?.label
+                                          ).label
                                         : null,
-                                      bonus_quantity: 0,
+                                      bonus_quantity:
+                                        form.values.bonus_quantity,
                                     };
 
+                                    // Add to array
                                     myCardProducts.push(productToAdd);
 
-                                    // Update localStorage and reset form values
+                                    // Update localStorage
                                     localStorage.setItem(
-                                      "temp-sales-products",
+                                      "temp-purchase-products",
                                       JSON.stringify(myCardProducts)
                                     );
 
-                                    // Show success notification
-                                    notifications.show({
-                                      color: "green",
-                                      title: t("ProductAdded"),
-                                      message: t("ProductAddedSuccessfully"),
-                                      autoClose: 1500,
-                                      withCloseButton: true,
-                                    });
-                                    //update the sales table
+                                    // Update both state variables
+                                    setTempCardProducts(myCardProducts); // Add this line
                                     setLoadCardProducts(true);
+
                                     // Reset quantity input for this specific product
                                     setProductQuantities((prev) => ({
                                       ...prev,
@@ -862,7 +799,7 @@ function _UpdateInvoice(props) {
                   </Box>
                   <Box mt={"8"}>
                     <SelectForm
-                      tooltip={t("PurchaseValidateMessage")}
+                      tooltip={t("Vendor")}
                       label=""
                       placeholder={t("Vendor")}
                       required={false}
@@ -1040,15 +977,15 @@ function _UpdateInvoice(props) {
                           </Grid.Col>
                           <Grid.Col span={4}>
                             <InputNumberForm
-                              tooltip={t("SalesPriceValidateMessage")}
+                              tooltip={t("PurchasePriceValidateMessage")}
                               label=""
-                              placeholder={t("SalesPrice")}
+                              placeholder={t("PurchasePrice")}
                               required={true}
                               nextField={"EntityFormSubmit"}
                               form={form}
-                              name={"sales_price"}
-                              id={"sales_price"}
-                              disabled={form.values.percent}
+                              name={"purchase_price"}
+                              id={"purchase_price"}
+                              disabled={!isPurchaseByPurchasePrice}
                               leftSection={
                                 <IconPlusMinus size={16} opacity={0.5} />
                               }
@@ -1134,7 +1071,7 @@ function _UpdateInvoice(props) {
                               nextField={
                                 form.values.percent
                                   ? "EntityFormSubmit"
-                                  : "sales_price"
+                                  : "purchase_price"
                               }
                               form={form}
                               name={"percent"}
@@ -1171,7 +1108,10 @@ function _UpdateInvoice(props) {
                               />
                             </Box>
                             <Text ta="right" mt={"8"}>
-                              {currencySymbol} {t("SubTotal")}
+                              {currencySymbol}{" "}
+                              {selectProductDetails
+                                ? selectProductDetails.sub_total
+                                : 0}
                             </Text>
                           </Grid.Col>
                         </Grid>
@@ -1228,27 +1168,23 @@ function _UpdateInvoice(props) {
           </form>
         </Grid.Col>
         <Grid.Col span={16}>
-          <__PosSalesUpdateForm
-            lastClicked={lastClicked}
+          <__PosPurchaseUpdateForm
+            tempCardProducts={tempCardProducts}
             currencySymbol={currencySymbol}
             domainId={domainId}
             isSMSActive={isSMSActive}
-            isZeroReceiveAllow={isZeroReceiveAllow}
-            tempCardProducts={tempCardProducts}
             setLoadCardProducts={setLoadCardProducts}
-            setTempCardProducts={setTempCardProducts}
-            entityEditData={entityEditData}
-            setLastClicked={setLastClicked}
-            handleClick={handleClick}
             isWarehouse={isWarehouse}
+            editedData={editedData}
+            setTempCardProducts={setTempCardProducts}
           />
         </Grid.Col>
       </Grid>
       {settingDrawer && (
-        <SettingsDrawer
+        <SettingDrawer
           settingDrawer={settingDrawer}
           setSettingDrawer={setSettingDrawer}
-          module={"sales"}
+          module={"purchase"}
         />
       )}
       {productDrawer && (
@@ -1264,4 +1200,4 @@ function _UpdateInvoice(props) {
   );
 }
 
-export default _UpdateInvoice;
+export default _UpdatePurchaseInvoice;

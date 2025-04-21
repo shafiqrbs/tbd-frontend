@@ -1,22 +1,23 @@
 import { isNotEmpty, useForm } from "@mantine/form";
 import { useEffect, useState } from "react";
-import __PosVendorSection from "./__PosVendorSection";
+import __PosVendorSection from "./__PosVendorSection.jsx";
 import { Box, Text, ActionIcon, Group, TextInput } from "@mantine/core";
 import { DataTable } from "mantine-datatable";
 import tableCss from "../../../../assets/css/Table.module.css";
 import { useTranslation } from "react-i18next";
 import { IconPercentage, IconSum, IconX } from "@tabler/icons-react";
-import { useOutletContext } from "react-router-dom";
-import __PosPurchaseInvoiceSection from "./__PosPurchaseInvoiceSection.jsx";
+import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 import { getHotkeyHandler, useToggle } from "@mantine/hooks";
 import vendorDataStoreIntoLocalStorage from "../../../global-hook/local-storage/vendorDataStoreIntoLocalStorage.js";
 import { useDispatch } from "react-redux";
 import { notifications } from "@mantine/notifications";
 import { IconCheck } from "@tabler/icons-react";
 import { rem } from "@mantine/core";
-import { storeEntityData } from "../../../../store/inventory/crudSlice.js";
+import __PosPurchaseInvoiceSection from "./__PosPurchaseInvoiceSection.jsx";
+import { updateEntityData } from "../../../../store/inventory/crudSlice.js";
 
-export default function __PosPurchaseForm(props) {
+export default function __PosPurchaseUpdateForm(props) {
+  const { id } = useParams();
   const {
     isSMSActive,
     currencySymbol,
@@ -24,6 +25,8 @@ export default function __PosPurchaseForm(props) {
     tempCardProducts,
     setLoadCardProducts,
     isWarehouse,
+    editedData,
+    setTempCardProducts,
   } = props;
 
   //common hooks
@@ -36,22 +39,23 @@ export default function __PosPurchaseForm(props) {
   // form
   const form = useForm({
     initialValues: {
-      vendor_id: "",
-      transaction_mode_id: "",
-      order_process: "",
-      narration: "",
-      discount: "",
-      receive_amount: "",
-      name: "",
-      mobile: "",
-      email: "",
-      warehouse_id: "",
+      vendor_id: editedData ? editedData?.vendor_id : "",
+      transaction_mode_id: editedData ? editedData?.transaction_mode_id : "",
+      order_process: editedData ? editedData?.order_process : "",
+      narration: editedData ? editedData?.narration : "",
+      discount: editedData ? editedData?.discount : "",
+      receive_amount: editedData ? editedData?.payment : "",
+      name: editedData ? editedData?.vendor_name : "",
+      mobile: editedData ? editedData?.vendor_mobile : "",
+      email: editedData ? editedData?.vendor_email : "",
+      warehouse_id : editedData ? editedData?.warehouse_id : "",
     },
     validate: {
       transaction_mode_id: isNotEmpty(),
+      vendor_id: isNotEmpty(),
     },
   });
-
+  const navigate = useNavigate();
   //calculate subTotal amount
   let purchaseSubTotalAmount =
     tempCardProducts?.reduce((total, item) => total + item.sub_total, 0) || 0;
@@ -60,7 +64,9 @@ export default function __PosPurchaseForm(props) {
   const [vendorsDropdownData, setVendorsDropdownData] = useState([]);
 
   //customer hook
-  const [vendorData, setVendorData] = useState(null);
+  const [vendorData, setVendorData] = useState(
+    editedData?.vendor_id?.toString()
+  );
 
   // setting defualt customer
   useEffect(() => {
@@ -92,7 +98,9 @@ export default function __PosPurchaseForm(props) {
   const [purchaseDiscountAmount, setPurchaseDiscountAmount] = useState(0);
 
   //order process hook
-  const [orderProcess, setOrderProcess] = useState(null);
+  const [orderProcess, setOrderProcess] = useState(
+    editedData?.process?.toString()
+  );
 
   //vat amount hook
   const [purchaseVatAmount, setPurchaseVatAmount] = useState(0);
@@ -107,7 +115,7 @@ export default function __PosPurchaseForm(props) {
   const [returnOrDueText, setReturnOrDueText] = useState("Due");
 
   //discount type hook
-  const [discountType, setDiscountType] = useToggle(["Flat", "Percent"]);
+  const [discountType, setDiscountType] = useState(editedData.discount_type);
 
   // calculate sales total amount after discount and vat change
   useEffect(() => {
@@ -145,23 +153,27 @@ export default function __PosPurchaseForm(props) {
     purchaseSubTotalAmount,
     purchaseVatAmount,
   ]);
+  //invoice button hooks for tracking last clicked
+  const [lastClicked, setLastClicked] = useState(null);
 
+  //function to handling button clicks
+  const handleClick = (event) => {
+    setLastClicked(event.currentTarget.name);
+  };
   return (
     <>
       <form
         onSubmit={form.onSubmit((values) => {
-          const tempProducts = localStorage.getItem("temp-purchase-products");
-          let items = tempProducts ? JSON.parse(tempProducts) : [];
           let createdBy = JSON.parse(localStorage.getItem("user"));
-          let transformedArray = items.map((product) => {
+          let transformedArray = tempCardProducts.map((product) => {
             return {
               product_id: product.product_id,
-              warehouse_id: product.warehouse_id,
               quantity: product.quantity,
               purchase_price: product.purchase_price,
               sales_price: product.sales_price,
-              bonus_quantity: product.bonus_quantity,
               sub_total: product.sub_total,
+              bonus_quantity: product.bonus_quantity,
+              warehouse_id: product.warehouse_id,
             };
           });
 
@@ -193,41 +205,41 @@ export default function __PosPurchaseForm(props) {
             discountType === "Percent" ? form.values.discount : 0;
           formValue["vat"] = 0;
           formValue["total"] = purchaseTotalAmount;
-          formValue["payment"] = form.values.receive_amount;
+          formValue["payment"] = form.values.payment;
           formValue["created_by_id"] = Number(createdBy["id"]);
-          formValue["process"] = form.values.order_process;
+          formValue["process"] = orderProcess;
           formValue["narration"] = form.values.narration;
-          formValue["invoice_date"] =
-            form.values.invoice_date &&
-            new Date(form.values.invoice_date).toLocaleDateString(
-              "en-CA",
-              options
-            );
           formValue["items"] = transformedArray ? transformedArray : [];
 
-          const data = {
-            url: "inventory/purchase",
-            data: formValue,
-          };
-          console.log(formValue);
-          dispatch(storeEntityData(data));
-          notifications.show({
-            color: "teal",
-            title: t("CreateSuccessfully"),
-            icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
-            loading: false,
-            autoClose: 700,
-            style: { backgroundColor: "lightgray" },
-          });
+          if (transformedArray && transformedArray.length > 0) {
+            const data = {
+              url: "inventory/purchase/" + id,
+              data: formValue,
+            };
+            dispatch(updateEntityData(data));
 
-          setTimeout(() => {
-            localStorage.removeItem("temp-purchase-products");
-            form.reset();
-            setVendorData(null);
-            setOrderProcess(null);
-            setLoadCardProducts(true);
-            setVendorObject(null);
-          }, 700);
+            notifications.show({
+              color: "teal",
+              title: t("UpdatedSuccessfully"),
+              icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
+              loading: false,
+              autoClose: 700,
+              style: { backgroundColor: "lightgray" },
+            });
+
+            if (lastClicked === "save") {
+              navigate("/inventory/purchase");
+            }
+          } else {
+            notifications.show({
+              color: "red",
+              title: t("PleaseChooseItems"),
+              icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
+              loading: false,
+              autoClose: 700,
+              style: { backgroundColor: "lightgray" },
+            });
+          }
         })}
       >
         <Box bg={"white"} p={"xs"} className={"borderRadiusAll"}>
@@ -258,7 +270,7 @@ export default function __PosPurchaseForm(props) {
                 {
                   accessor: "index",
                   title: t("S/N"),
-                  textAlign: "right",
+                  textAlignment: "right",
                   render: (item) => tempCardProducts.indexOf(item) + 1,
                 },
                 {
@@ -274,7 +286,7 @@ export default function __PosPurchaseForm(props) {
                 },
                 {
                   accessor: "bonus_quantity",
-                  title: t("BonusQuantityTable"),
+                  title: t("BonusQty"),
                 },
                 {
                   accessor: "quantity",
@@ -285,33 +297,25 @@ export default function __PosPurchaseForm(props) {
                       item.quantity
                     );
 
-                    const handlQuantityChange = (e) => {
+                    const handleQuantityChange = (e) => {
                       const editedQuantity = e.currentTarget.value;
                       setEditedQuantity(editedQuantity);
 
-                      const tempCardProducts = localStorage.getItem(
-                        "temp-purchase-products"
-                      );
-                      const cardProducts = tempCardProducts
-                        ? JSON.parse(tempCardProducts)
-                        : [];
-
-                      const updatedProducts = cardProducts.map((product) => {
-                        if (product.product_id === item.product_id) {
-                          return {
-                            ...product,
-                            quantity: e.currentTarget.value,
-                            sub_total: e.currentTarget.value * item.sales_price,
-                          };
+                      const updatedProducts = tempCardProducts.map(
+                        (product) => {
+                          if (product.id === item.id) {
+                            return {
+                              ...product,
+                              quantity: e.currentTarget.value,
+                              sub_total:
+                                e.currentTarget.value * item.purchase_price,
+                            };
+                          }
+                          return product;
                         }
-                        return product;
-                      });
-
-                      localStorage.setItem(
-                        "temp-purchase-products",
-                        JSON.stringify(updatedProducts)
                       );
-                      setLoadCardProducts(true);
+
+                      setTempCardProducts(updatedProducts);
                     };
 
                     return (
@@ -321,7 +325,7 @@ export default function __PosPurchaseForm(props) {
                           label=""
                           size="xs"
                           value={editedQuantity}
-                          onChange={handlQuantityChange}
+                          onChange={handleQuantityChange}
                           onKeyDown={getHotkeyHandler([
                             [
                               "Enter",
@@ -358,28 +362,19 @@ export default function __PosPurchaseForm(props) {
                     };
                     useEffect(() => {
                       const timeoutId = setTimeout(() => {
-                        const tempCardProducts = localStorage.getItem(
-                          "temp-purchase-products"
-                        );
-                        const cardProducts = tempCardProducts
-                          ? JSON.parse(tempCardProducts)
-                          : [];
-                        const updatedProducts = cardProducts.map((product) => {
-                          if (product.product_id === item.product_id) {
-                            return {
-                              ...product,
-                              purchase_price: editedPurchasePrice,
-                              sub_total: editedPurchasePrice * item.quantity,
-                            };
+                        const updatedProducts = tempCardProducts.map(
+                          (product) => {
+                            if (product.id === item.id) {
+                              return {
+                                ...product,
+                                purchase_price: editedPurchasePrice,
+                                sub_total: editedPurchasePrice * item.quantity,
+                              };
+                            }
+                            return product;
                           }
-                          return product;
-                        });
-
-                        localStorage.setItem(
-                          "temp-purchase-products",
-                          JSON.stringify(updatedProducts)
                         );
-                        setLoadCardProducts(true);
+                        setTempCardProducts(updatedProducts);
                       }, 1000);
 
                       return () => clearTimeout(timeoutId);
@@ -430,22 +425,9 @@ export default function __PosPurchaseForm(props) {
                         variant="subtle"
                         color="red"
                         onClick={() => {
-                          const dataString = localStorage.getItem(
-                            "temp-purchase-products"
-                          );
-                          let data = dataString ? JSON.parse(dataString) : [];
-
-                          data = data.filter(
-                            (d) => d.product_id !== item.product_id
-                          );
-
-                          const updatedDataString = JSON.stringify(data);
-
-                          localStorage.setItem(
-                            "temp-purchase-products",
-                            updatedDataString
-                          );
-                          setLoadCardProducts(true);
+                          let data = tempCardProducts ? tempCardProducts : [];
+                          data = data.filter((d) => d.id !== item.id);
+                          setTempCardProducts(data);
                         }}
                       >
                         <IconX
@@ -470,6 +452,9 @@ export default function __PosPurchaseForm(props) {
         </Box>
         <Box>
           <__PosPurchaseInvoiceSection
+            lastClicked={lastClicked}
+            setLastClicked={setLastClicked}
+            handleClick={handleClick}
             setVendorsDropdownData={setVendorsDropdownData}
             vendorsDropdownData={vendorsDropdownData}
             form={form}
@@ -486,6 +471,7 @@ export default function __PosPurchaseForm(props) {
             vendorData={vendorData}
             purchaseDueAmount={purchaseDueAmount}
             setLoadCardProducts={setLoadCardProducts}
+            editedData={editedData}
             isWarehouse={isWarehouse}
           />
         </Box>

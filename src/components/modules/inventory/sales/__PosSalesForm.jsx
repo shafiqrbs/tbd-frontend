@@ -62,6 +62,9 @@ export default function __PosSalesForm(props) {
   //customer hook
   const [customerData, setCustomerData] = useState(null);
 
+  //default customer hook
+  const [defaultCustomerId, setDefaultCustomerId] = useState(null);
+
   // setting defualt customer
   useEffect(() => {
     const fetchCustomers = async () => {
@@ -88,8 +91,6 @@ export default function __PosSalesForm(props) {
     fetchCustomers();
   }, []);
 
-  //default customer hook
-  const [defaultCustomerId, setDefaultCustomerId] = useState(null);
 
   //Custoemr object hook
   const [customerObject, setCustomerObject] = useState({});

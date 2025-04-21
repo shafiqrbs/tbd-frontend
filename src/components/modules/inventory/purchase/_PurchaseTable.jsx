@@ -43,6 +43,7 @@ import {PurchasePrintPos} from "./print-component/PurchasePrintPos.jsx";
 import {notifications} from "@mantine/notifications";
 import getConfigData from "../../../global-hook/config-data/getConfigData.js";
 import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
+import Navigation from "../common/Navigation.jsx";
 
 function _PurchaseTable() {
     const {configData} = getConfigData()
@@ -62,8 +63,7 @@ function _PurchaseTable() {
     const navigate = useNavigate();
     const [selectedRow, setSelectedRow] = useState("");
     const [indexData, setIndexData] = useState([])
-    const [fetching, setFetching] = useState(true)
-
+    const fetching = useSelector((state) => state.inventoryCrudSlice.fetching);
     const purchaseFilterData = useSelector(
         (state) => state.inventoryCrudSlice.purchaseFilterData
     );
@@ -167,7 +167,7 @@ function _PurchaseTable() {
 // useEffect now only calls fetchData based on dependencies
     useEffect(() => {
         fetchData();
-    }, [purchaseFilterData, page]);
+    }, [purchaseFilterData, page, fetching]);
 
 
     useEffect(() => {
@@ -258,7 +258,10 @@ function _PurchaseTable() {
             </Box>
             <Box>
                 <Grid columns={24} gutter={{base: 8}}>
-                    <Grid.Col span={15}>
+                    <Grid.Col span={1}>
+                        <Navigation module = "sales" />
+                    </Grid.Col>
+                    <Grid.Col span={14}>
                         <Box bg={"white"} p={"xs"} className={"borderRadiusAll"}>
                             <Box className={"borderRadiusAll"}>
                                 <DataTable

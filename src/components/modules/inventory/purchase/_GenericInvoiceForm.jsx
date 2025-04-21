@@ -54,9 +54,9 @@ function _GenericInvoiceForm(props) {
     allowZeroPercentage,
     domainId,
     isSMSActive,
-    isZeroReceiveAllow,
     focusFrom,
     isWarehouse,
+    isPurchaseByPurchasePrice,
   } = props;
 
   //common hooks and variables
@@ -948,7 +948,7 @@ function _GenericInvoiceForm(props) {
                               label=""
                               placeholder={t("Price")}
                               required={false}
-                              nextField={""}
+                              nextField={"price"}
                               name={"multi_price"}
                               form={form}
                               dropdownValue={["1", "2", "3", "4", "5"]}
@@ -962,7 +962,8 @@ function _GenericInvoiceForm(props) {
                           <Grid.Col span={4}>
                             <InputButtonForm
                               type="number"
-                              tooltip=""
+                              tooltip="purchase_price"
+                              nextField={"price"}
                               label=""
                               placeholder={t("Price")}
                               required={true}
@@ -983,11 +984,11 @@ function _GenericInvoiceForm(props) {
                               label=""
                               placeholder={t("PurchasePrice")}
                               required={true}
-                              nextField={"EntityFormSubmit"}
+                              nextField={"unit_id"}
                               form={form}
                               name={"purchase_price"}
                               id={"purchase_price"}
-                              disabled={form.values.percent}
+                              disabled={!isPurchaseByPurchasePrice}
                               leftSection={
                                 <IconPlusMinus size={16} opacity={0.5} />
                               }
@@ -1006,7 +1007,7 @@ function _GenericInvoiceForm(props) {
                               label=""
                               placeholder={t("Unit")}
                               required={false}
-                              nextField={""}
+                              nextField={"quantity"}
                               name={"unit_id"}
                               form={form}
                               dropdownValue={["pcs", "kg"]}
@@ -1020,11 +1021,11 @@ function _GenericInvoiceForm(props) {
                           <Grid.Col span={4}>
                             <InputButtonForm
                               type="number"
-                              tooltip={t("PercentValidateMessage")}
+                              tooltip={t("QuantityValidateMessage")}
                               label=""
                               placeholder={t("Quantity")}
                               required={true}
-                              nextField={"percent"}
+                              nextField={"bonus_quantity"}
                               form={form}
                               name={"quantity"}
                               id={"quantity"}
@@ -1070,11 +1071,7 @@ function _GenericInvoiceForm(props) {
                               label=""
                               placeholder={t("Percent")}
                               required={true}
-                              nextField={
-                                form.values.percent
-                                  ? "EntityFormSubmit"
-                                  : "purchase_price"
-                              }
+                              nextField={"EntityFormSubmit"}
                               form={form}
                               name={"percent"}
                               id={"percent"}
@@ -1087,7 +1084,7 @@ function _GenericInvoiceForm(props) {
                               closeIcon={true}
                             />
                           </Grid.Col>
-                          <Grid.Col span={4}>
+                          <Grid.Col span={4}> 
                             <Box style={{ display: "none" }}>
                               <InputButtonForm
                                 tooltip=""
@@ -1174,7 +1171,6 @@ function _GenericInvoiceForm(props) {
             currencySymbol={currencySymbol}
             domainId={domainId}
             isSMSActive={isSMSActive}
-            isZeroReceiveAllow={isZeroReceiveAllow}
             tempCardProducts={tempCardProducts}
             setLoadCardProducts={setLoadCardProducts}
             isWarehouse={isWarehouse}

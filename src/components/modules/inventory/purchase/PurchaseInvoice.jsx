@@ -36,6 +36,7 @@ function PurchaseInvoice() {
                                         currencySymbol={configData?.currency?.symbol}
                                         isPurchaseByPurchasePrice={configData?.is_purchase_by_purchase_price}
                                         isWarehouse={configData?.sku_warehouse}
+                                        isSMSActive={configData?.is_active_sms}
                                     />
                                 }
                             </Box>

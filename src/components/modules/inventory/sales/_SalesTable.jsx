@@ -43,6 +43,7 @@ import { SalesPrintPos } from "./print-component/SalesPrintPos.jsx";
 import { modals } from "@mantine/modals";
 import { notifications } from "@mantine/notifications";
 import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
+import Navigation from "../common/Navigation.jsx";
 
 function _SalesTable(props) {
     const {isWarehouse} = props
@@ -61,7 +62,7 @@ function _SalesTable(props) {
     const [printPos, setPrintPos] = useState(false);
     const [checked, setChecked] = useState(false);
     const [indexData,setIndexData] = useState([])
-    const [fetching,setFetching] = useState(true)
+    const fetching = useSelector((state) => state.inventoryCrudSlice.fetching)
 
 
 
@@ -157,7 +158,7 @@ function _SalesTable(props) {
 
     useEffect(() => {
         fetchData();
-    }, [salesFilterData,page]);
+    }, [salesFilterData,page, fetching]);
 
     const [checkList, setCheckList] = useState({});
     const CheckItemsHandel = (e, item) => {
@@ -227,7 +228,8 @@ function _SalesTable(props) {
             </Box>
             <Box>
                 <Grid columns={24} gutter={{ base: 8 }}>
-                    <Grid.Col span={15} >
+                    <Grid.Col span={1} ><Navigation module="sales"/></Grid.Col>
+                    <Grid.Col span={14} >
                         <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
                             <Box className={'borderRadiusAll'}>
                                 <DataTable
