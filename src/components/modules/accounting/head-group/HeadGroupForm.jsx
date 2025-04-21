@@ -1,65 +1,50 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import {
-    Button,
-    rem, Flex,
-    Grid, Box, ScrollArea, Group, Text, Title, Alert, List, Stack, SimpleGrid, Image, Tooltip
+    Button, Flex, Grid, Box, ScrollArea, Text, Title, Stack
 } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
-import {
-    IconCheck,
-    IconDeviceFloppy, IconInfoCircle, IconPlus,
-} from "@tabler/icons-react";
-import { useDisclosure, useHotkeys } from "@mantine/hooks";
-import { useDispatch, useSelector } from "react-redux";
-import { hasLength, isNotEmpty, useForm } from "@mantine/form";
+import {IconDeviceFloppy} from "@tabler/icons-react";
+import { useHotkeys } from "@mantine/hooks";
+import { useDispatch } from "react-redux";
+import { isNotEmpty, useForm } from "@mantine/form";
 import { modals } from "@mantine/modals";
-import { notifications } from "@mantine/notifications";
 import {
-    setEntityNewData,
     setFetching,
     setValidationData,
     storeEntityData,
-    storeEntityDataWithFile
-} from "../../../../store/accounting/crudSlice.js";
+} from "../../../../store/core/crudSlice.js";
 
 import Shortcut from "../../shortcut/Shortcut";
 import InputForm from "../../../form-builders/InputForm";
 import SelectForm from "../../../form-builders/SelectForm.jsx";
-import SwitchForm from "../../../form-builders/SwitchForm";
 import getSettingMotherAccountDropdownData from "../../../global-hook/dropdown/getSettingMotherAccountDropdownData";
-import useAccountHeadDropdownData from "../../../global-hook/dropdown/account/getAccountHeadAllDropdownData.js";
 import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
 
-function HeadGroupForm(props) {
+function HeadGroupForm() {
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const { isOnline, mainAreaHeight } = useOutletContext();
     const height = mainAreaHeight - 100; //TabList height 104
 
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
-    const [motherData, setMotherData] = useState(null);
+    const [headGroup, setHeadGroup] = useState(null);
 
-    const accountDropdown = getSettingMotherAccountDropdownData()
-
-    const [reloadTrigger, setReloadTrigger] = useState(false);
-    const accountHeadDropdownData = useAccountHeadDropdownData(reloadTrigger, 'account-head');
-
-
+    const motherAccountDropdown = getSettingMotherAccountDropdownData()
 
     const form = useForm({
         initialValues: {
-            parent_id: '', name: '', code: '', status: true, head_group : 'account-head'
+            mother_account_id: '', name: '', code: '', head_group : 'head'
         },
         validate: {
-            parent_id: isNotEmpty(),
+            mother_account_id: isNotEmpty(),
             name: isNotEmpty(),
             code : isNotEmpty()
         }
     });
 
     useHotkeys([['alt+n', () => {
-        document.getElementById('parent_id').click()
+        document.getElementById('mother_account_id').click()
     }]], []);
 
     useHotkeys([['alt+r', () => {
@@ -70,48 +55,44 @@ function HeadGroupForm(props) {
         document.getElementById('EntityFormSubmit').click()
     }]], []);
 
+    const handleSubmit = async (values) => {
+        setSaveCreateLoading(true);
+        dispatch(setValidationData(false));
+
+        try {
+            const action = await dispatch(storeEntityData({
+                url: "accounting/account-head",
+                data: values
+            }));
+
+            if (action.payload?.status === 200) {
+                showNotificationComponent(t("Account head created successfully"), "green");
+                form.reset();
+            } else {
+                showNotificationComponent(t("Something went wrong"), "red");
+            }
+        } catch (error) {
+            console.error("Account head creation error:", error);
+            showNotificationComponent(t("Request failed"), "red");
+        } finally {
+            dispatch(setFetching(true));
+            setSaveCreateLoading(false);
+        }
+    };
+
+    const openConfirmationModal = (values) => {
+        modals.openConfirmModal({
+            title: <Text size="md">{t("FormConfirmationTitle")}</Text>,
+            children: <Text size="sm">{t("FormConfirmationMessage")}</Text>,
+            labels: { confirm: 'Confirm', cancel: 'Cancel' },
+            confirmProps: { color: 'red' },
+            onConfirm: () => handleSubmit(values),
+        });
+    };
 
     return (
         <Box>
-            <form onSubmit={form.onSubmit((values) => {
-                dispatch(setValidationData(false))
-                modals.openConfirmModal({
-                    title: (
-                        <Text size="md"> {t("FormConfirmationTitle")}</Text>
-                    ),
-                    children: (
-                        <Text size="sm"> {t("FormConfirmationMessage")}</Text>
-                    ),
-                    labels: { confirm: 'Confirm', cancel: 'Cancel' }, confirmProps: { color: 'red' },
-                    onCancel: () => console.log('Cancel'),
-                    onConfirm: async () => {
-                        setSaveCreateLoading(true)
-
-                        const data = {
-                            url: "accounting/account-head",
-                            data: form.values
-                        };
-
-                        try {
-                            const action = await dispatch(storeEntityData(data));
-                            const payload = action.payload;
-
-                            if (payload?.status === 200 && payload?.data?.data?.id) {
-                                showNotificationComponent(t("Account head created successfully"), "green");
-                            } else {
-                                showNotificationComponent(t("Something went wrong"), "red");
-                            }
-                        } catch (error) {
-                            console.error("Error updating domain status", error);
-                            showNotificationComponent(t("Request failed"), "red");
-                        } finally {
-                            form.reset()
-                            dispatch(setFetching(true))
-                            setSaveCreateLoading(false)
-                        }
-                    },
-                });
-            })}>
+            <form onSubmit={form.onSubmit(openConfirmationModal)}>
                 <Grid columns={9} gutter={{ base: 8 }}>
                     <Grid.Col span={8} >
                         <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
@@ -155,13 +136,13 @@ function HeadGroupForm(props) {
                                                             placeholder={t('ChooseMotherAccount')}
                                                             required={true}
                                                             nextField={'name'}
-                                                            name={'parent_id'}
+                                                            name={'mother_account_id'}
                                                             form={form}
-                                                            dropdownValue={accountHeadDropdownData}
-                                                            id={'parent_id'}
+                                                            dropdownValue={motherAccountDropdown}
+                                                            id={'mother_account_id'}
                                                             searchable={false}
-                                                            value={motherData}
-                                                            changeValue={setMotherData}
+                                                            value={headGroup}
+                                                            changeValue={setHeadGroup}
                                                         />
                                                     </Box>
                                                     <Box mt={'xs'}>
@@ -189,34 +170,13 @@ function HeadGroupForm(props) {
                                                             nextField={'status'}
                                                         />
                                                     </Box>
-                                                    <Box mt={'xs'} >
-                                                        <Grid gutter={{ base: 1 }}>
-                                                            <Grid.Col span={2}>
-                                                                <SwitchForm
-                                                                    tooltip={t('Status')}
-                                                                    label=''
-                                                                    nextField={'EntityFormSubmit'}
-                                                                    name={'status'}
-                                                                    form={form}
-                                                                    color="red"
-                                                                    id={'status'}
-                                                                    position={'left'}
-                                                                    defaultChecked={1}
-                                                                />
-                                                            </Grid.Col>
-                                                            <Grid.Col span={6} fz={'sm'} pt={'1'}>{t('Status')}</Grid.Col>
-                                                        </Grid>
-                                                    </Box>
                                                 </Box>
                                             </ScrollArea>
                                         </Grid.Col>
                                     </Grid>
                                 </Box>
                             </Box>
-
                         </Box>
-
-
                     </Grid.Col>
                     <Grid.Col span={1} >
                         <Box bg={'white'} className={'borderRadiusAll'} pt={'16'}>
@@ -231,7 +191,7 @@ function HeadGroupForm(props) {
                 </Grid>
             </form>
         </Box>
-
     );
 }
+
 export default HeadGroupForm;

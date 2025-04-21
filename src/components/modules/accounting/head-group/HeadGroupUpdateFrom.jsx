@@ -1,49 +1,34 @@
 import React, { useEffect, useState } from "react";
-import {useNavigate, useOutletContext, useParams} from "react-router-dom";
+import {useNavigate, useOutletContext} from "react-router-dom";
 import {
-    Button,
-    rem, Flex,
-    Grid, Box, ScrollArea, Group, Text, Title, Alert, List, Stack, Tooltip, SimpleGrid, Image,
+    Button, Flex, Grid, Box, ScrollArea, Text, Title, Stack
 } from "@mantine/core";
 import { useTranslation } from 'react-i18next';
-import {
-    IconCheck,
-    IconDeviceFloppy, IconInfoCircle, IconPlus,
-} from "@tabler/icons-react";
-import { useDisclosure, useHotkeys } from "@mantine/hooks";
+import {IconDeviceFloppy} from "@tabler/icons-react";
+import { useHotkeys } from "@mantine/hooks";
 import { useDispatch, useSelector } from "react-redux";
-import { hasLength, isNotEmpty, useForm } from "@mantine/form";
+import { isNotEmpty, useForm } from "@mantine/form";
 import { modals } from "@mantine/modals";
-import { notifications } from "@mantine/notifications";
-
-import {
-    getExecutiveDropdown, getLocationDropdown,
-} from "../../../../store/core/utilitySlice";
 import {
     setEditEntityData,
-    setEntityNewData,
     setFetching,
     setFormLoading,
-    setValidationData,
-    storeEntityData,
     setInsertType,
     updateEntityData
-} from "../../../../store/accounting/crudSlice.js";
+} from "../../../../store/core/crudSlice.js";
 
 import Shortcut from "../../shortcut/Shortcut";
 import InputForm from "../../../form-builders/InputForm";
 import SelectForm from "../../../form-builders/SelectForm";
-import SwitchForm from "../../../form-builders/SwitchForm.jsx";
 import getSettingMotherAccountDropdownData from "../../../global-hook/dropdown/getSettingMotherAccountDropdownData";
+import {showNotificationComponent} from "../../../core-component/showNotificationComponent.jsx";
 
-function HeadGroupUpdateFrom(props) {
+function HeadGroupUpdateFrom() {
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { isOnline, mainAreaHeight } = useOutletContext();
     const height = mainAreaHeight - 100; //TabList height 104
-    const [opened, { open, close }] = useDisclosure(false);
-
     const [saveCreateLoading, setSaveCreateLoading] = useState(false);
 
     const entityEditData = useSelector((state) => state.crudSlice.entityEditData)
@@ -56,7 +41,7 @@ function HeadGroupUpdateFrom(props) {
 
     const form = useForm({
         initialValues: {
-            mother_account_id:'', name:'', code: '', status: '', head_group : 'head'
+            mother_account_id:'', name:'', code: '', head_group : 'head'
         },
         validate: {
             mother_account_id: isNotEmpty(),
@@ -75,7 +60,6 @@ function HeadGroupUpdateFrom(props) {
             mother_account_id: entityEditData.mother_account_id ? entityEditData.mother_account_id : '',
             name: entityEditData.name ? entityEditData.name : '',
             code: entityEditData.code ? entityEditData.code : '',
-            status: entityEditData.status ? entityEditData.status : '',
             head_group : entityEditData.head_group ? entityEditData.head_group : 'head',
         })
     }
@@ -85,7 +69,6 @@ function HeadGroupUpdateFrom(props) {
             mother_account_id: entityEditData.mother_account_id ? entityEditData.mother_account_id : '',
             name: entityEditData.name ? entityEditData.name : '',
             code: entityEditData.code ? entityEditData.code : '',
-            status: entityEditData.status ? entityEditData.status : '',
             head_group : entityEditData.head_group ? entityEditData.head_group : 'head',
         })
 
@@ -121,30 +104,40 @@ function HeadGroupUpdateFrom(props) {
                     ),
                     labels: { confirm: 'Submit', cancel: 'Cancel' }, confirmProps: { color: 'red' },
                     onCancel: () => console.log('Cancel'),
-                    onConfirm: () => {
+                    onConfirm: async () => {
                         setSaveCreateLoading(true)
                         const value = {
                             url: 'accounting/account-head/' + entityEditData.id,
                             data: form.values
                         }
-                        dispatch(updateEntityData(value))
-                        notifications.show({
-                            color: 'teal',
-                            title: t('UpdateSuccessfully'),
-                            icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
-                            loading: false,
-                            autoClose: 700,
-                            style: { backgroundColor: 'lightgray' },
-                        });
 
-                        setTimeout(() => {
-                            form.reset()
-                            dispatch(setInsertType('create'))
-                            dispatch(setEditEntityData([]))
-                            dispatch(setFetching(true))
-                            setSaveCreateLoading(false)
-                            navigate('/accounting/head-group', { replace: true })
-                        }, 700)
+                        const resultAction = await dispatch(updateEntityData(value));
+
+                        if (updateEntityData.rejected.match(resultAction)) {
+                            const fieldErrors = resultAction.payload.errors;
+
+                            // Check if there are field validation errors and dynamically set them
+                            if (fieldErrors) {
+                                const errorObject = {};
+                                Object.keys(fieldErrors).forEach(key => {
+                                    errorObject[key] = fieldErrors[key][0]; // Assign the first error message for each field
+                                });
+                                // Display the errors using your form's `setErrors` function dynamically
+                                form.setErrors(errorObject);
+                            }
+                        } else if (updateEntityData.fulfilled.match(resultAction)) {
+                            showNotificationComponent(t("UpdateSuccessfully"), "green");
+
+
+                            setTimeout(() => {
+                                form.reset()
+                                dispatch(setInsertType('create'))
+                                dispatch(setEditEntityData([]))
+                                dispatch(setFetching(true))
+                                setSaveCreateLoading(false)
+                                navigate('/accounting/head-group', { replace: true })
+                            }, 700);
+                        }
                     },
                 });
             })}>
@@ -225,24 +218,6 @@ function HeadGroupUpdateFrom(props) {
                                                             id={'code'}
                                                             nextField={'status'}
                                                         />
-                                                    </Box>
-                                                    <Box mt={'xs'} >
-                                                        <Grid gutter={{ base: 1 }}>
-                                                            <Grid.Col span={2}>
-                                                                <SwitchForm
-                                                                    tooltip={t('Status')}
-                                                                    label=''
-                                                                    nextField={'EntityFormSubmit'}
-                                                                    name={'status'}
-                                                                    form={form}
-                                                                    color="red"
-                                                                    id={'status'}
-                                                                    position={'left'}
-                                                                    checked={form.values.status}
-                                                                />
-                                                            </Grid.Col>
-                                                            <Grid.Col span={6} fz={'sm'} pt={'1'}>{t('Status')}</Grid.Col>
-                                                        </Grid>
                                                     </Box>
                                                 </Box>
                                             </ScrollArea>
