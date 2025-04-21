@@ -62,8 +62,7 @@ function _PurchaseTable() {
     const navigate = useNavigate();
     const [selectedRow, setSelectedRow] = useState("");
     const [indexData, setIndexData] = useState([])
-    const [fetching, setFetching] = useState(true)
-
+    const fetching = useSelector((state) => state.inventoryCrudSlice.fetching);
     const purchaseFilterData = useSelector(
         (state) => state.inventoryCrudSlice.purchaseFilterData
     );
@@ -167,7 +166,7 @@ function _PurchaseTable() {
 // useEffect now only calls fetchData based on dependencies
     useEffect(() => {
         fetchData();
-    }, [purchaseFilterData, page]);
+    }, [purchaseFilterData, page, fetching]);
 
 
     useEffect(() => {
