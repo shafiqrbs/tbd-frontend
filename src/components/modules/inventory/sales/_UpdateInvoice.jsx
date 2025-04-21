@@ -451,11 +451,23 @@ function _UpdateInvoice(props) {
 
   //load cart products from local storage
   useEffect(() => {
+    localStorage.removeItem("temp-sales-products");
+    localStorage.setItem(
+      "temp-sales-products",
+      JSON.stringify(entityEditData?.sales_items || [])
+    );
     setTempCardProducts(
       entityEditData?.sales_items ? entityEditData.sales_items : []
     );
     setLoadCardProducts(false);
   }, []);
+  useEffect(() => {
+    if (loadCardProducts) {
+      const cardProducts = localStorage.getItem("temp-sales-products");
+      setTempCardProducts(cardProducts ? JSON.parse(cardProducts) : []);
+      setLoadCardProducts(false);
+    }
+  }, [loadCardProducts]);
   useHotkeys(
     [
       [
@@ -772,16 +784,16 @@ function _UpdateInvoice(props) {
                                     const myCardProducts = cardProducts
                                       ? JSON.parse(cardProducts)
                                       : [];
-
+                                    console.log(data)
                                     const productToAdd = {
                                       product_id: data.id,
-                                      display_name: data.display_name,
+                                      item_name: data.display_name,
                                       sales_price: data.sales_price,
                                       price: data.sales_price,
                                       percent: "",
                                       stock: data.quantity,
                                       quantity: quantity,
-                                      unit_name: data.unit_name,
+                                      uom: data.unit_name,
                                       purchase_price: data.purchase_price,
                                       sub_total:
                                         Number(quantity) *
@@ -807,7 +819,7 @@ function _UpdateInvoice(props) {
                                       "temp-sales-products",
                                       JSON.stringify(myCardProducts)
                                     );
-                                    
+
                                     // Show success notification
                                     notifications.show({
                                       color: "green",

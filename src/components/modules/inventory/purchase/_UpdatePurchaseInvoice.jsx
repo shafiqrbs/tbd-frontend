@@ -84,11 +84,23 @@ function _UpdatePurchaseInvoice(props) {
   }, [stockProductRestore]);
 
   useEffect(() => {
+    localStorage.removeItem("temp-purchase-products");
+    localStorage.setItem(
+      "temp-purchase-products",
+      JSON.stringify(editedData?.purchase_items || [])
+    );
     setTempCardProducts(
       editedData?.purchase_items ? editedData.purchase_items : []
     );
     setLoadCardProducts(false);
   }, []);
+  useEffect(() => {
+      if (loadCardProducts) {
+        const cardProducts = localStorage.getItem("temp-purchase-products");
+        setTempCardProducts(cardProducts ? JSON.parse(cardProducts) : []);
+        setLoadCardProducts(false);
+      }
+    }, [loadCardProducts]);
 
   useEffect(() => {
     if (searchValue.length > 0) {
@@ -752,9 +764,9 @@ function _UpdatePurchaseInvoice(props) {
                                     );
 
                                     // Update both state variables
-                                    setTempCardProducts(myCardProducts);  // Add this line
+                                    setTempCardProducts(myCardProducts); // Add this line
                                     setLoadCardProducts(true);
-                                    
+
                                     // Reset quantity input for this specific product
                                     setProductQuantities((prev) => ({
                                       ...prev,

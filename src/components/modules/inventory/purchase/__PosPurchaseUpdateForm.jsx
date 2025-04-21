@@ -445,7 +445,7 @@ export default function __PosPurchaseUpdateForm(props) {
               recordsPerPage={10}
               loaderSize="xs"
               loaderColor="grape"
-              height={height}
+              height={height - 264}
               scrollAreaProps={{ type: "never" }}
             />
           </Box>

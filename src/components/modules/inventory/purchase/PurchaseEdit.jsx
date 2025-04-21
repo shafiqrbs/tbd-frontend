@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { editEntityData } from "../../../../store/inventory/crudSlice.js";
 import { notifications } from "@mantine/notifications";
 import { IconCheck } from "@tabler/icons-react";
-import _UpdatePurchaseInvoice from "./_UpdatePurchaseInvoice.jsx";
+import _UpdatePurchaseInvoice from "./_UpdatePurchaseInvoice.jsx"
 
 function PurchaseEdit() {
   let { id } = useParams();
