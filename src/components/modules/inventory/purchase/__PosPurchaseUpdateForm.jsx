@@ -41,13 +41,14 @@ export default function __PosPurchaseUpdateForm(props) {
     initialValues: {
       vendor_id: editedData ? editedData?.vendor_id : "",
       transaction_mode_id: editedData ? editedData?.transaction_mode_id : "",
-      order_process: editedData ? editedData?.process : "",
+      order_process: editedData ? editedData?.order_process : "",
       narration: editedData ? editedData?.narration : "",
       discount: editedData ? editedData?.discount : "",
       receive_amount: editedData ? editedData?.payment : "",
       name: editedData ? editedData?.vendor_name : "",
       mobile: editedData ? editedData?.vendor_mobile : "",
       email: editedData ? editedData?.vendor_email : "",
+      warehouse_id : editedData ? editedData?.warehouse_id : "",
     },
     validate: {
       transaction_mode_id: isNotEmpty(),
@@ -159,7 +160,6 @@ export default function __PosPurchaseUpdateForm(props) {
   const handleClick = (event) => {
     setLastClicked(event.currentTarget.name);
   };
-
   return (
     <>
       <form
@@ -472,6 +472,7 @@ export default function __PosPurchaseUpdateForm(props) {
             purchaseDueAmount={purchaseDueAmount}
             setLoadCardProducts={setLoadCardProducts}
             editedData={editedData}
+            isWarehouse={isWarehouse}
           />
         </Box>
       </form>

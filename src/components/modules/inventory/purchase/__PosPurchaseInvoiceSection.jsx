@@ -32,6 +32,7 @@ import { useOutletContext } from "react-router-dom";
 import classes from "../../../../assets/css/FeaturesCards.module.css";
 import InputNumberForm from "../../../form-builders/InputNumberForm";
 import vendorDataStoreIntoLocalStorage from "../../../global-hook/local-storage/vendorDataStoreIntoLocalStorage";
+import getCoreWarehouseDropdownData from "../../../global-hook/dropdown/core/getCoreWarehouseDropdownData";
 
 export default function __PosPurchaseInvoiceSection(props) {
   const {
@@ -55,6 +56,7 @@ export default function __PosPurchaseInvoiceSection(props) {
     lastClicked,
     setLastClicked,
     handleClick,
+    isWarehouse,
   } = props;
 
   //common hooks
@@ -88,6 +90,9 @@ export default function __PosPurchaseInvoiceSection(props) {
 
   //default customer id hook
   const [defaultVendorId, setDefaultVendorId] = useState(null);
+
+  let warehouseDropdownData = getCoreWarehouseDropdownData();
+  const [warehouseData, setWarehouseData] = useState(null);
 
   // get default customer id
   useEffect(() => {
@@ -217,6 +222,25 @@ export default function __PosPurchaseInvoiceSection(props) {
                   closeIcon={true}
                 />
               </Box>
+              {isWarehouse == 1 && (
+                <Box mt={"4"}>
+                  <SelectForm
+                    tooltip={t("Warehouse")}
+                    label=""
+                    placeholder={t("Warehouse")}
+                    required={false}
+                    nextField={"category_id"}
+                    name={"warehouse_id"}
+                    form={form}
+                    dropdownValue={warehouseDropdownData}
+                    id={"warehouse_id"}
+                    mt={1}
+                    searchable={true}
+                    value={warehouseData}
+                    changeValue={setWarehouseData}
+                  />
+                </Box>
+              )}
               <Box pt={4}>
                 <SelectForm
                   tooltip={t("ChooseOrderProcess")}

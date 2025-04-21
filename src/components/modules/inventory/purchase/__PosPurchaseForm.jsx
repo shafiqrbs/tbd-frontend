@@ -45,6 +45,7 @@ export default function __PosPurchaseForm(props) {
       name: "",
       mobile: "",
       email: "",
+      warehouse_id: "",
     },
     validate: {
       transaction_mode_id: isNotEmpty(),
@@ -485,6 +486,7 @@ export default function __PosPurchaseForm(props) {
             vendorData={vendorData}
             purchaseDueAmount={purchaseDueAmount}
             setLoadCardProducts={setLoadCardProducts}
+            isWarehouse={isWarehouse}
           />
         </Box>
       </form>
