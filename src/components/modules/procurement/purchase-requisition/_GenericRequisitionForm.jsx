@@ -110,16 +110,25 @@ export default function _GenericRequisitionForm(props) {
         coreVendors = coreVendors ? JSON.parse(coreVendors) : [];
 
         // Filter vendor for domain vendor
-        const filteredVendors = coreVendors.filter(vendor => vendor.sub_domain_id != null);
-        if (filteredVendors && filteredVendors.length > 0) {
-            const transformedData = filteredVendors.map((type) => {
-                return {
-                    label: type.mobile + " -- " + type.name,
-                    value: String(type.id),
-                };
-            });
-            setVendorsDropdownData(transformedData);
-        }
+        // const filteredVendors = coreVendors.filter(vendor => vendor.sub_domain_id != null);
+        // if (filteredVendors && filteredVendors.length > 0) {
+        //     const transformedData = filteredVendors.map((type) => {
+        //         return {
+        //             label: type.mobile + " -- " + type.name,
+        //             value: String(type.id),
+        //         };
+        //     });
+        //     setVendorsDropdownData(transformedData);
+        // }
+
+        // all vendors opened
+        const transformedData = coreVendors.map((type) => {
+            return {
+                label: type.mobile + " -- " + type.name,
+                value: String(type.id),
+            };
+        });
+        setVendorsDropdownData(transformedData);
     };
     useEffect(() => {
         fetchVendors();
@@ -166,7 +175,6 @@ export default function _GenericRequisitionForm(props) {
         const filteredProducts = localProducts.filter(
             (product) => product.id === Number(productForm.values.product_id)
         );
-        console.log(filteredProducts)
         if (filteredProducts.length > 0) {
             const selectedProduct = filteredProducts[0];
             setSelectProductDetails(selectedProduct);

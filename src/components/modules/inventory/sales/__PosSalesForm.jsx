@@ -645,7 +645,7 @@ export default function __PosSalesForm(props) {
               recordsPerPage={10}
               loaderSize="xs"
               loaderColor="grape"
-              height={height - 266}
+              height={height - 264}
             />
           </Box>
         </Box>

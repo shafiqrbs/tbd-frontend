@@ -784,7 +784,7 @@ function _UpdateInvoice(props) {
                                     const myCardProducts = cardProducts
                                       ? JSON.parse(cardProducts)
                                       : [];
-                                    console.log(data)
+                                    // console.log(data)
                                     const productToAdd = {
                                       product_id: data.id,
                                       item_name: data.display_name,
@@ -947,7 +947,7 @@ function _UpdateInvoice(props) {
                           <Box>
                             <Tooltip
                               multiline
-                              bg={"#905923"}
+                              className={genericClass.genericPrimaryBg}
                               position="top"
                               withArrow
                               ta={"center"}
@@ -1171,7 +1171,10 @@ function _UpdateInvoice(props) {
                               />
                             </Box>
                             <Text ta="right" mt={"8"}>
-                              {currencySymbol} {t("SubTotal")}
+                              {currencySymbol}{" "}
+                              {selectProductDetails
+                                ? selectProductDetails.sub_total
+                                : 0}
                             </Text>
                           </Grid.Col>
                         </Grid>
@@ -1182,7 +1185,7 @@ function _UpdateInvoice(props) {
               </Box>
               <Box mb="xs">
                 <Grid
-                  className={genericClass.genericHighlightedBox}
+                  className={genericClass.genericBackground}
                   columns={12}
                   justify="space-between"
                   align="center"

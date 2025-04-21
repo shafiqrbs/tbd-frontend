@@ -71,11 +71,11 @@ export default function __PosCustomerSection(props) {
   return (
     <>
       <Box pl={`4`} pr={4} mb={"xs"} style={{ borderRadius:4}} className={genericClass.bodyBackground}>
-        <Grid columns={24} gutter={{ base: 4 }}>
+        <Grid columns={24} gutter={{ base: 6 }}>
           <Grid.Col span={16} className={genericClass.genericSecondaryBg}>
             <Box pl={"4"} pr={"4"}>
               <Box style={{ borderRadius:4}} className={genericClass.genericHighlightedBox} >
-                <Grid r={'4'} gutter={{ base: 6 }} mt={8} >
+                <Grid gutter={{ base: 6 }} mt={8} >
                   <Grid.Col span={10} pl={"8"}>
                     <SelectForm
                       tooltip={t("CustomerValidateMessage")}

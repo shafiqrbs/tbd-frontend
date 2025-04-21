@@ -286,7 +286,7 @@ export default function __PosPurchaseUpdateForm(props) {
                 },
                 {
                   accessor: "bonus_quantity",
-                  title: t("BonusQty"),
+                  title: t("BonusQuantityTable"),
                 },
                 {
                   accessor: "quantity",
