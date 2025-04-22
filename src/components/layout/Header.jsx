@@ -35,6 +35,7 @@ import {
   IconWindowMinimize,
   IconWifiOff,
   IconWifi,
+  IconEdit,
 } from "@tabler/icons-react";
 import { Link } from "react-router-dom";
 import HeaderStyle from "./../../assets/css/Header.module.css";
@@ -268,75 +269,99 @@ export default function Header({ isOnline, configData }) {
       <Box bg={"#905a23"} mb={"2"} pos={`relative`}>
         <Grid columns={24} gutter={{ base: 2 }} justify="space-between">
           <Grid.Col span={3}>
-            {configData?.domain && loginUser.user_group === "domain" ? (
-              <>
-                <div
-                  style={{
-                    display: "flex",
-                    height: "100%",
-                    alignItems: "center",
-                    paddingLeft: 16,
-                  }}
+            {configData?.path ? (
+              <div
+                style={{
+                  display: "flex",
+                  height: "100%",
+                  alignItems: "center",
+                  paddingLeft: 16,
+                }}
+              >
+                <Tooltip
+                  label={
+                    configData && configData.domain
+                      ? configData.domain.company_name
+                      : ""
+                  }
+                  className={"tooltipSecondaryBg"}
+                  position="right"
+                  withArrow
                 >
+                  <Anchor
+                    target="_blank"
+                    underline="never"
+                    onClick={() => {
+                      navigate("/");
+                    }}
+                    style={{
+                      backgroundColor: "#905a23",
+                      color: "white",
+                      fontWeight: 800,
+                      transition: "background 1s",
+                    }}
+                  >
+                    <Image
+                      mah={40}
+                      radius="md"
+                      src={
+                        import.meta.env.VITE_IMAGE_GATEWAY_URL +
+                        "/uploads/inventory/logo/" +
+                        configData.path
+                      }
+                      fallbackSrc={logo_default}
+                      pl={6}
+                    ></Image>
+                  </Anchor>
+                </Tooltip>
+                {configData?.domain && loginUser.user_group === "domain" && (
                   <Tooltip
-                    label={
-                      configData && configData.domain
-                        ? configData.domain.company_name
-                        : ""
-                    }
+                    label={t("UpdateYourLogoAndOtherConfigs")}
                     bg={`green`}
                     position="right"
                     withArrow
+                    className={"tooltipSecondaryBg"}
                   >
-                    <Anchor
-                      target="_blank"
-                      underline="never"
+                    <ActionIcon
+                      c={"grey"}
+                      bg={"transparent"}
+                      pl={"xs"}
                       onClick={() => {
-                        if (!configData?.path) {
-                          navigate(`/domain/config/${configData?.domain?.id}`);
-                        } else {
-                          navigate("/");
-                        }
+                        navigate(`/domain/config/${configData?.domain?.id}`);
                       }}
                       onAuxClick={(e) => {
-                        if (!configData?.path) {
-                          window.open(
-                            `/domain/config/${configData?.domain?.id}`
-                          );
-                        } else {
-                          window.open("/");
-                        }
+                        navigate(`/domain/config/${configData?.domain?.id}`);
                       }}
                     >
-                      <Image
-                        mah={40}
-                        radius="md"
-                        src={
-                          import.meta.env.VITE_IMAGE_GATEWAY_URL +
-                          "/uploads/inventory/logo/" +
-                          configData.path
-                        }
-                        fallbackSrc={logo_default}
-                        pl={6}
-                      ></Image>
-                    </Anchor>
+                      <IconEdit style={{ width: rem(18), height: rem(18) }} />
+                    </ActionIcon>
                   </Tooltip>
-                  <Text ml={4}>{configData.domain.company_name}</Text>
-                </div>
-              </>
+                )}
+                {/* <Text ml={4}>{configData.domain.company_name}</Text> */}
+              </div>
             ) : (
               <NavLink
-                href="/"
-                c={"white"}
-                fw={"800"}
                 component="button"
+                bg={"transparent"}
+                style={{
+                  backgroundColor: "#905a23",
+                  color: "white",
+                  fontWeight: 800,
+                  transition: "background 1s",
+                }}
                 label={
                   configData && configData.domain
                     ? configData.domain.company_name
                     : ""
                 }
-                onClick={(e) => {
+                onClick={() => {
                   navigate("/");
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = "#dee2e6";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = "white";
                 }}
               />
             )}
@@ -380,9 +405,9 @@ export default function Header({ isOnline, configData }) {
                 }
                 w={`100%`}
                 justify="space-between"
-                style={{ border: '1px solid #49362366' }}
-                color={'black'}
-                bg={'white'}
+                style={{ border: "1px solid #49362366" }}
+                color={"black"}
+                bg={"white"}
                 onClick={open}
                 className="no-focus-outline"
               />
@@ -412,11 +437,9 @@ export default function Header({ isOnline, configData }) {
                 <HoverCard.Dropdown style={{ overflow: "hidden" }}>
                   <Group justify="space-between">
                     <Text fw={500} fz={16}>
-                      {
-                        configData && configData.domain
-                            ? configData.domain.company_name
-                            : ""
-                      }
+                      {configData && configData.domain
+                        ? configData.domain.company_name
+                        : ""}
                     </Text>
                   </Group>
                   <Divider my="sm" />
@@ -435,7 +458,7 @@ export default function Header({ isOnline, configData }) {
                         </Text>
                       </div>
                       <Button
-                        className={'btnPrimaryBg'}
+                        className={"btnPrimaryBg"}
                         size="xs"
                         onClick={() => navigate("/")}
                       >
@@ -455,7 +478,7 @@ export default function Header({ isOnline, configData }) {
               wrap="wrap"
               mih={42}
               align={"right"}
-              px={'xs'}
+              px={"xs"}
               pr={"24"}
             >
               <Menu
@@ -470,7 +493,7 @@ export default function Header({ isOnline, configData }) {
                 <Menu.Target>
                   <UnstyledButton
                     p={2}
-                    bg={'red'}
+                    bg={"red"}
                     className={LanguagePickerStyle.control}
                     data-expanded={languageOpened || undefined}
                   >
@@ -511,14 +534,14 @@ export default function Header({ isOnline, configData }) {
               </Menu>
               <Tooltip
                 label={fullscreen ? t("NormalScreen") : t("Fullscreen")}
-                bg={'#635031'}
+                bg={"#635031"}
                 withArrow
               >
                 <ActionIcon
                   mt={"6"}
                   onClick={toggle}
                   variant="subtle"
-                  color={'white'}
+                  color={"white"}
                 >
                   {fullscreen ? (
                     <IconWindowMinimize size={24} />
@@ -532,13 +555,13 @@ export default function Header({ isOnline, configData }) {
                   <>
                     <Stack spacing={0} gap={0}>
                       <Text align="center">
-                        {loginUser.name} ( {loginUser.username} )
+                        {loginUser?.name} ( {loginUser?.username} )
                       </Text>
                       <Text align="center">{t("LogoutAltL")}</Text>
                     </Stack>
                   </>
                 }
-                bg={'#635031'}
+                bg={"#635031"}
                 withArrow
                 position={"left"}
                 multiline
@@ -547,7 +570,7 @@ export default function Header({ isOnline, configData }) {
                   onClick={() => logout()}
                   variant="subtle"
                   mt={"6"}
-                  color={'white'}
+                  color={"white"}
                 >
                   <IconLogout size={24} />
                 </ActionIcon>
