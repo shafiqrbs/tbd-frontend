@@ -167,7 +167,7 @@ function HeadSubGroupUpdateFrom(props) {
                                                         !saveCreateLoading && isOnline &&
                                                         <Button
                                                             size="xs"
-                                                            color={`green.8`}
+                                                            calssName={'BtnPrimaryBg'}
                                                             type="submit"
                                                             id="EntityFormSubmit"
                                                             leftSection={<IconDeviceFloppy size={16} />}

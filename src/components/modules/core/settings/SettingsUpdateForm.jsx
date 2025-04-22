@@ -145,7 +145,7 @@ function SettingsUpdateForm(props) {
                                                             !saveCreateLoading && isOnline &&
                                                             <Button
                                                                 size="xs"
-                                                                color={`green.8`}
+                                                                calssName={'BtnPrimaryBg'}
                                                                 type="submit"
                                                                 id={`${saveId}`}
                                                                 leftSection={<IconDeviceFloppy size={16} />}

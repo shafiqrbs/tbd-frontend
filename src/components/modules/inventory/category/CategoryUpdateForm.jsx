@@ -143,7 +143,7 @@ function CategoryUpdateForm(props) {
                                                             !saveCreateLoading && isOnline &&
                                                             <Button
                                                                 size="xs"
-                                                                color={`green.8`}
+                                                                calssName={'BtnPrimaryBg'}
                                                                 type="submit"
                                                                 id="CategoryFormSubmit"
                                                                 leftSection={<IconDeviceFloppy size={16} />}
