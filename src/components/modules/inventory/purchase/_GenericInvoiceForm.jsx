@@ -886,7 +886,7 @@ function _GenericInvoiceForm(props) {
                           <Box>
                             <Tooltip
                               multiline
-                              bg={"#905923"}
+                              className={genericClass.genericPrimaryBg}
                               position="top"
                               withArrow
                               ta={"center"}
@@ -1121,7 +1121,7 @@ function _GenericInvoiceForm(props) {
               </Box>
               <Box mb="xs">
                 <Grid
-                  className={genericClass.genericHighlightedBox}
+                  className={genericClass.genericBackground}
                   columns={12}
                   justify="space-between"
                   align="center"

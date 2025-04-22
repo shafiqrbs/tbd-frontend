@@ -1,37 +1,56 @@
-import { t } from "i18next";
-import { useEffect, useState } from "react";
-import genericClass from "../../../../assets/css/Generic.module.css";
-import { Box, Grid, Tooltip, ActionIcon, Group, Text } from "@mantine/core";
-import { IconMessage, IconEyeEdit, IconUserCircle } from "@tabler/icons-react";
-import InputForm from "../../../form-builders/InputForm";
-import PhoneNumber from "../../../form-builders/PhoneNumberInput";
+import {
+  Box,
+  Grid,
+  ScrollArea,
+  Tooltip,
+  Center,
+  Stack,
+  TextInput,
+  ActionIcon,
+  Button,
+  Group,
+  Text,
+  Flex,
+} from "@mantine/core";
 import { useTranslation } from "react-i18next";
+import DatePickerForm from "../../../form-builders/DatePicker";
+import genericClass from "../../../../assets/css/Generic.module.css";
 import SelectForm from "../../../form-builders/SelectForm";
+import TextAreaForm from "../../../form-builders/TextAreaForm";
+import {
+  IconCalendar,
+  IconRefresh,
+  IconStackPush,
+  IconPrinter,
+  IconReceipt,
+  IconDeviceFloppy,
+  IconMessage,
+  IconEyeEdit,
+} from "@tabler/icons-react";
+import { useEffect, useState } from "react";
 import vendorDataStoreIntoLocalStorage from "../../../global-hook/local-storage/vendorDataStoreIntoLocalStorage";
 
-export default function __PosVendorSection(props) {
-  //common hooks
+export default function __RequistionInvoiceSection(props) {
   const {
     form,
-    isSMSActive,
     currencySymbol,
-    setVendorObject,
-    vendorObject,
-    vendorData,
-    setVendorData,
-    vendorsDropdownData,
-    setVendorsDropdownData,
     defaultVendorId,
+    handleClick,
+    isSMSActive,
     setDefaultVendorId,
+    vendorObject,
+    setVendorObject
   } = props;
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
 
-  //fetching customer dropdownData
+  // vendor dropdown
+  const [vendorData, setVendorData] = useState(null);
+  const [vendorsDropdownData, setVendorsDropdownData] = useState([]);
   useEffect(() => {
-    const fetchVendors = async () => {
-      await vendorDataStoreIntoLocalStorage();
-      let coreVendors = localStorage.getItem("core-vendors");
-      coreVendors = coreVendors ? JSON.parse(coreVendors) : [];
+    if (vendorData) {
+      const coreVendors = JSON.parse(
+        localStorage.getItem("core-vendors") || "[]"
+      );
       let defaultId = defaultVendorId;
       if (coreVendors && coreVendors.length > 0) {
         const transformedData = coreVendors.map((type) => {
@@ -43,16 +62,12 @@ export default function __PosVendorSection(props) {
             value: String(type.id),
           };
         });
-
         setVendorsDropdownData(transformedData);
         setDefaultVendorId(defaultId);
       }
-    };
+    }
+  }, [vendorData]);
 
-    fetchVendors();
-  }, []);
-
-  //setting vendorObject based on vendorData
   useEffect(() => {
     if (vendorData) {
       const coreVendors = JSON.parse(
@@ -66,37 +81,89 @@ export default function __PosVendorSection(props) {
     }
   }, [vendorData]);
 
+  const fetchVendors = async () => {
+    await vendorDataStoreIntoLocalStorage();
+    let coreVendors = localStorage.getItem("core-vendors");
+    coreVendors = coreVendors ? JSON.parse(coreVendors) : [];
+
+    // Filter vendor for domain vendor
+    // const filteredVendors = coreVendors.filter(vendor => vendor.sub_domain_id != null);
+    // if (filteredVendors && filteredVendors.length > 0) {
+    //     const transformedData = filteredVendors.map((type) => {
+    //         return {
+    //             label: type.mobile + " -- " + type.name,
+    //             value: String(type.id),
+    //         };
+    //     });
+    //     setVendorsDropdownData(transformedData);
+    // }
+
+    // all vendors opened
+    const transformedData = coreVendors.map((type) => {
+      return {
+        label: type.mobile + " -- " + type.name,
+        value: String(type.id),
+      };
+    });
+    setVendorsDropdownData(transformedData);
+  };
+  useEffect(() => {
+    fetchVendors();
+  }, []);
   return (
     <>
-      <Box pl={`4`} pr={4} mb={"xs"} className={genericClass.bodyBackground}>
-        <Grid columns={24} gutter={{ base: 6 }}>
-          <Grid.Col span={16} className={genericClass.genericSecondaryBg}>
+      <Box>
+        <Grid columns={24} gutter={{ base: 6 }} pt={"6"}>
+          <Grid.Col span={8}>
+            {/* outstading section */}
+            <Box p={"xs"} className={genericClass.genericSecondaryBg}>
+              <Flex
+                h={140}
+                justify="flex-end"
+                align="flex-end"
+                direction={"column"}
+              >
+                <Box></Box>
+              </Flex>
+            </Box>
+          </Grid.Col>
+          <Grid.Col
+            span={8}
+            style={{ borderRadius: 4 }}
+            className={genericClass.genericSecondaryBg}
+            mt={3}
+            mb={3}
+          >
             <Box pl={"4"} pr={"4"}>
-              <Box style={{ borderRadius:4}} className={genericClass.genericHighlightedBox}>
-                <Grid gutter={{ base: 6 }} mt={8}>
-                  <Grid.Col span={10} pl={"8"}>
+              <Box
+                style={{ borderRadius: 4 }}
+                className={genericClass.genericHighlightedBox}
+              >
+                <Grid gutter={{ base: 6 }} mt={8} columns={24}>
+                  <Grid.Col span={19} pl={"8"}>
                     <SelectForm
-                      tooltip={t("VendorValidateMessage")}
+                      tooltip={t("ChooseVendor")}
                       label=""
-                      placeholder={t("Jhon Dee")}
+                      placeholder={t("ChooseVendor")}
                       required={false}
-                      nextField={""}
-                      name={"vendor_id"}
+                      nextField="invoice_date"
+                      name="vendor_id"
                       form={form}
                       dropdownValue={vendorsDropdownData}
-                      id={"vendor_id"}
+                      id="vendor_id"
+                      mt={1}
                       searchable={true}
                       value={vendorData}
                       changeValue={setVendorData}
                     />
                   </Grid.Col>
-                  <Grid.Col span={2}>
+                  <Grid.Col span={5}>
                     <Box
                       mr={"12"}
                       mt={"4"}
                       style={{ textAlign: "right", float: "right" }}
                     >
-                      <Group>
+                      <Group gap={4} justify="center" wrap="nowrap">
                         <Tooltip
                           multiline
                           bg={"orange.8"}
@@ -109,7 +176,7 @@ export default function __PosVendorSection(props) {
                               ? isSMSActive
                                 ? t("SendSms")
                                 : t("PleasePurchaseAsmsPackage")
-                              : t("ChooseVendor")
+                              : t("ChooseCustomer")
                           }
                         >
                           <ActionIcon
@@ -149,8 +216,8 @@ export default function __PosVendorSection(props) {
                           transitionProps={{ duration: 200 }}
                           label={
                             vendorData && vendorData != defaultVendorId
-                              ? t("VendorDetails")
-                              : t("ChooseVendor")
+                              ? t("CustomerDetails")
+                              : t("ChooseCustomer")
                           }
                         >
                           <ActionIcon
@@ -176,10 +243,11 @@ export default function __PosVendorSection(props) {
                 pr={"4"}
                 mt={"4"}
                 pt={"8"}
-                style={{ borderRadius:4}}
+                pb={"4"}
+                style={{ borderRadius: 4 }}
               >
-                <Grid columns={18} gutter={{ base: 2 }}>
-                  <Grid.Col span={3}>
+                <Grid columns={18} gutter={{ base: 2 }} pt={"xs"}>
+                  <Grid.Col span={4}>
                     <Text
                       pl={"md"}
                       className={genericClass.genericPrimaryFontColor}
@@ -188,70 +256,70 @@ export default function __PosVendorSection(props) {
                       {t("Outstanding")}
                     </Text>
                   </Grid.Col>
-                  <Grid.Col span={6}>
+                  <Grid.Col span={5}>
                     <Text fz={"sm"} order={1} fw={"800"}>
                       {currencySymbol + " "}
                       {vendorData &&
                       vendorObject &&
                       vendorData != defaultVendorId
-                        ? Number(vendorObject?.balance).toFixed(2)
+                        ? Number(vendorObject.balance).toFixed(2)
                         : "0.00"}
                     </Text>
                   </Grid.Col>
-                  <Grid.Col span={3}>
+                  <Grid.Col span={4} pt={2}>
                     <Text ta="left" size="xs" pl={"md"}>
-                      {t("Purchase")}
+                      {t("Sales")}
                     </Text>
                   </Grid.Col>
-                  <Grid.Col span={6}>
+                  <Grid.Col span={5}>
                     <Text ta="left" size="sm">
                       {" "}
-                      {currencySymbol} {vendorObject?.purchase}
+                      {currencySymbol} {vendorObject?.sales}
                     </Text>
                   </Grid.Col>
                 </Grid>
-                <Grid columns={18} gutter={{ base: 2 }}>
-                  <Grid.Col span={3}>
+                <Grid columns={18} gutter={{ base: 2 }} pt={"xs"}>
+                  <Grid.Col span={4}>
                     <Text ta="left" size="xs" pl={"md"}>
                       {t("Discount")}
                     </Text>
                   </Grid.Col>
-                  <Grid.Col span={6}>
+                  <Grid.Col span={5}>
                     <Text ta="left" size="sm">
                       {" "}
                       {currencySymbol} {vendorObject?.discount}
                     </Text>
                   </Grid.Col>
-                  <Grid.Col span={3}>
+                  <Grid.Col span={4}>
                     <Text ta="left" size="xs" pl={"md"}>
                       {t("Receive")}
                     </Text>
                   </Grid.Col>
-                  <Grid.Col span={6}>
+                  <Grid.Col span={5}>
                     <Text ta="left" size="sm">
                       {" "}
                       {currencySymbol} {vendorObject?.receive}
                     </Text>
                   </Grid.Col>
                 </Grid>
-                <Grid columns={18} gutter={{ base: 2 }}>
-                  <Grid.Col span={3}>
+                <Grid columns={18} gutter={{ base: 2 }} pt={"xs"}>
+                  <Grid.Col span={4}>
                     <Text ta="left" size="xs" pl={"md"}>
                       {t("CreditLimit")}
                     </Text>
                   </Grid.Col>
-                  <Grid.Col span={6}>
+                  <Grid.Col span={5}>
                     <Text ta="left" size="sm">
                       {" "}
                       {currencySymbol} {vendorObject?.credit_limit}
                     </Text>
                   </Grid.Col>
-                  <Grid.Col span={3}>
+                  <Grid.Col span={4}>
                     <Text ta="left" size="xs" pl={"md"}>
                       {t("EarnPoint")}
                     </Text>
                   </Grid.Col>
-                  <Grid.Col span={6}>
+                  <Grid.Col span={5}>
                     <Text ta="left" size="sm">
                       {" "}
                       {currencySymbol} {vendorObject?.earn_point}
@@ -261,54 +329,115 @@ export default function __PosVendorSection(props) {
               </Box>
             </Box>
           </Grid.Col>
-          <Grid.Col span={8} style={{ borderRadius:4}} className={genericClass.genericSecondaryBg}>
-            <Box pl={"4"} pr={"4"}>
-              <Box mt={"4"}>
-                <InputForm
-                  tooltip={t("NameValidateMessage")}
-                  label={t("")}
-                  placeholder={t("VendorName")}
+          <Grid.Col span={8}>
+            <Box className={genericClass.genericSecondaryBg} p={"xs"} h={160}>
+              <Box>
+                <DatePickerForm
+                  tooltip={t("SelectInvoiceDate")}
+                  label=""
+                  placeholder={t("InvoiceDate")}
                   required={true}
-                  nextField={"mobile"}
+                  nextField={"expected_date"}
                   form={form}
-                  name={"name"}
-                  id={"name"}
-                  leftSection={<IconUserCircle size={16} opacity={0.5} />}
-                  rightIcon={""}
+                  name={"invoice_date"}
+                  id={"invoice_date"}
+                  leftSection={<IconCalendar size={16} opacity={0.5} />}
+                  closeIcon={true}
                 />
               </Box>
-              <Box mt={"4"}>
-                <PhoneNumber
-                  tooltip={
-                    form.errors.mobile
-                      ? form.errors.mobile
-                      : t("MobileValidateMessage")
-                  }
-                  label={t("")}
-                  placeholder={t("Mobile")}
+              <Box mt={4}>
+                <DatePickerForm
+                  tooltip={t("SelectExpectedDate")}
+                  label=""
+                  placeholder={t("ExpectedDate")}
                   required={true}
-                  nextField={"email"}
+                  nextField={"narration"}
                   form={form}
-                  name={"mobile"}
-                  id={"mobile"}
-                  rightIcon={""}
+                  name={"expected_date"}
+                  id={"expected_date"}
+                  disable={true}
+                  leftSection={<IconCalendar size={16} opacity={0.5} />}
+                  closeIcon={true}
                 />
               </Box>
-              <Box mt={"4"} mb={4}>
-                <InputForm
-                  tooltip={t("InvalidEmail")}
-                  label={t("")}
-                  placeholder={t("Email")}
+              <Box pt={4}>
+                <TextAreaForm
+                  size="xs"
+                  tooltip={t("NarrationValidateMessage")}
+                  label=""
+                  placeholder={t("Narration")}
                   required={false}
-                  nextField={""}
-                  name={"email"}
+                  nextField={"save"}
+                  name={"narration"}
                   form={form}
-                  id={"email"}
+                  id={"narration"}
                 />
               </Box>
             </Box>
           </Grid.Col>
         </Grid>
+        <Box mt={"8"} pb={"xs"} pr={"xs"}>
+          <Button.Group>
+            <Button
+              fullWidth={true}
+              variant="filled"
+              leftSection={<IconRefresh size={14} />}
+              className={genericClass.invoiceReset}
+            >
+              {t("Reset")}
+            </Button>
+            <Button
+              fullWidth={true}
+              variant="filled"
+              leftSection={<IconStackPush size={14} />}
+              className={genericClass.invoiceHold}
+            >
+              {t("Hold")}
+            </Button>
+            <Button
+              fullWidth={true}
+              variant="filled"
+              type={"submit"}
+              onClick={handleClick}
+              name="print"
+              leftSection={<IconPrinter size={14} />}
+              className={genericClass.invoicePrint}
+              style={{
+                transition: "all 0.3s ease",
+              }}
+            >
+              {t("Print")}
+            </Button>
+            <Button
+              fullWidth={true}
+              type={"submit"}
+              onClick={handleClick}
+              name="pos"
+              variant="filled"
+              leftSection={<IconReceipt size={14} />}
+              className={genericClass.invoicePos}
+              style={{
+                transition: "all 0.3s ease",
+              }}
+            >
+              {t("Pos")}
+            </Button>
+            <Button
+              fullWidth={true}
+              className={genericClass.invoiceSave}
+              type={"submit"}
+              onClick={handleClick}
+              name="save"
+              variant="filled"
+              leftSection={<IconDeviceFloppy size={14} />}
+              style={{
+                transition: "all 0.3s ease",
+              }}
+            >
+              {t("Save")}
+            </Button>
+          </Button.Group>
+        </Box>
       </Box>
     </>
   );
