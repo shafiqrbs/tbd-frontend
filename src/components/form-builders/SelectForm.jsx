@@ -30,6 +30,7 @@ const SelectForm = forwardRef((props, ref) => {
         allowDeselect = true,
         inlineUpdate = false,
         updateDetails = null,
+        size,
         pt
     } = props;
     const dispatch = useDispatch();
@@ -85,7 +86,7 @@ const SelectForm = forwardRef((props, ref) => {
                         label={label}
                         placeholder={placeholder}
                         mt={mt}
-                        size="sm"
+                        size={size ? size : "sm"}
                         data={dropdownValue}
                         autoComplete="off"
                         clearable={clearable}
