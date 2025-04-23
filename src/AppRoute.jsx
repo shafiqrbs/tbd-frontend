@@ -65,6 +65,7 @@ import B2bDomainIndex from "./components/modules/b2b/domain/B2bDomainIndex.jsx";
 import GeneralIssueIndex from "./components/modules/production/production-issue/general-issue/GeneralIssueIndex.jsx";
 import BatchIssueIndex from "./components/modules/production/production-issue/batch-issue/BatchIssueIndex.jsx";
 import UserDiscountIndex from "./components/modules/discount/user-discount/UserDiscountIndex";
+import B2bUserIndex from "./components/modules/b2b/master-user/B2bUserIndex";
 
 function AppRoute() {
   return (
@@ -202,6 +203,7 @@ function AppRoute() {
         <Route path="/b2b/">
           <Route path="dashboard" element={<DashboardIndexB2B />} />
           <Route path="domain" element={<B2bDomainIndex />} />
+          <Route path="master-user" element={<B2bUserIndex />} />
           <Route path="sub-domain/category/:id" element={<CategoryIndexB2B />} />
           <Route path="sub-domain/product/:id" element={<ProductIndexB2B />} />
           <Route path="sub-domain/setting/:id" element={<SettingIndexB2B />} />

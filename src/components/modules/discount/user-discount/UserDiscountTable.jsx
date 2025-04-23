@@ -70,6 +70,7 @@ const EditableNumberInput = ({ item, field, value, onUpdate }) => {
 };
 
 // ─── Main Component ───────────────────────────────────────────────────────────
+
 export default function UserDiscountTable({ id }) {
     const dispatch = useDispatch();
     const { t } = useTranslation();
@@ -147,8 +148,7 @@ export default function UserDiscountTable({ id }) {
     return (
         <>
             <LoadingOverlay visible={reloadList} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />
-
-            <Grid columns={24} gutter={{ base: 8 }}>
+            <Grid columns={24} gutter={{ base:8}}>
                 <Grid.Col span={24}>
                     <Box p="xs" bg="white" className="borderRadiusAll">
                         <Box pl="xs" pb="xs" pr={8} pt="xs" mb="xs" className="boxBackground borderRadiusAll">

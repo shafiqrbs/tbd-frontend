@@ -27,6 +27,7 @@ function B2BHeaderNavbar(props) {
     const links = [
         { link: '/b2b/dashboard', label: t('Dashboard') },
         { link: '/b2b/domain', label: t('Domains') },
+        { link: '/b2b/master-user', label: t('MasterUser') },
     ];
     const items = links.map((link) => (
         <a

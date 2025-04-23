@@ -11,6 +11,7 @@ import {
   IconSettings,
   IconIcons,
   IconCategory,
+  IconUsers
 } from "@tabler/icons-react";
 import { Button, Flex, Text, Tooltip, ScrollArea } from "@mantine/core";
 import { useTranslation } from "react-i18next";
@@ -93,6 +94,40 @@ export default function _Shortcut(props) {
               {t("Domain")}
             </Flex>
           </Flex>
+
+          <Flex direction={`column`} align={"center"} pt={5}>
+            <Tooltip
+                label={t("B2BDomain")}
+                px={16}
+                py={2}
+                withArrow
+                position={"left"}
+                c={"white"}
+                bg={"blue"}
+                transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
+            >
+              <Button
+                  bg={"blue"}
+                  size="md"
+                  pl={"12"}
+                  pr={"12"}
+                  variant={"light"}
+                  color={`black`}
+                  radius="xl"
+                  onClick={(e) => {
+                    navigate("/b2b/master-user");
+                  }}
+              >
+                <Flex direction={`column`} align={"center"}>
+                  <IconUsers size={16} color={"white"} />
+                </Flex>
+              </Button>
+            </Tooltip>
+            <Flex direction={`column`} align={"center"} fz={"12"} c={"black"}>
+              {t("MasterUsers")}
+            </Flex>
+          </Flex>
+
           {module !== "b2b_dashboard" && (
             <>
 
