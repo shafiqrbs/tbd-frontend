@@ -25,8 +25,8 @@ import _ManageBranchAndFranchise from "../common/_ManageBranchAndFranchise.jsx";
 const PercentColumn = React.memo(({item}) => (
     <Group justify="center" gap={4} noWrap mt={10}>
         <Text w={80} ta="center">{item.percent_mode || "0"}</Text>
-        <Text w={80} ta="center">{item.purchase_percent || "0"}</Text>
         <Text w={80} ta="center">{item.mrp_percent || "0"}</Text>
+        <Text w={80} ta="center">{item.purchase_percent || "0"}</Text>
     </Group>
 ));
 

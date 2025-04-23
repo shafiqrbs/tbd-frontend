@@ -967,5 +967,7 @@
   "RequirementStock" : "Requirement Stock",
   "BatchQuantity" : "Batch Quantity",
   "AddAll" : "Add All",
+  "GeneralProductionIssueN" : "General Production Issue",
+  "BatchProdcutionIssueN" : "Batch Production Issue",
   "": ""
 }

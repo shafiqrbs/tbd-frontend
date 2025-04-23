@@ -173,7 +173,7 @@ export default function BatchIssueForm(props) {
                     <Grid columns={12} gutter={{ base: 2 }}>
                       <Grid.Col span={7}>
                         <Text fz="md" fw={500} className={classes.cardTitle}>
-                          {t("GeneralProductionIssue")}
+                          {t("BatchProdcutionIssue")}
                         </Text>
                       </Grid.Col>
                       <Grid.Col span={5} align="center">
