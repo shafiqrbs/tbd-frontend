@@ -32,6 +32,7 @@ import getCoreWarehouseDropdownData from "../../../../global-hook/dropdown/core/
 import { useEffect, useState, useMemo } from "react";
 import SelectForm from "../../../../form-builders/SelectForm";
 import genericClass from "../../../../../assets/css/Generic.module.css";
+import GeneralIssueSubmitForm from "./GeneralIssueSubmitForm";
 export default function GeneralIssueForm(props) {
   const { isWarehouse, currencySymbol, isMeasurement } = props;
   const { t, i18n } = useTranslation();
@@ -47,6 +48,7 @@ export default function GeneralIssueForm(props) {
   const [warehouseData, setWarehouseData] = useState(null);
   const [searchValue, setSearchValue] = useState("");
 
+  const [loadCardProducts, setLoadCardProducts] = useState(false);
   const [productDropdown, setProductDropdown] = useState([]);
   //products hook
   const [products, setProducts] = useState([]);
@@ -537,7 +539,9 @@ export default function GeneralIssueForm(props) {
               </Box>
             </Box>
           </Grid.Col>
-          <Grid.Col span={15}></Grid.Col>
+          <Grid.Col span={15}>
+            <GeneralIssueSubmitForm loadCardProducts={loadCardProducts} setLoadCardProducts={setLoadCardProducts} />
+          </Grid.Col>
         </Grid>
       </Box>
     </>
