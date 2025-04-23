@@ -308,7 +308,7 @@ export default function GeneralIssueSubmitForm(props) {
               <Box
                 p={"xs"}
                 className={genericClass.genericSecondaryBg}
-                h={100}
+                h={102}
               ></Box>
             </Grid.Col>
             <Grid.Col span={8}>
@@ -422,7 +422,7 @@ export default function GeneralIssueSubmitForm(props) {
               </Box>
             </Grid.Col>
             <Grid.Col span={8}>
-              <Box className={genericClass.genericSecondaryBg} p={"xs"} h={100}>
+              <Box className={genericClass.genericSecondaryBg} p={"xs"} h={95}>
                 <Box>
                   <DatePickerForm
                     tooltip={t("InvoiceDateValidateMessage")}
@@ -438,7 +438,7 @@ export default function GeneralIssueSubmitForm(props) {
                     closeIcon={true}
                   />
                 </Box>
-                <Box mt={4}>
+                <Box mt={8}>
                   <SelectForm
                     tooltip={t("ChooseIssuedBy")}
                     label=""

@@ -371,17 +371,12 @@ export default function BatchIssueSubmitForm(props) {
               <Box
                 p={"xs"}
                 className={genericClass.genericSecondaryBg}
-                h={100}
+                h={102}
               ></Box>
             </Grid.Col>
             <Grid.Col span={8}>
               <Box className={"borderRadiusAll"}>
-                <ScrollArea
-                  h={100}
-                  scrollbarSize={2}
-                  type="never"
-                  bg={"gray.1"}
-                >
+                <ScrollArea h={100} scrollbarSize={2} type="never" bg={"gray.1"}>
                   <Box
                     pl={"xs"}
                     pt={"xs"}
@@ -501,7 +496,7 @@ export default function BatchIssueSubmitForm(props) {
                     closeIcon={true}
                   />
                 </Box>
-                <Box mt={4}>
+                <Box mt={8}>
                   <SelectForm
                     tooltip={t("ChooseIssuedBy")}
                     label=""
