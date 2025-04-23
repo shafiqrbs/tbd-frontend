@@ -13,8 +13,9 @@ import {useNavigate, useParams} from "react-router-dom";
 import {editEntityData} from "../../../../store/production/crudSlice.js";
 import axios from "axios";
 
-function InhouseIndex() {
-    let { id } = useParams();
+function InhouseIndex(props) {
+    const params = useParams();
+    const id = props.batchId ? props.batchId : params.id;
     const navigate = useNavigate()
     const dispatch = useDispatch();
 

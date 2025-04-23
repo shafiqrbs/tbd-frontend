@@ -36,6 +36,8 @@ import { storeEntityData } from "../../../../../store/inventory/crudSlice.js";
 import genericClass from "../../../../../assets/css/Generic.module.css";
 import DatePickerForm from "../../../../form-builders/DatePicker.jsx";
 import SelectForm from "../../../../form-builders/SelectForm.jsx";
+import getCoreWarehouseDropdownData from "../../../../global-hook/dropdown/core/getCoreWarehouseDropdownData.js";
+import getVendorDropdownData from "../../../../global-hook/dropdown/getVendorDropdownData.js";
 export default function GeneralIssueSubmitForm(props) {
   const {
     isSMSActive,
@@ -52,21 +54,8 @@ export default function GeneralIssueSubmitForm(props) {
   const dispatch = useDispatch();
 
   const form = useForm({
-    initialValues: {
-      customer_id: "",
-      transaction_mode_id: "",
-      sales_by: "",
-      order_process: "",
-      narration: "",
-      discount: "",
-      receive_amount: "",
-      name: "",
-      mobile: "",
-      email: "",
-    },
-    validate: {
-      transaction_mode_id: isNotEmpty(),
-    },
+    initialValues: {},
+    validate: {},
   });
   // temp cart product hook
   const [tempCardProducts, setTempCardProducts] = useState([]);
@@ -105,123 +94,52 @@ export default function GeneralIssueSubmitForm(props) {
     const clickedButton = event.currentTarget.name;
     setLastClicked(clickedButton);
   };
-
+  let warehouseDropdownData = getCoreWarehouseDropdownData();
+  let vendorDropdownData = getVendorDropdownData();
+  const [issueType, setIssueType] = useState("");
+  const [factoryId, setFactoryId] = useState("");
+  const [vendorId, setVendorId] = useState("");
+  const [warehouseId, setWarehouseId] = useState("");
+  const [issuedById, setIssuedById] = useState("");
   return (
     <>
       <form
         onSubmit={form.onSubmit((values) => {
+          console.log("hola", factoryId);
           const tempProducts = localStorage.getItem("temp-production-issue");
-          let items = tempProducts ? JSON.parse(tempProducts) : [];
-          let createdBy = JSON.parse(localStorage.getItem("user"));
+          const items = tempProducts ? JSON.parse(tempProducts) : [];
+          const createdBy = JSON.parse(localStorage.getItem("user"));
 
-          let transformedArray = items.map((product) => {
-            return {
-              product_id: product.product_id,
-              display_name: product.display_name,
-              quantity: product.quantity,
-              unit_name: product.unit_name,
-              purchase_price: product.purchase_price,
-              sub_total: product.sub_total,
-              sales_price: product.sales_price,
-            };
-          });
-
-          const options = {
-            year: "numeric",
-            month: "2-digit",
-            day: "2-digit",
-          };
+          const transformedArray = items.map((product) => ({
+            product_id: product.product_id,
+            display_name: product.display_name,
+            quantity: product.quantity,
+            unit_name: product.unit_name,
+            purchase_price: product.purchase_price,
+            sub_total: product.sub_total,
+            sales_price: product.sales_price,
+          }));
+          const options = { year: "numeric", month: "2-digit", day: "2-digit" };
           const formValue = {};
-          formValue["total"] = salesTotalAmount;
-          formValue["created_by_id"] = Number(createdBy["id"]);
-          formValue["invoice_date"] =
-            form.values.invoice_date &&
-            new Date(form.values.invoice_date).toLocaleDateString(
-              "en-CA",
-              options
-            );
-          formValue["items"] = transformedArray ? transformedArray : [];
+          formValue["created_by_id"] = Number(createdBy?.id);
+          formValue["invoice_date"] = values.invoice_date
+            ? new Date(values.invoice_date).toLocaleDateString("en-CA", options)
+            : new Date().toLocaleDateString("en-CA");
+          formValue["issued_by"] = form.values.issued_by;
+          formValue["issueType"] = issueType;
+          if (factoryId) {
+            formValue["factory_id"] = form.values.factory_id;
+          }
+          if (vendorId) {
+            formValue["vendor_id"] = form.values.vendor_id;
+          }
+          if (warehouseId) {
+            formValue["warehouse_id"] = form.values.warehouse_id;
+          }
+          formValue["items"] = transformedArray;
 
-          // Add console log to display all form values
           console.log("Form submission values:", formValue);
-
-          // Check if default customer needs receive amount
-          if (
-            isDefaultCustomer &&
-            !isZeroReceiveAllow &&
-            (!form.values.receive_amount ||
-              Number(form.values.receive_amount) <= 0 ||
-              Number(form.values.receive_amount) < salesTotalAmount)
-          ) {
-            form.setFieldError(
-              "receive_amount",
-              t("Receive amount must cover the total for default customer")
-            );
-
-            notifications.show({
-              color: "red",
-              title: t("Payment Required"),
-              message: t("Default customer must pay full amount"),
-              loading: false,
-              autoClose: 1500,
-            });
-
-            return;
-          }
-
-          // Also ensure transaction mode is selected
-          if (!form.values.transaction_mode_id) {
-            form.setFieldError(
-              "transaction_mode_id",
-              t("Please select a payment method")
-            );
-
-            notifications.show({
-              color: "red",
-              title: t("Missing Payment Method"),
-              message: t("Please select a payment method"),
-              loading: false,
-              autoClose: 1500,
-            });
-
-            return;
-          }
-
-          if (items && items.length > 0) {
-            const data = {
-              url: "inventory/sales",
-              data: formValue,
-            };
-            dispatch(storeEntityData(data));
-
-            notifications.show({
-              color: "teal",
-              title: t("CreateSuccessfully"),
-              icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
-              loading: false,
-              autoClose: 700,
-              style: { backgroundColor: "lightgray" },
-            });
-
-            setTimeout(() => {
-              localStorage.removeItem("temp-production-issue");
-              form.reset();
-              setCustomerData(null);
-              setSalesByUser(null);
-              setOrderProcess(null);
-              setLoadCardProducts(true);
-              setCustomerObject(null);
-            }, 500);
-          } else {
-            notifications.show({
-              color: "red",
-              title: t("PleaseChooseItems"),
-              icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
-              loading: false,
-              autoClose: 700,
-              style: { backgroundColor: "lightgray" },
-            });
-          }
+          form.reset();
         })}
       >
         <Box bg={"white"} p={"xs"} className={"borderRadiusAll"}>
@@ -257,17 +175,13 @@ export default function GeneralIssueSubmitForm(props) {
                   ),
                 },
                 {
-                  accessor: "price",
-                  title: t("Price"),
-                  textAlign: "right",
-                  render: (item) => {
-                    return item.price && Number(item.price).toFixed(2);
-                  },
-                },
-
-                {
                   accessor: "stock",
                   title: t("Stock"),
+                  textAlign: "center",
+                },
+                {
+                  accessor: "requirement_stock",
+                  title: t("RequirementStock"),
                   textAlign: "center",
                 },
                 {
@@ -340,163 +254,6 @@ export default function GeneralIssueSubmitForm(props) {
                   textAlign: "center",
                 },
                 {
-                  accessor: "sales_price",
-                  title: t("SalesPrice"),
-                  textAlign: "center",
-                  width: "100px",
-                  render: (item) => {
-                    const [editedSalesPrice, setEditedSalesPrice] = useState(
-                      item.sales_price
-                    );
-
-                    const handleSalesPriceChange = (e) => {
-                      const newSalesPrice = e.currentTarget.value;
-                      setEditedSalesPrice(newSalesPrice);
-                    };
-
-                    useEffect(() => {
-                      const timeoutId = setTimeout(() => {
-                        const tempCardProducts = localStorage.getItem(
-                          "temp-production-issue"
-                        );
-                        const cardProducts = tempCardProducts
-                          ? JSON.parse(tempCardProducts)
-                          : [];
-                        const updatedProducts = cardProducts.map((product) => {
-                          if (product.product_id === item.product_id) {
-                            return {
-                              ...product,
-                              sales_price: editedSalesPrice,
-                              sub_total: editedSalesPrice * item.quantity,
-                            };
-                          }
-                          return product;
-                        });
-
-                        localStorage.setItem(
-                          "temp-production-issue",
-                          JSON.stringify(updatedProducts)
-                        );
-                        setLoadCardProducts(true);
-                      }, 1000);
-
-                      return () => clearTimeout(timeoutId);
-                    }, [editedSalesPrice, item.product_id, item.quantity]);
-
-                    return item.percent ? (
-                      Number(item.sales_price).toFixed(2)
-                    ) : (
-                      <>
-                        <TextInput
-                          type="number"
-                          label=""
-                          size="xs"
-                          id={"inline-update-quantity-" + item.product_id}
-                          value={editedSalesPrice}
-                          onChange={handleSalesPriceChange}
-                        />
-                      </>
-                    );
-                  },
-                },
-                {
-                  accessor: "percent",
-                  title: t("Discount"),
-                  textAlign: "center",
-                  width: "100px",
-                  render: (item) => {
-                    const [editedPercent, setEditedPercent] = useState(
-                      item.percent
-                    );
-                    const handlePercentChange = (e) => {
-                      const editedPercent = e.currentTarget.value;
-                      setEditedPercent(editedPercent);
-
-                      const tempCardProducts = localStorage.getItem(
-                        "temp-production-issue"
-                      );
-                      const cardProducts = tempCardProducts
-                        ? JSON.parse(tempCardProducts)
-                        : [];
-
-                      if (e.currentTarget.value && e.currentTarget.value >= 0) {
-                        const updatedProducts = cardProducts.map((product) => {
-                          if (product.product_id === item.product_id) {
-                            const discountAmount =
-                              (item.price * editedPercent) / 100;
-                            const salesPrice = item.price - discountAmount;
-
-                            return {
-                              ...product,
-                              percent: editedPercent,
-                              sales_price: salesPrice,
-                              sub_total: salesPrice * item.quantity,
-                            };
-                          }
-                          return product;
-                        });
-
-                        localStorage.setItem(
-                          "temp-production-issue",
-                          JSON.stringify(updatedProducts)
-                        );
-                        setLoadCardProducts(true);
-                      }
-                    };
-
-                    return item.percent ? (
-                      <>
-                        <TextInput
-                          type="number"
-                          label=""
-                          size="xs"
-                          value={editedPercent}
-                          onChange={handlePercentChange}
-                          rightSection={
-                            editedPercent === "" ? (
-                              <>
-                                {item.percent}
-                                <IconPercentage size={16} opacity={0.5} />
-                              </>
-                            ) : (
-                              <IconPercentage size={16} opacity={0.5} />
-                            )
-                          }
-                        />
-                      </>
-                    ) : (
-                      <Text size={"xs"} ta="right">
-                        {(
-                          Number(item.price) - Number(item.sales_price)
-                        ).toFixed(2)}
-                      </Text>
-                    );
-                  },
-                  footer: (
-                    <Group spacing="xs">
-                      <Text fz={"md"} fw={"600"}>
-                        {t("SubTotal")}
-                      </Text>
-                    </Group>
-                  ),
-                },
-
-                {
-                  accessor: "sub_total",
-                  title: t("SubTotal"),
-                  textAlign: "right",
-                  render: (item) => {
-                    return item.sub_total && Number(item.sub_total).toFixed(2);
-                  },
-                  footer: (
-                    <Group spacing="xs">
-                      <Text fw={"600"} fz={"md"}>
-                        {salesSubTotalAmount.toFixed(2)}
-                      </Text>
-                    </Group>
-                  ),
-                },
-                {
                   accessor: "action",
                   title: t("Action"),
                   textAlign: "right",
@@ -548,6 +305,13 @@ export default function GeneralIssueSubmitForm(props) {
         <Box>
           <Grid columns={24} gutter={{ base: 6 }} pt={"6"}>
             <Grid.Col span={8}>
+              <Box
+                p={"xs"}
+                className={genericClass.genericSecondaryBg}
+                h={192}
+              ></Box>
+            </Grid.Col>
+            <Grid.Col span={8}>
               <Box className={"borderRadiusAll"}>
                 <ScrollArea
                   h={190}
@@ -555,8 +319,101 @@ export default function GeneralIssueSubmitForm(props) {
                   type="never"
                   bg={"gray.1"}
                 >
-                  <Box pl={"xs"} pt={"xs"} pr={"xs"} bg={"white"} pb={"10"}>
-                    <Grid columns={"16"} gutter="6"></Grid>
+                  <Box
+                    pl={"xs"}
+                    pt={"xs"}
+                    pr={"xs"}
+                    className={genericClass.genericSecondaryBg}
+                    h={192}
+                    pb={"10"}
+                  >
+                    <Box>
+                      <SelectForm
+                        tooltip={t("IssuedTo")}
+                        label={t("")}
+                        placeholder={t("IssuedTo")}
+                        required={true}
+                        nextField={
+                          issueType === "factory"
+                            ? "factory_id"
+                            : issueType === "vendor"
+                            ? "vendor_id"
+                            : "warehouse_id"
+                        }
+                        name={"issued_to_type"}
+                        form={form}
+                        dropdownValue={[
+                          { label: t("Factory"), value: "factory" },
+                          { label: t("Vendor"), value: "vendor" },
+                          { label: t("Warehouse"), value: "warehouse" },
+                        ]}
+                        id={"issued_to_type"}
+                        mt={1}
+                        searchable={false}
+                        value={issueType}
+                        changeValue={setIssueType}
+                      />
+                    </Box>
+                    {form.values.type === "factory" && (
+                      <Box mt={8}>
+                        <SelectForm
+                          tooltip={t("ChooseFactory")}
+                          label={t("")}
+                          placeholder={t("ChooseFactory")}
+                          required={true}
+                          nextField={"invoice_date"}
+                          name={"factory_id"}
+                          form={form}
+                          dropdownValue={[
+                            { label: t("FactoryOne"), value: "1" },
+                            { label: t("FactoryTwo"), value: "2" },
+                          ]}
+                          id={"factory_id"}
+                          mt={1}
+                          searchable={true}
+                          value={factoryId}
+                          changeValue={setFactoryId}
+                        />
+                      </Box>
+                    )}
+                    {form.values.type === "vendor" && (
+                      <Box mt={8}>
+                        <SelectForm
+                          tooltip={t("ChooseVendor")}
+                          label={t("")}
+                          placeholder={t("ChooseVendor")}
+                          required={true}
+                          nextField={"invoice_date"}
+                          name={"vendor_id"}
+                          form={form}
+                          dropdownValue={vendorDropdownData}
+                          id={"vendor_id"}
+                          mt={1}
+                          searchable={true}
+                          value={vendorId}
+                          changeValue={setVendorId}
+                        />
+                      </Box>
+                    )}
+                    {form.values.type === "warehouse" && (
+                      <Box mt={8}>
+                        <SelectForm
+                          tooltip={t("ChooseWarehouse")}
+                          label={t("")}
+                          placeholder={t("ChooseWarehouse")}
+                          required={true}
+                          nextField={"invoice_date"}
+                          name={"warehouse_id"}
+                          form={form}
+                          dropdownValue={warehouseDropdownData}
+                          id={"warehouse_id"}
+                          mt={1}
+                          searchable={true}
+                          value={warehouseId}
+                          changeValue={(val) => setWarehouseId(val)}
+                        />
+                      </Box>
+                    )}
                   </Box>
                 </ScrollArea>
               </Box>
@@ -580,71 +437,24 @@ export default function GeneralIssueSubmitForm(props) {
                 </Box>
                 <Box mt={4}>
                   <SelectForm
-                    tooltip={t("ChooseSalesBy")}
+                    tooltip={t("ChooseIssuedBy")}
                     label=""
-                    placeholder={t("SalesBy")}
+                    placeholder={t("ChooseIssuedBy")}
                     required={false}
-                    name={"sales_by"}
+                    name={"issued_by"}
                     form={form}
                     dropdownValue={salesByDropdownData}
-                    id={"sales_by"}
-                    nextField={"order_process"}
+                    id={"issued_by"}
+                    nextField={"save"}
                     searchable={false}
-                    value={salesByUser}
-                    changeValue={setSalesByUser}
+                    value={issuedById}
+                    changeValue={(val) => setIssuedById(val)}
                   />
                 </Box>
               </Box>
             </Grid.Col>
-            <Grid.Col span={8}>
-              {/* outstading section */}
-              <Box p={"xs"} className={genericClass.genericSecondaryBg} h={192}>
-                <Box
-                  pb={"xs"}
-                  className={genericClass.genericSecondaryBg}
-                ></Box>
-                {/* Due Section */}
-                <Box>
-                  <Stack justify="space-between">
-                    <Box className={genericClass.genericHighlightedBox}>
-                      <Grid columns={18} gutter={{ base: 2 }}>
-                        <Grid.Col span={8} mt={"4"} pl={"6"}></Grid.Col>
-                        <Grid.Col
-                          span={10}
-                          align="center"
-                          justify="center"
-                        ></Grid.Col>
-                      </Grid>
-                    </Box>
-                  </Stack>
-                </Box>
-                <Box>
-                  <Tooltip
-                    label={t("MustBeNeedReceiveAmountWithoutCustomer")}
-                    position="top-center"
-                    bg={"#905923"}
-                    withArrow
-                  >
-                    <Grid gutter={{ base: 1 }}>
-                      <Grid.Col
-                        span={10}
-                        bg={"#bc924f"}
-                        p={"18"}
-                        pr={"0"}
-                      ></Grid.Col>
-                      <Grid.Col
-                        span={2}
-                        bg={"#bc924f"}
-                        p={"18"}
-                        pl={"8"}
-                      ></Grid.Col>
-                    </Grid>
-                  </Tooltip>
-                </Box>
-              </Box>
-            </Grid.Col>
           </Grid>
-          <Box mt={"8"} pb={"xs"} pr={"xs"}>
+          <Box mt={"8"} pb={"xs"}>
             <Button.Group>
               <Button
                 fullWidth={true}
@@ -652,15 +462,7 @@ export default function GeneralIssueSubmitForm(props) {
                 leftSection={<IconRefresh size={14} />}
                 className={genericClass.invoiceReset}
               >
-                {t("Reset")}
-              </Button>
-              <Button
-                fullWidth={true}
-                variant="filled"
-                leftSection={<IconStackPush size={14} />}
-                className={genericClass.invoiceHold}
-              >
-                {t("Hold")}
+                {t("Reset")}pr={"xs"}
               </Button>
               <Button
                 fullWidth={true}
@@ -675,20 +477,6 @@ export default function GeneralIssueSubmitForm(props) {
                 }}
               >
                 {t("Print")}
-              </Button>
-              <Button
-                fullWidth={true}
-                type={"submit"}
-                onClick={handleClick}
-                name="pos"
-                variant="filled"
-                leftSection={<IconReceipt size={14} />}
-                className={genericClass.invoicePos}
-                style={{
-                  transition: "all 0.3s ease",
-                }}
-              >
-                {t("Pos")}
               </Button>
               <Button
                 fullWidth={true}
