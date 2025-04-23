@@ -75,7 +75,7 @@ function MainDashboard(props) {
         }
     });
 
-   // console.log(userRole)
+//    console.log(userRole)
 
     const targetValues1 = ["payroll", "purchase"];
 
@@ -159,7 +159,7 @@ function MainDashboard(props) {
                     </Card>
                     
                     {
-                        userRole && userRole.length > 0 && userRole.includes("role_accounting") && (
+                        userRole && userRole.length > 0 && (userRole.includes("role_accounting") || userRole.includes("role_domain")) && (
                             <Card shadow="md" radius="md" className={classes.card} padding="lg">
                                 <Grid gutter={{base: 2}}>
                                     <Grid.Col span={2}>
@@ -180,7 +180,7 @@ function MainDashboard(props) {
                     }
                     {}
                     {
-                        ["role_procurement",].some((value) => userRole.includes(value)) &&
+                        ["role_procurement","role_domain"].some((value) => userRole.includes(value)) &&
                         (
                             <Card shadow="md" radius="md" className={classes.card} padding="lg">
                             <Grid gutter={{base: 2}}>
@@ -200,7 +200,7 @@ function MainDashboard(props) {
                         </Card>
                         )
                     }
-                    {["role_inventory",].some((value) => userRole.includes(value)) && (
+                    {["role_inventory","role_domain"].some((value) => userRole.includes(value)) && (
                         <Card shadow="md" radius="md" className={classes.card} padding="lg">
                         <Grid gutter={{base: 2}}>
                             {/* demo role implement*/}
@@ -245,7 +245,7 @@ function MainDashboard(props) {
                     <SimpleGrid cols={{base: 1, md: 4}} spacing="xs">
                         
                         {
-                            configData?.domain?.modules?.includes("sales-purchase") && ["role_sales_purchase",].some((value) => userRole.includes(value)) && (
+                            configData?.domain?.modules?.includes("sales-purchase") && ["role_sales_purchase","role_domain"].some((value) => userRole.includes(value)) && (
                                 <Card shadow="md" radius="md" className={classes.card} padding="lg">
                                     <Grid gutter={{base: 2}}>
                                         <Grid.Col span={2}>
@@ -293,7 +293,7 @@ function MainDashboard(props) {
                                                 />
                                             </List.Item>
                                             {
-            ["role_sales",].some((value) => userRole.includes(value)) &&
+            ["role_sales","role_domain"].some((value) => userRole.includes(value)) &&
             (
                 <List.Item
                                                         pl={"xs"}
@@ -327,7 +327,7 @@ function MainDashboard(props) {
             )
         }
                           {
-    ["role_purchase",].some((value) => userRole.includes(value)) &&
+    ["role_purchase","role_domain"].some((value) => userRole.includes(value)) &&
     (
         <List.Item
                                                 pl={"xs"}
@@ -484,8 +484,7 @@ function MainDashboard(props) {
                         }
                         
                         {
-                            // configData?.domain?.modules?.includes("accounting") && ["role_accounting",].some((value) => userRole.includes(value)) && (
-                            configData?.domain?.modules?.includes("accounting") &&  (
+                            configData?.domain?.modules?.includes("accounting") && ["role_accounting", "role_domain"].some((value) => userRole.includes(value)) && (
                                 <Card shadow="md" radius="md" className={classes.card} padding="lg">
                                     <Grid gutter={{base: 2}}>
                                         <Grid.Col span={2}>
@@ -675,8 +674,7 @@ function MainDashboard(props) {
                             )
                         }
                         {
-                            // configData?.domain?.modules?.includes("procurement") && ["role_procurement",].some((value) => userRole.includes(value)) && (
-                            configData?.domain?.modules?.includes("procurement") && (
+                            configData?.domain?.modules?.includes("procurement") && ["role_procurement","role_domain"].some((value) => userRole.includes(value)) && ( 
                                 <Card shadow="md" radius="md" className={classes.card} padding="lg">
                                     <Grid gutter={{base: 2}}>
                                         <Grid.Col span={2}>
@@ -793,7 +791,7 @@ function MainDashboard(props) {
                             )
                         }
                         {
-                            configData?.domain?.modules?.includes("inventory") && ["role_inventory",].some((value) => userRole.includes(value)) && (
+                            configData?.domain?.modules?.includes("inventory") && ["role_inventory","role_domain"].some((value) => userRole.includes(value)) && (
                                 <Card shadow="md" radius="md" className={classes.card} padding="lg">
                                     <Grid gutter={{base: 2}}>
                                         <Grid.Col span={2}>
@@ -1112,7 +1110,7 @@ function MainDashboard(props) {
                             )
                         }
                         {
-                            configData?.domain?.modules?.includes("domain") && (
+                            configData?.domain?.modules?.includes("domain") && ["role_domain"].some((value) => userRole.includes(value)) && (
                                 <Card shadow="md" radius="md" className={classes.card} padding="lg">
                                     <Grid gutter={{base: 2}}>
                                         <Grid.Col span={2}>
@@ -1203,7 +1201,7 @@ function MainDashboard(props) {
                             )
                         }
                         {
-                            configData?.domain?.modules?.includes("core") && ["role_core",]?.some((value) => userRole.includes(value)) && (
+                            configData?.domain?.modules?.includes("core") && ["role_core","role_domain"]?.some((value) => userRole.includes(value)) && (
                                 <Card shadow="md" radius="md" className={classes.card} padding="lg">
                                     <Grid gutter={{base: 2}}>
                                         <Grid.Col span={2}>
@@ -1394,7 +1392,7 @@ function MainDashboard(props) {
                             )
                         }
                         {
-                            configData?.domain?.modules?.includes("production") && ["role_production",].some((value) => userRole.includes(value)) && (
+                            configData?.domain?.modules?.includes("production") && ["role_production","role_domain"].some((value) => userRole.includes(value)) && (
                                 <Card shadow="md" radius="md" className={classes.card} padding="lg">
                                     <Grid gutter={{base: 2}}>
                                         <Grid.Col span={2}>
