@@ -964,5 +964,8 @@
   "GeneralProductionIssue" : "General Production Issue",
   "StockManagement" : "Stock Management",
   "BatchProdcutionIssue" : "Batch Production Issue",
+  "RequirementStock" : "Requirement Stock",
+  "BatchQuantity" : "Batch Quantity",
+  "AddAll" : "Add All",
   "": ""
 }
