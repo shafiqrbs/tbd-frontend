@@ -298,7 +298,7 @@ export default function GeneralIssueSubmitForm(props) {
               recordsPerPage={10}
               loaderSize="xs"
               loaderColor="grape"
-              height={height - 134}
+              height={height - 44}
             />
           </Box>
         </Box>
@@ -308,13 +308,13 @@ export default function GeneralIssueSubmitForm(props) {
               <Box
                 p={"xs"}
                 className={genericClass.genericSecondaryBg}
-                h={192}
+                h={100}
               ></Box>
             </Grid.Col>
             <Grid.Col span={8}>
               <Box className={"borderRadiusAll"}>
                 <ScrollArea
-                  h={190}
+                  h={100}
                   scrollbarSize={2}
                   type="never"
                   bg={"gray.1"}
@@ -324,7 +324,7 @@ export default function GeneralIssueSubmitForm(props) {
                     pt={"xs"}
                     pr={"xs"}
                     className={genericClass.genericSecondaryBg}
-                    h={192}
+                    h={100}
                     pb={"10"}
                   >
                     <Box>
@@ -354,7 +354,8 @@ export default function GeneralIssueSubmitForm(props) {
                         changeValue={setIssueType}
                       />
                     </Box>
-                    {form.values.type === "factory" && (
+
+                    {issueType === "factory" && (
                       <Box mt={8}>
                         <SelectForm
                           tooltip={t("ChooseFactory")}
@@ -376,7 +377,8 @@ export default function GeneralIssueSubmitForm(props) {
                         />
                       </Box>
                     )}
-                    {form.values.type === "vendor" && (
+
+                    {issueType === "vendor" && (
                       <Box mt={8}>
                         <SelectForm
                           tooltip={t("ChooseVendor")}
@@ -395,7 +397,8 @@ export default function GeneralIssueSubmitForm(props) {
                         />
                       </Box>
                     )}
-                    {form.values.type === "warehouse" && (
+
+                    {issueType === "warehouse" && (
                       <Box mt={8}>
                         <SelectForm
                           tooltip={t("ChooseWarehouse")}
@@ -419,7 +422,7 @@ export default function GeneralIssueSubmitForm(props) {
               </Box>
             </Grid.Col>
             <Grid.Col span={8}>
-              <Box className={genericClass.genericSecondaryBg} p={"xs"} h={192}>
+              <Box className={genericClass.genericSecondaryBg} p={"xs"} h={100}>
                 <Box>
                   <DatePickerForm
                     tooltip={t("InvoiceDateValidateMessage")}
@@ -462,7 +465,7 @@ export default function GeneralIssueSubmitForm(props) {
                 leftSection={<IconRefresh size={14} />}
                 className={genericClass.invoiceReset}
               >
-                {t("Reset")}pr={"xs"}
+                {t("Reset")}
               </Button>
               <Button
                 fullWidth={true}

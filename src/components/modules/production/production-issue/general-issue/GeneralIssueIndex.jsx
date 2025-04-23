@@ -29,7 +29,7 @@ export default function GeneralIssueIndex() {
           {configData && (
             <>
               <ProductionHeaderNavbar
-                pageTitle={t("IssueProduction")}
+                pageTitle={t("GeneralProductionIssue")}
                 roles={t("Roles")}
               />
               <Box p={"8"}>

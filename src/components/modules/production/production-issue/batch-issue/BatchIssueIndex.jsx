@@ -29,7 +29,7 @@ export default function BatchIssueIndex() {
           {configData && (
             <>
               <ProductionHeaderNavbar
-                pageTitle={t("IssueProduction")}
+                pageTitle={t("BatchProdcutionIssue")}
                 roles={t("Roles")}
               />
               <Box p={"8"}>

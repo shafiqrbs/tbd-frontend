@@ -150,26 +150,32 @@ export default function BatchIssueSubmitForm(props) {
       >
         <Box bg={"white"} p={"xs"} className={"borderRadiusAll"}>
           <Box mt={"4"} mb={"8"}>
-            <Grid columns={18} gutter={{ base: 6 }}>
+            <Grid
+              columns={18}
+              gutter={{ base: 6 }}
+              className={genericClass.genericHighlightedBox}
+            >
               <Grid.Col span={17}>
-                <SelectForm
-                  tooltip={t("ChooseBatch")}
-                  label=""
-                  placeholder={t("ChooseBatch")}
-                  required={false}
-                  nextField={"issued_to_type"}
-                  name={"batch_id"}
-                  form={form}
-                  dropdownValue={warehouseDropdownData}
-                  id={"batch_id"}
-                  mt={1}
-                  searchable={true}
-                  value={batchId}
-                  changeValue={setBatchId}
-                />
+                <Box pl={"8"} pt={"8"} pb={"8"}>
+                  <SelectForm
+                    tooltip={t("ChooseBatch")}
+                    label=""
+                    placeholder={t("ChooseBatch")}
+                    required={false}
+                    nextField={"issued_to_type"}
+                    name={"batch_id"}
+                    form={form}
+                    dropdownValue={warehouseDropdownData}
+                    id={"batch_id"}
+                    mt={1}
+                    searchable={true}
+                    value={batchId}
+                    changeValue={setBatchId}
+                  />
+                </Box>
               </Grid.Col>
               <Grid.Col span={1}>
-                <Box>
+                <Box pt={"8"}>
                   <Tooltip
                     multiline
                     className={genericClass.genericPrimaryBg}
@@ -199,7 +205,7 @@ export default function BatchIssueSubmitForm(props) {
             </Grid>
           </Box>
 
-          <Box className={"borderRadiusAll"}>
+          <Box className={"borderRadiusAll"} pl={"8"} pr={"8"}>
             <DataTable
               classNames={{
                 root: tableCss.root,
@@ -354,7 +360,7 @@ export default function BatchIssueSubmitForm(props) {
               recordsPerPage={10}
               loaderSize="xs"
               loaderColor="grape"
-              height={height - 182}
+              height={height - 109}
             />
           </Box>
         </Box>
@@ -365,13 +371,13 @@ export default function BatchIssueSubmitForm(props) {
               <Box
                 p={"xs"}
                 className={genericClass.genericSecondaryBg}
-                h={192}
+                h={100}
               ></Box>
             </Grid.Col>
             <Grid.Col span={8}>
               <Box className={"borderRadiusAll"}>
                 <ScrollArea
-                  h={190}
+                  h={100}
                   scrollbarSize={2}
                   type="never"
                   bg={"gray.1"}
@@ -381,7 +387,7 @@ export default function BatchIssueSubmitForm(props) {
                     pt={"xs"}
                     pr={"xs"}
                     className={genericClass.genericSecondaryBg}
-                    h={192}
+                    h={100}
                     pb={"10"}
                   >
                     <Box>
@@ -479,7 +485,7 @@ export default function BatchIssueSubmitForm(props) {
               </Box>
             </Grid.Col>
             <Grid.Col span={8}>
-              <Box className={genericClass.genericSecondaryBg} p={"xs"} h={192}>
+              <Box className={genericClass.genericSecondaryBg} p={"xs"} h={100}>
                 <Box>
                   <DatePickerForm
                     tooltip={t("InvoiceDateValidateMessage")}
