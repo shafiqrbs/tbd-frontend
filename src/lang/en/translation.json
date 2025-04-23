@@ -959,6 +959,10 @@
   "B2BProductDescription" : "Our ERP’s B2B Product Management module is built to handle the depth and complexity of business-to-business product lines. Easily manage bulk inventory, configure custom pricing per client, and streamline product lifecycle management—all in one centralized system.",
   "B2BCategoryDescription" : "Take control of complex product structures with powerful B2B Category Management. Our ERP solution helps you streamline product classification, improve searchability, and deliver a tailored buying experience for your clients.",
   "B2BSettingDescription" : "Our B2B ERP solution is designed to transform complex business processes into seamless, automated workflows. Whether you're managing supply chains, customer relationships, finance, or inventory, our ERP system provides real-time insights and powerful tools tailored for B2B environments",
-  "SalesPrice" : "Sales Price",
+  "IssueProduction" : "Issue Production",
+  "BatchwiseProduction" : "Batchwise Production",
+  "GeneralProductionIssue" : "General Production Issue",
+  "StockManagement" : "Stock Management",
+  "BatchProdcutionIssue" : "Batch Production Issue",
   "": ""
 }

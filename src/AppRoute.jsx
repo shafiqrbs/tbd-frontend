@@ -62,6 +62,8 @@ import CategoryIndexB2B from "./components/modules/b2b/category/CategoryIndex.js
 import ProductIndexB2B from "./components/modules/b2b/product/ProductIndex.jsx";
 import SettingIndexB2B from "./components/modules/b2b/setting/SettingIndex.jsx";
 import B2bDomainIndex from "./components/modules/b2b/domain/B2bDomainIndex.jsx";
+import GeneralIssueIndex from "./components/modules/production/production-issue/general-issue/GeneralIssueIndex.jsx";
+import BatchIssueIndex from "./components/modules/production/production-issue/batch-issue/BatchIssueIndex.jsx";
 
 function AppRoute() {
   return (
@@ -148,6 +150,11 @@ function AppRoute() {
           <Route path="config" element={<ProductionConfigurationIndex />} />
           <Route path="batch" element={<BatchIndex />} />
           <Route path="batch/:id" element={<InhouseIndex />} />
+          <Route
+            path="issue-production-general"
+            element={<GeneralIssueIndex />}
+          />
+          <Route path="issue-production-batch" element={<BatchIssueIndex />} />
         </Route>
 
         <Route path="/domain/">
