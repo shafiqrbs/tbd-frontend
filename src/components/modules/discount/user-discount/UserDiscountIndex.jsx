@@ -3,12 +3,15 @@ import {useParams} from "react-router-dom";
 import {Box, Grid, Progress} from "@mantine/core";
 import {useTranslation} from "react-i18next";
 import {getLoadingProgress} from "../../../global-hook/loading-progress/getLoadingProgress.js";
-import _Shortcut from "../common/_Shortcut.jsx";
-import CategoryTable from "./CategoryTable.jsx";
-import B2BHeaderNavbar from "../B2BHeaderNavbar";
+import UserDiscountTable from "./UserDiscountTable";
+import DiscountHeaderNavbar from "../DiscountHeaderNavbar";
+import _DiscountShortcut from "../common/_DiscountShortcut";
 
 
-export default function CategoryIndex() {
+
+
+
+export default function UserDiscountIndex() {
     const {id} = useParams();
     const {t} = useTranslation();
     const progress = getLoadingProgress();
@@ -20,9 +23,9 @@ export default function CategoryIndex() {
             )}
             {progress === 100 && (
                 <>
-                    <B2BHeaderNavbar
-                        pageTitle={t("B2BCategory")}
-                        pageDescription={t("B2BCategoryDescription")}
+                    <DiscountHeaderNavbar
+                        pageTitle={t("UserDiscount")}
+                        pageDescription={t("UserDiscountDescription")}
                         roles={t("Roles")}
                         allowZeroPercentage=""
                         currencySymbol=""
@@ -30,10 +33,10 @@ export default function CategoryIndex() {
                     <Box p={"8"}>
                         <Grid columns={24} gutter={{base: 8}}>
                             <Grid.Col span={1}>
-                                <_Shortcut id={id}/>
+                                <_DiscountShortcut id={id}/>
                             </Grid.Col>
                             <Grid.Col span={23}>
-                                <CategoryTable id={id}/>
+                                <UserDiscountTable id={id}/>
                             </Grid.Col>
                         </Grid>
                     </Box>

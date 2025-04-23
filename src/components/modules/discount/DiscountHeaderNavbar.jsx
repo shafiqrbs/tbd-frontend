@@ -16,7 +16,7 @@ import {
 import {useLocation, useNavigate} from "react-router-dom";
 
 
-function B2BHeaderNavbar(props) {
+function DiscountHeaderNavbar(props) {
     const { pageTitle,pageDescription, roles, currancySymbol, allowZeroPercentage } = props
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
@@ -79,5 +79,5 @@ function B2BHeaderNavbar(props) {
     );
 }
 
-export default B2BHeaderNavbar;
+export default DiscountHeaderNavbar;
 

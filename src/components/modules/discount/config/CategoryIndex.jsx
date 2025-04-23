@@ -5,7 +5,7 @@ import {useTranslation} from "react-i18next";
 import {getLoadingProgress} from "../../../global-hook/loading-progress/getLoadingProgress.js";
 import _Shortcut from "../common/_Shortcut.jsx";
 import CategoryTable from "./CategoryTable.jsx";
-import B2BHeaderNavbar from "../B2BHeaderNavbar";
+import DiscountHeaderNavbar from "../B2BHeaderNavbar";
 
 
 export default function CategoryIndex() {
@@ -20,7 +20,7 @@ export default function CategoryIndex() {
             )}
             {progress === 100 && (
                 <>
-                    <B2BHeaderNavbar
+                    <DiscountHeaderNavbar
                         pageTitle={t("B2BCategory")}
                         pageDescription={t("B2BCategoryDescription")}
                         roles={t("Roles")}

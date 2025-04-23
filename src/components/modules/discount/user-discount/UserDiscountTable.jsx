@@ -17,9 +17,6 @@ import { getHotkeyHandler } from "@mantine/hooks";
 
 import tableCss from "../../../../assets/css/Table.module.css";
 import classes from "../../../../assets/css/FeaturesCards.module.css";
-
-import _Search from "../common/_Search.jsx";
-import _ManageBranchAndFranchise from "../common/_ManageBranchAndFranchise.jsx";
 import SelectForm from "../../../form-builders/SelectForm.jsx";
 
 import {
@@ -35,6 +32,7 @@ import {
 } from "../../../../store/core/crudSlice.js";
 
 import { showNotificationComponent } from "../../../core-component/showNotificationComponent.jsx";
+import _DiscountSearch from "../common/_DiscountSearch";
 
 // ─── Reusable Input for Inline Percentage Fields ──────────────────────────────
 const EditableNumberInput = ({ item, field, value, onUpdate }) => {
@@ -72,7 +70,7 @@ const EditableNumberInput = ({ item, field, value, onUpdate }) => {
 };
 
 // ─── Main Component ───────────────────────────────────────────────────────────
-export default function CategoryTable({ id }) {
+export default function UserDiscountTable({ id }) {
     const dispatch = useDispatch();
     const { t } = useTranslation();
     const { mainAreaHeight } = useOutletContext();
@@ -151,21 +149,10 @@ export default function CategoryTable({ id }) {
             <LoadingOverlay visible={reloadList} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />
 
             <Grid columns={24} gutter={{ base: 8 }}>
-                <Grid.Col span={4}>
-                    <_ManageBranchAndFranchise
-                        classes={classes}
-                        setSelectedDomainId={setSelectedDomainId}
-                        selectedDomainId={selectedDomainId}
-                        setReloadList={setReloadList}
-                        id={id}
-                        module={"category"}
-                    />
-                </Grid.Col>
-
-                <Grid.Col span={20}>
+                <Grid.Col span={24}>
                     <Box p="xs" bg="white" className="borderRadiusAll">
                         <Box pl="xs" pb="xs" pr={8} pt="xs" mb="xs" className="boxBackground borderRadiusAll">
-                            <_Search module="product" />
+                            <_DiscountSearch module="product" />
                         </Box>
 
                         <Box className="borderRadiusAll">

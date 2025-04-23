@@ -64,6 +64,7 @@ import SettingIndexB2B from "./components/modules/b2b/setting/SettingIndex.jsx";
 import B2bDomainIndex from "./components/modules/b2b/domain/B2bDomainIndex.jsx";
 import GeneralIssueIndex from "./components/modules/production/production-issue/general-issue/GeneralIssueIndex.jsx";
 import BatchIssueIndex from "./components/modules/production/production-issue/batch-issue/BatchIssueIndex.jsx";
+import UserDiscountIndex from "./components/modules/discount/user-discount/UserDiscountIndex";
 
 function AppRoute() {
   return (
@@ -142,6 +143,9 @@ function AppRoute() {
           <Route path="barcode-print" element={<BarcodePrintIndex />} />
         </Route>
 
+        <Route path="/discount/">
+          <Route path="user-discount" element={<UserDiscountIndex />} />
+        </Route>
         <Route path="/production/">
           <Route path="items" element={<RecipeItemsIndex />} />
           <Route path="recipe-update/:id" element={<RecipeIndex />} />
