@@ -1,5 +1,5 @@
 import { isNotEmpty, useForm } from "@mantine/form";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Text,
@@ -11,7 +11,7 @@ import {
   Center,
   Stack,
   Tooltip,
-  Button,
+  Button, SimpleGrid, Card, Image, Title, Divider, Container, Textarea,
 } from "@mantine/core";
 import { DataTable } from "mantine-datatable";
 import tableCss from "../../../../../assets/css/Table.module.css";
@@ -24,7 +24,7 @@ import {
   IconStackPush,
   IconPrinter,
   IconReceipt,
-  IconDeviceFloppy,
+  IconDeviceFloppy, IconMoneybag, IconShoppingCart,
 } from "@tabler/icons-react";
 import { useOutletContext } from "react-router-dom";
 import { getHotkeyHandler, useToggle } from "@mantine/hooks";
@@ -38,6 +38,11 @@ import DatePickerForm from "../../../../form-builders/DatePicker.jsx";
 import SelectForm from "../../../../form-builders/SelectForm.jsx";
 import getCoreWarehouseDropdownData from "../../../../global-hook/dropdown/core/getCoreWarehouseDropdownData.js";
 import getVendorDropdownData from "../../../../global-hook/dropdown/getVendorDropdownData.js";
+import classes from "../../../../../assets/css/FeaturesCards.module.css";
+import pos from "../../../../../assets/images/pos/pos.png";
+import TextAreaForm from "../../../../form-builders/TextAreaForm";
+import TextAreaGenericForm from "../../../../form-builders/TextAreaGenericForm";
+import inputCss from "../../../../../assets/css/InputField.module.css";
 export default function GeneralIssueSubmitForm(props) {
   const {
     isSMSActive,
@@ -303,160 +308,155 @@ export default function GeneralIssueSubmitForm(props) {
           </Box>
         </Box>
         <Box>
-          <Grid columns={24} gutter={{ base: 6 }} pt={"6"}>
-            <Grid.Col span={8}>
-              <Box
-                p={"xs"}
-                className={genericClass.genericSecondaryBg}
-                h={102}
-              ></Box>
-            </Grid.Col>
-            <Grid.Col span={8}>
-              <Box className={"borderRadiusAll"}>
-                <ScrollArea
-                  h={100}
-                  scrollbarSize={2}
-                  type="never"
-                  bg={"gray.1"}
-                >
-                  <Box
-                    pl={"xs"}
-                    pt={"xs"}
-                    pr={"xs"}
-                    className={genericClass.genericSecondaryBg}
-                    h={100}
-                    pb={"10"}
-                  >
-                    <Box>
-                      <SelectForm
-                        tooltip={t("IssuedTo")}
+          <SimpleGrid cols={{base: 1, md: 3}} mt={'2'} spacing="xs" mb={"xs"}>
+            <Card shadow="md" radius="4" className={`${classes.card} ${genericClass.genericBackground}`} padding="xs">
+              <Box>
+                <SelectForm
+                    tooltip={t("IssuedTo")}
+                    label={t("")}
+                    placeholder={t("IssuedTo")}
+                    required={true}
+                    nextField={
+                      issueType === "factory"
+                          ? "factory_id"
+                          : issueType === "vendor"
+                          ? "vendor_id"
+                          : "warehouse_id"
+                    }
+                    name={"issued_to_type"}
+                    form={form}
+                    dropdownValue={[
+                      { label: t("Factory"), value: "factory" },
+                      { label: t("Vendor"), value: "vendor" },
+                      { label: t("Warehouse"), value: "warehouse" },
+                    ]}
+                    id={"issued_to_type"}
+                    mt={1}
+                    searchable={false}
+                    value={issueType}
+                    changeValue={setIssueType}
+                />
+              </Box>
+              {issueType === "factory" && (
+                  <Box mt={8}>
+                    <SelectForm
+                        tooltip={t("ChooseFactory")}
                         label={t("")}
-                        placeholder={t("IssuedTo")}
+                        placeholder={t("ChooseFactory")}
                         required={true}
-                        nextField={
-                          issueType === "factory"
-                            ? "factory_id"
-                            : issueType === "vendor"
-                            ? "vendor_id"
-                            : "warehouse_id"
-                        }
-                        name={"issued_to_type"}
+                        nextField={"invoice_date"}
+                        name={"factory_id"}
                         form={form}
                         dropdownValue={[
-                          { label: t("Factory"), value: "factory" },
-                          { label: t("Vendor"), value: "vendor" },
-                          { label: t("Warehouse"), value: "warehouse" },
+                          { label: t("FactoryOne"), value: "1" },
+                          { label: t("FactoryTwo"), value: "2" },
                         ]}
-                        id={"issued_to_type"}
+                        id={"factory_id"}
                         mt={1}
-                        searchable={false}
-                        value={issueType}
-                        changeValue={setIssueType}
-                      />
-                    </Box>
-
-                    {issueType === "factory" && (
-                      <Box mt={8}>
-                        <SelectForm
-                          tooltip={t("ChooseFactory")}
-                          label={t("")}
-                          placeholder={t("ChooseFactory")}
-                          required={true}
-                          nextField={"invoice_date"}
-                          name={"factory_id"}
-                          form={form}
-                          dropdownValue={[
-                            { label: t("FactoryOne"), value: "1" },
-                            { label: t("FactoryTwo"), value: "2" },
-                          ]}
-                          id={"factory_id"}
-                          mt={1}
-                          searchable={true}
-                          value={factoryId}
-                          changeValue={setFactoryId}
-                        />
-                      </Box>
-                    )}
-
-                    {issueType === "vendor" && (
-                      <Box mt={8}>
-                        <SelectForm
-                          tooltip={t("ChooseVendor")}
-                          label={t("")}
-                          placeholder={t("ChooseVendor")}
-                          required={true}
-                          nextField={"invoice_date"}
-                          name={"vendor_id"}
-                          form={form}
-                          dropdownValue={vendorDropdownData}
-                          id={"vendor_id"}
-                          mt={1}
-                          searchable={true}
-                          value={vendorId}
-                          changeValue={setVendorId}
-                        />
-                      </Box>
-                    )}
-
-                    {issueType === "warehouse" && (
-                      <Box mt={8}>
-                        <SelectForm
-                          tooltip={t("ChooseWarehouse")}
-                          label={t("")}
-                          placeholder={t("ChooseWarehouse")}
-                          required={true}
-                          nextField={"invoice_date"}
-                          name={"warehouse_id"}
-                          form={form}
-                          dropdownValue={warehouseDropdownData}
-                          id={"warehouse_id"}
-                          mt={1}
-                          searchable={true}
-                          value={warehouseId}
-                          changeValue={(val) => setWarehouseId(val)}
-                        />
-                      </Box>
-                    )}
+                        searchable={true}
+                        value={factoryId}
+                        changeValue={setFactoryId}
+                    />
                   </Box>
-                </ScrollArea>
-              </Box>
-            </Grid.Col>
-            <Grid.Col span={8}>
-              <Box className={genericClass.genericSecondaryBg} p={"xs"} h={95}>
+              )}
+
+              {issueType === "vendor" && (
+                  <Box mt={8}>
+                    <SelectForm
+                        tooltip={t("ChooseVendor")}
+                        label={t("")}
+                        placeholder={t("ChooseVendor")}
+                        required={true}
+                        nextField={"invoice_date"}
+                        name={"vendor_id"}
+                        form={form}
+                        dropdownValue={vendorDropdownData}
+                        id={"vendor_id"}
+                        mt={1}
+                        searchable={true}
+                        value={vendorId}
+                        changeValue={setVendorId}
+                    />
+                  </Box>
+              )}
+
+              {issueType === "warehouse" && (
+                  <Box mt={8}>
+                    <SelectForm
+                        tooltip={t("ChooseWarehouse")}
+                        label={t("")}
+                        placeholder={t("ChooseWarehouse")}
+                        required={true}
+                        nextField={"invoice_date"}
+                        name={"warehouse_id"}
+                        form={form}
+                        dropdownValue={warehouseDropdownData}
+                        id={"warehouse_id"}
+                        mt={1}
+                        searchable={true}
+                        value={warehouseId}
+                        changeValue={(val) => setWarehouseId(val)}
+                    />
+                  </Box>
+              )}
+            </Card>
+            <Card shadow="md" radius="4" className={`${classes.card} ${genericClass.genericBackground}`} padding="xs">
+              <Box className={"borderRadiusAll"}>
                 <Box>
                   <DatePickerForm
-                    tooltip={t("InvoiceDateValidateMessage")}
-                    label=""
-                    placeholder={t("InvoiceDate")}
-                    required={false}
-                    nextField={"discount"}
-                    form={form}
-                    name={"invoice_date"}
-                    id={"invoice_date"}
-                    leftSection={<IconCalendar size={16} opacity={0.5} />}
-                    rightSectionWidth={30}
-                    closeIcon={true}
+                      tooltip={t("InvoiceDateValidateMessage")}
+                      label=""
+                      placeholder={t("InvoiceDate")}
+                      required={false}
+                      nextField={"discount"}
+                      form={form}
+                      name={"invoice_date"}
+                      id={"invoice_date"}
+                      leftSection={<IconCalendar size={16} opacity={0.5} />}
+                      rightSectionWidth={30}
+                      closeIcon={true}
                   />
                 </Box>
                 <Box mt={8}>
                   <SelectForm
-                    tooltip={t("ChooseIssuedBy")}
-                    label=""
-                    placeholder={t("ChooseIssuedBy")}
-                    required={false}
-                    name={"issued_by"}
-                    form={form}
-                    dropdownValue={salesByDropdownData}
-                    id={"issued_by"}
-                    nextField={"save"}
-                    searchable={false}
-                    value={issuedById}
-                    changeValue={(val) => setIssuedById(val)}
+                      tooltip={t("ChooseIssuedBy")}
+                      label=""
+                      placeholder={t("ChooseIssuedBy")}
+                      required={false}
+                      name={"issued_by"}
+                      form={form}
+                      dropdownValue={salesByDropdownData}
+                      id={"issued_by"}
+                      nextField={"save"}
+                      searchable={false}
+                      value={issuedById}
+                      changeValue={(val) => setIssuedById(val)}
                   />
                 </Box>
               </Box>
-            </Grid.Col>
-          </Grid>
+            </Card>
+            <Card shadow="md" radius="4" className={`${classes.card} ${genericClass.genericBackground}`} padding="xs">
+              <Box>
+                <Textarea
+                    label=""
+                    classNames={inputCss}
+                    placeholder={t("Narration")}
+                    autosize
+                    minRows={3}
+                    maxRows={12}
+                    required={false}
+                    nextField={"Status"}
+                    name={"narration"}
+                    form={form}
+                    id={"narration"}
+                />
+              </Box>
+
+            </Card>
+          </SimpleGrid>
+        </Box>
+        <Box>
+
           <Box mt={"8"} pb={"xs"}>
             <Button.Group>
               <Button
