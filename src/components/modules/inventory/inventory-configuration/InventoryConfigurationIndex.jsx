@@ -3,9 +3,9 @@ import { Box, Grid, Progress } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress.js";
 import InventoryHeaderNavbar from "../../domain/configuraton/InventoryHeaderNavbar.jsx";
-import InventoryConfigurationForm from "./InventoryConfigurationForm.jsx";
 import getConfigData from "../../../global-hook/config-data/getConfigData.js";
 import Navigation from "../common/Navigation.jsx";
+import InventoryConfigarationFormBK from "./InventoryConfigarationFormBK.jsx";
 
 function InventoryConfigurationIndex() {
   const { t, i18n } = useTranslation();
@@ -33,7 +33,7 @@ function InventoryConfigurationIndex() {
                 <Navigation module={"config"} />
               </Grid.Col>
               <Grid.Col span={23}>
-                <InventoryConfigurationForm />
+                <InventoryConfigarationFormBK />
               </Grid.Col>
             </Grid>
           </Box>

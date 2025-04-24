@@ -1,19 +1,18 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { showEntityData } from "../../../store/inventory/crudSlice.js";
+import { getShowConfigEntityData } from "../../../store/inventory/crudSlice.js";
 
 const getDomainConfig = () => {
     const dispatch = useDispatch();
-    const domainConfig = useSelector((state) => state.inventoryCrudSlice.showEntityData);
-    // console.log(domainConfig)
-
+    const domainConfig = useSelector((state) => state.inventoryCrudSlice.showConfigData);
+    
     const fetchEntity = () => {
-        dispatch(showEntityData("domain/config")); // Trigger the Redux action to fetch the data
+        dispatch(getShowConfigEntityData("domain/config")); 
     };
     useEffect(() => {
-        fetchEntity(); // Fetch config data on mount
-    }, [dispatch]); // Only triggers once on mount since the dependency is `dispatch`
-    return { domainConfig, fetchEntity }; // Return both data and the function to manually re-fetch
+        fetchEntity(); 
+    }, [dispatch]); 
+    return { domainConfig };
 };
 
 export default getDomainConfig;
