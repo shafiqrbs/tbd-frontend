@@ -62,7 +62,6 @@ function InventoryConfigarationFormBK() {
       is_zero_receive_allow: config_sales?.is_zero_receive_allow,
       due_sales_without_customer: config_sales?.due_sales_without_customer,
       item_sales_percent: config_sales?.item_sales_percent,
-      item_sales_percent: config_sales?.item_sales_percent,
       zero_stock: config_sales?.zero_stock,
       is_multi_price: config_sales?.is_multi_price,
       is_sales_auto_approved: config_sales?.is_sales_auto_approved,
@@ -375,119 +374,7 @@ function InventoryConfigarationFormBK() {
                       <Box mt={"xs"}>
                         <Grid gutter={{ base: 1 }}>
                           <Grid.Col span={11} fz={"sm"} pt={"1"}>
-                            {t("StockItem")}
-                          </Grid.Col>
-                          <Grid.Col span={1}>
-                            <Checkbox
-                              pr="xs"
-                              checked={form.values.stock_item === 1}
-                              color="red"
-                              {...form.getInputProps("stock_item", {
-                                type: "checkbox",
-                              })}
-                              onChange={(event) =>
-                                form.setFieldValue(
-                                  "stock_item",
-                                  event.currentTarget.checked ? 1 : 0
-                                )
-                              }
-                              styles={(theme) => ({
-                                input: {
-                                  borderColor: "red",
-                                },
-                              })}
-                            />
-                          </Grid.Col>
-                        </Grid>
-                      </Box>
-                      <Box mt={"xs"}>
-                        <Grid gutter={{ base: 1 }}>
-                          <Grid.Col span={11} fz={"sm"} pt={"1"}>
-                            {t("StockHistory")}
-                          </Grid.Col>
-                          <Grid.Col span={1}>
-                            <Checkbox
-                              pr="xs"
-                              checked={form.values.is_stock_history === 1}
-                              color="red"
-                              {...form.getInputProps("is_stock_history", {
-                                type: "checkbox",
-                              })}
-                              onChange={(event) =>
-                                form.setFieldValue(
-                                  "is_stock_history",
-                                  event.currentTarget.checked ? 1 : 0
-                                )
-                              }
-                              styles={(theme) => ({
-                                input: {
-                                  borderColor: "red",
-                                },
-                              })}
-                            />
-                          </Grid.Col>
-                        </Grid>
-                      </Box>
-                      <Box mt={"xs"}>
-                        <Grid gutter={{ base: 1 }}>
-                          <Grid.Col span={11} fz={"sm"} pt={"1"}>
-                            {t("PosSales")}
-                          </Grid.Col>
-                          <Grid.Col span={1}>
-                            <Checkbox
-                              pr="xs"
-                              checked={form.values.pos_sales === 1}
-                              color="red"
-                              {...form.getInputProps("pos_sales", {
-                                type: "checkbox",
-                              })}
-                              onChange={(event) =>
-                                form.setFieldValue(
-                                  "pos_sales",
-                                  event.currentTarget.checked ? 1 : 0
-                                )
-                              }
-                              styles={(theme) => ({
-                                input: {
-                                  borderColor: "red",
-                                },
-                              })}
-                            />
-                          </Grid.Col>
-                        </Grid>
-                      </Box>
-                      <Box mt={"xs"}>
-                        <Grid gutter={{ base: 1 }}>
-                          <Grid.Col span={11} fz={"sm"} pt={"1"}>
-                            {t("PayFirst")}
-                          </Grid.Col>
-                          <Grid.Col span={1}>
-                            <Checkbox
-                              pr="xs"
-                              checked={form.values.pay_first === 1}
-                              color="red"
-                              {...form.getInputProps("pay_first", {
-                                type: "checkbox",
-                              })}
-                              onChange={(event) =>
-                                form.setFieldValue(
-                                  "pay_first",
-                                  event.currentTarget.checked ? 1 : 0
-                                )
-                              }
-                              styles={(theme) => ({
-                                input: {
-                                  borderColor: "red",
-                                },
-                              })}
-                            />
-                          </Grid.Col>
-                        </Grid>
-                      </Box>
-                      <Box mt={"xs"}>
-                        <Grid gutter={{ base: 1 }}>
-                          <Grid.Col span={11} fz={"sm"} pt={"1"}>
-                            {t("IsMultiPrice")}
+                            {t("MultiPrice")}
                           </Grid.Col>
                           <Grid.Col span={1}>
                             <Checkbox
@@ -515,7 +402,7 @@ function InventoryConfigarationFormBK() {
                       <Box mt={"xs"}>
                         <Grid gutter={{ base: 1 }}>
                           <Grid.Col span={11} fz={"sm"} pt={"1"}>
-                            {t("IsSalesAutoApproved")}
+                            {t("SalesAutoApproved")}
                           </Grid.Col>
                           <Grid.Col span={1}>
                             <Checkbox
@@ -805,7 +692,7 @@ function InventoryConfigarationFormBK() {
                       <Box mt={"xs"}>
                         <Grid gutter={{ base: 1 }}>
                           <Grid.Col span={11} fz={"sm"} pt={"1"}>
-                            {t("SearchByVendor")}
+                            {t("ShowProduct")}
                           </Grid.Col>
                           <Grid.Col span={1}>
                             <Checkbox
