@@ -129,7 +129,7 @@ function _ConfigurationForm() {
                                                         !saveCreateLoading && isOnline &&
                                                         <Button
                                                             size="xs"
-                                                            calssName={'BtnPrimaryBg'}
+                                                            calssName={'btnPrimaryBg'}
                                                             type="submit"
                                                             id="EntityFormSubmit"
                                                             leftSection={<IconDeviceFloppy size={16} />}
