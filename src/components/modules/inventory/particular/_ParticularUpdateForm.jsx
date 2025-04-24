@@ -146,7 +146,7 @@ function _ParticularUpdateForm(props) {
                                                             !saveCreateLoading && isOnline &&
                                                             <Button
                                                                 size="xs"
-                                                                calssName={'BtnPrimaryBg'}
+                                                                calssName={'btnPrimaryBg'}
                                                                 type="submit"
                                                                 id={formSubmitId}
                                                                 leftSection={<IconDeviceFloppy size={16} />}

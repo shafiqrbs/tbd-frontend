@@ -45,7 +45,7 @@ import vendorDataStoreIntoLocalStorage from "../../../global-hook/local-storage/
 import getSettingCategoryDropdownData from "../../../global-hook/dropdown/getSettingCategoryDropdownData.js";
 import classes from "../../../../assets/css/FeaturesCards.module.css";
 import genericClass from "../../../../assets/css/Generic.module.css";
-import SettingsDrawer from "../common/SettingDrawer.jsx";
+import SettingsDrawer from "../../../modules/setting-drawer/SettingDrawer.jsx";
 import Navigation from "../common/Navigation.jsx";
 import __PosSalesForm from "./__PosSalesForm.jsx";
 import { useHotkeys } from "@mantine/hooks";
