@@ -889,31 +889,31 @@ function InventoryConfigarationFormBK() {
                 >
                   <ScrollArea h={height - 176} type="never">
                     <Grid columns={24}>
-                      <Grid.Col span={11} align={"left"} fw={"600"} fz={"14"}>
+                      <Grid.Col span={9} align={"left"} fw={"600"} fz={"14"}>
                         {t("Name")}
                       </Grid.Col>
                       <Grid.Col span={1}>:</Grid.Col>
-                      <Grid.Col span={"13"}>
+                      <Grid.Col span={14}>
                         {domainConfig && domainConfig?.name}
                       </Grid.Col>
                     </Grid>
 
                     <Grid columns={24}>
-                      <Grid.Col span={11} align={"left"} fw={"600"} fz={"14"}>
+                      <Grid.Col span={9} align={"left"} fw={"600"} fz={"14"}>
                         {t("Mobile")}
                       </Grid.Col>
                       <Grid.Col span={1}>:</Grid.Col>
-                      <Grid.Col span={"13"}>
+                      <Grid.Col span={14}>
                         {domainConfig && domainConfig?.mobile}
                       </Grid.Col>
                     </Grid>
 
                     <Grid columns={24}>
-                      <Grid.Col span={11} align={"left"} fw={"600"} fz={"14"}>
+                      <Grid.Col span={9} align={"left"} fw={"600"} fz={"14"}>
                         {t("Email")}
                       </Grid.Col>
                       <Grid.Col span={1}>:</Grid.Col>
-                      <Grid.Col span={"13"}>
+                      <Grid.Col span={14}>
                         {domainConfig && domainConfig?.email}
                       </Grid.Col>
                     </Grid>
