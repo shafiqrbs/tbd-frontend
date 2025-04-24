@@ -1110,7 +1110,7 @@ function MainDashboard(props) {
                             )
                         }
                         {
-                            configData?.domain?.modules?.includes("domain") && ["role_domain"].some((value) => userRole.includes(value)) && (
+                            configData?.domain?.modules?.includes("domain") && ["role_domain", "role_core_admin"].some((value) => userRole.includes(value)) && (
                                 <Card shadow="md" radius="md" className={classes.card} padding="lg">
                                     <Grid gutter={{base: 2}}>
                                         <Grid.Col span={2}>

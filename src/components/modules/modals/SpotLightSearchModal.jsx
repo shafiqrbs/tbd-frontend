@@ -203,8 +203,13 @@ function SpotLightSearchModal({ onClose }) {
       const selectedAction = filteredItems[selectedIndex];
       if (selectedAction) {
         const path =
-          selectedAction.group === "Production" ||
-          selectedAction.group === "প্রোডাকশন"
+          (selectedAction.group === "Domain" &&
+            selectedAction.id === "dashboard") ||
+          (selectedAction.group === "ডোমেইন" &&
+            selectedAction.id === "dashboard")
+            ? `b2b/${selectedAction.id}`
+            : selectedAction.group === "Production" ||
+              selectedAction.group === "প্রোডাকশন"
             ? `production/${selectedAction.id}`
             : selectedAction.group === "Core" ||
               selectedAction.group === "কেন্দ্র"
@@ -356,6 +361,11 @@ function SpotLightSearchModal({ onClose }) {
                                     to={
                                       action.id === "inhouse"
                                         ? "#"
+                                        : (action.group === "Domain" &&
+                                            action.id === "dashboard") ||
+                                          (action.group === "ডোমেইন" &&
+                                            action.id === "dashboard")
+                                        ? `b2b/${action.id}`
                                         : action.group === "Production" ||
                                           action.group === "প্রোডাকশন"
                                         ? `production/${action.id}`
@@ -379,8 +389,18 @@ function SpotLightSearchModal({ onClose }) {
                                     }
                                     onClick={(e) => {
                                       navigate(
-                                        action.group === "Production" ||
-                                          action.group === "প্রোডাকশন"
+                                        ((action.group === "Domain" &&
+                                          action.id === "dashboard") ||
+                                        (action.group === "ডোমেইন" &&
+                                          action.id === "dashboard")
+                                          ? `b2b/${action.id}`
+                                          : action.group === "Domain" &&
+                                            action.id === "dashboard") ||
+                                          (action.group === "ডোমেইন" &&
+                                            action.id === "dashboard")
+                                          ? `b2b/${action.id}`
+                                          : action.group === "Production" ||
+                                            action.group === "প্রোডাকশন"
                                           ? `production/${action.id}`
                                           : action.group === "Core" ||
                                             action.group === "কেন্দ্র"

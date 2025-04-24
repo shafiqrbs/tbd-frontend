@@ -206,6 +206,12 @@ const getSpotlightDropdownData = (t, configData) => {
                         description: t("WhereWePresentTheDomainInformationN"),
                         isShow: true
                     },
+                    {
+                        id: "dashboard",
+                        label: t("B2BManagement"),
+                        description: t("WhereWePresentTheDomainInformationN"),
+                        isShow: true
+                    },
                 ]
                 : [],
         },
