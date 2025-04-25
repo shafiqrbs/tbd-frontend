@@ -45,10 +45,10 @@ import vendorDataStoreIntoLocalStorage from "../../../global-hook/local-storage/
 import getSettingCategoryDropdownData from "../../../global-hook/dropdown/getSettingCategoryDropdownData.js";
 import classes from "../../../../assets/css/FeaturesCards.module.css";
 import genericClass from "../../../../assets/css/Generic.module.css";
-import SettingsDrawer from "../../../modules/setting-drawer/SettingDrawer.jsx";
 import Navigation from "../common/Navigation.jsx";
 import __PosSalesForm from "./__PosSalesForm.jsx";
 import { useHotkeys } from "@mantine/hooks";
+import SettingDrawer from "../common/SettingDrawer.jsx";
 
 function _GenericPosForm(props) {
   const {
@@ -1200,7 +1200,7 @@ function _GenericPosForm(props) {
         </Grid.Col>
       </Grid>
       {settingDrawer && (
-        <SettingsDrawer
+        <SettingDrawer
           settingDrawer={settingDrawer}
           setSettingDrawer={setSettingDrawer}
           module={"sales"}
