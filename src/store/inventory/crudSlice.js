@@ -73,6 +73,17 @@ export const getShowEntityData = createAsyncThunk("config/show", async (value) =
     }
 });
 
+export const getShowConfigEntityData = createAsyncThunk("config/all", async (value) => {
+    try {
+        const response = showData(value);
+        return response;
+    } catch (error) {
+        console.log('error', error.message);
+        throw error;
+    }
+});
+        
+
 export const showEntityData = createAsyncThunk("show", async (value) => {
     try {
         const response = showData(value);
@@ -163,6 +174,7 @@ const crudSlice = createSlice({
         fetching: true,
         dataStatus: null,
         showEntityData: [],
+        showConfigData: [],
         showInstantEntityData: [],
         validation: false,
         validationMessage: [],
@@ -251,6 +263,9 @@ const crudSlice = createSlice({
         },
         setInventoryShowDataEmpty : (state,action) => {
             state.showEntityData = []
+        },
+        setConfigShowDataEmpty : (state,action) => {
+            state.showConfigData = []
         }
     },
 
@@ -313,6 +328,11 @@ const crudSlice = createSlice({
         builder.addCase(getShowEntityData.fulfilled, (state, action) => {
             state.showEntityData = action.payload.data.data
         })
+
+        builder.addCase(getShowConfigEntityData.fulfilled, (state, action) => {
+            // console.log("Reducer Payload:", action.payload.data); 
+            state.showConfigData = action.payload.data;
+        });
 
         builder.addCase(showEntityData.fulfilled, (state, action) => {
             state.showEntityData = action.payload.data.data

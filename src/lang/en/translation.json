@@ -969,5 +969,15 @@
   "AddAll" : "Add All",
   "GeneralProductionIssueN" : "General Production Issue",
   "BatchProdcutionIssueN" : "Batch Production Issue",
+  "DomainDetails" : "Domain Details",
+  "SearchByWarehouse" : "Search by warehouse",
+  "SearchByProduct" : "Search by product",
+  "SearchByCategory" : "Search by category",
+  "SearchByVendor" : "Search by vendor",
+  "SearchByProdcutNature" : "Search by product nature",
+  "ShowProduct" : "Show Product",
+  "ItemSalesPercent" : "Item Sales Percent",
+  "MeasurementEnabled" : "Measurement Enabled",
+  "DiscountWithCustomer" : "Discount With Customer",
   "": ""
 }
