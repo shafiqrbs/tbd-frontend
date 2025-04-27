@@ -49,6 +49,7 @@ import Navigation from "../common/Navigation.jsx";
 import __PosSalesForm from "./__PosSalesForm.jsx";
 import { useHotkeys } from "@mantine/hooks";
 import SettingDrawer from "../common/SettingDrawer.jsx";
+import getDomainConfig from "../../../global-hook/config-data/getDomainConfig.js";
 
 function _GenericPosForm(props) {
   const {
@@ -458,6 +459,10 @@ function _GenericPosForm(props) {
     ],
     []
   );
+  const { domainConfig } = getDomainConfig();
+  let inventory_config = domainConfig?.inventory_config;
+  let config_sales = inventory_config?.config_sales;
+  let id = domainConfig?.inventory_config?.id
   return (
     <Box>
       <Grid columns={24} gutter={{ base: 8 }}>
@@ -1203,7 +1208,9 @@ function _GenericPosForm(props) {
         <SettingDrawer
           settingDrawer={settingDrawer}
           setSettingDrawer={setSettingDrawer}
-          module={"sales"}
+          module={"Sales"}
+          config_sales={config_sales}
+          id={id}
         />
       )}
       {productDrawer && (

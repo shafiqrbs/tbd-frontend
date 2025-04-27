@@ -1181,7 +1181,7 @@ function _GenericInvoiceForm(props) {
         <SettingDrawer
           settingDrawer={settingDrawer}
           setSettingDrawer={setSettingDrawer}
-          module={"purchase"}
+          module={"Purchase"}
         />
       )}
       {productDrawer && (

@@ -112,6 +112,7 @@ export const deleteEntityData = createAsyncThunk("delete", async (value) => {
 const crudSlice = createSlice({
     name: "crud",
     initialState: {
+        dropdownLoad: false,
         isLoading: true,
         fetching: true,
         indexEntityData: [],
@@ -141,6 +142,9 @@ const crudSlice = createSlice({
     reducers: {
         setFetching: (state, action) => {
             state.fetching = action.payload
+        },
+        setDropdownLoad: (state, action) => {
+            state.dropdownLoad = action.payload
         },
         setFormLoading: (state, action) => {
             state.formLoading = action.payload
@@ -263,6 +267,6 @@ const crudSlice = createSlice({
     }
 })
 
-export const { setFetching, setFormLoading, setInsertType, setSearchKeyword, setEntityUpdateId, setEntityIsUpdate, setEditEntityData, setCustomerFilterData, setVendorFilterData, setUserFilterData, setValidationData, setEntityNewData, setCategoryGroupFilterData, setDeleteMessage,setWarehouseFilterData ,setRequisitionFilterData, setFileUploadFilterData} = crudSlice.actions
+export const { setDropdownLoad, setFetching, setFormLoading, setInsertType, setSearchKeyword, setEntityUpdateId, setEntityIsUpdate, setEditEntityData, setCustomerFilterData, setVendorFilterData, setUserFilterData, setValidationData, setEntityNewData, setCategoryGroupFilterData, setDeleteMessage,setWarehouseFilterData ,setRequisitionFilterData, setFileUploadFilterData} = crudSlice.actions
 
 export default crudSlice.reducer;

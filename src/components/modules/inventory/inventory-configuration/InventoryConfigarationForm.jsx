@@ -22,13 +22,11 @@ import SalesForm from "./SalesForm";
 import PurchaseForm from "./PurchaseForm";
 import RequisitionForm from "./RequisitionForm";
 import FormGeneric from "./FormGeneric";
-import {useDispatch, useSelector} from "react-redux";
-import { coreSettingDropdown } from "../../../../store/core/utilitySlice.js";
-import {setDropdownLoad } from "../../../../store/inventory/crudSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { coreSettingDropdown,  } from "../../../../store/core/utilitySlice.js";
+import { setDropdownLoad } from "../../../../store/core/crudSlice.js";
 
 function InventoryConfigarationForm() {
-
-
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const { isOnline, mainAreaHeight } = useOutletContext();
@@ -38,48 +36,53 @@ function InventoryConfigarationForm() {
     : [];
   const [activeTab, setActiveTab] = useState("Sales");
 
-  const dropdownLoad = useSelector((state) => state.utilitySlice.dropdownLoad)
-  const vendorDropdownLoad = useSelector((state) => state.utilitySlice.dropdownLoad)
+  const dropdownLoad = useSelector((state) => state.utilitySlice.dropdownLoad);
 
-  const dropdownData = useSelector((state) => state.utilitySlice.customerGroupDropdownData);
-  const vendorDropdownData = useSelector((state) => state.utilitySlice.vendorGroupDropdownData);
+  const dropdownData = useSelector(
+    (state) => state.utilitySlice.customerGroupDropdownData
+  );
+  const vendorDropdownData = useSelector(
+    (state) => state.utilitySlice.vendorGroupDropdownData
+  );
 
-  let groupDropdownData = dropdownData && dropdownData.length > 0 ?
-      dropdownData.map((type, index) => {
-        return ({ 'label': type.name, 'value': String(type.id) })
-      }) : []
+  let groupDropdownData =
+    dropdownData && dropdownData.length > 0
+      ? dropdownData.map((type, index) => {
+          return { label: type.name, value: String(type.id) };
+        })
+      : [];
   useEffect(() => {
     const value = {
-      url: 'core/select/setting',
-      param: { 'dropdown-type': 'customer-group' }
-    }
-    dispatch(coreSettingDropdown(value))
-    dispatch(setDropdownLoad(false))
+      url: "core/select/setting",
+      param: { "dropdown-type": "customer-group" },
+    };
+    dispatch(coreSettingDropdown(value));
+    dispatch(setDropdownLoad(false));
   }, [dropdownLoad]);
 
-  let groupVendorDropdownData = vendorDropdownData && vendorDropdownData.length > 0 ?
-      vendorDropdownData.map((type, index) => {
-        return ({ 'label': type.name, 'value': String(type.id) })
-      }) : []
+  let groupVendorDropdownData =
+    vendorDropdownData && vendorDropdownData.length > 0
+      ? vendorDropdownData.map((type, index) => {
+          return { label: type.name, value: String(type.id) };
+        })
+      : [];
   useEffect(() => {
     const value = {
-      url: 'core/select/setting',
-      param: { 'dropdown-type': 'customer-group' }
-    }
-    dispatch(coreSettingDropdown(value))
-    dispatch(setDropdownLoad(false))
-  }, [vendorDropdownLoad]);
-
-
+      url: "core/select/setting",
+      param: { "dropdown-type": "vendor-group" },
+    };
+    dispatch(coreSettingDropdown(value));
+    dispatch(setDropdownLoad(false));
+  }, [dropdownLoad]);
 
   const { domainConfig } = getDomainConfig();
-  console.log(domainConfig)
+  // console.log(domainConfig)
 
   let inventory_config = domainConfig?.inventory_config;
   let config_sales = inventory_config?.config_sales;
   let config_purchase = inventory_config?.config_purchase;
   let config_requisition = inventory_config?.config_requisition;
-  let id = domainConfig ?.id;
+  let id = domainConfig?.id;
 
   const navItems = [
     "Sales",
@@ -135,19 +138,19 @@ function InventoryConfigarationForm() {
       case "Sales":
         return (
           <SalesForm
-              customerGroupDropdownData={groupDropdownData}
-              height={height}
-              config_sales={config_sales}
-              id={id}
+            customerGroupDropdownData={groupDropdownData}
+            height={height}
+            config_sales={config_sales}
+            id={id}
           />
         );
       case "Purchase":
         return (
           <PurchaseForm
-              vendorGroupDropdownData={groupDropdownData}
-              height={height}
-              config_purchase={config_purchase}
-              id={id}
+            vendorGroupDropdownData={groupVendorDropdownData}
+            height={height}
+            config_purchase={config_purchase}
+            id={id}
           />
         );
       case "Requisition":
@@ -160,11 +163,7 @@ function InventoryConfigarationForm() {
         );
       default:
         return (
-          <FormGeneric
-            height={height}
-            config_sales={config_sales}
-            id={id}
-          />
+          <FormGeneric height={height} config_sales={config_sales} id={id} />
         );
     }
   };
@@ -280,7 +279,7 @@ function InventoryConfigarationForm() {
           </Box>
         </Grid.Col>
         <Grid.Col span={8}>
-          <Box bg={"white"} p={"xs"} pb={'xs'} className={"borderRadiusAll"}>
+          <Box bg={"white"} p={"xs"} pb={"xs"} className={"borderRadiusAll"}>
             <Box
               h={48}
               pl={`xs`}
@@ -294,11 +293,7 @@ function InventoryConfigarationForm() {
               </Title>
             </Box>
             <Box mb={0} bg={"gray.1"} h={height}>
-              <Box
-                p={"md"}
-                className="borderRadiusAll"
-                h={height}
-              >
+              <Box p={"md"} className="borderRadiusAll" h={height}>
                 <ScrollArea h={height - 176} type="never">
                   <Grid columns={24}>
                     <Grid.Col span={9} align={"left"} fw={"600"} fz={"14"}>
