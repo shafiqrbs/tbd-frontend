@@ -23,13 +23,7 @@ import {
 import SelectForm from "../../../form-builders/SelectForm";
 
 function PurchaseForm(props) {
-
-  const {
-    vendorGroupDropdownData,
-    height,
-    config,
-    id
-  } = props;
+  const { vendorGroupDropdownData, height, config, id } = props;
 
   const { t } = useTranslation();
   const dispatch = useDispatch();
@@ -50,7 +44,6 @@ function PurchaseForm(props) {
   });
 
   const handlePurchaseFormSubmit = (values) => {
-
     dispatch(setValidationData(false));
 
     modals.openConfirmModal({
@@ -64,7 +57,6 @@ function PurchaseForm(props) {
   };
 
   const handlePurchaseConfirmSubmit = async (values) => {
-
     const properties = [
       "search_by_vendor",
       "search_by_product_nature",
@@ -81,12 +73,11 @@ function PurchaseForm(props) {
     });
 
     try {
-
       setSaveCreateLoading(true);
       const value = {
         url: `domain/config/inventory-purchase/${id}`,
         data: values,
-        type: 'POST',
+        type: "POST",
       };
       console.log("value", values);
       await dispatch(storeEntityData(value));
@@ -133,21 +124,28 @@ function PurchaseForm(props) {
       <form onSubmit={form.onSubmit(handlePurchaseFormSubmit)}>
         <Box pt={"xs"} pl={"xs"}>
           <Box>
-            <SelectForm
-                tooltip={t('ChooseVendorGroup')}
-                label={t('VendorGroup')}
-                placeholder={t('ChooseVendorGroup')}
-                required={true}
-                nextField={''}
-                name={'default_vendor_group_id'}
-                form={form}
-                dropdownValue={vendorGroupDropdownData}
-                mt={8}
-                id={'default_vendor_group_id'}
-                searchable={false}
-                value={vendorGroupData}
-                changeValue={setVendorGroupData}
-            />
+            <Grid columns={24} gutter={{ base: 1 }}>
+              <Grid.Col span={12} fz={"sm"} mt={8}>
+                {t("VendorGroup")}
+              </Grid.Col>
+              <Grid.Col span={12}>
+                <SelectForm
+                  tooltip={t("ChooseVendorGroup")}
+                  label={""}
+                  placeholder={t("ChooseVendorGroup")}
+                  required={true}
+                  nextField={""}
+                  name={"default_vendor_group_id"}
+                  form={form}
+                  dropdownValue={vendorGroupDropdownData}
+                  mt={8}
+                  id={"default_vendor_group_id"}
+                  searchable={false}
+                  value={vendorGroupData}
+                  changeValue={setVendorGroupData}
+                />
+              </Grid.Col>
+            </Grid>
           </Box>
           <Box mt={"xs"}>
             <Grid

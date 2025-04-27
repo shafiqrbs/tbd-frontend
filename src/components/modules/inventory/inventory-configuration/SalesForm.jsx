@@ -20,17 +20,10 @@ import {
   setValidationData,
   storeEntityData,
 } from "../../../../store/core/crudSlice.js";
-import customerDataStoreIntoLocalStorage from "../../../global-hook/local-storage/customerDataStoreIntoLocalStorage.js";
 import SelectForm from "../../../form-builders/SelectForm";
 
 function SalesForm(props) {
-
-  const {
-    customerGroupDropdownData,
-    height,
-    config_sales,
-    id
-  } = props;
+  const { customerGroupDropdownData, height, config_sales, id } = props;
 
   console.log(props.domainConfig)
 
@@ -38,13 +31,13 @@ function SalesForm(props) {
   const dispatch = useDispatch();
   const [saveCreateLoading, setSaveCreateLoading] = useState(false);
   const [customerGroupData, setCustomerGroupData] = useState(null);
-//  const { locationDropdown, customerGroupDropdownData, executiveDropdown } = props
 
   const form = useForm({
     initialValues: {
       default_customer_group_id: config_sales?.default_customer_group_id || 0,
       discount_with_customer: config_sales?.discount_with_customer || 0,
-      due_sales_without_customer: config_sales?.due_sales_without_customer || "",
+      due_sales_without_customer:
+        config_sales?.due_sales_without_customer || "",
       is_measurement_enable: config_sales?.is_measurement_enable || "",
       is_multi_price: config_sales?.is_multi_price || "",
       is_sales_auto_approved: config_sales?.is_sales_auto_approved || "",
@@ -59,9 +52,7 @@ function SalesForm(props) {
     },
   });
 
-
   const handleSalesFormSubmit = (values) => {
-
     dispatch(setValidationData(false));
     modals.openConfirmModal({
       title: <Text size="md">{t("FormConfirmationTitle")}</Text>,
@@ -103,7 +94,7 @@ function SalesForm(props) {
       console.log("value", values);
       await dispatch(storeEntityData(value));
 
-     /* const resultAction = await dispatch(
+      /* const resultAction = await dispatch(
         showInstantEntityData("inventory/config")
       );
       if (showInstantEntityData.fulfilled.match(resultAction)) {
@@ -161,21 +152,27 @@ function SalesForm(props) {
       <form onSubmit={form.onSubmit(handleSalesFormSubmit)}>
         <Box pt={"xs"} pl={"xs"}>
           <Box>
-            <SelectForm
-                tooltip={t('ChooseCustomerGroup')}
-                label={t('CustomerGroup')}
-                placeholder={t('ChooseCustomerGroup')}
-                required={true}
-                nextField={''}
-                name={'default_customer_group_id'}
-                form={form}
-                dropdownValue={customerGroupDropdownData}
-                mt={8}
-                id={'default_customer_group_id'}
-                searchable={false}
-                value={customerGroupData}
-                changeValue={setCustomerGroupData}
-            />
+            <Grid columns={24} gutter={{ base: 1 }}>
+              <Grid.Col span={12} fz={"sm"} mt={8}>
+                {t("CustomerGroup")}
+              </Grid.Col>
+              <Grid.Col span={12}>
+                <SelectForm
+                  tooltip={t("ChooseCustomerGroup")}
+                  label={""}
+                  placeholder={t("ChooseCustomerGroup")}
+                  required={true}
+                  nextField={""}
+                  name={"default_customer_group_id"}
+                  form={form}
+                  dropdownValue={customerGroupDropdownData}
+                  id={"default_customer_group_id"}
+                  searchable={false}
+                  value={customerGroupData}
+                  changeValue={setCustomerGroupData}
+                />
+              </Grid.Col>
+            </Grid>
           </Box>
 
           {/* discount_with_customer */}
