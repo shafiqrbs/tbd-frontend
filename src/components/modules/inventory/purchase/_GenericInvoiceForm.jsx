@@ -47,6 +47,7 @@ import Navigation from "../common/Navigation.jsx";
 import __PosPurchaseForm from "./__PosPurchaseForm.jsx";
 import SettingDrawer from "../common/SettingDrawer.jsx";
 import { useHotkeys } from "@mantine/hooks";
+import useDomainConfig from "../../../global-hook/config-data/getDomainConfig.js";
 
 function _GenericInvoiceForm(props) {
   const {
@@ -455,6 +456,8 @@ function _GenericInvoiceForm(props) {
     ],
     []
   );
+  const { domainConfig } = useDomainConfig();
+  let id = domainConfig?.id;
   return (
     <Box>
       <Grid columns={24} gutter={{ base: 8 }}>
@@ -1084,7 +1087,7 @@ function _GenericInvoiceForm(props) {
                               closeIcon={true}
                             />
                           </Grid.Col>
-                          <Grid.Col span={4}> 
+                          <Grid.Col span={4}>
                             <Box style={{ display: "none" }}>
                               <InputButtonForm
                                 tooltip=""
@@ -1182,6 +1185,7 @@ function _GenericInvoiceForm(props) {
           settingDrawer={settingDrawer}
           setSettingDrawer={setSettingDrawer}
           module={"Purchase"}
+          id={id}
         />
       )}
       {productDrawer && (

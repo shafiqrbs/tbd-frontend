@@ -38,12 +38,12 @@ import {
 import {useTranslation} from "react-i18next";
 import classes from "../../../assets/css/FeaturesCards.module.css";
 import getConfigData from "../../global-hook/config-data/getConfigData.js";
-import getDomainConfig from "../../global-hook/config-data/getDomainConfig.js";
 import pos from "../../../assets/images/pos/pos.png";
+import useDomainConfig from "../../global-hook/config-data/getDomainConfig.js";
 
 function MainDashboard(props) {
     const {configData, fetchData} = getConfigData();
-    const {domainConfig,fetchEntity} = getDomainConfig();
+    const {domainConfig,fetchEntity} = useDomainConfig();
 
     /* start for user role check */
     const [userRole, setUserRole] = useState(() => {
