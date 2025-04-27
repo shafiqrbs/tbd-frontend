@@ -138,7 +138,6 @@ function PurchaseForm(props) {
                   name={"default_vendor_group_id"}
                   form={form}
                   dropdownValue={vendorGroupDropdownData}
-                  mt={8}
                   id={"default_vendor_group_id"}
                   searchable={false}
                   value={vendorGroupData}
