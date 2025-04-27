@@ -181,14 +181,13 @@ function SalesForm(props) {
               <Grid.Col span={12}>
                 <SelectForm
                     tooltip={t('ChooseCustomerGroup')}
-                    label={t('CustomerGroup')}
+                    label={""}
                     placeholder={t('ChooseCustomerGroup')}
                     required={true}
                     nextField={''}
                     name={'default_customer_group_id'}
                     form={form}
                     dropdownValue={customerGroupDropdownData}
-                    mt={8}
                     id={'default_customer_group_id'}
                     searchable={false}
                     value={ customerGroupData ? String(customerGroupData) : config_sales?.default_customer_group_id ? String(config_sales?.default_customer_group_id) : null}
