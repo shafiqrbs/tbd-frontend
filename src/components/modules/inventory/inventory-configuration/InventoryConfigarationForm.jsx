@@ -23,10 +23,11 @@ import PurchaseForm from "./PurchaseForm";
 import RequisitionForm from "./RequisitionForm";
 import FormGeneric from "./FormGeneric";
 
-import {useDispatch, useSelector} from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { coreSettingDropdown } from "../../../../store/core/utilitySlice.js";
-import {setDropdownLoad } from "../../../../store/inventory/crudSlice";
+import { setDropdownLoad } from "../../../../store/inventory/crudSlice";
 import useDomainConfig from "../../../global-hook/config-data/getDomainConfig.js";
+import _DomainDetailsSection from "./_DomainDetailsSection.jsx";
 
 function InventoryConfigarationForm() {
   const { t } = useTranslation();
@@ -77,8 +78,7 @@ function InventoryConfigarationForm() {
     dispatch(setDropdownLoad(false));
   }, [dropdownLoad]);
 
-  const { domainConfig,fetchDomainConfig } = useDomainConfig(true);
-
+  const { domainConfig, fetchDomainConfig } = useDomainConfig(true);
 
   let inventory_config = domainConfig?.inventory_config;
   let config_sales = inventory_config?.config_sales;
@@ -140,12 +140,12 @@ function InventoryConfigarationForm() {
       case "Sales":
         return (
           <SalesForm
-              customerGroupDropdownData={groupDropdownData}
-              height={height}
-              config_sales={config_sales}
-              id={id}
-              domainConfig={domainConfig}
-              fetchDomainConfig={fetchDomainConfig}
+            customerGroupDropdownData={groupDropdownData}
+            height={height}
+            config_sales={config_sales}
+            id={id}
+            domainConfig={domainConfig}
+            fetchDomainConfig={fetchDomainConfig}
           />
         );
       case "Purchase":
@@ -283,55 +283,7 @@ function InventoryConfigarationForm() {
           </Box>
         </Grid.Col>
         <Grid.Col span={8}>
-          <Box bg={"white"} p={"xs"} pb={"xs"} className={"borderRadiusAll"}>
-            <Box
-              h={48}
-              pl={`xs`}
-              pr={8}
-              pt={"xs"}
-              mb={"6"}
-              className={"boxBackground borderRadiusAll"}
-            >
-              <Title order={6} pl={"6"} pt={4}>
-                {t("DomainDetails")}
-              </Title>
-            </Box>
-            <Box mb={0} bg={"gray.1"} h={height}>
-              <Box p={"md"} className="borderRadiusAll" h={height}>
-                <ScrollArea h={height - 176} type="never">
-                  <Grid columns={24}>
-                    <Grid.Col span={9} align={"left"} fw={"600"} fz={"14"}>
-                      {t("Name")}
-                    </Grid.Col>
-                    <Grid.Col span={1}>:</Grid.Col>
-                    <Grid.Col span={14}>
-                      {domainConfig && domainConfig?.name}
-                    </Grid.Col>
-                  </Grid>
-
-                  <Grid columns={24}>
-                    <Grid.Col span={9} align={"left"} fw={"600"} fz={"14"}>
-                      {t("Mobile")}
-                    </Grid.Col>
-                    <Grid.Col span={1}>:</Grid.Col>
-                    <Grid.Col span={14}>
-                      {domainConfig && domainConfig?.mobile}
-                    </Grid.Col>
-                  </Grid>
-
-                  <Grid columns={24}>
-                    <Grid.Col span={9} align={"left"} fw={"600"} fz={"14"}>
-                      {t("Email")}
-                    </Grid.Col>
-                    <Grid.Col span={1}>:</Grid.Col>
-                    <Grid.Col span={14}>
-                      {domainConfig && domainConfig?.email}
-                    </Grid.Col>
-                  </Grid>
-                </ScrollArea>
-              </Box>
-            </Box>
-          </Box>
+          <_DomainDetailsSection height={height} domainConfig={domainConfig} />
         </Grid.Col>
         <Grid.Col span={1}>
           <Box bg={"white"} className={"borderRadiusAll"} pt={"16"}>
