@@ -116,6 +116,7 @@ const utilitySlice = createSlice({
         locationDropdownData : [],
         executiveDropdownData : [],
         customerGroupDropdownData : [],
+        vendorGroupDropdownData : [],
         employeeGroupDropdownData : [],
         coreLocationDropdownData : [],
         coreDesignationDropdownData : [],
@@ -170,6 +171,11 @@ const utilitySlice = createSlice({
             if (action.payload.type == 'customer-group'){
                 state.customerGroupDropdownData = action.payload.data.data
             }
+
+            if (action.payload.type == 'vendor-group'){
+                state.vendorGroupDropdownData = action.payload.data.data
+            }
+
             if (action.payload.type == 'employee-group'){
                 state.employeeGroupDropdownData = action.payload.data.data
             }

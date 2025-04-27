@@ -5,7 +5,7 @@ import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoa
 import InventoryHeaderNavbar from "../../domain/configuraton/InventoryHeaderNavbar.jsx";
 import getConfigData from "../../../global-hook/config-data/getConfigData.js";
 import Navigation from "../common/Navigation.jsx";
-import InventoryConfigarationFormBK from "./InventoryConfigarationFormBK.jsx";
+import InventoryConfigarationForm from "./InventoryConfigarationForm.jsx";
 
 function InventoryConfigurationIndex() {
   const { t, i18n } = useTranslation();
@@ -33,7 +33,7 @@ function InventoryConfigurationIndex() {
                 <Navigation module={"config"} />
               </Grid.Col>
               <Grid.Col span={23}>
-                <InventoryConfigarationFormBK />
+                <InventoryConfigarationForm />
               </Grid.Col>
             </Grid>
           </Box>

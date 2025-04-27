@@ -22,22 +22,64 @@ import SalesForm from "./SalesForm";
 import PurchaseForm from "./PurchaseForm";
 import RequisitionForm from "./RequisitionForm";
 import FormGeneric from "./FormGeneric";
+import {useDispatch, useSelector} from "react-redux";
+import { coreSettingDropdown } from "../../../../store/core/utilitySlice.js";
+import {setDropdownLoad } from "../../../../store/inventory/crudSlice";
 
-function InventoryConfigarationFormBK() {
+function InventoryConfigarationForm() {
+
+
   const { t } = useTranslation();
+  const dispatch = useDispatch();
   const { isOnline, mainAreaHeight } = useOutletContext();
-  const height = mainAreaHeight - 100; //TabList height 104
+  const height = mainAreaHeight - 104; //TabList height 104
   const inventoryConfigData = localStorage.getItem("config-data")
     ? JSON.parse(localStorage.getItem("config-data"))
     : [];
   const [activeTab, setActiveTab] = useState("Sales");
 
+  const dropdownLoad = useSelector((state) => state.utilitySlice.dropdownLoad)
+  const vendorDropdownLoad = useSelector((state) => state.utilitySlice.dropdownLoad)
+
+  const dropdownData = useSelector((state) => state.utilitySlice.customerGroupDropdownData);
+  const vendorDropdownData = useSelector((state) => state.utilitySlice.vendorGroupDropdownData);
+
+  let groupDropdownData = dropdownData && dropdownData.length > 0 ?
+      dropdownData.map((type, index) => {
+        return ({ 'label': type.name, 'value': String(type.id) })
+      }) : []
+  useEffect(() => {
+    const value = {
+      url: 'core/select/setting',
+      param: { 'dropdown-type': 'customer-group' }
+    }
+    dispatch(coreSettingDropdown(value))
+    dispatch(setDropdownLoad(false))
+  }, [dropdownLoad]);
+
+  let groupVendorDropdownData = vendorDropdownData && vendorDropdownData.length > 0 ?
+      vendorDropdownData.map((type, index) => {
+        return ({ 'label': type.name, 'value': String(type.id) })
+      }) : []
+  useEffect(() => {
+    const value = {
+      url: 'core/select/setting',
+      param: { 'dropdown-type': 'customer-group' }
+    }
+    dispatch(coreSettingDropdown(value))
+    dispatch(setDropdownLoad(false))
+  }, [vendorDropdownLoad]);
+
+
+
   const { domainConfig } = getDomainConfig();
+  console.log(domainConfig)
+
   let inventory_config = domainConfig?.inventory_config;
   let config_sales = inventory_config?.config_sales;
   let config_purchase = inventory_config?.config_purchase;
   let config_requisition = inventory_config?.config_requisition;
-  let id = inventoryConfigData?.id;
+  let id = domainConfig ?.id;
 
   const navItems = [
     "Sales",
@@ -92,14 +134,20 @@ function InventoryConfigarationFormBK() {
     switch (activeTab) {
       case "Sales":
         return (
-          <SalesForm height={height} config_sales={config_sales} id={id} />
+          <SalesForm
+              customerGroupDropdownData={groupDropdownData}
+              height={height}
+              config_sales={config_sales}
+              id={id}
+          />
         );
       case "Purchase":
         return (
           <PurchaseForm
-            height={height}
-            config_purchase={config_purchase}
-            id={id}
+              vendorGroupDropdownData={groupDropdownData}
+              height={height}
+              config_purchase={config_purchase}
+              id={id}
           />
         );
       case "Requisition":
@@ -232,13 +280,13 @@ function InventoryConfigarationFormBK() {
           </Box>
         </Grid.Col>
         <Grid.Col span={8}>
-          <Box bg={"white"} p={"xs"} className={"borderRadiusAll"}>
+          <Box bg={"white"} p={"xs"} pb={'xs'} className={"borderRadiusAll"}>
             <Box
               h={48}
               pl={`xs`}
               pr={8}
               pt={"xs"}
-              mb={"xs"}
+              mb={"6"}
               className={"boxBackground borderRadiusAll"}
             >
               <Title order={6} pl={"6"} pt={4}>
@@ -248,7 +296,7 @@ function InventoryConfigarationFormBK() {
             <Box mb={0} bg={"gray.1"} h={height}>
               <Box
                 p={"md"}
-                className="boxBackground borderRadiusAll"
+                className="borderRadiusAll"
                 h={height}
               >
                 <ScrollArea h={height - 176} type="never">
@@ -306,4 +354,4 @@ function InventoryConfigarationFormBK() {
   );
 }
 
-export default InventoryConfigarationFormBK;
+export default InventoryConfigarationForm;

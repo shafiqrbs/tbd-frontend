@@ -46,7 +46,10 @@ export default function Search(props) {
   const vendorFilterData = useSelector(
     (state) => state.crudSlice.vendorFilterData
   );
-  const userFilterData = useSelector((state) => state.crudSlice.userFilterData);
+  const userFilterData = useSelector((
+      state) => state.crudSlice.userFilterData
+  );
+
   const warehouseFilterData = useSelector(
     (state) => state.crudSlice.warehouseFilterData
   );
@@ -216,6 +219,13 @@ export default function Search(props) {
                           ...categoryFilterData,
                           name: "",
                           parent_name: "",
+                        })
+                      );
+                    } else if (props.module === "user") {
+                      dispatch(
+                        setUserFilterData({
+                          ...userFilterData,
+                          keyword: ""
                         })
                       );
                     }

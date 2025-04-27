@@ -13,7 +13,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 import tableCss from "../../../../assets/css/Table.module.css";
 import _Search from "../common/_Search.jsx";
-import SelectForm from "../../../form-builders/SelectForm.jsx";
+import { IconArrowRight } from "@tabler/icons-react";
 import { useForm } from "@mantine/form";
 import {
     getIndexEntityData,
@@ -68,7 +68,6 @@ export default function B2bUserTable({ id }) {
                     },
                 })
             );
-
             if (getIndexEntityData.fulfilled.match(action)) {
                 setIndexData(action.payload);
             } else {
@@ -87,57 +86,6 @@ export default function B2bUserTable({ id }) {
     useEffect(() => {
         fetchData();
     }, [fetchData]);
-
-    const handleDomainTypeChange = async (id, value) => {
-        setDomainTypeMap((prev) => ({ ...prev, [id]: value }));
-
-        try {
-            const payload = {
-                url: "domain/b2b/inline-update/domain",
-                data: {
-                    domain_id: id,
-                    field_name: "domain_type",
-                    value,
-                },
-            };
-            await dispatch(storeEntityData(payload));
-            setRefresh(true);
-        } catch (error) {
-            console.error("Domain type update failed", error);
-            showNotificationComponent(t("Update failed"), "red");
-        }
-    };
-
-    const handleProcess = async (itemId) => {
-        setLoading(true);
-        const data = {
-            url: "domain/b2b/inline-update/domain",
-            data: {
-                domain_id: itemId,
-                field_name: "status",
-                value: true,
-            },
-        };
-
-        try {
-            const action = await dispatch(storeEntityData(data));
-            const payload = action.payload;
-
-            if (payload?.status === 200 && payload?.data?.data?.id) {
-                showNotificationComponent(t("Domain process successfully"), "green");
-                navigate(`/b2b/sub-domain/setting/${payload.data.data.id}`);
-            } else {
-                showNotificationComponent(t("Something went wrong"), "red");
-            }
-        } catch (error) {
-            console.error("Error updating domain status", error);
-            showNotificationComponent(t("Request failed"), "red");
-        } finally {
-            setLoading(false);
-            setRefresh(true);
-        }
-    };
-
     return (
         <>
             <LoadingOverlay
@@ -155,7 +103,7 @@ export default function B2bUserTable({ id }) {
                 pb="xs"
                 mb="xs"
             >
-                <_Search module="category" />
+                <_Search module="user" />
             </Box>
 
             {/* Table */}
@@ -168,11 +116,8 @@ export default function B2bUserTable({ id }) {
                         footer: tableCss.footer,
                         pagination: tableCss.pagination,
                     }}
-                    records={
-                        (indexData?.data || []).filter(
-                            (item) => item.id
-                        )
-                    }
+
+                    records={indexData.data}
                     columns={[
                         {
                             accessor: "index",
@@ -188,6 +133,31 @@ export default function B2bUserTable({ id }) {
                         { accessor: "name", title: t("Name") },
                         { accessor: "username", title: t("UserName") },
                         { accessor: "email", title: t("Email") },
+                        {
+                            accessor: "action",
+                            title: t("Action"),
+                            textAlign: "right",
+                            render: (data) => (
+                                <Group gap={4} justify="right" wrap="nowrap">
+                                    <Button
+                                        component="a"
+                                        size="compact-xs"
+                                        radius="xs"
+                                        variant="filled"
+                                        fw={"100"}
+                                        fz={"12"}
+                                        className={'btnPrimaryBg'}
+                                        mr={"4"}
+                                        rightSection={<IconArrowRight size={14} />}
+                                        onClick={() => {
+                                            navigate(`/b2b/sub-domain/setting/${data.id}`);
+                                        }}
+                                    >
+                                        {t("Login")}
+                                    </Button>
+                                </Group>
+                            ),
+                        },
                     ]}
                     fetching={loading}
                     totalRecords={indexData.total || 0}

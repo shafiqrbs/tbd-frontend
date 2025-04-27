@@ -28,7 +28,7 @@ import {
 } from "../../../../store/inventory/crudSlice.js";
 import SwitchForm from "../../../form-builders/SwitchForm.jsx";
 
-function InventoryConfigurationForm() {
+function InventoryConfigurationFormOBK() {
     const {t, i18n} = useTranslation();
     const dispatch = useDispatch();
     const {isOnline, mainAreaHeight} = useOutletContext();
@@ -1073,4 +1073,4 @@ function InventoryConfigurationForm() {
     );
 }
 
-export default InventoryConfigurationForm;
+export default InventoryConfigurationFormOBK;

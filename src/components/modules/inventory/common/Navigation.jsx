@@ -33,6 +33,8 @@ export default function Navigation(props) {
         h={
           module === "opening-approve-stock"
             ? height - 9
+            : module === 'config'
+            ? height - 8
             : module
             ? height - 63
             : height

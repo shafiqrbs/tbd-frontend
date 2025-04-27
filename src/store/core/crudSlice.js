@@ -44,7 +44,6 @@ export const getStatusInlineUpdateData = createAsyncThunk("status-update", async
 
 export const storeEntityData = createAsyncThunk('store', async (value, { rejectWithValue }) => {
     const response = await createData(value);
-
     if (response.success === false) {
         return rejectWithValue({
             message: response.message,

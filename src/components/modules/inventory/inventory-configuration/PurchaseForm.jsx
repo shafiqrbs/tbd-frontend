@@ -18,30 +18,39 @@ import { IconCheck, IconDeviceFloppy, IconX } from "@tabler/icons-react";
 import { useHotkeys } from "@mantine/hooks";
 import {
   setValidationData,
-  showInstantEntityData,
-  updateEntityData,
-} from "../../../../store/inventory/crudSlice.js";
+  storeEntityData,
+} from "../../../../store/core/crudSlice.js";
+import SelectForm from "../../../form-builders/SelectForm";
 
 function PurchaseForm(props) {
-  const { height, config_sales, id } = props;
+
+  const {
+    vendorGroupDropdownData,
+    height,
+    config,
+    id
+  } = props;
+
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const [saveCreateLoading, setSaveCreateLoading] = useState(false);
+  const [vendorGroupData, setVendorGroupData] = useState(null);
 
   const form = useForm({
     initialValues: {
-      search_by_vendor: config_sales?.search_by_vendor || "",
-      search_by_product_nature: config_sales?.search_by_product_nature || "",
-      search_by_category: config_sales?.search_by_category || "",
-      show_product: config_sales?.show_product || "",
-      is_measurement_enable: config_sales?.is_measurement_enable || "",
-      is_purchase_auto_approved: config_sales?.is_purchase_auto_approved || "",
-      default_vendor_group_id: config_sales?.default_vendor_group_id || "",
-      search_by_warehouse: config_sales?.search_by_warehouse || "",
+      search_by_vendor: config?.search_by_vendor || "",
+      search_by_product_nature: config?.search_by_product_nature || "",
+      search_by_category: config?.search_by_category || "",
+      show_product: config?.show_product || "",
+      is_measurement_enable: config?.is_measurement_enable || "",
+      is_purchase_auto_approved: config?.is_purchase_auto_approved || "",
+      default_vendor_group_id: config?.default_vendor_group_id || 0,
+      search_by_warehouse: config?.search_by_warehouse || "",
     },
   });
 
   const handlePurchaseFormSubmit = (values) => {
+
     dispatch(setValidationData(false));
 
     modals.openConfirmModal({
@@ -55,6 +64,7 @@ function PurchaseForm(props) {
   };
 
   const handlePurchaseConfirmSubmit = async (values) => {
+
     const properties = [
       "search_by_vendor",
       "search_by_product_nature",
@@ -62,37 +72,24 @@ function PurchaseForm(props) {
       "show_product",
       "is_measurement_enable",
       "is_purchase_auto_approved",
-      "default_vendor_group_id",
       "search_by_warehouse",
     ];
 
     properties.forEach((property) => {
       values[property] =
-        values[property] === true || values[property] == 1 ? 1 : 0;
+        values[property] === true || values[property] === 1 ? 1 : 0;
     });
 
     try {
-      setSaveCreateLoading(true);
 
+      setSaveCreateLoading(true);
       const value = {
-        url: `inventory/config-purchase-update/${id}`,
+        url: `domain/config/inventory-purchase/${id}`,
         data: values,
+        type: 'POST',
       };
       console.log("value", values);
-      await dispatch(updateEntityData(value));
-
-      const resultAction = await dispatch(
-        showInstantEntityData("inventory/config")
-      );
-      if (showInstantEntityData.fulfilled.match(resultAction)) {
-        if (resultAction.payload.data.status === 200) {
-          localStorage.setItem(
-            "config-data",
-            JSON.stringify(resultAction.payload.data.data)
-          );
-        }
-      }
-
+      await dispatch(storeEntityData(value));
       notifications.show({
         color: "teal",
         title: t("UpdateSuccessfully"),
@@ -101,13 +98,11 @@ function PurchaseForm(props) {
         autoClose: 700,
         style: { backgroundColor: "lightgray" },
       });
-
       setTimeout(() => {
         setSaveCreateLoading(false);
       }, 700);
     } catch (error) {
       console.error("Error updating purchase config:", error);
-
       notifications.show({
         color: "red",
         title: t("UpdateFailed"),
@@ -137,6 +132,23 @@ function PurchaseForm(props) {
     <ScrollArea h={height} scrollbarSize={2} scrollbars="y" type="never">
       <form onSubmit={form.onSubmit(handlePurchaseFormSubmit)}>
         <Box pt={"xs"} pl={"xs"}>
+          <Box>
+            <SelectForm
+                tooltip={t('ChooseVendorGroup')}
+                label={t('VendorGroup')}
+                placeholder={t('ChooseVendorGroup')}
+                required={true}
+                nextField={''}
+                name={'default_vendor_group_id'}
+                form={form}
+                dropdownValue={vendorGroupDropdownData}
+                mt={8}
+                id={'default_vendor_group_id'}
+                searchable={false}
+                value={vendorGroupData}
+                changeValue={setVendorGroupData}
+            />
+          </Box>
           <Box mt={"xs"}>
             <Grid
               gutter={{ base: 1 }}
@@ -347,43 +359,6 @@ function PurchaseForm(props) {
                   onChange={(event) =>
                     form.setFieldValue(
                       "is_purchase_auto_approved",
-                      event.currentTarget.checked ? 1 : 0
-                    )
-                  }
-                  styles={(theme) => ({
-                    input: {
-                      borderColor: "red",
-                    },
-                  })}
-                />
-              </Grid.Col>
-            </Grid>
-          </Box>
-          <Box mt={"xs"}>
-            <Grid
-              gutter={{ base: 1 }}
-              style={{ cursor: "pointer" }}
-              onClick={() =>
-                form.setFieldValue(
-                  "default_vendor_group_id",
-                  form.values.default_vendor_group_id === 1 ? 0 : 1
-                )
-              }
-            >
-              <Grid.Col span={11} fz={"sm"} pt={"1"}>
-                {t("DefaultVendorGroup")}
-              </Grid.Col>
-              <Grid.Col span={1}>
-                <Checkbox
-                  pr="xs"
-                  checked={form.values.default_vendor_group_id === 1}
-                  color="red"
-                  {...form.getInputProps("default_vendor_group_id", {
-                    type: "checkbox",
-                  })}
-                  onChange={(event) =>
-                    form.setFieldValue(
-                      "default_vendor_group_id",
                       event.currentTarget.checked ? 1 : 0
                     )
                   }

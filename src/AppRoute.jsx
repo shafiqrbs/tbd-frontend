@@ -64,8 +64,9 @@ import SettingIndexB2B from "./components/modules/b2b/setting/SettingIndex.jsx";
 import B2bDomainIndex from "./components/modules/b2b/domain/B2bDomainIndex.jsx";
 import GeneralIssueIndex from "./components/modules/production/production-issue/general-issue/GeneralIssueIndex.jsx";
 import BatchIssueIndex from "./components/modules/production/production-issue/batch-issue/BatchIssueIndex.jsx";
-import UserDiscountIndex from "./components/modules/discount/user-discount/UserDiscountIndex";
+import DiscountUserIndex from "./components/modules/discount/user/DiscountUserIndex";
 import B2bUserIndex from "./components/modules/b2b/master-user/B2bUserIndex";
+import DiscountConfigIndex from "./components/modules/discount/config/DiscountConfigIndex";
 
 function AppRoute() {
   return (
@@ -145,7 +146,8 @@ function AppRoute() {
         </Route>
 
         <Route path="/discount/">
-          <Route path="user-discount" element={<UserDiscountIndex />} />
+          <Route path="users" element={<DiscountUserIndex />} />
+          <Route path="config" element={<DiscountConfigIndex />} />
         </Route>
         <Route path="/production/">
           <Route path="items" element={<RecipeItemsIndex />} />
