@@ -32,6 +32,8 @@ function SalesForm(props) {
     id
   } = props;
 
+  console.log(props.domainConfig)
+
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const [saveCreateLoading, setSaveCreateLoading] = useState(false);
@@ -57,7 +59,6 @@ function SalesForm(props) {
     },
   });
 
-  console.log(config_sales ?.discount_with_customer);
 
   const handleSalesFormSubmit = (values) => {
 
@@ -122,6 +123,7 @@ function SalesForm(props) {
         autoClose: 700,
         style: { backgroundColor: "lightgray" },
       });
+
 
       setTimeout(() => {
         setSaveCreateLoading(false);

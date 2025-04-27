@@ -25,6 +25,7 @@ import FormGeneric from "./FormGeneric";
 import {useDispatch, useSelector} from "react-redux";
 import { coreSettingDropdown } from "../../../../store/core/utilitySlice.js";
 import {setDropdownLoad } from "../../../../store/inventory/crudSlice";
+import useDomainConfig from "../../../global-hook/config-data/getDomainConfig.js";
 
 function InventoryConfigarationForm() {
 
@@ -72,8 +73,9 @@ function InventoryConfigarationForm() {
 
 
 
-  const { domainConfig } = getDomainConfig();
-  console.log(domainConfig)
+  const { domainConfig,fetchDomainConfig } = useDomainConfig(true);
+
+  // console.log(domainConfig)
 
   let inventory_config = domainConfig?.inventory_config;
   let config_sales = inventory_config?.config_sales;
@@ -139,6 +141,8 @@ function InventoryConfigarationForm() {
               height={height}
               config_sales={config_sales}
               id={id}
+              domainConfig={domainConfig}
+              fetchDomainConfig={fetchDomainConfig}
           />
         );
       case "Purchase":
