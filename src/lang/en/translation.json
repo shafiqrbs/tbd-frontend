@@ -979,5 +979,9 @@
   "ItemSalesPercent" : "Item Sales Percent",
   "MeasurementEnabled" : "Measurement Enabled",
   "DiscountWithCustomer" : "Discount With Customer",
+  "ChooseVoucherType" : "Choose Voucher Type",
+  "VoucherType" : "Voucher Type",
+  "ShortCode" : "Short Code",
+  "VoucherCreate" : "Voucher Create",
   "": ""
 }

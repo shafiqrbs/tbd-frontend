@@ -16,6 +16,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { editEntityData, setEntityNewData } from "../../../../store/accounting/crudSlice.js";
 import LedgerUpdateFrom from "./LedgerUpdateFrom";
 import getSettingMotherAccountDropdownData from "../../../global-hook/dropdown/getSettingMotherAccountDropdownData.js";
+import Navigation from "../common/Navigation.jsx";
 
 
 function LedgerIndex() {
@@ -65,7 +66,10 @@ function LedgerIndex() {
                         />
                         <Box p={'8'}>
                             <Grid columns={24} gutter={{ base: 8 }}>
-                                <Grid.Col span={15} >
+                                <Grid.Col span={1} >
+                                    <Navigation module={"ledger"} />
+                                </Grid.Col>
+                                <Grid.Col span={14} >
                                     <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
                                         <LedgerTable />
                                     </Box>

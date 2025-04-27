@@ -14,6 +14,7 @@ import TransactionModeTable from "./TransactionModeTable";
 import AccountingHeaderNavbar from "../AccountingHeaderNavbar";
 import { useNavigate, useParams } from "react-router-dom";
 import { setFormLoading } from "../../../../store/accounting/crudSlice.js";
+import Navigation from "../common/Navigation.jsx";
 
 function TransactionModeIndex() {
     const { t, i18n } = useTranslation();
@@ -53,7 +54,8 @@ function TransactionModeIndex() {
                         />
                         <Box p={'8'}>
                             <Grid columns={24} gutter={{ base: 8 }}>
-                                <Grid.Col span={15} >
+                                <Navigation module={'transaction-mode'} /> 
+                                <Grid.Col span={14} >
                                     <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
                                         <TransactionModeTable />
                                     </Box>

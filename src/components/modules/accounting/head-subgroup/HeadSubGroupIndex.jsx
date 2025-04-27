@@ -14,6 +14,7 @@ import HeadSubGroupTable from "./HeadSubGroupTable";
 import AccountingHeaderNavbar from "../AccountingHeaderNavbar";
 import { useNavigate, useParams } from "react-router-dom";
 import { editEntityData, setEntityNewData, setFormLoading, setInsertType } from "../../../../store/accounting/crudSlice.js";
+import Navigation from "../common/Navigation.jsx";
 function HeadSubGroupIndex() {
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
@@ -52,7 +53,10 @@ function HeadSubGroupIndex() {
                         />
                         <Box p={'8'}>
                             <Grid columns={24} gutter={{ base: 8 }}>
-                                <Grid.Col span={15} >
+                                <Grid.Col span={1}>
+                                    <Navigation module={'head-subgroup'} />
+                                </Grid.Col>
+                                <Grid.Col span={14} >
                                     <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
                                         <HeadSubGroupTable />
                                     </Box>

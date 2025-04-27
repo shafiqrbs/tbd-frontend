@@ -21,6 +21,7 @@ import AccountingHeaderNavbar from "../AccountingHeaderNavbar";
 
 // Hook
 import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress.js";
+import Navigation from "../common/Navigation.jsx";
 
 function HeadGroupIndex() {
     const { t } = useTranslation();
@@ -64,7 +65,10 @@ function HeadGroupIndex() {
                     />
                     <Box p="8">
                         <Grid columns={24} gutter={{ base: 8 }}>
-                            <Grid.Col span={15}>
+                            <Grid.Col span={1}>
+                                <Navigation module={""} />
+                                </Grid.Col>
+                            <Grid.Col span={14}>
                                 <Box bg="white" p="xs" className="borderRadiusAll">
                                     <HeadGroupTable />
                                 </Box>

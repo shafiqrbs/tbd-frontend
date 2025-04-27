@@ -34,6 +34,7 @@ import {modals} from "@mantine/modals";
 import {setFetching, storeEntityDataWithFile} from "../../../../store/accounting/crudSlice";
 import {notifications} from "@mantine/notifications";
 import axios from "axios";
+import Navigation from "../common/Navigation.jsx";
 
 function AccountingConfig() {
     const { t, i18n } = useTranslation();
@@ -97,7 +98,10 @@ function AccountingConfig() {
                         />
                         <Box p={'8'}>
                             <Grid columns={24} gutter={{ base: 8 }}>
-                                <Grid.Col span={15} >
+                                <Grid.Col span={1} >
+                                    <Navigation module="settings"/>
+                                </Grid.Col>
+                                <Grid.Col span={14} >
                                     <Box bg={'white'} p={'xs'} className={'borderRadiusAll'} >
                                         <Card shadow="md" radius="md" className={classes.card} padding="lg">
                                             <Grid>
