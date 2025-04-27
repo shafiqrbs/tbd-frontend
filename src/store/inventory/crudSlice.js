@@ -331,7 +331,7 @@ const crudSlice = createSlice({
 
         builder.addCase(getShowConfigEntityData.fulfilled, (state, action) => {
             // console.log("Reducer Payload:", action.payload.data); 
-            state.showConfigData = action.payload.data;
+            state.showConfigData = action.payload.data.data;
         });
 
         builder.addCase(showEntityData.fulfilled, (state, action) => {
