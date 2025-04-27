@@ -67,6 +67,7 @@ import BatchIssueIndex from "./components/modules/production/production-issue/ba
 import DiscountUserIndex from "./components/modules/discount/user/DiscountUserIndex";
 import B2bUserIndex from "./components/modules/b2b/master-user/B2bUserIndex";
 import DiscountConfigIndex from "./components/modules/discount/config/DiscountConfigIndex";
+import VoucherCreateIndex from "./components/modules/accounting/voucher-create/VoucherCreateIndex.jsx";
 
 function AppRoute() {
   return (
@@ -182,6 +183,7 @@ function AppRoute() {
           <Route path="head-subgroup" element={<HeadSubGroupIndex />} />
           <Route path="head-subgroup/:id" element={<HeadSubGroupIndex />} />
           <Route path="transaction-mode" element={<TransactionModeIndex />} />
+          <Route path="voucher-create" element={<VoucherCreateIndex />} />
           <Route
             path="transaction-mode/:id"
             element={<TransactionModeIndex />}
