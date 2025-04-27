@@ -25,6 +25,8 @@ import SelectForm from "../../../form-builders/SelectForm";
 function SalesForm(props) {
   const { customerGroupDropdownData, height, config_sales, id } = props;
 
+  console.log(props.domainConfig)
+
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const [saveCreateLoading, setSaveCreateLoading] = useState(false);
@@ -49,8 +51,6 @@ function SalesForm(props) {
       zero_stock: config_sales?.zero_stock || "",
     },
   });
-
-  // console.log(config_sales?.discount_with_customer);
 
   const handleSalesFormSubmit = (values) => {
     dispatch(setValidationData(false));
@@ -114,6 +114,7 @@ function SalesForm(props) {
         autoClose: 700,
         style: { backgroundColor: "lightgray" },
       });
+
 
       setTimeout(() => {
         setSaveCreateLoading(false);
