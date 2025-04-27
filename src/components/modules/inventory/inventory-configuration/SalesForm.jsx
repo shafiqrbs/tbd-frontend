@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import { useTranslation } from "react-i18next";
 import {
   Box,
@@ -11,7 +11,7 @@ import {
   rem,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { useDispatch } from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import { modals } from "@mantine/modals";
 import { notifications } from "@mantine/notifications";
 import { IconCheck, IconDeviceFloppy, IconX } from "@tabler/icons-react";
@@ -21,6 +21,7 @@ import {
   storeEntityData,
 } from "../../../../store/core/crudSlice.js";
 import SelectForm from "../../../form-builders/SelectForm";
+import {setFormLoading} from "../../../../store/inventory/crudSlice";
 
 function SalesForm(props) {
   const { customerGroupDropdownData, height, config_sales, id } = props;
@@ -51,6 +52,27 @@ function SalesForm(props) {
       zero_stock: config_sales?.zero_stock || "",
     },
   });
+  useEffect(() => {
+    if (config_sales) {
+      form.setValues({
+        default_customer_group_id: config_sales?.default_customer_group_id || 0,
+        discount_with_customer: config_sales?.discount_with_customer || 0,
+        due_sales_without_customer: config_sales?.due_sales_without_customer || "",
+        is_measurement_enable: config_sales?.is_measurement_enable || "",
+        is_multi_price: config_sales?.is_multi_price || "",
+        is_sales_auto_approved: config_sales?.is_sales_auto_approved || "",
+        is_zero_receive_allow: config_sales?.is_zero_receive_allow || "",
+        item_sales_percent: config_sales?.item_sales_percent || "",
+        search_by_category: config_sales?.search_by_category || "",
+        search_by_product_nature: config_sales?.search_by_product_nature || "",
+        search_by_vendor: config_sales?.search_by_vendor || "",
+        search_by_warehouse: config_sales?.search_by_warehouse || "",
+        show_product: config_sales?.show_product || "",
+        zero_stock: config_sales?.zero_stock || "",
+      })
+    }
+
+  }, [ dispatch, config_sales])
 
   const handleSalesFormSubmit = (values) => {
     dispatch(setValidationData(false));
@@ -158,21 +180,23 @@ function SalesForm(props) {
               </Grid.Col>
               <Grid.Col span={12}>
                 <SelectForm
-                  tooltip={t("ChooseCustomerGroup")}
-                  label={""}
-                  placeholder={t("ChooseCustomerGroup")}
-                  required={true}
-                  nextField={""}
-                  name={"default_customer_group_id"}
-                  form={form}
-                  dropdownValue={customerGroupDropdownData}
-                  id={"default_customer_group_id"}
-                  searchable={false}
-                  value={customerGroupData}
-                  changeValue={setCustomerGroupData}
+                    tooltip={t('ChooseCustomerGroup')}
+                    label={t('CustomerGroup')}
+                    placeholder={t('ChooseCustomerGroup')}
+                    required={true}
+                    nextField={''}
+                    name={'default_customer_group_id'}
+                    form={form}
+                    dropdownValue={customerGroupDropdownData}
+                    mt={8}
+                    id={'default_customer_group_id'}
+                    searchable={false}
+                    value={ customerGroupData ? String(customerGroupData) : config_sales?.default_customer_group_id ? String(config_sales?.default_customer_group_id) : null}
+                    changeValue={setCustomerGroupData}
                 />
               </Grid.Col>
             </Grid>
+
           </Box>
 
           {/* discount_with_customer */}
