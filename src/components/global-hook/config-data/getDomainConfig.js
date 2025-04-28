@@ -2,7 +2,7 @@ import { useEffect, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getShowConfigEntityData } from "../../../store/inventory/crudSlice.js";
 
-const useDomainConfig = (autoFetch = true) => {
+const getDomainConfig = (autoFetch = true) => {
     const dispatch = useDispatch();
     const domainConfig = useSelector((state) => state.inventoryCrudSlice.showConfigData);
 
@@ -21,7 +21,14 @@ const useDomainConfig = (autoFetch = true) => {
         }
     }, [autoFetch, fetchDomainConfig, path]);
 
+    // Save domainConfig to localStorage whenever it changes
+    useEffect(() => {
+        if (domainConfig) {
+            localStorage.setItem("domain-config-data", JSON.stringify(domainConfig));
+        }
+    }, [domainConfig]);
+
     return { domainConfig, fetchDomainConfig, setPath };
 };
 
-export default useDomainConfig;
+export default getDomainConfig;

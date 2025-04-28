@@ -5,13 +5,13 @@ import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoa
 import InventoryHeaderNavbar from "../../domain/configuraton/InventoryHeaderNavbar.jsx";
 import Navigation from "../common/Navigation.jsx";
 import InventoryConfigarationForm from "./InventoryConfigarationForm.jsx";
-import useDomainConfig from "../../../global-hook/config-data/getDomainConfig.js";
+import getDomainConfig from "../../../global-hook/config-data/getDomainConfig.js";
 
 function InventoryConfigurationIndex() {
   const { t, i18n } = useTranslation();
 
   const progress = getLoadingProgress();
-  const { domainConfig, fetchData } = useDomainConfig();
+  const { domainConfig, fetchData } = getDomainConfig();
 
   return (
     <>

@@ -19,7 +19,9 @@ function SalesInvoice() {
     const dispatch = useDispatch();
     const insertType = useSelector((state) => state.crudSlice.insertType)
     const progress = getLoadingProgress()
-    const {configData,fetchData} = getConfigData()
+    const domainConfigData = JSON.parse(localStorage.getItem('domain-config-data'))
+
+    // console.log(domainConfigData?.inventory_config?.business_model)
     return (
         <>
             {progress !== 100 &&
@@ -27,34 +29,35 @@ function SalesInvoice() {
             {progress === 100 &&
                 <Box>
                     {
-                        configData &&
+                        domainConfigData &&
                         <>
                             <_SalesPurchaseHeaderNavbar
                                 pageTitle={t('SalesInvoice')}
                                 roles={t('Roles')}
-                                allowZeroPercentage={configData?.zero_stock}
-                                currencySymbol={configData?.currency?.symbol}
+                                allowZeroPercentage={domainConfigData?.inventory_config?.zero_stock}
+                                currencySymbol={domainConfigData?.inventory_config?.currency?.symbol}
                             />
                             <Box p={'8'}>
                                 {
-                                    insertType === 'create' && configData?.business_model?.slug === 'general' &&
+                                    insertType === 'create' && domainConfigData?.inventory_config?.business_model?.slug === 'general' &&
                                     <_GenericPosForm
-                                        allowZeroPercentage={configData?.zero_stock}
-                                        currencySymbol={configData?.currency?.symbol}
-                                        domainId={configData?.domain_id}
-                                        isSMSActive={configData?.is_active_sms}
-                                        isZeroReceiveAllow={configData?.is_zero_receive_allow}
-                                        isWarehouse={configData?.sku_warehouse}
+                                        allowZeroPercentage={domainConfigData?.inventory_config?.zero_stock}
+                                        currencySymbol={domainConfigData?.inventory_config?.currency?.symbol}
+                                        domainId={domainConfigData?.inventory_config?.domain_id}
+                                        isSMSActive={domainConfigData?.inventory_config?.is_active_sms}
+                                        isZeroReceiveAllow={domainConfigData?.inventory_config?.is_zero_receive_allow}
+                                        isWarehouse={domainConfigData?.inventory_config?.sku_warehouse}
+                                        domainConfigData={domainConfigData}
                                     />
                                 }
                                 {
-                                    insertType === 'create' && configData?.business_model?.slug === 'distribution' &&
+                                    insertType === 'create' && domainConfigData?.inventory_config?.business_model?.slug === 'distribution' &&
                                     <_WholeSaleGenericInvoiceForm
-                                        allowZeroPercentage={configData?.zero_stock}
-                                        currencySymbol={configData?.currency?.symbol}
-                                        domainId={configData?.domain_id}
-                                        isSMSActive={configData?.is_active_sms}
-                                        isZeroReceiveAllow={configData?.is_zero_receive_allow}
+                                        allowZeroPercentage={domainConfigData?.inventory_config?.zero_stock}
+                                        currencySymbol={domainConfigData?.inventory_config?.currency?.symbol}
+                                        domainId={domainConfigData?.inventory_config?.domain_id}
+                                        isSMSActive={domainConfigData?.inventory_config?.is_active_sms}
+                                        isZeroReceiveAllow={domainConfigData?.inventory_config?.is_zero_receive_allow}
                                     />
                                 }
                             </Box>

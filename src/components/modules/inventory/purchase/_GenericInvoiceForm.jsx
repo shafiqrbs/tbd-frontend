@@ -47,7 +47,7 @@ import Navigation from "../common/Navigation.jsx";
 import __PosPurchaseForm from "./__PosPurchaseForm.jsx";
 import SettingDrawer from "../common/SettingDrawer.jsx";
 import { useHotkeys } from "@mantine/hooks";
-import useDomainConfig from "../../../global-hook/config-data/getDomainConfig.js";
+import getDomainConfig from "../../../global-hook/config-data/getDomainConfig.js";
 
 function _GenericInvoiceForm(props) {
   const {
@@ -60,7 +60,7 @@ function _GenericInvoiceForm(props) {
     isPurchaseByPurchasePrice,
   } = props;
 
-  const { domainConfig, fetchDomainConfig } = useDomainConfig(true);
+  const { domainConfig, fetchDomainConfig } = getDomainConfig(true);
 
   let inventory_config = domainConfig?.inventory_config;
   let config_purchase = inventory_config?.config_purchase;

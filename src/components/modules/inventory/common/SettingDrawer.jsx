@@ -24,24 +24,23 @@ import FormGeneric from "../inventory-configuration/FormGeneric.jsx";
 import { coreSettingDropdown } from "../../../../store/core/utilitySlice.js";
 import { setDropdownLoad } from "../../../../store/core/crudSlice.js";
 import { useDispatch, useSelector } from "react-redux";
+import getDomainConfig from "../../../global-hook/config-data/getDomainConfig.js";
 
 function SettingDrawer(props) {
   const {
     settingDrawer,
     setSettingDrawer,
     module,
-    config_sales,
+    salesConfig,
     config_purchase,
     config_requisition,
     id,
-    fetchDomainConfig,
   } = props;
   const { isOnline, mainAreaHeight } = useOutletContext();
   const { t, i18n } = useTranslation();
   const height = mainAreaHeight - 100; //TabList height 104
   const closeDrawer = () => {
     setSettingDrawer(false);
-    // fetchDomainConfig();
   };
   const dispatch = useDispatch();
   const dropdownLoad = useSelector((state) => state.utilitySlice.dropdownLoad);
@@ -89,7 +88,6 @@ function SettingDrawer(props) {
         return (
           <SalesForm
             height={height + 56}
-            config_sales={config_sales}
             id={id}
             customerGroupDropdownData={groupDropdownData}
           />
@@ -113,7 +111,7 @@ function SettingDrawer(props) {
         );
       default:
         return (
-          <FormGeneric height={height} config_sales={config_sales} id={id} />
+          <FormGeneric height={height} salesConfig={salesConfig} id={id} />
         );
     }
   };

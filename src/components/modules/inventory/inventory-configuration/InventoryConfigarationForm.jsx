@@ -28,7 +28,7 @@ import {
   getAccountingDropdown,
 } from "../../../../store/core/utilitySlice.js";
 import { setDropdownLoad } from "../../../../store/inventory/crudSlice";
-import useDomainConfig from "../../../global-hook/config-data/getDomainConfig.js";
+import getDomainConfig from "../../../global-hook/config-data/getDomainConfig.js";
 import _DomainDetailsSection from "./_DomainDetailsSection.jsx";
 import AccountingForm from "./AccountingForm.jsx";
 import ProductionForm from "./ProductionForm.jsx";
@@ -98,7 +98,7 @@ function InventoryConfigarationForm() {
   let countryList = getCountryDropdownData();
   let businessModelList = getSettingBusinessModelDropdownData();
 
-  const { domainConfig, fetchDomainConfig } = useDomainConfig(true);
+  const { domainConfig, fetchDomainConfig } = getDomainConfig(true);
 
   let inventory_config = domainConfig?.inventory_config;
   let config_purchase = inventory_config?.config_purchase;

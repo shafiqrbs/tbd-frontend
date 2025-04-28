@@ -2,7 +2,7 @@ import axios from "axios";
 
 const commonDataStoreIntoLocalStorage = async (user_id) => {
     const apiBackendRoutes = [
-        'inventory/config',
+        'inventory/config', // this is old implementation , remove this after new domain config final implementation
         'inventory/stock-item',
         'core/customer/local-storage',
         'core/vendor/local-storage',

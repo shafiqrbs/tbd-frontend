@@ -49,7 +49,7 @@ import Navigation from "../common/Navigation.jsx";
 import __PosSalesForm from "./__PosSalesForm.jsx";
 import { useHotkeys } from "@mantine/hooks";
 import SettingDrawer from "../common/SettingDrawer.jsx";
-import useDomainConfig from "../../../global-hook/config-data/getDomainConfig.js";
+import getDomainConfig from "../../../global-hook/config-data/getDomainConfig.js";
 
 function _GenericPosForm(props) {
   const {
@@ -58,17 +58,21 @@ function _GenericPosForm(props) {
     domainId,
     isSMSActive,
     isZeroReceiveAllow,
-    focusFrom,
     isWarehouse,
+    domainConfigData
   } = props;
 
+  let inventoryConfig = domainConfigData?.inventory_config;
+  let salesConfig = domainConfigData?.inventory_config?.config_sales;
+  let id = domainConfigData?.id;
+  let categoryDropDownData = getSettingCategoryDropdownData();
   //common hooks and variables
   const { t, i18n } = useTranslation();
   const { isOnline, mainAreaHeight } = useOutletContext();
   const height = mainAreaHeight - 360;
 
   //segmented control
-  const [switchValue, setSwitchValue] = useState("barcode");
+  const [productSalesMode, setProductSalesMode] = useState("product");
 
   //setting drawer control
   const [settingDrawer, setSettingDrawer] = useState(false);
@@ -459,11 +463,8 @@ function _GenericPosForm(props) {
     ],
     []
   );
-  const { domainConfig, fetchDomainConfig } = useDomainConfig();
-  let inventory_config = domainConfig?.inventory_config;
-  let config_sales = inventory_config?.config_sales;
-  let id = domainConfig?.id;
-  let categoryDropDownData = getSettingCategoryDropdownData();
+  
+  
   return (
     <Box>
       <Grid columns={24} gutter={{ base: 8 }}>
@@ -539,8 +540,8 @@ function _GenericPosForm(props) {
                             withItemsBorders={false}
                             fullWidth
                             color={"#f8eedf"}
-                            value={switchValue}
-                            onChange={setSwitchValue}
+                            value={productSalesMode}
+                            onChange={setProductSalesMode}
                             data={[
                               {
                                 label: (
@@ -610,10 +611,10 @@ function _GenericPosForm(props) {
                 >
                   <Box pl={`8`} pr={8} mb={"xs"} className={"borderRadiusAll"} w={"100%"}>
                     <Box
-                      mt={switchValue === "product" ? "0" : "xs"}
+                      mt={productSalesMode === "product" ? "0" : "xs"}
                       h={height - 130}
                     >
-                      {config_sales?.show_product === 1 && (
+                      {salesConfig?.show_product === 1 && (
                         <DataTable
                           classNames={{
                             root: tableCss.root,
@@ -838,7 +839,7 @@ function _GenericPosForm(props) {
                       )}
                     </Box>
                     <Box className="borderRadiusAll">
-                      {config_sales?.search_by_vendor === 1 && (
+                      {salesConfig?.search_by_vendor === 1 && (
                         <Box mt={"8"}>
                           <SelectForm
                             tooltip={t("PurchaseValidateMessage")}
@@ -857,7 +858,7 @@ function _GenericPosForm(props) {
                           />
                         </Box>
                       )}
-                      {config_sales?.search_by_warehouse === 1 && (
+                      {salesConfig?.search_by_warehouse === 1 && (
                         <Box mt={"4"}>
                           <SelectForm
                             tooltip={t("Warehouse")}
@@ -876,7 +877,7 @@ function _GenericPosForm(props) {
                           />
                         </Box>
                       )}
-                      {config_sales?.search_by_category === 1 && (
+                      {salesConfig?.search_by_category === 1 && (
                         <Box mt={"4"}>
                           <SelectForm
                             tooltip={t("ChooseCategory")}
@@ -895,7 +896,7 @@ function _GenericPosForm(props) {
                           />
                         </Box>
                       )}
-                      {switchValue === "product" && (
+                      {productSalesMode === "product" && (
                         <Box
                           p={"xs"}
                           mt={"8"}
@@ -956,7 +957,7 @@ function _GenericPosForm(props) {
                           </Grid>
                         </Box>
                       )}
-                      {switchValue === "barcode" && (
+                      {productSalesMode === "barcode" && (
                         <Box
                           p={"xs"}
                           mt={"8"}
@@ -979,7 +980,7 @@ function _GenericPosForm(props) {
                           />
                         </Box>
                       )}
-                      {switchValue === "product" && (
+                      {productSalesMode === "product" && (
                         <Box
                           ml={"-xs"}
                           p={"xs"}
@@ -989,7 +990,7 @@ function _GenericPosForm(props) {
                           <Box mt={"4"}>
                             <Grid columns={12} gutter={{ base: 8 }}>
                               <Grid.Col span={4}>
-                                {config_sales?.is_multi_price === 1 && (
+                                {salesConfig?.is_multi_price === 1 && (
                                   <SelectForm
                                     tooltip={t("MultiPriceValidateMessage")}
                                     label=""
@@ -1049,7 +1050,7 @@ function _GenericPosForm(props) {
                           <Box>
                             <Grid columns={12} gutter={{ base: 8 }}>
                               <Grid.Col span={4}>
-                                {config_sales?.is_measurement_enable === 1 && (
+                                {salesConfig?.is_measurement_enable === 1 && (
                                   <SelectForm
                                     tooltip={t("UnitValidateMessage")}
                                     label=""
@@ -1227,7 +1228,7 @@ function _GenericPosForm(props) {
             currencySymbol={currencySymbol}
             domainId={domainId}
             isSMSActive={isSMSActive}
-            is_zero_receive_allow={config_sales?.is_zero_receive_allow}
+            is_zero_receive_allow={salesConfig?.is_zero_receive_allow}
             tempCardProducts={tempCardProducts}
             setLoadCardProducts={setLoadCardProducts}
             setTempCardProducts={setTempCardProducts}
@@ -1239,9 +1240,8 @@ function _GenericPosForm(props) {
           settingDrawer={settingDrawer}
           setSettingDrawer={setSettingDrawer}
           module={"Sales"}
-          config_sales={config_sales}
+          salesConfig={salesConfig}
           id={id}
-          fetchDomainConfig={fetchDomainConfig}
         />
       )}
       {productDrawer && (
