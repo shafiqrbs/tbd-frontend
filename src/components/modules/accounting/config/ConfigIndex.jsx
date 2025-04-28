@@ -121,6 +121,11 @@ function AccountingConfig() {
                                                             ()=>{AccountingDataProcess('accounting/account-head-generate')}
                                                         } />
                                                     </List.Item>
+                                                    <List.Item pl={'xs'} icon={<ThemeIcon color="blue.6" size={20} radius="xl" variant="outline" ><IconCurrencyMonero /></ThemeIcon>}>
+                                                        <NavLink pl={'md'} pt={2}  label={t('ResetVoucher')} component="button" onClick={
+                                                            ()=>{AccountingDataProcess('accounting/account-voucher-reset')}
+                                                        } />
+                                                    </List.Item>
                                                 </List>
                                             </Box>
                                         </Card>
