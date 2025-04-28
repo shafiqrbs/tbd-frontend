@@ -310,7 +310,7 @@ export default function Navigation(props) {
                   hyphens: "auto",
                 }}
               >
-                {t("OpeningStock")}
+                {t("Opening")}
               </Text>
             </Flex>
           </Flex>
@@ -356,7 +356,7 @@ export default function Navigation(props) {
                   hyphens: "auto",
                 }}
               >
-                {t("ApproveStock")}
+                {t("Approve")}
               </Text>
             </Flex>
           </Flex>
