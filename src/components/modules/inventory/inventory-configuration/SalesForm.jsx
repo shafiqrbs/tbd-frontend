@@ -26,8 +26,6 @@ import {setFormLoading} from "../../../../store/inventory/crudSlice";
 function SalesForm(props) {
   const { customerGroupDropdownData, height, config_sales, id } = props;
 
-  console.log(props.domainConfig)
-
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const [saveCreateLoading, setSaveCreateLoading] = useState(false);
@@ -289,7 +287,7 @@ function SalesForm(props) {
               }
             >
               <Grid.Col span={11} fz={"sm"} pt={"1"}>
-                {t("IsMeasurementEnable")}
+                {t("MeasurementEnable")}
               </Grid.Col>
               <Grid.Col span={1}>
                 <Checkbox
@@ -328,7 +326,7 @@ function SalesForm(props) {
               }
             >
               <Grid.Col span={11} fz={"sm"} pt={"1"}>
-                {t("IsMultiPrice")}
+                {t("MultiPrice")}
               </Grid.Col>
               <Grid.Col span={1}>
                 <Checkbox
@@ -367,7 +365,7 @@ function SalesForm(props) {
               }
             >
               <Grid.Col span={11} fz={"sm"} pt={"1"}>
-                {t("IsSalesAutoApproved")}
+                {t("SalesAutoApproved")}
               </Grid.Col>
               <Grid.Col span={1}>
                 <Checkbox
@@ -406,7 +404,7 @@ function SalesForm(props) {
               }
             >
               <Grid.Col span={11} fz={"sm"} pt={"1"}>
-                {t("IsZeroReceiveAllow")}
+                {t("ZeroReceiveAllow")}
               </Grid.Col>
               <Grid.Col span={1}>
                 <Checkbox

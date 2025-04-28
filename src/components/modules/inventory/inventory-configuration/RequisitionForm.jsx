@@ -18,10 +18,8 @@ import { IconCheck, IconDeviceFloppy, IconX } from "@tabler/icons-react";
 import { useHotkeys } from "@mantine/hooks";
 import {
   setValidationData,
-  showInstantEntityData,
-  updateEntityData,
-} from "../../../../store/inventory/crudSlice.js";
-
+  storeEntityData,
+} from "../../../../store/core/crudSlice.js";
 function RequisitionForm(props) {
   const { height, config_requisition, id } = props;
   const { t } = useTranslation();
@@ -77,24 +75,106 @@ function RequisitionForm(props) {
     try {
       setSaveCreateLoading(true);
 
+      // Group unique fields into categories
+      const posFields = [
+        "pos_print",
+        "is_pos",
+        "is_pay_first",
+        "pos_invoice_position",
+        "multi_kitchen",
+        "payment_split",
+        "item_addons",
+        "cash_on_delivery",
+        "is_online",
+        "pos_invoice_mode_id",
+        "custom_invoice",
+        "custom_invoice_print",
+      ];
+
+      const taxFields = [
+        "vat_enable",
+        "vat_percent",
+        "vat_reg_no",
+        "vat_integration",
+        "ait_enable",
+        "ait_percent",
+        "zakat_enable",
+        "zakat_percent",
+        "hs_code_enable",
+        "sd_enable",
+        "sd_percent",
+      ];
+
+      const inventoryFields = [
+        "printer",
+        "address",
+        "unit_commission",
+        "border_color",
+        "is_stock_history",
+        "business_model_id",
+        "print_footer_text",
+        "invoice_comment",
+        "font_size_label",
+        "font_size_value",
+        "multi_company",
+        "bonus_from_stock",
+        "condition_sales",
+        "is_marketing_executive",
+        "fuel_station",
+        "zero_stock",
+        "system_reset",
+        "tlo_commission",
+        "sr_commission",
+        "sales_return",
+        "store_ledger",
+        "invoice_width",
+        "print_top_margin",
+        "print_margin_bottom",
+        "header_left_width",
+        "header_right_width",
+        "print_margin_report_top",
+        "is_print_header",
+        "is_invoice_title",
+        "print_outstanding",
+        "is_print_footer",
+        "invoice_prefix",
+        "invoice_process",
+        "customer_prefix",
+        "production_type",
+        "invoice_type",
+        "border_width",
+        "body_font_size",
+        "sidebar_font_size",
+        "invoice_font_size",
+        "print_left_margin",
+        "invoice_height",
+        "left_top_margin",
+        "is_unit_price",
+        "body_top_margin",
+        "sidebar_width",
+        "body_width",
+        "invoice_print_logo",
+        "show_stock",
+        "is_powered",
+        "remove_image",
+        "currency_id",
+        "shop_name",
+        "is_active_sms",
+        "is_zero_receive_allow",
+        "country_id",
+        "stock_item",
+        "is_description",
+        "is_batch_invoice",
+        "is_provision",
+        "is_category_item_quantity",
+      ];
+
       const value = {
-        url: `inventory/config-requisition-update/${id}`,
+        url: `domain/config/requisition/${id}`,
         data: values,
       };
       console.log("value", values);
-      await dispatch(updateEntityData(value));
-
-      const resultAction = await dispatch(
-        showInstantEntityData("inventory/config")
-      );
-      if (showInstantEntityData.fulfilled.match(resultAction)) {
-        if (resultAction.payload.data.status === 200) {
-          localStorage.setItem(
-            "config-data",
-            JSON.stringify(resultAction.payload.data.data)
-          );
-        }
-      }
+      await dispatch(storeEntityData(value));
 
       notifications.show({
         color: "teal",
