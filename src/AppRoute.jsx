@@ -147,7 +147,7 @@ function AppRoute() {
           <Route path="barcode-print" element={<BarcodePrintIndex />} />
         </Route>
 
-        <Route path="/discount/">
+        <Route path="/discount">
           <Route path="" element={<DiscountDashboard />} />
           <Route path="users" element={<DiscountUserIndex />} />
           <Route path="config" element={<DiscountConfigIndex />} />

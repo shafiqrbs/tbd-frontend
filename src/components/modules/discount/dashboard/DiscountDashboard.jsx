@@ -3,7 +3,7 @@ import {useParams} from "react-router-dom";
 import {Box, Grid, Progress} from "@mantine/core";
 import {useTranslation} from "react-i18next";
 import {getLoadingProgress} from "../../../global-hook/loading-progress/getLoadingProgress.js";
-
+import _Shortcut from "../common/_DiscountSearch.jsx";
 import DiscountHeaderNavbar from "../DiscountHeaderNavbar";
 import _DiscountShortcut from "../common/_DiscountShortcut";
 
@@ -32,9 +32,7 @@ export default function DiscountDashboard() {
                             <Grid.Col span={1}>
                                 <_DiscountShortcut/>
                             </Grid.Col>
-                            <Grid.Col span={23}>
-                                asdasd
-                            </Grid.Col>
+                            
                         </Grid>
                     </Box>
                 </>
