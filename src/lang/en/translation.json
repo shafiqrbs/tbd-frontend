@@ -983,5 +983,6 @@
   "VoucherType" : "Voucher Type",
   "ShortCode" : "Short Code",
   "VoucherCreate" : "Voucher Create",
+  "VoucherDetailsData" : "Voucher Details Data",
   "": ""
 }

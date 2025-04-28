@@ -50,7 +50,6 @@ function VoucherForm(props) {
   const [saveCreateLoading, setSaveCreateLoading] = useState(false);
   const [voucherType, setVoucherType] = useState(null);
 
-  const [reloadTrigger, setReloadTrigger] = useState(false);
   const form = useForm({
     initialValues: {
       name: "",

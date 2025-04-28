@@ -22,7 +22,7 @@ import getConfigData from "../../../global-hook/config-data/getConfigData.js";
 import { getLoadingProgress } from "../../../global-hook/loading-progress/getLoadingProgress.js";
 import AccountingHeaderNavbar from "../AccountingHeaderNavbar.jsx";
 import VoucherForm from "./VoucherForm.jsx";
-import VoucherTable from "./VoucherTable";
+import VoucherCreateTable from "./VoucherCreateTable.jsx";
 import { useNavigate, useParams } from "react-router-dom";
 import {
   editEntityData,
@@ -37,7 +37,6 @@ function VoucherCreateIndex() {
   const { t, i18n } = useTranslation();
   const dispatch = useDispatch();
   const insertType = useSelector((state) => state.crudSlice.insertType);
-  const { configData } = getConfigData();
   const progress = getLoadingProgress();
 
   const voucherDropdown = getVoucherTypeDropdownData();
@@ -54,15 +53,12 @@ function VoucherCreateIndex() {
         dispatch(setSearchKeyword("")),
         dispatch(
           setEntityNewData({
-            ["parent_name"]: "",
             ["name"]: "",
-            ["code"]: "",
+            ["short_code"]: "",
           })
         ),
         navigate("/accounting/voucher-create"));
   }, [id, dispatch, navigate]);
-
-  const accountDropdown = getSettingMotherAccountDropdownData();
 
   return (
     <>
@@ -92,7 +88,7 @@ function VoucherCreateIndex() {
                 </Grid.Col>
                 <Grid.Col span={14}>
                   <Box bg={"white"} p={"xs"} className={"borderRadiusAll"}>
-                    <VoucherTable />
+                    <VoucherCreateTable />
                   </Box>
                 </Grid.Col>
                 <Grid.Col span={9}>

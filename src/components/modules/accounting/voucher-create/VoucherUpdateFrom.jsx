@@ -46,76 +46,55 @@ import SelectForm from "../../../form-builders/SelectForm.jsx";
 import SwitchForm from "../../../form-builders/SwitchForm.jsx";
 
 function VoucherUpdateFrom(props) {
-  const { accountDropdown } = props;
+  const { voucherDropdown } = props;
   const { t, i18n } = useTranslation();
   const dispatch = useDispatch();
   const { isOnline, mainAreaHeight } = useOutletContext();
-  const height = mainAreaHeight - 100; //TabList height 104
-  const [formLoad, setFormLoad] = useState("");
-  const [motherData, setMotherData] = useState(null);
+  const height = mainAreaHeight - 100;
 
   const [saveCreateLoading, setSaveCreateLoading] = useState(false);
-
+  const [voucherType, setVoucherType] = useState(null);
   const entityEditData = useSelector((state) => state.crudSlice.entityEditData);
-  const formLoading = useSelector((state) => state.crudSlice.formLoading);
-
-  const [setFormData, setFormDataForUpdate] = useState(false);
+  const [mode, setMode] = useState(null);
 
   const form = useForm({
     initialValues: {
-      parent_name: "",
-      name: "",
-      code: "",
-      status: true,
-      head_group: "ledger",
+      name: entityEditData?.name || "",
+      short_name: entityEditData?.short_name || "",
+      short_code: entityEditData?.short_code || "",
+      status: entityEditData?.status || "",
+      mode: entityEditData?.mode || "",
+      voucher_type_id: entityEditData?.voucher_type_id || "",
     },
     validate: {
-      parent_name: isNotEmpty(),
-      name: hasLength({ min: 2, max: 20 }),
+      name: isNotEmpty(),
+      voucher_type_id: isNotEmpty(),
     },
   });
-
   useEffect(() => {
-    setFormLoad(true);
-    setFormDataForUpdate(true);
-  }, [dispatch, formLoading]);
-
-  const { ledgerId } = useParams();
-
-  useEffect(() => {
-    if (ledgerId) {
-      dispatch(setEditEntityData(`/accounting/ledger${ledgerId}`));
-      dispatch(setFormLoading(true));
+    if (entityEditData) {
+      form.setValues({
+        name: entityEditData?.name || "",
+        short_name: entityEditData?.short_name || "",
+        short_code: entityEditData?.short_code || "",
+        status: entityEditData?.status || "",
+        mode: entityEditData?.mode || "",
+        voucher_type_id: entityEditData?.voucher_type_id || "",
+      });
     }
-  }, [ledgerId, dispatch]);
-  const handleReset = () => {
-    form.setValues({
-      parent_name: entityEditData.parent_name ? entityEditData.parent_name : "",
-      name: entityEditData.name ? entityEditData.name : "",
-      code: entityEditData.code ? entityEditData.code : "",
-      status: entityEditData.status ? entityEditData.status : true,
-    });
-  };
-  useEffect(() => {
-    form.setValues({
-      parent_name: entityEditData.parent_name ? entityEditData.parent_name : "",
-      name: entityEditData.name ? entityEditData.name : "",
-      code: entityEditData.code ? entityEditData.code : "",
-      status: entityEditData.status ? entityEditData.status : true,
-    });
     dispatch(setFormLoading(false));
     setTimeout(() => {
-      setFormLoad(false);
+      setFormLoading(false);
       setFormDataForUpdate(false);
     }, 500);
-  }, [dispatch, setFormData, entityEditData]);
+  }, [entityEditData, dispatch]);
 
   useHotkeys(
     [
       [
         "alt+n",
         () => {
-          document.getElementById("parent_name").click();
+          document.getElementById("voucher_type_id").click();
         },
       ],
     ],
@@ -150,19 +129,21 @@ function VoucherUpdateFrom(props) {
     <Box>
       <form
         onSubmit={form.onSubmit((values) => {
+          dispatch(setValidationData(false));
           modals.openConfirmModal({
             title: <Text size="md"> {t("FormConfirmationTitle")}</Text>,
             children: <Text size="sm"> {t("FormConfirmationMessage")}</Text>,
-            labels: { confirm: "Submit", cancel: "Cancel" },
+            labels: { confirm: "Confirm", cancel: "Cancel" },
             confirmProps: { color: "red" },
             onCancel: () => console.log("Cancel"),
-            onConfirm: () => {
+            onConfirm: async () => {
               setSaveCreateLoading(true);
-              const value = {
-                url: "accounting/account-head/" + entityEditData.id,
-                data: values,
+              const data = {
+                url: "accounting/voucher/" + entityEditData.id,
+                data: form.values,
               };
-              dispatch(updateEntityData(value));
+
+              dispatch(updateEntityData(data));
               notifications.show({
                 color: "teal",
                 title: t("UpdateSuccessfully"),
@@ -171,15 +152,18 @@ function VoucherUpdateFrom(props) {
                 autoClose: 700,
                 style: { backgroundColor: "lightgray" },
               });
-
               setTimeout(() => {
-                form.reset();
-                dispatch(setInsertType("create"));
-                dispatch(setEditEntityData([]));
-                dispatch(setFetching(true));
                 setSaveCreateLoading(false);
-                navigate("/accounting/ledger", { replace: true });
-              }, 700);
+                dispatch(setFetching(true));
+                dispatch(
+                  setEntityNewData({
+                    ["name"]: "",
+                    ["short_code"]: "",
+                  })
+                );
+                form.reset();
+                setVoucherType(null);
+              }, 500);
             },
           });
         })}
@@ -199,7 +183,7 @@ function VoucherUpdateFrom(props) {
                   <Grid>
                     <Grid.Col span={6}>
                       <Title order={6} pt={"6"}>
-                        {t("UpdateLedger")}
+                        {t("CreateVoucher")}
                       </Title>
                     </Grid.Col>
                     <Grid.Col span={6}>
@@ -237,34 +221,28 @@ function VoucherUpdateFrom(props) {
                         <Box>
                           <Box mt={"8"}>
                             <SelectForm
-                              tooltip={t("ChooseHeadGroup")}
-                              label={t("HeadGroup")}
-                              placeholder={t("ChooseHeadGroup")}
+                              tooltip={t("ChooseVoucherType")}
+                              label={t("VoucherType")}
+                              placeholder={t("ChooseVoucherType")}
                               required={true}
                               nextField={"name"}
-                              name={"parent_name"}
+                              name={"voucher_type_id"}
                               form={form}
-                              dropdownValue={accountDropdown}
+                              dropdownValue={voucherDropdown}
                               mt={8}
-                              id={"parent_name"}
+                              id={"voucher_type_id"}
                               searchable={false}
-                              value={
-                                motherData
-                                  ? String(motherData)
-                                  : entityEditData.mother_account_id
-                                  ? String(entityEditData.mother_account_id)
-                                  : null
-                              }
-                              changeValue={setMotherData}
+                              value={voucherType}
+                              changeValue={setVoucherType}
                             />
                           </Box>
                           <Box mt={"xs"}>
                             <InputForm
-                              tooltip={t("SubGroupNameValidateMessage")}
+                              tooltip={t("NameValidateMessage")}
                               label={t("Name")}
                               placeholder={t("Name")}
                               required={true}
-                              nextField={"code"}
+                              nextField={"short_name"}
                               name={"name"}
                               form={form}
                               mt={0}
@@ -273,14 +251,48 @@ function VoucherUpdateFrom(props) {
                           </Box>
                           <Box mt={"xs"}>
                             <InputForm
-                              tooltip={t("AccountCodeValidateMessage")}
-                              label={t("AccountCode")}
-                              placeholder={t("AccountCode")}
+                              tooltip={t("ShortName")}
+                              label={t("ShortName")}
+                              placeholder={t("ShortName")}
                               required={true}
-                              name={"code"}
+                              nextField={"short_code"}
+                              name={"short_name"}
                               form={form}
-                              id={"code"}
+                              mt={0}
+                              id={"short_name"}
+                            />
+                          </Box>
+                          <Box mt={"xs"}>
+                            <InputForm
+                              tooltip={t("ShortCode")}
+                              label={t("ShortCode")}
+                              placeholder={t("ShortCode")}
+                              required={true}
+                              name={"short_code"}
+                              form={form}
+                              id={"short_code"}
+                              nextField={"mode"}
+                              type="number"
+                            />
+                          </Box>
+                          <Box mt={"8"}>
+                            <SelectForm
+                              tooltip={t("ChooseMode")}
+                              label={t("Mode")}
+                              placeholder={t("ChooseMode")}
+                              required={true}
                               nextField={"status"}
+                              name={"mode"}
+                              form={form}
+                              dropdownValue={[
+                                { value: "debit", label: t("Debit") },
+                                { value: "credit", label: t("Credit") },
+                              ]}
+                              mt={8}
+                              id={"mode"}
+                              searchable={false}
+                              value={mode}
+                              changeValue={setMode}
                             />
                           </Box>
                           <Box mt={"xs"}>

@@ -3,11 +3,8 @@ import { useNavigate, useOutletContext } from "react-router-dom";
 import {
   Group,
   Box,
-  Grid,
   ActionIcon,
   Text,
-  Title,
-  Stack,
   rem,
   Menu,
   Switch,
@@ -15,9 +12,6 @@ import {
 } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import {
-  IconEye,
-  IconEdit,
-  IconTrash,
   IconDotsVertical,
   IconTrashX,
 } from "@tabler/icons-react";
@@ -35,8 +29,9 @@ import {
 import KeywordSearch from "../../filter/KeywordSearch.jsx";
 import { modals } from "@mantine/modals";
 import tableCss from "../../../../assets/css/Table.module.css";
+import _VoucherCreateViewDrawer from "./_VoucherCreateViewDrawer.jsx";
 
-function VoucherTable(props) {
+function VoucherCreateTable(props) {
   const dispatch = useDispatch();
   const { t, i18n } = useTranslation();
   const { isOnline, mainAreaHeight } = useOutletContext();
@@ -75,7 +70,7 @@ function VoucherTable(props) {
   }, [fetching]);
 
   const navigate = useNavigate();
-  const [ledgerViewDrawer, setLedgerViewDrawer] = useState(false);
+  const [voucherCrateViewDrawer, setVoucherCreateViewDrawer] = useState(false);
   return (
     <>
       <Box
@@ -165,10 +160,12 @@ function VoucherTable(props) {
                         onClick={() => {
                           dispatch(setInsertType("update"));
                           dispatch(
-                            editEntityData("accounting/account-head/" + data.id)
+                            editEntityData(
+                              `accounting/voucher-create/${data.id}`
+                            )
                           );
                           dispatch(setFormLoading(true));
-                          navigate(`/accounting/ledger/${data.id}`);
+                          navigate(`accounting/voucher-create/${data.id}`);
                         }}
                       >
                         {t("Edit")}
@@ -176,9 +173,13 @@ function VoucherTable(props) {
 
                       <Menu.Item
                         onClick={() => {
-                          // console.log("ok")
-                          setLedgerViewDrawer(true);
-                          // setCustomerViewModel(true)
+                          console.log("ok")
+                          setVoucherCreateViewDrawer(true);
+                          dispatch(
+                            showEntityData(
+                              `accounting/voucher-create/${data.id}`
+                            )
+                          );
                           // dispatch(showEntityData('core/customer/' + data.id))
                         }}
                         target="_blank"
@@ -215,7 +216,7 @@ function VoucherTable(props) {
                             onConfirm: () => {
                               dispatch(
                                 deleteEntityData(
-                                  "accounting/account-head/" + data.id
+                                  "accounting/voucher-create/" + data.id
                                 )
                               );
                               dispatch(setFetching(true));
@@ -250,10 +251,10 @@ function VoucherTable(props) {
           scrollAreaProps={{ type: "never" }}
         />
       </Box>
-      {/* {ledgerViewDrawer &&
-                <LedgerViewDrawer ledgerViewDrawer={ledgerViewDrawer} setLedgerViewDrawer={setLedgerViewDrawer} />
-            } */}
+      {voucherCrateViewDrawer &&
+                <_VoucherCreateViewDrawer voucherCrateViewDrawer={voucherCrateViewDrawer} setVoucherCreateViewDrawer={setVoucherCreateViewDrawer} />
+            }
     </>
   );
 }
-export default VoucherTable;
+export default VoucherCreateTable;
