@@ -34,49 +34,6 @@ export default function Navigation(props) {
         <Flex direction={`column`} align={"center"} gap={"16"}>
           <Flex direction={`column`} align={"center"} mt={"xs"} pt={5}>
             <Tooltip
-              label={t("VoucherCreate")}
-              px={16}
-              py={2}
-              withArrow
-              position={"left"}
-              c={"white"}
-              bg={"#4CAF50"}
-              transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
-            >
-              <Button
-                bg={"#4CAF50"}
-                size="md"
-                pl={"12"}
-                pr={"12"}
-                variant={"light"}
-                color={`black`}
-                radius="xl"
-                onClick={(e) => {
-                  navigate("/accounting/voucher-create");
-                }}
-              >
-                <Flex direction={`column`} align={"center"}>
-                  <IconCirclePlus size={16} color={"white"} />
-                </Flex>
-              </Button>
-            </Tooltip>
-            <Flex direction={`column`} align={"center"} fz={"12"} c={"black"}>
-              <Text
-                size="xs"
-                c="black"
-                ta="center"
-                w={58}
-                style={{
-                  wordBreak: "break-word",
-                  hyphens: "auto",
-                }}
-              >
-                {t("VoucherCreate")}
-              </Text>
-            </Flex>
-          </Flex>
-          <Flex direction={`column`} align={"center"}>
-            <Tooltip
               label={t("VoucherEntry")}
               px={16}
               py={2}
@@ -160,7 +117,7 @@ export default function Navigation(props) {
                   hyphens: "auto",
                 }}
               >
-                {t("AccountLedger")}
+                {t("Ledger")}
               </Text>
             </Flex>
           </Flex>
@@ -252,7 +209,7 @@ export default function Navigation(props) {
                   hyphens: "auto",
                 }}
               >
-                {t("AccountHeadGroup")}
+                {t("HeadGroup")}
               </Text>
             </Flex>
           </Flex>
@@ -298,7 +255,51 @@ export default function Navigation(props) {
                   hyphens: "auto",
                 }}
               >
-                {t("AccountSubHeadGroup")}
+                {t("SubHeadGroup")}
+              </Text>
+            </Flex>
+          </Flex>
+
+          <Flex direction={`column`} align={"center"} >
+            <Tooltip
+              label={t("VoucherCreate")}
+              px={16}
+              py={2}
+              withArrow
+              position={"left"}
+              c={"white"}
+              bg={"#4CAF50"}
+              transitionProps={{ transition: "pop-bottom-left", duration: 500 }}
+            >
+              <Button
+                bg={"#4CAF50"}
+                size="md"
+                pl={"12"}
+                pr={"12"}
+                variant={"light"}
+                color={`black`}
+                radius="xl"
+                onClick={(e) => {
+                  navigate("/accounting/voucher-create");
+                }}
+              >
+                <Flex direction={`column`} align={"center"}>
+                  <IconCirclePlus size={16} color={"white"} />
+                </Flex>
+              </Button>
+            </Tooltip>
+            <Flex direction={`column`} align={"center"} fz={"12"} c={"black"}>
+              <Text
+                size="xs"
+                c="black"
+                ta="center"
+                w={58}
+                style={{
+                  wordBreak: "break-word",
+                  hyphens: "auto",
+                }}
+              >
+                {t("VoucherCreate")}
               </Text>
             </Flex>
           </Flex>

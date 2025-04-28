@@ -17,17 +17,31 @@ import { IconCheck, IconDeviceFloppy, IconX } from "@tabler/icons-react";
 import { useHotkeys } from "@mantine/hooks";
 import Shortcut from "../../shortcut/Shortcut";
 import classes from "../../../../assets/css/FeaturesCards.module.css";
-import getDomainConfig from "../../../global-hook/config-data/getDomainConfig.js";
 import SalesForm from "./SalesForm";
 import PurchaseForm from "./PurchaseForm";
 import RequisitionForm from "./RequisitionForm";
 import FormGeneric from "./FormGeneric";
 
 import { useDispatch, useSelector } from "react-redux";
-import { coreSettingDropdown } from "../../../../store/core/utilitySlice.js";
+import {
+  coreSettingDropdown,
+  getAccountingDropdown,
+} from "../../../../store/core/utilitySlice.js";
 import { setDropdownLoad } from "../../../../store/inventory/crudSlice";
 import useDomainConfig from "../../../global-hook/config-data/getDomainConfig.js";
 import _DomainDetailsSection from "./_DomainDetailsSection.jsx";
+import AccountingForm from "./AccountingForm.jsx";
+import ProductionForm from "./ProductionForm.jsx";
+import ProductForm from "./ProductForm.jsx";
+import DiscountForm from "./DiscountForm.jsx";
+import InventoryForm from "./InventoryForm.jsx";
+import getAccountingDropdownData from "../../../global-hook/dropdown/getAccountingDropdownData.jsx";
+import getVoucherDropdownData from "../../../global-hook/dropdown/getVoucherDropdownData.jsx";
+import getCurrencyDropdownData from "../../../global-hook/dropdown/getCurrencyDropdownData.js";
+import getCountryDropdownData from "../../../global-hook/dropdown/getCountryDropdownData.js";
+import getSettingBusinessModelDropdownData from "../../../global-hook/dropdown/getSettingBusinessModelDropdownData.js";
+import PosForm from "./PosForm.jsx";
+import VatForm from "./VatForm.jsx";
 
 function InventoryConfigarationForm() {
   const { t } = useTranslation();
@@ -37,7 +51,7 @@ function InventoryConfigarationForm() {
   const inventoryConfigData = localStorage.getItem("config-data")
     ? JSON.parse(localStorage.getItem("config-data"))
     : [];
-  const [activeTab, setActiveTab] = useState("Sales");
+  const [activeTab, setActiveTab] = useState("Inventory");
 
   const dropdownLoad = useSelector((state) => state.utilitySlice.dropdownLoad);
 
@@ -78,25 +92,36 @@ function InventoryConfigarationForm() {
     dispatch(setDropdownLoad(false));
   }, [dropdownLoad]);
 
+  let accountDropdownData = getAccountingDropdownData();
+  let voucherDropdownData = getVoucherDropdownData();
+  let currencyList = getCurrencyDropdownData();
+  let countryList = getCountryDropdownData();
+  let businessModelList = getSettingBusinessModelDropdownData();
+
   const { domainConfig, fetchDomainConfig } = useDomainConfig(true);
 
   let inventory_config = domainConfig?.inventory_config;
-  let config_sales = inventory_config?.config_sales;
   let config_purchase = inventory_config?.config_purchase;
+  let config_sales = inventory_config?.config_sales;
   let config_requisition = inventory_config?.config_requisition;
+  let account_config = domainConfig?.account_config;
+  let production_config = domainConfig?.production_config;
+  let config_discount = inventory_config?.config_discount;
+  let config_product = inventory_config?.config_product;
   let id = domainConfig?.id;
 
   const navItems = [
+    "Inventory",
     "Sales",
     "Purchase",
     "Requisition",
-    "Domain",
-    "Product",
-    "Discount",
-    "Pos",
-    "Vat",
     "Accounting",
     "Production",
+    "Discount",
+    "Product",
+    "Domain",
+    "Pos",
+    "Vat",
   ];
 
   useHotkeys(
@@ -137,6 +162,17 @@ function InventoryConfigarationForm() {
 
   const renderForm = () => {
     switch (activeTab) {
+      case "Inventory":
+        return (
+          <InventoryForm
+            height={height}
+            inventory_config={inventory_config}
+            id={id}
+            currencyList={currencyList}
+            countryList={countryList}
+            businessModelList={businessModelList}
+          />
+        );
       case "Sales":
         return (
           <SalesForm
@@ -162,6 +198,56 @@ function InventoryConfigarationForm() {
           <RequisitionForm
             height={height}
             config_requisition={config_requisition}
+            id={id}
+          />
+        );
+      case "Accounting":
+        return (
+          <AccountingForm
+            height={height}
+            account_config={account_config}
+            id={id}
+            accountDropdownData={accountDropdownData}
+            voucherDropdownData={voucherDropdownData}
+          />
+        );
+      case "Production":
+        return (
+          <ProductionForm
+            height={height}
+            production_config={production_config}
+            id={id}
+          />
+        );
+      case "Discount":
+        return (
+          <DiscountForm
+            height={height}
+            config_discount={config_discount}
+            id={id}
+          />
+        );
+      case "Product":
+        return (
+          <ProductForm
+            height={height}
+            config_product={config_product}
+            id={id}
+          />
+        );
+      case "Pos":
+        return (
+          <PosForm
+            height={height}
+            inventory_config={inventory_config}
+            id={id}
+          />
+        );
+      case "Vat":
+        return (
+          <VatForm
+            height={height}
+            inventory_config={inventory_config}
             id={id}
           />
         );
@@ -243,7 +329,14 @@ function InventoryConfigarationForm() {
                         {isOnline &&
                           (activeTab === "Sales" ||
                             activeTab === "Purchase" ||
-                            activeTab === "Requisition") && (
+                            activeTab === "Requisition" ||
+                            activeTab === "Accounting" ||
+                            activeTab === "Production" ||
+                            activeTab === "Discount" ||
+                            activeTab === "Product" ||
+                            activeTab === "Inventory" ||
+                            activeTab === "pos" ||
+                            activeTab === "Vat") && (
                             <Button
                               size="xs"
                               className={"btnPrimaryBg"}
@@ -260,6 +353,34 @@ function InventoryConfigarationForm() {
                                 } else if (activeTab === "Requisition") {
                                   document
                                     .getElementById("RequisitionFormSubmit")
+                                    .click();
+                                } else if (activeTab === "Accounting") {
+                                  document
+                                    .getElementById("AccountingFormSubmit")
+                                    .click();
+                                } else if (activeTab === "Production") {
+                                  document
+                                    .getElementById("ProductionFormSubmit")
+                                    .click();
+                                } else if (activeTab === "Discount") {
+                                  document
+                                    .getElementById("DiscountFormSubmit")
+                                    .click();
+                                } else if (activeTab === "Product") {
+                                  document
+                                    .getElementById("ProductFormSubmit")
+                                    .click();
+                                } else if (activeTab === "Inventory") {
+                                  document
+                                    .getElementById("InventoryFormSubmit")
+                                    .click();
+                                } else if (activeTab === "Vat") {
+                                  document
+                                    .getElementById("VatFormSubmit")
+                                    .click();
+                                } else if (activeTab === "Pos") {
+                                  document
+                                    .getElementById("PosFormSubmit")
                                     .click();
                                 }
                               }}
@@ -293,7 +414,21 @@ function InventoryConfigarationForm() {
                   ? "SalesFormSubmit"
                   : activeTab === "Purchase"
                   ? "PurchaseFormSubmit"
-                  : "RequisitionFormSubmit"
+                  : activeTab === "Requisition"
+                  ? "RequisitionFormSubmit"
+                  : activeTab === "Accounting"
+                  ? "AccountingFormSubmit"
+                  : activeTab === "Production"
+                  ? "ProductionFormSubmit"
+                  : activeTab === "Discount"
+                  ? "DiscountFormSubmit"
+                  : activeTab === "Product"
+                  ? "ProductFormSubmit"
+                  : activeTab === "Inventory"
+                  ? "InventoryFormSubmit"
+                  : activeTab === "Pos"
+                  ? "PosFormSubmit"
+                  : "VatFormSubmit"
               }
               Name={"name"}
               inputType="select"

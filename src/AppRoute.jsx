@@ -186,6 +186,7 @@ function AppRoute() {
           <Route path="head-subgroup/:id" element={<HeadSubGroupIndex />} />
           <Route path="transaction-mode" element={<TransactionModeIndex />} />
           <Route path="voucher-create" element={<VoucherCreateIndex />} />
+          <Route path="voucher-create/:id" element={<VoucherCreateIndex />} />
           <Route
             path="transaction-mode/:id"
             element={<TransactionModeIndex />}

@@ -26,7 +26,7 @@ export const storeEntityData = createAsyncThunk("store", async (value) => {
         throw error;
     }
 });
-export const storeEntityDataWithFile = createAsyncThunk("store", async (value) => {
+export const storeEntityDataWithFile = createAsyncThunk("storeWithFile", async (value) => {
     try {
         const response = createDataWithFile(value);
         return response;

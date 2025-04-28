@@ -34,12 +34,14 @@ function SettingDrawer(props) {
     config_purchase,
     config_requisition,
     id,
+    fetchDomainConfig,
   } = props;
   const { isOnline, mainAreaHeight } = useOutletContext();
   const { t, i18n } = useTranslation();
   const height = mainAreaHeight - 100; //TabList height 104
   const closeDrawer = () => {
     setSettingDrawer(false);
+    // fetchDomainConfig();
   };
   const dispatch = useDispatch();
   const dropdownLoad = useSelector((state) => state.utilitySlice.dropdownLoad);

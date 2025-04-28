@@ -68,7 +68,7 @@ function _GenericPosForm(props) {
   const height = mainAreaHeight - 360;
 
   //segmented control
-  const [switchValue, setSwitchValue] = useState("product");
+  const [switchValue, setSwitchValue] = useState("barcode");
 
   //setting drawer control
   const [settingDrawer, setSettingDrawer] = useState(false);
@@ -459,10 +459,11 @@ function _GenericPosForm(props) {
     ],
     []
   );
-  const { domainConfig } = useDomainConfig();
+  const { domainConfig, fetchDomainConfig } = useDomainConfig();
   let inventory_config = domainConfig?.inventory_config;
   let config_sales = inventory_config?.config_sales;
-  let id = domainConfig?.id
+  let id = domainConfig?.id;
+  let categoryDropDownData = getSettingCategoryDropdownData();
   return (
     <Box>
       <Grid columns={24} gutter={{ base: 8 }}>
@@ -598,552 +599,581 @@ function _GenericPosForm(props) {
                     </Grid.Col>
                   </Grid>
                 </Box>
-                <Box
-                  pl={`8`}
-                  pr={8}
-                  mb={"xs"}
-                  className={"boxBackground borderRadiusAll"}
+                <Flex
+                  mih={height + 224}
+                  direction="column"
+                  gap={0}
+                  bg="white"
+                  wrap="wrap"
+                  justify="flex-end"
+                  align="flex-end"
                 >
-                  <Box mt={switchValue === "product" ? "xs" : "xs"}>
-                    <DataTable
-                      classNames={{
-                        root: tableCss.root,
-                        table: tableCss.table,
-                        header: tableCss.header,
-                        footer: tableCss.footer,
-                        pagination: tableCss.pagination,
-                      }}
-                      records={products}
-                      columns={[
-                        {
-                          accessor: "display_name",
-                          title: t("Product"),
-                          render: (data, index) => (
-                            <Text fz={11} fw={400}>
-                              {index + 1}. {data.display_name}
-                            </Text>
-                          ),
-                        },
-                        {
-                          accessor: "qty",
-                          width: 200,
-                          title: (
-                            <Group
-                              justify={"flex-end"}
-                              spacing="xs"
-                              noWrap
-                              pl={"sm"}
-                              ml={"sm"}
-                            >
-                              <Box pl={"4"}>{t("")}</Box>
-                              <ActionIcon
-                                mr={"sm"}
-                                radius="xl"
-                                variant="transparent"
-                                color="grey"
-                                size="xs"
-                                onClick={() => {}}
-                              >
-                                <IconRefresh
-                                  style={{ width: "100%", height: "100%" }}
-                                  stroke={1.5}
-                                />
-                              </ActionIcon>
-                            </Group>
-                          ),
-                          textAlign: "right",
-                          render: (data) => (
-                            <Group
-                              wrap="nowrap"
-                              w="100%"
-                              gap={0}
-                              justify="flex-end"
-                              align="center"
-                              mx="auto"
-                            >
-                              <Text fz={11} fw={400} pr={"xs"} w={70}>
-                                {currencySymbol} {data.sales_price}
-                              </Text>
-                              <Input
-                                styles={{
-                                  input: {
-                                    fontSize: "var(--mantine-font-size-xs)",
-                                    fontWeight: 300,
-                                    lineHeight: 2,
-                                    textAlign: "center",
-                                    borderRadius: 0,
-                                    borderColor: "#905923",
-                                    borderTopLeftRadius:
-                                      "var(--mantine-radius-sm)",
-                                    borderBottomLeftRadius:
-                                      "var(--mantine-radius-sm)",
-                                  },
-                                  placeholder: {
-                                    fontSize: "var(--mantine-font-size-xs)",
-                                    fontWeight: 300,
-                                  },
-                                }}
-                                size="xxs"
-                                w="50"
-                                type={"number"}
-                                tooltip={""}
-                                label={""}
-                                value={productQuantities[data.id] || ""}
-                                onChange={(e) => {
-                                  const value = e.currentTarget.value;
-                                  setProductQuantities((prev) => ({
-                                    ...prev,
-                                    [data.id]: value,
-                                  }));
-                                }}
-                                required={false}
-                                nextField={"credit_limit"}
-                                name={"quantity"}
-                                id={"quantity"}
-                              />
-                              <Button
-                                size="compact-xs"
-                                color={"#f8eedf"}
-                                radius={0}
-                                w="50"
-                                styles={{
-                                  root: {
-                                    height: "26px",
-                                    borderRadius: 0,
-                                    borderTopColor: "#905923",
-                                    borderBottomColor: "#905923",
-                                  },
-                                }}
-                                onClick={() => {}}
-                              >
-                                <Text fz={9} fw={400} c={"black"}>
-                                  {data.unit_name}
+                  <Box pl={`8`} pr={8} mb={"xs"} className={"borderRadiusAll"} w={"100%"}>
+                    <Box
+                      mt={switchValue === "product" ? "0" : "xs"}
+                      h={height - 130}
+                    >
+                      {config_sales?.show_product === 1 && (
+                        <DataTable
+                          classNames={{
+                            root: tableCss.root,
+                            table: tableCss.table,
+                            header: tableCss.header,
+                            footer: tableCss.footer,
+                            pagination: tableCss.pagination,
+                          }}
+                          records={products}
+                          columns={[
+                            {
+                              accessor: "display_name",
+                              title: t("Product"),
+                              render: (data, index) => (
+                                <Text fz={11} fw={400}>
+                                  {index + 1}. {data.display_name}
                                 </Text>
-                              </Button>
-                              <Button
-                                size="compact-xs"
-                                className={genericClass.invoiceAdd}
-                                radius={0}
-                                w="30"
-                                styles={{
-                                  root: {
-                                    height: "26px",
-                                    borderRadius: 0,
-                                    borderTopRightRadius:
-                                      "var(--mantine-radius-sm)",
-                                    borderBottomRightRadius:
-                                      "var(--mantine-radius-sm)",
-                                  },
-                                }}
-                                onClick={() => {
-                                  const quantity = productQuantities[data.id];
-                                  if (quantity && Number(quantity) > 0) {
-                                    const cardProducts = localStorage.getItem(
-                                      "temp-sales-products"
-                                    );
-                                    const myCardProducts = cardProducts
-                                      ? JSON.parse(cardProducts)
-                                      : [];
+                              ),
+                            },
+                            {
+                              accessor: "qty",
+                              width: 200,
+                              title: (
+                                <Group
+                                  justify={"flex-end"}
+                                  spacing="xs"
+                                  noWrap
+                                  pl={"sm"}
+                                  ml={"sm"}
+                                >
+                                  <Box pl={"4"}>{t("")}</Box>
+                                  <ActionIcon
+                                    mr={"sm"}
+                                    radius="xl"
+                                    variant="transparent"
+                                    color="grey"
+                                    size="xs"
+                                    onClick={() => {}}
+                                  >
+                                    <IconRefresh
+                                      style={{ width: "100%", height: "100%" }}
+                                      stroke={1.5}
+                                    />
+                                  </ActionIcon>
+                                </Group>
+                              ),
+                              textAlign: "right",
+                              render: (data) => (
+                                <Group
+                                  wrap="nowrap"
+                                  w="100%"
+                                  gap={0}
+                                  justify="flex-end"
+                                  align="center"
+                                  mx="auto"
+                                >
+                                  <Text fz={11} fw={400} pr={"xs"} w={70}>
+                                    {currencySymbol} {data.sales_price}
+                                  </Text>
+                                  <Input
+                                    styles={{
+                                      input: {
+                                        fontSize: "var(--mantine-font-size-xs)",
+                                        fontWeight: 300,
+                                        lineHeight: 2,
+                                        textAlign: "center",
+                                        borderRadius: 0,
+                                        borderColor: "#905923",
+                                        borderTopLeftRadius:
+                                          "var(--mantine-radius-sm)",
+                                        borderBottomLeftRadius:
+                                          "var(--mantine-radius-sm)",
+                                      },
+                                      placeholder: {
+                                        fontSize: "var(--mantine-font-size-xs)",
+                                        fontWeight: 300,
+                                      },
+                                    }}
+                                    size="xxs"
+                                    w="50"
+                                    type={"number"}
+                                    tooltip={""}
+                                    label={""}
+                                    value={productQuantities[data.id] || ""}
+                                    onChange={(e) => {
+                                      const value = e.currentTarget.value;
+                                      setProductQuantities((prev) => ({
+                                        ...prev,
+                                        [data.id]: value,
+                                      }));
+                                    }}
+                                    required={false}
+                                    nextField={"credit_limit"}
+                                    name={"quantity"}
+                                    id={"quantity"}
+                                  />
+                                  <Button
+                                    size="compact-xs"
+                                    color={"#f8eedf"}
+                                    radius={0}
+                                    w="50"
+                                    styles={{
+                                      root: {
+                                        height: "26px",
+                                        borderRadius: 0,
+                                        borderTopColor: "#905923",
+                                        borderBottomColor: "#905923",
+                                      },
+                                    }}
+                                    onClick={() => {}}
+                                  >
+                                    <Text fz={9} fw={400} c={"black"}>
+                                      {data.unit_name}
+                                    </Text>
+                                  </Button>
+                                  <Button
+                                    size="compact-xs"
+                                    className={genericClass.invoiceAdd}
+                                    radius={0}
+                                    w="30"
+                                    styles={{
+                                      root: {
+                                        height: "26px",
+                                        borderRadius: 0,
+                                        borderTopRightRadius:
+                                          "var(--mantine-radius-sm)",
+                                        borderBottomRightRadius:
+                                          "var(--mantine-radius-sm)",
+                                      },
+                                    }}
+                                    onClick={() => {
+                                      const quantity =
+                                        productQuantities[data.id];
+                                      if (quantity && Number(quantity) > 0) {
+                                        const cardProducts =
+                                          localStorage.getItem(
+                                            "temp-sales-products"
+                                          );
+                                        const myCardProducts = cardProducts
+                                          ? JSON.parse(cardProducts)
+                                          : [];
 
-                                    const productToAdd = {
-                                      product_id: data.id,
-                                      display_name: data.display_name,
-                                      sales_price: data.sales_price,
-                                      price: data.sales_price,
-                                      percent: "",
-                                      stock: data.quantity,
-                                      quantity: quantity,
-                                      unit_name: data.unit_name,
-                                      purchase_price: data.purchase_price,
-                                      sub_total:
-                                        Number(quantity) *
-                                        Number(data.sales_price),
-                                      unit_id: data.unit_id,
-                                      warehouse_id: form.values.warehouse_id
-                                        ? Number(form.values.warehouse_id)
-                                        : null,
-                                      warehouse_name: form.values.warehouse_id
-                                        ? warehouseDropdownData.find(
-                                            (warehouse) =>
-                                              warehouse.value ===
-                                              form.values.warehouse_id
-                                          )?.label
-                                        : null,
-                                      bonus_quantity: 0,
-                                    };
+                                        const productToAdd = {
+                                          product_id: data.id,
+                                          display_name: data.display_name,
+                                          sales_price: data.sales_price,
+                                          price: data.sales_price,
+                                          percent: "",
+                                          stock: data.quantity,
+                                          quantity: quantity,
+                                          unit_name: data.unit_name,
+                                          purchase_price: data.purchase_price,
+                                          sub_total:
+                                            Number(quantity) *
+                                            Number(data.sales_price),
+                                          unit_id: data.unit_id,
+                                          warehouse_id: form.values.warehouse_id
+                                            ? Number(form.values.warehouse_id)
+                                            : null,
+                                          warehouse_name: form.values
+                                            .warehouse_id
+                                            ? warehouseDropdownData.find(
+                                                (warehouse) =>
+                                                  warehouse.value ===
+                                                  form.values.warehouse_id
+                                              )?.label
+                                            : null,
+                                          bonus_quantity: 0,
+                                        };
 
-                                    myCardProducts.push(productToAdd);
+                                        myCardProducts.push(productToAdd);
 
-                                    // Update localStorage and reset form values
-                                    localStorage.setItem(
-                                      "temp-sales-products",
-                                      JSON.stringify(myCardProducts)
-                                    );
+                                        // Update localStorage and reset form values
+                                        localStorage.setItem(
+                                          "temp-sales-products",
+                                          JSON.stringify(myCardProducts)
+                                        );
 
-                                    // Show success notification
-                                    notifications.show({
-                                      color: "green",
-                                      title: t("ProductAdded"),
-                                      message: t("ProductAddedSuccessfully"),
-                                      autoClose: 1500,
-                                      withCloseButton: true,
-                                    });
-                                    //update the sales table
-                                    setLoadCardProducts(true);
-                                    // Reset quantity input for this specific product
-                                    setProductQuantities((prev) => ({
-                                      ...prev,
-                                      [data.id]: "",
-                                    }));
-                                  } else {
-                                    // Show error for invalid quantity
-                                    notifications.show({
-                                      color: "red",
-                                      title: t("InvalidQuantity"),
-                                      message: t("PleaseEnterValidQuantity"),
-                                      autoClose: 1500,
-                                      withCloseButton: true,
-                                    });
+                                        // Show success notification
+                                        notifications.show({
+                                          color: "green",
+                                          title: t("ProductAdded"),
+                                          message: t(
+                                            "ProductAddedSuccessfully"
+                                          ),
+                                          autoClose: 1500,
+                                          withCloseButton: true,
+                                        });
+                                        //update the sales table
+                                        setLoadCardProducts(true);
+                                        // Reset quantity input for this specific product
+                                        setProductQuantities((prev) => ({
+                                          ...prev,
+                                          [data.id]: "",
+                                        }));
+                                      } else {
+                                        // Show error for invalid quantity
+                                        notifications.show({
+                                          color: "red",
+                                          title: t("InvalidQuantity"),
+                                          message: t(
+                                            "PleaseEnterValidQuantity"
+                                          ),
+                                          autoClose: 1500,
+                                          withCloseButton: true,
+                                        });
+                                      }
+                                    }}
+                                  >
+                                    <Flex direction={`column`} gap={0}>
+                                      <IconShoppingBag size={12} />
+                                    </Flex>
+                                  </Button>
+                                </Group>
+                              ),
+                            },
+                          ]}
+                          loaderSize="xs"
+                          loaderColor="grape"
+                          height={height - 130}
+                        />
+                      )}
+                    </Box>
+                    <Box className="borderRadiusAll">
+                      {config_sales?.search_by_vendor === 1 && (
+                        <Box mt={"8"}>
+                          <SelectForm
+                            tooltip={t("PurchaseValidateMessage")}
+                            label=""
+                            placeholder={t("Vendor")}
+                            required={false}
+                            nextField={"warehouse_id"}
+                            name={"vendor_id"}
+                            form={form}
+                            dropdownValue={vendorsDropdownData}
+                            id={"purchase_vendor_id"}
+                            mt={1}
+                            searchable={true}
+                            value={vendorData}
+                            changeValue={setVendorData}
+                          />
+                        </Box>
+                      )}
+                      {config_sales?.search_by_warehouse === 1 && (
+                        <Box mt={"4"}>
+                          <SelectForm
+                            tooltip={t("Warehouse")}
+                            label=""
+                            placeholder={t("Warehouse")}
+                            required={false}
+                            nextField={"category_id"}
+                            name={"warehouse_id"}
+                            form={form}
+                            dropdownValue={warehouseDropdownData}
+                            id={"warehouse_id"}
+                            mt={1}
+                            searchable={true}
+                            value={warehouseData}
+                            changeValue={setWarehouseData}
+                          />
+                        </Box>
+                      )}
+                      {config_sales?.search_by_category === 1 && (
+                        <Box mt={"4"}>
+                          <SelectForm
+                            tooltip={t("ChooseCategory")}
+                            label={""}
+                            placeholder={t("ChooseCategory")}
+                            required={true}
+                            nextField={"product_id"}
+                            name={"category_id"}
+                            form={form}
+                            dropdownValue={categoryDropDownData}
+                            id={"category_id"}
+                            searchable={true}
+                            value={categoryData}
+                            changeValue={setCategoryData}
+                            comboboxProps={{ withinPortal: false }}
+                          />
+                        </Box>
+                      )}
+                      {switchValue === "product" && (
+                        <Box
+                          p={"xs"}
+                          mt={"8"}
+                          className={genericClass.genericHighlightedBox}
+                          ml={"-xs"}
+                          mr={-8}
+                        >
+                          <Grid gutter={{ base: 6 }}>
+                            <Grid.Col span={11}>
+                              <Box>
+                                <SelectForm
+                                  tooltip={t("ChooseProduct")}
+                                  label={""}
+                                  placeholder={t("ChooseProduct")}
+                                  required={true}
+                                  nextField={"quantity"}
+                                  name={"product_id"}
+                                  form={form}
+                                  dropdownValue={productDropdown}
+                                  id={"product_id"}
+                                  searchable={true}
+                                  value={product}
+                                  changeValue={(val) => {
+                                    setProduct(val);
+                                  }}
+                                  comboboxProps={{ withinPortal: false }}
+                                />
+                              </Box>
+                            </Grid.Col>
+                            <Grid.Col span={1}>
+                              <Box>
+                                <Tooltip
+                                  multiline
+                                  className={genericClass.genericPrimaryBg}
+                                  position="top"
+                                  withArrow
+                                  ta={"center"}
+                                  offset={{ crossAxis: "-50", mainAxis: "5" }}
+                                  transitionProps={{ duration: 200 }}
+                                  label={t("InstantProductCreate")}
+                                >
+                                  <ActionIcon
+                                    variant="outline"
+                                    radius="xl"
+                                    size={"sm"}
+                                    mt={"8"}
+                                    ml={"8"}
+                                    color="white"
+                                    aria-label="Settings"
+                                    bg={"#905923"}
+                                    onClick={() => setProductDrawer(true)}
+                                  >
+                                    <IconPlus stroke={1} />
+                                  </ActionIcon>
+                                </Tooltip>
+                              </Box>
+                            </Grid.Col>
+                          </Grid>
+                        </Box>
+                      )}
+                      {switchValue === "barcode" && (
+                        <Box
+                          p={"xs"}
+                          mt={"8"}
+                          className={genericClass.genericHighlightedBox}
+                          ml={"-xs"}
+                          mr={-8}
+                        >
+                          <InputNumberForm
+                            tooltip={t("BarcodeValidateMessage")}
+                            label=""
+                            placeholder={t("Barcode")}
+                            required={true}
+                            nextField={""}
+                            form={form}
+                            name={"barcode"}
+                            id={"barcode"}
+                            leftSection={
+                              <IconBarcode size={16} opacity={0.5} />
+                            }
+                          />
+                        </Box>
+                      )}
+                      {switchValue === "product" && (
+                        <Box
+                          ml={"-xs"}
+                          p={"xs"}
+                          mr={-8}
+                          className={genericClass.genericBackground}
+                        >
+                          <Box mt={"4"}>
+                            <Grid columns={12} gutter={{ base: 8 }}>
+                              <Grid.Col span={4}>
+                                {config_sales?.is_multi_price === 1 && (
+                                  <SelectForm
+                                    tooltip={t("MultiPriceValidateMessage")}
+                                    label=""
+                                    placeholder={t("Price")}
+                                    required={false}
+                                    nextField={""}
+                                    name={"multi_price"}
+                                    form={form}
+                                    dropdownValue={["1", "2", "3", "4", "5"]}
+                                    id={"multi_price"}
+                                    mt={1}
+                                    searchable={true}
+                                    value={multiPrice}
+                                    changeValue={setMultiPrice}
+                                  />
+                                )}
+                              </Grid.Col>
+                              <Grid.Col span={4}>
+                                <InputButtonForm
+                                  type="number"
+                                  tooltip=""
+                                  label=""
+                                  placeholder={t("Price")}
+                                  required={true}
+                                  form={form}
+                                  name={"price"}
+                                  id={"price"}
+                                  rightSection={inputGroupCurrency}
+                                  leftSection={
+                                    <IconCoinMonero size={16} opacity={0.5} />
                                   }
-                                }}
-                              >
-                                <Flex direction={`column`} gap={0}>
-                                  <IconShoppingBag size={12} />
-                                </Flex>
-                              </Button>
-                            </Group>
-                          ),
-                        },
-                      ]}
-                      loaderSize="xs"
-                      loaderColor="grape"
-                      height={height - 130}
-                    />
-                  </Box>
-                  <Box mt={"8"}>
-                    <SelectForm
-                      tooltip={t("PurchaseValidateMessage")}
-                      label=""
-                      placeholder={t("Vendor")}
-                      required={false}
-                      nextField={"warehouse_id"}
-                      name={"vendor_id"}
-                      form={form}
-                      dropdownValue={vendorsDropdownData}
-                      id={"purchase_vendor_id"}
-                      mt={1}
-                      searchable={true}
-                      value={vendorData}
-                      changeValue={setVendorData}
-                    />
-                  </Box>
-                  {isWarehouse == 1 && (
-                    <Box mt={"4"}>
-                      <SelectForm
-                        tooltip={t("Warehouse")}
-                        label=""
-                        placeholder={t("Warehouse")}
-                        required={false}
-                        nextField={"category_id"}
-                        name={"warehouse_id"}
-                        form={form}
-                        dropdownValue={warehouseDropdownData}
-                        id={"warehouse_id"}
-                        mt={1}
-                        searchable={true}
-                        value={warehouseData}
-                        changeValue={setWarehouseData}
-                      />
-                    </Box>
-                  )}
-                  <Box mt={"4"}>
-                    <SelectForm
-                      tooltip={t("ChooseCategory")}
-                      label={""}
-                      placeholder={t("ChooseCategory")}
-                      required={true}
-                      nextField={"product_id"}
-                      name={"category_id"}
-                      form={form}
-                      dropdownValue={getSettingCategoryDropdownData()}
-                      id={"category_id"}
-                      searchable={true}
-                      value={categoryData}
-                      changeValue={setCategoryData}
-                      comboboxProps={{ withinPortal: false }}
-                    />
-                  </Box>
-                  {switchValue === "product" && (
-                    <Box
-                      p={"xs"}
-                      mt={"8"}
-                      className={genericClass.genericHighlightedBox}
-                      ml={"-xs"}
-                      mr={-8}
-                    >
-                      <Grid gutter={{ base: 6 }}>
-                        <Grid.Col span={11}>
-                          <Box>
-                            <SelectForm
-                              tooltip={t("ChooseProduct")}
-                              label={""}
-                              placeholder={t("ChooseProduct")}
-                              required={true}
-                              nextField={"quantity"}
-                              name={"product_id"}
-                              form={form}
-                              dropdownValue={productDropdown}
-                              id={"product_id"}
-                              searchable={true}
-                              value={product}
-                              changeValue={(val) => {
-                                setProduct(val);
-                              }}
-                              comboboxProps={{ withinPortal: false }}
-                            />
-                          </Box>
-                        </Grid.Col>
-                        <Grid.Col span={1}>
-                          <Box>
-                            <Tooltip
-                              multiline
-                              className={genericClass.genericPrimaryBg}
-                              position="top"
-                              withArrow
-                              ta={"center"}
-                              offset={{ crossAxis: "-50", mainAxis: "5" }}
-                              transitionProps={{ duration: 200 }}
-                              label={t("InstantProductCreate")}
-                            >
-                              <ActionIcon
-                                variant="outline"
-                                radius="xl"
-                                size={"sm"}
-                                mt={"8"}
-                                ml={"8"}
-                                color="white"
-                                aria-label="Settings"
-                                bg={"#905923"}
-                                onClick={() => setProductDrawer(true)}
-                              >
-                                <IconPlus stroke={1} />
-                              </ActionIcon>
-                            </Tooltip>
-                          </Box>
-                        </Grid.Col>
-                      </Grid>
-                    </Box>
-                  )}
-                  {switchValue === "barcode" && (
-                    <Box
-                      p={"xs"}
-                      mt={"8"}
-                      className={genericClass.genericHighlightedBox}
-                      ml={"-xs"}
-                      mr={-8}
-                    >
-                      <InputNumberForm
-                        tooltip={t("BarcodeValidateMessage")}
-                        label=""
-                        placeholder={t("Barcode")}
-                        required={true}
-                        nextField={""}
-                        form={form}
-                        name={"barcode"}
-                        id={"barcode"}
-                        leftSection={<IconBarcode size={16} opacity={0.5} />}
-                      />
-                    </Box>
-                  )}
-                  {switchValue === "product" && (
-                    <Box
-                      ml={"-xs"}
-                      p={"xs"}
-                      mr={-8}
-                      className={genericClass.genericBackground}
-                    >
-                      <Box mt={"4"}>
-                        <Grid columns={12} gutter={{ base: 8 }}>
-                          <Grid.Col span={4}>
-                            <SelectForm
-                              tooltip={t("MultiPriceValidateMessage")}
-                              label=""
-                              placeholder={t("Price")}
-                              required={false}
-                              nextField={""}
-                              name={"multi_price"}
-                              form={form}
-                              dropdownValue={["1", "2", "3", "4", "5"]}
-                              id={"multi_price"}
-                              mt={1}
-                              searchable={true}
-                              value={multiPrice}
-                              changeValue={setMultiPrice}
-                            />
-                          </Grid.Col>
-                          <Grid.Col span={4}>
-                            <InputButtonForm
-                              type="number"
-                              tooltip=""
-                              label=""
-                              placeholder={t("Price")}
-                              required={true}
-                              form={form}
-                              name={"price"}
-                              id={"price"}
-                              rightSection={inputGroupCurrency}
-                              leftSection={
-                                <IconCoinMonero size={16} opacity={0.5} />
-                              }
-                              rightSectionWidth={30}
-                              disabled={true}
-                            />
-                          </Grid.Col>
-                          <Grid.Col span={4}>
-                            <InputNumberForm
-                              tooltip={t("SalesPriceValidateMessage")}
-                              label=""
-                              placeholder={t("SalesPrice")}
-                              required={true}
-                              nextField={"EntityFormSubmit"}
-                              form={form}
-                              name={"sales_price"}
-                              id={"sales_price"}
-                              disabled={form.values.percent}
-                              leftSection={
-                                <IconPlusMinus size={16} opacity={0.5} />
-                              }
-                              rightIcon={
-                                <IconCurrency size={16} opacity={0.5} />
-                              }
-                            />
-                          </Grid.Col>
-                        </Grid>
-                      </Box>
-                      <Box>
-                        <Grid columns={12} gutter={{ base: 8 }}>
-                          <Grid.Col span={4}>
-                            <SelectForm
-                              tooltip={t("UnitValidateMessage")}
-                              label=""
-                              placeholder={t("Unit")}
-                              required={false}
-                              nextField={""}
-                              name={"unit_id"}
-                              form={form}
-                              dropdownValue={["pcs", "kg"]}
-                              id={"unit_id"}
-                              mt={1}
-                              searchable={true}
-                              value={unitType}
-                              changeValue={setUnitType}
-                            />
-                          </Grid.Col>
-                          <Grid.Col span={4}>
-                            <InputButtonForm
-                              type="number"
-                              tooltip={t("PercentValidateMessage")}
-                              label=""
-                              placeholder={t("Quantity")}
-                              required={true}
-                              nextField={"percent"}
-                              form={form}
-                              name={"quantity"}
-                              id={"quantity"}
-                              leftSection={
-                                <IconSortAscendingNumbers
-                                  size={16}
-                                  opacity={0.5}
+                                  rightSectionWidth={30}
+                                  disabled={true}
                                 />
-                              }
-                              rightSection={inputGroupText}
-                              rightSectionWidth={50}
-                            />
-                          </Grid.Col>
-                          <Grid.Col span={4}>
-                            <InputButtonForm
-                              type="number"
-                              tooltip={t("PercentValidateMessage")}
-                              label=""
-                              placeholder={t("BonusQuantity")}
-                              required={true}
-                              nextField={"percent"}
-                              form={form}
-                              name={"bonus_quantity"}
-                              id={"bonus_quantity"}
-                              leftSection={
-                                <IconSortAscendingNumbers
-                                  size={16}
-                                  opacity={0.5}
+                              </Grid.Col>
+                              <Grid.Col span={4}>
+                                <InputNumberForm
+                                  tooltip={t("SalesPriceValidateMessage")}
+                                  label=""
+                                  placeholder={t("SalesPrice")}
+                                  required={true}
+                                  nextField={"EntityFormSubmit"}
+                                  form={form}
+                                  name={"sales_price"}
+                                  id={"sales_price"}
+                                  disabled={form.values.percent}
+                                  leftSection={
+                                    <IconPlusMinus size={16} opacity={0.5} />
+                                  }
+                                  rightIcon={
+                                    <IconCurrency size={16} opacity={0.5} />
+                                  }
                                 />
-                              }
-                              rightSection={inputGroupText}
-                              rightSectionWidth={50}
-                            />
-                          </Grid.Col>
-                        </Grid>
-                      </Box>
-                      <Box>
-                        <Grid columns={12} gutter={{ base: 8 }}>
-                          <Grid.Col span={4}></Grid.Col>
-                          <Grid.Col span={4}>
-                            <InputNumberForm
-                              tooltip={t("PercentValidateMessage")}
-                              label=""
-                              placeholder={t("Percent")}
-                              required={true}
-                              nextField={
-                                form.values.percent
-                                  ? "EntityFormSubmit"
-                                  : "sales_price"
-                              }
-                              form={form}
-                              name={"percent"}
-                              id={"percent"}
-                              leftSection={
-                                <IconPercentage size={16} opacity={0.5} />
-                              }
-                              rightIcon={
-                                <IconCurrency size={16} opacity={0.5} />
-                              }
-                              closeIcon={true}
-                            />
-                          </Grid.Col>
-                          <Grid.Col span={4}>
-                            <Box style={{ display: "none" }}>
-                              <InputButtonForm
-                                tooltip=""
-                                label=""
-                                type=""
-                                placeholder={t("SubTotal")}
-                                required={true}
-                                nextField={"EntityFormSubmit"}
-                                form={form}
-                                name={"sub_total"}
-                                id={"sub_total"}
-                                leftSection={
-                                  <IconSum size={16} opacity={0.5} />
-                                }
-                                rightSection={inputGroupCurrency}
-                                disabled={
-                                  selectProductDetails &&
-                                  selectProductDetails.sub_total
-                                }
-                                closeIcon={false}
-                              />
-                            </Box>
-                            <Text ta="right" mt={"8"}>
-                              {currencySymbol}{" "}
-                              {selectProductDetails
-                                ? selectProductDetails.sub_total
-                                : 0}
-                            </Text>
-                          </Grid.Col>
-                        </Grid>
-                      </Box>
+                              </Grid.Col>
+                            </Grid>
+                          </Box>
+                          <Box>
+                            <Grid columns={12} gutter={{ base: 8 }}>
+                              <Grid.Col span={4}>
+                                {config_sales?.is_measurement_enable === 1 && (
+                                  <SelectForm
+                                    tooltip={t("UnitValidateMessage")}
+                                    label=""
+                                    placeholder={t("Unit")}
+                                    required={false}
+                                    nextField={""}
+                                    name={"unit_id"}
+                                    form={form}
+                                    dropdownValue={["pcs", "kg"]}
+                                    id={"unit_id"}
+                                    mt={1}
+                                    searchable={true}
+                                    value={unitType}
+                                    changeValue={setUnitType}
+                                  />
+                                )}
+                              </Grid.Col>
+                              <Grid.Col span={4}>
+                                <InputButtonForm
+                                  type="number"
+                                  tooltip={t("PercentValidateMessage")}
+                                  label=""
+                                  placeholder={t("Quantity")}
+                                  required={true}
+                                  nextField={"percent"}
+                                  form={form}
+                                  name={"quantity"}
+                                  id={"quantity"}
+                                  leftSection={
+                                    <IconSortAscendingNumbers
+                                      size={16}
+                                      opacity={0.5}
+                                    />
+                                  }
+                                  rightSection={inputGroupText}
+                                  rightSectionWidth={50}
+                                />
+                              </Grid.Col>
+                              <Grid.Col span={4}>
+                                <InputButtonForm
+                                  type="number"
+                                  tooltip={t("PercentValidateMessage")}
+                                  label=""
+                                  placeholder={t("BonusQuantity")}
+                                  required={true}
+                                  nextField={"percent"}
+                                  form={form}
+                                  name={"bonus_quantity"}
+                                  id={"bonus_quantity"}
+                                  leftSection={
+                                    <IconSortAscendingNumbers
+                                      size={16}
+                                      opacity={0.5}
+                                    />
+                                  }
+                                  rightSection={inputGroupText}
+                                  rightSectionWidth={50}
+                                />
+                              </Grid.Col>
+                            </Grid>
+                          </Box>
+                          <Box>
+                            <Grid columns={12} gutter={{ base: 8 }}>
+                              <Grid.Col span={4}></Grid.Col>
+                              <Grid.Col span={4}>
+                                <InputNumberForm
+                                  tooltip={t("PercentValidateMessage")}
+                                  label=""
+                                  placeholder={t("Percent")}
+                                  required={true}
+                                  nextField={
+                                    form.values.percent
+                                      ? "EntityFormSubmit"
+                                      : "sales_price"
+                                  }
+                                  form={form}
+                                  name={"percent"}
+                                  id={"percent"}
+                                  leftSection={
+                                    <IconPercentage size={16} opacity={0.5} />
+                                  }
+                                  rightIcon={
+                                    <IconCurrency size={16} opacity={0.5} />
+                                  }
+                                  closeIcon={true}
+                                />
+                              </Grid.Col>
+                              <Grid.Col span={4}>
+                                <Box style={{ display: "none" }}>
+                                  <InputButtonForm
+                                    tooltip=""
+                                    label=""
+                                    type=""
+                                    placeholder={t("SubTotal")}
+                                    required={true}
+                                    nextField={"EntityFormSubmit"}
+                                    form={form}
+                                    name={"sub_total"}
+                                    id={"sub_total"}
+                                    leftSection={
+                                      <IconSum size={16} opacity={0.5} />
+                                    }
+                                    rightSection={inputGroupCurrency}
+                                    disabled={
+                                      selectProductDetails &&
+                                      selectProductDetails.sub_total
+                                    }
+                                    closeIcon={false}
+                                  />
+                                </Box>
+                                <Text ta="right" mt={"8"}>
+                                  {currencySymbol}{" "}
+                                  {selectProductDetails
+                                    ? selectProductDetails.sub_total
+                                    : 0}
+                                </Text>
+                              </Grid.Col>
+                            </Grid>
+                          </Box>
+                        </Box>
+                      )}
                     </Box>
-                  )}
-                </Box>
+                  </Box>
+                </Flex>
               </Box>
               <Box mb="xs">
                 <Grid
@@ -1197,7 +1227,7 @@ function _GenericPosForm(props) {
             currencySymbol={currencySymbol}
             domainId={domainId}
             isSMSActive={isSMSActive}
-            isZeroReceiveAllow={isZeroReceiveAllow}
+            is_zero_receive_allow={config_sales?.is_zero_receive_allow}
             tempCardProducts={tempCardProducts}
             setLoadCardProducts={setLoadCardProducts}
             setTempCardProducts={setTempCardProducts}
@@ -1211,6 +1241,7 @@ function _GenericPosForm(props) {
           module={"Sales"}
           config_sales={config_sales}
           id={id}
+          fetchDomainConfig={fetchDomainConfig}
         />
       )}
       {productDrawer && (

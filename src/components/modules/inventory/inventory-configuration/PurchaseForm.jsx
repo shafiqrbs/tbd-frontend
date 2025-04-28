@@ -23,7 +23,7 @@ import {
 import SelectForm from "../../../form-builders/SelectForm";
 
 function PurchaseForm(props) {
-  const { vendorGroupDropdownData, height, config, id } = props;
+  const { vendorGroupDropdownData, height, config_purchase, id } = props;
 
   const { t } = useTranslation();
   const dispatch = useDispatch();
@@ -32,14 +32,14 @@ function PurchaseForm(props) {
 
   const form = useForm({
     initialValues: {
-      search_by_vendor: config?.search_by_vendor || "",
-      search_by_product_nature: config?.search_by_product_nature || "",
-      search_by_category: config?.search_by_category || "",
-      show_product: config?.show_product || "",
-      is_measurement_enable: config?.is_measurement_enable || "",
-      is_purchase_auto_approved: config?.is_purchase_auto_approved || "",
-      default_vendor_group_id: config?.default_vendor_group_id || 0,
-      search_by_warehouse: config?.search_by_warehouse || "",
+      search_by_vendor: config_purchase?.search_by_vendor || "",
+      search_by_product_nature: config_purchase?.search_by_product_nature || "",
+      search_by_category: config_purchase?.search_by_category || "",
+      show_product: config_purchase?.show_product || "",
+      is_measurement_enable: config_purchase?.is_measurement_enable || "",
+      is_purchase_auto_approved: config_purchase?.is_purchase_auto_approved || "",
+      default_vendor_group_id: config_purchase?.default_vendor_group_id || 0,
+      search_by_warehouse: config_purchase?.search_by_warehouse || "",
     },
   });
 
@@ -93,7 +93,7 @@ function PurchaseForm(props) {
         setSaveCreateLoading(false);
       }, 700);
     } catch (error) {
-      console.error("Error updating purchase config:", error);
+      console.error("Error updating purchase config_purchase:", error);
       notifications.show({
         color: "red",
         title: t("UpdateFailed"),
@@ -140,7 +140,7 @@ function PurchaseForm(props) {
                   dropdownValue={vendorGroupDropdownData}
                   id={"default_vendor_group_id"}
                   searchable={false}
-                  value={vendorGroupData}
+                  value={ vendorGroupData ? String(vendorGroupData) : config_purchase?.default_vendor_group_id ? String(config_purchase?.default_vendor_group_id) : null}
                   changeValue={setVendorGroupData}
                 />
               </Grid.Col>

@@ -19,7 +19,6 @@ const getVoucherTypeDropdownData = () => {
     const voucherDropdownData = useSelector(state => state.utilitySlice.voucherDropdownData);
 
     useEffect(() => {
-        console.log("voucherDropdownData", voucherDropdownData);
         if (voucherDropdownData && voucherDropdownData.length > 0) {
             const transformedData = voucherDropdownData.map(type => {
                 return { 'label': type.name, 'value': String(type.id) };

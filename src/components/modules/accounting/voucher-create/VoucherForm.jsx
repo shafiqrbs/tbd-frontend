@@ -50,7 +50,6 @@ function VoucherForm(props) {
   const [saveCreateLoading, setSaveCreateLoading] = useState(false);
   const [voucherType, setVoucherType] = useState(null);
 
-  const [reloadTrigger, setReloadTrigger] = useState(false);
   const form = useForm({
     initialValues: {
       name: "",
@@ -162,7 +161,7 @@ function VoucherForm(props) {
                   <Grid>
                     <Grid.Col span={6}>
                       <Title order={6} pt={"6"}>
-                        {t("CreateVoucher")}
+                        {t("Voucher")}
                       </Title>
                     </Grid.Col>
                     <Grid.Col span={6}>
