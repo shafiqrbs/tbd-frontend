@@ -60,6 +60,12 @@ function _GenericInvoiceForm(props) {
     isPurchaseByPurchasePrice,
   } = props;
 
+  const { domainConfig, fetchDomainConfig } = useDomainConfig(true);
+
+  let inventory_config = domainConfig?.inventory_config;
+  let config_purchase = inventory_config?.config_purchase;
+
+  let id = domainConfig?.id;
   //common hooks and variables
   const { t, i18n } = useTranslation();
   const { isOnline, mainAreaHeight } = useOutletContext();
@@ -456,8 +462,6 @@ function _GenericInvoiceForm(props) {
     ],
     []
   );
-  const { domainConfig } = useDomainConfig();
-  let id = domainConfig?.id;
   return (
     <Box>
       <Grid columns={24} gutter={{ base: 8 }}>
@@ -1185,6 +1189,7 @@ function _GenericInvoiceForm(props) {
           settingDrawer={settingDrawer}
           setSettingDrawer={setSettingDrawer}
           module={"Purchase"}
+          config_purchase={config_purchase}
           id={id}
         />
       )}
