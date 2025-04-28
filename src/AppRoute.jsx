@@ -68,6 +68,7 @@ import DiscountUserIndex from "./components/modules/discount/user/DiscountUserIn
 import B2bUserIndex from "./components/modules/b2b/master-user/B2bUserIndex";
 import DiscountConfigIndex from "./components/modules/discount/config/DiscountConfigIndex";
 import VoucherCreateIndex from "./components/modules/accounting/voucher-create/VoucherCreateIndex.jsx";
+import DiscountDashboard from "./components/modules/discount/dashboard/DiscountDashboard";
 
 function AppRoute() {
   return (
@@ -147,6 +148,7 @@ function AppRoute() {
         </Route>
 
         <Route path="/discount/">
+          <Route path="" element={<DiscountDashboard />} />
           <Route path="users" element={<DiscountUserIndex />} />
           <Route path="config" element={<DiscountConfigIndex />} />
         </Route>

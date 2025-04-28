@@ -19,7 +19,7 @@ import _DiscountShortcut from "../common/_DiscountShortcut";
 
 
 
-function DiscountUserIndex() {
+function DiscountDashboard() {
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const insertType = useSelector((state) => state.crudSlice.insertType);
@@ -68,4 +68,4 @@ function DiscountUserIndex() {
     );
 }
 
-export default DiscountUserIndex;
+export default DiscountDashboard;

@@ -1197,6 +1197,35 @@ function MainDashboard(props) {
                                                     }}
                                                 />
                                             </List.Item>
+                                            <List.Item
+                                                pl={"xs"}
+                                                icon={
+                                                    <ThemeIcon
+                                                        color="blue.6"
+                                                        size={20}
+                                                        radius="xl"
+                                                        variant="outline"
+                                                    >
+                                                        <IconCurrencyMonero/>
+                                                    </ThemeIcon>
+                                                }
+                                            >
+                                                <NavLink
+                                                    pl={"md"}
+                                                    href="/discount/dashboard"
+                                                    label={t("Discount")}
+                                                    component="button"
+                                                    onClick={(e) => {
+                                                        navigate("/discount/dashboard");
+                                                    }}
+                                                    onAuxClick={(e) => {
+                                                        // Handle middle mouse button click for browsers that support it
+                                                        if (e.button === 1) {
+                                                            window.open("/discount/dashboard", "_blank");
+                                                        }
+                                                    }}
+                                                />
+                                            </List.Item>
                                         </List>
                                     </Box>
                                 </Card>
