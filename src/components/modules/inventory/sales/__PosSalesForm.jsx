@@ -21,7 +21,7 @@ export default function __PosSalesForm(props) {
     isSMSActive,
     currencySymbol,
     domainId,
-    isZeroReceiveAllow,
+    is_zero_receive_allow,
     tempCardProducts,
     setLoadCardProducts,
   } = props;
@@ -229,7 +229,7 @@ export default function __PosSalesForm(props) {
 
           formValue["payment"] = hasReceiveAmount
             ? form.values.receive_amount
-            : isZeroReceiveAllow && isDefaultCustomer
+            : is_zero_receive_allow && isDefaultCustomer
             ? salesTotalAmount
             : 0;
 
@@ -239,7 +239,7 @@ export default function __PosSalesForm(props) {
           // Check if default customer needs receive amount
           if (
             isDefaultCustomer &&
-            !isZeroReceiveAllow &&
+            !is_zero_receive_allow &&
             (!form.values.receive_amount ||
               Number(form.values.receive_amount) <= 0 ||
               Number(form.values.receive_amount) < salesTotalAmount)
@@ -668,7 +668,7 @@ export default function __PosSalesForm(props) {
             setDiscountType={setDiscountType}
             returnOrDueText={returnOrDueText}
             customerData={customerData}
-            isZeroReceiveAllow={isZeroReceiveAllow}
+            is_zero_receive_allow={is_zero_receive_allow}
             salesDueAmount={salesDueAmount}
             setLoadCardProducts={setLoadCardProducts}
           />
