@@ -211,8 +211,11 @@ function ConfigurationForm() {
 
 
     return (
-        <Box>
-            <LoadingOverlay visible={formLoad} zIndex={1000} overlayProps={{radius: "sm", blur: 2}}/>
+        <Box style={{ position: 'relative' }}>
+        <LoadingOverlay 
+            visible={formLoad} 
+            overlayProps={{ radius: "sm", blur: 2 }} 
+            zIndex={1000} loaderProps={{color : "red"}} />             
             {
                 configData && (
                     <form onSubmit={form.onSubmit(handleSubmit)}>
